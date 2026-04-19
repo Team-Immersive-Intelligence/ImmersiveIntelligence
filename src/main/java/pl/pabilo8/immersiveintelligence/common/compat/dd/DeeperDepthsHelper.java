@@ -17,6 +17,7 @@ import pl.pabilo8.immersiveintelligence.api.crafting.BathingRecipe;
 import pl.pabilo8.immersiveintelligence.api.crafting.PrecisionAssemblerRecipe;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
+import pl.pabilo8.immersiveintelligence.common.compat.thaum.ThaumcraftHelper;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMaterialIngot.MaterialsIngot;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
@@ -39,7 +40,7 @@ public class DeeperDepthsHelper extends IICompatModule
 		return "deeperdepths";
 	}
 
-	private static final ResLoc RES_DD = ResLoc.of(ResLoc.root("deeperdepths"));
+	public static final ResLoc RES_DD = ResLoc.of(ResLoc.root("deeperdepths"));
 
 	@Override
 	public void preInit()
@@ -69,33 +70,21 @@ public class DeeperDepthsHelper extends IICompatModule
 				new ItemStack(Item.REGISTRY.getObject(new ResourceLocation("deeperdepths", "cut_copper"))),
 				ItemStack.EMPTY, 100, 1000);
 
-		Item cutcopperslab1 = Item.REGISTRY.getObject(new ResourceLocation("deeperdepths", "cut_copper_slab"));
 		ArcFurnaceRecipe.addRecipe(new ItemStack(IEContent.itemMetal, 5, 0),
-				new ItemStack(cutcopperslab1),
+				new ItemStack(Item.REGISTRY.getObject(new ResourceLocation("deeperdepths", "cut_copper_slab"))),
 				ItemStack.EMPTY, 100, 500);
 
 		ArcFurnaceRecipe.addRecipe(new ItemStack(IEContent.itemMetal, 9, 0),
 				new ItemStack(Item.REGISTRY.getObject(new ResourceLocation("deeperdepths", "chiseled_copper"))),
 				ItemStack.EMPTY, 100, 1000);
 
-		Item grate1 = Item.REGISTRY.getObject(new ResourceLocation("deeperdepths", "copper_grate"));
 		ArcFurnaceRecipe.addRecipe(new ItemStack(IEContent.itemMetal, 9, 0),
-				new ItemStack(grate1),
+				new ItemStack(Item.REGISTRY.getObject(new ResourceLocation("deeperdepths", "copper_grate"))),
 				ItemStack.EMPTY, 60, 500);
 
 		ArcFurnaceRecipe.addRecipe(new ItemStack(IEContent.itemMetal, 1, 0),
 				new ItemStack(Item.REGISTRY.getObject(new ResourceLocation("deeperdepths", "copper_lantern"))),
 				ItemStack.EMPTY, 60, 500);
-
-		//TODO: 19.04.2026 KARVAR FIX
-//		new BathingRecipe(new ItemStack(chiseledcopper1, 1, 0),
-//				new ItemStack(chiseledcopper1, 1), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 120, false);
-
-		//Bathing recipes
-		new BathingRecipe(new ItemStack(cutcopperslab1, 1, 0),
-				new ItemStack(cutcopperslab1, 1), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 100, false);
-		new BathingRecipe(new ItemStack(grate1, 1, 0),
-				new ItemStack(grate1, 1), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 80, false);
 
 
 		String[] waxed = new String[]{"", "waxed_"};
@@ -125,206 +114,270 @@ public class DeeperDepthsHelper extends IICompatModule
 				Item cut_copper_stairs = Item.REGISTRY.getObject(new ResourceLocation("deeperdepths", varient2+variant1+"cut_copper_stairs"));
 				ArcFurnaceRecipe.addRecipe(new ItemStack(IEContent.itemMetal, 5, 0),
 						new ItemStack(cut_copper_stairs), ItemStack.EMPTY, 100, 800);
-
 				Item door1 = Item.REGISTRY.getObject(new ResourceLocation("deeperdepths", varient2+variant1+"copper_door"));
 				ArcFurnaceRecipe.addRecipe(new ItemStack(IEContent.itemMetal, 2, 0),
 						new ItemStack(door1), ItemStack.EMPTY, 100, 500);
-
 				Item bars = Item.REGISTRY.getObject(new ResourceLocation("deeperdepths", varient2+variant1+"copper_bars"));
 				ArcFurnaceRecipe.addRecipe(new ItemStack(IEContent.itemMetal, 2, 0),
 						new ItemStack(bars), ItemStack.EMPTY, 200, 1000);
 
-				//07.04.2026 Carver TODO: check if bath stripping oxidation layers and adding waxing works
+				//==================
+				//Cleaning oxidation vvvv  (and apparently waxed state) with hydrofluoric acid
+				//==================
 
-				Item ddcopper1 = Item.REGISTRY.getObject(new ResourceLocation("deeperdepths", varient2+variant1+"copper"));
+				//no extensions, just metadata sensetive
 
-				//TODO: 19.04.2026 KARVAR FIX BATHING RECIPES
-				//Cleaning oxidation (and apparently waxed state) with hydrofluoric acid
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("copper_block")), 1, 0),
+						new ItemStack(Item.REGISTRY.getObject(RES_DD.with("copper_block")), 1), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 120, false);
 
-				/*new BathingRecipe(new ItemStack(ddcopper1, 1, 0),
-						new ItemStack(ddcopper1, 1), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 120, false);
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("chiseled_copper")), 1, 0),
+						new ItemStack(Item.REGISTRY.getObject(RES_DD.with("chiseled_copper")), 1), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 120, false);
+
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("copper_grate")), 1, 0),
+						new ItemStack(Item.REGISTRY.getObject(RES_DD.with("copper_grate")), 1), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 120, false);
+
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("cut_copper")), 1, 0),
+						new ItemStack(Item.REGISTRY.getObject(RES_DD.with("cut_copper")), 1), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 120, false);
+
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("copper_lantern")), 1, 0),
+						new ItemStack(Item.REGISTRY.getObject(RES_DD.with("copper_lantern")), 1), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 120, false);
+
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("cut_copper_slab")), 1, 0),
+					new ItemStack(Item.REGISTRY.getObject(RES_DD.with("cut_copper_slab")), 1), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 120, false);
+
+
+				//more name-sensetive. Semi-sensetive.
+
+				new BathingRecipe(new ItemStack(chest, 1, 0),
+						new ItemStack(chest, 1), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 120, false);
+
+				new BathingRecipe(new ItemStack(bulb1, 1, 0),
+						new ItemStack(bulb1, 1), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 120, false);
+
+				new BathingRecipe(new ItemStack(chain, 1, 0),
+						new ItemStack(chain, 1), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 120, false);
+
+				//name-sensetive.
+
 
 				new BathingRecipe(new ItemStack(trapdoor1, 1, 0),
 						new ItemStack(trapdoor1, 1), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 100, false);
 
 				new BathingRecipe(new ItemStack(rod1, 1, 0),
-						new ItemStack(rod1, 1), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 256, 80, false);
-
+						new ItemStack(rod1, 1), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 100, false);
 
 				new BathingRecipe(new ItemStack(cut_copper_stairs, 1, 0),
-						new ItemStack(cut_copper_stairs, 1), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 110, false);
-
+						new ItemStack(cut_copper_stairs, 1), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 100, false);
 
 				new BathingRecipe(new ItemStack(door1, 1, 0),
-						new ItemStack(door1, 1), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 256, 100, false);
+						new ItemStack(door1, 1), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 100, false);
 
-				new BathingRecipe(new ItemStack(bulb1, 1, 0),
-						new ItemStack(bulb1, 1), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 140, false);
-
-
-				new BathingRecipe(new ItemStack(chain, 1, 0),
-						new ItemStack(chain, 1), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 140, false);
 				new BathingRecipe(new ItemStack(bars, 1, 0),
-						new ItemStack(bars, 1), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 140, false);
-				new BathingRecipe(new ItemStack(chest, 1, 0),
-						new ItemStack(chest, 1), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 140, false);
+						new ItemStack(bars, 1), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 100, false);
 
-				//Adding coating with sulfuric acid, metadata sensitive
-
+				//==================
+				//Adding coating with sulfuric acid, metadata sensitive vvvv
+				//==================
 				//normal
 
-				new BathingRecipe(new ItemStack(bulb1, 1, 4),
-						new ItemStack(ddcopper1, 1, 0), new FluidStack(IIContent.fluidSulfuricAcid, 100), 512, 120, false);
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("copper_block")), 1, 4),
+						new ItemStack(Item.REGISTRY.getObject(RES_DD.with("copper_block")), 1,0), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 120, false);
 
-				new BathingRecipe(new ItemStack(bulb1, 1, 4),
-						new ItemStack(bulb1, 1, 0), new FluidStack(IIContent.fluidSulfuricAcid, 100), 512, 140, false);
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("chiseled_copper")), 1, 4),
+						new ItemStack(Item.REGISTRY.getObject(RES_DD.with("chiseled_copper")), 1,0), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 120, false);
 
-				new BathingRecipe(new ItemStack(trapdoor1, 1, 4),
-						new ItemStack(trapdoor1, 1, 0), new FluidStack(IIContent.fluidSulfuricAcid, 100), 512, 100, false);
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("copper_grate")), 1, 4),
+						new ItemStack(Item.REGISTRY.getObject(RES_DD.with("copper_grate")), 1,0), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 120, false);
 
-				new BathingRecipe(new ItemStack(rod1, 1, 4),
-						new ItemStack(rod1, 1, 0), new FluidStack(IIContent.fluidSulfuricAcid, 100), 256, 80, false);
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("cut_copper")), 1, 4),
+						new ItemStack(Item.REGISTRY.getObject(RES_DD.with("cut_copper")), 1,0), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 120, false);
 
-				new BathingRecipe(new ItemStack(cutcopperslab1, 1, 4),
-						new ItemStack(cutcopperslab1, 1, 0), new FluidStack(IIContent.fluidSulfuricAcid, 100), 512, 100, false);
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("copper_lantern")), 1, 4),
+						new ItemStack(Item.REGISTRY.getObject(RES_DD.with("copper_lantern")), 1,0), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 120, false);
 
-				new BathingRecipe(new ItemStack(cut_copper_stairs, 1, 4),
-						new ItemStack(cut_copper_stairs, 1, 0), new FluidStack(IIContent.fluidSulfuricAcid, 100), 512, 110, false);
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("cut_copper_slab")), 1, 4),
+						new ItemStack(Item.REGISTRY.getObject(RES_DD.with("cut_copper_slab")), 1,0), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 120, false);
 
-				new BathingRecipe(new ItemStack(grate1, 1, 4),
-						new ItemStack(grate1, 1, 0), new FluidStack(IIContent.fluidSulfuricAcid, 100), 256, 80, false);
 
-				//TODO: 19.04.2026 KARVAR FIX
-//				new BathingRecipe(new ItemStack(chiseledcopper1, 1, 4),
-//						new ItemStack(chiseledcopper1, 1, 0), new FluidStack(IIContent.fluidSulfuricAcid, 100), 512, 120, false);
+				//more name-sensetive. Semi-sensetive.
 
-				new BathingRecipe(new ItemStack(door1, 1, 4),
-						new ItemStack(door1, 1, 0), new FluidStack(IIContent.fluidSulfuricAcid, 100), 256, 100, false);
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("waxed_copper_grate")), 4),
+						new ItemStack(Item.REGISTRY.getObject(RES_DD.with("copper_grate")), 1, 0), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 120, false);
 
-				new BathingRecipe(new ItemStack(chain, 1, 4),
-						new ItemStack(chain, 1, 0), new FluidStack(IIContent.fluidSulfuricAcid, 100), 256, 100, false);
-				new BathingRecipe(new ItemStack(bars, 1, 4),
-						new ItemStack(bars, 1, 0), new FluidStack(IIContent.fluidSulfuricAcid, 100), 256, 100, false);
-				new BathingRecipe(new ItemStack(chain, 1, 4),
-						new ItemStack(chest, 1, 0), new FluidStack(IIContent.fluidSulfuricAcid, 100), 256, 100, false);
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("waxed_copper_bulb")), 4),
+						new ItemStack(Item.REGISTRY.getObject(RES_DD.with("copper_bulb")), 1, 0), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 120, false);
+
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("waxed_copper_chain")), 4),
+						new ItemStack(Item.REGISTRY.getObject(RES_DD.with("copper_chain")), 1, 0), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 120, false);
+
+				//name-sensetive.
+
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("waxed_cut_copper_stairs")), 1),
+						new ItemStack(Item.REGISTRY.getObject(RES_DD.with("cut_copper_stairs")), 1), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 100, false);
+
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("waxed_copper_door")), 1),
+						new ItemStack(Item.REGISTRY.getObject(RES_DD.with("copper_door")), 1), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 100, false);
+
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("waxed_copper_trapdoor")), 1),
+						new ItemStack(Item.REGISTRY.getObject(RES_DD.with("copper_trapdoor")), 1), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 100, false);
+
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("waxed_lightning_rod")), 1),
+						new ItemStack(Item.REGISTRY.getObject(RES_DD.with("lightning_rod")), 1), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 100, false);
+
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("waxed_copper_bars")), 1),
+						new ItemStack(Item.REGISTRY.getObject(RES_DD.with("copper_bars")), 1), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 100, false);
+
 
 				//exposed
 
-				new BathingRecipe(new ItemStack(bulb1, 1, 5),
-						new ItemStack(ddcopper1, 1, 1), new FluidStack(IIContent.fluidSulfuricAcid, 100), 512, 140, false);
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("copper_block")), 1, 5),
+						new ItemStack(Item.REGISTRY.getObject(RES_DD.with("copper_block")), 1, 1), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 120, false);
 
-				new BathingRecipe(new ItemStack(bulb1, 1, 5),
-						new ItemStack(bulb1, 1, 1), new FluidStack(IIContent.fluidSulfuricAcid, 100), 512, 160, false);
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("chiseled_copper")), 1, 5),
+						new ItemStack(Item.REGISTRY.getObject(RES_DD.with("chiseled_copper")), 1, 1), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 120, false);
 
-				new BathingRecipe(new ItemStack(trapdoor1, 1, 5),
-						new ItemStack(trapdoor1, 1, 1), new FluidStack(IIContent.fluidSulfuricAcid, 100), 256, 120, false);
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("copper_grate")), 1, 5),
+						new ItemStack(Item.REGISTRY.getObject(RES_DD.with("copper_grate")), 1,1), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 120, false);
 
-				new BathingRecipe(new ItemStack(rod1, 1, 5),
-						new ItemStack(rod1, 1, 1), new FluidStack(IIContent.fluidSulfuricAcid, 100), 256, 100, false);
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("cut_copper")), 1, 5),
+						new ItemStack(Item.REGISTRY.getObject(RES_DD.with("cut_copper")), 1,1), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 120, false);
 
-				new BathingRecipe(new ItemStack(cutcopperslab1, 1, 5),
-						new ItemStack(cutcopperslab1, 1, 1), new FluidStack(IIContent.fluidSulfuricAcid, 100), 512, 120, false);
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("copper_lantern")), 1, 5),
+						new ItemStack(Item.REGISTRY.getObject(RES_DD.with("copper_lantern")), 1,1), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 120, false);
 
-				new BathingRecipe(new ItemStack(cut_copper_stairs, 1, 5),
-						new ItemStack(cut_copper_stairs, 1, 1), new FluidStack(IIContent.fluidSulfuricAcid, 100), 512, 130, false);
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("cut_copper_slab")), 1, 5),
+						new ItemStack(Item.REGISTRY.getObject(RES_DD.with("cut_copper_slab")), 1,1), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 120, false);
 
-				new BathingRecipe(new ItemStack(grate1, 1, 5),
-						new ItemStack(grate1, 1, 1), new FluidStack(IIContent.fluidSulfuricAcid, 100), 256, 100, false);
 
-				//TODO: 19.04.2026 KARVAR FIX
-//				new BathingRecipe(new ItemStack(chiseledcopper1, 1, 5),
-//						new ItemStack(chiseledcopper1, 1, 1), new FluidStack(IIContent.fluidSulfuricAcid, 100), 512, 140, false);
+				//more name-sensetive. Semi-sensetive.
 
-				new BathingRecipe(new ItemStack(door1, 1, 5),
-						new ItemStack(door1, 1, 1), new FluidStack(IIContent.fluidSulfuricAcid, 100), 256, 120, false);
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("waxed_copper_grate")), 1,5),
+						new ItemStack(Item.REGISTRY.getObject(RES_DD.with("copper_grate")), 1, 1), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 120, false);
 
-				new BathingRecipe(new ItemStack(chain, 1, 5),
-						new ItemStack(chain, 1, 1), new FluidStack(IIContent.fluidSulfuricAcid, 100), 256, 120, false);
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("waxed_copper_bulb")), 1,5),
+						new ItemStack(Item.REGISTRY.getObject(RES_DD.with("copper_bulb")), 1, 1), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 120, false);
 
-				new BathingRecipe(new ItemStack(bars, 1, 5),
-						new ItemStack(bars, 1, 1), new FluidStack(IIContent.fluidSulfuricAcid, 100), 256, 120, false);
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("waxed_copper_chain")), 1,5),
+						new ItemStack(Item.REGISTRY.getObject(RES_DD.with("copper_chain")), 1, 1), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 120, false);
 
-				new BathingRecipe(new ItemStack(chest, 1, 5),
-						new ItemStack(chest, 1, 1), new FluidStack(IIContent.fluidSulfuricAcid, 100), 256, 120, false);
+				//name-sensetive.
 
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("waxed_exposed_cut_copper_stairs")), 1),
+						new ItemStack(Item.REGISTRY.getObject(RES_DD.with("exposed_cut_copper_stairs")), 1), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 100, false);
+
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("waxed_exposed_copper_door")), 1),
+						new ItemStack(Item.REGISTRY.getObject(RES_DD.with("exposed_copper_door")), 1), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 100, false);
+
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("waxed_exposed_copper_trapdoor")), 1),
+						new ItemStack(Item.REGISTRY.getObject(RES_DD.with("exposed_copper_trapdoor")), 1), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 100, false);
+
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("waxed_exposed_lightning_rod")), 1),
+						new ItemStack(Item.REGISTRY.getObject(RES_DD.with("exposed_lightning_rod")), 1), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 100, false);
+
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("waxed_exposed_copper_bars")), 1),
+						new ItemStack(Item.REGISTRY.getObject(RES_DD.with("exposed_copper_bars")), 1), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 100, false);
 
 				//wethered
 
-				new BathingRecipe(new ItemStack(bulb1, 1, 6),
-						new ItemStack(ddcopper1, 1, 2), new FluidStack(IIContent.fluidSulfuricAcid, 100), 512, 160, false);
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("copper_block")), 1, 6),
+						new ItemStack(Item.REGISTRY.getObject(RES_DD.with("copper_block")), 1, 2), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 120, false);
 
-				new BathingRecipe(new ItemStack(bulb1, 1, 6),
-						new ItemStack(bulb1, 1, 2), new FluidStack(IIContent.fluidSulfuricAcid, 100), 512, 180, false);
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("chiseled_copper")), 1, 6),
+						new ItemStack(Item.REGISTRY.getObject(RES_DD.with("chiseled_copper")), 1, 2), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 120, false);
 
-				new BathingRecipe(new ItemStack(trapdoor1, 1, 6),
-						new ItemStack(trapdoor1, 1, 2), new FluidStack(IIContent.fluidSulfuricAcid, 100), 256, 140, false);
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("copper_grate")), 1, 6),
+						new ItemStack(Item.REGISTRY.getObject(RES_DD.with("copper_grate")), 1,2), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 120, false);
 
-				new BathingRecipe(new ItemStack(rod1, 1, 6),
-						new ItemStack(rod1, 1, 2), new FluidStack(IIContent.fluidSulfuricAcid, 100), 256, 140, false);
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("cut_copper")), 1, 6),
+						new ItemStack(Item.REGISTRY.getObject(RES_DD.with("cut_copper")), 1,2), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 120, false);
 
-				new BathingRecipe(new ItemStack(cutcopperslab1, 1, 6),
-						new ItemStack(cutcopperslab1, 1, 2), new FluidStack(IIContent.fluidSulfuricAcid, 100), 512, 140, false);
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("copper_lantern")), 1, 6),
+						new ItemStack(Item.REGISTRY.getObject(RES_DD.with("copper_lantern")), 1,2), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 120, false);
 
-				new BathingRecipe(new ItemStack(cut_copper_stairs, 1, 6),
-						new ItemStack(cut_copper_stairs, 1, 2), new FluidStack(IIContent.fluidSulfuricAcid, 100), 512, 150, false);
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("cut_copper_slab")), 1, 6),
+						new ItemStack(Item.REGISTRY.getObject(RES_DD.with("cut_copper_slab")), 1,2), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 120, false);
 
-				new BathingRecipe(new ItemStack(grate1, 1, 6),
-						new ItemStack(grate1, 1, 2), new FluidStack(IIContent.fluidSulfuricAcid, 100), 256, 120, false);
 
-				//TODO: 19.04.2026 KARVAR FIX
-//				new BathingRecipe(new ItemStack(chiseledcopper1, 1, 6),
-//						new ItemStack(chiseledcopper1, 1, 2), new FluidStack(IIContent.fluidSulfuricAcid, 100), 512, 160, false);
+				//more name-sensetive. Semi-sensetive.
 
-				new BathingRecipe(new ItemStack(door1, 1, 6),
-						new ItemStack(door1, 1, 2), new FluidStack(IIContent.fluidSulfuricAcid, 100), 256, 140, false);
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("waxed_copper_grate")), 1,6),
+						new ItemStack(Item.REGISTRY.getObject(RES_DD.with("copper_grate")), 1, 2), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 120, false);
 
-				new BathingRecipe(new ItemStack(chain, 1, 6),
-						new ItemStack(chain, 1, 2), new FluidStack(IIContent.fluidSulfuricAcid, 100), 256, 140, false);
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("waxed_copper_bulb")), 1,6),
+						new ItemStack(Item.REGISTRY.getObject(RES_DD.with("copper_bulb")), 1, 2), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 120, false);
 
-				new BathingRecipe(new ItemStack(bars, 1, 6),
-						new ItemStack(bars, 1, 2), new FluidStack(IIContent.fluidSulfuricAcid, 100), 256, 140, false);
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("waxed_copper_chain")), 1,6),
+						new ItemStack(Item.REGISTRY.getObject(RES_DD.with("copper_chain")), 1, 2), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 120, false);
 
-				new BathingRecipe(new ItemStack(chest, 1, 6),
-						new ItemStack(chest, 1, 2), new FluidStack(IIContent.fluidSulfuricAcid, 100), 256, 140, false);
+				//name-sensetive.
 
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("waxed_weathered_cut_copper_stairs")), 1),
+						new ItemStack(Item.REGISTRY.getObject(RES_DD.with("weathered_cut_copper_stairs")), 1), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 100, false);
+
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("waxed_weathered_copper_door")), 1),
+						new ItemStack(Item.REGISTRY.getObject(RES_DD.with("weathered_copper_door")), 1), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 100, false);
+
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("waxed_weathered_copper_trapdoor")), 1),
+						new ItemStack(Item.REGISTRY.getObject(RES_DD.with("weathered_copper_trapdoor")), 1), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 100, false);
+
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("waxed_weathered_lightning_rod")), 1),
+						new ItemStack(Item.REGISTRY.getObject(RES_DD.with("weathered_lightning_rod")), 1), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 100, false);
+
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("waxed_weathered_copper_bars")), 1),
+						new ItemStack(Item.REGISTRY.getObject(RES_DD.with("weathered_copper_bars")), 1), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 100, false);
 
 				//oxidized
 
-				new BathingRecipe(new ItemStack(bulb1, 1, 7),
-						new ItemStack(ddcopper1, 1, 3), new FluidStack(IIContent.fluidSulfuricAcid, 100), 512, 180, false);
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("copper_block")), 1, 7),
+						new ItemStack(Item.REGISTRY.getObject(RES_DD.with("copper_block")), 1, 3), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 120, false);
 
-				new BathingRecipe(new ItemStack(bulb1, 1, 7),
-						new ItemStack(bulb1, 1, 3), new FluidStack(IIContent.fluidSulfuricAcid, 100), 512, 200, false);
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("chiseled_copper")), 1, 7),
+						new ItemStack(Item.REGISTRY.getObject(RES_DD.with("chiseled_copper")), 1, 3), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 120, false);
 
-				new BathingRecipe(new ItemStack(trapdoor1, 1, 7),
-						new ItemStack(trapdoor1, 1, 2), new FluidStack(IIContent.fluidSulfuricAcid, 100), 256, 160, false);
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("copper_grate")), 1, 7),
+						new ItemStack(Item.REGISTRY.getObject(RES_DD.with("copper_grate")), 1,3), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 120, false);
 
-				new BathingRecipe(new ItemStack(rod1, 1, 7),
-						new ItemStack(rod1, 1, 3), new FluidStack(IIContent.fluidSulfuricAcid, 100), 256, 160, false);
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("cut_copper")), 1, 7),
+						new ItemStack(Item.REGISTRY.getObject(RES_DD.with("cut_copper")), 1,3), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 120, false);
 
-				new BathingRecipe(new ItemStack(cutcopperslab1, 1, 7),
-						new ItemStack(cutcopperslab1, 1, 3), new FluidStack(IIContent.fluidSulfuricAcid, 100), 512, 160, false);
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("copper_lantern")), 1, 7),
+						new ItemStack(Item.REGISTRY.getObject(RES_DD.with("copper_lantern")), 1,3), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 120, false);
 
-				new BathingRecipe(new ItemStack(cut_copper_stairs, 1, 7),
-						new ItemStack(cut_copper_stairs, 1, 3), new FluidStack(IIContent.fluidSulfuricAcid, 100), 512, 170, false);
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("cut_copper_slab")), 1, 7),
+						new ItemStack(Item.REGISTRY.getObject(RES_DD.with("cut_copper_slab")), 1,3), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 120, false);
 
-				new BathingRecipe(new ItemStack(grate1, 1, 7),
-						new ItemStack(grate1, 1, 3), new FluidStack(IIContent.fluidSulfuricAcid, 100), 256, 140, false);
 
-				new BathingRecipe(new ItemStack(chiseledcopper1, 1, 7),
-						new ItemStack(chiseledcopper1, 1, 3), new FluidStack(IIContent.fluidSulfuricAcid, 100), 512, 180, false);
+				//more name-sensetive. Semi-sensetive.
 
-				new BathingRecipe(new ItemStack(door1, 1, 7),
-						new ItemStack(door1, 1, 3), new FluidStack(IIContent.fluidSulfuricAcid, 100), 256, 160, false);
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("waxed_copper_grate")), 1,7),
+						new ItemStack(Item.REGISTRY.getObject(RES_DD.with("copper_grate")), 1, 3), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 120, false);
 
-				new BathingRecipe(new ItemStack(chain, 1, 7),
-						new ItemStack(chain, 1, 3), new FluidStack(IIContent.fluidSulfuricAcid, 100), 256, 160, false);
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("waxed_copper_bulb")), 1,7),
+						new ItemStack(Item.REGISTRY.getObject(RES_DD.with("copper_bulb")), 1, 3), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 120, false);
 
-				new BathingRecipe(new ItemStack(bars, 1, 7),
-						new ItemStack(bars, 1, 3), new FluidStack(IIContent.fluidSulfuricAcid, 100), 256, 160, false);
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("waxed_copper_chain")), 1,7),
+						new ItemStack(Item.REGISTRY.getObject(RES_DD.with("copper_chain")), 1, 3), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 120, false);
 
-				new BathingRecipe(new ItemStack(chest, 1, 7),
-						new ItemStack(chest, 1, 3), new FluidStack(IIContent.fluidSulfuricAcid, 100), 256, 160, false);*/
+				//name-sensetive.
+
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("waxed_oxidized_cut_copper_stairs")), 1),
+						new ItemStack(Item.REGISTRY.getObject(RES_DD.with("oxidized_cut_copper_stairs")), 1), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 100, false);
+
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("waxed_oxidized_copper_door")), 1),
+						new ItemStack(Item.REGISTRY.getObject(RES_DD.with("oxidized_copper_door")), 1), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 100, false);
+
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("waxed_oxidized_copper_trapdoor")), 1),
+						new ItemStack(Item.REGISTRY.getObject(RES_DD.with("oxidized_copper_trapdoor")), 1), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 100, false);
+
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("waxed_oxidized_lightning_rod")), 1),
+						new ItemStack(Item.REGISTRY.getObject(RES_DD.with("oxidized_lightning_rod")), 1), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 100, false);
+
+				new BathingRecipe(new ItemStack(Item.REGISTRY.getObject(RES_DD.with("waxed_oxidized_copper_bars")), 1),
+						new ItemStack(Item.REGISTRY.getObject(RES_DD.with("oxidized_copper_bars")), 1), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 100, false);
+
+				//==================
+				//Adding coating with sulfuric acid END
+				//==================
 
 				//08.04.2026 Carver:
 				//Precision assembler recipe for converting amethyst into silicon + recipe for crusher converting amethyst to sand
