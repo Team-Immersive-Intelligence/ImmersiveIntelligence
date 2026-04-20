@@ -19,6 +19,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.util.Text
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiUtils;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoSprite;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
@@ -294,7 +295,7 @@ public class DecoIngredientStackPickerPanel extends DecoPanel
 								.withSize(32, 32)
 								.withPadding(new int[]{0, 0, 0, 0})
 								.withIconSize(24)
-								.withBackgroundTexture(DecoTextures.BG_DARK)
+								.withBackgroundTexture(DecoSprite.atlasSprite(DecoTextures.BG_DARK, 32, true))
 								.withIconAlignment(DecoAlignment.CENTER)
 								.withOnPressed((gui, button, mouseX, mouseY) -> {
 									//Reset stack

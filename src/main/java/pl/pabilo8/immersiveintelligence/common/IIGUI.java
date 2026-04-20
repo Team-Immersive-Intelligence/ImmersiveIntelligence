@@ -134,8 +134,8 @@ public enum IIGUI implements ISerializableEnum
 	),
 	VULCANIZER(TileEntityVulcanizer.class, ContainerVulcanizer::new),
 
-	FLAGPOLE(TileEntityFlagpole.class, ContainerFlagpole::new),
-	FLAGPOLE_FACTION(TileEntityFlagpole.class, ContainerFlagpole::new),
+	FLAGPOLE(TileEntityFlagpole.class, ContainerFlagpole::getContainerForFlagpolePage),
+	FLAGPOLE_FACTION(TileEntityFlagpole.class, ContainerFlagpole::getContainerForFactionPage),
 	EMPLACEMENT_STORAGE(TileEntityEmplacement.class, ContainerEmplacement::getContainerForStoragePage),
 	EMPLACEMENT_CONFIG(TileEntityEmplacement.class, ContainerEmplacement::new),
 	EMPLACEMENT_TARGET_FILTERS(TileEntityEmplacement.class, ContainerEmplacement::new),

@@ -6,12 +6,12 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.util.ITooltipFlag.TooltipFlags;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoSprite;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
@@ -39,7 +39,8 @@ public class DecoItemStackDisplay extends DecoComponent<DecoItemStackDisplay>
 
 	private int displayTime = 30;
 	protected int[] padding = new int[]{2, 2, 2, 2};
-	private ResourceLocation backgroundTexture;
+	private DecoSprite backgroundSprite;
+
 	private Function<Float, Float> progressBarValue;
 	private IIColor barGradientColor1 = IIColor.fromPackedRGB(0xb51500), barGradientColor2 = IIColor.fromPackedRGB(0x600b00);
 	private DecoAlignment iconAlignment = DecoAlignment.CENTER;
@@ -78,9 +79,9 @@ public class DecoItemStackDisplay extends DecoComponent<DecoItemStackDisplay>
 		return this;
 	}
 
-	public DecoItemStackDisplay withBackgroundTexture(ResourceLocation backgroundTexture)
+	public DecoItemStackDisplay withBackgroundTexture(DecoSprite backgroundTexture)
 	{
-		this.backgroundTexture = backgroundTexture;
+		this.backgroundSprite = backgroundTexture;
 		return this;
 	}
 
@@ -151,13 +152,13 @@ public class DecoItemStackDisplay extends DecoComponent<DecoItemStackDisplay>
 	{
 		GlStateManager.pushMatrix();
 
-		if(backgroundTexture!=null)
+		if(backgroundSprite!=null)
 		{
 			bindAtlas();
 			IIDrawUtils draw = IIDrawUtils.startTexturedColored();
 			if(progressBarValue!=null)
-				draw.drawConnectedTexColorRect(x+width-padding[0]-padding[2], y-padding[1], 6, height, IIColor.WHITE, backgroundTexture, 32, 32, 2, 2);
-			draw.drawConnectedTexColorRect(x-padding[0], y-padding[1], width, height, IIColor.WHITE, backgroundTexture, 32, 32, 8, 8)
+				draw.drawTexColorRect(x+width-padding[0]-padding[2], y-padding[1], 6, height, IIColor.WHITE, backgroundSprite);
+			draw.drawTexColorRect(x-padding[0], y-padding[1], width, height, IIColor.WHITE, backgroundSprite)
 					.finish();
 		}
 		if(progressBarValue!=null)

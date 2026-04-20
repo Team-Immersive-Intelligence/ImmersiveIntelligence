@@ -68,6 +68,7 @@ public class OwnerIdentity
 		this(player.getName());
 		this.withMember(player, true);
 		this.color = IIColor.fromHSV(player.getRNG().nextFloat(), 0.35f, 0.85f);
+		this.banner = new ItemStack(Items.BANNER, 1, color.getDyeColor().getMetadata());
 	}
 
 	public OwnerIdentity(OwnerIdentity a, OwnerIdentity b)
