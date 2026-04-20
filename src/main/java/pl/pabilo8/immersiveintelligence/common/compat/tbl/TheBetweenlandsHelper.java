@@ -6,6 +6,7 @@ import blusunrize.immersiveengineering.api.crafting.FermenterRecipe;
 import blusunrize.immersiveengineering.api.crafting.MixerRecipe;
 import blusunrize.immersiveengineering.api.crafting.RefineryRecipe;
 import blusunrize.immersiveengineering.api.tool.ExcavatorHandler;
+import blusunrize.immersiveengineering.api.tool.ExcavatorHandler.MineralMix;
 import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.util.IEPotions;
 import net.minecraft.block.Block;
@@ -440,9 +441,60 @@ public class TheBetweenlandsHelper extends IICompatModule
 		FermenterRecipe.addRecipe(new FluidStack(IEContent.fluidEthanol, 80), ItemStack.EMPTY, h46_1, 3400);
 		FermenterRecipe.addRecipe(new FluidStack(IEContent.fluidEthanol, 90), ItemStack.EMPTY, swampreed, 3400);
 
-		//ExcavatorHandler.addMineral("Octine_Deposit", 15, .15f, new String[]{"oreOctine", "betweenstone"}, new float[]{.25f, .75f});
-		//mineralOctine_Deposit.dimensionWhitelist = new int[]{20};
-		//Todo: tbl-exclusive ore veins.
+		//TBL-exclusive mineral veins
+
+		Block betweenstone = Block.REGISTRY.getObject(TheBetweenlandsHelper.RES_TBL.with(  "betweenstone"));
+		OreDictionary.registerOre("betweenstone", new ItemStack(betweenstone));
+		Block limestone = Block.REGISTRY.getObject(TheBetweenlandsHelper.RES_TBL.with(  "limestone"));
+		OreDictionary.registerOre("limestone", new ItemStack(betweenstone));
+
+		Block peat = Block.REGISTRY.getObject(TheBetweenlandsHelper.RES_TBL.with(  "peat"));
+		OreDictionary.registerOre("peat", new ItemStack(peat));
+		Block swamp_dirt = Block.REGISTRY.getObject(TheBetweenlandsHelper.RES_TBL.with(  "swamp_dirt"));
+		OreDictionary.registerOre("swampdirt", new ItemStack(swamp_dirt));
+		Block mud = Block.REGISTRY.getObject(TheBetweenlandsHelper.RES_TBL.with(  "mud"));
+		OreDictionary.registerOre("mud", new ItemStack(mud));
+		Block compost_block = Block.REGISTRY.getObject(TheBetweenlandsHelper.RES_TBL.with(  "compost_block"));
+		OreDictionary.registerOre("compost", new ItemStack(compost_block));
+		Block tar_solid = Block.REGISTRY.getObject(TheBetweenlandsHelper.RES_TBL.with(  "tar_solid"));
+		OreDictionary.registerOre("tarsolid", new ItemStack(tar_solid));
+
+
+		MineralMix mineralSyrmorite = ExcavatorHandler.addMineral("Syrmorite Deposit", 15, .15f, new String[]{"oreSyrmorite", "betweenstone"}, new float[]{.85f, .15f});
+		mineralSyrmorite.dimensionWhitelist = new int[]{20};
+		MineralMix mineralOctine = ExcavatorHandler.addMineral("Octine Deposit", 15, .15f, new String[]{"oreOctine", "betweenstone"}, new float[]{.85f, .15f});
+		mineralOctine.dimensionWhitelist = new int[]{20};
+		MineralMix mineralSulfur = ExcavatorHandler.addMineral("Sulfur Deposit", 15, .15f, new String[]{"oreSulfur", "betweenstone"}, new float[]{.85f, .15f});
+		mineralSulfur.dimensionWhitelist = new int[]{20};
+		MineralMix mineralLimestone = ExcavatorHandler.addMineral("Limestone intrusion", 15, .15f, new String[]{"limestone", "betweenstone"}, new float[]{0.90f, .10f});
+		mineralLimestone.dimensionWhitelist = new int[]{20};
+
+		MineralMix mineralOrganicdeposit = ExcavatorHandler.addMineral("Organic deposit", 15, .15f, new String[]{"oreBone", "peat","swampdirt","mud","compost","tarsolid"}, new float[]{.10f,.40f,.10f,10f,10f,20f});
+		mineralOrganicdeposit.dimensionWhitelist = new int[]{20};
+
+		Block pitstone = Block.REGISTRY.getObject(TheBetweenlandsHelper.RES_TBL.with(  "pitstone"));
+		OreDictionary.registerOre("pitstone", new ItemStack(pitstone));
+
+		Block stalactite = Block.REGISTRY.getObject(TheBetweenlandsHelper.RES_TBL.with(  "stalactite"));
+		OreDictionary.registerOre("stalactite", new ItemStack(stalactite));
+		Block lifecrystalstalactite = Block.REGISTRY.getObject(TheBetweenlandsHelper.RES_TBL.with(  "life_crystal_stalactite"));
+		OreDictionary.registerOre("lifecrystalstalactite", new ItemStack(lifecrystalstalactite));
+
+		MineralMix mineralValonite= ExcavatorHandler.addMineral("Syrmorite Deposit", 15, .15f, new String[]{"oreValonite", "pitstone","oreOctine","betweenstone"}, new float[]{.30f, .50f, .10f,.10f});
+		mineralValonite.dimensionWhitelist = new int[]{20};
+
+		MineralMix mineralScabyst = ExcavatorHandler.addMineral("Scabyst Shale", 15, .15f, new String[]{"oreScabyst", "pitstone"}, new float[]{.80f, .20f});
+		mineralScabyst.dimensionWhitelist = new int[]{20};
+
+		MineralMix mineralLifecrystal = ExcavatorHandler.addMineral("Life Crystal Deep Cave", 15, .15f, new String[]{"oreLifeCrystal", "stalactite","lifecrystalstalactite","pitstone"}, new float[]{.20f, .40f,.10f,.30f});
+		mineralLifecrystal.dimensionWhitelist = new int[]{20};
+
+
+		Item tardrip = Item.REGISTRY.getObject(TheBetweenlandsHelper.RES_TBL.with( "items_misc"));
+		Item tar_solid2 = Item.REGISTRY.getObject(TheBetweenlandsHelper.RES_TBL.with(  "tar_solid"));
+		CrusherRecipe.addRecipe(new ItemStack(tardrip, 4,26),
+				new ItemStack(tar_solid2, 1), 100);
+
 	}
 
 	@Override
