@@ -1,9 +1,13 @@
 package pl.pabilo8.immersiveintelligence.common.compat.tbl;
 
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
+import blusunrize.immersiveengineering.common.util.Utils;
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -15,11 +19,13 @@ import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentEffectShape;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentRole;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIExplosion;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
 import javax.annotation.Nullable;
+import java.util.Set;
 
 public class AmmoComponentPyradFlame extends AmmoComponent
 
@@ -64,6 +70,17 @@ public class AmmoComponentPyradFlame extends AmmoComponent
 		for(EntityLivingBase e : entities)
 		{
 			e.setFire(120);
+		}
+
+		Set<BlockPos> blocks = IIUtils.getBlocksInOrb(world, new BlockPos(pos), 6*componentSize);
+		for(BlockPos firePos : blocks)
+		{
+			IBlockState placed = (Blocks.FIRE).getDefaultState();
+
+			if(world.isAirBlock(firePos)&&world.getBlockState(firePos.down()).isTopSolid())
+				world.setBlockState(firePos, placed);
+			if(Utils.isOreBlockAt(world, firePos, "wood")||Utils.isOreBlockAt(world, firePos, "logWood"))
+				world.setBlockState(firePos, placed);
 		}
 	}
 }

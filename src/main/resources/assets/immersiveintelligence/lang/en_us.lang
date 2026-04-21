@@ -3435,3 +3435,187 @@ ii.gui_tooltip.speed=Speed: %s
 ii.gui_tooltip.progress=Progress: %s %
 ii.gui_tooltip.fuel=Fuel: %s/%s mB
 ii.gui_tooltip.soil_fertility=Soil Fertility: %s %
+
+
+# End exansion compat
+ie.manual.entry.bullet_component.infused_crystal=Infused Crystal
+ie.manual.entry.bullet_component.infused_crystal.lore=Two in one
+ie.manual.entry.bullet_component.infused_crystal.desc=Combination of both Lustrian and Pure crystal, this component combines both into one.
+
+ie.manual.entry.bullet_component.lustrian_crystal=Lustrian Crystal
+ie.manual.entry.bullet_component.lustrian_crystal.lore=What's the deal with all the knights?
+ie.manual.entry.bullet_component.lustrian_crystal.desc=A red ominous crystal from ashen wastes of End. Unstable, and often used for some sort of machinery, using this as ammo component allows a more disruptive effect.
+
+ie.manual.entry.bullet_component.pure_crystal=Pure Crystal
+ie.manual.entry.bullet_component.pure_crystal.lore=Purple stuff
+ie.manual.entry.bullet_component.pure_crystal.desc=Seemingly pure and original crystal of the End. Allows for exotic gravity altercation effect.
+
+ie.manual.entry.bullet_component.pure_crystal=Vacous Crystal
+ie.manual.entry.bullet_component.pure_crystal.lore=Not Tiberium.
+ie.manual.entry.bullet_component.pure_crystal.desc=Pulsating with unknown energy and hated by local End creatures, this type of crystal, in a right circumstance, is a solid choice for irradiating munitions.
+
+ie.manual.entry.bullet_component.pure_crystal=Vacous Crystal
+ie.manual.entry.bullet_component.pure_crystal.lore=Not Tiberium.
+ie.manual.entry.bullet_component.pure_crystal.desc=Pulsating with unknown energy and hated by local End creatures, this type of crystal, in a right circumstance, is a solid choice for irradiating munitions.
+
+ie.manual.entry.bullet.component.core_cordium=Cordium
+ie.manual.entry.bullet.component.core_cordium.name=Cordium Core
+ie.manual.entry.bullet_component.core_cordium.lore=Amber?
+ie.manual.entry.bullet_component.core_cordium.desc=A material unique to the End islands. Heavy and hard, it is a worthy candidate for ammo production needs. Although it cannot replace Steel.
+
+# Scape and run parasites compat
+ie.manual.entry.bullet.component.core_vileshell=Vile Shell
+ie.manual.entry.bullet.component.core_vileshell.name=Vile Shell Core
+ie.manual.entry.bullet_component.core_vileshell.lore=Not quite biopunk yet
+ie.manual.entry.bullet_component.core_vileshell.desc=An extremely resistant shell made out of combined parasitic matter. However, its resilience roughly halves the effectiveness of any components it may house.
+
+ie.manual.entry.bullet.component.core_longarmsfrag=Longarms Armor Fragment
+ie.manual.entry.bullet.component.core_longarmsfrag.name=Longarms Armor Fragment Core
+ie.manual.entry.bullet_component.core_longarmsfrag.lore=In the grim future... there is only conflict.
+ie.manual.entry.bullet_component.core_longarmsfrag.desc=Light yet surprisingly resilient biological shell ripped off of adapted longarms. It is a good candidate if one ever finds oneself running out of conventional metals for the shells.
+
+ie.manual.entry.bullet.component.core_hivescrap=Hive Scrap
+ie.manual.entry.bullet.component.core_hivescrap.name=Hive Scrap Core
+ie.manual.entry.bullet_component.core_hivescrap.lore=But wait, it gets worse!
+ie.manual.entry.bullet_component.core_hivescrap.desc=A rare and hard-to-obtain piece of parasitic matter, this type of shell can only be ripped from Preeminents or obtained from the meteors. But its supreme properties make it a very valuable material of choice.
+
+ie.manual.entry.bullet.component.core_dispatcher=Dispatcher membrane
+ie.manual.entry.bullet.component.core_dispatcher.name=Dispatcher membrane Core
+ie.manual.entry.bullet_component.core_dispatcher.lore=Running low on ammo?
+ie.manual.entry.bullet_component.core_dispatcher.desc=Extensive shortages of ammo materials call for a more radical measures. Using the membranes of Dispatchers, it is possible to stitch together a bag of meat and thrun it into a component somewhat comparable to brass, but ultimately more fragile.
+
+ie.manual.entry.bullet.component.core_bolster=Bolster husk
+ie.manual.entry.bullet.component.core_bolster.name=Bolster husk Core
+ie.manual.entry.bullet_component.core_bolster.lore=Running low on ammo?
+ie.manual.entry.bullet_component.core_bolster.desc=Extensive shortages of ammo materials call for a more radical measures. Using the husks of Bolsters, it is possible to stitch together a bag of meat and turn it into a component somewhat comparable to brass, but ultimately more fragile.
+
+ie.manual.entry.bullet.component.core_beckon=Beckon membrane
+ie.manual.entry.bullet.component.core_beckon.name=Beckon membrane Core
+ie.manual.entry.bullet_component.core_beckon.lore=Running low on ammo?
+ie.manual.entry.bullet_component.core_beckon.desc=Extensive shortages of ammo materials call for a more radical measures. Using the Beckon membranes, it is possible to stitch together a bag of meat and turn it into a component somewhat comparable to brass, but ultimately more fragile.
+
+ie.manual.entry.bullet_component.summoner_core=Summoner Core
+ie.manual.entry.bullet_component.summoner_core.lore=Dirty bombs, but alive
+ie.manual.entry.bullet_component.summoner_core.desc=The core obtained from Summoner still glows with energy. With enough tinkering, it would be possible to force it to produce something. However, there is no doubt that something would not appreciate your company.
+
+ie.manual.entry.bullet_component.manducater_core=Manducater Core
+ie.manual.entry.bullet_component.manducater_core.lore=Infrared
+ie.manual.entry.bullet_component.manducater_core.desc=While it will not be possible to apply it to armor for cloaking purposes, it sure can disrupt any attempts at hiding in invisibility.
+
+ie.manual.entry.bullet_component.blade_fragmenter=Serrated Payload
+ie.manual.entry.bullet_component.blade_fragmenter.lore=Thousand cutted
+ie.manual.entry.bullet_component.blade_fragmenter.desc=In essence, it is merely a shell with a bunch of razor-sharp infectious blade fragments stuffed tight around the explosive charge. Too large to be utilized as shrapnel, and too small to be useable as an ammo core. Afflicts bleeding.
+
+ie.manual.entry.bullet_component.virulent_gas=Putrid mass
+ie.manual.entry.bullet_component.virulent_gas.lore=Biological warcrimes
+ie.manual.entry.bullet_component.virulent_gas.desc=A deceased sponge full of parasitic muck is not something that would get approved by any safety or sanity standards. But who is there to really stop you? May not be too effective against its original owners, however.
+
+ie.manual.entry.bullet_component.infestor_bomb=Infestor charge
+ie.manual.entry.bullet_component.infestor_bomb.lore=Grandfather would be proud
+ie.manual.entry.bullet_component.infestor_bomb.desc=A resourceful engineer never lets anything go to waste. Although sometimes they should. In either case, the vile contents of this shell material are nothing but weaponization of the very persistent threat. The contents are not, however, subject to your authority.
+
+# Thebetweenlands compat
+
+# Refersnce to the origin of the name, originating from one of the first tbl letsplayers who played tbl.
+ie.manual.entry.bullet.component.core_syrmorite=Syrmorite
+ie.manual.entry.bullet.component.core_syrmorite.name=Syrmorite Core
+ie.manual.entry.bullet_component.core_syrmorite.lore=Legacy of first explorers
+ie.manual.entry.bullet_component.core_syrmorite.desc=Syrmorite is the worthy replacement of standard overworld Iron for the common ammunition, as they seem to share the same properties.
+
+ie.manual.entry.bullet.component.core_octine=Octine
+ie.manual.entry.bullet.component.core_octine.name=Octine Core
+ie.manual.entry.bullet_component.core_octine.lore=Not just for moss
+ie.manual.entry.bullet_component.core_octine.desc=Ever-burning and hot material, its properties allow to ignite targets on impact. It is still not clear why it is constantly that hot, but it should be of no concern. [WIP, component does not set things on fire yet]
+
+ie.manual.entry.bullet.component.core_valonite=Valonite
+ie.manual.entry.bullet.component.core_valonite.name=Valonite Core
+ie.manual.entry.bullet_component.core_valonite.lore=Not quite the diamond
+ie.manual.entry.bullet_component.core_valonite.desc=Valonite shards, and subsequently valonite itself, are a good alternative to Steel ammo cores, albeit slightly worse in direct damage and slightly better for component effects.
+
+ie.manual.entry.bullet.component.core_ancient_remnant=Ancient Remnant
+ie.manual.entry.bullet.component.core_ancient_remnant.name=Ancient Remnant Core
+ie.manual.entry.bullet_component.core_ancient_remnant.lore=Does this belong in a museum?
+ie.manual.entry.bullet_component.core_ancient_remnant.desc=Remains of some ancient empire, it is not clear what they are made of or what there were part of. It should not matter though, as luckily they are slightly better than Tungsten, even if rather scarce.
+
+ie.manual.entry.bullet_component.undying_embers=Undying embers
+ie.manual.entry.bullet_component.undying_embers.lore=Magical napalm
+ie.manual.entry.bullet_component.undying_embers.desc=Despite the origin, these embers are a good alternative to typical incendiary compounds.
+
+ie.manual.entry.bullet_component.pyrad_flame=Pyrad Flame
+ie.manual.entry.bullet_component.pyrad_flame.lore=Magical napalm: tree version
+ie.manual.entry.bullet_component.pyrad_flame.desc=Fire of Pyrad is a handy substitute for incendiary components in case of a shortage.
+
+ie.manual.entry.bullet_component.cremains=Cremains
+ie.manual.entry.bullet_component.cremains.lore=Who needs Censer anyways?
+ie.manual.entry.bullet_component.cremains.desc=Liquified cremains that would burst into a burning cloud. Just like anything in that damp swamp, some things have no real answer.
+
+ie.manual.entry.bullet_component.life_crystal=Life Crystal
+ie.manual.entry.bullet_component.life_crystal.lore=The irony
+ie.manual.entry.bullet_component.life_crystal.desc=Life force concentrated into a singular crystal hides much more energy than it looks, only leaking some of it out during the intended use. However, when unleashed all at once, it turns into a pretty destructive weapon.
+
+ie.manual.entry.bullet_component.life_crystal_fragment=Life Crystal Fragment
+ie.manual.entry.bullet_component.life_crystal_fragment.lore=Half the irony
+ie.manual.entry.bullet_component.life_crystal_fragment.desc=Life force concentrated into a singular crystal fragment hides much more energy than it looks, only leaking some of it out during the intended use. However, when unleashed all at once, it turns into a pretty destructive weapon. Only partially as strong compared to the full crystal.
+
+ie.manual.entry.bullet_component.aqua_middlegem=Aqua Middlegem
+ie.manual.entry.bullet_component.aqua_middlegem.lore=rgB
+ie.manual.entry.bullet_component.aqua_middlegem.desc=Middlegems usually imbue equipment and certain entities with unique attributes. However, when applied to a shell, the aqua middlegem will shatter on impact and apply weakness to all nearby foes within the area of impact.
+
+ie.manual.entry.bullet_component.green_middlegem=Green Middlegem
+ie.manual.entry.bullet_component.green_middlegem.lore=rGb
+ie.manual.entry.bullet_component.green_middlegem.desc=Middlegems usually imbue equipment and certain entities with unique attributes. However, when applied to a shell, the green middlegem will shatter on impact and would stun all nearby foes within the area of impact.
+
+ie.manual.entry.bullet_component.crimson_middlegem=Crimson Middlegem
+ie.manual.entry.bullet_component.crimson_middlegem.lore=RGb
+ie.manual.entry.bullet_component.crimson_middlegem.desc=Middlegems usually imbue equipment and certain entities with unique attributes. However, when applied to a shell, the crimson middlegem will violently shatter on impact and light all nearby foes within the area of impact on fire, and deal additional damage.
+
+# Wyrms of Nyrus compat
+ie.manual.entry.bullet.component.core_wyrmshell=Wyrm Shell
+ie.manual.entry.bullet.component.core_wyrmshell.name=Wyrm shell Core
+ie.manual.entry.bullet_component.core_wyrmshell.lore=Shelling with shells
+ie.manual.entry.bullet_component.core_wyrmshell.desc=A core made out of Wyrm shell is somewhat comparable to steel.
+
+ie.manual.entry.bullet.component.core_hivesteel=Hivesteel
+ie.manual.entry.bullet.component.core_hivesteel.name=Hivesteel Core
+ie.manual.entry.bullet_component.core_hivesteel.lore=The steel of Hive
+ie.manual.entry.bullet_component.core_hivesteel.desc=Alien alloy of iron, lead and titanium, the Hivesteel is a very good component for ammunition, even if rather pricy.
+
+ie.manual.entry.bullet.component.core_creepedbone=Creeped Bone
+ie.manual.entry.bullet.component.core_creepedbone.name=Creeped Bone Core
+ie.manual.entry.bullet_component.core_creepedbone.lore=Bad to the bone
+ie.manual.entry.bullet_component.core_creepedbone.desc=When low on suitable components, Creeped Bone is surprisingly hard enough to substitute other low-grade cores.
+
+ie.manual.entry.bullet.component.core_borgiplate=Borgi plaing
+ie.manual.entry.bullet.component.core_borgiplate.name=Borgi plating Core
+ie.manual.entry.bullet_component.core_borgiplate.lore=Space was too, corrupted by capitalism
+ie.manual.entry.bullet_component.core_borgiplate.desc=Light and heat resistant alien alloy that is usually mounted on the hulls of spaceships. It is okay material for the ammunition.
+
+ie.manual.entry.bullet_component.wyrm_armor_frag=Wyrm armor frag
+ie.manual.entry.bullet_component.wyrm_armor_frag.lore=Multipurpose material
+ie.manual.entry.bullet_component.wyrm_armor_frag.desc=Exploiting the still-radioactive properties of the wyrm shells, it is possible to make use of them as dirty bombs. Do not expect the "guests" to be affected, however.
+
+ie.manual.entry.bullet_component.hivelight=Hivelight
+ie.manual.entry.bullet_component.hivelight.lore=If it glows, it is radioactive
+ie.manual.entry.bullet_component.hivelight.desc=A suitable material for radiation-laden ammunition. Even if the effects are rather miniscule. Do not expect the "guests" to be affected, however.
+
+ie.manual.entry.bullet_component.creepshard=Creepshard
+ie.manual.entry.bullet_component.creepshard.lore=Dead or alive, put it to use
+ie.manual.entry.bullet_component.creepshard.desc=Despite its questionable nature, it is a suitable material for radiation-laden ammunition. Even if the effects are rather miniscule. Do not expect the "guests" to be affected, however.
+
+ie.manual.entry.bullet_component.creeped_bulb=Creeped Bulb
+ie.manual.entry.bullet_component.creeped_bulb.lore=May need an HEV here
+ie.manual.entry.bullet_component.creeped_bulb.desc=A sizeable chunk of irradiated goop. Despite its origins, it can be used for making radiation-laden dirty munitions. Do not expect the "guests" to be affected, however.
+
+ie.manual.entry.bullet_component.corium=Corium
+ie.manual.entry.bullet_component.corium.lore=Reactor is NOT doing good
+ie.manual.entry.bullet_component.corium.desc=If that kind of material is already present around the factory, it makes no sense to restrain oneself with environmental impact concerns anymore. Potent source of radiation contamination.
+
+ie.manual.entry.bullet_component.nuclearcore=Nuclear Wyrm Core
+ie.manual.entry.bullet_component.nuclearcore.lore=[SPREAD THE DOOM]
+ie.manual.entry.bullet_component.nuclearcore.desc=The very reason why Wyrms explode when lit on fire. While it is stable and cannot go supercritical, the nuclear core is a very potent irradiator that does not pollute the area. However, when detonated in a shell, the power of the burst of gamma radiation makes this component extremely lethal to anything living.
+
+ie.manual.entry.bullet_component.infestor_bomb=Creep infestor shell
+ie.manual.entry.bullet_component.infestor_bomb.lore=On who's side are you, exactly?
+ie.manual.entry.bullet_component.infestor_bomb.desc=A concentrated mass of Creep sludge, with some additions, is a great tool for spreading Creep across the field. However, what consequence to using this is undetermined.
+
+

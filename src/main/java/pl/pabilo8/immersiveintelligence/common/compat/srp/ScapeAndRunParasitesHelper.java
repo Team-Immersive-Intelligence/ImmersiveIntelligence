@@ -43,6 +43,8 @@ public class ScapeAndRunParasitesHelper extends IICompatModule
 
 	public static AmmoComponent AmmoComponentSerratedPayload;
 
+	public static AmmoComponent AmmoComponentParasiticgas;
+
 	public static final ResLoc RES_SRP = ResLoc.of(ResLoc.root("srparasites"));
 
 	@Override
@@ -77,8 +79,7 @@ public class ScapeAndRunParasitesHelper extends IICompatModule
 		AmmoRegistry.registerComponent(AmmoComponentSummonerCore = new AmmoComponentSummonerCore());
 		AmmoRegistry.registerComponent(AmmoComponentInfester = new AmmoComponentInfester());
 		AmmoRegistry.registerComponent(AmmoComponentSerratedPayload = new AmmoComponentSerratedPayload());
-
-		//19.04.2026 TODO - infester shells improve with placing infected blocks.
+		AmmoRegistry.registerComponent(AmmoComponentParasiticgas = new AmmoComponentParasiticgas());
 
 //17.04.2026 TODO: hazmat protection, block placement template to make some shells spread infestation.
 // 	parasitecanister (meta 0, 2 - items for parasitic bombs, separate). 		//infestremain?

@@ -3,9 +3,11 @@ package pl.pabilo8.immersiveintelligence.common.compat.tbl;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.common.util.IEPotions;
 import blusunrize.immersiveengineering.common.util.Utils;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAreaEffectCloud;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -22,12 +24,14 @@ import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentRole;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.EntityWhitePhosphorus;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageParticleEffect;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 import javax.annotation.Nullable;
+import java.util.Set;
 
 /**
  * @author Carver (carver@iiteam.net)
@@ -141,6 +145,17 @@ public class AmmoComponentUndyingEmbers extends AmmoComponent
 			cloud.setDuration(Math.round(15f+(8f*Utils.RAND.nextFloat()))); // Burst effect lasts a bit shorter
 			cloud.setParticle(EnumParticleTypes.LAVA);
 			world.spawnEntity(cloud);
+
+			Set<BlockPos> blocks = IIUtils.getBlocksInOrb(world, new BlockPos(pos), 6*componentSize);
+			for(BlockPos firePos : blocks)
+			{
+				IBlockState placed = (Blocks.FIRE).getDefaultState();
+
+				if(world.isAirBlock(firePos)&&world.getBlockState(firePos.down()).isTopSolid())
+					world.setBlockState(firePos, placed);
+				if(Utils.isOreBlockAt(world, firePos, "wood")||Utils.isOreBlockAt(world, firePos, "logWood"))
+					world.setBlockState(firePos, placed);
+			}
 		}
 	}
 }

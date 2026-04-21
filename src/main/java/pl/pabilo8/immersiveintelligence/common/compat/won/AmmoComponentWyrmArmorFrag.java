@@ -49,7 +49,7 @@ public class AmmoComponentWyrmArmorFrag extends AmmoComponent
 {
 	public AmmoComponentWyrmArmorFrag()
 	{
-		super("wyrm armor frag", 1f, ComponentRole.SPECIAL, IIColor.fromPackedARGB(0xe77e28));
+		super("wyrm_armor_frag", 1f, ComponentRole.SPECIAL, IIColor.fromPackedARGB(0xe77e28));
 	}
 
 	@Override

@@ -398,7 +398,7 @@ public class IIContent
 	public static BlockIIFluid blockFluidAmmonia, blockFluidMethanol;
 	public static BlockIIFluid blockFluidBrine;
 	public static BlockIIFluid blockGasHydrogen, blockGasOxygen, blockGasChlorine, blockGasCO2, blockGasCO;
-	public static BlockIIFluid blockGasMustardGas;
+	public static BlockIIFluid blockGasMustardGas, blockGasTearGas, blockGasPhosgeneGas, blockGasHydrogenCyanideGas,blockGasTabunGas,blockGasSarinGas,blockGasSomanGas;
 	public static BlockIIFluid blockFluidLatex;
 	//fluids
 	public static Fluid fluidInkBlack, fluidInkCyan, fluidInkMagenta, fluidInkYellow;
@@ -406,7 +406,7 @@ public class IIContent
 	public static Fluid fluidAmmonia, fluidMethanol;
 	public static Fluid fluidBrine;
 	public static Fluid gasHydrogen, gasOxygen, gasChlorine, gasCO2, gasCO;
-	public static Fluid gasMustardGas;
+	public static Fluid gasMustardGas, gasTearGas, gasPhosgeneGas,gasHydrogenCyanideGas,gasTabunGas,gasSarinGas,gasSomanGas;
 	public static Fluid fluidLatex;
 	//biomes
 	public static BiomeWasteland biomeWasteland = new BiomeWasteland();
@@ -433,6 +433,13 @@ public class IIContent
 		IIContent.fluidLatex = makeFluid("latex", 4300, 3500);
 		IIContent.gasMustardGas = makeFluid("mustard_gas", 127, 340); //heavier than water
 
+		IIContent.gasTearGas = makeFluid("tear_gas", -500+100, 240);
+		IIContent.gasPhosgeneGas = makeFluid("phosgene_gas", -200+100, 120).setGaseous(true);
+		IIContent.gasHydrogenCyanideGas = makeFluid("hydrogen_cyanide_gas", -1500+100, 180).setGaseous(true);
+		IIContent.gasTabunGas = makeFluid("tabun_gas", 250, 140);
+		IIContent.gasSarinGas = makeFluid("sarin_gas", 320, 80).setGaseous(true);
+		IIContent.gasSomanGas = makeFluid("soman_gas", 300, 180).setGaseous(true);
+
 		IIContent.blockFluidInkBlack = new BlockIIFluid("ink", IIContent.fluidInkBlack, Material.WATER);
 		IIContent.blockFluidInkCyan = new BlockIIFluid("ink_cyan", IIContent.fluidInkCyan, Material.WATER);
 		IIContent.blockFluidInkMagenta = new BlockIIFluid("ink_magenta", IIContent.fluidInkMagenta, Material.WATER);
@@ -448,17 +455,65 @@ public class IIContent
 		IIContent.blockFluidAmmonia = new BlockIIFluid("ammonia", IIContent.fluidAmmonia, Material.WATER);
 		IIContent.blockFluidMethanol = new BlockIIFluid("methanol", IIContent.fluidMethanol, Material.WATER);
 
+
 		IIContent.blockGasHydrogen = new BlockIIFluid("hydrogen", IIContent.gasHydrogen, Material.WATER);
 		IIContent.blockGasOxygen = new BlockIIFluid("oxygen", IIContent.gasOxygen, Material.WATER)
 				.setPotionEffects(new PotionEffect(MobEffects.WATER_BREATHING, 20, 0));
-		IIContent.blockGasChlorine = new BlockIIFluid("chlorine", IIContent.gasChlorine, Material.WATER)
-				.setPotionEffects(new PotionEffect(MobEffects.BLINDNESS, 60, 1));
+		//IIContent.blockGasChlorine = new BlockIIFluid("chlorine", IIContent.gasChlorine, Material.WATER)
+		//		.setPotionEffects(new PotionEffect(MobEffects.BLINDNESS, 60, 1));
 		IIContent.blockGasCO2 = new BlockIIFluid("carbon_dioxide", IIContent.gasCO2, Material.WATER)
 				.setPotionEffects(new PotionEffect(MobEffects.BLINDNESS, 60, 0));
 		IIContent.blockGasCO = new BlockIIFluid("carbon_oxide", IIContent.gasCO, Material.WATER)
 				.setPotionEffects(new PotionEffect(MobEffects.BLINDNESS, 60, 0));
+		//IIContent.blockGasMustardGas = new BlockIIFluid("mustard_gas", IIContent.gasMustardGas, Material.WATER)
+		//		.setPotionEffects(new PotionEffect(MobEffects.POISON, 60, 0));
+
+
+
+		IIContent.blockGasChlorine = new BlockIIFluid("chlorine", IIContent.gasChlorine, Material.WATER)
+				.setPotionEffects(new PotionEffect(IIPotions.poisonirritant, 60, 0))
+				.setPotionEffects(new PotionEffect(IIPotions.suffocator, 60, 1));
+
+		//Mustard gas is more effective than Chlorine due to it being much bigger irritant despite lower lethality.
+		//* Hydrofluoric Acid, Salt Dust, Ethanol
 		IIContent.blockGasMustardGas = new BlockIIFluid("mustard_gas", IIContent.gasMustardGas, Material.WATER)
-				.setPotionEffects(new PotionEffect(MobEffects.POISON, 60, 0));
+				.setPotionEffects(new PotionEffect(IIPotions.poisonirritant, 60, 2));
+
+		//ethanol+chlorine
+		IIContent.blockGasTearGas = new BlockIIFluid("tear_gas", IIContent.gasTearGas, Material.WATER)
+				.setPotionEffects(new PotionEffect(IIPotions.poisonirritant, 40, 0));
+
+		//phosgene is colorless. It should have a delayed effect application.
+		//Carbon Monoxide, Chlorine Gas
+		IIContent.blockGasPhosgeneGas = new BlockIIFluid("phosgene_gas", IIContent.gasPhosgeneGas, Material.WATER)
+				.setPotionEffects(new PotionEffect(IIPotions.suffocatordelayed1, 60, 0))
+				.setPotionEffects(new PotionEffect(IIPotions.poisonirritant, 120, 0));
+
+		//Hydrogen, Carbon Monoxide, Ammonia
+		IIContent.blockGasHydrogenCyanideGas = new BlockIIFluid("hydrogen_cyanide_gas", IIContent.gasHydrogenCyanideGas, Material.WATER)
+				.setPotionEffects(new PotionEffect(IIPotions.suffocator, 80, 0))
+				.setPotionEffects(new PotionEffect(IIPotions.corrosion, 60, 0))
+				.setPotionEffects(new PotionEffect(IIPotions.poisonirritant, 120, 3))
+				.setPotionEffects(new PotionEffect(MobEffects.NAUSEA, 120, 0))
+				.setPotionEffects(new PotionEffect(MobEffects.MINING_FATIGUE, 480, 2));
+
+		//Phosphorus, Chlorine,Ammonia, Salt Dust
+		IIContent.blockGasTabunGas = new BlockIIFluid("tabun_gas", IIContent.gasTabunGas, Material.WATER)
+				.setPotionEffects(new PotionEffect(IIPotions.suffocator, 120, 0))
+				.setPotionEffects(new PotionEffect(IIPotions.neuroparalitic, 480, 0))
+				.setPotionEffects(new PotionEffect(MobEffects.HUNGER, 360, 4));
+
+		//sarin is twice as deadly than tabun, but is less persistent
+		//Hydrofluoric Acid, Ammonia, Phosphorus, Sulfur Dust
+		IIContent.blockGasSarinGas = new BlockIIFluid("sarin_gas", IIContent.gasSarinGas, Material.WATER)
+				.setPotionEffects(new PotionEffect(MobEffects.NAUSEA, 120, 0))
+				.setPotionEffects(new PotionEffect(IIPotions.neuroparalitic, 240, 2));
+
+		//Cheaper version of sarin that is much more toxic by 2-4 times. However much more unstable and technically spreads worse.
+		// Ethanol, Phosphorus ,Sulfuric Acid,Salt Dust
+		IIContent.blockGasSomanGas = new BlockIIFluid("soman_gas", IIContent.gasSomanGas, Material.WATER)
+				.setPotionEffects(new PotionEffect(MobEffects.NAUSEA, 120, 1))
+				.setPotionEffects(new PotionEffect(IIPotions.neuroparalitic, 120, 4));
 	}
 
 	//dummy method, called so that the static fields above get loaded
@@ -489,5 +544,8 @@ public class IIContent
 		IIContent.fluidMethanol = FluidRegistry.getFluid("methanol");
 		IIContent.fluidLatex = FluidRegistry.getFluid("latex");
 		IIContent.gasMustardGas = FluidRegistry.getFluid("mustard_gas");
+
+		IIContent.gasTearGas = FluidRegistry.getFluid("tear_gas");
+		IIContent.gasPhosgeneGas = FluidRegistry.getFluid("phosgene_gas");
 	}
 }

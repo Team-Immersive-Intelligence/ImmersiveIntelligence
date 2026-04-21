@@ -48,7 +48,7 @@ public class AmmoComponentCreepBulb extends AmmoComponent
 {
 	public AmmoComponentCreepBulb()
 	{
-		super("creeped bulb", 1f, ComponentRole.SPECIAL, IIColor.fromPackedARGB(0x860900));
+		super("creeped_bulb", 1f, ComponentRole.SPECIAL, IIColor.fromPackedARGB(0x860900));
 	}
 
 	@Override

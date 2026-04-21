@@ -35,6 +35,7 @@ public class WyrmsOfNyrusHelper extends IICompatModule
 	public static AmmoComponent AmmoComponentCorium;
 	public static AmmoComponent AmmoComponentHivelight;
 	public static AmmoComponent AmmoComponentCreepInfestor;
+	public static AmmoComponent AmmoComponentNuclearCore;
 	public static AmmoCore AmmoCoreCreepedBone;
 	public static AmmoCore AmmoCoreWyrmArmorFrag;
 	public static AmmoCore AmmoCoreHivesteel;
@@ -93,6 +94,8 @@ public class WyrmsOfNyrusHelper extends IICompatModule
 		AmmoRegistry.registerComponent(AmmoComponentCreepBulb = new AmmoComponentCreepBulb());
 		AmmoRegistry.registerComponent(AmmoComponentCorium = new AmmoComponentCorium());
 		AmmoRegistry.registerComponent(AmmoComponentHivelight = new AmmoComponentHivelight());
+		AmmoRegistry.registerComponent(AmmoComponentNuclearCore = new AmmoComponentNuclearCore());
+
 		AmmoRegistry.registerCore(AmmoCoreWyrmArmorFrag = new AmmoCoreWyrmArmorFrag());
 		AmmoRegistry.registerCore(AmmoCoreCreepedBone = new AmmoCoreCreepedBone());
 		AmmoRegistry.registerCore(AmmoCoreHivesteel = new AmmoCoreHivesteel());
