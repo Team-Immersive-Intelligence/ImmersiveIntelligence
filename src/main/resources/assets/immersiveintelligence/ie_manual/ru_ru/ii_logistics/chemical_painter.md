@@ -16,7 +16,7 @@
 Помимо окрашивания таких предметов, как шерсть или ковер, с помощью химического маляра можно наносить маркировку на снаряды, чтобы их было легче идентифицировать визуально.
 Большинство окрашенных предметов впоследствии можно обесцветить с помощью [химической ванны](chemical_bath), чтобы вернуть им первоначальный цвет.
 # interface
-Цвет задается через интерфейс или с помощью системы обработки данных. В интерфейсе есть 3 кнопки для переключения цветовой модели:
+Цвет задается через интерфейс или с помощью системы обработки данных. В интерфейсе есть 3 кнопки для переключения цветовой палитры:
 [R] - [RGB]  
 [C] - [CMYK]  
 [H] - [HSV]
@@ -24,8 +24,8 @@
 Если требуется управление данными, следующая страница содержит описания необходимых переменных.
 # data_output
 **Data input:**<br>
-|[data_variable]{type:"integer", direction:"in", letter:"p", name:"Paint Color", description:"A number representing the RGB paint color. In its hexadecimal form its digits should be in RRGGBB form, where R is red, G is green and B is blue"}|
-|[data_variable]{type:"string", direction:"in", letter:"p", name:"Paint Color", description:"A string hex code for the color without any additional leading or trailing characters"}|
+|[data_variable]{type:"integer", direction:"вход", letter:"p", name:"Цвет окрашевания", description:"Число, представляющее цвет краски RGB. В шестнадцатеричном виде его цифры должны быть в виде RRGGBB, где R - красный, G - зеленый и B - синий"}|
+|[data_variable]{type:"string", direction:"вход", letter:"p", name:"Цвет окрашевания", description:"Строковый шестнадцатеричный код цвета"}|
 # data_callback
 Callback Variables
 |[data_callback]{type:"integer", name:"get_energy", label:"Energy Stored", returns:"Stored energy amount (IF)"}|

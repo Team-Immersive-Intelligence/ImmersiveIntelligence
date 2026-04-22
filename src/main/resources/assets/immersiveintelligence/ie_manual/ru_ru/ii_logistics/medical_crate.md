@@ -1,14 +1,13 @@
 # meta
-Medical Crate
-Right, Archimedes!
+Медицинский ящик
+Клятва Гиппократа
 # intro
 |[crafting]{source:"medical"}|
-The Medical Crate is a device used for healing wounded entities. After being placed, it has to be filled with basic [Potions of Regeneration] to work.
+Медицинский ящик используеncz для лечения раненых существ. После установки его необходимо наполнить [зельями регенерации], чтобы оно заработало.
 # details_1
-Sneaking and right clicking will open or close the crate.
-When it's closed, its inventory can be accessed. When it's open, right click to receive the effects. Fill the second slot of the Medical Crate with Golden Apples to enable an
-**Iron Will** boost effect. This effect [increases mobility and focus] while firing weapons.
+Shift+ + ПКМ откроет или закроет ящик.
+Когда он закрыт, можно получить доступ к его инвентарю. Когда он открыт, щелкните ПКМ, чтобы получить эффекты. Заполните второе отделение медицинского ящика золотыми яблоками, чтобы активировать эффект железной воли. Этот эффект [увеличивает подвижность и концентрацию] при стрельбе из оружия.
 # details_2
-An inserter can be installed on top of the crate. Use the wrench on a closed crate and select the appropriate upgrade. After installation, the crate requires a MV or LV power wire connected directly to it. The installed syringe inserter will automatically heal and give boosts to surrounding entities.
+На верхней части ящика можно установить манипулятор. Используйте гаечный ключ на ящике и выберите соответствующую модификацию. После установки к ящику необходимо напрямую подключить электричество. Манипулятор автоматически заживит раны и придаст силы окружающим сущностям.
 
 

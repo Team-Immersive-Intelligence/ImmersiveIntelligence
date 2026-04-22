@@ -1,8 +1,8 @@
 # meta
-Engineers Crate
-Matryoshka
+Инженерный ящик
+Матрёшка
 # intro
 @hammer;level_advanced_industrial
-This section is currently a Work In Progress, please excuse our dust!
+Оно сломано и не работает, НЕ ЧИТАЙ ДАЛЬШЕ.
 # reinforced crates
 # variable_sized_crates

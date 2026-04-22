@@ -1,8 +1,8 @@
 # meta
-Improved Capacitor Backpack
-(Almost) Infinite Power
+Улучшенный конденсаторный рюкзак
+(почти) бесконечная энергия
 # powerpack_1
 |[crafting]{source:"improved_capacitor"}|
-Improved Capacitor Backpack is a direct upgrade to the [Capacitor Backpack](powerpack), with the main difference being more energy capacity and ability to be charged by [Tesla Coils](emplacement_weapons.md#tesla0) or by [standing inside uninsulated wiring.]
+Улучшенный конденсаторный рюкзак - это прямое обновление [конденсаторного рюкзака](powerpack), основное отличие которого заключается в большей емкости и возможности подзарядки от [катушек Tesla](emplacement_weapons.md#tesla0) или от [неизолированных проводов.]
 # powerpack_2
-Its wireless charging ability also makes the wearer [immune to electric damage] and removes the need of wearing the Faraday Suit. The Backpack's side sacks can be painted the same way as leather armor.
+Возможность беспроводной зарядки также делает владельца [неуязвимым для поражения электрическим током] и избавляет от необходимости носить костюм Фарадея. Боковые карманы рюкзака могут быть окрашены так же, как и кожаные доспехи.
