@@ -473,6 +473,7 @@ public class IIContent
 		//		.setPotionEffects(new PotionEffect(MobEffects.POISON, 60, 0));
 
 
+		//22.04.2026 Carver: gasworks.
 
 		IIContent.blockGasChlorine = new BlockIIFluid("chlorine", IIContent.gasChlorine, Material.WATER)
 				.setPotionEffects(new PotionEffect(IIPotions.poisonirritant, 60, 0))
@@ -519,7 +520,12 @@ public class IIContent
 				.setPotionEffects(new PotionEffect(MobEffects.NAUSEA, 120, 1))
 				.setPotionEffects(new PotionEffect(IIPotions.neuroparalitic, 120, 4));
 
-		IIContent.blockFluidHerbicide = new BlockIIFluid("herbicide", IIContent.fluidHerbicide, Material.WATER);
+		//23.04.2026 Carver: added herbicide as a start of biological weapons.
+		//Kills plants and foliage and farmland. Less effective than tear gas in tactical effeiciency despite its toxicity.
+		//copper and nitrate dust, ethanol (alt: ethanol, sulfur, copper).
+		IIContent.blockFluidHerbicide = new BlockIIFluid("herbicide", IIContent.fluidHerbicide, Material.WATER)
+				.setPotionEffects(new PotionEffect(MobEffects.HUNGER, 80, 4))
+				.setPotionEffects(new PotionEffect(MobEffects.NAUSEA, 40, 0));
 	}
 
 	//dummy method, called so that the static fields above get loaded
