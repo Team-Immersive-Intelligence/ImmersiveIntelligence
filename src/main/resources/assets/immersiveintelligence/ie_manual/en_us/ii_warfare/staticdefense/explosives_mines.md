@@ -41,7 +41,7 @@ Naval Mines are mines deployed in water, which prevent boats and water creatures
 Naval Mines carry a higher amount of components inside, meaning the explosion is greater than one of a landmine and deadly in most cases.
 # naval_mine1
 In order to deploy the **Naval Mine**, first set the chain length by sneaking and scrolling.
-Deploy the landmine on a water block; it will deploy an anchor cart with the mine attached to it with a chain.
+Deploy the navalmine on a water block; it will deploy an anchor cart with the mine attached to it with a chain.
 The cart will submerge, dragging the mine down with it. The mine will float above the ground equal to the chain length above the cart at the seafloor.
 # naval_mine2
 [Naval Mines take a few seconds to arm themselves], meaning you can safely deploy them *without* blowing yourself up.

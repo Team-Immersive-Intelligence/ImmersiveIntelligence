@@ -1,44 +1,43 @@
 # meta
 Взрывчатка и мины
-Ка-бум?
+-Бахнем? -Обязательно бахнем, но потом.
 # radio_satchel0
-When your operations require a stealthy, precise approach, [radio](radio_station.md)[-detonated satchel] charges are the right choice. Be it
-mining operations, demolition of buildings, or sabotage of train bridges, satchel charges are universal in their role and are beloved by both combat engineers and saboteurs.
+Когда ваши операции требуют скрытного и точного подхода, [радио](radio_station.md)[-детонирующие ранцевые] бомбы - это правильный выбор. 
+Будь то операции по добыче полезных ископаемых, сносу зданий или подрыву железнодорожных мостов, ранцевые бомбы универсальны по своей роли и пользуются популярностью как у саперов, так и у диверсантов.
 # radio_satchel1
-The primary way to detonate the explosive devices is by using a [radio signal](radio_station). To do that, the explosives must first be programmed with a data packet in a [DIM](data_input_machine).
+Основным способом приведения в действия взрывчатки является использование [радиосигнала](radio_station). Для этого взрывчатку необходимо сначала запрограммировать с помощью пакета данных в [МВД](data_input_machine).
 
-Explosives will only detonate when they receive a data packet [identical] to the programmed one through radio.
-Additionally, explosives can receive [data through cable] on the exact same conditions and work as a data relay.
+Взрывчатка сдетонируют только при получении по радио пакета данных, [идентичного] запрограммированному.
+Кроме того, взрывчатые вещества могут получать [данные по кабелю].
 # radio_satchel2
-Explosives can also be detonated using [redstone]. Similar to other [redstone connectors](redstoneWires), they can receive signal on one of the 16 channels. To change the channel sneak-use a hammer on a placed satchel.
+Взрывчатка также активируется [редстоунам]. Аналогично [редстоун коннекторам](redstoneWires), они могут принимать сигнал по одному из 16 каналов. Shift+ПКМ молотком для переключения каналов.
 # radio_satchel4
 |[crafting]{source:"crafting_radio_equipped_satchel"}|
-Unlike other explosive casings, the [radio-equipped satchel] needs to be crafted. Using leather, a [basic circuit](electronic_components.md#basic_general), and iron, the paragon of sabotage is born.
+В отличие от других мин, [сумку радиобомбы] необходимо изготовить самостоятельно. Используя кожу, [базовую схему](electronic_components.md#basic_general) и железо.
 # mines
-[Mines] are commonly used as a static defensive measure. Their main use cases are denying the enemy access to an area, slowing their advance, or (in case they aren't very bright), marking where their graves will be.
+[Мины] обычно используются в качестве статической оборонительной меры. Их основные варианты использования - блокировать доступ противника к местности, замедлять его продвижение или [в случае, если они не очень сообразительны] отмечать места, где будут их могилы.
 
-Keep in mind landmines do not differentiate between their targets. **It is very important to keep a track of your own
-minefields** and use plans instead of placing them randomly.
+Имейте в виду, что наземные мины не различают свои цели. **Очень важно отслеживать свои собственные минные поля** и использовать мозги, а не размещать их случайным образом.
 # landmine0
-**Landmines**<br>
-Classic, reliable and cheap to produce: this type of landmine is the most widely used one. The way it works is very straightforward:
-it explodes after an [enemy steps onto it], causing serious damage. However, dropped items and lightweight critters like chickens will not cause a detonation.
+**Наземные мины**<br>
+Классическая, надежная и дешевая в производстве: этот тип противопехотных мин является наиболее широко используемым. Принцип их действия очень прост:
+он взрывается после того, как [враг наступает на него], нанося серьезный урон. Однако брошенные предметы и легкие существа, такие как цыплята, не вызовут детонации.
 # landmine1
-A prominent feature of the landmine is the ability to dig it into any soft block, such as dirt, gravel, or clay on which it was placed.
+Отличительной особенностью противопехотной мины является ее возможность закопать в любой мягкий материал, такой как грязь, гравий или глина, на который она была установлена.
 
-In order to dig the landmine into the ground, use a [shovel] on it. Although any shovel would suffice, the [trench shovel](trench_shovel.md) does that job much faster.
-Additionally, you can place [grass] on top of the landmine to [fully conceal it].
+Чтобы закопать мину в землю, используйте для этого [лопату]. Хотя для этого подойдет любая лопата, [траншейная лопата] (trench_shovel.md) выполняет эту работу намного быстрее.
+Кроме того, вы можете поставить [траву] поверх мины, чтобы [полностью скрыть ее].
 # tripmine
-**Tripmine**<br>
-Sometimes called the [jumping landmine], the [Tripmine] is an explosive device, activated not by weight pressure, but by pulling the wire on the top.
-After being triggered, the mine will jump out of its casing and explode. In order to be set up, the mine requires linking with another mine or a [tripwire connector].
+**Мины-растяжки**<br>
+Иногда называемая [прыгающей миной], [противопехотная мина] представляет собой взрывное устройство, приводимое в действие не давлением веса, а натягиванием проволоки сверху.
+После срабатывания мина выскакивает из корпуса и взрывается. Для активации мины требуется подключение к другой мине или [крепежу мины-растяжки].
 # naval_mine0
-**Naval Mine**<br>
-Naval Mines are mines deployed in water, which prevent boats and water creatures from reaching an area, effectively killing them on contact.
-Naval Mines carry a higher amount of components inside, meaning the explosion is greater than one of a landmine and deadly in most cases.
+**Морские мины**<br>
+Морские мины - это мины, устанавливаемые в воде, которые не позволяют лодкам и водным существам добраться до района, эффективно уничтожая их при контакте.
+Морские мины содержат большее количество взрывчатки внутри, что означает, что мощность взрыва больше, чем у наземных мин, и в большинстве случаев смертельна.
 # naval_mine1
-In order to deploy the **Naval Mine**, first set the chain length by sneaking and scrolling.
-Deploy the landmine on a water block; it will deploy an anchor cart with the mine attached to it with a chain.
-The cart will submerge, dragging the mine down with it. The mine will float above the ground equal to the chain length above the cart at the seafloor.
+Чтобы правильно установить [Морскую мину], сначала расчитайте глубину дна и установите длину цепочки (Shift+Колёсико),
+Затем установите морскую мину на водной поверхности; это приведет к установке якорной тележки с миной.
+Тележка погрузится под воду, увлекая за собой мину. Мина будет плавать на уровне равной [длине цепи + глубина дна]. Наиболее эффективно когда мина погружена лишь чуть ниже уровня моря.
 # naval_mine2
-[Naval Mines take a few seconds to arm themselves], meaning you can safely deploy them *without* blowing yourself up.
+[На активацию морских мин уходит несколько секунд], что означает, что вы можете безопасно установить их, не подорвав себя.

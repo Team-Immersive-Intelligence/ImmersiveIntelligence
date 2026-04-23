@@ -3,9 +3,9 @@
 Никакого желтого цвета!
 # intro
 |[item_display]{source:"inserters_full"}|
-<br>The Precision Insertion Device, also known as the "Inserter," is a device used to transfer items from one inventory to another. Item Inserters consists of an arm and motors for rotation and handling the item pickup. Fluid Inserters use pipes and automatic valves. Inserters are able to take and output from and to any horizontal side desired.
+"Манипулятор,"  это устройство, используемое для перемещения предметов из одного инвентаря в другой. Он состоят из рычага и двигателей для вращения и перемещения устройства для сбора предметов. Для ввода жидкостей используются трубы и клапаны. Манипуляторы могут брать и ложить в любое заданное горизонтальное направление.
 # intro_2
-The Inserter's sides can be configured with a [hammer](introduction#introductionHammer). Right click to set an input. The device will turn to face that направление. Sneak to set an output. The output can be any of the non-input sides.<br>
+Манипулятор настраевается [молотком](introduction#introductionHammer). ПКМ для входа и  Shiht+ПКМ для выхода.<br>
 Для работы манипуляторы требуется электричество и [данные](data_main.md), указывающие им, что делать.
 # basic_inserter
 |[crafting]{source:"inserter_basic"}|

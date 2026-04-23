@@ -12,7 +12,7 @@ Ctrl + колёсико мыши для переключения режимов 
 
 [Прицел](weapon_upgrades.md#7)
 [Инфракрасный прицел](weapon_upgrades.md#8)
-[Винтовочный гранатомёт](weapon_upgrades.md#15)
+[Ствольный гранатомёт](weapon_upgrades.md#15)
 [Стереоскопический дальномер](weapon_upgrades.md#16)
 [Гироскопический стабилизатор](weapon_upgrades.md#17)
 [Электрический привод](weapon_upgrades.md#18)

@@ -31,7 +31,7 @@ Callback Variables
 |[data_callback]{type:"integer", name:"get_energy", label:"Energy Stored", returns:"Stored energy amount (IF)"}|
 |[data_callback]{type:"integer", name:"get_progress", label:"Production Progress", returns:"Progress value 0:1"}|
 |[data_callback]{type:"integer", name:"get_color", label:"Color", returns:"Currently used color as a RGB integer"}|
-|[data_callback]{type:"integer", name:"get_ink", label:"Ink Level", returns:"Black ink amount (mB)"}|
-|[data_callback]{type:"integer", name:"get_ink_cyan", label:"Cyan Ink Level", returns:"Cyan ink amount (mB)"}|
-|[data_callback]{type:"integer", name:"get_ink_yellow", label:"Yellow Ink Level", returns:"Yellow ink amount (mB)"}|
-|[data_callback]{type:"integer", name:"get_ink_magenta", label:"Magenta Ink Level", returns:"Magenta ink amount (mB)"}|
+|[data_callback]{type:"integer", name:"get_ink", label:"Ink Level", returns:"Кол-во чёрных чернил (mB)"}|
+|[data_callback]{type:"integer", name:"get_ink_cyan", label:"Cyan Ink Level", returns:"Кол-во бирюзовых чернил (mB)"}|
+|[data_callback]{type:"integer", name:"get_ink_yellow", label:"Yellow Ink Level", returns:"Кол-во жёлтых чернил (mB)"}|
+|[data_callback]{type:"integer", name:"get_ink_magenta", label:"Magenta Ink Level", returns:"Кол-во пурпурных чернил (mB)"}|

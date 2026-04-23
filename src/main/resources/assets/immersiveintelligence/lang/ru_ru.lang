@@ -242,7 +242,7 @@ item.immersiveintelligence.weapon_upgrade.folding_stock.name=Складной п
 item.immersiveintelligence.weapon_upgrade.heavy_springbox.name=Тяжелая пружинная коробка
 
 item.immersiveintelligence.weapon_upgrade.radio_marker.name=Радиомаркер
-item.immersiveintelligence.weapon_upgrade.rifle_grenade_launcher.name=Винтовочный гранатомёт
+item.immersiveintelligence.weapon_upgrade.rifle_grenade_launcher.name=Ствольный гранатомёт
 item.immersiveintelligence.weapon_upgrade.stereoscopic_rangefinder.name=Стереоскопический дальномер
 item.immersiveintelligence.weapon_upgrade.gyroscopic_stabilizer.name=Гироскопический стабилизатор
 item.immersiveintelligence.weapon_upgrade.electric_firing_motor.name=Электрический привод
@@ -265,7 +265,7 @@ item.immersiveintelligence.armor_upgrade.infrared_absorbing_mesh.name=Сетка
 item.immersiveintelligence.armor_upgrade.scuba_tank.name=Акваланг
 item.immersiveintelligence.armor_upgrade.helipack.name=Вертолетный ранец
 item.immersiveintelligence.armor_upgrade.exoskeleton.name=Экзоскелет
-item.immersiveintelligence.armor_upgrade.boot_reinforcement.name=Укрепление ботинок
+item.immersiveintelligence.armor_upgrade.boot_reinforcement.name=Укреплёные ботинки
 item.immersiveintelligence.armor_upgrade.snow_rackets.name=Снегоступы
 item.immersiveintelligence.armor_upgrade.flippers.name=Ласты
 item.immersiveintelligence.armor_upgrade.internal_springs.name=Внутренние пружины
