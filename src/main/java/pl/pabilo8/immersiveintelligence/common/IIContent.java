@@ -400,6 +400,7 @@ public class IIContent
 	public static BlockIIFluid blockGasHydrogen, blockGasOxygen, blockGasChlorine, blockGasCO2, blockGasCO;
 	public static BlockIIFluid blockGasMustardGas, blockGasTearGas, blockGasPhosgeneGas, blockGasHydrogenCyanideGas,blockGasTabunGas,blockGasSarinGas,blockGasSomanGas;
 	public static BlockIIFluid blockFluidLatex;
+	public static BlockIIFluid blockFluidHerbicide;
 	//fluids
 	public static Fluid fluidInkBlack, fluidInkCyan, fluidInkMagenta, fluidInkYellow;
 	public static Fluid fluidEtchingAcid, fluidSulfuricAcid, fluidHydrofluoricAcid, fluidNitricAcid, fluidFormicAcid;
@@ -408,6 +409,7 @@ public class IIContent
 	public static Fluid gasHydrogen, gasOxygen, gasChlorine, gasCO2, gasCO;
 	public static Fluid gasMustardGas, gasTearGas, gasPhosgeneGas,gasHydrogenCyanideGas,gasTabunGas,gasSarinGas,gasSomanGas;
 	public static Fluid fluidLatex;
+	public static Fluid fluidHerbicide;
 	//biomes
 	public static BiomeWasteland biomeWasteland = new BiomeWasteland();
 
@@ -439,6 +441,8 @@ public class IIContent
 		IIContent.gasTabunGas = makeFluid("tabun_gas", 250, 140);
 		IIContent.gasSarinGas = makeFluid("sarin_gas", 320, 80).setGaseous(true);
 		IIContent.gasSomanGas = makeFluid("soman_gas", 300, 180).setGaseous(true);
+
+		IIContent.fluidHerbicide = makeFluid("herbicide", 1030, 1002);
 
 		IIContent.blockFluidInkBlack = new BlockIIFluid("ink", IIContent.fluidInkBlack, Material.WATER);
 		IIContent.blockFluidInkCyan = new BlockIIFluid("ink_cyan", IIContent.fluidInkCyan, Material.WATER);
@@ -514,6 +518,8 @@ public class IIContent
 		IIContent.blockGasSomanGas = new BlockIIFluid("soman_gas", IIContent.gasSomanGas, Material.WATER)
 				.setPotionEffects(new PotionEffect(MobEffects.NAUSEA, 120, 1))
 				.setPotionEffects(new PotionEffect(IIPotions.neuroparalitic, 120, 4));
+
+		IIContent.blockFluidHerbicide = new BlockIIFluid("herbicide", IIContent.fluidHerbicide, Material.WATER);
 	}
 
 	//dummy method, called so that the static fields above get loaded
@@ -547,5 +553,11 @@ public class IIContent
 
 		IIContent.gasTearGas = FluidRegistry.getFluid("tear_gas");
 		IIContent.gasPhosgeneGas = FluidRegistry.getFluid("phosgene_gas");
+		IIContent.gasHydrogenCyanideGas = FluidRegistry.getFluid("hydrogen_cyanide_gas");
+		IIContent.gasTabunGas = FluidRegistry.getFluid("tabun_gas");
+		IIContent.gasSarinGas = FluidRegistry.getFluid("sarin_gas");
+		IIContent.gasSomanGas = FluidRegistry.getFluid("soman_gas");
+
+		IIContent.fluidHerbicide = FluidRegistry.getFluid("herbicide");
 	}
 }
