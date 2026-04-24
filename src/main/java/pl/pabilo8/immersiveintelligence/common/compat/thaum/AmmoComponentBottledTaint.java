@@ -23,8 +23,6 @@ import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 import java.util.Set;
 
-//import thaumcraft.api.aura.AuraHelper;
-
 /**
  * @author Carver (carver@iiteam.net)
  * @updated 11.04.2026

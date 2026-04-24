@@ -23,6 +23,10 @@ import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 import java.util.Set;
 
+/**
+ * @author Carver (carver@iiteam.net)
+ * @since 11.04.2026
+ */
 public class AmmoComponentNetherFire extends AmmoComponent
 {
 	public AmmoComponentNetherFire()

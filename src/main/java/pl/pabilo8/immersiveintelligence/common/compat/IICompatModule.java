@@ -1,6 +1,9 @@
 package pl.pabilo8.immersiveintelligence.common.compat;
 
 import blusunrize.immersiveengineering.common.util.Utils;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -164,5 +167,23 @@ public abstract class IICompatModule
 	@SideOnly(Side.CLIENT)
 	public void clientPostInit()
 	{
+	}
+
+	//--- Utils ---//
+
+	protected ItemStack getModItem(ResourceLocation id, int amount, int metaData)
+	{
+		Item item = Item.REGISTRY.getObject(id);
+		return item==null?ItemStack.EMPTY: new ItemStack(item, amount, metaData);
+	}
+
+	protected ItemStack getModItem(ResourceLocation id, int amount)
+	{
+		return getModItem(id, amount, 0);
+	}
+
+	protected ItemStack getModItem(ResourceLocation id)
+	{
+		return getModItem(id, 1, 0);
 	}
 }

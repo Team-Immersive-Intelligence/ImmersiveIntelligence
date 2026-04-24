@@ -36,7 +36,6 @@ public class AmmoComponentWindCharge extends AmmoComponent
 	}
 
 	@Override
-
 	public IngredientStack getMaterial()
 	{
 		Item windcharge1 = Item.REGISTRY.getObject(new ResourceLocation("deeperdepths", "wind_charge"));
@@ -44,8 +43,6 @@ public class AmmoComponentWindCharge extends AmmoComponent
 	}
 
 	@Override
-	//10.04.2026 Carver: properly implemented the desired effects for the ammo component
-
 	public void onEffect(World world, Vec3d pos, Vec3d dir, ComponentEffectShape shape, NBTTagCompound tag, float size, float multiplier, Entity owner)
 	{
 		IIAmmoUtils.suppress(world, pos.x, pos.y, pos.z, 6f, (int)(255*multiplier));
