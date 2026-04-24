@@ -1,6 +1,9 @@
 package pl.pabilo8.immersiveintelligence.common.compat;
 
 import blusunrize.immersiveengineering.common.util.Utils;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -8,7 +11,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
+import pl.pabilo8.immersiveintelligence.common.compat.dd.DeeperDepthsHelper;
 import pl.pabilo8.immersiveintelligence.common.compat.it.ImmersiveTechnologyHelper;
+import pl.pabilo8.immersiveintelligence.common.compat.nb.NetherBackportHelper;
+import pl.pabilo8.immersiveintelligence.common.compat.thaum.ThaumcraftHelper;
+import pl.pabilo8.immersiveintelligence.common.compat.thaumaugment.ThaumicAugmentationHelper;
 
 import java.io.File;
 import java.util.HashMap;
@@ -48,6 +55,10 @@ public abstract class IICompatModule
 		moduleClasses.put("mysticalmechanics", MysticalMechanicsAPIHelper.class);
 		moduleClasses.put("tfc", TerrafirmaHelper.class);
 		moduleClasses.put("betterwithmods", BetterWithModsHelper.class);
+		moduleClasses.put("deeperdepths", DeeperDepthsHelper.class);
+		moduleClasses.put("nb", NetherBackportHelper.class);
+		moduleClasses.put("thaumcraft", ThaumcraftHelper.class);
+		moduleClasses.put("thaumicaugmentation", ThaumicAugmentationHelper.class);
 		moduleClasses.put("cfb", CratesFeltBlueHelper.class);
 		moduleClasses.put("fluidlogged_api", FluidloggedAPIHelper.class);
 	}
@@ -162,5 +173,23 @@ public abstract class IICompatModule
 	@SideOnly(Side.CLIENT)
 	public void clientPostInit()
 	{
+	}
+
+	//--- Utils ---//
+
+	protected ItemStack getModItem(ResourceLocation id, int amount, int metaData)
+	{
+		Item item = Item.REGISTRY.getObject(id);
+		return item==null?ItemStack.EMPTY: new ItemStack(item, amount, metaData);
+	}
+
+	protected ItemStack getModItem(ResourceLocation id, int amount)
+	{
+		return getModItem(id, amount, 0);
+	}
+
+	protected ItemStack getModItem(ResourceLocation id)
+	{
+		return getModItem(id, 1, 0);
 	}
 }

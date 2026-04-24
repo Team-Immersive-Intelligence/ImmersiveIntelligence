@@ -9,6 +9,7 @@ import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Conn
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
 import blusunrize.immersiveengineering.common.util.Utils;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementManager;
 import net.minecraft.advancements.PlayerAdvancements;
@@ -51,6 +52,7 @@ import javax.annotation.Nullable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -486,6 +488,41 @@ public class IIUtils
 		if(te==null||!te.hasCapability(capability, facing))
 			return null;
 		return te.getCapability(capability, facing);
+	}
+
+	/**
+	 * @return blocks in an orb of a given radius
+	 */
+	public static Set<BlockPos> getBlocksInOrb(World world, BlockPos centerPos, float radius)
+	{
+		ArrayList<BlockPos> set = new ArrayList<>();
+		float diameter = radius*radius;
+
+		//Iterate in a cube
+		for(float x = -radius; x < radius; x++)
+			for(float y = -radius; y < radius; y++)
+				for(float z = -radius; z < radius; z++)
+				{
+					BlockPos pos = centerPos.add(x, y, z);
+					//Check if distance is in radius
+					if(pos.distanceSq(centerPos) <= diameter)
+						set.add(pos);
+				}
+
+		return Sets.newHashSet(set);
+	}
+
+	public static Set<BlockPos> getBlocksInCube(World world, BlockPos centerPos, float radius)
+	{
+		ArrayList<BlockPos> set = new ArrayList<>();
+
+		//Iterate in a cube
+		for(float x = -radius; x < radius; x++)
+			for(float y = -radius; y < radius; y++)
+				for(float z = -radius; z < radius; z++)
+					set.add(centerPos.add(x, y, z));
+
+		return Sets.newHashSet(set);
 	}
 
 }

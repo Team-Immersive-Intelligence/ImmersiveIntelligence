@@ -27,6 +27,7 @@ import net.minecraft.block.BlockTNT;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -306,6 +307,9 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 				} catch(IllegalAccessException ignored) {}
 			}
 		}
+
+		OreDictionary.registerOre("sandRed", new ItemStack(Blocks.SAND, 1, 1));
+		OreDictionary.registerOre("sandstoneRed", Blocks.RED_SANDSTONE);
 	}
 
 	@SubscribeEvent
@@ -324,6 +328,20 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		ExcavatorHandler.addMineral("Ferberite", 10, .2f, new String[]{"oreTungsten", "oreIron", "oreTin"}, new float[]{.2f, .4f, .3f});
 		ExcavatorHandler.addMineral("Smithsonite", 10, .15f, new String[]{"oreZinc"}, new float[]{1.0f});
 		ExcavatorHandler.addMineral("Halite", 15, .10f, new String[]{"oreSalt"}, new float[]{1.0f});
+		ExcavatorHandler.addMineral("Hardened Claypan", 15, .15f, new String[]{"terracotta", "sandstoneRed", "sandRed"}, new float[]{.6f, .3f, .1f});
+		ExcavatorHandler.addMineral("Banded Iron", 15, .15f, new String[]{"oreIron", "cobblestone"}, new float[]{.8f, .2f});
+		ExcavatorHandler.addMineral("Lazulitic Intrusion", 15, .15f, new String[]{"oreLapis", "oreGold", "dustSulfur"}, new float[]{.75f, .15f, .1f});
+		ExcavatorHandler.addMineral("Alluvial Sift", 15, .15f, new String[]{"clay", "sand", "gemDiamond"}, new float[]{.4f, .4f, .2f});
+		ExcavatorHandler.addMineral("Auricupride", 15, .15f, new String[]{"oreCopper", "oreGold"}, new float[]{.7f, .3f});
+		ExcavatorHandler.addMineral("Beryl", 15, .15f, new String[]{"blockPrismarine", "oreEmerald"}, new float[]{.7f, .3f});
+		ExcavatorHandler.addMineral("Bituminous coal", 15, .15f, new String[]{"oreCoal", "dustSulfur"}, new float[]{.8f, .2f});
+		ExcavatorHandler.addMineral("Chalcopyrite", 15, .15f, new String[]{"oreIron", "oreCopper", "dustSulfur"}, new float[]{.5f, .45f, .05f});
+		ExcavatorHandler.addMineral("Ingenious rock", 15, .15f, new String[]{"stoneGranite", "stoneDiorite", "stoneAndesite", "obsidian"}, new float[]{.3f, .3f, .3f, .1f});
+		ExcavatorHandler.addMineral("Laterite", 15, .15f, new String[]{"oreAluminum", "oreIron", "oreNickel"}, new float[]{.6f, .45f, .05f});
+		ExcavatorHandler.addMineral("Petlandite", 15, .15f, new String[]{"oreNickel", "oreIron", "dustSulfur"}, new float[]{.65f, .25f, .1f});
+		ExcavatorHandler.addMineral("Rich Auricupride", 15, .15f, new String[]{"oreGold", "oreCopper"}, new float[]{.6f, .4f});
+		ExcavatorHandler.addMineral("Emerald Geode", 15, .15f, new String[]{"terracotta", "sand", "gemEmerald"}, new float[]{.4f, .4f, .2f});
+		ExcavatorHandler.addMineral("Uranite", 15, .15f, new String[]{"oreUranium", "oreLead"}, new float[]{.4f, .6f});
 
 		LighterFuelHandler.addFuel(FluidRegistry.getFluid("creosote"), 100);
 		LighterFuelHandler.addFuel(FluidRegistry.getFluid("ethanol"), 20);
