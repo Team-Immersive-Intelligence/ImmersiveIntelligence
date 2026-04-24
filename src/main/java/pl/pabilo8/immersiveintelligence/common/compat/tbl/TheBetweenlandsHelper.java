@@ -11,10 +11,14 @@ import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.util.IEPotions;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.living.PotionEvent.PotionApplicableEvent;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -32,6 +36,7 @@ import pl.pabilo8.immersiveintelligence.common.compat.srp.ScapeAndRunParasitesHe
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIFluid;
+import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradeableArmor;
 
 import static pl.pabilo8.immersiveintelligence.api.ShrapnelHandler.addShrapnel;
 
@@ -129,42 +134,23 @@ public class TheBetweenlandsHelper extends IICompatModule
 		OreDictionary.registerOre("life_crystal", new ItemStack(life_crystal));
 		OreDictionary.registerOre("life_crystal_fragment", new ItemStack(life_crystal_fragment));
 
+		AmmoRegistry.registerCore(AmmoCoreSyrmorite = new AmmoCoreSyrmorite());
+		AmmoRegistry.registerCore(AmmoCoreValonite = new AmmoCoreValonite());
+		AmmoRegistry.registerCore(AmmoCoreOctine = new AmmoCoreOctine());
+		AmmoRegistry.registerCore(AmmoCoreAncientRemnant = new AmmoCoreOctine());
 
-		AmmoCore AmmoCoreSyrmorite = new AmmoCoreSyrmorite();
-		AmmoCore AmmoCoreValonite = new AmmoCoreValonite();
-		AmmoCore AmmoCoreOctine = new AmmoCoreOctine();
-		AmmoCore AmmoCoreAncientRemnant = new AmmoCoreOctine();
+		AmmoRegistry.registerComponent(AmmoComponentCremains = new AmmoComponentCremains());
+		AmmoRegistry.registerComponent(AmmoComponentUndyingEmbers = new AmmoComponentUndyingEmbers());
+		AmmoRegistry.registerComponent(AmmoComponentPyradFlame = new AmmoComponentPyradFlame());
 
-		AmmoComponent AmmoComponentCremains = new AmmoComponentCremains();
-		AmmoComponent AmmoComponentUndyingEmbers = new AmmoComponentUndyingEmbers();
-		AmmoComponent AmmoComponentPyradFlame = new AmmoComponentPyradFlame();
+		AmmoRegistry.registerComponent(AmmoComponentBMiddleGem = new AmmoComponentBMiddleGem());
+		AmmoRegistry.registerComponent(AmmoComponentRMiddleGem = new AmmoComponentBMiddleGem());
+		AmmoRegistry.registerComponent(AmmoComponentGMiddleGem = new AmmoComponentBMiddleGem());
 
-		AmmoComponent AmmoComponentBMiddleGem = new AmmoComponentBMiddleGem();
-		AmmoComponent AmmoComponentRMiddleGem = new AmmoComponentBMiddleGem();
-		AmmoComponent AmmoComponentGMiddleGem = new AmmoComponentBMiddleGem();
+		AmmoRegistry.registerComponent(AmmoComponentLifeCrystal = new AmmoComponentLifeCrystal());
+		AmmoRegistry.registerComponent(AmmoComponentLifeCrystalFragment = new AmmoComponentLifeCrystalFragment());
 
-		AmmoComponent AmmoComponentLifeCrystal = new AmmoComponentLifeCrystal();
-		AmmoComponent AmmoComponentLifeCrystalFragment = new AmmoComponentLifeCrystalFragment();
-
-		AmmoPropellant AmmoPropellantTBLSulfur = new AmmoPropellantTBLSulfur();
-
-		AmmoRegistry.registerCore(TheBetweenlandsHelper.AmmoCoreSyrmorite);
-		AmmoRegistry.registerCore(TheBetweenlandsHelper.AmmoCoreValonite);
-		AmmoRegistry.registerCore(TheBetweenlandsHelper.AmmoCoreOctine);
-		AmmoRegistry.registerCore(TheBetweenlandsHelper.AmmoCoreAncientRemnant);
-
-		AmmoRegistry.registerComponent(TheBetweenlandsHelper.AmmoComponentCremains);
-		AmmoRegistry.registerComponent(TheBetweenlandsHelper.AmmoComponentUndyingEmbers);
-		AmmoRegistry.registerComponent(TheBetweenlandsHelper.AmmoComponentPyradFlame);
-
-		AmmoRegistry.registerComponent(TheBetweenlandsHelper.AmmoComponentBMiddleGem);
-		AmmoRegistry.registerComponent(TheBetweenlandsHelper.AmmoComponentRMiddleGem);
-		AmmoRegistry.registerComponent(TheBetweenlandsHelper.AmmoComponentGMiddleGem);
-
-		AmmoRegistry.registerComponent(TheBetweenlandsHelper.AmmoComponentLifeCrystal);
-		AmmoRegistry.registerComponent(TheBetweenlandsHelper.AmmoComponentLifeCrystalFragment);
-
-		AmmoRegistry.registerPropellant(TheBetweenlandsHelper.AmmoPropellantTBLSulfur);
+		AmmoRegistry.registerPropellant(AmmoPropellantTBLSulfur = new AmmoPropellantTBLSulfur());
 
 		//TODO 14.04.2026: deeper integrations
 
@@ -500,7 +486,54 @@ public class TheBetweenlandsHelper extends IICompatModule
 	@Override
 	public void init()
 	{
+		MinecraftForge.EVENT_BUS.register(this);
+	}
 
+	//Whether the Light Engineer Armor is worn
+	public static boolean gotProtectionT;
+
+	//24.04.2026 Carver: added hazmat+gasmask protection.
+
+	//Should cancel direct decay effect application. Not certain how it works for the decay bar.
+
+
+	public void onPotionApplicable(PotionApplicableEvent event, EntityLivingBase entity)
+	{
+		if(entity==null)
+			return;
+
+		if(event.getPotionEffect().getPotion().getRegistryName().equals(ResLoc.of("thebetweenlands:EFFECT_DECAY")))
+		{
+			if(gotProtectionT==ItemIIUpgradeableArmor.isArmorWithUpgrade(entity.getItemStackFromSlot(EntityEquipmentSlot.HEAD),
+					"gasmask", "hazmat")&&
+					gotProtectionT==ItemIIUpgradeableArmor.isArmorWithUpgrade(entity.getItemStackFromSlot(EntityEquipmentSlot.CHEST),
+							"hazmat")&&
+					gotProtectionT==ItemIIUpgradeableArmor.isArmorWithUpgrade(entity.getItemStackFromSlot(EntityEquipmentSlot.LEGS),
+							"hazmat")&&
+					gotProtectionT==ItemIIUpgradeableArmor.isArmorWithUpgrade(entity.getItemStackFromSlot(EntityEquipmentSlot.FEET),
+							"hazmat"))
+			{
+				event.setCanceled(true);
+			}
+		}
+
+		if(event.getPotionEffect().getPotion().getRegistryName().equals(ResLoc.of("thebetweenlands:EFFECT_SHOCKED")))
+		{
+			if(gotProtectionT==ItemIIUpgradeableArmor.isArmorWithUpgrade(entity.getItemStackFromSlot(EntityEquipmentSlot.CHEST),
+							"anti_static_mesh"))
+			{
+				event.setCanceled(true);
+			}
+		}
+
+		if(event.getPotionEffect().getPotion().getRegistryName().equals(ResLoc.of("thebetweenlands:EFFECT_LUMBERING")))
+		{
+			if(gotProtectionT==ItemIIUpgradeableArmor.isArmorWithUpgrade(entity.getItemStackFromSlot(EntityEquipmentSlot.LEGS),
+					"exoskeleton"))
+			{
+				event.setCanceled(true);
+			}
+		}
 	}
 
 	@Override

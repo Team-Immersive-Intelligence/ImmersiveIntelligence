@@ -2,15 +2,21 @@ package pl.pabilo8.immersiveintelligence.common.compat.srp;
 
 import blusunrize.immersiveengineering.api.crafting.ArcFurnaceRecipe;
 import blusunrize.immersiveengineering.common.IEContent;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.living.PotionEvent.PotionApplicableEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
+import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradeableArmor;
 
 /**
  * * @author Carver (carver@iiteam.net)
@@ -105,7 +111,89 @@ public class ScapeAndRunParasitesHelper extends IICompatModule
 	@Override
 	public void init()
 	{
+		MinecraftForge.EVENT_BUS.register(this);
+	}
+	//Whether the Light Engineer Armor is worn
+	public static boolean gotProtection;
 
+	@SubscribeEvent
+	//24.04.2026 Carver: added hazmat+gasmask protection.
+
+	//Cancels some of s&r effects if full set of hazmat and gasmask are on.
+
+	public void onPotionApplicable(PotionApplicableEvent event, EntityLivingBase entity)
+	{
+		if(entity==null)
+			return;
+
+		if(event.getPotionEffect().getPotion().getRegistryName().equals(ResLoc.of("srparasites:coth")))
+		{
+			if(gotProtection==ItemIIUpgradeableArmor.isArmorWithUpgrade(entity.getItemStackFromSlot(EntityEquipmentSlot.HEAD),
+					"gasmask", "hazmat")&&
+					gotProtection==ItemIIUpgradeableArmor.isArmorWithUpgrade(entity.getItemStackFromSlot(EntityEquipmentSlot.CHEST),
+					"hazmat")&&
+					gotProtection==ItemIIUpgradeableArmor.isArmorWithUpgrade(entity.getItemStackFromSlot(EntityEquipmentSlot.LEGS),
+					"hazmat")&&
+					gotProtection==ItemIIUpgradeableArmor.isArmorWithUpgrade(entity.getItemStackFromSlot(EntityEquipmentSlot.FEET),
+					"hazmat"))
+			{
+				event.setCanceled(true);
+			}
+		}
+
+		if(event.getPotionEffect().getPotion().getRegistryName().equals(ResLoc.of("srparasites:viral")))
+		{
+			if(gotProtection==ItemIIUpgradeableArmor.isArmorWithUpgrade(entity.getItemStackFromSlot(EntityEquipmentSlot.HEAD),
+					"gasmask", "hazmat")&&
+					gotProtection==ItemIIUpgradeableArmor.isArmorWithUpgrade(entity.getItemStackFromSlot(EntityEquipmentSlot.CHEST),
+							"hazmat")&&
+					gotProtection==ItemIIUpgradeableArmor.isArmorWithUpgrade(entity.getItemStackFromSlot(EntityEquipmentSlot.LEGS),
+							"hazmat")&&
+					gotProtection==ItemIIUpgradeableArmor.isArmorWithUpgrade(entity.getItemStackFromSlot(EntityEquipmentSlot.FEET),
+							"hazmat"))
+			{
+				event.setCanceled(true);
+			}
+		}
+
+		if(event.getPotionEffect().getPotion().getRegistryName().equals(ResLoc.of("srparasites:corrosive")))
+		{
+			if(gotProtection==ItemIIUpgradeableArmor.isArmorWithUpgrade(entity.getItemStackFromSlot(EntityEquipmentSlot.HEAD),
+					"hazmat")&&
+					gotProtection==ItemIIUpgradeableArmor.isArmorWithUpgrade(entity.getItemStackFromSlot(EntityEquipmentSlot.CHEST),
+							"hazmat")&&
+					gotProtection==ItemIIUpgradeableArmor.isArmorWithUpgrade(entity.getItemStackFromSlot(EntityEquipmentSlot.LEGS),
+							"hazmat")&&
+					gotProtection==ItemIIUpgradeableArmor.isArmorWithUpgrade(entity.getItemStackFromSlot(EntityEquipmentSlot.FEET),
+							"hazmat"))
+			{
+				event.setCanceled(true);
+			}
+		}
+
+		if(event.getPotionEffect().getPotion().getRegistryName().equals(ResLoc.of("srparasites:conta")))
+		{
+			if(gotProtection==ItemIIUpgradeableArmor.isArmorWithUpgrade(entity.getItemStackFromSlot(EntityEquipmentSlot.HEAD),
+					"gasmask", "hazmat")&&
+					gotProtection==ItemIIUpgradeableArmor.isArmorWithUpgrade(entity.getItemStackFromSlot(EntityEquipmentSlot.CHEST),
+							"hazmat")&&
+					gotProtection==ItemIIUpgradeableArmor.isArmorWithUpgrade(entity.getItemStackFromSlot(EntityEquipmentSlot.LEGS),
+							"hazmat")&&
+					gotProtection==ItemIIUpgradeableArmor.isArmorWithUpgrade(entity.getItemStackFromSlot(EntityEquipmentSlot.FEET),
+							"hazmat"))
+			{
+				event.setCanceled(true);
+			}
+		}
+
+		if(event.getPotionEffect().getPotion().getRegistryName().equals(ResLoc.of("srparasites:overheating")))
+		{
+			if(gotProtection==ItemIIUpgradeableArmor.isArmorWithUpgrade(entity.getItemStackFromSlot(EntityEquipmentSlot.CHEST),
+					"heatcoat"))
+			{
+				event.setCanceled(true);
+			}
+		}
 	}
 
 	@Override
