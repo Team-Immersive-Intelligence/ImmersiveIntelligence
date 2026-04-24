@@ -364,6 +364,7 @@ item.immersiveintelligence.printed_page.bound_pages.name=Связанные ст
 item.immersiveintelligence.printed_page.newspaper.name=Газета
 item.immersiveintelligence.printed_page.book.name=Печатная книга
 item.immersiveintelligence.printed_page.letter.name=Письмо
+item.immersiveintelligence.printed_page.letter_opened.name=Открытое письмо
 
 item.immersiveintelligence.precission_tool.buzzsaw.name=Точная циркулярная пила
 item.immersiveintelligence.precission_tool.drill.name=Точная дрель
@@ -1158,7 +1159,7 @@ machineupgrade.immersiveintelligence.packer_fluid=Жидкостный напо�
 machineupgrade.immersiveintelligence.packer_fluid.desc=Установка контейнера для жидкости и некоторых трубопроводов позволяет заполнять и сливать жидкости из контейнеров. Из соображений безопасности упаковщик может работать как с предметами, так и с жидкостями или энергией.
 
 machineupgrade.immersiveintelligence.packer_energy=Зарядное устройство
-machineupgrade.immersiveintelligence.packer_energy.desc=Установка контейнера для жидкости и некоторых трубопроводов позволяет заполнять и сливать жидкости из контейнеров. Из соображений безопасности упаковщик может работать как с предметами, так и с жидкостями или энергией.
+machineupgrade.immersiveintelligence.packer_energy.desc=Установка пары конденсаторов и катушки Тесла позволяет быстро заряжать энергетические устройства. Из соображений безопасности упаковщик может работать как с предметами, так и с жидкостями или энергией.
 
 machineupgrade.immersiveintelligence.packer_railway=ЖД конверсия
 machineupgrade.immersiveintelligence.packer_railway.desc=Заменяет конвейерную ленту упаковщика железнодорожными путями, что позволяет загружать и разгружать вагонетки.
@@ -1200,6 +1201,7 @@ desc.immersiveintelligence.printed_page.bound_pages=Разные страниц�
 desc.immersiveintelligence.printed_page.newspaper=Несколько страниц, переплетенных в газету.
 desc.immersiveintelligence.printed_page.book=Несколько страниц, переплетенных в печатную книгу.
 desc.immersiveintelligence.printed_page.letter=Страница, упакованная в конверт для отправки кому-либо.
+desc.immersiveintelligence.printed_page.letter_opened=Раскрытый конверт с одной страницей.
 
 desc.immersiveintelligence.punchtape.empty=Переменные не записаны
 desc.immersiveintelligence.punchtape.written=Записаны

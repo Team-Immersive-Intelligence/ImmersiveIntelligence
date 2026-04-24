@@ -150,6 +150,8 @@ item.immersiveintelligence.printed_page.blank.name=Pusta Strona
 item.immersiveintelligence.printed_page.text.name=Wydrukowany Tekst
 item.immersiveintelligence.printed_page.code.name=Wydrukowany Kod
 item.immersiveintelligence.printed_page.blueprint.name=Wydrukowany Schemat Budowlany
+item.immersiveintelligence.printed_page.letter.name=List
+item.immersiveintelligence.printed_page.letter_opened.name=List otwarty
 
 item.immersiveintelligence.precission_tool.precission_buzzsaw.name=Precyzyjna Piła
 item.immersiveintelligence.precission_tool.precission_drill.name=Precyzyjne Wiertło
@@ -425,6 +427,8 @@ desc.immersiveintelligence.printed_page.blank=Pusta strona gotowa do druku.
 desc.immersiveintelligence.printed_page.text=Strona zawierająca tekst.
 desc.immersiveintelligence.printed_page.code=Strona zawierająca kod w języku programowania.
 desc.immersiveintelligence.printed_page.blueprint=Strona zawierające informacje o budowie jakiejś struktury.
+desc.immersiveintelligence.printed_page.letter=Jedna strona w kopercie, gotowa do wysłania.
+desc.immersiveintelligence.printed_page.letter_opened=Otwarty kopert z jednym bokiem.
 
 desc.immersiveintelligence.infrared_enabled=Wizja §4Podczerwona§r aktywna!
 desc.immersiveintelligence.infrared_disabled=Wizja §cPodczerwona§r wyłączona!

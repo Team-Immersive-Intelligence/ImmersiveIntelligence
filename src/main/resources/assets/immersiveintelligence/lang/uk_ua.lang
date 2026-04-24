@@ -364,6 +364,7 @@ item.immersiveintelligence.printed_page.bound_pages.name=Зшиті сторін
 item.immersiveintelligence.printed_page.newspaper.name=Газета
 item.immersiveintelligence.printed_page.book.name=Книга
 item.immersiveintelligence.printed_page.letter.name=Лист
+item.immersiveintelligence.printed_page.letter_opened.name=Відкритий лист
 
 item.immersiveintelligence.precission_tool.buzzsaw.name=Точна жуйка
 item.immersiveintelligence.precission_tool.drill.name=Прецизійне свердло
@@ -1132,7 +1133,7 @@ machineupgrade.immersiveintelligence.packer_fluid=Завантажувач рі�
 machineupgrade.immersiveintelligence.packer_fluid.desc=Встановлення контейнера для рідини та деяких труб дозволяє наповнювати та зливати рідини з контейнерів. З міркувань безпеки пакувальник може обробляти предмети, рідини або енергію.
 
 machineupgrade.immersiveintelligence.packer_energy=Енергетичний навантажувач
-machineupgrade.immersiveintelligence.packer_energy.desc=Встановлення контейнера для рідини та деяких труб дозволяє наповнювати та зливати рідини з контейнерів. З міркувань безпеки пакувальник може обробляти предмети, рідини або енергію.
+machineupgrade.immersiveintelligence.packer_energy.desc=Встановлення пари конденсаторів та котушки Тесли може швидко заряджати енергетичні пристрої. З міркувань безпеки пакувальник може обробляти предмети, рідини або енергію.
 
 machineupgrade.immersiveintelligence.packer_railway=Перетворення залізниці
 machineupgrade.immersiveintelligence.packer_railway.desc=Замінює конвеєрну стрічку пакувальника на залізничні колії, що дозволяє завантажувати та розвантажувати шахтні візки.
@@ -1174,6 +1175,7 @@ desc.immersiveintelligence.printed_page.bound_pages=Різні сторінки,
 desc.immersiveintelligence.printed_page.newspaper=Кілька сторінок переплетені в газету.
 desc.immersiveintelligence.printed_page.book=Кілька сторінок переплетені в одну книгу.
 desc.immersiveintelligence.printed_page.letter=Сторінка, запакована в конверт для відправлення комусь.
+desc.immersiveintelligence.printed_page.letter_opened=Розкритий конверт, що містить одну сторінку.
 
 desc.immersiveintelligence.punchtape.empty=Немає записаних змінних
 desc.immersiveintelligence.punchtape.written=Написаний

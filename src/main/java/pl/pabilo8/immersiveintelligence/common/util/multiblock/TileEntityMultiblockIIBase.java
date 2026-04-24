@@ -500,12 +500,14 @@ public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockI
 
 	public UUID getUUID()
 	{
-		if(isDummy())
+		if(this.uuid==null)
 		{
-			T master = master();
-			return master==null?IIUtils.getBlockPosUUID(getPos()): master.getUUID();
+			UUID uuid = IIUtils.getBlockPosUUID(getPos().add(-offset[0], -offset[1], -offset[2]));
+			if(master!=null)
+				this.uuid = uuid; //Master exists, so the position is correct
+			return uuid;
 		}
-		return this.uuid==null?this.uuid = IIUtils.getBlockPosUUID(getPos()): this.uuid;
+		return this.uuid;
 	}
 
 	public long getTicksExisted()

@@ -232,12 +232,14 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 	@Override
 	protected int[] listAllPOI(MultiblockPOI poi)
 	{
+		boolean fluid = false, energy = false, railway = false;
 		TileEntityPacker master = master();
-		assert master!=null;
-
-		boolean fluid = master.isUpgradeInstalled(IIContent.UPGRADE_PACKER_FLUID);
-		boolean energy = master.isUpgradeInstalled(IIContent.UPGRADE_PACKER_ENERGY);
-		boolean railway = master.isUpgradeInstalled(IIContent.UPGRADE_PACKER_RAILWAY);
+		if(master!=null)
+		{
+			fluid = master.isUpgradeInstalled(IIContent.UPGRADE_PACKER_FLUID);
+			energy = master.isUpgradeInstalled(IIContent.UPGRADE_PACKER_ENERGY);
+			railway = master.isUpgradeInstalled(IIContent.UPGRADE_PACKER_RAILWAY);
+		}
 
 		switch(poi)
 		{

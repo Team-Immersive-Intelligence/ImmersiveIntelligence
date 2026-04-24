@@ -5,6 +5,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
@@ -16,6 +17,7 @@ import pl.pabilo8.immersiveintelligence.common.compat.nb.NetherBackportHelper;
 import pl.pabilo8.immersiveintelligence.common.compat.thaum.ThaumcraftHelper;
 import pl.pabilo8.immersiveintelligence.common.compat.thaumaugment.ThaumicAugmentationHelper;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map.Entry;
@@ -31,8 +33,9 @@ public abstract class IICompatModule
 	public static HashMap<String, Class<? extends IICompatModule>> moduleClasses = new HashMap<>();
 	public static HashMap<String, String> moduleMinModVersions = new HashMap<>();
 	public static Set<IICompatModule> modules = new HashSet<>();
+	public static File configurationDirectory = null;
 
-	public static boolean serene = false, baubles = false, petroleum = false;
+	public static boolean serene = false, baubles = false, petroleum = false, cfb = false;
 	//We don't want this to happen multiple times after all >_>
 	public static boolean serverStartingDone = false;
 
@@ -56,16 +59,19 @@ public abstract class IICompatModule
 		moduleClasses.put("nb", NetherBackportHelper.class);
 		moduleClasses.put("thaumcraft", ThaumcraftHelper.class);
 		moduleClasses.put("thaumicaugmentation", ThaumicAugmentationHelper.class);
+		moduleClasses.put("cfb", CratesFeltBlueHelper.class);
+		moduleClasses.put("fluidlogged_api", FluidloggedAPIHelper.class);
 	}
 
-	public static void doModulesPreInit()
+	public static void doModulesPreInit(FMLPreInitializationEvent event)
 	{
+		configurationDirectory = event.getModConfigurationDirectory();
 		for(Entry<String, Class<? extends IICompatModule>> e : moduleClasses.entrySet())
 			if(Loader.isModLoaded(e.getKey()))
 				try
 				{
 					Boolean enabled = IIConfig.compat.get(e.getKey());
-					IILogger.info(e.getKey()+Utils.getModVersion(e.getKey()));
+					IILogger.info("Adding compat for "+e.getKey()+" version "+Utils.getModVersion(e.getKey()));
 
 					if(moduleMinModVersions.containsKey(e.getKey())&&
 							new DefaultArtifactVersion(moduleMinModVersions.get(e.getKey()))

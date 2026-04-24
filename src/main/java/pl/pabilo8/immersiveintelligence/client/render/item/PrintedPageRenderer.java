@@ -4,6 +4,7 @@ import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderPlayer;
@@ -13,6 +14,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.client.gui.item.GuiPrintedPage;
+import pl.pabilo8.immersiveintelligence.common.item.ItemIIPrintedPage.PageType;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -20,15 +22,40 @@ import pl.pabilo8.immersiveintelligence.client.gui.item.GuiPrintedPage;
  */
 public class PrintedPageRenderer
 {
-	private static ItemStack cachedStack;
-	private static GuiPrintedPage cachedGui;
+	private static ItemStack cachedStackMain;
+	private static PageType cachedTypeMain;
+	private static GuiPrintedPage cachedGuiMain;
+	private static ItemStack cachedStackOff;
+	private static PageType cachedTypeOff;
+	private static GuiPrintedPage cachedGuiOff;
 
 	private static void renderItem(ItemStack stack, EnumHand hand)
 	{
-		if(cachedStack==null||stack.getTagCompound()!=cachedStack.getTagCompound())
+		PageType pageType = PageType.fromStack(stack);
+
+		// Draw Item in Hand
+		if (hand == EnumHand.OFF_HAND)
 		{
-			cachedStack = stack;
-			cachedGui = new GuiPrintedPage(ClientUtils.mc().player, stack, hand);
+			if(cachedTypeOff == null
+					|| pageType != cachedTypeOff
+					|| checkNBTCacheNeedsUpdate(stack, cachedStackOff)
+			)
+			{
+				cachedStackOff = stack.copy();
+				cachedTypeOff = pageType;
+				cachedGuiOff = new GuiPrintedPage(ClientUtils.mc().player, stack, hand, true);
+			}
+		} else
+		{
+			if(cachedTypeMain == null
+					|| pageType != cachedTypeMain
+					|| checkNBTCacheNeedsUpdate(stack, cachedStackMain)
+			)
+			{
+				cachedStackMain = stack.copy();
+				cachedTypeMain = pageType;
+				cachedGuiMain = new GuiPrintedPage(ClientUtils.mc().player, stack, hand, true);
+			}
 		}
 
 		final float scale = 0.25F;
@@ -40,15 +67,41 @@ public class PrintedPageRenderer
 		GlStateManager.disableLighting();
 		GlStateManager.translate(-0.5F, -0.5F, 0.0F);
 		GlStateManager.scale(0.0078125F, 0.0078125F, 0.0078125F);
-
+		if (pageType == PageType.NEWSPAPER) GlStateManager.translate(-165.0F, -15.0F, 0.0F);
 		GlStateManager.disableDepth();
-		cachedGui.drawPage();
+
+		((hand == EnumHand.OFF_HAND) ? cachedGuiOff : cachedGuiMain).drawTitlePage();
 
 		GlStateManager.popMatrix();
 	}
 
+	/**
+	 * Returns true, if the NBT Data between the cached stack and the supplied one suggests, that the cache is invalid
+	 * @param stack is the fresh ItemStack
+	 */
+	private static boolean checkNBTCacheNeedsUpdate(ItemStack stack, ItemStack cachedStack)
+	{
+		if (cachedStack == null || stack == null) return true;
+		boolean stackHasNBT = stack.hasTagCompound();
+		if (stackHasNBT != cachedStack.hasTagCompound()) return true;
+		if (stackHasNBT) // At that point we know, that both the cache and the new stack have NBT data
+			return !cachedStack.getTagCompound().equals(stack.getTagCompound());
+
+		return false;
+	}
+
 	public static void renderItemFirstPerson(ItemStack stack, EnumHand hand, float equipProgress, float swingProgress, float pitch)
 	{
+
+		// Check if page is already rendering as UI, skip it if true, to reduce clutter
+		GuiScreen screen = Minecraft.getMinecraft().currentScreen;
+		if (screen instanceof GuiPrintedPage)
+		{
+			GuiPrintedPage guiPrintedPage = (GuiPrintedPage) screen;
+			if (guiPrintedPage.initiatedFromHand == hand) return;
+
+		}
+
 		EntityPlayer player = Minecraft.getMinecraft().player;
 		GlStateManager.pushMatrix();
 		if(hand==EnumHand.MAIN_HAND&&player.getHeldItemOffhand().isEmpty())

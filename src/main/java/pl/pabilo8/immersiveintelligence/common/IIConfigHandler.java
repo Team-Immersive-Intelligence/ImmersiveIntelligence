@@ -147,6 +147,9 @@ public class IIConfigHandler
 		@RequiresMcRestart
 		public static boolean concreteOverride = true;
 
+		@Comment({"If disabled, II will not make any changes to IE villager trades."})
+		public static boolean enableTradeOverride = true;
+
 		@Comment({"A list of all entities for which a fakeplayer should be used when shooter is not a player"})
 		public static String[] bulletFakeplayerWhitelist = new String[]{
 				"minecraft:ender_dragon"
@@ -462,15 +465,15 @@ public class IIConfigHandler
 
 			@Comment({"The usage time of the Precision Buzzsaw."})
 			@RequiresMcRestart
-			public static int precisionToolBuzzsawUsageTime = 140;
+			public static int precisionToolBuzzsawUsageTime = 100;
 
 			@Comment({"The usage time of the Precision Drill."})
 			@RequiresMcRestart
-			public static int precisionToolDrillUsageTime = 140;
+			public static int precisionToolDrillUsageTime = 100;
 
 			@Comment({"The usage time of the Precision Inserter."})
 			@RequiresMcRestart
-			public static int precisionToolInserterUsageTime = 60;
+			public static int precisionToolInserterUsageTime = 0;
 
 			@Comment({"The usage time of the Precision Solderer."})
 			@RequiresMcRestart
@@ -478,11 +481,12 @@ public class IIConfigHandler
 
 			@Comment({"The usage time of the Precision Welder."})
 			@RequiresMcRestart
-			public static int precisionToolWelderUsageTime = 160;
+			public static int precisionToolWelderUsageTime = 100;
 
 			@Comment({"The usage time of the Precision Hammer."})
 			@RequiresMcRestart
-			public static int precisionToolHammerUsageTime = 40;
+			public static int precisionToolHammerUsageTime = 80;
+
 			@Comment({"The capacity of the Improved Capacitor Backpack (in IF)."})
 			@RequiresMcRestart
 			public static int advancedPowerpackCapacity = 1000000;
@@ -917,6 +921,8 @@ public class IIConfigHandler
 				@Comment({"Hatch opening (or closing) time (in ticks)"})
 				public static int hatchTime = 40;
 
+				@Comment({"Tool traverse time, added to beginning and end of animation (in ticks)"})
+				public static int toolMoveTime = 30;
 			}
 
 			public static class ArtilleryHowitzer
@@ -1175,7 +1181,7 @@ public class IIConfigHandler
 				public static int craneMoveTime = 20;
 
 				@Comment({"Duration of crane bucket actions (in ticks)."})
-				public static int craneGrabTime = 20;
+				public static int craneBucketActionTime = 100;
 			}
 
 			public static class AmmunitionAssembler

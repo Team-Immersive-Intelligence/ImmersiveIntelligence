@@ -1,0 +1,247 @@
+{
+  "comment": "Made by Pabilo8 with Blockbench",
+  "groups": {
+    "crane_top": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, -270, 0]
+        },
+        {
+          "time": 0.1,
+          "transform": [0, -180, 0]
+        },
+        {
+          "time": 0.1125,
+          "transform": [0, -175, 0]
+        },
+        {
+          "time": 0.125,
+          "transform": [0, -180, 0]
+        },
+        {
+          "time": 0.70417,
+          "transform": [0, -180, 0]
+        },
+        {
+          "time": 1,
+          "transform": [0, -270, 0]
+        }
+      ]
+    },
+    "extender": {
+      "position": [
+        {
+          "time": 0.125,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.25,
+          "transform": [0, 0, 3]
+        },
+        {
+          "time": 0.3,
+          "transform": [0, 0, 3]
+        },
+        {
+          "time": 0.9,
+          "transform": [0, 0, 3]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "grabber": {
+      "position": [
+        {
+          "time": 0.3,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.5,
+          "transform": [0, -29, 0]
+        },
+        {
+          "time": 0.55,
+          "transform": [0, -29, 0]
+        },
+        {
+          "time": 0.70417,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "rope": {
+      "position": [
+        {
+          "time": 0.3,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.5,
+          "transform": [0, 14, 0]
+        },
+        {
+          "time": 0.55,
+          "transform": [0, 14, 0]
+        },
+        {
+          "time": 0.70417,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "scale": [
+        {
+          "time": 0.3,
+          "transform": [1, 1, 1]
+        },
+        {
+          "time": 0.5,
+          "transform": [1, 5.7, 1]
+        },
+        {
+          "time": 0.55,
+          "transform": [1, 5.7, 1]
+        },
+        {
+          "time": 0.70417,
+          "transform": [1, 1, 1]
+        }
+      ]
+    },
+    "bucket": {
+      "visibility": [
+        {
+          "time": 0,
+          "visibility": false
+        },
+        {
+          "time": 0.575,
+          "visibility": true
+        },
+        {
+          "time": 1,
+          "visibility": true
+        }
+      ],
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.575,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.6,
+          "transform": [-17.5, 0, 0]
+        },
+        {
+          "time": 0.625,
+          "transform": [15, 0, 0]
+        },
+        {
+          "time": 0.65,
+          "transform": [-7.5, 0, 0]
+        },
+        {
+          "time": 0.675,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.70417,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.575,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.6,
+          "transform": [0, 2, 6]
+        },
+        {
+          "time": 0.70417,
+          "transform": [0, 22, 6]
+        },
+        {
+          "time": 0.9,
+          "transform": [0, 22, 6]
+        },
+        {
+          "time": 1,
+          "transform": [0, 22, 9]
+        }
+      ]
+    },
+    "stick": {
+      "rotation": [
+        {
+          "time": 0.55,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.575,
+          "transform": [52.5, 0, 0]
+        },
+        {
+          "time": 0.6,
+          "transform": [112.5, 0, 0]
+        }
+      ]
+    },
+    "handle": {
+      "rotation": [
+        {
+          "time": 0.55,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.575,
+          "transform": [-52.5, 0, 0]
+        },
+        {
+          "time": 0.6,
+          "transform": [-112.5, 0, 0]
+        }
+      ]
+    },
+    "rotate": {
+      "rotation": [
+        {
+          "time": 0.70417,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 1,
+          "transform": [0, -90, 0]
+        }
+      ]
+    },
+    "bucket2": {
+      "visibility": [
+        {
+          "time": 0,
+          "visibility": true
+        },
+        {
+          "time": 0.575,
+          "visibility": false
+        },
+        {
+          "time": 1.0,
+          "visibility": false
+        }
+      ]
+    }
+  }
+}

@@ -1,9 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common.item.crafting;
 
-import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
@@ -45,44 +43,18 @@ public class ItemIISawBlade extends ItemIISubItemsBase<SawBlades> implements ISa
 	}
 
 	@Override
-	public void onCreated(@Nonnull ItemStack stack, @Nonnull World worldIn, @Nonnull EntityPlayer playerIn)
-	{
-		super.onCreated(stack, worldIn, playerIn);
-		ItemNBTHelper.setInt(stack, NBT_DAMAGE, getToolMaxDamage(stack));
-	}
-
-	@Override
 	@ParametersAreNonnullByDefault
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
 	{
 		super.addInformation(stack, worldIn, tooltip, flagIn);
-		tooltip.add(I18n.format(IIReference.INFO_KEY_TOOL_DURABILITY, TextFormatting.GOLD.toString()+getToolDamage(stack)+TextFormatting.GRAY, TextFormatting.GOLD.toString()+getToolMaxDamage(stack)+TextFormatting.GRAY));
+		tooltip.add(I18n.format(IIReference.INFO_KEY_TOOL_DURABILITY,
+				TextFormatting.GOLD.toString()+getToolDamage(stack)+TextFormatting.GRAY, TextFormatting.GOLD.toString()+getToolMaxDamage(stack)+TextFormatting.GRAY));
 	}
 
 	@Override
 	public String getToolID(ItemStack stack)
 	{
 		return stackToSub(stack).getName();
-	}
-
-	@Override
-	public void damageTool(ItemStack stack, int amount)
-	{
-		if(!ItemNBTHelper.hasKey(stack, NBT_DAMAGE))
-			ItemNBTHelper.setInt(stack, NBT_DAMAGE, getToolMaxDamage(stack));
-
-		ItemNBTHelper.setInt(stack, NBT_DAMAGE, getToolDamage(stack)-amount);
-
-		if(getToolDamage(stack) < 0)
-			stack.setCount(0);
-	}
-
-	@Override
-	public int getToolDamage(ItemStack stack)
-	{
-		if(!ItemNBTHelper.hasKey(stack, NBT_DAMAGE))
-			return getToolMaxDamage(stack);
-		return ItemNBTHelper.getInt(stack, NBT_DAMAGE);
 	}
 
 	@Override

@@ -1,0 +1,141 @@
+{
+  "comment": "Made by Pabilo8 with Blockbench",
+  "groups": {
+    "bucket5": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.11113,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.44447,
+          "transform": [-40, 0, 0]
+        },
+        {
+          "time": 0.58333,
+          "transform": [-40, 0, 0]
+        },
+        {
+          "time": 0.86113,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.9722,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.16667,
+          "transform": [0, 0, 5]
+        },
+        {
+          "time": 0.44447,
+          "transform": [0, -6.4, 11.3]
+        },
+        {
+          "time": 0.58333,
+          "transform": [0, -6.4, 11.3]
+        },
+        {
+          "time": 0.80553,
+          "transform": [0, 0, 5]
+        },
+        {
+          "time": 0.9722,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "stick5": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.11113,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.44447,
+          "transform": [12.5, 0, 0]
+        },
+        {
+          "time": 0.58333,
+          "transform": [12.5, 0, 0]
+        },
+        {
+          "time": 0.86113,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "handle5": {
+      "rotation": [
+        {
+          "time": 0.11113,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.44447,
+          "transform": [27.5, 0, 0]
+        },
+        {
+          "time": 0.58333,
+          "transform": [27.5, 0, 0]
+        },
+        {
+          "time": 0.86113,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "fluid5": {
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.44447,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.58333,
+          "transform": [0, 4, 0]
+        },
+        {
+          "time": 1.0,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "property": [
+        {
+          "time": 1,
+          "property": 0.82
+        },
+        {
+          "time": 0.44447,
+          "property": 0.25
+        },
+        {
+          "time": 0.58333,
+          "property": 0.0
+        },
+        {
+          "time": 1.0,
+          "property": 0.0
+        }
+      ]
+    }
+  }
+}

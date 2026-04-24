@@ -47,6 +47,9 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import org.lwjgl.input.Keyboard;
@@ -357,10 +360,10 @@ public class ClientProxy extends CommonProxy
 	}
 
 	@Override
-	public void preInit()
+	public void preInit(FMLPreInitializationEvent event)
 	{
 		//long live .obj models! ^^
-		super.preInit();
+		super.preInit(event);
 		MinecraftForge.EVENT_BUS.register(this);
 		MinecraftForge.EVENT_BUS.register(IIModelRegistry.INSTANCE);
 		OBJLoader.INSTANCE.addDomain(ImmersiveIntelligence.MODID);
@@ -642,9 +645,9 @@ public class ClientProxy extends CommonProxy
 	}
 
 	@Override
-	public void init()
+	public void init(FMLInitializationEvent event)
 	{
-		super.init();
+		super.init(event);
 
 		ClientEventHandler handler = new ClientEventHandler();
 		MinecraftForge.EVENT_BUS.register(handler);
@@ -700,9 +703,9 @@ public class ClientProxy extends CommonProxy
 	}
 
 	@Override
-	public void postInit()
+	public void postInit(FMLPostInitializationEvent event)
 	{
-		super.postInit();
+		super.postInit(event);
 
 		//Render Layers
 		Map<String, RenderPlayer> skinMap = Minecraft.getMinecraft().getRenderManager().getSkinMap();

@@ -18,11 +18,13 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.renderer.vertex.VertexFormatElement;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.resources.IResource;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
@@ -30,9 +32,16 @@ import pl.pabilo8.immersiveintelligence.api.ammo.penetration.DamageBlockPos;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoColors;
 import pl.pabilo8.immersiveintelligence.client.util.font.IIFontRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.font.IIFontRendererCustomGlyphs;
+import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
 
+import javax.annotation.Nonnull;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -46,6 +55,8 @@ public class IIClientUtils
 	public static IIFontRenderer fontRegular;
 	@SideOnly(Side.CLIENT)
 	public static IIFontRendererCustomGlyphs fontEngineerTimes, fontNormung, fontKaiser, fontTinkerer;
+	@SideOnly(Side.CLIENT)
+	private static final HashMap<Fluid, IIColor> CACHED_COLORS = new HashMap<>();
 
 	@SideOnly(Side.CLIENT)
 	private static Minecraft mc()
@@ -158,6 +169,31 @@ public class IIClientUtils
 
 		GlStateManager.depthMask(true);
 		GlStateManager.popMatrix();
+	}
+
+	@Nonnull
+	public static IIColor getFluidTextureColor(@Nonnull Fluid fluid)
+	{
+		if(CACHED_COLORS.containsKey(fluid))
+			return CACHED_COLORS.get(fluid);
+
+		InputStream is;
+		BufferedImage image;
+		IIColor color;
+		try
+		{
+			final ResourceLocation f = new ResourceLocation(fluid.getStill().getResourceDomain(), "textures/"+fluid.getStill().getResourcePath()+".png");
+			final IResource resource = Minecraft.getMinecraft().getResourceManager().getResource(f);
+			is = resource.getInputStream();
+			image = ImageIO.read(is);
+			color = IIColor.fromPackedRGB((image.getRGB(0, 0)-0xff000000)<<2);
+		} catch(IOException e)
+		{
+			IILogger.error("Could not load fluid texture file for color analysis");
+			color = IIColor.WHITE;
+		}
+		CACHED_COLORS.put(fluid, color);
+		return color;
 	}
 
 	//Thanks Blu, these stencil buffers look really capable

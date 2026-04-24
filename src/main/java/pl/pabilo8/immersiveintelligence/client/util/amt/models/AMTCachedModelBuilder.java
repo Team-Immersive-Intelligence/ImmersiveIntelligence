@@ -127,9 +127,9 @@ public final class AMTCachedModelBuilder<T>
 		return this;
 	}
 
-	public AMTCachedModelBuilder<T> withHeaderProvider(Function<T, AMTModelHeader> modelProvider)
+	public AMTCachedModelBuilder<T> withHeaderProvider(Function<T, AMTModelHeader> headerProvider)
 	{
-		this.headerProvider = modelProvider;
+		this.headerProvider = headerProvider;
 		return this;
 	}
 

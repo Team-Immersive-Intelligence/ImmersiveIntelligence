@@ -1,0 +1,327 @@
+{
+  "comment": "Made by Pabilo8 with Blockbench",
+  "groups": {
+    "mixer": {
+      "rotation": [
+        {
+          "time": 0.5,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.52273,
+          "transform": [0, -15, 0]
+        },
+        {
+          "time": 0.54545,
+          "transform": [0, -15, 0]
+        },
+        {
+          "time": 0.72727,
+          "transform": [0, -720, 0]
+        },
+        {
+          "time": 0.75,
+          "transform": [0, -790, 0]
+        },
+        {
+          "time": 0.90909,
+          "transform": [0, -1080, 0]
+        },
+        {
+          "time": 0.92803,
+          "transform": [0, -1087.5, 0]
+        },
+        {
+          "time": 0.94318,
+          "transform": [0, -1080, 0]
+        }
+      ]
+    },
+    "hydraulics1": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.14394,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.36364,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.07955,
+          "transform": [0, 4, 0]
+        },
+        {
+          "time": 0.14394,
+          "transform": [0, 4, 0]
+        },
+        {
+          "time": 0.36364,
+          "transform": [0, 4, 0]
+        },
+        {
+          "time": 0.5,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "tank1": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.09091,
+          "transform": [0, 0, 23.46]
+        },
+        {
+          "time": 0.10606,
+          "transform": [0, 0, 20]
+        },
+        {
+          "time": 0.14394,
+          "transform": [0, 0, 20]
+        },
+        {
+          "time": 0.36364,
+          "transform": [0, 0, 20]
+        },
+        {
+          "time": 0.5,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "position": [
+        {
+          "time": 0.14394,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.36364,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "door1": {
+      "rotation": [
+        {
+          "time": 0.04545,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.13636,
+          "transform": [0, 0, -227.5]
+        },
+        {
+          "time": 0.14394,
+          "transform": [0, 0, -222.5]
+        },
+        {
+          "time": 0.36364,
+          "transform": [0, 0, -222.5]
+        },
+        {
+          "time": 0.45455,
+          "transform": [0, 0, -222.5]
+        },
+        {
+          "time": 0.5,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.50757,
+          "transform": [0, 0, -7.5]
+        },
+        {
+          "time": 0.51515,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "hydraulics2": {
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.07955,
+          "transform": [0, 4, 0]
+        },
+        {
+          "time": 0.31818,
+          "transform": [0, 4, 0]
+        },
+        {
+          "time": 0.36364,
+          "transform": [0, 4, 0]
+        },
+        {
+          "time": 0.5,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "tank2": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.09091,
+          "transform": [0, 0, -23.46]
+        },
+        {
+          "time": 0.10606,
+          "transform": [0, 0, -20]
+        },
+        {
+          "time": 0.14394,
+          "transform": [0, 0, -20]
+        },
+        {
+          "time": 0.36364,
+          "transform": [0, 0, -20]
+        },
+        {
+          "time": 0.5,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "position": [
+        {
+          "time": 0.14394,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.36364,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "door2": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.09091,
+          "transform": [0, 0, 227.5]
+        },
+        {
+          "time": 0.09848,
+          "transform": [0, 0, 222.5]
+        },
+        {
+          "time": 0.31818,
+          "transform": [0, 0, 222.5]
+        },
+        {
+          "time": 0.40909,
+          "transform": [0, 0, 222.5]
+        },
+        {
+          "time": 0.45455,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.46212,
+          "transform": [0, 0, 7.5]
+        },
+        {
+          "time": 0.4697,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "fuel1": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 22.5]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, 22.5]
+        }
+      ],
+      "property": [
+        {
+          "time": 0,
+          "property": 0.0
+        },
+        {
+          "time": 0.10606,
+          "property": 0.0
+        },
+        {
+          "time": 0.14394,
+          "property": 1.0
+        },
+        {
+          "time": 0.36364,
+          "property": 1.0
+        },
+        {
+          "time": 0.3985,
+          "property": 0.0
+        },
+        {
+          "time": 0.5,
+          "property": 0.0
+        }
+      ]
+    },
+    "fuel2": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, -22.5]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, -22.5]
+        }
+      ],
+      "property": [
+        {
+          "time": 0,
+          "property": 0.0
+        },
+        {
+          "time": 0.10606,
+          "property": 0.0
+        },
+        {
+          "time": 0.14394,
+          "property": 1.0
+        },
+        {
+          "time": 0.36364,
+          "property": 1.0
+        },
+        {
+          "time": 0.3985,
+          "property": 0.0
+        },
+        {
+          "time": 0.5,
+          "property": 0.0
+        }
+      ]
+    }
+  }
+}

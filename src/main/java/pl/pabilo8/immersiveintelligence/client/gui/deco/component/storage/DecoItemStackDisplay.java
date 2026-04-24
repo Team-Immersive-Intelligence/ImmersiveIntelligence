@@ -21,7 +21,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Supplier;
+import java.util.function.Function;
 
 /**
  * Displays an item stack inside a Deco GUI.
@@ -40,7 +40,7 @@ public class DecoItemStackDisplay extends DecoComponent<DecoItemStackDisplay>
 	private int displayTime = 30;
 	protected int[] padding = new int[]{2, 2, 2, 2};
 	private ResourceLocation backgroundTexture;
-	private Supplier<Float> progressBarValue;
+	private Function<Float, Float> progressBarValue;
 	private IIColor barGradientColor1 = IIColor.fromPackedRGB(0xb51500), barGradientColor2 = IIColor.fromPackedRGB(0x600b00);
 	private DecoAlignment iconAlignment = DecoAlignment.CENTER;
 	private int iconSize = 16;
@@ -70,7 +70,7 @@ public class DecoItemStackDisplay extends DecoComponent<DecoItemStackDisplay>
 		return this;
 	}
 
-	public DecoItemStackDisplay withProgressBar(Supplier<Float> progressBarValue, IIColor barGradientColor1, IIColor barGradientColor2)
+	public DecoItemStackDisplay withProgressBar(Function<Float, Float> progressBarValue, IIColor barGradientColor1, IIColor barGradientColor2)
 	{
 		this.progressBarValue = progressBarValue;
 		this.barGradientColor1 = barGradientColor1;
@@ -162,7 +162,7 @@ public class DecoItemStackDisplay extends DecoComponent<DecoItemStackDisplay>
 		}
 		if(progressBarValue!=null)
 		{
-			float progress = MathHelper.clamp(progressBarValue.get(), 0, 1);
+			float progress = MathHelper.clamp(progressBarValue.apply(partialTicks), 0, 1);
 			IIDrawUtils.startColored()
 					.drawColorGradient(
 							x+width-padding[0]-padding[2]+2, y-padding[1]-padding[3]+height-(int)((height-4)*progress),

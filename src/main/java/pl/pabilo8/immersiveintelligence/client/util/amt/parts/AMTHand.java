@@ -135,6 +135,14 @@ public class AMTHand extends AMT
 	}
 
 	@Override
+	protected AMT renamedCopy(String newName)
+	{
+		AMTHand amt = new AMTHand(newName, off);
+		amt.withHand(hand);
+		return amt;
+	}
+
+	@Override
 	public void disposeOf()
 	{
 		if(handModel==null)

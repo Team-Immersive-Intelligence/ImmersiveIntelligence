@@ -53,6 +53,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -447,6 +448,22 @@ public class IIUtils
 	public static <T extends Enum<T> & ISerializableEnum> T enumValue(Class<T> en, String name)
 	{
 		return Enum.valueOf(en, name.toUpperCase());
+	}
+
+	/**
+	 * Returns a reversed copy of an array.
+	 *
+	 * @param array array to reverse
+	 * @param <T>   array type
+	 * @return reversed array
+	 * @implNote Does not modify the input array.
+	 */
+	public static <T> T[] reverseArray(T[] array)
+	{
+		T[] reversed = Arrays.copyOf(array, array.length);
+		for(int i = 0; i < array.length; i++)
+			reversed[i] = array[array.length-1-i];
+		return reversed;
 	}
 
 	public static void sendToolbarMessage(EntityPlayer player, String messageFormat, Object... args)

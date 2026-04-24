@@ -148,6 +148,32 @@ public class AMTModelHeader
 		return offsets.keySet();
 	}
 
+	public void renameElement(String oldName, String newName)
+	{
+		//Perform rename for the element on all maps
+		String parent = hierarchy.remove(oldName);
+		if(parent!=null)
+		{
+			hierarchy.put(newName, parent);
+			//Search and replace by value for others
+			hierarchy.entrySet().stream()
+					.filter(e -> e.getValue().equals(oldName))
+					.forEach(e -> e.setValue(newName));
+		}
+
+		Vec3d offset = offsets.remove(oldName);
+		if(offset!=null)
+			offsets.put(newName, offset);
+
+		EasyNBT property = properties.remove(oldName);
+		if(property!=null)
+			properties.put(newName, property);
+
+		Matrix4 transform = transforms.remove(oldName);
+		if(transform!=null)
+			transforms.put(newName, transform);
+	}
+
 	/**
 	 * @param name of the model group
 	 * @return the offset or {@link Vec3d#ZERO} if not specified
@@ -168,8 +194,8 @@ public class AMTModelHeader
 		for(AMT amt : amts)
 		{
 			AMT[] children = amts.stream()
-					.filter(child -> hierarchy.getOrDefault(child.name, "")
-							.equals(amt.name))
+					.filter(child -> hierarchy.getOrDefault(child.getName(), "")
+							.equals(amt.getName()))
 					.map(AMT::setChild)
 					.toArray(AMT[]::new);
 
@@ -177,7 +203,7 @@ public class AMTModelHeader
 				amt.setChildren(children);
 
 			//Apply properties
-			EasyNBT nbt = properties.get(amt.name);
+			EasyNBT nbt = properties.get(amt.getName());
 			if(nbt!=null)
 				amt.applyProperties(nbt);
 		}

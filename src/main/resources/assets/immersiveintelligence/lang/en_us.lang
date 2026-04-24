@@ -364,6 +364,7 @@ item.immersiveintelligence.printed_page.bound_pages.name=Bound Pages
 item.immersiveintelligence.printed_page.newspaper.name=Newspaper
 item.immersiveintelligence.printed_page.book.name=Book
 item.immersiveintelligence.printed_page.letter.name=Letter
+item.immersiveintelligence.printed_page.letter_opened.name=Opened Letter
 
 item.immersiveintelligence.logistic_tag.name=Logistic Manifest
 
@@ -1139,7 +1140,7 @@ machineupgrade.immersiveintelligence.packer_fluid=Fluid Loader
 machineupgrade.immersiveintelligence.packer_fluid.desc=Installing a fluid container and some pipes allows to fill and drain fluids from containers. Due to safety reasons the packer can handle either items, fluids or energy.
 
 machineupgrade.immersiveintelligence.packer_energy=Energy Loader
-machineupgrade.immersiveintelligence.packer_energy.desc=Installing a fluid container and some pipes allows to fill and drain fluids from containers. Due to safety reasons the packer can handle either items, fluids or energy.
+machineupgrade.immersiveintelligence.packer_energy.desc=Installing a pair of capacitors and a Tesla coil allows rapid charging of energy devices. Due to safety reasons the packer can handle either items, fluids or energy.
 
 machineupgrade.immersiveintelligence.packer_railway=Railway Conversion
 machineupgrade.immersiveintelligence.packer_railway.desc=Replaces the Packer's conveyor belt with railway tracks, which allows loading and unloading minecarts.
@@ -1189,6 +1190,7 @@ desc.immersiveintelligence.printed_page.bound_pages=Various pages bound together
 desc.immersiveintelligence.printed_page.newspaper=Multiple pages bound into a newspaper.
 desc.immersiveintelligence.printed_page.book=Multiple pages bound into a book.
 desc.immersiveintelligence.printed_page.letter=A page packed into an envelope to be sent to someone.
+desc.immersiveintelligence.printed_page.letter_opened=An opened envelope containing a page.
 
 desc.immersiveintelligence.logistic_tag.none=No logistic data written
 desc.immersiveintelligence.logistic_tag.info.hold=%s - Logistic Manifest

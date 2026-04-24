@@ -106,10 +106,10 @@ public class IIManualCategoryData extends IIManualCategory
 						.withList("elements",
 								EasyNBT.parseEasyNBT("{name:\"input\",rot:[0.0,-90.0,0.0],pos:[-2.5,0.0,-1.25],model:\"immersiveintelligence:models/block/metal_device/punchtape_reader.obj\"}"),
 								EasyNBT.parseEasyNBT("{name:\"conn\",rot:[0.0,0.0,90.0],pos:[-1.5,0.0,-1.25],model:\"immersiveintelligence:models/block/connector/data_connector.obj.ie\"}"),
-								EasyNBT.parseEasyNBT("{name:\"wire0\",start:[1.0,0.9,-1.25], end:[0.5,1.0,0.5], diameter: 0.125, type:\"wire\"}"),
+								EasyNBT.parseEasyNBT("{name:\"wire0\",start:[16.0,14.4,-20.0], end:[8.0,16.0,8.0], diameter: 0.125, type:\"wire\"}"),
 								EasyNBT.parseEasyNBT("{name:\"relay\",pos:[0.0,0.0,0.0],model:\"immersiveintelligence:models/block/connector/data_relay.obj\"}"),
 								EasyNBT.parseEasyNBT("{name:\"debugger\",pos:[1.25,0.0,1.25],model:\"immersiveintelligence:models/block/metal_device/data_debugger/data_debugger.obj\"}"),
-								EasyNBT.parseEasyNBT("{name:\"wire0\",start:[0.5,1.0,0.5], end:[-0.75,1.1385,1.25], diameter: 0.125, type:\"wire\"}")
+								EasyNBT.parseEasyNBT("{name:\"wire0\",start:[8.0,16.0,8.0], end:[-12.0,18.0,20.0], diameter: 0.125, type:\"wire\"}")
 						)
 						.withList("overlay",
 								EasyNBT.parseEasyNBT("{name:\"punchtape\",pos:[0.0,0.0,0.0], type:\"item\", stack:%s}", IIContent.itemPunchtape.getStack(1).serializeNBT()),
