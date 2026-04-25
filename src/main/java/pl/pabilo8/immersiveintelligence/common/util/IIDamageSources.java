@@ -26,7 +26,11 @@ public class IIDamageSources
 	public static final DamageSource PRINTING_PRESS_DAMAGE = new DamageSource("iiPrintingPress");
 	public static final DamageSource RADIATION_DAMAGE = new DamageSource("iiRadiation").setDamageBypassesArmor().setDamageIsAbsolute();
 	public static final DamageSource NUCLEAR_HEAT_DAMAGE = new DamageSource("iiNuclearHeat").setDamageBypassesArmor().setDamageIsAbsolute();
-
+	//gas-related damage types
+	public static final DamageSource NEUROPARALITIC_GAS = new DamageSource("iiNeuroparalitic").setDamageBypassesArmor().setDamageIsAbsolute();
+	public static final DamageSource SUFFOCATION_GAS = new DamageSource("iiSuffocation").setDamageBypassesArmor().setDamageIsAbsolute();
+	//biologcal weapon damage types
+	public static final DamageSource VIRAL_DAMAGE = new DamageSource("iiVirusdamage").setDamageBypassesArmor().setDamageIsAbsolute();
 
 	public static DamageSource causeVehicleDamage(EntityVehicleBase<?> vehicle)
 	{
