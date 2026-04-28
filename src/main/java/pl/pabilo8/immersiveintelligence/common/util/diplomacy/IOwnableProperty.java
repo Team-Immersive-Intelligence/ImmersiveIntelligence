@@ -5,6 +5,7 @@ import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IEntityPr
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import pl.pabilo8.immersiveintelligence.common.util.IWorldPosProvider;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.permission.PermissionCategory;
 
 import java.util.UUID;
 

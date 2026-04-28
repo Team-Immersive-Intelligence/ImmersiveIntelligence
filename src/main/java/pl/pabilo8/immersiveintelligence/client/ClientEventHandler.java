@@ -57,6 +57,7 @@ import net.minecraftforge.client.resource.VanillaResourceType;
 import net.minecraftforge.event.GameRuleChangeEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.world.WorldEvent.Load;
+import net.minecraftforge.event.world.WorldEvent.Unload;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
@@ -117,6 +118,7 @@ import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyUtils;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradeableArmor;
 
@@ -979,7 +981,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 					.doHandRender(stack, event.getHand(), stackOpposite, event.getSwingProgress(), event.getPartialTicks()))
 				event.setCanceled(true);
 
-		if(stack.getItem()==IIContent.itemPrintedPage && PageType.fromStack(stack).useHandSpecialRender())
+		if(stack.getItem()==IIContent.itemPrintedPage&&PageType.fromStack(stack).useHandSpecialRender())
 		{
 			PrintedPageRenderer.renderItemFirstPerson(stack, event.getHand(), event.getEquipProgress(), event.getSwingProgress(), event.getInterpolatedPitch());
 			event.setCanceled(true);
@@ -1064,8 +1066,18 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		aimingPlayers.clear();
 		blockDamageClient.clear();
 
+		DiplomacyUtils.init();
+
 		//Reload the particle system
 		ImmersiveIntelligence.proxy.reloadParticles();
+	}
+
+	@SubscribeEvent
+	public void onWorldUnload(Unload event)
+	{
+		if(!event.getWorld().isRemote)
+			return;
+		DiplomacyUtils.unload();
 	}
 
 	@SubscribeEvent

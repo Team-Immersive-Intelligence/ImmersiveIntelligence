@@ -90,6 +90,9 @@ public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockI
 			dummyCleanup();
 			return;
 		}
+		//On client
+		if(isDummy())
+			return;
 
 		//First Tick
 		if(firstTick)

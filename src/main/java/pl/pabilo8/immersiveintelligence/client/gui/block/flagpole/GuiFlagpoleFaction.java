@@ -1,15 +1,14 @@
 package pl.pabilo8.immersiveintelligence.client.gui.block.flagpole;
 
+import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBanner;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoDropdown;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoList;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoTitleLabel;
@@ -24,14 +23,14 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuild
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityFlagpole;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerFlagpole;
+import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageDiplomacyAction;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyUtils;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.OwnerIdentity;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.PermissionCategory;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.PermissionLevel;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.permission.PermissionCategory;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.UUID;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -43,6 +42,11 @@ import java.util.List;
 @DecoTemplate(name = "flagpole_faction", category = DecoGuiCategory.TERRITORY_CONTROL_TILE)
 public class GuiFlagpoleFaction extends DecoGui<TileEntityFlagpole, ContainerFlagpole>
 {
+	private String factionName = null;
+	private IIColor factionColor = null;
+	private ItemStack factionBanner = null;
+
+
 	public GuiFlagpoleFaction(EntityPlayer player, TileEntityFlagpole tile)
 	{
 		super(player, tile, IIGUI.FLAGPOLE_FACTION);
@@ -51,15 +55,9 @@ public class GuiFlagpoleFaction extends DecoGui<TileEntityFlagpole, ContainerFla
 	@Override
 	public void onInit()
 	{
-		OwnerIdentity identity = tile.ownerIdentity;
-		if(identity==DiplomacyUtils.NEUTRAL)
-			identity = DiplomacyUtils.getLocalPlayerIdentity();
-		final OwnerIdentity displayIdentity = identity;
-
-		String playerName = playerContainer.player.getName();
-		List<String> members = new ArrayList<>(displayIdentity.getPlayers());
-		if(members.isEmpty())
-			members.add(playerName);
+		OwnerIdentity identity = DiplomacyUtils.getLocalPlayerIdentity();
+		NetHandlerPlayClient connection = mc.getConnection();
+		assert connection!=null;
 
 		startBackground()
 				.withBox(DecoTextures.BG_STEEL, 0, 0, 248, 152+32)
@@ -86,21 +84,29 @@ public class GuiFlagpoleFaction extends DecoGui<TileEntityFlagpole, ContainerFla
 		addComponent(new DecoBannerDisplay(5+1, 15+1)
 				.withSize(40+2, 20+2)
 				.withBackgroundTexture(DecoSprite.atlasSprite(DecoTextures.SLOT_IE, 32, true))
-				.withBanner(displayIdentity.getBanner())
+				.withBanner(identity.getBanner())
 				.withOnPressed((gui, button, mouseX, mouseY) -> {
 					ItemStack stack = getMouseHeldItemStack();
 					if(stack.getItem() instanceof ItemBanner)
 					{
-						gui.withBanner(stack);
+						ItemStack copy = stack.copy();
+						copy.setCount(1);
+						gui.withBanner(copy);
+						this.factionBanner = copy;
 						return true;
 					}
 					return false;
 				})
+				.withDisabled(!identity.isPermitted(mc.player, PermissionCategory.MODIFY_INSIGNIA))
 		);
 		addComponent(new DecoTextField(26+20, 14+2)
 				.withSize(120-20+4, 16)
-				.withText(displayIdentity.getDisplayName())
+				.withText(identity.getDisplayName())
 				.withMaxStringLength(32)
+				.withDisabled(!identity.isPermitted(mc.player, PermissionCategory.MODIFY_INSIGNIA))
+				.withOnTextChanged(s -> {
+					this.factionName = s.isEmpty()?null: s;
+				})
 		);
 
 		//Color header
@@ -127,10 +133,11 @@ public class GuiFlagpoleFaction extends DecoGui<TileEntityFlagpole, ContainerFla
 					}
 				}
 						.withOnColorChanged((oldColor, newColor) -> {
-							//TODO: implement faction color change
+							factionColor = newColor;
 						})
-						.withColor(displayIdentity.getColor())
+						.withColor(identity.getColor())
 						.withSize(144+4, 44)
+						.withDisabled(!identity.isPermitted(mc.player, PermissionCategory.MODIFY_INSIGNIA))
 		);
 
 		//Members Panel
@@ -142,21 +149,25 @@ public class GuiFlagpoleFaction extends DecoGui<TileEntityFlagpole, ContainerFla
 		);
 
 		//Invite row
-		panelMembers.addComponent(new DecoTextField(4, 6+2)
+		DecoTextField usernameField = panelMembers.addComponent(new DecoTextField(4, 6+2)
 				.withSize(118+4+2, 16)
 				.withMaxStringLength(16)
 		);
 		panelMembers.addComponent(new DecoButton(124+2+2, 6+2)
-						.withTemplate(DecoTemplates.ACTION_BUTTON_ADD)
-						.withSize(16, 16)
-				//TODO: implement member invite
+				.withTemplate(DecoTemplates.ACTION_BUTTON_ADD)
+				.withSize(16, 16)
+				.withOnLMBPressed(() -> {
+					NetworkPlayerInfo playerInfo = connection.getPlayerInfo(usernameField.getText());
+					if(playerInfo!=null)
+						IIPacketHandler.sendToServer(MessageDiplomacyAction.invitePlayer(playerInfo.getGameProfile().getId()));
+				})
 		);
 
 		//Member list
-		panelMembers.addComponent(new DecoList<String>(4, 22+2)
+		panelMembers.addComponent(new DecoList<UUID>(4, 22+2)
 				.withSize(132+4+2+2, 32+24+2-2)
-				.withEntries(members)
-				.withDisplayFunction(new DecoEntryPanelBuilder<String>()
+				.withEntries(identity.getMembers())
+				.withDisplayFunction(new DecoEntryPanelBuilder<UUID>()
 						.withHeight(18)
 						.withBackground(DecoTextures.BG_PAPER)
 						.withBackgroundMask(DecoTextures.TEMPLATE_PAPER)
@@ -168,19 +179,22 @@ public class GuiFlagpoleFaction extends DecoGui<TileEntityFlagpole, ContainerFla
 								.withSize(14, 14)
 						)
 						.withComponent(p -> new DecoButton(p.width-16, 2)
-										.withTemplate(DecoTemplates.ACTION_BUTTON_REMOVE)
-								//TODO: implement member removal
+								.withTemplate(DecoTemplates.ACTION_BUTTON_REMOVE)
+								.withOnLMBPressed(() -> IIPacketHandler.sendToServer(MessageDiplomacyAction.removeMember(p.getCurrentElement())))
 						)
-						.withElementApplyMethod((memberName, panel) -> {
-							panel.label("name").withRawText(memberName);
-
+						.withElementApplyMethod((uuid, panel) -> {
 							ResourceLocation skinLocation = DefaultPlayerSkin.getDefaultSkinLegacy();
-							if(mc.getConnection()!=null)
+							String memberName = "Missingno";
+
+							NetworkPlayerInfo networkplayerinfo = connection.getPlayerInfo(uuid);
+							//noinspection ConstantValue
+							if(networkplayerinfo!=null)
 							{
-								NetworkPlayerInfo networkplayerinfo = mc.getConnection().getPlayerInfo(memberName);
-								if(networkplayerinfo!=null)
-									skinLocation = networkplayerinfo.getLocationSkin();
+								skinLocation = networkplayerinfo.getLocationSkin();
+								memberName = networkplayerinfo.getGameProfile().getName();
 							}
+
+							panel.label("name").withRawText(memberName);
 							panel.component("head", DecoImage.class).withImageLocation(skinLocation)
 									.withUV(64, 8, 8, 16, 16);
 						})
@@ -195,7 +209,7 @@ public class GuiFlagpoleFaction extends DecoGui<TileEntityFlagpole, ContainerFla
 				.withTitleLabel("Permissions", DecoAlignment.TOP)
 		);
 
-		DecoEntryPanelBuilder<PermissionLevel> permDisplay = new DecoEntryPanelBuilder<PermissionLevel>()
+		/*DecoEntryPanelBuilder<PermissionLevel> permDisplay = new DecoEntryPanelBuilder<PermissionLevel>()
 				.withBackground(DecoTextures.BG_STEEL)
 				.withHeight(12)
 				.withLabel("label", new DecoLabel(IIClientUtils.fontRegular, 2, 1)
@@ -204,10 +218,12 @@ public class GuiFlagpoleFaction extends DecoGui<TileEntityFlagpole, ContainerFla
 				)
 				.withElementApplyMethod((level, builder) ->
 						builder.label("label").withRawText(formatPermissionLevel(level))
-				);
+				);*/
 
 		int y = 8;
-		for(PermissionCategory category : SHOWN_PERMISSIONS)
+
+		//TODO: 24.04.2026 permission roles
+		/*for(PermissionCategory category : SHOWN_PERMISSIONS)
 		{
 			panelPerms.addLabel(formatPermissionName(category), 4, y)
 					.withSize(80, 8)
@@ -220,34 +236,19 @@ public class GuiFlagpoleFaction extends DecoGui<TileEntityFlagpole, ContainerFla
 					//TODO: implement permission changes
 			);
 			y += 22;
-		}
+		}*/
 	}
 
-	private static final List<PermissionCategory> SHOWN_PERMISSIONS = Arrays.asList(
-			PermissionCategory.ADD_MEMBERS,
-			PermissionCategory.REMOVE_MEMBERS,
-			PermissionCategory.CONTAINER_ACCESS,
-			PermissionCategory.BREAKING_STRUCTURES
-	);
-
-	private static final List<PermissionLevel> AVAILABLE_LEVELS = Arrays.asList(
-			PermissionLevel.OWNER_ALLOW,
-			PermissionLevel.MEMBER_ALLOW,
-			PermissionLevel.ALLIES_ALLOW,
-			PermissionLevel.OTHERS_ALLOW
-	);
-
-	private static String formatPermissionName(PermissionCategory category)
+	@Override
+	public void onGuiClosed()
 	{
-		if(category==PermissionCategory.BREAKING_STRUCTURES)
-			return "Breaking blocks";
-		String name = category.name().toLowerCase().replace('_', ' ');
-		return Character.toUpperCase(name.charAt(0))+name.substring(1);
-	}
+		if(factionName!=null)
+			IIPacketHandler.sendToServer(MessageDiplomacyAction.rename(factionName));
+		if(factionColor!=null)
+			IIPacketHandler.sendToServer(MessageDiplomacyAction.changeColor(factionColor));
+		if(factionBanner!=null)
+			IIPacketHandler.sendToServer(MessageDiplomacyAction.changeBanner(factionBanner));
 
-	private static String formatPermissionLevel(PermissionLevel level)
-	{
-		String name = level.name().toLowerCase().replace("_allow", "").replace('_', ' ');
-		return Character.toUpperCase(name.charAt(0))+name.substring(1);
+		super.onGuiClosed();
 	}
 }

@@ -96,7 +96,7 @@ public class MessageIIChunkClaimData extends IIMessage implements IPositionBound
 	{
 		this.pos = readPos(buf);
 		byte mutex = buf.readByte();
-		this.ownerIdentity = (mutex&1)!=0?DiplomacyUtils.getIdentityByName(readString(buf)): null;
+		this.ownerIdentity = (mutex&1)!=0?DiplomacyUtils.getIdentityByUUID(readString(buf)): null;
 		this.claimData = (mutex&2)!=0?ChunkClaimData.fromNBT(readEasyNBT(buf)): null;
 	}
 
@@ -107,7 +107,7 @@ public class MessageIIChunkClaimData extends IIMessage implements IPositionBound
 		byte mutex = (byte)((ownerIdentity!=null?1: 0)+(claimData!=null?2: 0));
 		buf.writeByte(mutex);
 		if(ownerIdentity!=null)
-			writeString(buf, ownerIdentity.getDisplayName());
+			writeString(buf, ownerIdentity.getStringUUID());
 		if(claimData!=null)
 			writeEasyNBT(buf, claimData.toNBT());
 	}

@@ -72,10 +72,10 @@ import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyUtils;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.IOwnableProperty;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.OwnerIdentity;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.PermissionCategory;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.chunk.CapabilityChunkOwnership;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.chunk.ChunkOwnership;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.chunk.IChunkOwnership;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.permission.PermissionCategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemUtils;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradeableArmor;
 
@@ -95,13 +95,13 @@ public class EventHandler
 	@SubscribeEvent
 	public static void onSave(Save event)
 	{
-		IISaveData.setDirty(event.getWorld().provider.getDimension());
+		IISaveData.setDirty();
 	}
 
 	@SubscribeEvent
 	public static void onUnload(Unload event)
 	{
-		IISaveData.setDirty(event.getWorld().provider.getDimension());
+		IISaveData.setDirty();
 	}
 
 	@SubscribeEvent
@@ -177,8 +177,7 @@ public class EventHandler
 			IIPacketHandler.sendToClient(player, new MessageIIGameruleUpdate(gamerule, rules));
 
 		//Sync Diplomacy data
-		IIPacketHandler.sendToClient(player, new MessageDiplomacySync(
-				true, null, false, DiplomacyUtils.saveAllToNBT()));
+		IIPacketHandler.sendToClient(player, MessageDiplomacySync.updateAllMessage());
 	}
 
 	@SubscribeEvent
@@ -240,6 +239,8 @@ public class EventHandler
 	public void onWorldTick(WorldTickEvent event)
 	{
 		pendingExplosions.removeIf(IIExplosion::explodeBlocks);
+		/*if(!event.world.isRemote&&event.world.getTotalWorldTime()%1000==0)
+			IIPacketHandler.sendToAllClients(MessageDiplomacySync.updateAllMessage());*/
 	}
 
 	//--- Vehicle or Gun Mounts ---//
@@ -273,7 +274,7 @@ public class EventHandler
 			if(master!=null)
 			{
 				//The property itself has an owner, check it
-				OwnerIdentity owner = DiplomacyUtils.NEUTRAL;
+				OwnerIdentity owner = null;
 				if(master instanceof IOwnableProperty)
 					owner = ((IOwnableProperty)master).getOwnerIdentity();
 				else
@@ -283,6 +284,8 @@ public class EventHandler
 					if(ownership!=null)
 						owner = ownership.getOwner();
 				}
+				if(owner==null)
+					owner = DiplomacyUtils.NEUTRAL;
 
 				//Deny container access when on an enemy chunk
 				if(!owner.isPermitted(living, PermissionCategory.CONTAINER_ACCESS))
@@ -365,22 +368,24 @@ public class EventHandler
 					living.addPotionEffect(new PotionEffect(IIPotions.radiation, 2000, 0, false, false));
 
 				//Apply faction chunk status effects
-				Chunk chunk = player.world.getChunkFromBlockCoords(player.getPosition());
-				if(chunk.hasCapability(CapabilityChunkOwnership.CHUNK_OWNERSHIP_CAP, null))
+				if(DiplomacyUtils.diplomacyInitialized)
 				{
-					IChunkOwnership cap = chunk.getCapability(CapabilityChunkOwnership.CHUNK_OWNERSHIP_CAP, null);
-					assert cap!=null;
-					switch(cap.getOwner().getRelationTowards(player))
+					Chunk chunk = player.world.getChunkFromBlockCoords(player.getPosition());
+					if(chunk.hasCapability(CapabilityChunkOwnership.CHUNK_OWNERSHIP_CAP, null))
 					{
-						case ENEMY:
-							player.addPotionEffect(new PotionEffect(IIPotions.enemySoil, 40, 0, false, false));
-							break;
-						case MEMBER:
-						case ALLIED:
-							player.addPotionEffect(new PotionEffect(IIPotions.homeland, 40, 0, false, false));
-							break;
-						default:
-							break;
+						IChunkOwnership cap = chunk.getCapability(CapabilityChunkOwnership.CHUNK_OWNERSHIP_CAP, null);
+						switch(cap.getOwner().getRelationTowards(player))
+						{
+							case ENEMY:
+								player.addPotionEffect(new PotionEffect(IIPotions.enemySoil, 40, 0, false, false));
+								break;
+							case MEMBER:
+							case ALLIED:
+								player.addPotionEffect(new PotionEffect(IIPotions.homeland, 40, 0, false, false));
+								break;
+							default:
+								break;
+						}
 					}
 				}
 			}

@@ -7,6 +7,8 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import pl.pabilo8.immersiveintelligence.api.ammo.penetration.DamageBlockPos;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.PenetrationCache;
+import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageDiplomacySync;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyUtils;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
@@ -22,17 +24,15 @@ public class IISaveData extends WorldSavedData
 	public IISaveData(String name)
 	{
 		super(name);
-		//Required for diplomacy to work
-		readFromNBT(new NBTTagCompound());
 	}
 
-	public static void setDirty(int dimension)
+	public static void setDirty()
 	{
 		if(FMLCommonHandler.instance().getEffectiveSide()==Side.SERVER&&INSTANCE!=null)
 			INSTANCE.markDirty();
 	}
 
-	public static void setInstance(int dimension, IISaveData in)
+	public static void setInstance(IISaveData in)
 	{
 		if(FMLCommonHandler.instance().getEffectiveSide()==Side.SERVER)
 			INSTANCE = in;
@@ -63,6 +63,7 @@ public class IISaveData extends WorldSavedData
 		}
 
 		DiplomacyUtils.loadAllFromNBT(enbt.getEasyCompound("diplomacy"));
+		IIPacketHandler.sendToAllClients(MessageDiplomacySync.updateAllMessage());
 	}
 
 	@Override

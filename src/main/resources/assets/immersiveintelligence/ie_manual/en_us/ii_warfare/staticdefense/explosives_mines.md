@@ -2,7 +2,7 @@
 Explosives and Mines
 Ka-boom?
 # radio_satchel0
-When your operations require a stealthy, precise approach, [radio](radio_station.md)[-detonated satchel] charges are the right choice. Be it mining operations, demolition of buildings, or sabotage of train bridges, satchel charges are universal in their role and are beloved by both combat engineers and saboteurs.
+When your operations require a stealthy, precise approach, [radio](radio_station.md)[-detonated satchel] charges are the right choice. Be it mining operations, demolition of buildings, or sabotage of train bridges, satchel charges are universal in their permissionRole and are beloved by both combat engineers and saboteurs.
 # radio_satchel1
 |[crafting]{source:"crafting_radio_equipped_satchel"}|
 Unlike other explosive casings, the [radio-equipped satchel] needs to be crafted. Using leather, a [basic circuit](electronic_components.md#basic_general), and iron, the paragon of sabotage is born.

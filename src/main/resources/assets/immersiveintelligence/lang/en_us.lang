@@ -1382,7 +1382,7 @@ desc.immersiveintelligence.diplomacy.law_form.dynasty.tier5_long=A lineage of em
 
 desc.immersiveintelligence.diplomacy.action.disband=Disband
 desc.immersiveintelligence.diplomacy.action.merge=Merge
-desc.immersiveintelligence.diplomacy.action.add_members=Add Members
+desc.immersiveintelligence.diplomacy.action.invite_members=Invite Members
 desc.immersiveintelligence.diplomacy.action.propose=Propose
 desc.immersiveintelligence.diplomacy.action.demand=Demand
 desc.immersiveintelligence.diplomacy.action.declare_war=Declare War
@@ -1390,7 +1390,7 @@ desc.immersiveintelligence.diplomacy.action.declare_alliance=Declare Alliance
 
 desc.immersiveintelligence.diplomacy.permission.disband=Disband
 desc.immersiveintelligence.diplomacy.permission.merge=Merge
-desc.immersiveintelligence.diplomacy.permission.add_members=Add Members
+desc.immersiveintelligence.diplomacy.permission.invite_members=Add Members
 desc.immersiveintelligence.diplomacy.permission.remove_members=Remove Members
 desc.immersiveintelligence.diplomacy.permission.military_aid=Military Aid
 desc.immersiveintelligence.diplomacy.permission.transit=Transit

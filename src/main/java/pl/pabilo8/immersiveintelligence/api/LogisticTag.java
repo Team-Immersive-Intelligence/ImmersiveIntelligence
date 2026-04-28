@@ -97,7 +97,7 @@ public class LogisticTag implements INBTSerializable<NBTTagCompound>, Cloneable
 					.ifPresent(string -> this.destination = string);
 			//Owner
 			IIDataHandlingUtils.optionalString('o', packet)
-					.map(DiplomacyUtils::getIdentityByName)
+					.map(DiplomacyUtils::getIdentityByUUID)
 					.ifPresent(identity -> this.owner = identity);
 			//Color (Paint)
 			IIDataHandlingUtils.optionalColor('p', packet)
@@ -207,7 +207,7 @@ public class LogisticTag implements INBTSerializable<NBTTagCompound>, Cloneable
 				.withString("origin", origin)
 				.withString("destination", destination)
 				.withColor("color", IIColor.fromDye(color))
-				.withString("owner", (owner==null?DiplomacyUtils.NEUTRAL: owner).getDisplayName())
+				.withString("owner", (owner==null?DiplomacyUtils.NEUTRAL: owner).getStringUUID())
 				.withInt("batch_number", batchNumber)
 				.unwrap();
 	}
@@ -226,7 +226,7 @@ public class LogisticTag implements INBTSerializable<NBTTagCompound>, Cloneable
 		enbt.checkSetColor("color", found -> color = found.getDyeColor());
 		//Owner
 		owner = DiplomacyUtils.NEUTRAL;
-		enbt.checkSetString("owner", DiplomacyUtils::getIdentityByName);
+		enbt.checkSetString("owner", DiplomacyUtils::getIdentityByUUID);
 	}
 
 	//--- Utils ---//

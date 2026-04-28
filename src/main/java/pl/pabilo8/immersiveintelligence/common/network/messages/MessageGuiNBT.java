@@ -49,7 +49,7 @@ public class MessageGuiNBT extends IIMessage
 	{
 		if(closeMessage)
 		{
-			handler.player.closeContainer();
+			handler.player.closeScreen();
 			return;
 		}
 

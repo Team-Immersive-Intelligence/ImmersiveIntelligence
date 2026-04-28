@@ -8,7 +8,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import static pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyUtils.NEUTRAL;
-import static pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyUtils.getIdentityByName;
+import static pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyUtils.getIdentityByUUID;
 
 /**
  * Implementation of chunk ownership capability
@@ -61,7 +61,7 @@ public class ChunkOwnership implements IChunkOwnership
 		EasyNBT nbt = EasyNBT.newNBT();
 
 		if(owner!=null)
-			nbt.withString("owner", owner.getDisplayName());
+			nbt.withString("owner", owner.getStringUUID());
 		if(claimData!=null)
 			nbt.withTag("claimData", claimData.toNBT());
 		return nbt;
@@ -72,7 +72,7 @@ public class ChunkOwnership implements IChunkOwnership
 		if(nbt.hasKey("owner"))
 		{
 			String ownerName = nbt.getString("owner");
-			this.owner = getIdentityByName(ownerName);
+			this.owner = getIdentityByUUID(ownerName);
 		}
 		if(nbt.hasKey("claimData"))
 			this.claimData = ChunkClaimData.fromNBT(nbt.getEasyCompound("claimData"));

@@ -73,8 +73,11 @@ public class TileEntityFlagpole extends TileEntityMultiblockIIBase<TileEntityFla
 	protected void onUpdate()
 	{
 		//Claim neighbouring chunks
-		if(!world.isRemote&&world.getTotalWorldTime()%240==0)
+		if(!world.isRemote&&world.getTotalWorldTime()%200==0)
+		{
+			updateTileForEvent(SyncEvents.TILE_OWNERSHIP_MODIFIED);
 			DiplomacyUtils.claimChunks(this);
+		}
 
 		/*if(!world.isRemote&&ownerIdentity!=DiplomacyUtils.NEUTRAL)
 			IILogger.info("Owner Identity for "+uuid+" : "+ownerIdentity);*/
@@ -196,8 +199,9 @@ public class TileEntityFlagpole extends TileEntityMultiblockIIBase<TileEntityFla
 	public void setOwnerIdentity(OwnerIdentity ownerIdentity)
 	{
 		this.ownerIdentity = ownerIdentity;
-		updateTileForEvent(SyncEvents.TILE_OWNERSHIP_MODIFIED);
-		IILogger.info("Owner Identity for "+uuid+" : "+ownerIdentity+" / world is "+(world.isRemote?"remote": "local"));
+		if(!world.isRemote)
+			updateTileForEvent(SyncEvents.TILE_OWNERSHIP_MODIFIED);
+		IILogger.debug("Owner Identity for "+uuid+" : "+ownerIdentity+" / world is "+(world.isRemote?"remote": "local"));
 	}
 
 	@Override

@@ -12,15 +12,18 @@ import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyUtils;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.OwnerIdentity;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
+import java.util.UUID;
+
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
+ * @updated 26.04.2026
  * @since 12.09.2025
  */
 public class MessageDiplomacySync extends IIMessage
 {
 	boolean updateAll;
-	String identityName;
+	UUID identity;
 	boolean shouldRemove;
 	EasyNBT tagCompound;
 
@@ -29,10 +32,10 @@ public class MessageDiplomacySync extends IIMessage
 
 	}
 
-	public MessageDiplomacySync(boolean updateAll, String identityName, boolean shouldRemove, EasyNBT tagCompound)
+	private MessageDiplomacySync(boolean updateAll, UUID identity, boolean shouldRemove, EasyNBT tagCompound)
 	{
 		this.updateAll = updateAll;
-		this.identityName = identityName;
+		this.identity = identity;
 		this.shouldRemove = shouldRemove;
 		this.tagCompound = tagCompound;
 	}
@@ -44,12 +47,12 @@ public class MessageDiplomacySync extends IIMessage
 
 	public static MessageDiplomacySync removeIdentityMessage(OwnerIdentity identity)
 	{
-		return new MessageDiplomacySync(false, identity.getDisplayName(), true, null);
+		return new MessageDiplomacySync(false, identity.getUUID(), true, null);
 	}
 
 	public static MessageDiplomacySync updateIdentityMessage(OwnerIdentity identity)
 	{
-		return new MessageDiplomacySync(false, identity.getDisplayName(), false, identity.toNBT());
+		return new MessageDiplomacySync(false, identity.getUUID(), false, identity.toNBT());
 	}
 
 	@Override
@@ -69,9 +72,9 @@ public class MessageDiplomacySync extends IIMessage
 		}
 
 		if(shouldRemove)
-			DiplomacyUtils.clientRemoveIdentity(identityName);
+			DiplomacyUtils.clientRemoveIdentity(identity);
 		else
-			DiplomacyUtils.clientUpdateIdentity(identityName, tagCompound);
+			DiplomacyUtils.clientUpdateIdentity(identity, tagCompound);
 	}
 
 	@Override
@@ -80,7 +83,7 @@ public class MessageDiplomacySync extends IIMessage
 		updateAll = buf.readBoolean();
 		if(!updateAll)
 		{
-			identityName = readString(buf);
+			identity = readUUID(buf);
 			shouldRemove = buf.readBoolean();
 		}
 		if(!shouldRemove)
@@ -93,7 +96,7 @@ public class MessageDiplomacySync extends IIMessage
 		buf.writeBoolean(updateAll);
 		if(!updateAll)
 		{
-			writeString(buf, identityName);
+			writeUUID(buf, identity);
 			buf.writeBoolean(shouldRemove);
 		}
 		if(!shouldRemove)

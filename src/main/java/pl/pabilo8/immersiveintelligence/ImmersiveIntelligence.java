@@ -28,7 +28,6 @@ import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyUtils;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import static pl.pabilo8.immersiveintelligence.ImmersiveIntelligence.MODID;
 import static pl.pabilo8.immersiveintelligence.ImmersiveIntelligence.VERSION;
@@ -42,7 +41,8 @@ public class ImmersiveIntelligence
 	public static final String MODID = "immersiveintelligence";
 	public static final String VERSION = "@VERSION@";
 	//If anyone wants to acquire a righteously certified loicense:tm:, ask @Pabilo8, it is probable he can grant you one
-	private static final HashMap<String, String> alternativeCerts = new HashMap<String,String>(){{
+	private static final HashMap<String, String> alternativeCerts = new HashMap<String, String>()
+	{{
 		put("gabriel@iiteam.net", "73cf50303bda0cde99468a637a9d2681a4d7a125");
 		put("pabilo@iiteam.net", "48791e3791eac0c69a01301060895dc0f4f15f68");
 		put("avalon@iiteam.net", "172df79c3bca2e9546b739451f4e32acf4872aae");
@@ -105,11 +105,19 @@ public class ImmersiveIntelligence
 	}
 
 	@Mod.EventHandler
-	public void serverStarting(FMLServerStartingEvent event)
+	public void serverAboutToStart(FMLServerAboutToStartEvent event)
 	{
 		IILogger.debug("Pre-World Load cleanup");
 		CommonProxy.refreshFluidReferences();
 		RadioNetwork.INSTANCE.clearDevices();
+		DiplomacyUtils.init();
+	}
+
+	@Mod.EventHandler
+	public void serverStarting(FMLServerStartingEvent event)
+	{
+		IILogger.debug("Registering II Commands");
+		event.registerServerCommand(new CommandII());
 
 		if(FMLCommonHandler.instance().getEffectiveSide()==Side.SERVER)
 		{
@@ -125,10 +133,8 @@ public class ImmersiveIntelligence
 			}
 			else
 				IILogger.info("WorldData retrieved");
-			IISaveData.setInstance(world.provider.getDimension(), worldData);
+			IISaveData.setInstance(worldData);
 		}
-		IILogger.debug("Registering II Commands");
-		event.registerServerCommand(new CommandII());
 	}
 
 	@EventHandler
@@ -144,7 +150,7 @@ public class ImmersiveIntelligence
 	public void wrongSignature(FMLFingerprintViolationEvent event)
 	{
 		boolean loicense = false;
-		for(Map.Entry<String,String> altCert : alternativeCerts.entrySet())
+		for(Map.Entry<String, String> altCert : alternativeCerts.entrySet())
 			if(event.getFingerprints().contains(altCert.getValue()))
 			{
 				System.out.println("[Immersive Intelligence/Error] "+altCert.getKey()+" ("+altCert.getValue()+") is considered a righteously loicensed certificate. "+

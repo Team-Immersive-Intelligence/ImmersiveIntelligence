@@ -12,7 +12,10 @@ import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageDiplomacyAction;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.*;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyUtils;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomaticStatus;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.IOwnableProperty;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.OwnerIdentity;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -58,7 +61,9 @@ public class DecoOwnershipWidget extends DecoComponentWidgetBase<DecoOwnershipWi
 						.withIcon(DecoTextures.ICON_OWNERSHIP)
 						.withText("desc.immersiveintelligence.diplomacy.ownership.claim")
 						.withOnLMBPressed(() -> {
-							IIPacketHandler.sendToServer(new MessageDiplomacyAction(DiplomaticAction.CLAIM, property));
+							IIPacketHandler.sendToServer(MessageDiplomacyAction.claimProperty(property));
+							if(parentGui!=null)
+								parentGui.closeGUI();
 						})
 				);
 			}
