@@ -10,6 +10,12 @@ import pl.pabilo8.immersiveintelligence.test.GameTestBasic;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @ii-approved 0.3.1
+ * @updated 28.04.2026
+ * @since 28.01.2026
+ */
 public class EasyNBTWrappingTest extends GameTestBasic
 {
 	@Test

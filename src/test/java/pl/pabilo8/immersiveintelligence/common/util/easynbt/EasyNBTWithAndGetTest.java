@@ -11,9 +11,17 @@ import net.minecraftforge.fluids.FluidStack;
 import org.junit.jupiter.api.Test;
 import pl.pabilo8.immersiveintelligence.test.GameTestBasic;
 
+import java.util.UUID;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @ii-approved 0.3.1
+ * @updated 28.04.2026
+ * @since 28.01.2026
+ */
 public class EasyNBTWithAndGetTest extends GameTestBasic
 {
 	@Test
@@ -23,6 +31,13 @@ public class EasyNBTWithAndGetTest extends GameTestBasic
 		EasyNBT nbtAny = EasyNBT.newNBT().withAny("key", 42);
 		assertEquals(nbt.unwrap(), nbtAny.unwrap());
 		assertEquals(42, nbt.getInt("key"));
+	}
+
+	@Test
+	public void testWithLong()
+	{
+		EasyNBT nbt = EasyNBT.newNBT().withLong("key", 42L);
+		assertEquals(42L, nbt.getLong("key"));
 	}
 
 	@Test
@@ -68,6 +83,14 @@ public class EasyNBTWithAndGetTest extends GameTestBasic
 		EasyNBT nbtAny = EasyNBT.newNBT().withAny("key", "value");
 		assertEquals(nbt.unwrap(), nbtAny.unwrap());
 		assertEquals("value", nbt.getString("key"));
+	}
+
+	@Test
+	public void testWithUUID()
+	{
+		UUID uuid = UUID.fromString("123e4567-e89b-12d3-a456-426655440000");
+		EasyNBT nbt = EasyNBT.newNBT().withUUID("key", uuid);
+		assertEquals(uuid, nbt.getUUID("key"));
 	}
 
 	@Test

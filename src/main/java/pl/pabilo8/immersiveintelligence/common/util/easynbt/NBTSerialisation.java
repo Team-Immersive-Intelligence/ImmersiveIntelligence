@@ -209,8 +209,8 @@ public class NBTSerialisation
 
 		registerSerializer(
 				OwnerIdentity.class, NBTTagString.class,
-				ownerIdentity -> new NBTTagString(ownerIdentity.getDisplayName()),
-				nbt -> DiplomacyUtils.getIdentityByName(nbt.getString())
+				ownerIdentity -> new NBTTagString(ownerIdentity==null?"00000000-0000-0000-0000-000000000000": ownerIdentity.getStringUUID()),
+				nbt -> DiplomacyUtils.getIdentityByUUID(nbt.getString())
 		);
 
 		//Inserter tasks
