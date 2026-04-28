@@ -398,7 +398,7 @@ public class IIContent
 	public static BlockIIFluid blockFluidAmmonia, blockFluidMethanol;
 	public static BlockIIFluid blockFluidBrine;
 	public static BlockIIFluid blockGasHydrogen, blockGasOxygen, blockGasChlorine, blockGasCO2, blockGasCO;
-	public static BlockIIFluid blockGasMustardGas, blockGasTearGas, blockGasPhosgeneGas, blockGasHydrogenCyanideGas,blockGasTabunGas,blockGasSarinGas,blockGasSomanGas;
+	public static BlockIIFluid blockGasMustardGas, blockGasTearGas, blockGasPhosgeneGas, blockGasHydrogenCyanideGas,blockGasTabunGas,blockGasSarinGas,blockGasSomanGas,blockGasPlagueGas;
 	public static BlockIIFluid blockFluidLatex;
 	public static BlockIIFluid blockFluidHerbicide;
 	//fluids
@@ -407,7 +407,7 @@ public class IIContent
 	public static Fluid fluidAmmonia, fluidMethanol;
 	public static Fluid fluidBrine;
 	public static Fluid gasHydrogen, gasOxygen, gasChlorine, gasCO2, gasCO;
-	public static Fluid gasMustardGas, gasTearGas, gasPhosgeneGas,gasHydrogenCyanideGas,gasTabunGas,gasSarinGas,gasSomanGas;
+	public static Fluid gasMustardGas, gasTearGas, gasPhosgeneGas,gasHydrogenCyanideGas,gasTabunGas,gasSarinGas,gasSomanGas,gasPlagueGas;
 	public static Fluid fluidLatex;
 	public static Fluid fluidHerbicide;
 	//biomes
@@ -443,6 +443,9 @@ public class IIContent
 		IIContent.gasSomanGas = makeFluid("soman_gas", 300, 180).setGaseous(true);
 
 		IIContent.fluidHerbicide = makeFluid("herbicide", 1030, 1002);
+
+		//Should not have color or transparency, should be fully invisible.
+		IIContent.gasPlagueGas = makeFluid("plague", -1500+100, 180).setGaseous(true);
 
 		IIContent.blockFluidInkBlack = new BlockIIFluid("ink", IIContent.fluidInkBlack, Material.WATER);
 		IIContent.blockFluidInkCyan = new BlockIIFluid("ink_cyan", IIContent.fluidInkCyan, Material.WATER);
@@ -526,6 +529,14 @@ public class IIContent
 		IIContent.blockFluidHerbicide = new BlockIIFluid("herbicide", IIContent.fluidHerbicide, Material.WATER)
 				.setPotionEffects(new PotionEffect(MobEffects.HUNGER, 80, 4))
 				.setPotionEffects(new PotionEffect(MobEffects.NAUSEA, 40, 0));
+
+		IIContent.blockFluidHerbicide = new BlockIIFluid("herbicide", IIContent.fluidHerbicide, Material.WATER)
+				.setPotionEffects(new PotionEffect(MobEffects.HUNGER, 80, 4))
+				.setPotionEffects(new PotionEffect(MobEffects.NAUSEA, 40, 0));
+
+		//Unobtainable, used as a tool for plague.
+		IIContent.blockGasPlagueGas = new BlockIIFluid("plague", IIContent.gasPlagueGas, Material.WATER)
+				.setPotionEffects(new PotionEffect(IIPotions.bioweapon5_1, 3456020, 0));
 	}
 
 	//dummy method, called so that the static fields above get loaded
@@ -565,5 +576,7 @@ public class IIContent
 		IIContent.gasSomanGas = FluidRegistry.getFluid("soman_gas");
 
 		IIContent.fluidHerbicide = FluidRegistry.getFluid("herbicide");
+		//should not obtainable by normal means.
+		IIContent.gasPlagueGas = FluidRegistry.getFluid("plague");
 	}
 }

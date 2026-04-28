@@ -30,6 +30,7 @@ import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.living.PotionEvent.PotionApplicableEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickEmpty;
@@ -533,5 +534,149 @@ public class EventHandler
 			return stack;
 
 		return ItemHandlerHelper.insertItem(pouchCap, stack, false);
+	}
+
+	public static boolean gotGasProtect;
+	//26.04.2026 Carver: gas protections from certain gasses. Only for II effects.
+
+	public void onPotionApplicable(PotionApplicableEvent event, EntityLivingBase entity)
+	{
+		if(entity==null)
+			return;
+
+		if(event.getPotionEffect().getPotion()==IIPotions.neuroparalitic)
+		{
+			if(gotGasProtect==ItemIIUpgradeableArmor.isArmorWithUpgrade(entity.getItemStackFromSlot(EntityEquipmentSlot.HEAD),
+					"gasmask", "hazmat")&&
+					gotGasProtect==ItemIIUpgradeableArmor.isArmorWithUpgrade(entity.getItemStackFromSlot(EntityEquipmentSlot.CHEST),
+							"hazmat")&&
+					gotGasProtect==ItemIIUpgradeableArmor.isArmorWithUpgrade(entity.getItemStackFromSlot(EntityEquipmentSlot.LEGS),
+							"hazmat")&&
+					gotGasProtect==ItemIIUpgradeableArmor.isArmorWithUpgrade(entity.getItemStackFromSlot(EntityEquipmentSlot.FEET),
+							"hazmat"))
+			{
+				event.setCanceled(true);
+			}
+		}
+
+		if(event.getPotionEffect().getPotion()==IIPotions.poisonirritant)
+		{
+			if(gotGasProtect==ItemIIUpgradeableArmor.isArmorWithUpgrade(entity.getItemStackFromSlot(EntityEquipmentSlot.HEAD),
+					"gasmask", "hazmat")&&
+					gotGasProtect==ItemIIUpgradeableArmor.isArmorWithUpgrade(entity.getItemStackFromSlot(EntityEquipmentSlot.CHEST),
+							"hazmat")&&
+					gotGasProtect==ItemIIUpgradeableArmor.isArmorWithUpgrade(entity.getItemStackFromSlot(EntityEquipmentSlot.LEGS),
+							"hazmat")&&
+					gotGasProtect==ItemIIUpgradeableArmor.isArmorWithUpgrade(entity.getItemStackFromSlot(EntityEquipmentSlot.FEET),
+							"hazmat"))
+			{
+				event.setCanceled(true);
+			}
+		}
+		//Regular suffocator is already protected from by gasmask.
+		if(event.getPotionEffect().getPotion()==IIPotions.suffocatordelayed1)
+		{
+			if(gotGasProtect==ItemIIUpgradeableArmor.isArmorWithUpgrade(entity.getItemStackFromSlot(EntityEquipmentSlot.HEAD),
+					"gasmask", "hazmat")&&
+					gotGasProtect==ItemIIUpgradeableArmor.isArmorWithUpgrade(entity.getItemStackFromSlot(EntityEquipmentSlot.CHEST),
+							"hazmat")&&
+					gotGasProtect==ItemIIUpgradeableArmor.isArmorWithUpgrade(entity.getItemStackFromSlot(EntityEquipmentSlot.LEGS),
+							"hazmat")&&
+					gotGasProtect==ItemIIUpgradeableArmor.isArmorWithUpgrade(entity.getItemStackFromSlot(EntityEquipmentSlot.FEET),
+							"hazmat"))
+			{
+				event.setCanceled(true);
+			}
+		}
+
+		if(event.getPotionEffect().getPotion()==IIPotions.bioweapon1)
+		{
+			if(gotGasProtect==ItemIIUpgradeableArmor.isArmorWithUpgrade(entity.getItemStackFromSlot(EntityEquipmentSlot.HEAD),
+					"gasmask", "hazmat")&&
+					gotGasProtect==ItemIIUpgradeableArmor.isArmorWithUpgrade(entity.getItemStackFromSlot(EntityEquipmentSlot.CHEST),
+							"hazmat")&&
+					gotGasProtect==ItemIIUpgradeableArmor.isArmorWithUpgrade(entity.getItemStackFromSlot(EntityEquipmentSlot.LEGS),
+							"hazmat")&&
+					gotGasProtect==ItemIIUpgradeableArmor.isArmorWithUpgrade(entity.getItemStackFromSlot(EntityEquipmentSlot.FEET),
+							"hazmat"))
+			{
+				event.setCanceled(true);
+			}
+		}
+
+		if(event.getPotionEffect().getPotion()==IIPotions.bioweapon2_1)
+		{
+			if(gotGasProtect==ItemIIUpgradeableArmor.isArmorWithUpgrade(entity.getItemStackFromSlot(EntityEquipmentSlot.HEAD),
+					"gasmask", "hazmat")&&
+					gotGasProtect==ItemIIUpgradeableArmor.isArmorWithUpgrade(entity.getItemStackFromSlot(EntityEquipmentSlot.CHEST),
+							"hazmat")&&
+					gotGasProtect==ItemIIUpgradeableArmor.isArmorWithUpgrade(entity.getItemStackFromSlot(EntityEquipmentSlot.LEGS),
+							"hazmat")&&
+					gotGasProtect==ItemIIUpgradeableArmor.isArmorWithUpgrade(entity.getItemStackFromSlot(EntityEquipmentSlot.FEET),
+							"hazmat"))
+			{
+				event.setCanceled(true);
+			}
+		}
+
+		if(event.getPotionEffect().getPotion()==IIPotions.bioweapon3_1)
+		{
+			if(gotGasProtect==ItemIIUpgradeableArmor.isArmorWithUpgrade(entity.getItemStackFromSlot(EntityEquipmentSlot.HEAD),
+					"gasmask", "hazmat")&&
+					gotGasProtect==ItemIIUpgradeableArmor.isArmorWithUpgrade(entity.getItemStackFromSlot(EntityEquipmentSlot.CHEST),
+							"hazmat")&&
+					gotGasProtect==ItemIIUpgradeableArmor.isArmorWithUpgrade(entity.getItemStackFromSlot(EntityEquipmentSlot.LEGS),
+							"hazmat")&&
+					gotGasProtect==ItemIIUpgradeableArmor.isArmorWithUpgrade(entity.getItemStackFromSlot(EntityEquipmentSlot.FEET),
+							"hazmat"))
+			{
+				event.setCanceled(true);
+			}
+		}
+
+		if(event.getPotionEffect().getPotion()==IIPotions.bioweapon4_1)
+		{
+			if(gotGasProtect==ItemIIUpgradeableArmor.isArmorWithUpgrade(entity.getItemStackFromSlot(EntityEquipmentSlot.HEAD),
+					"gasmask", "hazmat")&&
+					gotGasProtect==ItemIIUpgradeableArmor.isArmorWithUpgrade(entity.getItemStackFromSlot(EntityEquipmentSlot.CHEST),
+							"hazmat")&&
+					gotGasProtect==ItemIIUpgradeableArmor.isArmorWithUpgrade(entity.getItemStackFromSlot(EntityEquipmentSlot.LEGS),
+							"hazmat")&&
+					gotGasProtect==ItemIIUpgradeableArmor.isArmorWithUpgrade(entity.getItemStackFromSlot(EntityEquipmentSlot.FEET),
+							"hazmat"))
+			{
+				event.setCanceled(true);
+			}
+		}
+
+		if(event.getPotionEffect().getPotion()==IIPotions.bioweapon5_1)
+		{
+			if(gotGasProtect==ItemIIUpgradeableArmor.isArmorWithUpgrade(entity.getItemStackFromSlot(EntityEquipmentSlot.HEAD),
+					"gasmask", "hazmat")&&
+					gotGasProtect==ItemIIUpgradeableArmor.isArmorWithUpgrade(entity.getItemStackFromSlot(EntityEquipmentSlot.CHEST),
+							"hazmat")&&
+					gotGasProtect==ItemIIUpgradeableArmor.isArmorWithUpgrade(entity.getItemStackFromSlot(EntityEquipmentSlot.LEGS),
+							"hazmat")&&
+					gotGasProtect==ItemIIUpgradeableArmor.isArmorWithUpgrade(entity.getItemStackFromSlot(EntityEquipmentSlot.FEET),
+							"hazmat"))
+			{
+				event.setCanceled(true);
+			}
+		}
+
+		if(event.getPotionEffect().getPotion()==IIPotions.bioweapon5_2)
+		{
+			if(gotGasProtect==ItemIIUpgradeableArmor.isArmorWithUpgrade(entity.getItemStackFromSlot(EntityEquipmentSlot.HEAD),
+					"gasmask", "hazmat")&&
+					gotGasProtect==ItemIIUpgradeableArmor.isArmorWithUpgrade(entity.getItemStackFromSlot(EntityEquipmentSlot.CHEST),
+							"hazmat")&&
+					gotGasProtect==ItemIIUpgradeableArmor.isArmorWithUpgrade(entity.getItemStackFromSlot(EntityEquipmentSlot.LEGS),
+							"hazmat")&&
+					gotGasProtect==ItemIIUpgradeableArmor.isArmorWithUpgrade(entity.getItemStackFromSlot(EntityEquipmentSlot.FEET),
+							"hazmat"))
+			{
+				event.setCanceled(true);
+			}
+		}
 	}
 }
