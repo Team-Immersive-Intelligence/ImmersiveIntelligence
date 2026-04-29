@@ -759,9 +759,10 @@ public class IIRecipes
 				},
 				new String[]{"welder", "inserter"},
 				new String[]{
-						"welder work first", "inserter pick second", "inserter drop third",
-						"inserter pick second", "inserter drop third", "welder work third",
-						"inserter pick third", "inserter drop main",
+						"inserter pick second", "inserter drop main", "inserter pick third", "inserter drop main", "welder work main",
+						"inserter pick forth", "inserter drop main", "welder work main",
+						"inserter pick first", "inserter drop main",
+
 				},
 				32000,
 				1.2f
