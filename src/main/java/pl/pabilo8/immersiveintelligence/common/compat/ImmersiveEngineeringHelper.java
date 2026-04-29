@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.compat;
 
+import blusunrize.immersiveengineering.api.crafting.CrusherRecipe;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.api.tool.RailgunHandler;
 import blusunrize.immersiveengineering.client.ImmersiveModelRegistry;
@@ -7,18 +8,30 @@ import blusunrize.immersiveengineering.client.render.ItemRendererIEOBJ;
 import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.items.ItemToolUpgrade.ToolUpgrades;
 import blusunrize.immersiveengineering.common.util.chickenbones.Matrix4;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.Railgun;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIEFluidConcreteOverride;
+import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIMaterial.Materials;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIRailgunOverride;
+import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
+
+import java.util.Objects;
+
+import static blusunrize.immersiveengineering.api.tool.BelljarHandler.cropHandler;
+import static blusunrize.immersiveengineering.api.tool.BelljarHandler.registerHandler;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -52,10 +65,67 @@ public class ImmersiveEngineeringHelper extends IICompatModule
 		return "ImmersiveEngineering";
 	}
 
+	public static final ResLoc RES_MC = ResLoc.of(ResLoc.root("minecraft"));
+
 	@Override
 	public void registerRecipes()
 	{
+		//29.04.2026 Carver: added crusher recipes for turning flowers into dye.
 
+		OreDictionary.registerOre("flowerYellow1", new ItemStack(Blocks.YELLOW_FLOWER,1,0));
+		OreDictionary.registerOre("flowerYellow2", new ItemStack(Blocks.DOUBLE_PLANT,1,0));
+		OreDictionary.registerOre("flowerRed1", new ItemStack(Blocks.RED_FLOWER, 1,14));
+		OreDictionary.registerOre("flowerRed2", new ItemStack(Blocks.DOUBLE_PLANT, 1,4));
+		OreDictionary.registerOre("flowerRed3", new ItemStack(Blocks.RED_FLOWER, 1,4));
+		OreDictionary.registerOre("flowerLightGray1", new ItemStack(Blocks.RED_FLOWER, 1,3));
+		OreDictionary.registerOre("flowerLightGray2", new ItemStack(Blocks.RED_FLOWER, 1,8));
+		OreDictionary.registerOre("flowerLightGray3", new ItemStack(Blocks.RED_FLOWER, 1,6));
+		OreDictionary.registerOre("flowerMagenta1", new ItemStack(Blocks.RED_FLOWER, 1,2));
+		OreDictionary.registerOre("flowerMagenta2", new ItemStack(Blocks.DOUBLE_PLANT, 1,1));
+		OreDictionary.registerOre("flowerPink1", new ItemStack(Blocks.DOUBLE_PLANT, 1,5));
+		OreDictionary.registerOre("flowerPink2", new ItemStack(Blocks.RED_FLOWER, 1,7));
+		OreDictionary.registerOre("flowerLightBlue1", new ItemStack(Blocks.RED_FLOWER, 1,1));
+		OreDictionary.registerOre("flowerOrange1", new ItemStack(Blocks.RED_FLOWER, 1,5));
+		OreDictionary.registerOre("flowerGreen", new ItemStack(Blocks.CACTUS, 1,0));
+
+		//yellow
+		CrusherRecipe.addRecipe(new ItemStack(Objects.requireNonNull(Item.REGISTRY.getObject(RES_MC.with("dye"))), 2,4),
+				new IngredientStack("flowerYellow1"), 500);
+		CrusherRecipe.addRecipe(new ItemStack(Objects.requireNonNull(Item.REGISTRY.getObject(RES_MC.with("dye"))), 4,4),
+				new IngredientStack("flowerYellow2"), 500);
+		//red
+		CrusherRecipe.addRecipe(new ItemStack(Objects.requireNonNull(Item.REGISTRY.getObject(RES_MC.with("dye"))), 2,14),
+				new IngredientStack("flowerRed1"), 500);
+		CrusherRecipe.addRecipe(new ItemStack(Objects.requireNonNull(Item.REGISTRY.getObject(RES_MC.with("dye"))), 4,14),
+				new IngredientStack("flowerRed2"), 500);
+		CrusherRecipe.addRecipe(new ItemStack(Objects.requireNonNull(Item.REGISTRY.getObject(RES_MC.with("dye"))), 2,14),
+				new IngredientStack("flowerRed3"), 500);
+		//Light Gray
+		CrusherRecipe.addRecipe(new ItemStack(Objects.requireNonNull(Item.REGISTRY.getObject(RES_MC.with("dye"))), 2,8),
+				new IngredientStack("flowerLightGray1"), 500);
+		CrusherRecipe.addRecipe(new ItemStack(Objects.requireNonNull(Item.REGISTRY.getObject(RES_MC.with("dye"))), 2,8),
+				new IngredientStack("flowerLightGray2"), 500);
+		CrusherRecipe.addRecipe(new ItemStack(Objects.requireNonNull(Item.REGISTRY.getObject(RES_MC.with("dye"))), 2,8),
+				new IngredientStack("flowerLightGray3"), 500);
+		//Magenta
+		CrusherRecipe.addRecipe(new ItemStack(Objects.requireNonNull(Item.REGISTRY.getObject(RES_MC.with("dye"))), 2,2),
+				new IngredientStack("flowerMagenta1"), 500);
+		CrusherRecipe.addRecipe(new ItemStack(Objects.requireNonNull(Item.REGISTRY.getObject(RES_MC.with("dye"))), 4,2),
+				new IngredientStack("flowerMagenta2"), 500);
+		//Pink
+		CrusherRecipe.addRecipe(new ItemStack(Objects.requireNonNull(Item.REGISTRY.getObject(RES_MC.with("dye"))), 4,6),
+				new IngredientStack("flowerPink1"), 500);
+		CrusherRecipe.addRecipe(new ItemStack(Objects.requireNonNull(Item.REGISTRY.getObject(RES_MC.with("dye"))), 2,6),
+				new IngredientStack("flowerPink2"), 500);
+		//Light Blue
+		CrusherRecipe.addRecipe(new ItemStack(Objects.requireNonNull(Item.REGISTRY.getObject(RES_MC.with("dye"))), 2,3),
+				new IngredientStack("flowerLightBlue1"), 500);
+		//Orange
+		CrusherRecipe.addRecipe(new ItemStack(Objects.requireNonNull(Item.REGISTRY.getObject(RES_MC.with("dye"))), 2,1),
+				new IngredientStack("flowerOrange1"), 500);
+		//Green
+		CrusherRecipe.addRecipe(new ItemStack(Objects.requireNonNull(Item.REGISTRY.getObject(RES_MC.with("dye"))), 2,13),
+				new IngredientStack("flowerGreen"), 500);
 	}
 
 	@Override
@@ -64,6 +134,29 @@ public class ImmersiveEngineeringHelper extends IICompatModule
 		IILogger.info("Adding Railgun Projectiles");
 		RailgunHandler.registerProjectileProperties(new IngredientStack("stickTungsten"), 32, 1.3).setColourMap(new int[][]{{0xCBD1D6, 0xCBD1D6, 0xCBD1D6, 0xCBD1D6, 0x9EA2A7, 0x9EA2A7}});
 
+
+		//29.04.2026 Carver: added cloche recipes for flowers.
+
+		//Soil: dirt yellow_flower (dandellion)
+		registerHandler(cropHandler);
+
+		IngredientStack flowerSoil = new IngredientStack(ImmutableList.of(new ItemStack(Blocks.DIRT,1,0)));
+
+		cropHandler.register(new ItemStack(Blocks.YELLOW_FLOWER), new ItemStack[]{new ItemStack(Blocks.YELLOW_FLOWER,2)}, flowerSoil, Blocks.YELLOW_FLOWER.getDefaultState());
+		cropHandler.register(new ItemStack(Blocks.RED_FLOWER,1,0), new ItemStack[]{new ItemStack(Blocks.RED_FLOWER,2,0)}, flowerSoil, Blocks.RED_FLOWER.getDefaultState());
+		cropHandler.register(new ItemStack(Blocks.RED_FLOWER,1,1), new ItemStack[]{new ItemStack(Blocks.RED_FLOWER,2,1)}, flowerSoil, Blocks.RED_FLOWER.getDefaultState());
+		cropHandler.register(new ItemStack(Blocks.RED_FLOWER,1,2), new ItemStack[]{new ItemStack(Blocks.RED_FLOWER,2,2)}, flowerSoil, Blocks.RED_FLOWER.getDefaultState());
+		cropHandler.register(new ItemStack(Blocks.RED_FLOWER,1,3), new ItemStack[]{new ItemStack(Blocks.RED_FLOWER,2,3)}, flowerSoil, Blocks.RED_FLOWER.getDefaultState());
+		cropHandler.register(new ItemStack(Blocks.RED_FLOWER,1,4), new ItemStack[]{new ItemStack(Blocks.RED_FLOWER,2,4)}, flowerSoil, Blocks.RED_FLOWER.getDefaultState());
+		cropHandler.register(new ItemStack(Blocks.RED_FLOWER,1,5), new ItemStack[]{new ItemStack(Blocks.RED_FLOWER,2,5)}, flowerSoil, Blocks.RED_FLOWER.getDefaultState());
+		cropHandler.register(new ItemStack(Blocks.RED_FLOWER,1,6), new ItemStack[]{new ItemStack(Blocks.RED_FLOWER,2,6)}, flowerSoil, Blocks.RED_FLOWER.getDefaultState());
+		cropHandler.register(new ItemStack(Blocks.RED_FLOWER,1,7), new ItemStack[]{new ItemStack(Blocks.RED_FLOWER,2,7)}, flowerSoil, Blocks.RED_FLOWER.getDefaultState());
+		cropHandler.register(new ItemStack(Blocks.RED_FLOWER,1,8), new ItemStack[]{new ItemStack(Blocks.RED_FLOWER,2,8)}, flowerSoil, Blocks.RED_FLOWER.getDefaultState());
+
+		cropHandler.register(new ItemStack(Blocks.DOUBLE_PLANT,1,0), new ItemStack[]{new ItemStack(Blocks.DOUBLE_PLANT,2,0)}, flowerSoil, Blocks.DOUBLE_PLANT.getDefaultState());
+		cropHandler.register(new ItemStack(Blocks.DOUBLE_PLANT,1,1), new ItemStack[]{new ItemStack(Blocks.DOUBLE_PLANT,2,1)}, flowerSoil, Blocks.DOUBLE_PLANT.getDefaultState());
+		cropHandler.register(new ItemStack(Blocks.DOUBLE_PLANT,1,4), new ItemStack[]{new ItemStack(Blocks.DOUBLE_PLANT,2,4)}, flowerSoil, Blocks.DOUBLE_PLANT.getDefaultState());
+		cropHandler.register(new ItemStack(Blocks.DOUBLE_PLANT,1,5), new ItemStack[]{new ItemStack(Blocks.DOUBLE_PLANT,2,5)}, flowerSoil, Blocks.DOUBLE_PLANT.getDefaultState());
 	}
 
 	@Override
