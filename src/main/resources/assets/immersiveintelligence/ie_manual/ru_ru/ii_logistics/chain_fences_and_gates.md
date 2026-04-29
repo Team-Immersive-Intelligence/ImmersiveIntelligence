@@ -1,29 +1,27 @@
 # meta
-Chain Fences and Gates
-Three Meters and Growing!
+Заборы и ворота из сетки
+Трехметровые и продолжают расти!
 # fence_blocks
 |[crafting]{source:"fence_blocks"}|
-The chain fence can serve as a stylish, industrial looking barrier between factory zones. They offer low amounts of protection against a full scale invasion, but are enough to deter unwanted guests from your base. Available in several flavors!
+Сетчатое ограждение может служить барьером между производственными зонами. Оно обеспечивает небольшую степень защиты от полномасштабного вторжения, но этого достаточно, чтобы отпугнуть нежелательных гостей от вашей базы. Возможно сделаать сетки из разных материалов!
 # multiblock_gates
-If standard size fence gates are too small for your needs, the **Engineering Department
-** offers large-scale fencing deployments fit for any industrial or military installation.<br>
-Fence gates can be upgraded to add razor wire on the top, and/or to offer [redstone wire](redstoneWires) connections, allowing remote control.
-# wooden_fence_gate
+Если стандартные размеры ворот для забора слишком малы для ваших нужд, **инженерный департамент** разработал большие ворота ограждения, подходящие для любого промышленного или военного объекта.<br>
+Ворота из сетки могут быть модернизированы, чтобы добавить сверху колючую проволоку и/или обеспечить подключение [редстоуна](redstoneWires), позволяющее дистанционно управлять ими.
+#wooden_fence_gate
 |[multiblock]{mb:"II:WoodenFenceGate"}|
-The Wooden Fence Gate makes for a stylish, [rustic] entry point to your factory complex. Form the multiblock by using a [hammer](introduction#introductionHammer) on the bottom light engineering blocks.
-# wooden_chain_fence_gate
+Деревянные ворота — это стильный, [деревенский] вход на ваш завод. Собирите ворота, используя [молоток инженера](introduction#introductionHammer) по нижнему легкому инженеому блоку.
+#wooden_chain_fence_gate
 |[multiblock]{mb:"II:WoodenChainFenceGate"}|
-The Wooden Chain Fence Gate makes for a stylish, [chain-linked] entry point to your factory complex. Form the multiblock by using a [hammer](introduction#introductionHammer) on the bottom light engineering blocks.
+Деревянные сеточные ворота — это стильный, [связующий] вход на ваш завод. Собирите ворота, используя [молоток инженера](introduction#introductionHammer) по нижнему легкому инженеому блоку.
 # steel_fence_gate
 |[multiblock]{mb:"II:SteelFenceGate"}|
-The Steel Fence Gate makes for a stylish, [formidable] entry point to your factory complex. Form the multiblock by using a [hammer](introduction#introductionHammer) on the bottom light engineering blocks.
+Стальные ворота — это стильный, [внушительный] вход на ваш завод. Собирите ворота, используя [молоток инженера](introduction#introductionHammer) по нижнему легкому инженеому блоку.
 # steel_chain_fence_gate
 |[multiblock]{mb:"II:SteelChainFenceGate"}|
-The Steel Chain Fence Gate makes for a stylish, [modern] entry point to your factory complex. Form the multiblock by using a [hammer](introduction#introductionHammer) on the bottom light engineering blocks.
+Стальные сеточные ворота — это стильный, [современный] вход на ваш завод. Собирите ворота, используя [молоток инженера](introduction#introductionHammer) по нижнему легкому инженеому блоку.
 # aluminum_chain_fence_gate
 |[multiblock]{mb:"II:AluminiumFenceGate"}|
-The Aluminum Fence Gate makes for a stylish, [lightweight] entry point to your factory complex. Form the multiblock by using a [hammer](introduction#introductionHammer) on the bottom light engineering blocks.
+Алюминиевые ворота — это стильный, [легкий] вход на ваш завод. Собирите ворота, используя [молоток инженера](introduction#introductionHammer) по нижнему легкому инженеому блоку.
 # aluminum_fence_gate
 |[multiblock]{mb:"II:AluminiumChainFenceGate"}|
-The Aluminum Chain Fence Gate makes for a stylish, [unique] entry point to your factory complex. Form the multiblock by using a [hammer](introduction#introductionHammer) on the bottom light engineering blocks.
-
+Алюминиевые сеточныеворота — это стильный, [уникальный] вход на ваш завод. Собирите ворота, используя [молоток инженера](introduction#introductionHammer) по нижнему легкому инженеому блоку.

@@ -1,36 +1,34 @@
 # meta
-Skycrate System
-Same Day Delivery
+Система фуникулёра
+Доставка в тот же день
 # intro
-The Skycrate system is a different approach on delivering items. Its speed surpasses any conveyor, and the usage of rope makes it cheaper and more space-efficient. There are also drawbacks however; it requires stations on both sides and a number of posts depending on the length of the system. Skycrates are a better option than conveyors on longer distances, and is not encouraged to use them for short (0-30m) distances.
+Система фуникулёра представляет собой иной подход к доставке благ. Ее скорость превосходит скорость любого конвейера, а использование троса делает ее дешевле и компактнее. Однако есть и недостатки: она требует наличия станций с обеих сторон и определенного количества постом в зависимости от длины системы. Не рекомендуется использовать их на коротких (0-30 м) дистанциях.
 # warning
-**Letter of notice from the Engineering Department:**<br>
-The Engineering Department has spent countless hours and funds attempting to implement advanced techniques into the aging Skycrate system, but tragically, have not been fruitful.
-<br>All Engineers wishing to develop a Skycrate system shall ensure that **all chunks between start and end stations are
-loaded**.
+**Письмо-оповещение от Инженерного департамента**<br>
+Инженерный департамент потратил неисчисленное количество часов и средств, пытаясь внедрить передовые технологии в устареющую систему фуникулёра, но, к сожалению, это не принесло результатов.
+Все инженеры, желающие эксплатировать систему фуникулёра, должны убедиться, что ** все чанки между начальной и конечной станциями прогружены**.
 # warning2
-The Engineering Department is not responsible for loss of goods along unloaded ziplines. Sign below to confirm you have [read and understood this warning.]<br>
+Инженерного департамент не несет ответственности за потерю груза на системах фуникулёра. Распишитесь ниже, что вы [прочитали данное оповещение и оповещены о рисках]<br>
 X
 ------------------------------
 # skycrate
 |[multiblock]{mb:"II:SkycrateStation"}|
-The Skycrate station is both the starting and stopping point of the delivery system. To form it, use a [hammer](introduction#introductionHammer) on the scaffolding in the middle.
-To function, it requires rotary power to be inputted to its side.
+Станция фуникулёра является одновременно начальной и конечной точкой системы доставки. Для её сборки используйте [молоток](introduction#introductionHammer) на строительных лесах.
+Для её функционирования необходимо подать вращательную энергию.
 # details_crate
-The amount of gears increase its efficiency, similar how it works with [Gearboxes](rotary_power.md#gearboxes).
-The station uses [mounts](#frames) to put crates into the delivery system. The mounts are taken from a [user-supplied crate] placed behind the inserter on the rear of the machine. Transport crates are inserted and outputted on the conveyor. A crate can be forced out of the station by applying a redstone signal.
+Увеличение количества шестерен повышает его эффективность, аналогично тому, как это работает с [коробками передач](rotary_power.md#gearboxes).
+Станция использует [рамки](#frames) для размещения ящиков в системе фуникулёра. Крепления берутся из [ящика], расположенного за манипулятором. Ящики вставляются и выводятся на конвейер. Ящик можно принудительно вытолкнуть из станции, подав сигнал красного камня.
 # skycart
 |[multiblock]{mb:"II:SkycartStation"}|
-The Sky*cart* station is similar to the Sky
-*crate* station, using minecarts and rails instead of crates and conveyors. To form it, use a [hammer](introduction#introductionHammer) on the scaffolding in the middle.
+Станция *пассажирского фуникулёра* похожа на станцию *фуникулёра*, но вместо ящиков в рамках используются вагонетки и рельсы. Чтобы её построить, используйте [молоток](introduction#introductionHammer) на строительных лесах посередине.
 # details_cart
-Like its Skycrate counterpart, the station uses [mounts](#frames) to put the contents of the carts into the delivery system. Minecarts can only enter the station when the railway barrier is up. A minecart can be forced out of the station by applying a redstone signal. The station will automatically expel minecarts after a loading/unloading operation.
+Как и её аналог Станция пассажирского фуникулёра, станция использует [рамки](#frames) для загрузки содержимого вагонеток в систему доставки. Вагонетки могут въезжать на станцию ​​только тогда, когда поднят железнодорожный барьер. Вагонетку можно вытолкнуть со станции, подав сигнал красного камня. Станция автоматически выталкивает вагонетки после операции погрузки/разгрузки.
 # skycrate_post
 |[multiblock]{mb:"II:SkycratePost"}|
-The Skycrate Post is the relay between two points in the skycrate network. Only two wires can be attached to the pylon at the same time. To form it, use a [hammer](introduction#introductionHammer) on the fence.
+Фуникулёрный пост является аналогом реле между двумя точками в системе фуникулёра. К опоре одновременно можно прикрепить только два провода.
 # minecarts
 |[item_display]{source:"minecart_general"}|
-Crate carts are a safe way to transport items via rail. They can be crafted by putting a crate into a minecart. Items inside said crates will not be lost. When disassembled, the minecart will split into the cart and the crate
+Вагонетки с ящиками — это безопасный способ перевозки предметов по железной дороге. Их можно изготовить, поместив ящик в вагонетку. Предметы внутри ящиков не будут потеряны. При разборке вагонетка разделится на вагонетку и ящик.
 # frames
 |[crafting]{source:"mount"}|
-The Skycrate mounts are used to transport crates via the zipline. There are two models: The basic ones and the electric ones, which use energy provided on the way via nearby [Tesla Coils](teslaCoil). 
+Рамки фуниклёра используются для транспортировки ящиков по канатной дороге. Существует две модели: базовая и электрическая, использующая энергию, получаемую по пути от расположенных рядом катушек Tesla(teslaCoil).

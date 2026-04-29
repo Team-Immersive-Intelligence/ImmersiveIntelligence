@@ -3,12 +3,12 @@ POL
 Компьютерная революция
 # intro
 @level_computer
-POL это язык программирования, используемый [компьютерами]
+POL это язык программирования, используемый [компьютерами].<br>
 Для [компьютеров] создают наборы исполняемых инструкций, называемых **Программами**.
 |[wip_notice]|
 # code_compilation0
-A **POL** program is a sequence of statements, each occupying a single line. Before using any data operations, you must import the required [Circuit](_functional_circuits.md) library with the **USE** statement.
-Variables are declared using their type name, followed by the variable letter prefixed with **@**, and an optional initial value.
+Программа **POL** представляет собой последовательность операторов, каждый из которых занимает отдельную строку. Перед использованием любых операций с данными необходимо импортировать требуемую библиотеку [печатной платы](_functional_circuits.md) с помощью оператора **USE**.
+Переменные объявляются с использованием имени типа, за которым следует буква переменной с префиксом **@** и опционально, начальное значение.
 # code_compilation0_example
 |[pol_code]{code:"use BASIC\\n\\ninteger @a = 5\\nfloat @b = 3.14\\nstring @c = \"hello\"\\nboolean @d = 1"}|
 # code_compilation1

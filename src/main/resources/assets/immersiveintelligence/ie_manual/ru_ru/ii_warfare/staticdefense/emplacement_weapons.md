@@ -2,51 +2,50 @@
 Вооружение огневых точек
 Демонстрация силы
 # intro
-An [emplacement], like most weapons developed by the Engineering Department, can be augmented to fill different niches.
-Several weapons with numerous strengths and weaknesses can be installed to create an incredibly versatile defense system.
+[Огневая точка], как и большинство видов оружия, разрабатываемых инженерным отделом, может быть дополнена для заполнения различных ниш.
+Можно установить несколько видов оружия с многочисленными сильными и слабыми сторонами, чтобы создать невероятно универсальную систему защиты.
 # mg0
-**Machinegun**<br>
-This Emplacement is the most basic and
-*cheapest* of all the Emplacements available. It is a reliable choice for dealing with soft ground targets or light vehicles, when using [armor-piercing long bullets] for ammunition.
+**Пулемётное гнездо**<br>
+Эта установка является самой простой и "дешевой" из всех доступных. Это надежный выбор для борьбы с наземными целями или легкими транспортными средствами, при использовании [бронебойных винтовочных патронов] в качестве боеприпасов.
 # mg1
-The **Machinegun** Emplacement comes in 3 variants: [Default], [Heavy Barreled], and [Water-Cooled], which are identical in function to those present in the [infantry version](machinegun.md) of the Machinegun.
-Take note, this weapon does not use [magazines](magazines.md). [Loose bullets have to be provided through the emplacement input port]. Due to its limited pitch, the MG Emplacement is a poor choice for firing at air targets.
+**Пулемётное гнездо** имеет в 3 варианта: [Стандартный], [С тяжёлым стволом] и [С водяным охлаждением], которые идентичны вариантам [пехотного пулемёта](machinegun.md).
+Обратите внимание, что это оружие не использует [магазины](magazines.md). [Патроны необходимо подавать через вход огневой точки]. Из-за ограниченного вертикального угла стрельбы пулемёта, он плохо подходит для стрельбы по воздушным целям.
 # chem0
-**Heavy Chemthrower**<br>
-This Emplacement designed for [close-range] engagements against masses of enemies. Similarly to regular [Chemthrower](chemthrower), the heavy variant can be filled with various liquids from the liquid tanks.
+**Тяжёлый жидкомёт**<br>
+Тяжёлый жидкомёт предназначен для [ближнего боя против групп противника]. Аналогично [жидкомёту](chemthrower), тяжелый вариант может быть заправлен различными жидкостями из резервуаров.
 # chem1
-Normally, it ignites the fluid, but this can be toggled using a data packet. **The Heavy Chemthrower** Emplacement has the [lowest range] among all of the Emplacements, and is incredibly poor at targeting airborne targets.
+По умолчанию [тяжёлый жидкомёт](#chem0) поджигает жидкость, это можно отключить с помощью пакета данных. **Тяжёлый жидкомёт** имеет [наименьшую дальность] среди всех огневых точек и невероятно плохо подходит для поражения воздушных целей.
 # flak0
-**Autocannon**<br>
-This Emplacement is a [standard, all-rounder option] for dealing with soft targets, vehicles and air targets. Depending on the ammo, it can serve as a great standard option for base protection against all sorts of threats.
+**Автопушка**<br>
+Автопушка — [стандартный, универсальный вариант] для борьбы с незащищенными целями, техникой и воздушными целями. В зависимости от боеприпасов, она может служить отличным стандартным вариантом для защиты базы от всевозможных угроз.
 # flak1
-Due to its high velocity and diverse pitch and yaw ranges, the **Autocannon** is [especially effective against airborne targets].
-Its drawbacks are a slower rate of fire compared to the Machinegun and it's [relatively low magazine size](magazines.md), forcing it to reload very often. It is best to combine it with other emplacements.
+Благодаря высокой скорости поворота и большим углом стрельбы, **автопушка** [особенно эффективна против воздушных целей].
+Её недостаток — более низкая скорострельность по сравнению с пулеметом и [относительно небольшой объем магазина](magazines.md), что вынуждает его очень часто перезаряжать. Лучше всего использовать его в сочетании с другими огневыми точками.
 # railgun0
-**Heavy Railgun**<br>
-This Emplacement is used in [precision-dependent long range combat]. It is best used against [vehicles] and [single targets with high durability]. Damage is dependent on the metal out of which the rod is made, or composition of the [railgun grenade](grenades.md#1).
+**Тяжёлый рельсотрон**<br>
+Тяжёлый рельсотрон используется в [бою на дальних дистанциях]. Она наиболее эффективна против [транспортных средств] и [одиночных целей с высокой прочностью]. Урон зависит от металла, из которого изготовлен стержень, или [рельсовой гранаты](grenades.md#1).
 # railgun1
-Due to the very low fire rate, turn rate, and low inventory space, it is a poor choice for engaging many targets. It is required to be paired with other emplacements for better protection.
-Fortunately, the **Heavy Railgun** possesses a high armor-piercing capability, so it is best utilized on armored targets, vehicles and targets behind steel walls.
-*No armor is too tough!*
+Из-за очень низкой скорострельности, скорости поворота и малого инвентаря это плохой выбор для поражения большого количества целей. Для лучшей защиты его необходимо использовать в паре с другими огневыми точками.
+К счастью, **тяжёлый рельсотрон** обладает высокой бронепробиваемостью, поэтому лучше всего использовать его против бронированных целей, техники и целей за стальными стенами.  
+*Нет брони, которую нельзя было бы пробить!*
 # cpds0
-**Counter-Projectile Defense System**<br>
-A pinnacle of computer technology, mechanical skill and sophisticated targeting software, this Emplacement is the worst enemy of anything that can fly, walk, or swim. It uses [long bullets].
+**Система ПротивоСнарядной Обороны (СПСО)**<br>
+СПСО представляющая собой вершину компьютерных технологий, механического мастерства и сложного программного обеспечения для наведения на цель, является злейшим врагом всего, что умеет летать, ходить, ездить, плавать и тд. 
 # cpds1
-Due to the astounding rate of fire, as well as fast tracking and response abilities, it is almost [impossible for targets to evade].
-Thanks to its advanced targeting system, it is the [best weapon for anti-projectile defense purposes], with the capability to [shoot down artillery projectiles in mid air]. In order to do that, it needs to be linked to a [Radar](radar.md) or [Observers](#ir_observer0) in order to maximize the chances of successful interception.
+Благодаря поразительной скорострельности, а также быстрому наведению и реагированию, целям практически *невозможно* уклониться.
+Благодаря усовершенствованной системе наведения, это [лучшее оружие для противоснарядной обороны], способное [сбивать артиллерийские снаряды в воздухе]. Для этого его необходимо связать с [радаром](radar.md) или [наблюдателям](#ir_observer0), чтобы максимально увеличить шансы на успешный перехват.
 # cpds2
-The only drawback it comes with is its enormous maintenance cost, due to its high rate of fire. If you're struggling with providing it with sufficient amounts of ammunition, consider using it as a [special, last resort] weapon for countering projectiles.
+Единственный недостаток — это огромные потребление боеприпасов из-за высокой скорострельности. Если у вас возникают проблемы с обеспечением достаточного количества боеприпасов, рассмотрите возможность [ограниченого] использования его, в качестве орудия для противоснаряданой обороны.
 # tesla0
-**Tesla Coil Emplacement**<br>
-This Emplacement is the bigger and more refined variant of the [Tesla Coil](teslaCoil) and deals [higher damage in expanded range]. The weapon is a good choice against [soft targets], who happened to come too close. Thanks to its advanced control systems, the weapon can differentiate between friend and foe.
+**Башня Теслы**<br>
+Эта установка представляет собой более крупный и усовершенствованный вариант [катушки Тесла](teslaCoil) и наносит [больший урон в расширенном диапазоне]. Это оружие хорошо подходит против [уязвимых целей], которые оказались слишком близко. Благодаря усовершенствованной системе управления, оружие может различать своих и чужих.
 # tesla1
-Due to being energy-powered, [it does not require ammunition] - only a constant supply of electricity. Its drawbacks are a low range of attack and high energy consumption.
+Благодаря тому, что он работает на энергии, [ему не нужны боеприпасы] — только постоянный источник электроэнергии. Его недостатки — малая дальность атаки и высокое энергопотребление.
 # ir_observer0
-**Infrared Observer**<br>
-This Emplacement is a [surveillance device] used to detect enemies from afar and share their coordinates with other emplacements. It is considered one of the most, [if not the most important] emplacement weapon.
+**Инфракрасный наблюдатель**<br>
+ИФ-наблюдатель представляет собой [устройство наблюдения], используемое для обнаружения врагов на расстоянии и передачи их координат другим огневым точкам. Она считается одним из наиболее важных [если не самым важным] видов огневой поддержки.
 # ir_observer1
-Using an [Observer] can dramatically extend the operational range of the other Emplacements. [Observers] reveal and communicate enemy positions coordinates via [Data](data_main.md) on extremely long distances and can coordinate a network of connected Emplacements to perform [precision focus fire on one target from afar], boosting the overall potential of defense system.
+Использование [наблюдателя] может значительно расширить оперативный диапазон других позиций. [Наблюдатели] раскрывают и передают координаты позиций противника через [данные](data_main.md) на чрезвычайно больших расстояниях и могут координировать сеть связанных позиций для выполнения [точечного прицельного огня по одной цели издалека].
 # ir_observer2
-It is worth noting the [Observer] can also detect [Flares](bullet_components) and send their coordinates, which can be used for directly guided precise artillery bombardment.
-[Observers] have a limited field of view of [180 degrees], with no ability to turn around once set up. This means [one Observer] can only cover [one direction]. Observers can turn when a proper data packet is sent to it, but take note this requires disassembly and hiding into the emplacement.
+Стоит отметить, что [ИФ-наблюдатель] также может обнаруживать [Flares](bullet_components) и передавать их координаты, которые могут быть использованы для точного артиллерийского обстрела.
+[Наблюдатель] имеют ограниченное поле зрения в [180 градусов] и не могут развернуться после установки. Это означает, что [один наблюдатель] может охватывать только [одно направление]. Наблюдатели могут развернуться, когда им будет отправлен соответствующий пакет данных.

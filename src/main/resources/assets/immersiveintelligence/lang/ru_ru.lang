@@ -273,8 +273,8 @@ item.immersiveintelligence.armor_upgrade.internal_springs.name=Внутренн�
 item.immersiveintelligence.tracer_powder.tracer_powder.name=Трассирующая пыль
 item.immersiveintelligence.tracer_powder.flare_powder.name=Осветительная пыль
 
-item.immersiveintelligence.skycrate_mount.mechanical.name=Фуникулёр
-item.immersiveintelligence.skycrate_mount.electric.name=Электрический фуникулёр
+item.immersiveintelligence.skycrate_mount.mechanical.name=Фуникулёрная рамка
+item.immersiveintelligence.skycrate_mount.electric.name=Электрическая фуникулёрная рамка
 
 desc.immersiveintelligence.electric_hammer=Поворачивает блоки, переключает порты машины, формирует мультиблоки.
 desc.immersiveintelligence.electric_wirecutter=Режет провода и моторные ремни, работает как ножницы.
