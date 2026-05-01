@@ -2,6 +2,8 @@ package pl.pabilo8.immersiveintelligence.common.compat;
 
 import blusunrize.immersiveengineering.api.crafting.CrusherRecipe;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
+import blusunrize.immersiveengineering.api.crafting.RefineryRecipe;
+import blusunrize.immersiveengineering.api.energy.DieselHandler;
 import blusunrize.immersiveengineering.api.tool.RailgunHandler;
 import blusunrize.immersiveengineering.client.ImmersiveModelRegistry;
 import blusunrize.immersiveengineering.client.render.ItemRendererIEOBJ;
@@ -15,6 +17,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -27,6 +30,7 @@ import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIEFluidConcrete
 import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIMaterial.Materials;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIRailgunOverride;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
+import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIFluid;
 
 import java.util.Objects;
 
@@ -57,6 +61,16 @@ public class ImmersiveEngineeringHelper extends IICompatModule
 		}
 
 		ReflectionHelper.setPrivateValue(ToolUpgrades.class, ToolUpgrades.REVOLVER_BAYONET, ImmutableSet.of("REVOLVER", "SUBMACHINEGUN", "RIFLE"), "toolset");
+
+		//Utilize the total burn time gained from 1000 mB.
+		//1 bucket of Biodiesel burns for 12.5 seconds = 250 ticks
+		//DieselHandler.registerFuel(fluid, time)
+		//High cetane is better by 20% efficiency.
+		//Possible stats for engines later: smoother engine operations, reduced ignition delay, less noise, less engine damage.
+		DieselHandler.registerFuel(IIContent.fluidBiodieselHighcetane,300);
+		DieselHandler.isValidFuel(IIContent.fluidBiodieselHighcetane);
+		DieselHandler.registerDrillFuel(IIContent.fluidBiodieselHighcetane);
+		DieselHandler.isValidDrillFuel(IIContent.fluidBiodieselHighcetane);
 	}
 
 	@Override
@@ -126,6 +140,10 @@ public class ImmersiveEngineeringHelper extends IICompatModule
 		//Green
 		CrusherRecipe.addRecipe(new ItemStack(Objects.requireNonNull(Item.REGISTRY.getObject(RES_MC.with("dye"))), 2,13),
 				new IngredientStack("flowerGreen"), 500);
+
+		//Given the nitrogen is made from mostly fatty meat, and high-cetane biodiesel is partially made of fats... some concessions have to be made.
+		RefineryRecipe.addRecipe(new FluidStack(IIContent.fluidBiodieselHighcetane, 200), new FluidStack(IIContent.gasNitrogen, 80),
+				new FluidStack(IEContent.fluidBiodiesel, 120), 50);
 	}
 
 	@Override

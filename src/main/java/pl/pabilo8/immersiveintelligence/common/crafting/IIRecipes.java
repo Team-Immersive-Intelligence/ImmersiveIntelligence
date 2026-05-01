@@ -916,9 +916,15 @@ public class IIRecipes
 				new FluidStack(IIContent.gasHydrogen, 3000),
 				new IngredientStack[]{new IngredientStack("dustPlatinum")}, 4800);
 
-		FermenterRecipe.addRecipe(new FluidStack(IIContent.fluidAmmonia, 120), ItemStack.EMPTY,
+		//01.05.2026 Carver: tweaks to recipes for better accuracy and to allow for high-cetane biodiesel.
+		//Nitrogen gas is made from meat, not ammonia. Ammonia is made from Nitrogen and hydrogen, and is energy-intensive.
+
+		RefineryRecipe.addRecipe(new FluidStack(IIContent.fluidAmmonia, 120), new FluidStack(IIContent.gasNitrogen, 98),
+				new FluidStack(IIContent.gasHydrogen, 22), 500);
+
+		FermenterRecipe.addRecipe(new FluidStack(IIContent.gasNitrogen, 120), ItemStack.EMPTY,
 				new IngredientStack("listAllMeatRaw"), 1600);
-		FermenterRecipe.addRecipe(new FluidStack(IIContent.fluidAmmonia, 160), ItemStack.EMPTY,
+		FermenterRecipe.addRecipe(new FluidStack(IIContent.gasNitrogen, 160), ItemStack.EMPTY,
 				new ItemStack(Items.ROTTEN_FLESH), 1000);
 
 		BottlingMachineRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.DUST_FORMALDEHYDE, 2),

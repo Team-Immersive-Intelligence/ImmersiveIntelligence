@@ -395,21 +395,21 @@ public class IIContent
 	//fluid blocks
 	public static BlockIIFluid blockFluidInkBlack, blockFluidInkCyan, blockFluidInkMagenta, blockFluidInkYellow;
 	public static BlockIIFluid blockFluidEtchingAcid, blockFluidSulfuricAcid, blockFluidNitricAcid, blockFluidHydrofluoricAcid, blockFluidFormicAcid;
-	public static BlockIIFluid blockFluidAmmonia, blockFluidMethanol;
+	public static BlockIIFluid blockFluidAmmonia, blockFluidMethanol, blockGasNitrogen;
 	public static BlockIIFluid blockFluidBrine;
 	public static BlockIIFluid blockGasHydrogen, blockGasOxygen, blockGasChlorine, blockGasCO2, blockGasCO;
 	public static BlockIIFluid blockGasMustardGas, blockGasTearGas, blockGasPhosgeneGas, blockGasHydrogenCyanideGas,blockGasTabunGas,blockGasSarinGas,blockGasSomanGas,blockGasPlagueGas;
 	public static BlockIIFluid blockFluidLatex;
-	public static BlockIIFluid blockFluidHerbicide;
+	public static BlockIIFluid blockFluidHerbicide,blockFluidBiodieselHighcetane;
 	//fluids
 	public static Fluid fluidInkBlack, fluidInkCyan, fluidInkMagenta, fluidInkYellow;
 	public static Fluid fluidEtchingAcid, fluidSulfuricAcid, fluidHydrofluoricAcid, fluidNitricAcid, fluidFormicAcid;
-	public static Fluid fluidAmmonia, fluidMethanol;
+	public static Fluid fluidAmmonia, fluidMethanol, gasNitrogen;
 	public static Fluid fluidBrine;
 	public static Fluid gasHydrogen, gasOxygen, gasChlorine, gasCO2, gasCO;
 	public static Fluid gasMustardGas, gasTearGas, gasPhosgeneGas,gasHydrogenCyanideGas,gasTabunGas,gasSarinGas,gasSomanGas,gasPlagueGas;
 	public static Fluid fluidLatex;
-	public static Fluid fluidHerbicide;
+	public static Fluid fluidHerbicide,fluidBiodieselHighcetane;
 	//biomes
 	public static BiomeWasteland biomeWasteland = new BiomeWasteland();
 
@@ -446,6 +446,12 @@ public class IIContent
 
 		//Should not have color or transparency, should be fully invisible.
 		IIContent.gasPlagueGas = makeFluid("plague", -1500+100, 180).setGaseous(true);
+
+		//01.05.2026 Carver: added Higher cetane biodiesel
+		IIContent.fluidBiodieselHighcetane = makeFluid("high_cetane_biodiesel", 2800, 4500);
+
+		IIContent.gasNitrogen = makeFluid("nitrogen", -1200+100, 204).setGaseous(true);
+
 
 		IIContent.blockFluidInkBlack = new BlockIIFluid("ink", IIContent.fluidInkBlack, Material.WATER);
 		IIContent.blockFluidInkCyan = new BlockIIFluid("ink_cyan", IIContent.fluidInkCyan, Material.WATER);
@@ -537,6 +543,10 @@ public class IIContent
 		//Unobtainable, used as a tool for plague.
 		IIContent.blockGasPlagueGas = new BlockIIFluid("plague", IIContent.gasPlagueGas, Material.WATER)
 				.setPotionEffects(new PotionEffect(IIPotions.bioweapon5_1, 3456020, 0));
+
+		IIContent.blockFluidBiodieselHighcetane = new BlockIIFluid("high_cetane_biodiesel", IIContent.fluidBiodieselHighcetane, Material.WATER);
+
+		IIContent.blockGasNitrogen = new BlockIIFluid("nitrogen", IIContent.gasNitrogen, Material.WATER);
 	}
 
 	//dummy method, called so that the static fields above get loaded
@@ -578,5 +588,9 @@ public class IIContent
 		IIContent.fluidHerbicide = FluidRegistry.getFluid("herbicide");
 		//should not obtainable by normal means.
 		IIContent.gasPlagueGas = FluidRegistry.getFluid("plague");
+
+		IIContent.fluidBiodieselHighcetane = FluidRegistry.getFluid("high_cetane_biodiesel");
+
+		IIContent.gasNitrogen = FluidRegistry.getFluid("nitrogen");
 	}
 }
