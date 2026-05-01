@@ -528,6 +528,11 @@ public class IISounds
 	@ModSound(sounds = {"motorbike/horn"}, subtitle = "*")
 	public static SoundEvent motorbikeHorn = registerSound("motorbike_horn");
 
+	//--- Armor ---//
+	@ModSound(sounds = {"armor/exoskeleton_ram"}, subtitle = "exoskeleton_ram")
+	public static SoundEvent rammingExoskeleton = registerSound("exoskeleton_ram");
+
+
 	//--- Hans ---//
 	//public static SoundEvent hans_test_pl = registerSound("hans_test_pl");
 	//public static SoundEvent hans_test_de = registerSound("hans_test_de");

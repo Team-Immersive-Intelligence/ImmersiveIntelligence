@@ -3,28 +3,44 @@ package pl.pabilo8.immersiveintelligence.common.item.armor;
 import blusunrize.immersiveengineering.api.tool.IElectricEquipment;
 import blusunrize.immersiveengineering.common.util.IEDamageSources;
 import blusunrize.immersiveengineering.common.util.IEDamageSources.ElectricDamageSource;
+import blusunrize.immersiveengineering.common.util.IESounds;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import com.google.common.collect.Multimap;
+import net.minecraft.block.*;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
 import pl.pabilo8.immersiveintelligence.client.model.armor.ModelLightEngineerArmor;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.LightEngineerArmor;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
+import pl.pabilo8.immersiveintelligence.common.IISounds;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.tileentity.TileEntityGateBase;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageItemKeybind;
+import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 
@@ -80,12 +96,66 @@ public class ItemIILightEngineerLeggings extends ItemIILightEngineerArmorBase im
 						mobs.forEach(entityMob -> {
 							entityMob.knockBack(player, 3, MathHelper.sin(player.rotationYaw*0.017453292F), -MathHelper.cos(player.rotationYaw*0.017453292F));
 							entityMob.attackEntityFrom(IEDamageSources.crusher, player.getTotalArmorValue());
+
+							BlockPos pos = new BlockPos(player.posX, player.posY, player.posZ);
+							world.playSound(null, new BlockPos(pos), IISounds.rammingExoskeleton, SoundCategory.NEUTRAL, 0.5F, 1.0f);
+
 						});
 						player.getArmorInventoryList().forEach(s -> s.damageItem(2, player));
 						player.removePotionEffect(IIPotions.movementAssist);
 						ItemNBTHelper.setInt(stack, "rammingCooldown", 40);
 					}
 
+					AxisAlignedBB boundbox = player.getEntityBoundingBox();
+
+					for (int x = MathHelper.floor(boundbox.minX); x < MathHelper.ceil(boundbox.maxX); x++)
+					{
+						for(int y = MathHelper.floor(boundbox.minY); y < MathHelper.ceil(boundbox.maxY); y++)
+						{
+							for(int z = MathHelper.floor(boundbox.minZ); z < MathHelper.ceil(boundbox.maxZ); z++)
+							{
+								BlockPos pos = new BlockPos(x, y, z);
+								IBlockState blockstaterammed = world.getBlockState(pos);
+
+								if(blockstaterammed.getBlock() instanceof BlockDoor)
+								{
+									world.setBlockToAir(pos);
+									world.playSound(null, new BlockPos(pos), SoundEvents.ENTITY_WITHER_BREAK_BLOCK, SoundCategory.NEUTRAL, 0.5F, 1.0f);
+									world.playSound(null, new BlockPos(pos), SoundEvents.ENTITY_ZOMBIE_ATTACK_IRON_DOOR, SoundCategory.NEUTRAL, 0.5F, 2.0f);
+									world.playSound(null, new BlockPos(pos), IISounds.rammingExoskeleton, SoundCategory.NEUTRAL, 0.5F, 1.0f);
+								}
+								if(blockstaterammed.getBlock() instanceof BlockFenceGate)
+								{
+									world.setBlockToAir(pos);
+									world.playSound(null, new BlockPos(pos), SoundEvents.ENTITY_WITHER_BREAK_BLOCK, SoundCategory.NEUTRAL, 0.3F, 1.0f);
+									world.playSound(null, new BlockPos(pos), SoundEvents.ENTITY_ZOMBIE_ATTACK_IRON_DOOR, SoundCategory.NEUTRAL, 0.3F, 2.0f);
+									world.playSound(null, new BlockPos(pos), IISounds.rammingExoskeleton, SoundCategory.NEUTRAL, 0.3F, 1.0f);
+								}
+								if(blockstaterammed.getBlock() instanceof BlockGlass)
+								{
+									world.setBlockToAir(pos);
+									world.playSound(null, new BlockPos(pos), SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.NEUTRAL, 0.5F, 1.0f);
+									world.playSound(null, new BlockPos(pos), SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.NEUTRAL, 0.5F, 0.5f);
+									world.playSound(null, new BlockPos(pos), IISounds.rammingExoskeleton, SoundCategory.NEUTRAL, 0.5F, 1.0f);
+								}
+								if(blockstaterammed.getBlock() instanceof BlockFence)
+								{
+									world.setBlockToAir(pos);
+									world.playSound(null, new BlockPos(pos), SoundEvents.ENTITY_WITHER_BREAK_BLOCK, SoundCategory.NEUTRAL, 0.3F, 1.0f);
+									world.playSound(null, new BlockPos(pos), SoundEvents.ENTITY_ZOMBIE_ATTACK_IRON_DOOR, SoundCategory.NEUTRAL, 0.3F, 2.0f);
+									world.playSound(null, new BlockPos(pos), IISounds.rammingExoskeleton, SoundCategory.NEUTRAL, 0.3F, 1.0f);
+								}
+								if(blockstaterammed.getBlock() instanceof BlockPlanks)
+								{
+									world.setBlockToAir(pos);
+									world.playSound(null, new BlockPos(pos), SoundEvents.ENTITY_WITHER_BREAK_BLOCK, SoundCategory.NEUTRAL, 0.3F, 1.0f);
+									world.playSound(null, new BlockPos(pos), SoundEvents.ENTITY_ZOMBIE_ATTACK_IRON_DOOR, SoundCategory.NEUTRAL, 0.3F, 2.0f);
+									world.playSound(null, new BlockPos(pos), IISounds.rammingExoskeleton, SoundCategory.NEUTRAL, 0.3F, 1.0f);
+								}
+
+							}
+						}
+					}
 				}
 
 				//slow down after ram

@@ -365,6 +365,9 @@ public class IIRecipes
 		RefineryRecipe.addRecipe(new FluidStack(IIContent.fluidFormicAcid, 16), new FluidStack(IIContent.fluidMethanol, 8),
 				new FluidStack(IIContent.gasCO, 8), 65);
 
+
+		//		RefineryRecipe.addRecipe(new FluidStack(IIContent.fluidFormicAcid, 16), new FluidStack(IIContent.fluidMethanol, 8),
+		//				new FluidStack(IIContent.gasCO, 8), 65);
 	}
 
 	private static void addColoringRecipes(IForgeRegistry<IRecipe> registry)
