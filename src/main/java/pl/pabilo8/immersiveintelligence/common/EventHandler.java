@@ -69,13 +69,13 @@ import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIIRequest
 import pl.pabilo8.immersiveintelligence.common.util.IIExplosion;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyUtils;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.IOwnableProperty;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyHandler;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.OwnerIdentity;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.chunk.CapabilityChunkOwnership;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.chunk.ChunkOwnership;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.chunk.IChunkOwnership;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.permission.PermissionCategory;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.property.IOwnableProperty;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.property.chunk.chunk.CapabilityChunkOwnership;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.property.chunk.chunk.ChunkOwnership;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.property.chunk.chunk.IChunkOwnership;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemUtils;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradeableArmor;
 
@@ -275,17 +275,18 @@ public class EventHandler
 			{
 				//The property itself has an owner, check it
 				OwnerIdentity owner = null;
+				DiplomacyHandler diplomacy = DiplomacyHandler.getInstance(master.getWorld().isRemote);
 				if(master instanceof IOwnableProperty)
 					owner = ((IOwnableProperty)master).getOwnerIdentity();
 				else
 				{
 					//Check for the chunk the property is on
-					IChunkOwnership ownership = DiplomacyUtils.getPositionOwnership(master.getWorld(), master.getPos());
+					IChunkOwnership ownership = diplomacy.getPositionOwnership(master.getWorld(), master.getPos());
 					if(ownership!=null)
 						owner = ownership.getOwner();
 				}
 				if(owner==null)
-					owner = DiplomacyUtils.NEUTRAL;
+					owner = DiplomacyHandler.NEUTRAL;
 
 				//Deny container access when on an enemy chunk
 				if(!owner.isPermitted(living, PermissionCategory.CONTAINER_ACCESS))
@@ -355,6 +356,10 @@ public class EventHandler
 	{
 		EntityLivingBase living = event.getEntityLiving();
 		World world = living.world;
+
+		if(!world.isRemote)
+			return;
+
 		Biome biome = world.getBiome(living.getPosition());
 		if(living instanceof EntityPlayer)
 		{
@@ -368,7 +373,7 @@ public class EventHandler
 					living.addPotionEffect(new PotionEffect(IIPotions.radiation, 2000, 0, false, false));
 
 				//Apply faction chunk status effects
-				if(DiplomacyUtils.diplomacyInitialized)
+				if(DiplomacyHandler.getInstance(false).diplomacyInitialized)
 				{
 					Chunk chunk = player.world.getChunkFromBlockCoords(player.getPosition());
 					if(chunk.hasCapability(CapabilityChunkOwnership.CHUNK_OWNERSHIP_CAP, null))

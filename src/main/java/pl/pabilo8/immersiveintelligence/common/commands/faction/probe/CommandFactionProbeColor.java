@@ -8,9 +8,9 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.server.command.CommandTreeBase;
 import pl.pabilo8.immersiveintelligence.common.util.CommandIIBase;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyUtils;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyHandler;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.OwnerIdentity;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.chunk.IChunkOwnership;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.property.chunk.chunk.IChunkOwnership;
 
 public class CommandFactionProbeColor extends CommandIIBase
 {
@@ -38,8 +38,9 @@ public class CommandFactionProbeColor extends CommandIIBase
 		if(!(entity instanceof EntityPlayer))
 			throw new CommandException("Player only.");
 
-		IChunkOwnership ownership = DiplomacyUtils.getPositionOwnership(entity.getEntityWorld(), entity.getPosition());
-		OwnerIdentity owner = (ownership!=null)?ownership.getOwner(): DiplomacyUtils.NEUTRAL;
+		DiplomacyHandler diplomacy = DiplomacyHandler.getInstance(false);
+		IChunkOwnership ownership = diplomacy.getPositionOwnership(entity.getEntityWorld(), entity.getPosition());
+		OwnerIdentity owner = (ownership!=null)?ownership.getOwner(): DiplomacyHandler.NEUTRAL;
 		sender.sendMessage(new TextComponentString("Faction color: "+owner.getColor().getHexRGB()));
 	}
 }

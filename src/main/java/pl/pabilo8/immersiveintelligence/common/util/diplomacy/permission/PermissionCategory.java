@@ -11,7 +11,7 @@ import pl.pabilo8.immersiveintelligence.common.util.ILocalizedEnum;
 public enum PermissionCategory implements ILocalizedEnum
 {
 	/**
-	 * Allows disbanding the identity
+	 * Allows disbanding the identity, releasing all claims and members.
 	 */
 	DISBAND,
 	/**

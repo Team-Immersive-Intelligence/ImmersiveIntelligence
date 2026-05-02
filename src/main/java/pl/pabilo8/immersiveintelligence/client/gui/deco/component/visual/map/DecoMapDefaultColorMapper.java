@@ -7,9 +7,9 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyUtils;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyHandler;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.OwnerIdentity;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.chunk.IChunkOwnership;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.property.chunk.chunk.IChunkOwnership;
 
 /**
  * Default color mappers for DecoMapDisplay.
@@ -162,8 +162,9 @@ public enum DecoMapDefaultColorMapper implements IDecoMapColorMapper
 				public int getColor(IBlockState state, BlockPos pos, World world, int sampleY)
 				{
 					Chunk chunk = world.getChunkFromBlockCoords(pos);
-					IChunkOwnership ownership = DiplomacyUtils.getChunkOwnership(chunk);
-					if(ownership==null||ownership.getOwner()==DiplomacyUtils.NEUTRAL)
+					DiplomacyHandler diplomacy = DiplomacyHandler.getInstance(true);
+					IChunkOwnership ownership = diplomacy.getChunkOwnership(chunk);
+					if(ownership==null||ownership.getOwner()==DiplomacyHandler.NEUTRAL)
 						return getGrayscaleTerrainColor(state, pos, world, sampleY);
 
 					IIColor factionColor = ownership.getOwner().getColor();
@@ -203,13 +204,13 @@ public enum DecoMapDefaultColorMapper implements IDecoMapColorMapper
 	 */
 	ALLIANCES
 			{
-				private final OwnerIdentity playerFaction = DiplomacyUtils.getLocalPlayerIdentity();
+				private final OwnerIdentity playerFaction = DiplomacyHandler.getLocalPlayerIdentity();
 
 				@Override
 				public int getColor(IBlockState state, BlockPos pos, World world, int sampleY)
 				{
 					Chunk chunk = world.getChunkFromBlockCoords(pos);
-					IChunkOwnership ownership = DiplomacyUtils.getChunkOwnership(chunk);
+					IChunkOwnership ownership = DiplomacyHandler.getInstance(true).getChunkOwnership(chunk);
 					if(ownership==null)
 						return getGrayscaleTerrainColor(state, pos, world, sampleY);
 
@@ -225,7 +226,7 @@ public enum DecoMapDefaultColorMapper implements IDecoMapColorMapper
 							return 0xBBF44336;
 						case NEUTRAL:
 						default:
-							return owner==DiplomacyUtils.NEUTRAL?getGrayscaleTerrainColor(state, pos, world, sampleY): 0xBBFFC107;
+							return owner==DiplomacyHandler.NEUTRAL?getGrayscaleTerrainColor(state, pos, world, sampleY): 0xBBFFC107;
 					}
 				}
 

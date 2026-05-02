@@ -1,7 +1,6 @@
-package pl.pabilo8.immersiveintelligence.common.util.diplomacy.agreement;
+package pl.pabilo8.immersiveintelligence.common.util.diplomacy.agreement.term;
 
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomaticStatus;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.agreement.term.DiplomaticAgreement;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 /**

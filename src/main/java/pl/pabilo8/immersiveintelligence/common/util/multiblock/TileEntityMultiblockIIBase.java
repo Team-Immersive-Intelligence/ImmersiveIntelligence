@@ -30,8 +30,8 @@ import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileManager.ITa
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
 import pl.pabilo8.immersiveintelligence.common.util.IWorldPosProvider;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyUtils;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.IOwnableProperty;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyHandler;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.property.IOwnableProperty;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.NBTSerialisation;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IAdvancedBounds;
@@ -112,7 +112,7 @@ public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockI
 	public void onBeforeFirstTick()
 	{
 		if(!world.isRemote&&this instanceof IOwnableProperty)
-			DiplomacyUtils.validateProperty(((IOwnableProperty)this));
+			DiplomacyHandler.getInstance(world.isRemote).validateProperty(((IOwnableProperty)this));
 	}
 
 	/**
@@ -125,7 +125,7 @@ public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockI
 	{
 		super.invalidate();
 		if(!world.isRemote&&this instanceof IOwnableProperty&&!isDummy())
-			DiplomacyUtils.invalidateProperty(((IOwnableProperty)this));
+			DiplomacyHandler.getInstance(world.isRemote).invalidateProperty(((IOwnableProperty)this));
 		forceReCacheAABB();
 	}
 

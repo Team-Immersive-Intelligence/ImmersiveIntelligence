@@ -118,7 +118,7 @@ import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyUtils;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyHandler;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradeableArmor;
 
@@ -1066,7 +1066,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		aimingPlayers.clear();
 		blockDamageClient.clear();
 
-		DiplomacyUtils.init();
+		DiplomacyHandler.getInstance(true).init();
 
 		//Reload the particle system
 		ImmersiveIntelligence.proxy.reloadParticles();
@@ -1077,7 +1077,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	{
 		if(!event.getWorld().isRemote)
 			return;
-		DiplomacyUtils.unload();
+		DiplomacyHandler.getInstance(true).unload();
 	}
 
 	@SubscribeEvent

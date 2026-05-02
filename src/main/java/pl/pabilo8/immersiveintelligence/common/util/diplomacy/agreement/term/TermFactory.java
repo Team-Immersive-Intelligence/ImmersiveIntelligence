@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.util.diplomacy.agreement.term;
 
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.agreement.RelationTerm;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 /**
@@ -20,7 +19,7 @@ public class TermFactory
 			case "permission":
 				return PermissionGrantTerm.fromNBT(tag);
 			case "transfer":
-				return ChunkTransferTerm.fromNBT(tag);
+				return PropertyTransferTerm.fromNBT(tag);
 			default:
 				throw new IllegalArgumentException("Unknown term type: "+termType);
 		}

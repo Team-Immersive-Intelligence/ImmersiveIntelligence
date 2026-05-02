@@ -9,11 +9,11 @@ import java.util.UUID;
  * @ii-approved 0.3.1
  * @since 27.04.2026
  */
-public class ChunkTransferTerm implements DiplomaticAgreement.ITerm
+public class PropertyTransferTerm implements DiplomaticAgreement.ITerm
 {
 	private final UUID propertyId;
 
-	ChunkTransferTerm(UUID propertyId)
+	PropertyTransferTerm(UUID propertyId)
 	{
 		this.propertyId = propertyId;
 	}
@@ -33,8 +33,8 @@ public class ChunkTransferTerm implements DiplomaticAgreement.ITerm
 				.withString("propertyId", propertyId.toString());
 	}
 
-	public static ChunkTransferTerm fromNBT(EasyNBT tag)
+	public static PropertyTransferTerm fromNBT(EasyNBT tag)
 	{
-		return new ChunkTransferTerm(UUID.fromString(tag.getString("propertyId")));
+		return new PropertyTransferTerm(UUID.fromString(tag.getString("propertyId")));
 	}
 }

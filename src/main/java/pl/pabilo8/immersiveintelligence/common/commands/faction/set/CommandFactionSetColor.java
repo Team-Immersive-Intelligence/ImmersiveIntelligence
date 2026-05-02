@@ -9,7 +9,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.server.command.CommandTreeBase;
 import pl.pabilo8.immersiveintelligence.common.util.CommandIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyUtils;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyHandler;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.OwnerIdentity;
 
 public class CommandFactionSetColor extends CommandIIBase
@@ -40,7 +40,8 @@ public class CommandFactionSetColor extends CommandIIBase
 		if(args.length < 1)
 			throw new CommandException("Specify a color.");
 
-		OwnerIdentity faction = DiplomacyUtils.getOwnerIdentityForEntity((EntityPlayer)sender);
+		DiplomacyHandler diplomacy = DiplomacyHandler.getInstance(false);
+		OwnerIdentity faction = diplomacy.getOwnerIdentityForEntity((EntityPlayer)sender);
 		if(faction.isInvalid()||!faction.isOwner(((EntityPlayer)sender).getUniqueID()))
 			throw new CommandException("You must be an owner.");
 
@@ -49,7 +50,7 @@ public class CommandFactionSetColor extends CommandIIBase
 			throw new CommandException("Unknown color: "+args[0]);
 
 		faction.withColor(IIColor.fromTextFormatting(color));
-		DiplomacyUtils.saveAndSyncIdentity(faction);
+		diplomacy.saveAndSyncIdentity(faction);
 		sender.sendMessage(new TextComponentString("Color set."));
 	}
 }

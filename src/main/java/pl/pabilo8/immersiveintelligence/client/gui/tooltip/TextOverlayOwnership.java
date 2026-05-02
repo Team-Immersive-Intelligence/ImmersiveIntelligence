@@ -12,9 +12,9 @@ import net.minecraft.util.math.RayTraceResult.Type;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyUtils;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.IOwnableProperty;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyHandler;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.OwnerIdentity;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.property.IOwnableProperty;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -54,7 +54,7 @@ public class TextOverlayOwnership extends TextOverlayBase
 		return new String[]{
 				stack.getDisplayName(),
 				//Abandoned Property
-				owner==DiplomacyUtils.NEUTRAL?I18n.format("desc.immersiveintelligence.diplomacy.noowner"):
+				owner==DiplomacyHandler.NEUTRAL?I18n.format("desc.immersiveintelligence.diplomacy.noowner"):
 						//Owned by Player
 						I18n.format("desc.immersiveintelligence.diplomacy.ownedby", owner.getDisplayName())
 		};

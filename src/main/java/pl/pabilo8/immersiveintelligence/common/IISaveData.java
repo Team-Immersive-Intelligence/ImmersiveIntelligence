@@ -9,7 +9,7 @@ import pl.pabilo8.immersiveintelligence.api.ammo.penetration.DamageBlockPos;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.PenetrationCache;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageDiplomacySync;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyUtils;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyHandler;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 /**
@@ -62,7 +62,7 @@ public class IISaveData extends WorldSavedData
 			IILogger.info("Error in the block damage list!");
 		}
 
-		DiplomacyUtils.loadAllFromNBT(enbt.getEasyCompound("diplomacy"));
+		DiplomacyHandler.getInstance(false).loadAllFromNBT(enbt.getEasyCompound("diplomacy"));
 		IIPacketHandler.sendToAllClients(MessageDiplomacySync.updateAllMessage());
 	}
 
@@ -73,7 +73,7 @@ public class IISaveData extends WorldSavedData
 				.withList("block_dmg", e -> new NBTTagIntArray(new int[]{
 						e.getX(), e.getY(), e.getZ(), e.dimension, (int)(e.damage*16)
 				}), PenetrationCache.blockDamage)
-				.withTag("diplomacy", DiplomacyUtils.saveAllToNBT())
+				.withTag("diplomacy", DiplomacyHandler.getInstance(false).saveAllToNBT())
 				.unwrap();
 	}
 

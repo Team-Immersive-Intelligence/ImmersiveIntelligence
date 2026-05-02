@@ -1,14 +1,12 @@
-package pl.pabilo8.immersiveintelligence.common.util.diplomacy.chunk;
+package pl.pabilo8.immersiveintelligence.common.util.diplomacy.property.chunk.chunk;
 
 import net.minecraft.world.chunk.Chunk;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyHandler;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.OwnerIdentity;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import static pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyUtils.NEUTRAL;
-import static pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyUtils.getIdentityByUUID;
 
 /**
  * Implementation of chunk ownership capability
@@ -32,7 +30,7 @@ public class ChunkOwnership implements IChunkOwnership
 	@Nonnull
 	public OwnerIdentity getOwner()
 	{
-		return owner==null?NEUTRAL: owner;
+		return owner==null?DiplomacyHandler.NEUTRAL: owner;
 	}
 
 	@Override
@@ -72,7 +70,7 @@ public class ChunkOwnership implements IChunkOwnership
 		if(nbt.hasKey("owner"))
 		{
 			String ownerName = nbt.getString("owner");
-			this.owner = getIdentityByUUID(ownerName);
+			this.owner = DiplomacyHandler.getInstance(chunk.getWorld().isRemote).getIdentityByUUID(ownerName);
 		}
 		if(nbt.hasKey("claimData"))
 			this.claimData = ChunkClaimData.fromNBT(nbt.getEasyCompound("claimData"));

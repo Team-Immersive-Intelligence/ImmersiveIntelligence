@@ -1,8 +1,7 @@
-package pl.pabilo8.immersiveintelligence.common.util.diplomacy;
+package pl.pabilo8.immersiveintelligence.common.util.diplomacy.permission;
 
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ILocalizedEnum;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.permission.PermissionCategory;
 
 import javax.annotation.Nullable;
 

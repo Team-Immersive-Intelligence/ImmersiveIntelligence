@@ -1,7 +1,7 @@
-package pl.pabilo8.immersiveintelligence.common.util.diplomacy.chunk;
+package pl.pabilo8.immersiveintelligence.common.util.diplomacy.property.chunk.chunk;
 
 import net.minecraft.util.math.BlockPos;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.IOwnableProperty;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.property.IOwnableProperty;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 /**

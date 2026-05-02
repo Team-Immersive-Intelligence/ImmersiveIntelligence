@@ -13,14 +13,15 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.common.network.IIMessage;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyUtils;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyHandler;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.OwnerIdentity;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.chunk.CapabilityChunkOwnership;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.chunk.ChunkClaimData;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.chunk.IChunkOwnership;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.property.chunk.chunk.CapabilityChunkOwnership;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.property.chunk.chunk.ChunkClaimData;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.property.chunk.chunk.IChunkOwnership;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.UUID;
 
 /**
  * Send by server to update {@link CapabilityChunkOwnership a chunk's terrain faction ownership Capability}
@@ -34,7 +35,7 @@ public class MessageIIChunkClaimData extends IIMessage implements IPositionBound
 	private World world;
 	private BlockPos pos;
 	@Nullable
-	private OwnerIdentity ownerIdentity;
+	private UUID ownerIdentity;
 	@Nullable
 	private ChunkClaimData claimData;
 
@@ -59,7 +60,7 @@ public class MessageIIChunkClaimData extends IIMessage implements IPositionBound
 	{
 		this.world = world;
 		this.pos = pos;
-		this.ownerIdentity = ownerIdentity;
+		this.ownerIdentity = ownerIdentity==null?null: ownerIdentity.getUUID();
 		this.claimData = claimData;
 	}
 
@@ -86,7 +87,7 @@ public class MessageIIChunkClaimData extends IIMessage implements IPositionBound
 		assert cap!=null;
 		//Set fields
 		if(ownerIdentity!=null)
-			cap.setOwner(ownerIdentity);
+			cap.setOwner(DiplomacyHandler.getInstance(true).getIdentityByUUID(ownerIdentity));
 		if(claimData!=null)
 			cap.setClaimData(claimData);
 	}
@@ -96,7 +97,7 @@ public class MessageIIChunkClaimData extends IIMessage implements IPositionBound
 	{
 		this.pos = readPos(buf);
 		byte mutex = buf.readByte();
-		this.ownerIdentity = (mutex&1)!=0?DiplomacyUtils.getIdentityByUUID(readString(buf)): null;
+		this.ownerIdentity = (mutex&1)!=0?readUUID(buf): null;
 		this.claimData = (mutex&2)!=0?ChunkClaimData.fromNBT(readEasyNBT(buf)): null;
 	}
 
@@ -107,7 +108,7 @@ public class MessageIIChunkClaimData extends IIMessage implements IPositionBound
 		byte mutex = (byte)((ownerIdentity!=null?1: 0)+(claimData!=null?2: 0));
 		buf.writeByte(mutex);
 		if(ownerIdentity!=null)
-			writeString(buf, ownerIdentity.getStringUUID());
+			writeUUID(buf, ownerIdentity);
 		if(claimData!=null)
 			writeEasyNBT(buf, claimData.toNBT());
 	}

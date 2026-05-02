@@ -20,7 +20,7 @@ import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.ins
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.inserter.TileEntityInserter.InserterTaskPlaceBlock;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyUtils;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyHandler;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.OwnerIdentity;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 
@@ -210,7 +210,7 @@ public class NBTSerialisation
 		registerSerializer(
 				OwnerIdentity.class, NBTTagString.class,
 				ownerIdentity -> new NBTTagString(ownerIdentity==null?"00000000-0000-0000-0000-000000000000": ownerIdentity.getStringUUID()),
-				nbt -> DiplomacyUtils.getIdentityByUUID(nbt.getString())
+				nbt -> DiplomacyHandler.getIdentityByUUIDStatic(nbt.getString())
 		);
 
 		//Inserter tasks

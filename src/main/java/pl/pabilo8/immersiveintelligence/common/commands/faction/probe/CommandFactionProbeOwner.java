@@ -8,10 +8,10 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.server.command.CommandTreeBase;
 import pl.pabilo8.immersiveintelligence.common.util.CommandIIBase;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyUtils;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyHandler;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.OwnerIdentity;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.chunk.IChunkOwnership;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.permission.PermissionRole;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.property.chunk.chunk.IChunkOwnership;
 
 import java.util.UUID;
 
@@ -38,9 +38,11 @@ public class CommandFactionProbeOwner extends CommandIIBase
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
 		Entity entity = sender.getCommandSenderEntity();
-		if(!(entity instanceof EntityPlayer)) throw new CommandException("Player only.");
-		IChunkOwnership ownership = DiplomacyUtils.getPositionOwnership(entity.getEntityWorld(), entity.getPosition());
-		OwnerIdentity faction = (ownership!=null)?ownership.getOwner(): DiplomacyUtils.NEUTRAL;
+		if(!(entity instanceof EntityPlayer))
+			throw new CommandException("Player only.");
+		DiplomacyHandler diplomacy = DiplomacyHandler.getInstance(false);
+		IChunkOwnership ownership = diplomacy.getPositionOwnership(entity.getEntityWorld(), entity.getPosition());
+		OwnerIdentity faction = (ownership!=null)?ownership.getOwner(): DiplomacyHandler.NEUTRAL;
 		StringBuilder sb = new StringBuilder("Chunk owner: ").append(faction);
 
 		//List players with role isOwner

@@ -7,7 +7,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.server.command.CommandTreeBase;
 import pl.pabilo8.immersiveintelligence.common.util.CommandIIBase;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyUtils;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyHandler;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomaticStatus;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.OwnerIdentity;
 
@@ -38,8 +38,9 @@ public class CommandFactionProbeAlly extends CommandIIBase
 		if(args.length < 1) throw
 				new CommandException("Specify a faction name.");
 
-		OwnerIdentity myFaction = DiplomacyUtils.getOwnerIdentityForEntity((EntityPlayer)sender);
-		OwnerIdentity other = DiplomacyUtils.getIdentityByName(args[0]);
+		DiplomacyHandler diplomacy = DiplomacyHandler.getInstance(false);
+		OwnerIdentity myFaction = diplomacy.getOwnerIdentityForEntity((EntityPlayer)sender);
+		OwnerIdentity other = diplomacy.getIdentityByName(args[0]);
 
 		boolean allied = myFaction.getRelationTowards(other).atLeast(DiplomaticStatus.ALLIED);
 		sender.sendMessage(new TextComponentString(allied?"Allied.": "Not allied."));

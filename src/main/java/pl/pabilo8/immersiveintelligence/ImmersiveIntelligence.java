@@ -24,7 +24,7 @@ import pl.pabilo8.immersiveintelligence.common.event.IEOverrideEventHandler;
 import pl.pabilo8.immersiveintelligence.common.event.LightEngineerEventHandler;
 import pl.pabilo8.immersiveintelligence.common.util.IIReflectionUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyUtils;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyHandler;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -110,7 +110,7 @@ public class ImmersiveIntelligence
 		IILogger.debug("Pre-World Load cleanup");
 		CommonProxy.refreshFluidReferences();
 		RadioNetwork.INSTANCE.clearDevices();
-		DiplomacyUtils.init();
+		DiplomacyHandler.getInstance(false).init();
 	}
 
 	@Mod.EventHandler
@@ -141,7 +141,7 @@ public class ImmersiveIntelligence
 	public void onFMLServerStopped(FMLServerStoppedEvent event)
 	{
 		IILogger.info("Post-World Unload cleanup");
-		DiplomacyUtils.unload();
+		DiplomacyHandler.getInstance(false).unload();
 		RadioNetwork.INSTANCE.clearDevices();
 	}
 

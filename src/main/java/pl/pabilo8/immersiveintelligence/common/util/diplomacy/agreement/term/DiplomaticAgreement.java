@@ -1,8 +1,8 @@
 package pl.pabilo8.immersiveintelligence.common.util.diplomacy.agreement.term;
 
 import net.minecraft.nbt.NBTTagCompound;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomaticAction;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomaticStatus;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.permission.DiplomaticAction;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.permission.PermissionCategory;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 

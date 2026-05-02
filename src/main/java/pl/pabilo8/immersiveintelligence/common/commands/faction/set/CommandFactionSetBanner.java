@@ -8,7 +8,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.server.command.CommandTreeBase;
 import pl.pabilo8.immersiveintelligence.common.util.CommandIIBase;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyUtils;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyHandler;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.OwnerIdentity;
 
 public class CommandFactionSetBanner extends CommandIIBase
@@ -41,12 +41,13 @@ public class CommandFactionSetBanner extends CommandIIBase
 		if(held.isEmpty())
 			throw new CommandException("You must hold a banner.");
 
-		OwnerIdentity faction = DiplomacyUtils.getOwnerIdentityForEntity(player);
+		DiplomacyHandler diplomacy = DiplomacyHandler.getInstance(false);
+		OwnerIdentity faction = diplomacy.getOwnerIdentityForEntity(player);
 		if(faction.isInvalid()||!faction.isOwner(player.getUniqueID()))
 			throw new CommandException("You must be an owner.");
 
 		faction.withBanner(held.copy());
-		DiplomacyUtils.saveAndSyncIdentity(faction);
+		diplomacy.saveAndSyncIdentity(faction);
 		sender.sendMessage(new TextComponentString("Banner updated."));
 	}
 }

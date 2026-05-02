@@ -7,7 +7,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.server.command.CommandTreeBase;
 import pl.pabilo8.immersiveintelligence.common.util.CommandIIBase;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyUtils;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyHandler;
 
 import java.util.Set;
 import java.util.UUID;
@@ -36,7 +36,8 @@ public class CommandFactionInviteList extends CommandIIBase
 	{
 		if(!(sender instanceof EntityPlayer)) throw new CommandException("Player only.");
 		UUID uuid = ((EntityPlayer)sender).getUniqueID();
-		Set<String> invites = DiplomacyUtils.getPendingInvitationsForPlayer(uuid);
+		DiplomacyHandler diplomacy = DiplomacyHandler.getInstance(false);
+		Set<String> invites = diplomacy.getPendingInvitationsForPlayer(uuid);
 		if(invites.isEmpty())
 			sender.sendMessage(new TextComponentString("No pending invitations."));
 		else

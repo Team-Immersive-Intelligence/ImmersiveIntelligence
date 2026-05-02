@@ -7,7 +7,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.server.command.CommandTreeBase;
 import pl.pabilo8.immersiveintelligence.common.util.CommandIIBase;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyUtils;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyHandler;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.OwnerIdentity;
 
 public class CommandFactionInvitePlayer extends CommandIIBase
@@ -41,8 +41,9 @@ public class CommandFactionInvitePlayer extends CommandIIBase
 		if(source==null)
 			throw new CommandException("Only players can invite.");
 
-		OwnerIdentity faction = DiplomacyUtils.getOwnerIdentityForEntity(source);
-		if(faction.isInvalid()||faction==DiplomacyUtils.NEUTRAL)
+		DiplomacyHandler diplomacy = DiplomacyHandler.getInstance(false);
+		OwnerIdentity faction = diplomacy.getOwnerIdentityForEntity(source);
+		if(faction.isInvalid()||faction==DiplomacyHandler.NEUTRAL)
 			return;
 
 		faction.invitePlayer(target.getUniqueID());

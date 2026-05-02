@@ -12,8 +12,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.network.IIMessage;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.*;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyHandler;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.LawForm;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.OwnerIdentity;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.agreement.term.DiplomaticAgreement;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.permission.DiplomaticAction;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.property.IOwnableProperty;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import javax.annotation.Nonnull;
@@ -160,7 +164,8 @@ public class MessageDiplomacyAction extends IIMessage
 	protected void onServerReceive(WorldServer world, NetHandlerPlayServer handler)
 	{
 		EntityPlayerMP sender = handler.player;
-		OwnerIdentity identity = DiplomacyUtils.getOwnerIdentityForEntity(sender);
+		DiplomacyHandler diplomacy = DiplomacyHandler.getInstance(false);
+		OwnerIdentity identity = diplomacy.getOwnerIdentityForEntity(sender);
 		if(identity.isInvalid())
 			return;
 
@@ -171,9 +176,9 @@ public class MessageDiplomacyAction extends IIMessage
 		{
 			case CLAIM:
 			{
-				IOwnableProperty prop = DiplomacyUtils.getPropertyByUUID(propertyUUID);
-				if(prop!=null&&prop.getOwnerIdentity()==DiplomacyUtils.NEUTRAL)
-					DiplomacyUtils.claimProperty(identity, prop);
+				IOwnableProperty prop = diplomacy.getPropertyByUUID(propertyUUID);
+				if(prop!=null&&prop.getOwnerIdentity()==DiplomacyHandler.NEUTRAL)
+					diplomacy.claimProperty(identity, prop);
 				break;
 			}
 			case START_SEIZING:
@@ -189,14 +194,14 @@ public class MessageDiplomacyAction extends IIMessage
 			case REMOVE_MEMBER:
 			{
 				if(identity.isMember(targetPlayer))
-					identity.removeMember(targetPlayer, true); //sync = true
+					identity.removeMember(targetPlayer); //sync = true
 				break;
 			}
 			case MERGE:
 			{
-				OwnerIdentity targetIdentity = DiplomacyUtils.getIdentityByUUID(targetFaction);
-				if(targetIdentity!=DiplomacyUtils.NEUTRAL&&!targetIdentity.equals(identity))
-					DiplomacyUtils.merge(identity, targetIdentity);
+				OwnerIdentity targetIdentity = diplomacy.getIdentityByUUID(targetFaction);
+				if(targetIdentity!=DiplomacyHandler.NEUTRAL&&!targetIdentity.equals(identity))
+					diplomacy.merge(identity, targetIdentity);
 				break;
 			}
 			case DISBAND:
@@ -207,25 +212,25 @@ public class MessageDiplomacyAction extends IIMessage
 			case RENAME:
 			{
 				identity.withDisplayName(newDisplayName);
-				DiplomacyUtils.saveAndSyncIdentity(identity);
+				diplomacy.saveAndSyncIdentity(identity);
 				break;
 			}
 			case CHANGE_LAW_FORM:
 			{
 				identity.withLawForm(newLawForm);
-				DiplomacyUtils.saveAndSyncIdentity(identity);
+				diplomacy.saveAndSyncIdentity(identity);
 				break;
 			}
 			case CHANGE_COLOR:
 			{
 				identity.withColor(newColor);
-				DiplomacyUtils.saveAndSyncIdentity(identity);
+				diplomacy.saveAndSyncIdentity(identity);
 				break;
 			}
 			case CHANGE_BANNER:
 			{
 				identity.withBanner(newBannerStack);
-				DiplomacyUtils.saveAndSyncIdentity(identity);
+				diplomacy.saveAndSyncIdentity(identity);
 				break;
 			}
 			case SEND_OFFER:
@@ -238,9 +243,9 @@ public class MessageDiplomacyAction extends IIMessage
 					return;
 				}
 
-				OwnerIdentity targetIdentity = DiplomacyUtils.getIdentityByUUID(targetFaction);
-				if(targetIdentity!=DiplomacyUtils.NEUTRAL)
-					DiplomacyUtils.proposeAgreement(identity, targetIdentity, proposal);
+				OwnerIdentity targetIdentity = diplomacy.getIdentityByUUID(targetFaction);
+				if(targetIdentity!=DiplomacyHandler.NEUTRAL)
+					diplomacy.proposeAgreement(identity, targetIdentity, proposal);
 				break;
 			}
 			default:

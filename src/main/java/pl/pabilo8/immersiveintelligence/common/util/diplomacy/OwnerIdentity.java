@@ -74,7 +74,7 @@ public class OwnerIdentity
 	public OwnerIdentity(EntityLivingBase player)
 	{
 		this(UUID.randomUUID(), player.getName());
-		this.withMember(player.getUniqueID(), LawForm.DEFAULT.getOwnerRole(), true);
+		this.withMember(player.getUniqueID(), LawForm.DEFAULT.getOwnerRole());
 		this.color = IIColor.fromHSV(player.getRNG().nextFloat(), 0.35f, 0.85f);
 		this.banner = new ItemStack(Items.BANNER, 1, color.getDyeColor().getMetadata());
 	}
@@ -131,28 +131,21 @@ public class OwnerIdentity
 	 *
 	 * @param uuid   player UUID
 	 * @param roleId id of the role (must exist in availableRoles)
-	 * @param sync   if true, mark data as dirty and send update to clients
 	 */
-	public OwnerIdentity withMember(UUID uuid, String roleId, boolean sync)
+	public OwnerIdentity withMember(UUID uuid, String roleId)
 	{
 		invalid = false;
 		if(availableRoles.containsKey(roleId))
-		{
 			memberRoles.put(uuid, roleId);
-			if(sync)
-				DiplomacyUtils.saveAndSyncIdentity(this);
-		}
 		return this;
 	}
 
-	public OwnerIdentity removeMember(UUID uuid, boolean sync)
+	public OwnerIdentity removeMember(UUID uuid)
 	{
 		memberRoles.remove(uuid);
 		//Remove
 		if(memberRoles.isEmpty())
 			this.disband();
-		else
-			DiplomacyUtils.saveAndSyncIdentity(this);
 		return this;
 	}
 
@@ -292,11 +285,11 @@ public class OwnerIdentity
 	 */
 	public boolean isPermitted(@Nonnull EntityLivingBase entity, @Nullable PermissionCategory category)
 	{
-		if(category==null||this==DiplomacyUtils.NEUTRAL)
+		if(category==null||this.uuid==DiplomacyHandler.NEUTRAL_UUID)
 			return true;
 
 		UUID uuid = entity.getUniqueID();
-		OwnerIdentity otherIdentity = DiplomacyUtils.getOwnerIdentityForEntity(entity);
+		OwnerIdentity otherIdentity = DiplomacyHandler.getInstance(entity.world.isRemote).getOwnerIdentityForEntity(entity);
 
 		if(isOwner(uuid))
 			return true;
@@ -375,7 +368,7 @@ public class OwnerIdentity
 	@Nonnull
 	public DiplomaticStatus getRelationTowards(@Nonnull EntityLivingBase entity)
 	{
-		OwnerIdentity other = DiplomacyUtils.getOwnerIdentityForEntity(entity);
+		OwnerIdentity other = DiplomacyHandler.getInstance(entity.world.isRemote).getOwnerIdentityForEntity(entity);
 		return getRelationTowards(other);
 	}
 

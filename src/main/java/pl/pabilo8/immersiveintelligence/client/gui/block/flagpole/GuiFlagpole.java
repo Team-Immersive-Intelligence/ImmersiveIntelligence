@@ -23,7 +23,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerFlagpole;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyUtils;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyHandler;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 
 /**
@@ -59,7 +59,7 @@ public class GuiFlagpole extends DecoGui<TileEntityFlagpole, ContainerFlagpole>
 
 		//Tabs
 		addLinkTab(IIGUI.FLAGPOLE, DecoTextures.ICON_MAP, "map_module");
-		if(tile.getOwnerIdentity()!=DiplomacyUtils.NEUTRAL)
+		if(tile.getOwnerIdentity()!=DiplomacyHandler.NEUTRAL)
 			addLinkTab(IIGUI.FLAGPOLE_FACTION, DecoTextures.ICON_FACTION_CONFIG, "faction_module");
 
 		BlockPos pos = tile.getPos();

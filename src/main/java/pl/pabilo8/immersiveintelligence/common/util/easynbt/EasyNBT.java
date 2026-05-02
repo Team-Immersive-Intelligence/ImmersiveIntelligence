@@ -779,7 +779,13 @@ public class EasyNBT extends Constants.NBT
 	@Nullable
 	public UUID getUUID(String key)
 	{
-		return UUID.fromString(wrapped.getString(key));
+		try
+		{
+			return UUID.fromString(wrapped.getString(key));
+		} catch(IllegalArgumentException e)
+		{
+			return null;
+		}
 	}
 
 	/**

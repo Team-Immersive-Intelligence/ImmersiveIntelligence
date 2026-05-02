@@ -9,6 +9,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
@@ -18,9 +19,10 @@ import pl.pabilo8.immersiveintelligence.common.network.messages.MessageDiplomacy
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIIChunkClaimData;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.agreement.term.DiplomaticAgreement;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.chunk.CapabilityChunkOwnership;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.chunk.ChunkClaimData;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.chunk.IChunkOwnership;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.property.IOwnableProperty;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.property.chunk.chunk.CapabilityChunkOwnership;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.property.chunk.chunk.ChunkClaimData;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.property.chunk.chunk.IChunkOwnership;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import javax.annotation.Nonnull;
@@ -32,37 +34,55 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
+ * Handles operations on Owner Identities and Properties. Use the
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
  * @since 03.09.2025
  */
-public class DiplomacyUtils
+public class DiplomacyHandler
 {
-	private static final HashMap<UUID, OwnerIdentity> OWNER_IDENTITIES = new HashMap<>();
-	private static final HashMap<UUID, IOwnableProperty> PROPERTIES = new HashMap<>();
-
+	public static final UUID NEUTRAL_UUID = UUID.fromString("00000000-0000-0000-0000-000000000000");
+	public static final UUID GLOBAL_ENEMY_UUID = UUID.fromString("ffffffff-ffff-ffff-ffff-ffffffffffff");
 	public static OwnerIdentity NEUTRAL, GLOBAL_ENEMY;
-	public static boolean diplomacyInitialized = false;
 
 	private static final String KEY_IDENTITIES = "identities";
 
+	private static final DiplomacyHandler INSTANCE_SERVER = new DiplomacyHandler();
+	private static final DiplomacyHandler INSTANCE_CLIENT = new DiplomacyHandler();
+
+	private final HashMap<UUID, OwnerIdentity> OWNER_IDENTITIES = new HashMap<>();
+	private final HashMap<UUID, IOwnableProperty> PROPERTIES = new HashMap<>();
+	public boolean diplomacyInitialized = false;
+
+	public static DiplomacyHandler getInstance(boolean isRemote)
+	{
+		return isRemote?INSTANCE_CLIENT: INSTANCE_SERVER;
+	}
+
+	public static OwnerIdentity getIdentityByUUIDStatic(String string)
+	{
+		boolean client = FMLCommonHandler.instance().getEffectiveSide().isClient();
+		return getInstance(client).getIdentityByUUID(string);
+	}
+
 	//--- NBT ---//
 
-	public static void init()
+	public void init()
 	{
 		UUID ieFakePlayerID = UUID.fromString("99562b85-bd1a-4ded-bb1a-c307bf0c0133");
 
 		//Create the neutral faction
 		if(NEUTRAL==null)
-			NEUTRAL = new OwnerIdentity(UUID.fromString("00000000-0000-0000-0000-000000000000"), "Neutral")
-					.withMember(ieFakePlayerID, LawForm.DEFAULT.getOwnerRole(), false)
+			NEUTRAL = new OwnerIdentity(NEUTRAL_UUID, "Neutral")
+					.withMember(ieFakePlayerID, LawForm.DEFAULT.getOwnerRole())
 					.withBanner(ItemBanner.makeBanner(EnumDyeColor.WHITE, null))
 					.withLawForm(LawForm.COMMUNE)
 					.withColor(IIColor.MC_GRAY);
 		//Create the global enemy faction
 		if(GLOBAL_ENEMY==null)
-			GLOBAL_ENEMY = new OwnerIdentity(UUID.fromString("ffffffff-ffff-ffff-ffff-ffffffffffff"), "GlobalEnemy")
-					.withMember(ieFakePlayerID, LawForm.DEFAULT.getOwnerRole(), false)
+			GLOBAL_ENEMY = new OwnerIdentity(GLOBAL_ENEMY_UUID, "GlobalEnemy")
+					.withMember(ieFakePlayerID, LawForm.DEFAULT.getOwnerRole())
 					.withBanner(ItemBanner.makeBanner(EnumDyeColor.BLACK, null))
 					.withColor(IIColor.MC_BLACK)
 					.withLawForm(LawForm.COMMISARIAT);
@@ -75,7 +95,7 @@ public class DiplomacyUtils
 		diplomacyInitialized = false;
 	}
 
-	public static void loadAllFromNBT(EasyNBT nbt)
+	public void loadAllFromNBT(EasyNBT nbt)
 	{
 		diplomacyInitialized = true;
 		//Load factions from NBT
@@ -104,7 +124,7 @@ public class DiplomacyUtils
 				});
 	}
 
-	public static EasyNBT saveAllToNBT()
+	public EasyNBT saveAllToNBT()
 	{
 		EasyNBT enbt = EasyNBT.newNBT();
 		//Load factions from NBT
@@ -113,7 +133,7 @@ public class DiplomacyUtils
 		return enbt;
 	}
 
-	public static void unload()
+	public void unload()
 	{
 		diplomacyInitialized = false;
 		OWNER_IDENTITIES.clear();
@@ -122,7 +142,7 @@ public class DiplomacyUtils
 		GLOBAL_ENEMY = null;
 	}
 
-	public static void validateProperty(IOwnableProperty property)
+	public void validateProperty(IOwnableProperty property)
 	{
 		UUID uuid = property.getUUID();
 		IILogger.debug("Validating IOwnableProperty: "+uuid);
@@ -130,14 +150,14 @@ public class DiplomacyUtils
 		claimChunks(property);
 	}
 
-	public static void invalidateProperty(IOwnableProperty property)
+	public void invalidateProperty(IOwnableProperty property)
 	{
 		UUID uuid = property.getUUID();
 		IILogger.debug("Invalidating IOwnableProperty: "+uuid);
 		PROPERTIES.remove(uuid);
 	}
 
-	public static void claimChunks(IOwnableProperty property)
+	public void claimChunks(IOwnableProperty property)
 	{
 		IILogger.debug("Claiming chunks for property: "+property.getUUID());
 		World world = property.getIIWorld();
@@ -192,10 +212,15 @@ public class DiplomacyUtils
 	@SideOnly(Side.CLIENT)
 	public static OwnerIdentity getLocalPlayerIdentity()
 	{
-		return getOwnerIdentityForEntity(ClientUtils.mc().player);
+		return getInstance(true).getOwnerIdentityForEntity(ClientUtils.mc().player);
 	}
 
-	public static OwnerIdentity getIdentityByUUID(String uuid)
+	/*public static OwnerIdentity getIdentityByUUID(String uuid)
+	{
+
+	}*/
+
+	public OwnerIdentity getIdentityByUUID(String uuid)
 	{
 		try
 		{
@@ -207,7 +232,7 @@ public class DiplomacyUtils
 		}
 	}
 
-	public static OwnerIdentity getIdentityByUUID(UUID uuid)
+	public OwnerIdentity getIdentityByUUID(UUID uuid)
 	{
 		//Return a placeholder identity
 		if(!diplomacyInitialized)
@@ -216,7 +241,7 @@ public class DiplomacyUtils
 	}
 
 	@Nullable
-	public static OwnerIdentity getIdentityByName(String name)
+	public OwnerIdentity getIdentityByName(String name)
 	{
 		if(name.equals("neutral"))
 			return NEUTRAL;
@@ -229,7 +254,7 @@ public class DiplomacyUtils
 	}
 
 	@Nonnull
-	public static OwnerIdentity getOwnerIdentityForEntity(EntityLivingBase player)
+	public OwnerIdentity getOwnerIdentityForEntity(EntityLivingBase player)
 	{
 		//Try to get an existing identity
 		for(OwnerIdentity identity : OWNER_IDENTITIES.values())
@@ -251,25 +276,25 @@ public class DiplomacyUtils
 		return NEUTRAL;
 	}
 
-	public static IOwnableProperty getPropertyByUUID(UUID uuid)
+	public IOwnableProperty getPropertyByUUID(UUID uuid)
 	{
 		return PROPERTIES.get(uuid);
 	}
 
 	@Nullable
-	public static IChunkOwnership getChunkOwnership(Chunk chunk)
+	public IChunkOwnership getChunkOwnership(Chunk chunk)
 	{
 		if(chunk.hasCapability(CapabilityChunkOwnership.CHUNK_OWNERSHIP_CAP, null))
 			return chunk.getCapability(CapabilityChunkOwnership.CHUNK_OWNERSHIP_CAP, null);
 		return null;
 	}
 
-	public static void setChunkOwnership(Chunk chunk, IChunkOwnership ownership)
+	public void setChunkOwnership(Chunk chunk, IChunkOwnership ownership)
 	{
 
 	}
 
-	public static IChunkOwnership getPositionOwnership(World world, BlockPos pos)
+	public IChunkOwnership getPositionOwnership(World world, BlockPos pos)
 	{
 		Chunk chunk = world.getChunkFromBlockCoords(pos);
 		return getChunkOwnership(chunk);
@@ -277,13 +302,13 @@ public class DiplomacyUtils
 
 	//--- Utilities ---//
 
-	public static void claimProperty(OwnerIdentity identity, IOwnableProperty property)
+	public void claimProperty(OwnerIdentity identity, IOwnableProperty property)
 	{
 		property.master().setOwnerIdentity(identity);
 		saveAndSyncIdentity(identity);
 	}
 
-	public static void proposeAgreement(OwnerIdentity from, OwnerIdentity to, DiplomaticAgreement proposal)
+	public void proposeAgreement(OwnerIdentity from, OwnerIdentity to, DiplomaticAgreement proposal)
 	{
 		// Save proposal to both factions' pending lists
 		from.addGrantorAgreement(proposal);
@@ -295,14 +320,14 @@ public class DiplomacyUtils
 	}
 
 	// In accept/deny of an agreement (when the target faction accepts/denies a proposal):
-	public static void acceptAgreement(OwnerIdentity acceptingFaction, DiplomaticAgreement proposal)
+	public void acceptAgreement(OwnerIdentity acceptingFaction, DiplomaticAgreement proposal)
 	{
 		if(!proposal.isPending()) return;
 		proposal.accept();
 		// Remove from pending lists
 		acceptingFaction.removeAgreement(proposal);
-		OwnerIdentity sourceFaction = DiplomacyUtils.getIdentityByUUID(proposal.getSourceFaction());
-		if(sourceFaction!=DiplomacyUtils.NEUTRAL)
+		OwnerIdentity sourceFaction = getIdentityByUUID(proposal.getSourceFaction());
+		if(sourceFaction!=NEUTRAL)
 		{
 			sourceFaction.removeAgreement(proposal);
 			//Apply terms
@@ -321,7 +346,7 @@ public class DiplomacyUtils
 		IIPacketHandler.sendToAllClients(MessageDiplomacySync.updateIdentityMessage(acceptingFaction));
 	}
 
-	public static OwnerIdentity merge(OwnerIdentity a, OwnerIdentity b)
+	public OwnerIdentity merge(OwnerIdentity a, OwnerIdentity b)
 	{
 		//Merge two identities
 		OwnerIdentity merged = new OwnerIdentity(a, b);
@@ -337,7 +362,7 @@ public class DiplomacyUtils
 		return merged;
 	}
 
-	public static OwnerIdentity[] split(OwnerIdentity identity, EntityLivingBase... between)
+	public OwnerIdentity[] split(OwnerIdentity identity, EntityLivingBase... between)
 	{
 		//Save and update clients
 		saveAndSyncIdentity(identity);
@@ -346,7 +371,7 @@ public class DiplomacyUtils
 
 	//--- Player Invitation ---//
 
-	public static Set<String> getPendingInvitationsForPlayer(UUID playerUUID)
+	public Set<String> getPendingInvitationsForPlayer(UUID playerUUID)
 	{
 		return OWNER_IDENTITIES.values().stream()
 				.filter(oi -> oi.isInvited(playerUUID))
@@ -354,19 +379,19 @@ public class DiplomacyUtils
 				.collect(Collectors.toSet());
 	}
 
-	public static Set<UUID> getPendingInvitationsForFaction(UUID factionUUID)
+	public Set<UUID> getPendingInvitationsForFaction(UUID factionUUID)
 	{
 		OwnerIdentity faction = getIdentityByUUID(factionUUID);
 		return faction!=NEUTRAL?faction.getInvitedPlayers(): Collections.emptySet();
 	}
 
-	public static boolean acceptInvitation(OwnerIdentity identity, UUID playerUUID)
+	public boolean acceptInvitation(OwnerIdentity identity, UUID playerUUID)
 	{
 		if(identity.isInvited(playerUUID))
 		{
 			//Add to new identity
 			identity.removeInvitation(playerUUID);
-			identity.withMember(playerUUID, identity.getStartingMemberRole(), true);
+			identity.withMember(playerUUID, identity.getStartingMemberRole());
 
 			//Remove from old identity
 			OWNER_IDENTITIES.values().stream()
@@ -374,7 +399,7 @@ public class DiplomacyUtils
 					.filter(oi -> oi.isMember(playerUUID))
 					.forEach(faction -> {
 						//Remove player from old identity
-						faction.removeMember(playerUUID, true);
+						faction.removeMember(playerUUID);
 					});
 
 
@@ -383,7 +408,7 @@ public class DiplomacyUtils
 		return false;
 	}
 
-	public static boolean denyInvitation(OwnerIdentity identity, UUID playerUUID)
+	public boolean denyInvitation(OwnerIdentity identity, UUID playerUUID)
 	{
 		if(identity.isInvited(playerUUID))
 		{
@@ -396,7 +421,7 @@ public class DiplomacyUtils
 
 	//--- Server Sync Methods ---//
 
-	public static void saveAndSyncIdentity(OwnerIdentity identity)
+	public void saveAndSyncIdentity(OwnerIdentity identity)
 	{
 		IISaveData.setDirty();
 		IIPacketHandler.sendToAllClients(MessageDiplomacySync.updateIdentityMessage(identity));
@@ -404,12 +429,12 @@ public class DiplomacyUtils
 
 	//--- Client Sync Methods ---//
 
-	public static void clientRemoveIdentity(UUID uuid)
+	public void removeIdentity(UUID uuid)
 	{
 		OWNER_IDENTITIES.remove(uuid);
 	}
 
-	public static void clientUpdateIdentity(UUID uuid, EasyNBT tagCompound)
+	public void updateIdentity(UUID uuid, EasyNBT tagCompound)
 	{
 		OwnerIdentity identity = getIdentityByUUID(uuid);
 		if(identity!=NEUTRAL)

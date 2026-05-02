@@ -19,7 +19,7 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyUtils;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyHandler;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.OwnerIdentity;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
@@ -27,6 +27,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * Represents a transportable item tag used by the II logistics system.
@@ -43,7 +44,7 @@ public class LogisticTag implements INBTSerializable<NBTTagCompound>, Cloneable
 	//--- Properties ---//
 	private String name = "";
 	private String description = "";
-	private OwnerIdentity owner = DiplomacyUtils.NEUTRAL;
+	private UUID owner = null;
 	private String origin = "";
 	private String destination = "";
 	private EnumDyeColor color = null;
@@ -96,9 +97,12 @@ public class LogisticTag implements INBTSerializable<NBTTagCompound>, Cloneable
 			IIDataHandlingUtils.optionalString('t', packet)
 					.ifPresent(string -> this.destination = string);
 			//Owner
-			IIDataHandlingUtils.optionalString('o', packet)
-					.map(DiplomacyUtils::getIdentityByUUID)
-					.ifPresent(identity -> this.owner = identity);
+			try
+			{
+				IIDataHandlingUtils.optionalString('o', packet)
+						.map(UUID::fromString)
+						.ifPresent(uuid -> this.owner = uuid);
+			} catch(IllegalArgumentException ignored) {}
 			//Color (Paint)
 			IIDataHandlingUtils.optionalColor('p', packet)
 					.ifPresent(color -> this.color = color.getDyeColor());
@@ -131,7 +135,7 @@ public class LogisticTag implements INBTSerializable<NBTTagCompound>, Cloneable
 
 	public LogisticTag withOwner(@Nonnull OwnerIdentity owner)
 	{
-		this.owner = owner;
+		this.owner = owner.getUUID();
 		return this;
 	}
 
@@ -171,9 +175,9 @@ public class LogisticTag implements INBTSerializable<NBTTagCompound>, Cloneable
 		return description;
 	}
 
-	public OwnerIdentity getOwner()
+	public OwnerIdentity getOwner(boolean isRemote)
 	{
-		return owner;
+		return DiplomacyHandler.getInstance(isRemote).getIdentityByUUID(owner);
 	}
 
 	public String getOrigin()
@@ -207,7 +211,7 @@ public class LogisticTag implements INBTSerializable<NBTTagCompound>, Cloneable
 				.withString("origin", origin)
 				.withString("destination", destination)
 				.withColor("color", IIColor.fromDye(color))
-				.withString("owner", (owner==null?DiplomacyUtils.NEUTRAL: owner).getStringUUID())
+				.withUUID("owner", owner)
 				.withInt("batch_number", batchNumber)
 				.unwrap();
 	}
@@ -225,8 +229,8 @@ public class LogisticTag implements INBTSerializable<NBTTagCompound>, Cloneable
 		color = null;
 		enbt.checkSetColor("color", found -> color = found.getDyeColor());
 		//Owner
-		owner = DiplomacyUtils.NEUTRAL;
-		enbt.checkSetString("owner", DiplomacyUtils::getIdentityByUUID);
+		owner = null;
+		enbt.checkSetUUID("owner", uuid -> owner = uuid);
 	}
 
 	//--- Utils ---//
@@ -271,8 +275,9 @@ public class LogisticTag implements INBTSerializable<NBTTagCompound>, Cloneable
 				tooltip.add(I18n.format(TRANSLATION_KEY+"batch_number", TextFormatting.WHITE+""+batchNumber));
 
 			//Owner
-			if(owner!=DiplomacyUtils.NEUTRAL)
-				tooltip.add(I18n.format(TRANSLATION_KEY+"owner", TextFormatting.WHITE+owner.getDisplayName()));
+			if(owner!=null&&owner!=DiplomacyHandler.NEUTRAL_UUID)
+				tooltip.add(I18n.format(TRANSLATION_KEY+"owner", TextFormatting.WHITE+
+						DiplomacyHandler.getInstance(true).getIdentityByUUID(owner).getDisplayName()));
 			//To and From
 			if(!origin.isEmpty())
 				tooltip.add(I18n.format(TRANSLATION_KEY+"origin", TextFormatting.WHITE+origin));
@@ -361,7 +366,7 @@ public class LogisticTag implements INBTSerializable<NBTTagCompound>, Cloneable
 		return "LogisticsTag{"+
 				"name='"+name+'\''+
 				", description='"+description+'\''+
-				(owner==DiplomacyUtils.NEUTRAL?"": ", owner="+owner)+
+				(owner!=null&&owner!=DiplomacyHandler.NEUTRAL_UUID?"": ", owner="+owner)+
 				", origin='"+origin+'\''+
 				", destination='"+destination+'\''+
 				(color==null?"": ", color="+color)+

@@ -7,7 +7,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.server.command.CommandTreeBase;
 import pl.pabilo8.immersiveintelligence.common.util.CommandIIBase;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyUtils;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyHandler;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.OwnerIdentity;
 
 public class CommandFactionInviteReject extends CommandIIBase
@@ -37,10 +37,11 @@ public class CommandFactionInviteReject extends CommandIIBase
 		if(args.length < 1)
 			throw new CommandException("Specify faction name.");
 
-		OwnerIdentity faction = DiplomacyUtils.getIdentityByName(String.join(" ", args));
+		DiplomacyHandler diplomacy = DiplomacyHandler.getInstance(false);
+		OwnerIdentity faction = diplomacy.getIdentityByName(String.join(" ", args));
 		if(faction!=null)
 		{
-			DiplomacyUtils.denyInvitation(faction, ((EntityPlayer)sender).getUniqueID());
+			diplomacy.denyInvitation(faction, ((EntityPlayer)sender).getUniqueID());
 			sender.sendMessage(new TextComponentString("Invitation rejected."));
 		}
 	}

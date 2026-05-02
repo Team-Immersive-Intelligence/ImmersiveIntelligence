@@ -8,7 +8,7 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.common.network.IIMessage;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyUtils;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyHandler;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.OwnerIdentity;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
@@ -42,7 +42,7 @@ public class MessageDiplomacySync extends IIMessage
 
 	public static MessageDiplomacySync updateAllMessage()
 	{
-		return new MessageDiplomacySync(true, null, false, DiplomacyUtils.saveAllToNBT());
+		return new MessageDiplomacySync(true, null, false, DiplomacyHandler.getInstance(false).saveAllToNBT());
 	}
 
 	public static MessageDiplomacySync removeIdentityMessage(OwnerIdentity identity)
@@ -67,14 +67,14 @@ public class MessageDiplomacySync extends IIMessage
 	{
 		if(updateAll)
 		{
-			DiplomacyUtils.loadAllFromNBT(tagCompound);
+			DiplomacyHandler.getInstance(true).loadAllFromNBT(tagCompound);
 			return;
 		}
 
 		if(shouldRemove)
-			DiplomacyUtils.clientRemoveIdentity(identity);
+			DiplomacyHandler.getInstance(true).removeIdentity(identity);
 		else
-			DiplomacyUtils.clientUpdateIdentity(identity, tagCompound);
+			DiplomacyHandler.getInstance(true).updateIdentity(identity, tagCompound);
 	}
 
 	@Override

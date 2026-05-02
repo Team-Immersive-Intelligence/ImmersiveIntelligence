@@ -26,7 +26,7 @@ import pl.pabilo8.immersiveintelligence.common.gui.ContainerFlagpole;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageDiplomacyAction;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyUtils;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyHandler;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.OwnerIdentity;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.permission.PermissionCategory;
 
@@ -55,7 +55,7 @@ public class GuiFlagpoleFaction extends DecoGui<TileEntityFlagpole, ContainerFla
 	@Override
 	public void onInit()
 	{
-		OwnerIdentity identity = DiplomacyUtils.getLocalPlayerIdentity();
+		OwnerIdentity identity = DiplomacyHandler.getLocalPlayerIdentity();
 		NetHandlerPlayClient connection = mc.getConnection();
 		assert connection!=null;
 

@@ -118,9 +118,9 @@ import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIFluid;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBlockEnum;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBlockProperties;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.IOwnableProperty;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.chunk.CapabilityChunkOwnership;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.permission.PermissionCategory;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.property.IOwnableProperty;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.property.chunk.chunk.CapabilityChunkOwnership;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.NBTSerialisation;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
@@ -140,16 +140,15 @@ import java.util.List;
 import static blusunrize.immersiveengineering.api.energy.wires.WireApi.registerFeedthroughForWiretype;
 
 /**
- * Created by Pabilo8 on 2019-05-07.
  * 2 days of headache, pain, lack of sleep and addict-like coffee drinking, finally i got a fix!
  * the problem why the server couldn't load was the modifier "abstract" in this class
  * why? i don't know why it was here in the first place
  * for how long? ask github
  * how did you not notice that? ... that was really unexpected, didn't even consider such a thing being there
  *
- * @edited Avalon (avalon@iiteam.net)
- * @since 03.03.2026
- * added compat for cfb
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @ii-approved 0.3.1
+ * @since 05.07.2019
  */
 @EventBusSubscriber(modid = ImmersiveIntelligence.MODID)
 public class CommonProxy implements IGuiHandler, LoadingCallback

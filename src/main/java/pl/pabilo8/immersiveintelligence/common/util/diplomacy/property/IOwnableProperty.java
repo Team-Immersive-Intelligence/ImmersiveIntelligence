@@ -1,10 +1,11 @@
-package pl.pabilo8.immersiveintelligence.common.util.diplomacy;
+package pl.pabilo8.immersiveintelligence.common.util.diplomacy.property;
 
 
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IEntityProof;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import pl.pabilo8.immersiveintelligence.common.util.IWorldPosProvider;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.OwnerIdentity;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.permission.PermissionCategory;
 
 import java.util.UUID;

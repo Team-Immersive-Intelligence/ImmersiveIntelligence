@@ -16,9 +16,9 @@ import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockFlagpole;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyUtils;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.IOwnableProperty;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyHandler;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.OwnerIdentity;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.property.IOwnableProperty;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IIIGuiMultiblockTile;
@@ -54,7 +54,7 @@ public class TileEntityFlagpole extends TileEntityMultiblockIIBase<TileEntityFla
 	{
 		super(MultiblockFlagpole.INSTANCE);
 		this.upgradeManager = new UpgradeManager<>(this);
-		this.ownerIdentity = DiplomacyUtils.NEUTRAL;
+		this.ownerIdentity = DiplomacyHandler.NEUTRAL;
 		this.style = new StyleCustomization(MultiblockFlagpole.STYLE_CONSTRAINTS);
 		this.health = new MultiblockHealth(this, Flagpole.baseHealth);
 	}
@@ -73,10 +73,10 @@ public class TileEntityFlagpole extends TileEntityMultiblockIIBase<TileEntityFla
 	protected void onUpdate()
 	{
 		//Claim neighbouring chunks
-		if(!world.isRemote&&world.getTotalWorldTime()%200==0)
+		if(world.getTotalWorldTime()%200==0)
 		{
 			updateTileForEvent(SyncEvents.TILE_OWNERSHIP_MODIFIED);
-			DiplomacyUtils.claimChunks(this);
+			DiplomacyHandler.getInstance(world.isRemote).claimChunks(this);
 		}
 
 		/*if(!world.isRemote&&ownerIdentity!=DiplomacyUtils.NEUTRAL)
