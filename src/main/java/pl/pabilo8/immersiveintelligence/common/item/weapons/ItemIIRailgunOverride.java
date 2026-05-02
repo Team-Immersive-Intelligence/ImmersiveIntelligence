@@ -30,6 +30,8 @@ import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProper
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * The man that added grenades
+ * @author Carver (carver@iiteam.net)
+ * The man that adjusted the properties
  * @author BluSunrize
  * The man that did the rest of the code
  * @since 27.11.2020
@@ -115,8 +117,11 @@ public class ItemIIRailgunOverride extends ItemRailgun
 			if(!ammo.isEmpty())
 			{
 				Vec3d vec = user.getLookVec();
-				float speed = 20;
-				float mass = 0.25f;
+				//Original values
+				//float speed = 20;
+				//float mass = 0.25f;
+				float speed = 60;
+				float mass = 0.15f;
 
 				world.playSound(null, user.posX, user.posY, user.posZ, IESounds.railgunFire, SoundCategory.PLAYERS, 1, .5f+(.5f*user.getRNG().nextFloat()));
 				this.extractEnergy(stack, energy, false);
