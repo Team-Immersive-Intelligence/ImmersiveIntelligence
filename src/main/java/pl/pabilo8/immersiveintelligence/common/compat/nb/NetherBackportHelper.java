@@ -60,7 +60,10 @@ public class NetherBackportHelper extends IICompatModule
 		OreDictionary.registerOre("oreNetherite", Item.REGISTRY.getObject(RES_NB.with("netherite_ore")));
 		OreDictionary.registerOre("oreGold", Item.REGISTRY.getObject(RES_NB.with("nether_gold_ore")));
 		OreDictionary.registerOre("oreGoldNether", Item.REGISTRY.getObject(RES_NB.with("nether_gold_ore")));
+		OreDictionary.registerOre("soulsoil", Item.REGISTRY.getObject(RES_NB.with("soul_soil")));
 		OreDictionary.registerOre("magma", Blocks.MAGMA);
+		OreDictionary.registerOre("soulsand", Blocks.SOUL_SAND);
+		OreDictionary.registerOre("gravel", Blocks.GRAVEL);
 
 		OreDictionary.registerOre("blockBasalt", Item.REGISTRY.getObject(RES_NB.with("basalt")));
 		OreDictionary.registerOre("blockBasaltSmooth", Item.REGISTRY.getObject(RES_NB.with("polished_basalt")));
@@ -75,9 +78,11 @@ public class NetherBackportHelper extends IICompatModule
 		MineralMix mineralDigsite = ExcavatorHandler.addMineral("Archaic Digsite", 30, .45f, new String[]{"bricksBlackstone", "blockBlackstoneSmooth", "oreNetherite", "blockBlackstoneGilded"}, new float[]{.4f, .3f, .2f, .1f});
 		MineralMix mineralLavatube = ExcavatorHandler.addMineral("Cooled Lava Tube", 30, .45f, new String[]{"magma", "blockBasaltSmooth", "obsidian"}, new float[]{.5f, .3f, .2f});
 		MineralMix mineralMephitic = ExcavatorHandler.addMineral("Mephitic Quarzite", 30, .45f, new String[]{"oreQuartz", "oreGold", "dustSulfur"}, new float[]{.6f, .2f, .2f});
+		MineralMix mineralSoulsilt = ExcavatorHandler.addMineral("Soul Silt", 30, .45f, new String[]{"soulsand", "soulsoil", "gravel"}, new float[]{.35f, .5f, .15f});
 		mineralDigsite.dimensionWhitelist = new int[]{-1};
 		mineralLavatube.dimensionWhitelist = new int[]{-1};
 		mineralMephitic.dimensionWhitelist = new int[]{-1};
+		mineralSoulsilt.dimensionWhitelist = new int[]{-1};
 	}
 
 	@Override
