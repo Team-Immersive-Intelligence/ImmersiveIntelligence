@@ -147,6 +147,10 @@ public class IIConfigHandler
 		@RequiresMcRestart
 		public static boolean concreteOverride = true;
 
+		@Comment({"Whether Immersive Engineering Engineers Skyhook should be replaced by II. WIP."})
+		@RequiresMcRestart
+		public static boolean skyhookOverride = true;
+
 		@Comment({"A list of all entities for which a fakeplayer should be used when shooter is not a player"})
 		public static String[] bulletFakeplayerWhitelist = new String[]{
 				"minecraft:ender_dragon"

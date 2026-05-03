@@ -28,6 +28,7 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIEFluidConcreteOverride;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIMaterial.Materials;
+import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIISkyhookOverride;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIRailgunOverride;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIFluid;
@@ -58,6 +59,11 @@ public class ImmersiveEngineeringHelper extends IICompatModule
 			IEContent.blockFluidConcrete = new BlockIEFluidConcreteOverride();
 			ReflectionHelper.setPrivateValue(Fluid.class, IEContent.fluidConcrete, IEContent.blockFluidConcrete, "block");
 			IILogger.info("Immersive Engineering Fluid Concrete was overridden by Immersive Intelligence");
+		}
+		if(IIConfig.skyhookOverride)
+		{
+			IEContent.itemSkyhook = new ItemIISkyhookOverride();
+			IILogger.info("Immersive Engineering Engineers Skyhook was overridden by Immersive Intelligence");
 		}
 
 		ReflectionHelper.setPrivateValue(ToolUpgrades.class, ToolUpgrades.REVOLVER_BAYONET, ImmutableSet.of("REVOLVER", "SUBMACHINEGUN", "RIFLE"), "toolset");
