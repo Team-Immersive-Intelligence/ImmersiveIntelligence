@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common.compat;
 
 import blusunrize.immersiveengineering.api.crafting.CrusherRecipe;
+import blusunrize.immersiveengineering.api.crafting.FermenterRecipe;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.api.crafting.RefineryRecipe;
 import blusunrize.immersiveengineering.api.energy.DieselHandler;
@@ -107,6 +108,9 @@ public class ImmersiveEngineeringHelper extends IICompatModule
 		OreDictionary.registerOre("flowerLightBlue1", new ItemStack(Blocks.RED_FLOWER, 1,1));
 		OreDictionary.registerOre("flowerOrange1", new ItemStack(Blocks.RED_FLOWER, 1,5));
 		OreDictionary.registerOre("flowerGreen", new ItemStack(Blocks.CACTUS, 1,0));
+		OreDictionary.registerOre("wartBlock", new ItemStack(Blocks.NETHER_WART_BLOCK, 1,0));
+
+		OreDictionary.registerOre("beetroot", new ItemStack(Item.REGISTRY.getObject(RES_MC.with("beetroot")), 1, 0));
 
 		//yellow
 		CrusherRecipe.addRecipe(new ItemStack(Objects.requireNonNull(Item.REGISTRY.getObject(RES_MC.with("dye"))), 2,4),
@@ -150,6 +154,14 @@ public class ImmersiveEngineeringHelper extends IICompatModule
 		//Given the nitrogen is made from mostly fatty meat, and high-cetane biodiesel is partially made of fats... some concessions have to be made.
 		RefineryRecipe.addRecipe(new FluidStack(IIContent.fluidBiodieselHighcetane, 200), new FluidStack(IIContent.gasNitrogen, 80),
 				new FluidStack(IEContent.fluidBiodiesel, 120), 50);
+
+
+		FermenterRecipe.addRecipe(new FluidStack(IEContent.fluidEthanol, 60), ItemStack.EMPTY,
+				new IngredientStack("beetroot"), 6400);
+
+		CrusherRecipe.addRecipe(new ItemStack(Objects.requireNonNull(Item.REGISTRY.getObject(RES_MC.with("nether_wart"))), 9),
+				new IngredientStack("wartBlock"), 500);
+
 	}
 
 	@Override
