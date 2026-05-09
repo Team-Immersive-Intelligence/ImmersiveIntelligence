@@ -150,6 +150,17 @@ public class NBTSerialisation
 
 		registerSerializer(ItemStack.class, NBTTagCompound.class, ItemStack::serializeNBT, nbt -> new ItemStack(nbt));
 
+		registerSerializer(UUID.class, NBTTagString.class,
+				uuid -> new NBTTagString(uuid.toString()),
+				nbt -> nbt.getString().isEmpty()?null: UUID.fromString(nbt.getString())
+		);
+
+		registerSerializer(
+				OwnerIdentity.class, NBTTagString.class,
+				ownerIdentity -> new NBTTagString(ownerIdentity==null?"00000000-0000-0000-0000-000000000000": ownerIdentity.getStringUUID()),
+				nbt -> DiplomacyHandler.getIdentityByUUIDStatic(nbt.getString())
+		);
+
 		registerSerializer(ITypeNBTSerializable.class, NBTTagCompound.class,
 				type -> {
 					NBTTagCompound nbt = new NBTTagCompound();
@@ -200,17 +211,6 @@ public class NBTSerialisation
 					NBTTagCompound valueTag = nbtTagCompound.getCompoundTag("value");
 					return new DataVariable(name, IIDataTypeUtils.getVarFromNBT(valueTag));
 				}
-		);
-
-		registerSerializer(UUID.class, NBTTagString.class,
-				uuid -> new NBTTagString(uuid.toString()),
-				nbt -> nbt.getString().isEmpty()?null: UUID.fromString(nbt.getString())
-		);
-
-		registerSerializer(
-				OwnerIdentity.class, NBTTagString.class,
-				ownerIdentity -> new NBTTagString(ownerIdentity==null?"00000000-0000-0000-0000-000000000000": ownerIdentity.getStringUUID()),
-				nbt -> DiplomacyHandler.getIdentityByUUIDStatic(nbt.getString())
 		);
 
 		//Inserter tasks

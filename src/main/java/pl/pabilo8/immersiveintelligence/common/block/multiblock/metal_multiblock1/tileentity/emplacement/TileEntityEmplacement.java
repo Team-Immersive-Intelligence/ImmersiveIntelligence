@@ -28,6 +28,7 @@ import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.UpgradeOperatio
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Emplacement;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
+import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockEmplacement;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockFlagpole;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.task.EmplacementTargetManager;
@@ -437,7 +438,9 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 	public void setOwnerIdentity(OwnerIdentity ownerIdentity)
 	{
 		this.ownerIdentity = ownerIdentity;
-		updateTileForEvent(SyncEvents.TILE_OWNERSHIP_MODIFIED);
+		if(!world.isRemote)
+			updateTileForEvent(SyncEvents.TILE_OWNERSHIP_MODIFIED);
+		IILogger.debug("Owner Identity for "+uuid+" : "+ownerIdentity+" / world is "+(world.isRemote?"remote": "local"));
 	}
 
 	@Override

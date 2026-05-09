@@ -45,7 +45,7 @@ public class DecoOwnershipWidget extends DecoComponentWidgetBase<DecoOwnershipWi
 
 			withTitleLabel(IIReference.GUI_TOOLTIP_KEY+"widget.ownership", DecoAlignment.TOP);
 
-			if(identity==null||identity==DiplomacyHandler.NEUTRAL)
+			if(identity==DiplomacyHandler.NEUTRAL)
 			{
 				//"Abandoned" Label
 				addLabel(I18n.format("desc.immersiveintelligence.diplomacy.noowner"), 2, 8);

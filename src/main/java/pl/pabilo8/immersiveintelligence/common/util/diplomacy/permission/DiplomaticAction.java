@@ -45,6 +45,10 @@ public enum DiplomaticAction implements ILocalizedEnum
 	 * Change the identity's banner
 	 */
 	CHANGE_BANNER(PermissionCategory.MODIFY_INSIGNIA),
+	/**
+	 * Change a permission for a lower role
+	 */
+	CHANGE_PERMISSION,
 
 	/**
 	 * Claim a property without an owner

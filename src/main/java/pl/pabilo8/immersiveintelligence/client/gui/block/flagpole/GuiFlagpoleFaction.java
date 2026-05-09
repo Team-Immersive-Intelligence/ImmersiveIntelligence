@@ -2,13 +2,14 @@ package pl.pabilo8.immersiveintelligence.client.gui.block.flagpole;
 
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.client.network.NetworkPlayerInfo;
-import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBanner;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoSwitch;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoDropdown;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoElementDisplays;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoList;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoTitleLabel;
@@ -27,8 +28,10 @@ import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageDiplomacyAction;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyHandler;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyHandler.PlayerInfo;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.OwnerIdentity;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.permission.PermissionCategory;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.permission.PermissionRole;
 
 import java.util.UUID;
 
@@ -45,7 +48,7 @@ public class GuiFlagpoleFaction extends DecoGui<TileEntityFlagpole, ContainerFla
 	private String factionName = null;
 	private IIColor factionColor = null;
 	private ItemStack factionBanner = null;
-
+	private PermissionRole selectedRole;
 
 	public GuiFlagpoleFaction(EntityPlayer player, TileEntityFlagpole tile)
 	{
@@ -60,10 +63,10 @@ public class GuiFlagpoleFaction extends DecoGui<TileEntityFlagpole, ContainerFla
 		assert connection!=null;
 
 		startBackground()
-				.withBox(DecoTextures.BG_STEEL, 0, 0, 248, 152+32)
+				.withBox(DecoTextures.BG_STEEL, 0, 0, 248+32, 152+32)
 				.withTitleBar(tile)
 				.withNextLayer()
-				.withBox(DecoTextures.BG_WOODEN, DecoTextures.TEMPLATE_ROUND_WOODEN, 32, 152+32, 176, 92)
+				.withBox(DecoTextures.BG_WOODEN, DecoTextures.TEMPLATE_ROUND_WOODEN, 32+16, 152+32, 176, 92)
 				.withInventorySlots(SlotStyle.VANILLA, container.inventorySlots)
 				.withInventoryTitleBar()
 				.withFrame(DecoTextures.FRAME_WOODEN_THIN, 4, false, new boolean[]{true, false, false, false})
@@ -183,19 +186,9 @@ public class GuiFlagpoleFaction extends DecoGui<TileEntityFlagpole, ContainerFla
 								.withOnLMBPressed(() -> IIPacketHandler.sendToServer(MessageDiplomacyAction.removeMember(p.getCurrentElement())))
 						)
 						.withElementApplyMethod((uuid, panel) -> {
-							ResourceLocation skinLocation = DefaultPlayerSkin.getDefaultSkinLegacy();
-							String memberName = "Missingno";
-
-							NetworkPlayerInfo networkplayerinfo = connection.getPlayerInfo(uuid);
-							//noinspection ConstantValue
-							if(networkplayerinfo!=null)
-							{
-								skinLocation = networkplayerinfo.getLocationSkin();
-								memberName = networkplayerinfo.getGameProfile().getName();
-							}
-
-							panel.label("name").withRawText(memberName);
-							panel.component("head", DecoImage.class).withImageLocation(skinLocation)
+							PlayerInfo playerInfo = DiplomacyHandler.getInstance(true).getPlayerInfo(uuid);
+							panel.label("name").withRawText(playerInfo.getName());
+							panel.component("head", DecoImage.class).withImageLocation(playerInfo.getSkin())
 									.withUV(64, 8, 8, 16, 16);
 						})
 				)
@@ -203,40 +196,40 @@ public class GuiFlagpoleFaction extends DecoGui<TileEntityFlagpole, ContainerFla
 
 		//Permissions Panel
 		DecoPanel panelPerms = addComponent(new DecoPanel(152+2, 4)
-				.withSize(92-4, 144+32)
+				.withSize(92-2+32, 144+32)
 				.withBackground(DecoTextures.BG_STEEL)
 				.withBackgroundMask(DecoTextures.TEMPLATE_SQUARE)
 				.withTitleLabel("Permissions", DecoAlignment.TOP)
 		);
 
-		/*DecoEntryPanelBuilder<PermissionLevel> permDisplay = new DecoEntryPanelBuilder<PermissionLevel>()
-				.withBackground(DecoTextures.BG_STEEL)
-				.withHeight(12)
-				.withLabel("label", new DecoLabel(IIClientUtils.fontRegular, 2, 1)
-						.withSize(76, 12)
-						.withAlign(DecoAlignment.LEFT)
-				)
-				.withElementApplyMethod((level, builder) ->
-						builder.label("label").withRawText(formatPermissionLevel(level))
-				);*/
+		panelPerms.addLabel("Role:", 4, 8+2-1)
+				.withSize(panelPerms.width-72-2, 14)
+				.withAlign(DecoAlignment.LEFT);
+		panelPerms.addComponents(
+				new DecoDropdown<PermissionRole>(panelPerms.width-72, 8+2-2)
+						.withSize(72-4, 14)
+						.withEntries(identity.getAvailableRoles().values())
+						.withDisplayFunction(DecoElementDisplays.getSimpleTextDisplay(PermissionRole::getDisplayName))
+						.withSelectedEntry(selectedRole = identity.getRoleOf(playerContainer.player.getUniqueID()))
+						.withOnSelectedEntry((oldRole, newRole) -> selectedRole = newRole),
+				new DecoList<PermissionCategory>(2, 12+8+2+1)
+						.withSize(panelPerms.width-4-2, panelPerms.height-32+8-2)
+						.withEntries(PermissionCategory.values())
+						.withDisplayFunction(new DecoEntryPanelBuilder<PermissionCategory>()
+								.withHeight(18)
+								.withComponent("toggle", p -> new DecoSwitch(2, 2)
+										.withOnToggle(change -> IIPacketHandler.sendToServer(MessageDiplomacyAction.changePermission(selectedRole,
+												p.getCurrentElement(), change)))
+								)
+								.withElementApplyMethod((permission, panel) -> {
+									panel.component("toggle", DecoSwitch.class)
+											.withCurrentState(selectedRole.isAllowed(permission))
+											.withText(permission.getFullLocaleKey());
+								})
+						)
+		);
 
-		int y = 8;
 
-		//TODO: 24.04.2026 permission roles
-		/*for(PermissionCategory category : SHOWN_PERMISSIONS)
-		{
-			panelPerms.addLabel(formatPermissionName(category), 4, y)
-					.withSize(80, 8)
-					.withAlign(DecoAlignment.LEFT);
-			panelPerms.addComponent(new DecoDropdown<PermissionLevel>(4, y+9)
-							.withSize(80, 12)
-							.withEntries(AVAILABLE_LEVELS)
-							.withSelectedEntry(displayIdentity.getPermission(category))
-							.withDisplayFunction(permDisplay)
-					//TODO: implement permission changes
-			);
-			y += 22;
-		}*/
 	}
 
 	@Override

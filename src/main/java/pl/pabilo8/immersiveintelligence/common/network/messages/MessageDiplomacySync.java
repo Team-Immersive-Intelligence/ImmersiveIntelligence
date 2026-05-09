@@ -3,15 +3,20 @@ package pl.pabilo8.immersiveintelligence.common.network.messages;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.network.NetHandlerPlayClient;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.common.network.IIMessage;
+import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyHandler;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyHandler.PlayerInfo;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.OwnerIdentity;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -22,49 +27,83 @@ import java.util.UUID;
  */
 public class MessageDiplomacySync extends IIMessage
 {
-	boolean updateAll;
-	UUID identity;
-	boolean shouldRemove;
-	EasyNBT tagCompound;
+	private static final List<MessageChunkedData> chunkBuffer = new ArrayList<>();
+	private boolean updateAll = false;
+	private UUID identity = null;
+	private boolean shouldRemove = false;
+	private EasyNBT tagCompound = null;
+	private PlayerInfo playerInfo = null;
+	private MessageChunkedData messageChunk = null;
 
 	public MessageDiplomacySync()
 	{
 
 	}
 
-	private MessageDiplomacySync(boolean updateAll, UUID identity, boolean shouldRemove, EasyNBT tagCompound)
+	private MessageDiplomacySync(MessageChunkedData messageChunk)
 	{
-		this.updateAll = updateAll;
+		this.messageChunk = messageChunk;
+		this.updateAll = true;
+	}
+
+	private MessageDiplomacySync(PlayerInfo playerInfo)
+	{
+		this.playerInfo = playerInfo;
+	}
+
+	private MessageDiplomacySync(UUID identity, boolean shouldRemove, EasyNBT tagCompound)
+	{
 		this.identity = identity;
 		this.shouldRemove = shouldRemove;
 		this.tagCompound = tagCompound;
 	}
 
-	public static MessageDiplomacySync updateAllMessage()
+	public static MessageDiplomacySync[] updateAllMessage()
 	{
-		return new MessageDiplomacySync(true, null, false, DiplomacyHandler.getInstance(false).saveAllToNBT());
+		DiplomacyHandler handler = DiplomacyHandler.getInstance(false);
+		return chunkNBT(handler.saveAllToNBT().unwrap()).stream()
+				.map(MessageDiplomacySync::new)
+				.toArray(MessageDiplomacySync[]::new);
 	}
 
 	public static MessageDiplomacySync removeIdentityMessage(OwnerIdentity identity)
 	{
-		return new MessageDiplomacySync(false, identity.getUUID(), true, null);
+		return new MessageDiplomacySync(identity.getUUID(), true, null);
 	}
 
 	public static MessageDiplomacySync updateIdentityMessage(OwnerIdentity identity)
 	{
-		return new MessageDiplomacySync(false, identity.getUUID(), false, identity.toNBT());
+		return new MessageDiplomacySync(identity.getUUID(), false, EasyNBT.wrapNBT(identity.serializeNBT()));
+	}
+
+	public static MessageDiplomacySync syncPlayerInfo(PlayerInfo playerInfo)
+	{
+		return new MessageDiplomacySync(playerInfo);
+	}
+
+	public static MessageDiplomacySync requestUpdateMessage()
+	{
+		//placeholder, because the server replies to any message
+		return new MessageDiplomacySync(DiplomacyHandler.DEFAULT_PLAYER_INFO);
 	}
 
 	@Override
 	protected void onServerReceive(WorldServer world, NetHandlerPlayServer handler)
 	{
-		//No action on server
+		//Request an update
+		for(MessageDiplomacySync message : updateAllMessage())
+			IIPacketHandler.sendToClient(handler.player, message);
 	}
 
 	@SideOnly(Side.CLIENT)
 	@Override
 	protected void onClientReceive(WorldClient world, NetHandlerPlayClient handler)
 	{
+		if(playerInfo!=null)
+		{
+			DiplomacyHandler.getInstance(false).updatePlayerInfo(playerInfo);
+			return;
+		}
 		if(updateAll)
 		{
 			DiplomacyHandler.getInstance(true).loadAllFromNBT(tagCompound);
@@ -80,25 +119,50 @@ public class MessageDiplomacySync extends IIMessage
 	@Override
 	public void fromBytes(ByteBuf buf)
 	{
-		updateAll = buf.readBoolean();
-		if(!updateAll)
+		//Update player
+		if(buf.readBoolean())
+		{
+			playerInfo = new PlayerInfo(readTagCompound(buf));
+			return;
+		}
+		//Update all
+		if(this.updateAll = buf.readBoolean())
+		{
+			synchronized(chunkBuffer)
+			{
+				NBTTagCompound nbt = readChunkedNBT(buf, chunkBuffer);
+				tagCompound = nbt==null?null: EasyNBT.wrapNBT(nbt);
+			}
+		}
+		//Update single identity
+		else
 		{
 			identity = readUUID(buf);
 			shouldRemove = buf.readBoolean();
+			if(!shouldRemove)
+				tagCompound = readEasyNBT(buf);
 		}
-		if(!shouldRemove)
-			tagCompound = readEasyNBT(buf);
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf)
 	{
-		buf.writeBoolean(updateAll);
-		if(!updateAll)
+		buf.writeBoolean(playerInfo!=null);
+		if(playerInfo!=null)
 		{
-			writeUUID(buf, identity);
-			buf.writeBoolean(shouldRemove);
+			writeTagCompound(buf, playerInfo.serializeNBT());
+			return;
 		}
+
+		buf.writeBoolean(updateAll);
+		if(updateAll)
+		{
+			writeChunkedData(buf, messageChunk);
+			return;
+		}
+		writeUUID(buf, identity);
+		buf.writeBoolean(shouldRemove);
+
 		if(!shouldRemove)
 			writeEasyNBT(buf, tagCompound);
 	}

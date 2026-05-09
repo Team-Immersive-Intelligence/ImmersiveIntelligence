@@ -2,7 +2,6 @@ package pl.pabilo8.immersiveintelligence;
 
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -16,6 +15,7 @@ import org.apache.logging.log4j.core.config.Configurator;
 import pl.pabilo8.immersiveintelligence.api.data.radio.RadioNetwork;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Factions;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.IISaveData;
 import pl.pabilo8.immersiveintelligence.common.commands.CommandII;
@@ -75,7 +75,6 @@ public class ImmersiveIntelligence
 		IIConfigHandler.putConfigValues();
 		//Pre-Init
 		proxy.preInit(event);
-		ForgeChunkManager.setForcedChunkLoadingCallback(this, proxy);
 		//Start contributor skins json download thread
 		new IISkinHandler.ThreadContributorSpecialsDownloader();
 	}
@@ -110,7 +109,8 @@ public class ImmersiveIntelligence
 		IILogger.debug("Pre-World Load cleanup");
 		CommonProxy.refreshFluidReferences();
 		RadioNetwork.INSTANCE.clearDevices();
-		DiplomacyHandler.getInstance(false).init();
+		if(Factions.enableFactions)
+			DiplomacyHandler.getInstance(false).init();
 	}
 
 	@Mod.EventHandler
@@ -141,8 +141,9 @@ public class ImmersiveIntelligence
 	public void onFMLServerStopped(FMLServerStoppedEvent event)
 	{
 		IILogger.info("Post-World Unload cleanup");
-		DiplomacyHandler.getInstance(false).unload();
 		RadioNetwork.INSTANCE.clearDevices();
+		if(Factions.enableFactions)
+			DiplomacyHandler.getInstance(false).cleanup();
 	}
 
 

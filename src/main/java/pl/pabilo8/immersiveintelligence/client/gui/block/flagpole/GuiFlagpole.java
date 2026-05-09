@@ -53,7 +53,8 @@ public class GuiFlagpole extends DecoGui<TileEntityFlagpole, ContainerFlagpole>
 				.withInventoryTitleBar()
 				.withFrame(DecoTextures.FRAME_WOODEN_THIN, 4, false, new boolean[]{true, false, false, false})
 				.withNextLayer()
-				.withBox(DecoTextures.BG_PAPER, DecoTextures.TEMPLATE_PAPER, 0, 0, 152+96, 152)
+				.withBox(DecoTextures.BG_PAPER, DecoTextures.TEMPLATE_PAPER, 0, 0, 152, 152)
+				.withNextLayer()
 				.withBox(DecoTextures.BG_STEEL, DecoTextures.TEMPLATE_SQUARE, 152, 0, 64+32, 152)
 				.build();
 

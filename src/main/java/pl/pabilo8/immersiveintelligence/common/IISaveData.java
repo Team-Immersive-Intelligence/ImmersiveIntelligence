@@ -7,8 +7,6 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import pl.pabilo8.immersiveintelligence.api.ammo.penetration.DamageBlockPos;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.PenetrationCache;
-import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.messages.MessageDiplomacySync;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyHandler;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
@@ -63,7 +61,6 @@ public class IISaveData extends WorldSavedData
 		}
 
 		DiplomacyHandler.getInstance(false).loadAllFromNBT(enbt.getEasyCompound("diplomacy"));
-		IIPacketHandler.sendToAllClients(MessageDiplomacySync.updateAllMessage());
 	}
 
 	@Override

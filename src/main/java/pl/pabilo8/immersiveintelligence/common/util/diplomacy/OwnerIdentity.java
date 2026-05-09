@@ -8,6 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.INBTSerializable;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageDiplomacySync;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
@@ -32,7 +33,7 @@ import java.util.*;
  * @updated 24.04.2026
  * @since 03.09.2025
  */
-public class OwnerIdentity
+public class OwnerIdentity implements INBTSerializable<NBTTagCompound>
 {
 	private final UUID uuid;
 	private String displayName;
@@ -55,7 +56,7 @@ public class OwnerIdentity
 	private final Set<UUID> invitedPlayers = new HashSet<>();
 
 	//--- Constructors ---//
-	protected OwnerIdentity(UUID uuid)
+	protected OwnerIdentity(@Nonnull UUID uuid)
 	{
 		this.uuid = uuid;
 		this.displayName = "placeholder";
@@ -63,7 +64,7 @@ public class OwnerIdentity
 		initAvailableRoles();
 	}
 
-	protected OwnerIdentity(UUID uuid, String displayName)
+	protected OwnerIdentity(@Nonnull UUID uuid, @Nonnull String displayName)
 	{
 		this.uuid = uuid;
 		this.displayName = displayName;
@@ -99,9 +100,18 @@ public class OwnerIdentity
 
 	public OwnerIdentity(EasyNBT tag)
 	{
-		this(tag.getUUID("uuid"), tag.getString("displayName"));
-		this.invalid = false;
-		loadFromNBT(tag);
+		if(this.invalid = tag.hasKey("invalid")||!tag.hasKey("uuid"))
+		{
+			this.uuid = UUID.randomUUID();
+			this.displayName = "invalid";
+			initAvailableRoles();
+		}
+		else
+		{
+			this.uuid = tag.getUUID("uuid");
+			this.displayName = tag.getString("displayName");
+			deserializeNBT(tag.unwrap());
+		}
 	}
 
 	private void initAvailableRoles()
@@ -398,10 +408,16 @@ public class OwnerIdentity
 	}
 
 	//--- NBT ---//
-	public EasyNBT toNBT()
+
+	@Override
+	public NBTTagCompound serializeNBT()
 	{
 		if(invalid)
-			return EasyNBT.newNBT().withBoolean("invalid", true);
+			return EasyNBT.newNBT()
+					.withUUID("uuid", uuid)
+					.withString("displayName", displayName)
+					.withBoolean("invalid", true)
+					.unwrap();
 
 		EasyNBT rolesTag = EasyNBT.newNBT();
 		memberRoles.forEach((uuid, roleId) -> rolesTag.withString(uuid.toString(), roleId));
@@ -433,11 +449,14 @@ public class OwnerIdentity
 				.withTag("activeTargetAgreements", targetTag)
 				.withTag("pendingOutgoing", outTag)
 				.withTag("pendingIncoming", inTag)
-				.withList("invitedPlayers", invitedList);
+				.withList("invitedPlayers", invitedList)
+				.unwrap();
 	}
 
-	public void loadFromNBT(EasyNBT nbt)
+	@Override
+	public void deserializeNBT(NBTTagCompound nbt)
 	{
+		EasyNBT enbt = EasyNBT.wrapNBT(nbt);
 		memberRoles.clear();
 		availableRoles.clear();
 		relations.clear();
@@ -447,14 +466,14 @@ public class OwnerIdentity
 		pendingIncomingProposals.clear();
 		invitedPlayers.clear();
 
-		if(nbt.getBoolean("invalid"))
+		if(enbt.getBoolean("invalid"))
 		{
 			invalid = true;
 			return;
 		}
 		invalid = false;
 
-		EasyNBT rolesTag = nbt.getEasyCompound("memberRoles");
+		EasyNBT rolesTag = enbt.getEasyCompound("memberRoles");
 		for(String key : rolesTag.asMap().keySet())
 		{
 			UUID uuid = UUID.fromString(key);
@@ -462,20 +481,20 @@ public class OwnerIdentity
 			memberRoles.put(uuid, roleId);
 		}
 
-		lawForm = nbt.getEnum("lawForm", LawForm.class);
+		lawForm = enbt.getEnum("lawForm", LawForm.class);
 		initAvailableRoles();
-		EasyNBT availTag = nbt.getEasyCompound("availableRoles");
+		EasyNBT availTag = enbt.getEasyCompound("availableRoles");
 		for(String roleId : availTag.asMap().keySet())
 		{
 			PermissionRole role = PermissionRole.fromNBT(availTag.getEasyCompound(roleId));
 			availableRoles.put(role.getId(), role);
 		}
 
-		color = nbt.getColor("color");
-		banner = nbt.getItemStack("banner");
-		displayName = nbt.getString("displayName");
+		color = enbt.getColor("color");
+		banner = enbt.getItemStack("banner");
+		displayName = enbt.getString("displayName");
 
-		EasyNBT relationsTag = nbt.getEasyCompound("relations");
+		EasyNBT relationsTag = enbt.getEasyCompound("relations");
 		for(String key : relationsTag.asMap().keySet())
 		{
 			UUID otherUuid = UUID.fromString(key);
@@ -483,12 +502,12 @@ public class OwnerIdentity
 			relations.put(otherUuid, status);
 		}
 
-		loadAgreementMap(nbt.getEasyCompound("activeGrantorAgreements"), activeAgreementsAsGrantor);
-		loadAgreementMap(nbt.getEasyCompound("activeTargetAgreements"), activeAgreementsAsTarget);
-		loadAgreementMap(nbt.getEasyCompound("pendingOutgoing"), pendingOutgoingProposals);
-		loadAgreementMap(nbt.getEasyCompound("pendingIncoming"), pendingIncomingProposals);
+		loadAgreementMap(enbt.getEasyCompound("activeGrantorAgreements"), activeAgreementsAsGrantor);
+		loadAgreementMap(enbt.getEasyCompound("activeTargetAgreements"), activeAgreementsAsTarget);
+		loadAgreementMap(enbt.getEasyCompound("pendingOutgoing"), pendingOutgoingProposals);
+		loadAgreementMap(enbt.getEasyCompound("pendingIncoming"), pendingIncomingProposals);
 
-		nbt.streamList(NBTTagString.class, "invitedPlayers")
+		enbt.streamList(NBTTagString.class, "invitedPlayers")
 				.map(NBTTagString::getString)
 				.map(UUID::fromString)
 				.forEach(invitedPlayers::add);
@@ -539,6 +558,6 @@ public class OwnerIdentity
 	@Override
 	public String toString()
 	{
-		return "OwnerIdentity:"+displayName;
+		return "OwnerIdentity:"+displayName+"("+uuid+")";
 	}
 }

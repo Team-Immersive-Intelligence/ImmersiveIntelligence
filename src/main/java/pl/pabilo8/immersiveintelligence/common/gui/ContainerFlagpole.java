@@ -15,7 +15,7 @@ public class ContainerFlagpole extends ContainerIIBase<TileEntityFlagpole>
 	private ContainerFlagpole(EntityPlayer player, TileEntityFlagpole tile, boolean faction)
 	{
 		super(player, tile);
-		addPlayerInventory(player.inventory, 40, faction?(166+32): 166);
+		addPlayerInventory(player.inventory, faction?56: 40, faction?(166+32): 166);
 	}
 
 	public static Container getContainerForFlagpolePage(EntityPlayer player, TileEntityFlagpole tile)

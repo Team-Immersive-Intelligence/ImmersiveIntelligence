@@ -2007,8 +2007,21 @@ public class IIConfigHandler
 
 		public static class Factions
 		{
+			@RequiresMcRestart
+			@Comment({"Allows to disable II's faction system completely. Chunk claiming, ownership and commanding Hanses will not work when disabled."})
+			public static boolean enableFactions = true;
+
+			@RequiresMcRestart
 			@Comment({"When enabled, players not belonging to a faction cannot access containers on chunks belonging to other factions."})
 			public static boolean preventContainerAccess = true;
+
+			@RequiresMcRestart
+			@Comment({"Determines how often faction property-bound chunkloader tickets are checked for validity. (in ticks)"})
+			public static int chunkloaderTickDelay = 200;
+
+			@RequiresMcRestart
+			@Comment({"Determines how often properties try to claim surrounding chunks. (in ticks)"})
+			public static int claimTickDelay = 200;
 		}
 
 		public static class MechanicalDevices

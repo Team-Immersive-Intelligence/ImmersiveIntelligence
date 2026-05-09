@@ -57,7 +57,6 @@ import net.minecraftforge.client.resource.VanillaResourceType;
 import net.minecraftforge.event.GameRuleChangeEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.world.WorldEvent.Load;
-import net.minecraftforge.event.world.WorldEvent.Unload;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
@@ -118,7 +117,6 @@ import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyHandler;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradeableArmor;
 
@@ -1066,18 +1064,8 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		aimingPlayers.clear();
 		blockDamageClient.clear();
 
-		DiplomacyHandler.getInstance(true).init();
-
 		//Reload the particle system
 		ImmersiveIntelligence.proxy.reloadParticles();
-	}
-
-	@SubscribeEvent
-	public void onWorldUnload(Unload event)
-	{
-		if(!event.getWorld().isRemote)
-			return;
-		DiplomacyHandler.getInstance(true).unload();
 	}
 
 	@SubscribeEvent
@@ -1106,7 +1094,6 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 						//higher the velocity (howitzers), lower the tone
 						bullet.playSound(IISounds.bulletFlyby, 0.6f, 1.75f-MathHelper.clamp(bullet.getVelocity()/6f, 0.5f, 1.75f));
 			}
-
 		}
 	}
 

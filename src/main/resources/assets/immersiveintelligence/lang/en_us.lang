@@ -1390,6 +1390,8 @@ desc.immersiveintelligence.diplomacy.action.declare_alliance=Declare Alliance
 
 desc.immersiveintelligence.diplomacy.permission.disband=Disband
 desc.immersiveintelligence.diplomacy.permission.merge=Merge
+desc.immersiveintelligence.diplomacy.permission.foreign_affairs=Foreign Affairs
+desc.immersiveintelligence.diplomacy.permission.modify_insignia=Modify Insignia
 desc.immersiveintelligence.diplomacy.permission.invite_members=Add Members
 desc.immersiveintelligence.diplomacy.permission.remove_members=Remove Members
 desc.immersiveintelligence.diplomacy.permission.military_aid=Military Aid
@@ -1398,6 +1400,7 @@ desc.immersiveintelligence.diplomacy.permission.trade=Trade
 desc.immersiveintelligence.diplomacy.permission.research=Research
 desc.immersiveintelligence.diplomacy.permission.logistics=Logistics
 desc.immersiveintelligence.diplomacy.permission.container_access=Container Access
+desc.immersiveintelligence.diplomacy.permission.breaking_structures=Breaking Structures
 
 desc.immersiveintelligence.diplomacy.permission_level.owner_allow=Owners
 desc.immersiveintelligence.diplomacy.permission_level.member_allow=Members

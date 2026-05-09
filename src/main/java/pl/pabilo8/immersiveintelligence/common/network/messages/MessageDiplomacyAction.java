@@ -17,6 +17,8 @@ import pl.pabilo8.immersiveintelligence.common.util.diplomacy.LawForm;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.OwnerIdentity;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.agreement.term.DiplomaticAgreement;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.permission.DiplomaticAction;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.permission.PermissionCategory;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.permission.PermissionRole;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.property.IOwnableProperty;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
@@ -43,6 +45,9 @@ public class MessageDiplomacyAction extends IIMessage
 	private LawForm newLawForm;
 	private IIColor newColor;
 	private ItemStack newBannerStack;
+	private String targetRole;
+	private PermissionCategory permissionCategory;
+	private boolean permissionSetting;
 
 	public MessageDiplomacyAction()
 	{
@@ -136,6 +141,17 @@ public class MessageDiplomacyAction extends IIMessage
 		MessageDiplomacyAction msg = new MessageDiplomacyAction();
 		msg.action = DiplomaticAction.CHANGE_BANNER;
 		msg.newBannerStack = bannerStack;
+		return msg;
+	}
+
+	@SideOnly(Side.CLIENT)
+	public static MessageDiplomacyAction changePermission(PermissionRole role, PermissionCategory category, boolean allowed)
+	{
+		MessageDiplomacyAction msg = new MessageDiplomacyAction();
+		msg.action = DiplomaticAction.CHANGE_PERMISSION;
+		msg.targetRole = role.getId();
+		msg.permissionCategory = category;
+		msg.permissionSetting = allowed;
 		return msg;
 	}
 
@@ -248,6 +264,18 @@ public class MessageDiplomacyAction extends IIMessage
 					diplomacy.proposeAgreement(identity, targetIdentity, proposal);
 				break;
 			}
+			case CHANGE_PERMISSION:
+			{
+				PermissionRole role = identity.getRoleOf(sender.getUniqueID());
+				PermissionRole changed = identity.getAvailableRoles().get(targetRole);
+				//Only the owner can change permissions
+				if(changed!=null&&role!=null&&role.isOwner())
+				{
+					changed.withPermission(permissionCategory, permissionSetting);
+					diplomacy.saveAndSyncIdentity(identity);
+				}
+				break;
+			}
 			default:
 				break;
 		}
@@ -298,6 +326,11 @@ public class MessageDiplomacyAction extends IIMessage
 				this.targetFaction = readUUID(buf);
 				this.agreementData = readEasyNBT(buf);
 				break;
+			case CHANGE_PERMISSION:
+				this.permissionCategory = readEnum(buf, PermissionCategory.class);
+				this.permissionSetting = buf.readBoolean();
+				this.targetRole = readString(buf);
+				break;
 			default:
 				break;
 		}
@@ -338,6 +371,11 @@ public class MessageDiplomacyAction extends IIMessage
 			case SEND_ULTIMATUM:
 				writeUUID(buf, targetFaction);
 				writeEasyNBT(buf, agreementData);
+				break;
+			case CHANGE_PERMISSION:
+				writeEnum(buf, permissionCategory);
+				buf.writeBoolean(permissionSetting);
+				writeString(buf, targetRole);
 				break;
 			default:
 				break;

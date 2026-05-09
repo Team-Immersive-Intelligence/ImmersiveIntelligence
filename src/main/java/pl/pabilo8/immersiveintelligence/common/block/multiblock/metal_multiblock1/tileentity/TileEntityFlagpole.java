@@ -72,13 +72,6 @@ public class TileEntityFlagpole extends TileEntityMultiblockIIBase<TileEntityFla
 	@Override
 	protected void onUpdate()
 	{
-		//Claim neighbouring chunks
-		if(world.getTotalWorldTime()%200==0)
-		{
-			updateTileForEvent(SyncEvents.TILE_OWNERSHIP_MODIFIED);
-			DiplomacyHandler.getInstance(world.isRemote).claimChunks(this);
-		}
-
 		/*if(!world.isRemote&&ownerIdentity!=DiplomacyUtils.NEUTRAL)
 			IILogger.info("Owner Identity for "+uuid+" : "+ownerIdentity);*/
 		/*if(!world.isRemote)
@@ -208,6 +201,12 @@ public class TileEntityFlagpole extends TileEntityMultiblockIIBase<TileEntityFla
 	public int getChunkOwnershipRadius()
 	{
 		return Flagpole.chunkClaimRadius;
+	}
+
+	@Override
+	public int getChunkLoadingRange()
+	{
+		return Math.min(Flagpole.chunkClaimRadius, Flagpole.maxChunksLoadedRadius);
 	}
 
 	//--- IStyleCustomizable ---//

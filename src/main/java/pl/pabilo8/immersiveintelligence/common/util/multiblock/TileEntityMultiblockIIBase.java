@@ -124,8 +124,6 @@ public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockI
 	public void invalidate()
 	{
 		super.invalidate();
-		if(!world.isRemote&&this instanceof IOwnableProperty&&!isDummy())
-			DiplomacyHandler.getInstance(world.isRemote).invalidateProperty(((IOwnableProperty)this));
 		forceReCacheAABB();
 	}
 
@@ -530,6 +528,11 @@ public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockI
 	public BlockPos getIIPos()
 	{
 		return getPos();
+	}
+
+	public boolean isValid()
+	{
+		return !tileEntityInvalid&&hasWorld();
 	}
 
 
