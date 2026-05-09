@@ -69,7 +69,7 @@ public class AMTQuads extends AMT
 		else
 		{
 			listID = GLAllocation.generateDisplayLists(1);
-			GL11.glNewList(listID, GL11.GL_COMPILE);
+			GL11.glNewList(listID, GL11.GL_COMPILE_AND_EXECUTE);
 
 			if(quads.length > 0)
 			{
