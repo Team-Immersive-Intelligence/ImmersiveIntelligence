@@ -15,6 +15,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoSprite;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -51,6 +52,7 @@ public class DecoItemStackDisplay extends DecoComponent<DecoItemStackDisplay>
 	public DecoItemStackDisplay(int x, int y)
 	{
 		super(x, y);
+		withSize(16, 16);
 		withForcedAdvancedTooltip(false);
 		withOnTooltip(this::onDisplayTooltip);
 	}
@@ -133,6 +135,15 @@ public class DecoItemStackDisplay extends DecoComponent<DecoItemStackDisplay>
 		return true;
 	}
 
+	@Override
+	protected boolean canBeClicked(int mouseX, int mouseY)
+	{
+		if(backgroundSprite!=null)
+			return IIMath.isPointInRectangle(x-padding[0], y-padding[1],
+					x+width+padding[2]+(progressBarValue!=null?4: 0), y+height+padding[3], mouseX, mouseY);
+		return super.canBeClicked(mouseX, mouseY);
+	}
+
 	private Collection<String> onDisplayTooltip(DecoItemStackDisplay gui)
 	{
 		ItemStack stack = getCurrentlyDisplayedStack();
@@ -157,8 +168,8 @@ public class DecoItemStackDisplay extends DecoComponent<DecoItemStackDisplay>
 			bindAtlas();
 			IIDrawUtils draw = IIDrawUtils.startTexturedColored();
 			if(progressBarValue!=null)
-				draw.drawTexColorRect(x+width-padding[0]-padding[2], y-padding[1], 6, height, IIColor.WHITE, backgroundSprite);
-			draw.drawTexColorRect(x-padding[0], y-padding[1], width, height, IIColor.WHITE, backgroundSprite)
+				draw.drawTexColorRect(x+width+padding[0]-padding[2], y-padding[1], 6, height+padding[1]+padding[3], IIColor.WHITE, backgroundSprite);
+			draw.drawTexColorRect(x-padding[0], y-padding[1], width+padding[0]+padding[2], height+padding[1]+padding[3], IIColor.WHITE, backgroundSprite)
 					.finish();
 		}
 		if(progressBarValue!=null)
@@ -166,8 +177,8 @@ public class DecoItemStackDisplay extends DecoComponent<DecoItemStackDisplay>
 			float progress = MathHelper.clamp(progressBarValue.apply(partialTicks), 0, 1);
 			IIDrawUtils.startColored()
 					.drawColorGradient(
-							x+width-padding[0]-padding[2]+2, y-padding[1]-padding[3]+height-(int)((height-4)*progress),
-							2, (int)((height-4)*progress),
+							x+width+padding[0]-padding[2]+2, y-padding[1]+padding[3]+height-((height+padding[1]+padding[3]-4)*progress),
+							2, ((height+padding[1]+padding[3]-4)*progress),
 							barGradientColor1, barGradientColor2
 					)
 					.finish();

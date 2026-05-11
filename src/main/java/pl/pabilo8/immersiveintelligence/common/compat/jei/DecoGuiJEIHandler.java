@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.common.compat.jei.gui_handlers;
+package pl.pabilo8.immersiveintelligence.common.compat.jei;
 
 import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
 import blusunrize.immersiveengineering.common.util.inventory.IIEInventory;

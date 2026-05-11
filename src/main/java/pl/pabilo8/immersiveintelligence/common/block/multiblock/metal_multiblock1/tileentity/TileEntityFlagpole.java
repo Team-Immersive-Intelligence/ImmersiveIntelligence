@@ -106,7 +106,6 @@ public class TileEntityFlagpole extends TileEntityMultiblockIIBase<TileEntityFla
 				master.flag.setCount(1);
 				heldItem.shrink(1);
 				master.updateTileForEvent(SyncEvents.TILE_CUSTOM1);
-				//forceTileUpdate();
 				return true;
 			}
 			else if(!master.flag.isEmpty()&&Utils.isWirecutter(heldItem))
@@ -114,7 +113,6 @@ public class TileEntityFlagpole extends TileEntityMultiblockIIBase<TileEntityFla
 				player.inventory.addItemStackToInventory(master.flag.copy());
 				master.flag = ItemStack.EMPTY;
 				master.updateTileForEvent(SyncEvents.TILE_CUSTOM1);
-				//forceTileUpdate();
 				return true;
 			}
 		}

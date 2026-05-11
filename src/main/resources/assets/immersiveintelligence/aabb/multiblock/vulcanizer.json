@@ -1,0 +1,19 @@
+{
+  "bounds": {
+  },
+  "positions": {
+  },
+  "poi": {
+    "energy": 22,
+    "redstone": 4,
+    "inputs": [53, 71, 95],
+    "input_sulfur": 53,
+    "input_compound": 71,
+    "input_rubber": 95,
+    "outputs": [0, 1, 2]
+  },
+  "rotations": {
+    "input": "clockwise_90",
+    "output": "clockwise_180"
+  }
+}

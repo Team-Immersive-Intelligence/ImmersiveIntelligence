@@ -31,7 +31,6 @@ import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.BlockIIMetalMultiblock0.MetalMultiblocks0;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.BlockIIMetalMultiblock1.MetalMultiblocks1;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.BlockIIWoodenMultiblock.WoodenMultiblocks;
-import pl.pabilo8.immersiveintelligence.common.compat.jei.gui_handlers.VulcanizerGuiJEIHandler;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.ingredients.JEIDustStackHelper;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.ingredients.JEIDustStackRenderer;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.gun.ItemIIAmmoRevolver.RevolverAmmoPart;
@@ -152,7 +151,6 @@ public class JEIHelper implements IModPlugin
 
 		IILogger.info("JEI has just requested our recipes, it seems that we even have a class for registering them!");
 		categories.values().forEach(cat -> cat.register(registryIn));
-		modRegistry.addAdvancedGuiHandlers(new VulcanizerGuiJEIHandler());
 
 		if(FMLCommonHandler.instance().getSide()==Side.CLIENT)
 			IIGUI.registerDecoJEICompat(modRegistry);

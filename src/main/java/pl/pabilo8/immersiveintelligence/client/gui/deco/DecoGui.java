@@ -487,9 +487,12 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 		{
 			if(currentWidget==null||!currentWidget.onComponentScroll(mouseX, mouseY, scroll))
 				if(focusedElement==null||!focusedElement.onComponentScroll(mouseX, mouseY, scroll))
-					for(GuiButton b : buttonList)
+					for(int i = buttonList.size()-1; i >= 0; i--)
+					{
+						GuiButton b = buttonList.get(i);
 						if(b instanceof DecoComponent)
 							((DecoComponent<?>)b).onComponentScroll(mouseX, mouseY, scroll);
+					}
 		}
 
 		//Draw the upper layer of buttons
@@ -650,8 +653,10 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 			}
 
 			if(!anyPressed)
-				for(GuiButton guiButton : this.buttonList)
+			{
+				for(int i = this.buttonList.size()-1; i >= 0; i--)
 				{
+					GuiButton guiButton = this.buttonList.get(i);
 					if(guiButton==focusedElement)
 						continue;
 					if(guiButton instanceof DecoComponent)
@@ -659,6 +664,7 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 					else if(mouseButtonEnum==MouseButton.LEFT)
 						anyPressed = guiButton.mousePressed(this.mc, mouseX, mouseY)||anyPressed;
 				}
+			}
 		}
 
 		if(!anyPressed)
@@ -724,12 +730,15 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 		if(currentWidget!=null&&currentWidget.isMouseOver())
 			return currentWidget.getTooltip();
 		//Buttons
-		for(GuiButton guiButton : buttonList)
+		for(int i = buttonList.size()-1; i >= 0; i--)
+		{
+			GuiButton guiButton = buttonList.get(i);
 			if(guiButton instanceof DecoComponent&&guiButton.isMouseOver())
 			{
 				this.hoveredElement = (DecoComponent<?>)guiButton;
 				return ((DecoComponent<?>)guiButton).getTooltip();
 			}
+		}
 		//Labels
 		for(GuiLabel guiLabel : labelList)
 			if(guiLabel instanceof DecoLabel&&((DecoLabel)guiLabel).shouldDisplayTooltip())

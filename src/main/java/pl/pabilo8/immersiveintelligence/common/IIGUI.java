@@ -51,7 +51,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multibloc
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySkyCrateStation;
 import pl.pabilo8.immersiveintelligence.common.block.rotary_device.tileentity.TileEntityGearbox;
 import pl.pabilo8.immersiveintelligence.common.block.simple.tileentity.TileEntitySmallCrate;
-import pl.pabilo8.immersiveintelligence.common.compat.jei.gui_handlers.DecoGuiJEIHandler;
+import pl.pabilo8.immersiveintelligence.common.compat.jei.DecoGuiJEIHandler;
 import pl.pabilo8.immersiveintelligence.common.gui.*;
 import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
@@ -268,7 +268,7 @@ public enum IIGUI implements ISerializableEnum
 		IIGUI.RADAR_CONFIG.setClientDecoGui(GuiRadarConfig::new);
 		IIGUI.RADAR_TARGETS.setClientDecoGui(GuiRadarTargets::new);
 		IIGUI.COAGULATOR.setClientDecoGui(GuiCoagulator::new);
-		IIGUI.VULCANIZER.setClientGui(GuiVulcanizer::new);
+		IIGUI.VULCANIZER.setClientDecoGui(GuiVulcanizer::new);
 	}
 
 	@SideOnly(Side.CLIENT)

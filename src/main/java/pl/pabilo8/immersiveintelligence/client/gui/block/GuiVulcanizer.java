@@ -1,168 +1,115 @@
 package pl.pabilo8.immersiveintelligence.client.gui.block;
 
-import blusunrize.immersiveengineering.client.ClientUtils;
-import blusunrize.immersiveengineering.client.gui.GuiIEContainerBase;
-import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal.MultiblockProcess;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.util.ITooltipFlag.TooltipFlags;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.MathHelper;
-import org.lwjgl.opengl.GL11;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.Optional.Method;
 import pl.pabilo8.immersiveintelligence.api.crafting.VulcanizerRecipe;
-import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoItemStackDisplay;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityVulcanizer;
+import pl.pabilo8.immersiveintelligence.common.compat.jei.JEIHelper;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerVulcanizer;
-import pl.pabilo8.immersiveintelligence.common.util.IIMath;
-
-import javax.annotation.Nullable;
-import java.util.ArrayList;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionBase.IIMultiblockProcess;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 10.07.2019
  */
-public class GuiVulcanizer extends GuiIEContainerBase
+@DecoTemplate(name = "vulcanizer", category = DecoGuiCategory.PRODUCTION_TILE)
+public class GuiVulcanizer extends DecoGui<TileEntityVulcanizer, ContainerVulcanizer>
 {
-	public static final String TEXTURE = ImmersiveIntelligence.MODID+":textures/gui/vulcanizer.png";
-	public TileEntityVulcanizer tile;
+	@DecoResource
+	public static final ResourceLocation TEXTURE = IIReference.RES_II.with("gui/vulcanizer");
+	private DecoImage imageRotato;
+	private DecoItemStackDisplay produced1, produced2;
 
 	public GuiVulcanizer(EntityPlayer player, TileEntityVulcanizer tile)
 	{
-		super(new ContainerVulcanizer(player, tile));
-		this.ySize = 168;
-		this.tile = tile;
+		super(player, tile, IIGUI.VULCANIZER);
 	}
 
-	/**
-	 * Draw the foreground layer for the GuiContainer (everything in front of the items)
-	 */
 	@Override
-	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
+	public void onInit()
 	{
+		startBackground()
+				.withBox(null, 0, 0, 176, 76)
+				.withBox(DecoTextures.BG_STEEL, 0, 0, 32, 76)
+				.withInventorySlots(SlotStyle.IE_INPUT, container.slotInput[0])
+				.withInventorySlots(SlotStyle.IE_CUSTOM1, container.slotInput[1])
+				.withInventorySlots(SlotStyle.IE_CUSTOM3, container.slotInput[2])
+				.withBox(DecoTextures.BG_STEEL, 152, 0, 24, 76)
+				//.withTitleBar(tile)
+				.withBox(DecoTextures.BG_WOODEN, DecoTextures.TEMPLATE_ROUND_WOODEN, 0, 76, 176, 92)
+				.withInventorySlots(SlotStyle.VANILLA, container.playerInventory)
+				.withInventoryTitleBar()
+				.build();
 
+		addComponents(
+				new DecoBar(157, -4)
+						.withTemplate(DecoTemplates.BAR_ELECTRIC_ENERGY.apply(tile.energyStorage)),
+				new DecoImage(56, 0)
+						.withSize(64, 71)
+						.withImageLocation(TEXTURE, true)
+						.withUV(128, 0, 0, 64, 71),
+				imageRotato = new DecoImage(56, 8)
+						.withSize(64, 48)
+						.withImageLocation(TEXTURE, true)
+						.withUV(128, 0, 71, 64, 119),
+				produced1 = new DecoItemStackDisplay(48, 24)
+						.withBackgroundTexture(DecoSprite.atlasSprite(DecoTextures.SLOT_IE, 32, true))
+						.withStack(ItemStack.EMPTY)
+						.withProgressBar(partialTicks -> tile.getProductionProgress(tile.processQueue.isEmpty()?null: tile.processQueue.get(0), partialTicks),
+								IIReference.COLOR_GUI_BRASS, IIReference.COLOR_IMMERSIVE_ORANGE),
+				produced2 = new DecoItemStackDisplay(112, 24)
+						.withBackgroundTexture(DecoSprite.atlasSprite(DecoTextures.SLOT_IE, 32, true))
+						.withStack(ItemStack.EMPTY)
+						.withProgressBar(partialTicks -> tile.getProductionProgress(tile.processQueue.size() < 2?null: tile.processQueue.get(1), partialTicks),
+								IIReference.COLOR_GUI_BRASS, IIReference.COLOR_IMMERSIVE_ORANGE)
+		);
 	}
 
-	/**
-	 * Draws the background layer of this container (behind the items).
-	 */
 	@Override
-	protected void drawGuiContainerBackgroundLayer(float f, int mx, int my)
+	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY)
 	{
-		float rotato = 0;
-		float prog1 = 0, prog2 = 0;
-		ItemStack s1 = ItemStack.EMPTY, s2 = ItemStack.EMPTY;
-		if(tile.processQueue.size() > 0)
+		super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
+
+		produced1.withStack(ItemStack.EMPTY);
+		produced2.withStack(ItemStack.EMPTY);
+
+		if(!tile.processQueue.isEmpty())
 		{
-			MultiblockProcess<VulcanizerRecipe> process0 = tile.processQueue.get(0);
-			prog1 = process0.processTick/(float)process0.maxTicks;
-			s1 = process0.recipe.output;
-			double processTime = ((process0.processTick+f)/(double)process0.maxTicks);
-			if(processTime < 0.78)
-				rotato = 0;
-			else if(processTime < 0.84)
-				rotato = Math.min((float)((processTime-0.78)/0.05), 1);
-			else
-				rotato = 1;
+			IIMultiblockProcess<VulcanizerRecipe> recipe = tile.processQueue.get(0);
+			produced1.withStack(recipe.recipe.output);
+			float progress = tile.getProductionProgress(recipe, partialTicks);
+			float angle = AMTUtils.getAnimationOffsetProgress(progress, 0.78f, 0.84f, partialTicks/recipe.maxTicks)*180f;
+			imageRotato.withRotation(angle);
+			produced1.x = (int)(guiLeft+(56+32)+Math.cos(Math.toRadians(-angle))*-32-12);
+			produced1.y = (int)(guiTop+(8+24)-Math.sin(Math.toRadians(-angle))*-32-8);
+
+			produced2.x = (int)(guiLeft+(56+32)+Math.cos(Math.toRadians(-angle))*32-12);
+			produced2.y = (int)(guiTop+(8+24)-Math.sin(Math.toRadians(-angle))*32-8);
 
 			if(tile.processQueue.size() > 1)
-			{
-				MultiblockProcess<VulcanizerRecipe> process1 = tile.processQueue.get(1);
-				s2 = process1.recipe.output;
-				prog2 = process1.processTick/(float)process1.maxTicks;
-
-			}
+				produced2.withStack(tile.processQueue.get(1).recipe.output);
 		}
 
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		ClientUtils.bindTexture(TEXTURE);
-		this.drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-
-		GlStateManager.pushMatrix();
-		GlStateManager.translate(guiLeft+85, guiTop+39, 0);
-		GlStateManager.rotate(rotato*180, 0, 0, 1);
-
-		this.drawTexturedModalRect(-32, -24, 0, 168, 64, 48);
-
-		GlStateManager.pushMatrix();
-		GlStateManager.translate(-36, 0, 0);
-		GlStateManager.rotate(-rotato*180, 0, 0, 1);
-		this.drawTexturedModalRect(-12, -14, 64, 168, 24, 23);
-		IIClientUtils.drawPowerBar(8, -9, 2, 16, prog1);
-
-		mc.getRenderItem().renderItemIntoGUI(s1, -10, -9);
-
-		GlStateManager.popMatrix();
-
-		GlStateManager.pushMatrix();
-		ClientUtils.bindTexture(TEXTURE);
-		GlStateManager.translate(36, 0, 0);
-		GlStateManager.rotate(-rotato*180, 0, 0, 1);
-		this.drawTexturedModalRect(-12, -14, 64, 168, 24, 23);
-		IIClientUtils.drawPowerBar(8, -9, 2, 16, prog2);
-		mc.getRenderItem().renderItemIntoGUI(s2, -10, -9);
-
-		GlStateManager.popMatrix();
-
-
-		GlStateManager.popMatrix();
-
-		IIClientUtils.drawPowerBar(guiLeft+157, guiTop+24, 7, 47, tile.getEnergyStored(null)/(float)tile.getMaxEnergyStored(null));
-
+		//Set rotation and progress for produced items
+		//imageRotato.withRotation(AMTUtils.getDebugProgress(80, partialTicks)*360f);
 	}
+
 
 	@Override
-	public void drawScreen(int mx, int my, float partial)
+	@Method(modid = "jei")
+	public void onInitJEICompat()
 	{
-		super.drawScreen(mx, my, partial);
-		this.renderHoveredToolTip(mx, my);
-
-		ArrayList<String> tooltip = new ArrayList<>();
-
-		if(mx > guiLeft+157&&mx < guiLeft+164&&my > guiTop+24&&my < guiTop+71)
-			tooltip.add(IIUtils.getPowerLevelString(tile));
-		ItemStack previewedItem = getPreviewedItem(mx, my);
-		if(previewedItem!=null)
-			tooltip.addAll(previewedItem.getTooltip(mc.player, mc.gameSettings.advancedItemTooltips?TooltipFlags.ADVANCED: TooltipFlags.NORMAL));
-		if(!tooltip.isEmpty())
-		{
-			ClientUtils.drawHoveringText(tooltip, mx, my, fontRenderer, guiLeft+xSize, -1);
-			RenderHelper.enableGUIStandardItemLighting();
-		}
-	}
-
-	@Nullable
-	public ItemStack getPreviewedItem(int mouseX, int mouseY)
-	{
-		if(tile.processQueue.size() > 0)
-		{
-			MultiblockProcess<VulcanizerRecipe> process0 = tile.processQueue.get(0);
-			float rotato;
-			double processTime = ((process0.processTick)/(double)process0.maxTicks);
-			if(processTime < 0.78)
-				rotato = 0;
-			else if(processTime < 0.84)
-				rotato = Math.min((float)((processTime-0.78)/0.05), 1);
-			else
-				rotato = 1;
-			double angle = rotato*180f;
-
-			{
-				float xx = (float)(guiLeft+86+Math.cos(Math.toRadians(angle))*-36), yy = (float)(guiTop+39+Math.sin(Math.toRadians(angle))*-36);
-				if(IIMath.isPointInRectangle(xx-8, yy-8, xx+8, yy+8, mouseX, mouseY))
-					return tile.processQueue.get(0).recipe.output;
-			}
-			if(tile.processQueue.size() > 1)
-			{
-				angle = MathHelper.wrapDegrees(180+angle);
-				float xx = (float)(guiLeft+86+Math.cos(Math.toRadians(angle))*-36), yy = (float)(guiTop+39+Math.sin(Math.toRadians(angle))*-36);
-				if(IIMath.isPointInRectangle(xx-8, yy-8, xx+8, yy+8, mouseX, mouseY))
-					return tile.processQueue.get(1).recipe.output;
-			}
-		}
-		return null;
+		JEIHelper.addRecipesDecoGuiLink(this.imageRotato, "ii.vulcanizer");
 	}
 }
