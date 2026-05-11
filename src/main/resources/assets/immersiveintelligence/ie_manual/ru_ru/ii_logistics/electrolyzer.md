@@ -1,6 +1,6 @@
 # meta
 Электролизер
-Жидкостная шоковая терапия
+Шоковая терапия
 # intro
 @hammer;level_advanced_industrial
 |[multiblock]{mb:"II:Electrolyzer"}|

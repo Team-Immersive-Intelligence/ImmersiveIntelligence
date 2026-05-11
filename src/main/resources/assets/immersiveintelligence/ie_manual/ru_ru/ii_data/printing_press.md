@@ -33,9 +33,9 @@
 # data_callback
 |[text]{text:"Data Callback",bold:1b}|
 
-|[data_callback]{type:"integer", name:"get_ink", label:"Ink Level", returns:"Black ink amount (mB)"}|
-|[data_callback]{type:"integer", name:"get_ink_cyan", label:"Cyan Ink Level", returns:"Cyan ink amount (mB)"}|
-|[data_callback]{type:"integer", name:"get_ink_yellow", label:"Yellow Ink Level", returns:"Yellow ink amount (mB)"}|
-|[data_callback]{type:"integer", name:"get_ink_magenta", label:"Magenta Ink Level", returns:"Magenta ink amount (mB)"}|
-|[data_callback]{type:"integer", name:"get_energy", label:"Energy Stored", returns:"Stored energy amount (IF)"}|
-|[data_callback]{type:"integer", name:"get_paper", label:"Paper amount", returns:"Blank paper pages amount"}|
+|[data_callback]{type:"integer", name:"get_ink", label:"Чернила(Ч)", returns:"Кол-во чёрных чернил (mB)"}|
+|[data_callback]{type:"integer", name:"get_ink_cyan", label:"Чернила(Б)", returns:"Кол-во бирюзовых чернил (mB)"}|
+|[data_callback]{type:"integer", name:"get_ink_yellow", label:"Чернила(Ж)", returns:"Кол-во жёлтых чернил (mB)"}|
+|[data_callback]{type:"integer", name:"get_ink_magenta", label:"Чернила(П)", returns:"Кол-во пурпурных чернил (mB)"}|
+|[data_callback]{type:"integer", name:"get_energy", label:"Запасённая энергия", returns:"Кол-во запасённой энергии (IF)"}|
+|[data_callback]{type:"integer", name:"get_paper", label:"Бумага", returns:"Кол-во листов бумаги"}|

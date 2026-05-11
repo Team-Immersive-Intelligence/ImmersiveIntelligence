@@ -784,7 +784,7 @@ desc.immersiveengineering.info.multiblock.II:FuelStation=Заправочная 
 desc.immersiveengineering.info.multiblock.II:Vulcanizer=Вулканизатор
 desc.immersiveengineering.info.multiblock.II:Coagulator=Коагулятор
 
-desc.immersiveengineering.info.multiblock.II:Emplacement=Позиция
+desc.immersiveengineering.info.multiblock.II:Emplacement=Огневая точка
 desc.immersiveengineering.info.multiblock.II:Radar=Радар
 desc.immersiveengineering.info.multiblock.II:Flagpole=Флагшток
 
@@ -3340,7 +3340,7 @@ ii.gui.redstone_data_interface.mode.float=Float 0-1
 ii.gui.redstone_data_interface.mode.string=String
 
 #GUI HelpBoxes
-ii.gui_help.data_input_machine.programming=Эти слоты позволяют считывать перфоленту в память DIM или записывать её содержимое в пустую.
+ii.gui_help.data_input_machine.programming=Эти слоты позволяют считывать перфоленту в память МВД или записывать её содержимое в пустую.
 ii.gui_help.data_input_machine.storage=Эти слоты позволяют хранить пустые или запрограммированные перфоленты для удобства.
 ii.gui_help.data_input_machine.variables=В этом списке отображаются переменные пакета данных, хранящегося в памяти машины.
 
