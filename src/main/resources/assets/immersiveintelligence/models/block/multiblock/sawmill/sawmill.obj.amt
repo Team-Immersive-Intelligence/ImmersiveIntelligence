@@ -1,6 +1,5 @@
 {
   "origins": {
-    "main": [32, -24, 16],
     "vise": [24, 19.0625, 34.4375],
     "vise_rotato": [24, 18.5, 38.5],
     "inserter": [25, 19.5, 6],
@@ -14,17 +13,15 @@
     "cardan3_motor": [26, 23.5, 17.25],
     "grabber_clamp_left": [21.5, 20, 19.75],
     "grabber_clamp_right": [30.5, 20, 19.75],
-    "sawdust": [4, 0, 16],
+    "sawdust": [7, 0, 16],
     "sawblade_axis": [8, 12, 15],
+    "item_output": [3, 20, 21],
     "sawblade": [0, 0, 0],
-    "item_input": [24, 20, 21],
-    "item_inserter": [26, 20, 21],
-    "item_output": [3, 20, 21]
+    "item_inserter": [26, 20, 18],
+    "item_input": [26, 20, 21]
   },
   "hierarchy": {
-    "vise": "main",
     "vise_rotato": "vise",
-    "inserter": "main",
     "cardan1": "inserter",
     "cardan1_motor": "cardan1",
     "cardan2": "inserter",
@@ -35,17 +32,7 @@
     "cardan3_motor": "cardan3",
     "grabber_clamp_left": "grabber",
     "grabber_clamp_right": "grabber",
-    "sawdust": "main",
-    "sawblade_axis": "main",
-    "unregulator": "upgrades",
     "sawblade": "sawblade_axis",
-    "item_input": "main",
-    "item_inserter": "grabber",
-    "item_output": "main"
-  },
-  "properties": {
-    "sawdust": {
-      "lighting": false
-    }
+    "item_inserter": "inserter"
   }
 }

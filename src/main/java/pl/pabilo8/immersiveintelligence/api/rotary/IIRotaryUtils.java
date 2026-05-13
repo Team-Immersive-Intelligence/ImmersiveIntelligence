@@ -327,6 +327,29 @@ public class IIRotaryUtils
 
 	//--- Ratios ---//
 
+	public static float getEffectiveEnergy(RotaryStorage rotation, float speedMin, float speedEfficient, float torqueMin, float torqueEfficient)
+	{
+		float effSpeed = (rotation.getRotationSpeed() > speedMin?Math.min(rotation.getRotationSpeed(), speedEfficient): 0)/speedEfficient;
+		float effTorque = (rotation.getTorque() > torqueMin?Math.min(rotation.getTorque(), torqueEfficient): 0)/torqueEfficient;
+		return effSpeed*effTorque;
+	}
+
+	public static boolean destroyIfOverloaded(TileEntity tile, RotaryStorage rotation, float speedMax, float torqueMax)
+	{
+		return destroyIfOverloaded(tile, 4, rotation, speedMax, torqueMax);
+	}
+
+	public static boolean destroyIfOverloaded(TileEntity tile, float explosionStrength, RotaryStorage rotation, float speedMax, float torqueMax)
+	{
+		if(rotation.getRotationSpeed() > speedMax||rotation.getTorque() > torqueMax)
+		{
+			BlockPos pos = tile.getPos();
+			tile.getWorld().createExplosion(null, pos.getX(), pos.getY(), pos.getZ(), explosionStrength, true);
+			return true;
+		}
+		return false;
+	}
+
 	public static float getGearEfficiency(NonNullList<ItemStack> inventory)
 	{
 		float fraction = 1f/(inventory.size());

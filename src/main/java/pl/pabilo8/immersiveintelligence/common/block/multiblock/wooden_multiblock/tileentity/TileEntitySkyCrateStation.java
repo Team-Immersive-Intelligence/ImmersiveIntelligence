@@ -194,9 +194,10 @@ public class TileEntitySkyCrateStation extends TileEntityMultiblockConnectable<T
 		if(!isDummy())
 			if(animation > 1)
 				if(progress < getAnimationLength())
-					progress += getEffectiveEnergy()*IIRotaryUtils.getGearEfficiency(
-							IIItemUtils.trimInventory(inventory, 0, 3)
-					);
+					progress += IIRotaryUtils.getEffectiveEnergy(rotation,
+							SkyCrateStation.speedMin, SkyCrateStation.speedEfficient,
+							SkyCrateStation.torqueMin, SkyCrateStation.torqueEfficient)*
+							IIRotaryUtils.getGearEfficiency(IIItemUtils.trimInventory(inventory, 0, 3));
 				else
 					switch(animation)
 					{
@@ -272,7 +273,7 @@ public class TileEntitySkyCrateStation extends TileEntityMultiblockConnectable<T
 	private void handleRotation()
 	{
 		boolean b = false;
-		if(rotation.getRotationSpeed() > SkyCrateStation.rpmBreakingMax||rotation.getTorque() > SkyCrateStation.torqueBreakingMax)
+		if(rotation.getRotationSpeed() > SkyCrateStation.speedBreaking||rotation.getTorque() > SkyCrateStation.torqueBreaking)
 			selfDestruct();
 
 		if(world.getTileEntity(getBlockPosForPos(6).offset((mirrored?this.facing.rotateY(): this.facing.rotateYCCW())))!=null)
@@ -298,13 +299,6 @@ public class TileEntitySkyCrateStation extends TileEntityMultiblockConnectable<T
 				rotation.grow(0, 0, 0.98f);
 			IIPacketHandler.sendToClient(new MessageRotaryPowerSync(world, master().getPos(), 0, rotation));
 		}
-	}
-
-	public float getEffectiveEnergy()
-	{
-		float eff_rpm = (rotation.getRotationSpeed() > SkyCrateStation.rpmMin?Math.min(rotation.getRotationSpeed(), SkyCrateStation.rpmEffectiveMax): 0)/SkyCrateStation.rpmEffectiveMax;
-		float eff_torque = (rotation.getTorque() > SkyCrateStation.torqueMin?Math.min(rotation.getTorque(), SkyCrateStation.torqueEffectiveMax): 0)/SkyCrateStation.torqueEffectiveMax;
-		return eff_rpm*eff_torque;
 	}
 
 	private void selfDestruct()

@@ -79,19 +79,20 @@ public enum DecoMapDefaultColorMapper implements IDecoMapColorMapper
 				@Override
 				public int getColor(IBlockState state, BlockPos pos, World world, int sampleY)
 				{
-					sampleY -= world.getSeaLevel();
 					//Skip air/water
 					if(state.getBlock().isAir(state, world, pos)||state.getMaterial().isLiquid())
 						return 0x00000000; //Transparent for air/water
-					if(sampleY < 32)
+					float heightFraction = (sampleY-world.getSeaLevel())/(float)(world.getHeight()-world.getSeaLevel());
+
+					if(heightFraction <= -0.5)
 						return 0xFF5D4037; //Dark brown
-					else if(sampleY < 48)
+					else if(heightFraction <= 0)
 						return 0xFF795548; //Brown
-					else if(sampleY < 64)
+					else if(heightFraction < 0.25)
 						return 0xFF7CB342; //Green
-					else if(sampleY < 80)
+					else if(heightFraction < 0.5)
 						return 0xFF9CCC65; //Light green
-					else if(sampleY < 172)
+					else if(heightFraction < 0.75)
 						return 0xFFBCAAA4; //Light brown
 					else
 						return 0xFF9E9E9E; //Gray
@@ -114,41 +115,20 @@ public enum DecoMapDefaultColorMapper implements IDecoMapColorMapper
 				@Override
 				public int getColor(IBlockState state, BlockPos pos, World world, int sampleY)
 				{
-					// Get block light level (0-15)
-					int blockLight = world.getLight(pos, false);
+					float blockLight = 0;
+					for(int x = -7; x < 7; x++)
+						for(int z = -7; z < 7; z++)
+							blockLight = Math.max(world.getLight(pos.add(x, world.getHeight(x, z), z).down())*MathHelper.sqrt(x*x+z*z), blockLight);
 
-					// Ignore sky light - we only care about artificial light
 					if(blockLight==0)
-					{
-						return 0x00000000; // Transparent for no light
-					}
+						return 0x00000000;
 
-					// Map light level to color: dark orange -> bright yellow
-					float intensity = blockLight/15.0f;
-
-					// Base color for artificial light: warm yellow/orange
-					int r = (int)(255*intensity);
-					int g = (int)(180*intensity);
-					int b = (int)(50*intensity);
-
-					// Add some glow effect based on intensity
-					if(intensity > 0.7f)
-					{
-						// Very bright lights get a slight white core
-						r = Math.min(255, r+30);
-						g = Math.min(255, g+30);
-					}
-
-					// Alpha based on intensity (dimmer lights are more transparent)
-					int alpha = 80+(int)(175*intensity);
-
-					return (alpha<<24)|(r<<16)|(g<<8)|b;
+					return IIColor.MC_YELLOW.withAlpha(1f-(blockLight/16f)).getPackedARGB();
 				}
 
 				@Override
 				public int applyHeightShading(int color, int sampleY)
 				{
-					// For light mapper, we don't apply height shading
 					return color;
 				}
 			},
@@ -170,30 +150,28 @@ public enum DecoMapDefaultColorMapper implements IDecoMapColorMapper
 					IIColor factionColor = ownership.getOwner().getColor();
 					int argb = factionColor.getPackedARGB();
 
-					// Make faction colors semi-transparent so terrain shows through
+					//Make faction colors semi-transparent so terrain shows through
 					int alpha = (argb>>24)&0xFF;
-					alpha = MathHelper.clamp(alpha, 128, 200); // Keep it somewhat transparent
+					alpha = MathHelper.clamp(alpha, 128, 200); //Keep it somewhat transparent
 
 					return (alpha<<24)|(argb&0x00FFFFFF);
 				}
 
 				private int getGrayscaleTerrainColor(IBlockState state, BlockPos pos, World world, int sampleY)
 				{
-					// Skip air/water - return transparent
+					//Skip air/water - return transparent
 					if(state.getBlock().isAir(state, world, pos)||state.getMaterial().isLiquid())
-					{
 						return 0x00000000;
-					}
 
-					// Use block hardness to determine gray level, but keep it in medium range
+					//Use block hardness to determine gray level, but keep it in medium range
 					float hardness = state.getBlockHardness(world, pos);
 					float normalized = MathHelper.clamp(hardness/50f, 0f, 1f);
-					float brightness = 0.3f+(normalized*0.4f); // Range: 0.3-0.7 (medium grays)
+					float brightness = 0.3f+(normalized*0.4f); //Range: 0.3-0.7 (medium grays)
 
 					int gray = (int)(brightness*255f);
-					gray = MathHelper.clamp(gray, 80, 180); // Keep in medium gray range
+					gray = MathHelper.clamp(gray, 80, 180); //Keep in medium gray range
 
-					// Return ARGB (full opacity for terrain)
+					//Return ARGB (full opacity for terrain)
 					return 0xFF000000|(gray<<16)|(gray<<8)|gray;
 				}
 			},
@@ -221,7 +199,7 @@ public enum DecoMapDefaultColorMapper implements IDecoMapColorMapper
 						case MEMBER:
 							return 0xBB3F76E4;
 						case ALLIED:
-							return 0xBB4CAF50; // Semi-transparent green
+							return 0xBB4CAF50; //Semi-transparent green
 						case ENEMY:
 							return 0xBBF44336;
 						case NEUTRAL:
@@ -232,11 +210,9 @@ public enum DecoMapDefaultColorMapper implements IDecoMapColorMapper
 
 				private int getGrayscaleTerrainColor(IBlockState state, BlockPos pos, World world, int sampleY)
 				{
-					// Same as FACTIONS mapper - medium grays
+					//Same as FACTIONS mapper - medium grays
 					if(state.getBlock().isAir(state, world, pos)||state.getMaterial().isLiquid())
-					{
 						return 0x00000000;
-					}
 
 					float hardness = state.getBlockHardness(world, pos);
 					float normalized = MathHelper.clamp(hardness/50f, 0f, 1f);

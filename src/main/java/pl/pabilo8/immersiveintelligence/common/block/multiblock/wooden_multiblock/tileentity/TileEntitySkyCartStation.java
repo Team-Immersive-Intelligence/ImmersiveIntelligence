@@ -293,9 +293,10 @@ public class TileEntitySkyCartStation extends TileEntityMultiblockConnectable<Ti
 		if(!isDummy())
 			if(animation > 1)
 				if(progress < getAnimationLength())
-					progress += getEffectiveEnergy()*IIRotaryUtils.getGearEfficiency(
-							IIItemUtils.trimInventory(inventory, 0, 3)
-					);
+					progress += IIRotaryUtils.getEffectiveEnergy(rotation,
+							SkyCrateStation.speedMin, SkyCrateStation.speedEfficient,
+							SkyCrateStation.torqueMin, SkyCrateStation.torqueEfficient)*
+							IIRotaryUtils.getGearEfficiency(IIItemUtils.trimInventory(inventory, 0, 3));
 				else
 					switch(animation)
 					{
@@ -378,7 +379,7 @@ public class TileEntitySkyCartStation extends TileEntityMultiblockConnectable<Ti
 		boolean hasIssues = false;
 
 		// If rotation speed or torque exceeds the maximum allowed values, trigger self-destruction.
-		if(rotation.getRotationSpeed() > SkyCrateStation.rpmBreakingMax||rotation.getTorque() > SkyCrateStation.torqueBreakingMax)
+		if(rotation.getRotationSpeed() > SkyCrateStation.speedBreaking||rotation.getTorque() > SkyCrateStation.torqueBreaking)
 		{
 			selfDestruct();
 			return; // Exit early after self-destruct.
@@ -415,14 +416,6 @@ public class TileEntitySkyCartStation extends TileEntityMultiblockConnectable<Ti
 			// Always sync rotary power state, even with reduced growth.
 			IIPacketHandler.sendToClient(new MessageRotaryPowerSync(world, master().getPos(), 0, rotation));
 		}
-	}
-
-
-	public float getEffectiveEnergy()
-	{
-		float eff_rpm = (rotation.getRotationSpeed() > SkyCrateStation.rpmMin?Math.min(rotation.getRotationSpeed(), SkyCrateStation.rpmEffectiveMax): 0)/SkyCrateStation.rpmEffectiveMax;
-		float eff_torque = (rotation.getTorque() > SkyCrateStation.torqueMin?Math.min(rotation.getTorque(), SkyCrateStation.torqueEffectiveMax): 0)/SkyCrateStation.torqueEffectiveMax;
-		return eff_rpm*eff_torque;
 	}
 
 	private void selfDestruct()

@@ -14,6 +14,7 @@ import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMT;
 import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTBanner;
 import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIMultiblockRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IITileRenderer.RegisteredTileRenderer;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityFlagpole;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
@@ -71,6 +72,10 @@ public class FlagpoleRenderer extends IIMultiblockRenderer<TileEntityFlagpole>
 
 		this.flag = new AMTCrossVariantReference<>("flag", this.model);
 		UpgradeTechTree.getTreeFor(TileEntityFlagpole.class)
-				.withBaseModelLocation(modelDir.with("flagpole_base.obj"));
+				.withBaseModelLocation(modelDir.with("flagpole_base.obj"))
+				.withUpgradeModelLocation(IIContent.UPGRADE_FLAGPOLE_UNIT_POST, modelDir.with("upgrade_unit_post.obj"))
+				.withUpgradeModelLocation(IIContent.UPGRADE_FLAGPOLE_DISTRESS_SIGNAL, modelDir.with("upgrade_distress_signal.obj"))
+				.withUpgradeModelLocation(IIContent.UPGRADE_FLAGPOLE_TASER_LOCKS, modelDir.with("upgrade_taser_locks.obj"))
+				.withUpgradeModelLocation(IIContent.UPGRADE_FLAGPOLE_CAPTURE_DEFIANCE, modelDir.with("upgrade_capture_defiance.obj"));
 	}
 }

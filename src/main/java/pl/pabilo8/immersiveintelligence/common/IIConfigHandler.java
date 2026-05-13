@@ -13,6 +13,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.RadioStation;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Sawmill;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
 import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIIMineDetector;
@@ -69,6 +70,7 @@ public class IIConfigHandler
 		Config.manual_bool.put("petroleumHere", false);
 		Config.manual_bool.put("baublesHere", false);
 		Config.manual_int.put("radio_station_range", RadioStation.radioRange);
+		Config.manual_double.put("sawmill_gearbox_efficiency", (double)Sawmill.gearboxUpgradeEfficiency);
 		Config.validateAndMapValues(IIConfig.class);
 	}
 
@@ -748,23 +750,23 @@ public class IIConfigHandler
 
 			public static class SkyCrateStation
 			{
-				@Comment({"Rotations per minute required for the Skycrate Station to Work."})
-				public static int rpmMin = 20;
+				@Comment({"Degrees/tick required by the machine to start working."})
+				public static int speedMin = 20;
 
-				@Comment({"Max rotations per minute (reaching over this level doesn't change effectiveness)."})
-				public static int rpmEffectiveMax = 80;
+				@Comment({"Degrees/tick required by the machine to work at full efficiency."})
+				public static int speedEfficient = 80;
 
-				@Comment({"Max rotations per minute (will break if over)."})
-				public static int rpmBreakingMax = 240;
+				@Comment({"Max Degrees/tick (machine will break if over)."})
+				public static int speedBreaking = 240;
 
-				@Comment({"Torque required for the Skycrate Station to Work."})
+				@Comment({"Torque required by the machine to start working."})
 				public static int torqueMin = 4;
 
-				@Comment({"Max Torque (reaching over this level doesn't change effectiveness)."})
-				public static int torqueEffectiveMax = 8;
+				@Comment({"Torque required by the machine to work at full efficiency."})
+				public static int torqueEfficient = 8;
 
-				@Comment({"Max Torque (will break if over)."})
-				public static int torqueBreakingMax = 256;
+				@Comment({"Max Torque (machine will break if over)."})
+				public static int torqueBreaking = 256;
 
 				@Comment({"How long does it take for the station to put a crate onto the line. (in ticks)"})
 				public static int outputTime = 240;
@@ -790,32 +792,50 @@ public class IIConfigHandler
 
 			public static class Sawmill
 			{
-				@Comment({"Rotations per minute required for the Sawmill to Work."})
-				public static int rpmMin = 20;
+				@Comment({"Degrees/tick required by the machine to start working."})
+				public static int speedMin = 10;
 
-				@Comment({"Max rotations per minute (will break if over)."})
-				public static int rpmBreakingMax = 160;
+				@Comment({"Degrees/tick required by the machine to work at full efficiency."})
+				public static int speedEfficient = 20;
 
-				@Comment({"Torque required for the Sawmill to Work."})
-				public static int torqueMin = 6;
+				@Comment({"Max Degrees/tick (machine will break if over)."})
+				public static int speedBreaking = 160;
 
-				@Comment({"Max Torque (will break if over)."})
-				public static int torqueBreakingMax = 140;
+				@Comment({"Torque required by the machine to start working."})
+				public static int torqueMin = 4;
+
+				@Comment({"Torque required by the machine to work at full efficiency."})
+				public static int torqueEfficient = 6;
+
+				@Comment({"Max Torque (machine will break if over)."})
+				public static int torqueBreaking = 140;
+
+				@Comment({"Degrees/tick required by the Improved Gearbox upgrade to multiply the machine's speed."})
+				public static int speedGearboxUpgrade = 40;
+
+				@Comment({"Efficiency modifier for the Improved Gearbox upgrade."})
+				public static float gearboxUpgradeEfficiency = 2.5f;
 			}
 
 			public static class MechanicalPump
 			{
-				@Comment({"Rotations per minute required for the Sawmill to Work."})
-				public static int rpmMin = 40;
+				@Comment({"Degrees/tick required by the machine to start working."})
+				public static int speedMin = 20;
 
-				@Comment({"Max rotations per minute (will break if over)."})
-				public static int rpmBreakingMax = 160;
+				@Comment({"Degrees/tick required by the machine to work at full efficiency."})
+				public static int speedEfficient = 40;
 
-				@Comment({"Torque required for the Sawmill to Work."})
+				@Comment({"Max Degrees/tick (machine will break if over)."})
+				public static int speedBreaking = 160;
+
+				@Comment({"Torque required by the machine to start working."})
 				public static int torqueMin = 2;
 
-				@Comment({"Max Torque (will break if over)."})
-				public static int torqueBreakingMax = 40;
+				@Comment({"Torque required by the machine to work at full efficiency."})
+				public static int torqueEfficient = 6;
+
+				@Comment({"Max Torque (machine will break if over)."})
+				public static int torqueBreaking = 40;
 			}
 
 			public static class RadioStation

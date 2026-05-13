@@ -3,6 +3,8 @@ package pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblo
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3i;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeTechTree;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.UpgradeTier;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.BlockIIWoodenMultiblock.WoodenMultiblocks;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySawmill;
@@ -25,6 +27,11 @@ public class MultiblockSawmill extends MultiblockStuctureBase<TileEntitySawmill>
 		super(new ResourceLocation(ImmersiveIntelligence.MODID, "multiblocks/sawmill"));
 		offset = new Vec3i(2, 0, 0);
 		INSTANCE = this;
+
+		UpgradeTechTree.getTreeFor(TileEntitySawmill.class)
+				.withUpgrade(IIContent.UPGRADE_IMPROVED_GEARBOX, UpgradeTier.TIER_1)
+				.withUpgrade(IIContent.UPGRADE_SAW_UNREGULATOR, UpgradeTier.TIER_1);
+
 	}
 
 	@Override

@@ -127,7 +127,7 @@ public class GuiFlagpole extends DecoGui<TileEntityFlagpole, ContainerFlagpole>
 
 				new DecoDropdown<IDecoMapColorMapper>(152+4, 4+10+12*5+10)
 						.withSize(96-8, 12)
-						.withEntries(DecoMapDefaultColorMapper.TERRAIN, DecoMapDefaultColorMapper.LIGHT,
+						.withEntries(DecoMapDefaultColorMapper.TERRAIN, DecoMapDefaultColorMapper.LIGHT, DecoMapDefaultColorMapper.TOPOGRAPHIC,
 								DecoMapDefaultColorMapper.FACTIONS, DecoMapDefaultColorMapper.ALLIANCES)
 						.withSelectedEntry(DecoMapDefaultColorMapper.TERRAIN)
 						.withOnSelectedEntry((prev, next) -> mapDisplay.withColorMapper(next)),
