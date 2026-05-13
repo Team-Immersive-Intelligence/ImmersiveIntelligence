@@ -84,7 +84,7 @@ public class GuiCoagulator extends DecoGui<TileEntityCoagulator, ContainerCoagul
 		{
 			int slotIndex = i;
 			final DecoItemStackDisplay stackDisplay = addComponent(new DecoItemStackDisplay(10-4-2+i*26, 20+40+16+2-2))
-					.withBackgroundTexture(DecoTextures.SLOT_IE)
+					.withBackgroundTexture(DecoSprite.atlasSprite(DecoTextures.SLOT_IE, 32, true))
 					.withStack(tile.bucketStacks.get(slotIndex))
 					.withProgressBar(partialTicks -> tile.getDryingProgressForSlot(slotIndex, partialTicks),
 							IIReference.COLOR_GUI_BRASS, IIReference.COLOR_IMMERSIVE_ORANGE);

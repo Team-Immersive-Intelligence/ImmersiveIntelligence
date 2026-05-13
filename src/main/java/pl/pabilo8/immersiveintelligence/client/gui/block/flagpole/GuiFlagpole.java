@@ -23,6 +23,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerFlagpole;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyHandler;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 
 /**
@@ -52,13 +53,15 @@ public class GuiFlagpole extends DecoGui<TileEntityFlagpole, ContainerFlagpole>
 				.withInventoryTitleBar()
 				.withFrame(DecoTextures.FRAME_WOODEN_THIN, 4, false, new boolean[]{true, false, false, false})
 				.withNextLayer()
-				.withBox(DecoTextures.BG_PAPER, DecoTextures.TEMPLATE_PAPER, 0, 0, 152+96, 152)
+				.withBox(DecoTextures.BG_PAPER, DecoTextures.TEMPLATE_PAPER, 0, 0, 152, 152)
+				.withNextLayer()
 				.withBox(DecoTextures.BG_STEEL, DecoTextures.TEMPLATE_SQUARE, 152, 0, 64+32, 152)
 				.build();
 
 		//Tabs
 		addLinkTab(IIGUI.FLAGPOLE, DecoTextures.ICON_MAP, "map_module");
-		addLinkTab(IIGUI.FLAGPOLE_FACTION, DecoTextures.ICON_FACTION_CONFIG, "faction_module");
+		if(tile.getOwnerIdentity()!=DiplomacyHandler.NEUTRAL)
+			addLinkTab(IIGUI.FLAGPOLE_FACTION, DecoTextures.ICON_FACTION_CONFIG, "faction_module");
 
 		BlockPos pos = tile.getPos();
 		addLabel("Shown Markers", 152+4, 4)
@@ -124,7 +127,7 @@ public class GuiFlagpole extends DecoGui<TileEntityFlagpole, ContainerFlagpole>
 
 				new DecoDropdown<IDecoMapColorMapper>(152+4, 4+10+12*5+10)
 						.withSize(96-8, 12)
-						.withEntries(DecoMapDefaultColorMapper.TERRAIN, DecoMapDefaultColorMapper.LIGHT,
+						.withEntries(DecoMapDefaultColorMapper.TERRAIN, DecoMapDefaultColorMapper.LIGHT, DecoMapDefaultColorMapper.TOPOGRAPHIC,
 								DecoMapDefaultColorMapper.FACTIONS, DecoMapDefaultColorMapper.ALLIANCES)
 						.withSelectedEntry(DecoMapDefaultColorMapper.TERRAIN)
 						.withOnSelectedEntry((prev, next) -> mapDisplay.withColorMapper(next)),

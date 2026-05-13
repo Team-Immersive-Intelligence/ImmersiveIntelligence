@@ -12,8 +12,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.network.IIMessage;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.chunk.CapabilityChunkOwnership;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.chunk.IChunkOwnership;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.property.chunk.chunk.CapabilityChunkOwnership;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.property.chunk.chunk.IChunkOwnership;
 
 /**
  * Send by server to update {@link CapabilityChunkOwnership a chunk's terrain faction ownership Capability}

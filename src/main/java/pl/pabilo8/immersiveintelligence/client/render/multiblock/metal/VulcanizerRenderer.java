@@ -1,7 +1,6 @@
 package pl.pabilo8.immersiveintelligence.client.render.multiblock.metal;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
-import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal.MultiblockProcess;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderItem;
@@ -14,9 +13,12 @@ import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelVulca
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityVulcanizer;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionBase.IIMultiblockProcess;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 09.05.2026
+ * @ii-approved 0.3.1
  * @since 21.06.2019
  */
 public class VulcanizerRenderer extends TileEntitySpecialRenderer<TileEntityVulcanizer> implements IReloadableModelContainer<VulcanizerRenderer>
@@ -45,10 +47,10 @@ public class VulcanizerRenderer extends TileEntitySpecialRenderer<TileEntityVulc
 				GlStateManager.rotate(90F, 0F, 1F, 0F);
 			}
 
-			if(te.processQueue.size() > 0)
+			if(!te.processQueue.isEmpty())
 			{
-				MultiblockProcess<VulcanizerRecipe> process0 = te.processQueue.get(0);
-				double processTime = ((process0.processTick+partialTicks)/(double)process0.maxTicks);
+				IIMultiblockProcess<VulcanizerRecipe> process0 = te.processQueue.get(0);
+				double processTime = ((process0.ticks+partialTicks)/(double)process0.maxTicks);
 				//rolling
 				if(processTime < 0.16)
 				{
@@ -159,8 +161,8 @@ public class VulcanizerRenderer extends TileEntitySpecialRenderer<TileEntityVulc
 
 				if(te.processQueue.size() > 1)
 				{
-					MultiblockProcess<VulcanizerRecipe> process1 = te.processQueue.get(1);
-					processTime = ((process1.processTick+partialTicks)/(double)process1.maxTicks);
+					IIMultiblockProcess<VulcanizerRecipe> process1 = te.processQueue.get(1);
+					processTime = ((process1.ticks+partialTicks)/(double)process1.maxTicks);
 
 					//rolling
 					if(processTime < 0.16)

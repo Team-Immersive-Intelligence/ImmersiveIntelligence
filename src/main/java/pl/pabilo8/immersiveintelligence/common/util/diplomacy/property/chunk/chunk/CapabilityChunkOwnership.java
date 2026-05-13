@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.common.util.diplomacy.chunk;
+package pl.pabilo8.immersiveintelligence.common.util.diplomacy.property.chunk.chunk;
 
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.util.EnumFacing;

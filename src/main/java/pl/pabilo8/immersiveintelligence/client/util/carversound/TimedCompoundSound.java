@@ -16,7 +16,7 @@ import pl.pabilo8.immersiveintelligence.common.util.sound.AdvancedSounds.MultiSo
 public class TimedCompoundSound extends CompoundSound
 {
 	private final int duration;
-	private int timePLaying = 0;
+	private int timePlaying = 0;
 
 	public TimedCompoundSound(MultiSound multiSound, SoundCategory category, Vec3d pos, int duration, float volume, float pitch)
 	{
@@ -28,22 +28,22 @@ public class TimedCompoundSound extends CompoundSound
 	@Override
 	public boolean isDonePlaying()
 	{
-		return timePLaying > duration;
+		return timePlaying > duration;
 	}
 
 	public void readjustTime(int timePLaying)
 	{
-		this.timePLaying = timePLaying;
+		this.timePlaying = timePLaying;
 	}
 
 	@Override
 	public void update()
 	{
-		if(timePLaying==0)
+		if(timePlaying==0)
 			playBeginSound();
-		else if(timePLaying==duration)
+		else if(timePlaying==duration-3)
 			playEndSound();
-		timePLaying++;
+		timePlaying++;
 
 	}
 }

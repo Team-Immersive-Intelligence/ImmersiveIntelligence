@@ -130,13 +130,13 @@ public class SawmillRecipe extends IIMultiblockRecipe implements RotaryMachineRe
 	@Override
 	public int getMinSpeed()
 	{
-		return Sawmill.rpmMin;
+		return Sawmill.speedMin;
 	}
 
 	@Override
 	public int getMaxSpeed()
 	{
-		return Sawmill.rpmBreakingMax;
+		return Sawmill.speedBreaking;
 	}
 
 	public int getHardness()

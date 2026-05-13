@@ -55,7 +55,7 @@ public class IIPacketHandler
 		registerMessage(MessageBeginMachineUpgrade.class, true, true);
 		registerMessage(MessageManualClose.class, false, true);
 		registerMessage(MessagePlayIISound.class, true, false);
-		registerMessage(MessageDiplomacySync.class, true, false);
+		registerMessage(MessageDiplomacySync.class, true, true);
 		registerMessage(MessageDiplomacyAction.class, false, true);
 		registerMessage(MessageIIGameruleUpdate.class, true, false);
 		registerMessage(MessageIIChunkClaimData.class, true, false);

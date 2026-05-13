@@ -262,6 +262,17 @@ public class EasyNBT extends Constants.NBT
 	}
 
 	/**
+	 * Appends a UUID
+	 *
+	 * @param key name of this tag
+	 */
+	public EasyNBT withUUID(String key, UUID value)
+	{
+		wrapped.setString(key, value.toString());
+		return this;
+	}
+
+	/**
 	 * Appends a character as a string
 	 *
 	 * @param key name of this tag
@@ -765,6 +776,18 @@ public class EasyNBT extends Constants.NBT
 		return wrapped.getString(key);
 	}
 
+	@Nullable
+	public UUID getUUID(String key)
+	{
+		try
+		{
+			return UUID.fromString(wrapped.getString(key));
+		} catch(IllegalArgumentException e)
+		{
+			return null;
+		}
+	}
+
 	/**
 	 * Gets a character as a string
 	 *
@@ -1135,6 +1158,13 @@ public class EasyNBT extends Constants.NBT
 		return this;
 	}
 
+	public EasyNBT checkSetUUID(String key, Consumer<UUID> ifPresent)
+	{
+		if(wrapped.hasKey(key))
+			ifPresent.accept(getUUID(key));
+		return this;
+	}
+
 	public EasyNBT checkSetCompound(String key, Consumer<NBTTagCompound> ifPresent, NBTTagCompound ifNot)
 	{
 		if(wrapped.hasKey(key))
@@ -1165,6 +1195,27 @@ public class EasyNBT extends Constants.NBT
 	{
 		if(wrapped.hasKey(key))
 			ifPresent.accept(new ItemStack(wrapped.getCompoundTag(key)));
+		return this;
+	}
+
+	public EasyNBT checkSetPos(String key, Consumer<BlockPos> ifPresent)
+	{
+		if(wrapped.hasKey(key))
+			ifPresent.accept(getPos(key));
+		return this;
+	}
+
+	public EasyNBT checkSetDimPos(String key, Consumer<DimensionBlockPos> ifPresent)
+	{
+		if(wrapped.hasKey(key))
+			ifPresent.accept(getDimPos(key));
+		return this;
+	}
+
+	public EasyNBT checkSetFluidStack(String key, Consumer<FluidStack> ifPresent)
+	{
+		if(wrapped.hasKey(key))
+			ifPresent.accept(getFluidStack(key));
 		return this;
 	}
 

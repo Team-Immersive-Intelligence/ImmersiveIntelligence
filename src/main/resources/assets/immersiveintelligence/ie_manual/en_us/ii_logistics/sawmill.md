@@ -15,6 +15,8 @@ The **Sawmill** can be used to process various wooden logs into planks, and plan
 ||[machine_recipe]{source:"recipe_sticks"}||
 # upgrades
 |[upgrade_display]{upgrade:"immersiveintelligence:improved_gearbox"}|
-The sawmill can be upgraded with an [Improved Gearbox] to increase its working speed.<br>
+The sawmill can be upgraded with an [Improved Gearbox] to increase its working speed by <config;d;sawmill_gearbox_efficiency> times. It also raises the required speed to operate the machine.
+
 |[upgrade_display]{upgrade:"immersiveintelligence:saw_unregulator"}|
-Remove the [regulator] from the saw blade to increase the amount of sawdust produced, though some planks will be lost in the process.
+Destabilizes the saw blade movements to increase the amount of sawdust produced, though some planks will be lost in the process.
+

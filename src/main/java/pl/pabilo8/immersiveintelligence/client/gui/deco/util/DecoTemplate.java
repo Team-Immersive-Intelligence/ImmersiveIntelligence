@@ -20,9 +20,4 @@ public @interface DecoTemplate
 	String name();
 
 	DecoGuiCategory category();
-
-	/**
-	 * The style of the gui, used for picking the default background and component textures
-	 */
-	String style() default "steel";
 }

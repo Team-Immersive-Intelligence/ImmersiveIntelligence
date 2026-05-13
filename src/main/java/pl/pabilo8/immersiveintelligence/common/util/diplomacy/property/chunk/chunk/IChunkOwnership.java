@@ -1,5 +1,6 @@
-package pl.pabilo8.immersiveintelligence.common.util.diplomacy.chunk;
+package pl.pabilo8.immersiveintelligence.common.util.diplomacy.property.chunk.chunk;
 
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyHandler;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.OwnerIdentity;
 
 import javax.annotation.Nonnull;
@@ -16,7 +17,7 @@ public interface IChunkOwnership
 	/**
 	 * Get the owner of this chunk.
 	 *
-	 * @implNote In case there is no owner, return {@link pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyUtils#NEUTRAL}
+	 * @implNote In case there is no owner, return {@link DiplomacyHandler#NEUTRAL}
 	 */
 	@Nonnull
 	OwnerIdentity getOwner();

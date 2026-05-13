@@ -1,0 +1,11 @@
+{
+  "origins": {
+    "unregulator_base": [8, 12, 17],
+    "unregulator1": [7, 11, 14],
+    "unregulator2": [7, 11, 16],
+    "unregulator3": [9, 11, 20],
+    "unregulator4": [9, 11, 18]
+  },
+  "hierarchy": {
+  }
+}

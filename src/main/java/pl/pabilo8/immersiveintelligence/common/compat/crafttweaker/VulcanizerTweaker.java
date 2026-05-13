@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common.compat.crafttweaker;
 
 import blusunrize.immersiveengineering.api.ComparableItemStack;
+import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.common.util.compat.crafttweaker.CraftTweakerHelper;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.IAction;
@@ -11,6 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.crafting.VulcanizerRecipe;
+import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIMultiblockRecipe;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
@@ -28,15 +30,13 @@ public class VulcanizerTweaker
 	public static void addRecipe(IIngredient mainInput, IIngredient compoundInput, IIngredient sulfurInput, IItemStack itemMold, IItemStack itemOutput, int energy, String resIn, String resOut)
 	{
 		for(IIngredient o : new IIngredient[]{mainInput, compoundInput, sulfurInput})
-		{
 			if(o==null)
 			{
 				CraftTweakerAPI.getLogger().logError("Could not add vulcanizer recipe for "+itemOutput.getDisplayName()+", input was null");
 				return;
 			}
-		}
 
-		VulcanizerRecipe r = new VulcanizerRecipe(
+		CraftTweakerAPI.apply(new Add(
 				CraftTweakerHelper.toStack(itemOutput),
 				new ComparableItemStack(CraftTweakerHelper.toStack(itemMold)),
 				CraftTweakerHelper.toIEIngredientStack(mainInput),
@@ -45,9 +45,7 @@ public class VulcanizerTweaker
 				energy,
 				new ResourceLocation(resIn+".png"),
 				new ResourceLocation(resOut+".png")
-		);
-
-		CraftTweakerAPI.apply(new Add(r));
+		));
 	}
 
 	@ZenMethod
@@ -64,30 +62,45 @@ public class VulcanizerTweaker
 
 	private static class Add implements IAction
 	{
-		private final VulcanizerRecipe recipe;
+		private ItemStack output;
+		private ComparableItemStack mold;
+		private IngredientStack mainInput;
+		private IngredientStack compoundInput;
+		private IngredientStack sulfurInput;
+		private int energy;
+		private ResourceLocation resIn;
+		private ResourceLocation resOut;
 
-		public Add(VulcanizerRecipe recipe)
+		public Add(ItemStack output, ComparableItemStack mold, IngredientStack mainInput, IngredientStack compoundInput, IngredientStack sulfurInput,
+				   int energy, ResourceLocation resIn, ResourceLocation resOut)
 		{
-			this.recipe = recipe;
+			this.output = output;
+			this.mold = mold;
+			this.mainInput = mainInput;
+			this.compoundInput = compoundInput;
+			this.sulfurInput = sulfurInput;
+			this.energy = energy;
+			this.resIn = resIn;
+			this.resOut = resOut;
 		}
 
 		@Override
 		public void apply()
 		{
-			VulcanizerRecipe.recipeList.put(recipe.mold, recipe);
+			new VulcanizerRecipe(output, mold, mainInput, compoundInput, sulfurInput, energy, resIn, resOut);
 		}
 
 		@Override
 		public String describe()
 		{
-			return "Adding Vulcanizer Recipe for "+recipe.output.getDisplayName();
+			return "Adding Vulcanizer Recipe for "+output.getDisplayName();
 		}
 	}
 
 	private static class Remove implements IAction
 	{
 		private final ItemStack output;
-		List<VulcanizerRecipe> removedRecipes;
+		private List<VulcanizerRecipe> removedRecipes;
 
 		public Remove(ItemStack output)
 		{
@@ -97,7 +110,7 @@ public class VulcanizerTweaker
 		@Override
 		public void apply()
 		{
-			removedRecipes = VulcanizerRecipe.removeRecipes(output);
+			this.removedRecipes = IIMultiblockRecipe.removeRecipesByFilter(VulcanizerRecipe.class, recipe -> recipe.output.isItemEqual(output));
 		}
 
 		@Override

@@ -12,7 +12,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.server.command.CommandTreeBase;
 import pl.pabilo8.immersiveintelligence.common.util.CommandIIBase;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.IOwnableProperty;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.property.IOwnableProperty;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 

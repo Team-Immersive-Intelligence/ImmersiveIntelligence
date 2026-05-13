@@ -979,7 +979,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 					.doHandRender(stack, event.getHand(), stackOpposite, event.getSwingProgress(), event.getPartialTicks()))
 				event.setCanceled(true);
 
-		if(stack.getItem()==IIContent.itemPrintedPage && PageType.fromStack(stack).useHandSpecialRender())
+		if(stack.getItem()==IIContent.itemPrintedPage&&PageType.fromStack(stack).useHandSpecialRender())
 		{
 			PrintedPageRenderer.renderItemFirstPerson(stack, event.getHand(), event.getEquipProgress(), event.getSwingProgress(), event.getInterpolatedPitch());
 			event.setCanceled(true);
@@ -1094,7 +1094,6 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 						//higher the velocity (howitzers), lower the tone
 						bullet.playSound(IISounds.bulletFlyby, 0.6f, 1.75f-MathHelper.clamp(bullet.getVelocity()/6f, 0.5f, 1.75f));
 			}
-
 		}
 	}
 

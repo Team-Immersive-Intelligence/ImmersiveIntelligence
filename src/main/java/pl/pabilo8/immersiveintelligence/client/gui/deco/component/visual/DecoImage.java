@@ -27,6 +27,7 @@ public class DecoImage extends DecoComponent<DecoImage>
 	private IIColor color = IIColor.WHITE;
 	private TextureAtlasSprite sprite;
 	private float[] uv;
+	private float rotation = 0;
 
 	@Nullable
 	private ImageAnimationDirection animationDirection;
@@ -119,6 +120,18 @@ public class DecoImage extends DecoComponent<DecoImage>
 		return this;
 	}
 
+	/**
+	 * Sets the rotation for the image.
+	 *
+	 * @param rotation the rotation angle in degrees
+	 * @return this DecoImage instance for method chaining
+	 */
+	public DecoImage withRotation(float rotation)
+	{
+		this.rotation = rotation;
+		return this;
+	}
+
 	@Override
 	protected boolean initialize()
 	{
@@ -138,6 +151,12 @@ public class DecoImage extends DecoComponent<DecoImage>
 		else
 			IIClientUtils.bindTexture(imageLocation);
 
+		if(rotation!=0)
+		{
+			GlStateManager.pushMatrix();
+			draw.setOffset(x+width/2f, y+height/2f).addRotation(rotation).setOffset(-width/2f-x, -height/2f-y);
+		}
+
 		//Draw the image with the specified UV coordinates
 		if(animationDirection==null)
 			draw.drawTexColorRect(x, y, width, height, color, uv);
@@ -152,6 +171,9 @@ public class DecoImage extends DecoComponent<DecoImage>
 		}
 
 		draw.finish();
+
+		if(rotation!=0)
+			GlStateManager.popMatrix();
 	}
 
 	@Override

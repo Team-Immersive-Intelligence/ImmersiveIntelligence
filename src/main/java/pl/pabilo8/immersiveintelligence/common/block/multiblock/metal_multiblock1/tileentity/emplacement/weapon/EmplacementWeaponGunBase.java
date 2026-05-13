@@ -11,7 +11,9 @@ import net.minecraftforge.items.ItemStackHandler;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoFactory;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPanel;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement.EmplacementStateNeeds;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.TargetCoordinateReference;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
@@ -51,10 +53,18 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 
 		this.ammoFactory = new AmmoFactory<A>(te.getWorld()).setIgnoredBlocks(te.getMultiblockBlocks());
 		if(!te.getWorld().isRemote&&te.tactileHandler!=null)
-			ammoFactory.setShooterAndGun(te.getOwnerIdentity().getFirstResponsibleMember(te.getWorld()), baseEntity)
+			ammoFactory.setShooterAndGun(null, baseEntity)
 					.setIgnoredEntities(te.tactileHandler.getEntities());
 
 		this.aim.withAimCorrectionFunction(ammoFactory::getAnglePrediction);
+	}
+
+	@Override
+	public EmplacementStateNeeds onUpdate(TileEntityEmplacement te, EmplacementStateNeeds baseNeeds, TargetCoordinateReference currentTarget)
+	{
+		if(!te.getWorld().isRemote&&te.getOwnerIdentity()!=null)
+			ammoFactory.setOwner(te.getOwnerIdentity().getFirstResponsibleMember(te.getWorld()));
+		return super.onUpdate(te, baseNeeds, currentTarget);
 	}
 
 	@Nullable

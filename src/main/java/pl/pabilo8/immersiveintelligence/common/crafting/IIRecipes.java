@@ -1477,7 +1477,7 @@ public class IIRecipes
 		);
 
 		//Motor belts
-		VulcanizerRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.RUBBER_BELT, 4),
+		new VulcanizerRecipe(IIContent.itemMaterial.getStack(Materials.RUBBER_BELT, 4),
 				IIContent.itemVulcanizerMold.getComparableStack(VulcanizerMolds.BELT),
 				new IngredientStack("plateRubberRaw", 10),
 				new IngredientStack("dustVulcanizationCompound", 3),
@@ -1485,7 +1485,7 @@ public class IIRecipes
 				24000
 		).setName("rubber_belts");
 
-		VulcanizerRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.RUBBER_TIRE, 3),
+		new VulcanizerRecipe(IIContent.itemMaterial.getStack(Materials.RUBBER_TIRE, 3),
 				IIContent.itemVulcanizerMold.getComparableStack(VulcanizerMolds.TIRE),
 				new IngredientStack("plateRubberRaw", 10),
 				new IngredientStack("dustVulcanizationCompound", 8),

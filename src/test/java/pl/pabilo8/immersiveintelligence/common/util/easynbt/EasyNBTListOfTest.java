@@ -15,6 +15,12 @@ import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+/**
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @ii-approved 0.3.1
+ * @updated 28.04.2026
+ * @since 28.01.2026
+ */
 public class EasyNBTListOfTest extends GameTestBasic
 {
 	@Test

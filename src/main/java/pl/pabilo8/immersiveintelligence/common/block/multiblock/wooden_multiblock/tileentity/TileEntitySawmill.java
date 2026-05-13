@@ -19,13 +19,13 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.api.crafting.SawmillRecipe;
 import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIMultiblockRecipe;
-import pl.pabilo8.immersiveintelligence.api.rotary.CapabilityRotaryEnergy;
-import pl.pabilo8.immersiveintelligence.api.rotary.IRotaryEnergy;
-import pl.pabilo8.immersiveintelligence.api.rotary.IRotationalEnergyBlock;
-import pl.pabilo8.immersiveintelligence.api.rotary.RotaryStorage;
+import pl.pabilo8.immersiveintelligence.api.rotary.*;
+import pl.pabilo8.immersiveintelligence.api.upgrade.IManagedUpgradableDevice;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeManager;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.ISawblade;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Sawmill;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.multiblock.MultiblockSawmill;
@@ -34,11 +34,13 @@ import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAn
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageRotaryPowerSync;
 import pl.pabilo8.immersiveintelligence.common.util.IIDamageSources;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionSingle;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 import pl.pabilo8.immersiveintelligence.common.util.sound.SoundHandler;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -48,10 +50,10 @@ import static pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_mu
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 13.04.2020
  */
-public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<TileEntitySawmill, SawmillRecipe> implements IRotationalEnergyBlock, IBooleanAnimatedPartsBlock
+public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<TileEntitySawmill, SawmillRecipe> implements IRotationalEnergyBlock, IBooleanAnimatedPartsBlock, IManagedUpgradableDevice<TileEntitySawmill>
 {
+	@SyncNBT
 	public MultiblockInteractablePart vise;
-	//Rotary Power
 	@SyncNBT
 	public RotaryStorage rotation = new RotaryStorage(0, 0)
 	{
@@ -61,10 +63,13 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 			return facing==getFacing()?RotationSide.INPUT: RotationSide.NONE;
 		}
 	};
-	// Inventory Handlers
+	@SyncNBT(name = "upgrades", events = SyncEvents.TILE_UPGRADES_MODIFIED)
+	public UpgradeManager<TileEntitySawmill> upgradeManager;
+
+	//Inventory Handlers
 	private IItemHandler insertionHandler = getSingleInventoryHandler(SLOT_INPUT, true, false);
 	private IItemHandler dustExtractionHandler = getSingleInventoryHandler(SLOT_SAWDUST, false, true);
-	// Recipe Output Handlers
+	//Recipe Output Handlers
 	private IItemHandler outputHandler = getSingleInventoryHandler(SLOT_OUTPUT), sawdustOutputHandler = getSingleInventoryHandler(SLOT_SAWDUST);
 	private SoundHandler sounds;
 
@@ -72,9 +77,10 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 	{
 		super(MultiblockSawmill.INSTANCE);
 
-		energyStorage = new FluxStorageAdvanced(0);
-		inventory = NonNullList.withSize(4, ItemStack.EMPTY);
-		vise = new MultiblockInteractablePart(22);
+		this.energyStorage = new FluxStorageAdvanced(0);
+		this.inventory = NonNullList.withSize(4, ItemStack.EMPTY);
+		this.vise = new MultiblockInteractablePart(22);
+		this.upgradeManager = new UpgradeManager<>(this);
 	}
 
 	@Override
@@ -89,10 +95,12 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 	protected void dummyCleanup()
 	{
 		super.dummyCleanup();
-		outputHandler = sawdustOutputHandler = null;
-		insertionHandler = dustExtractionHandler = null;
-		rotation = null;
-		vise = null;
+		this.outputHandler = this.sawdustOutputHandler = null;
+		this.insertionHandler = this.dustExtractionHandler = null;
+		this.upgradeManager = null;
+		this.rotation = null;
+		this.vise = null;
+
 	}
 
 	@Override
@@ -131,17 +139,14 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 	@Override
 	protected void onUpdate()
 	{
-		vise.update();
-
-		boolean receivesPower = false;
+		this.vise.update();
+		this.upgradeManager.update();
 
 		//Self destruct
-		if(rotation.getRotationSpeed() > Sawmill.rpmBreakingMax||rotation.getTorque() > Sawmill.torqueBreakingMax)
-		{
-			selfDestruct();
+		if(IIRotaryUtils.destroyIfOverloaded(this, rotation, Sawmill.speedBreaking, Sawmill.torqueBreaking))
 			return;
-		}
 
+		boolean receivesPower = false;
 		//Wheel or mechanical device connected to multiblock
 		TileEntity te = world.getTileEntity(getPOIPos(MultiblockPOI.ROTARY_INPUT).offset(facing));
 		if(te!=null&&te.hasCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, facing.getOpposite()))
@@ -186,14 +191,6 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 
 		if(world.isRemote&&currentProcess!=null)
 			currentProcess.recipe.getSoundAnimation().handleSounds(sounds, (int)currentProcess.ticks, 1f);
-	}
-
-	public float getCurrentEfficiency()
-	{
-		float e1, e2;
-		e1 = MathHelper.clamp(this.rotation.getRotationSpeed()/(float)Sawmill.rpmMin, 0, 1);
-		e2 = MathHelper.clamp(this.rotation.getTorque()/(float)Sawmill.torqueMin, 0, 1);
-		return (e1+e2)/2f;
 	}
 
 	@Override
@@ -255,9 +252,15 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 	@Override
 	public float getProductionStep(IIMultiblockProcess<SawmillRecipe> process, boolean simulate)
 	{
-		if(inventory.get(SLOT_SAWBLADE).getItem() instanceof ISawblade&&getCurrentEfficiency() > 0.95&&
+		float efficiency;
+		if(upgradeManager.has(IIContent.UPGRADE_IMPROVED_GEARBOX))
+			efficiency = Sawmill.gearboxUpgradeEfficiency*IIRotaryUtils.getEffectiveEnergy(rotation, Sawmill.speedEfficient, Sawmill.speedGearboxUpgrade, Sawmill.torqueMin, Sawmill.torqueEfficient);
+		else
+			efficiency = IIRotaryUtils.getEffectiveEnergy(rotation, Sawmill.torqueMin, Sawmill.speedEfficient, Sawmill.torqueMin, Sawmill.torqueEfficient);
+
+		if(inventory.get(SLOT_SAWBLADE).getItem() instanceof ISawblade&&efficiency > 0&&
 				inventory.get(SLOT_OUTPUT).getCount()+process.recipe.itemOutput.getCount() <= getSlotLimit(SLOT_OUTPUT))
-			return 1;
+			return efficiency;
 		return 0;
 	}
 
@@ -270,6 +273,13 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 			output = process.recipe.itemOutput.copy();
 		ItemStack sawdust = process.recipe.itemSecondaryOutput.copy();
 
+		if(upgradeManager.has(IIContent.UPGRADE_SAW_UNREGULATOR))
+			if(!sawdust.isEmpty()&&output.getCount() > 1)
+			{
+				output.shrink(1);
+				sawdust.grow(1);
+			}
+
 		outputOrDrop(output, outputHandler, facing, getPOI("item_output"));
 		outputOrDrop(sawdust, sawdustOutputHandler, EnumFacing.DOWN, getPOI("sawdust"));
 		return true;
@@ -281,11 +291,6 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 		ItemStack sawblade = inventory.get(SLOT_SAWBLADE);
 		if(sawblade.getItem() instanceof ISawblade)
 			((ISawblade)sawblade.getItem()).damageTool(sawblade, process.recipe.getHardness());
-	}
-
-	private void selfDestruct()
-	{
-		world.createExplosion(null, getPos().getX(), getPos().getY(), getPos().getZ(), 4, true);
 	}
 
 	/**
@@ -352,6 +357,13 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 		if(vise.setState(state))
 			world.playSound(null, getPos(), state?IISounds.viseOpen: IISounds.viseClose, SoundCategory.BLOCKS, 1f, 1f);
 		IIPacketHandler.sendToClient(new MessageBooleanAnimatedPartsSync(part, state, this));
+	}
+
+	@Nonnull
+	@Override
+	public UpgradeManager<TileEntitySawmill> getUpgradeManager()
+	{
+		return upgradeManager;
 	}
 }
 

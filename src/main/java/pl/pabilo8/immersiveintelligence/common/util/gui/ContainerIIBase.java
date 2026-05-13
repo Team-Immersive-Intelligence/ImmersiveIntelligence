@@ -59,9 +59,14 @@ public class ContainerIIBase<T extends TileEntityIEBase & IIEInventory> extends 
 
 	protected <SLOT extends Slot> Slot[] addSlotArray(int x, int y, int startIndex, int totalSlots, int slotsPerRow, SlotConstructor<SLOT> aNew)
 	{
+		return addSlotArray(x, y, startIndex, totalSlots, slotsPerRow, 18, aNew);
+	}
+
+	protected <SLOT extends Slot> Slot[] addSlotArray(int x, int y, int startIndex, int totalSlots, int slotsPerRow, int slotDistance, SlotConstructor<SLOT> aNew)
+	{
 		ArrayList<SLOT> slots = new ArrayList<>();
 		for(int i = 0; i < totalSlots; i++)
-			slots.add(this.addSlot(x+i%slotsPerRow*18, y+i/slotsPerRow*18, i+startIndex, aNew));
+			slots.add(this.addSlot(x+i%slotsPerRow*slotDistance, y+i/slotsPerRow*slotDistance, i+startIndex, aNew));
 		return slots.toArray(new Slot[0]);
 	}
 

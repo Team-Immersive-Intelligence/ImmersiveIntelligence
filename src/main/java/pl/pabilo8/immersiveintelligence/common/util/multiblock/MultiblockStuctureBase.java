@@ -46,8 +46,8 @@ import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileManager;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyUtils;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.IOwnableProperty;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyHandler;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.property.IOwnableProperty;
 import pl.pabilo8.immersiveintelligence.common.util.raytracer.AxisAlignedFacingBB;
 
 import javax.annotation.Nonnull;
@@ -399,7 +399,7 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 								new int[]{(side==EnumFacing.WEST?-l: side==EnumFacing.EAST?l: side==EnumFacing.NORTH?ww: -ww), h, (side==EnumFacing.NORTH?-l: side==EnumFacing.SOUTH?l: side==EnumFacing.EAST?ww: -ww)};
 
 						if(tile instanceof IOwnableProperty)
-							((IOwnableProperty)tile).setOwnerIdentity(DiplomacyUtils.getOwnerIdentityForEntity(player));
+							((IOwnableProperty)tile).setOwnerIdentity(DiplomacyHandler.getInstance(world.isRemote).getOwnerIdentityForEntity(player));
 
 						tile.markDirty();
 						addBlockEvent(world, pos2);

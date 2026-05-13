@@ -12,7 +12,10 @@ import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageDiplomacyAction;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.*;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyHandler;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomaticStatus;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.OwnerIdentity;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.property.IOwnableProperty;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -38,11 +41,11 @@ public class DecoOwnershipWidget extends DecoComponentWidgetBase<DecoOwnershipWi
 		if(super.initialize())
 		{
 			OwnerIdentity identity = property.getOwnerIdentity();
-			OwnerIdentity playerIdentity = DiplomacyUtils.getOwnerIdentityForEntity(ClientUtils.mc().player);
+			OwnerIdentity playerIdentity = DiplomacyHandler.getInstance(true).getOwnerIdentityForEntity(ClientUtils.mc().player);
 
 			withTitleLabel(IIReference.GUI_TOOLTIP_KEY+"widget.ownership", DecoAlignment.TOP);
 
-			if(identity==null||identity==DiplomacyUtils.NEUTRAL)
+			if(identity==DiplomacyHandler.NEUTRAL)
 			{
 				//"Abandoned" Label
 				addLabel(I18n.format("desc.immersiveintelligence.diplomacy.noowner"), 2, 8);
@@ -58,7 +61,9 @@ public class DecoOwnershipWidget extends DecoComponentWidgetBase<DecoOwnershipWi
 						.withIcon(DecoTextures.ICON_OWNERSHIP)
 						.withText("desc.immersiveintelligence.diplomacy.ownership.claim")
 						.withOnLMBPressed(() -> {
-							IIPacketHandler.sendToServer(new MessageDiplomacyAction(DiplomaticAction.CLAIM, property));
+							IIPacketHandler.sendToServer(MessageDiplomacyAction.claimProperty(property));
+							if(parentGui!=null)
+								parentGui.closeGUI();
 						})
 				);
 			}

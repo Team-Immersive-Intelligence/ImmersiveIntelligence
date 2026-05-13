@@ -109,6 +109,7 @@ public class UpgradeManager<T extends IUpgradableDevice> implements INBTSerializ
 			return false;
 
 		upgradeProgress += toAdd;
+		maxClientUpgradeProgress = UpgradeUtils.getMaxClientProgress(upgradeProgress, currentlyInstalled);
 		if(upgradeProgress >= currentlyInstalled.getProgressRequired())
 		{
 			parent.addUpgrade(currentlyInstalled, UpgradeOperation.FORCE_ADD);

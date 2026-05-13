@@ -37,7 +37,7 @@ public class MechanicalPumpRenderer extends IITileRenderer<TileEntityMechanicalP
 
 		//pumping calculation
 		boolean b = te.getWorld().isBlockIndirectlyGettingPowered(te.getPos()) > 0;
-		int a = (int)(30-(25*(te.rotation.getRotationSpeed()/(float)MechanicalPump.rpmBreakingMax)));
+		int a = (int)(30-(25*(te.rotation.getRotationSpeed()/(float)MechanicalPump.speedBreaking)));
 		float pumpingProgress = 0;
 		if(te.rotation.getRotationSpeed() > 0)
 			pumpingProgress = ((te.getWorld().getTotalWorldTime()%a)+partialTicks)/(float)a*(b?1f: 0f);

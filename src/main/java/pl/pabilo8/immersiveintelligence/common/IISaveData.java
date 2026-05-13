@@ -7,7 +7,7 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import pl.pabilo8.immersiveintelligence.api.ammo.penetration.DamageBlockPos;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.PenetrationCache;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyUtils;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyHandler;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 /**
@@ -22,17 +22,15 @@ public class IISaveData extends WorldSavedData
 	public IISaveData(String name)
 	{
 		super(name);
-		//Required for diplomacy to work
-		readFromNBT(new NBTTagCompound());
 	}
 
-	public static void setDirty(int dimension)
+	public static void setDirty()
 	{
 		if(FMLCommonHandler.instance().getEffectiveSide()==Side.SERVER&&INSTANCE!=null)
 			INSTANCE.markDirty();
 	}
 
-	public static void setInstance(int dimension, IISaveData in)
+	public static void setInstance(IISaveData in)
 	{
 		if(FMLCommonHandler.instance().getEffectiveSide()==Side.SERVER)
 			INSTANCE = in;
@@ -62,7 +60,7 @@ public class IISaveData extends WorldSavedData
 			IILogger.info("Error in the block damage list!");
 		}
 
-		DiplomacyUtils.loadAllFromNBT(enbt.getEasyCompound("diplomacy"));
+		DiplomacyHandler.getInstance(false).loadAllFromNBT(enbt.getEasyCompound("diplomacy"));
 	}
 
 	@Override
@@ -72,7 +70,7 @@ public class IISaveData extends WorldSavedData
 				.withList("block_dmg", e -> new NBTTagIntArray(new int[]{
 						e.getX(), e.getY(), e.getZ(), e.dimension, (int)(e.damage*16)
 				}), PenetrationCache.blockDamage)
-				.withTag("diplomacy", DiplomacyUtils.saveAllToNBT())
+				.withTag("diplomacy", DiplomacyHandler.getInstance(false).saveAllToNBT())
 				.unwrap();
 	}
 

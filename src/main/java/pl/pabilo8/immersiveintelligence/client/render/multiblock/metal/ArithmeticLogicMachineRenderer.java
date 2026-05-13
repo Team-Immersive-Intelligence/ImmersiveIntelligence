@@ -52,15 +52,13 @@ public class ArithmeticLogicMachineRenderer extends IIMultiblockRenderer<TileEnt
 
 		//Reset model to default state
 		this.model.defaultize();
+		applyStandardMirroring(te, true);
 		this.upgradeCircuitRacks.apply(te, tes, buf, partialTicks);
 		this.upgradeMemory.apply(te, tes, buf, partialTicks);
 
 		animationDrawer.apply(te.drawer.getProgress(partialTicks));
 		animationDoor.apply(te.door.getProgress(partialTicks));
 		animationKeyboard.apply(te.keyboard.getProgress(partialTicks));
-
-		//Draw
-		applyStandardMirroring(te, true);
 
 		//Render
 		model.render(tes, buf);

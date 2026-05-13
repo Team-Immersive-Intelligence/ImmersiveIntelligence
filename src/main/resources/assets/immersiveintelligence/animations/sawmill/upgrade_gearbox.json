@@ -1,0 +1,105 @@
+{
+  "comment": "Made by Pabilo8 with Blockbench",
+  "groups": {
+    "gearbox_gear1": {
+      "rotation": [
+        {
+          "time": 0.4,
+          "transform": [0, 0, 360]
+        },
+        {
+          "time": 0.6,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "position": [
+        {
+          "time": 0.4,
+          "transform": [0, 0, -5]
+        },
+        {
+          "time": 0.6,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "gearbox_gear2": {
+      "rotation": [
+        {
+          "time": 0.4,
+          "transform": [0, 0, -360]
+        },
+        {
+          "time": 0.6,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "position": [
+        {
+          "time": 0.4,
+          "transform": [0, 0, -5]
+        },
+        {
+          "time": 0.6,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "gearbox_gauge": {
+      "rotation": [
+        {
+          "time": 0.2,
+          "transform": [0, 0, -12.5]
+        },
+        {
+          "time": 0.4,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "position": [
+        {
+          "time": 0.2,
+          "transform": [-4, 2, 0]
+        },
+        {
+          "time": 0.4,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "gearbox_base": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [-30, 0, 0]
+        },
+        {
+          "time": 0.2,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, 0, -16]
+        },
+        {
+          "time": 0.2,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "gearbox_lever": {
+      "rotation": [
+        {
+          "time": 0.6,
+          "transform": [0, 0, 60]
+        },
+        {
+          "time": 0.8,
+          "transform": [0, 0, 0]
+        }
+      ]
+    }
+  }
+}

@@ -16,9 +16,9 @@ import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockFlagpole;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyUtils;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.IOwnableProperty;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyHandler;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.OwnerIdentity;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.property.IOwnableProperty;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IIIGuiMultiblockTile;
@@ -54,7 +54,7 @@ public class TileEntityFlagpole extends TileEntityMultiblockIIBase<TileEntityFla
 	{
 		super(MultiblockFlagpole.INSTANCE);
 		this.upgradeManager = new UpgradeManager<>(this);
-		this.ownerIdentity = DiplomacyUtils.NEUTRAL;
+		this.ownerIdentity = DiplomacyHandler.NEUTRAL;
 		this.style = new StyleCustomization(MultiblockFlagpole.STYLE_CONSTRAINTS);
 		this.health = new MultiblockHealth(this, Flagpole.baseHealth);
 	}
@@ -72,10 +72,6 @@ public class TileEntityFlagpole extends TileEntityMultiblockIIBase<TileEntityFla
 	@Override
 	protected void onUpdate()
 	{
-		//Claim neighbouring chunks
-		if(!world.isRemote&&world.getTotalWorldTime()%240==0)
-			DiplomacyUtils.claimChunks(this);
-
 		/*if(!world.isRemote&&ownerIdentity!=DiplomacyUtils.NEUTRAL)
 			IILogger.info("Owner Identity for "+uuid+" : "+ownerIdentity);*/
 		/*if(!world.isRemote)
@@ -110,7 +106,6 @@ public class TileEntityFlagpole extends TileEntityMultiblockIIBase<TileEntityFla
 				master.flag.setCount(1);
 				heldItem.shrink(1);
 				master.updateTileForEvent(SyncEvents.TILE_CUSTOM1);
-				//forceTileUpdate();
 				return true;
 			}
 			else if(!master.flag.isEmpty()&&Utils.isWirecutter(heldItem))
@@ -118,7 +113,6 @@ public class TileEntityFlagpole extends TileEntityMultiblockIIBase<TileEntityFla
 				player.inventory.addItemStackToInventory(master.flag.copy());
 				master.flag = ItemStack.EMPTY;
 				master.updateTileForEvent(SyncEvents.TILE_CUSTOM1);
-				//forceTileUpdate();
 				return true;
 			}
 		}
@@ -196,14 +190,21 @@ public class TileEntityFlagpole extends TileEntityMultiblockIIBase<TileEntityFla
 	public void setOwnerIdentity(OwnerIdentity ownerIdentity)
 	{
 		this.ownerIdentity = ownerIdentity;
-		updateTileForEvent(SyncEvents.TILE_OWNERSHIP_MODIFIED);
-		IILogger.info("Owner Identity for "+uuid+" : "+ownerIdentity+" / world is "+(world.isRemote?"remote": "local"));
+		if(!world.isRemote)
+			updateTileForEvent(SyncEvents.TILE_OWNERSHIP_MODIFIED);
+		IILogger.debug("Owner Identity for "+uuid+" : "+ownerIdentity+" / world is "+(world.isRemote?"remote": "local"));
 	}
 
 	@Override
 	public int getChunkOwnershipRadius()
 	{
 		return Flagpole.chunkClaimRadius;
+	}
+
+	@Override
+	public int getChunkLoadingRange()
+	{
+		return Math.min(Flagpole.chunkClaimRadius, Flagpole.maxChunksLoadedRadius);
 	}
 
 	//--- IStyleCustomizable ---//

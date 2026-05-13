@@ -1057,6 +1057,7 @@ skin.immersiveintelligence.zvezda.text=A Soviet themed skin granted for contribu
 skin.immersiveintelligence.vaterland.name=Vaterland
 skin.immersiveintelligence.vaterland.desc=An Iron Cross
 skin.immersiveintelligence.vaterland.text=A Germany themed skin.
+
 #Machine Upgrades
 machineupgrade.immersiveintelligence.inserter=Inserter
 machineupgrade.immersiveintelligence.inserter.desc=Adding an inserter to a crate allows it to operate automatically in a 3 blocks radius if supplied with power.
@@ -1064,32 +1065,38 @@ machineupgrade.immersiveintelligence.inserter.desc=Adding an inserter to a crate
 machineupgrade.immersiveintelligence.mg_loader=Belt Feeder
 machineupgrade.immersiveintelligence.mg_loader.desc=Expanding the ammo compartments allows to feed bullets directly to a machinegun after some modifications. Crate must be open to provide ammunition.
 
-machineupgrade.immersiveintelligence.improved_gearbox=Improved Gearbox
-machineupgrade.immersiveintelligence.improved_gearbox.desc=Replacing the stock gearbox with an improved model significantly increases machine speed, increases amount of energy required to operate.
-
-machineupgrade.immersiveintelligence.saw_unregulator=Saw Unregulator
-machineupgrade.immersiveintelligence.saw_unregulator.desc=Unregulating the saw leads to higher sawdust output in cost of main output amount.
-
 machineupgrade.immersiveintelligence.sovereignty=Sovereignty
 machineupgrade.immersiveintelligence.sovereignty.desc=Allows the structure to seize terrain around it for the owner's faction.
 
-machineupgrade.immersiveintelligence.emplacement.emergency_smoke=Emergency Smoke Dischargers
-machineupgrade.immersiveintelligence.emplacement.emergency_smoke.desc=When the Emplacement's weapon is heavily damaged, smoke will be discharged to provide cover.
+#Sawmill
+machineupgrade.immersiveintelligence.improved_gearbox=Improved Gearbox
+machineupgrade.immersiveintelligence.improved_gearbox.desc=Replacing the stock gearbox with an improved model significantly increases machine speed, increases amount of energy required to operate.
+machineupgrade.immersiveintelligence.saw_unregulator=Saw Unregulator
+machineupgrade.immersiveintelligence.saw_unregulator.desc=Unregulating the saw leads to higher sawdust output in cost of main output amount.
 
+#Flagpole
+machineupgrade.immersiveintelligence.flagpole.capture_defiance=Capture Defiance
+machineupgrade.immersiveintelligence.flagpole.capture_defiance.desc=Reinforces the Flagpole, raising its structural integrity and troops required to actively capture it.
+machineupgrade.immersiveintelligence.flagpole.taser_locks=Taser Locks
+machineupgrade.immersiveintelligence.flagpole.taser_locks.desc=Adds a defensive tesla coil, that strikes enemies aiming to capture the Flagpole.
+machineupgrade.immersiveintelligence.flagpole.distress_signal=Distress Signal
+machineupgrade.immersiveintelligence.flagpole.distress_signal.desc=Adds a radio-connected alarm siren, that activates when enemy troops are close.
+machineupgrade.immersiveintelligence.flagpole.unit_post=Unit Post
+machineupgrade.immersiveintelligence.flagpole.unit_post.desc=Allows forming platoons of infantry assigned to this Flagpole.
+
+#Emplacement
 machineupgrade.immersiveintelligence.emplacement.sturdy_bearings=Sturdy Bearings
 machineupgrade.immersiveintelligence.emplacement.sturdy_bearings.desc=Higher quality bearings increase the maximum weapon rotation speed.
-
+machineupgrade.immersiveintelligence.emplacement.emergency_smoke=Emergency Smoke Dischargers
+machineupgrade.immersiveintelligence.emplacement.emergency_smoke.desc=When the Emplacement's weapon is heavily damaged, smoke will be discharged to provide cover.
 machineupgrade.immersiveintelligence.emplacement.targetting=Enhanced Targetting Systems
 machineupgrade.immersiveintelligence.emplacement.targetting.desc=Improved fire control systems allow for better target acquisition and tracking, increasing accuracy.
 
 #Emplacement Weapons
-
 machineupgrade.immersiveintelligence.emplacement.infrared_observer=Infrared Observer
 machineupgrade.immersiveintelligence.emplacement.infrared_observer.desc=The Infrared Observer allows surveillance of distant enemies and sending their coordinates via data cables.
-
 machineupgrade.immersiveintelligence.emplacement.spotlight_tower=Spotlight Tower
 machineupgrade.immersiveintelligence.emplacement.spotlight_tower.desc=The Spotlight Tower allows illumination of hostile units, disorienting them and increasing accuracy of allied units.
-
 machineupgrade.immersiveintelligence.emplacement.searchlight=Searchlight
 machineupgrade.immersiveintelligence.emplacement.searchlight.desc=Searchlights work in coordination with Radars, Infrared Observers or Spotlight Towers, disorienting hostile units and increasing accuracy of allied fire.
 
@@ -1098,24 +1105,19 @@ machineupgrade.immersiveintelligence.emplacement.cpds.desc=The Counter-Projectil
 
 machineupgrade.immersiveintelligence.emplacement.autocannon=Autocannon
 machineupgrade.immersiveintelligence.emplacement.autocannon.desc=Four 3bCal Automatic Cannons provide lots of firepower making the weapon a universal defense against air and ground targets.
-
 machineupgrade.immersiveintelligence.emplacement.heavy_chemthrower=Heavy Chemthrower
 machineupgrade.immersiveintelligence.emplacement.heavy_chemthrower.desc=A heavier version of the well known Chemthrower, higher pressure allows for attacking enemies at ranges 4 times longer than the portable one.
-
 machineupgrade.immersiveintelligence.emplacement.heavy_railgun=Heavy Railgun
 machineupgrade.immersiveintelligence.emplacement.heavy_railgun.desc=Heavy Railgun provides direct fire support. It can launch metal rods or grenades with high velocity, allowing piercing of enemies and materiel.
 
 machineupgrade.immersiveintelligence.emplacement.machinegun=Machinegun Nest
 machineupgrade.immersiveintelligence.emplacement.machinegun.desc=The Machinegun Nest can provide suppressive automatic fire, allowing crowd control. Due to its construction, it is unable to fight airborne enemies.
-
 machineupgrade.immersiveintelligence.emplacement.machinegun.heavy_barrel=Heavy Barrel
 machineupgrade.immersiveintelligence.emplacement.machinegun.heavy_barrel.desc=Heavy barrels allow for much faster firing rate and slightly increase the maximum permitted overheat.
-
 machineupgrade.immersiveintelligence.emplacement.machinegun.watercooled=Water Cooled Barrel
 machineupgrade.immersiveintelligence.emplacement.machinegun.watercooled.desc=A replacement for the stock barrels. When mounted, barrels do not overheat when a coolant is provided.
-
-machineupgrade.immersiveintelligence.emplacement.machinegun.bunker=Additional Fortifications
-machineupgrade.immersiveintelligence.emplacement.machinegun.bunker.desc=Placing additional sandbags around the machinegun nest gives it additional armor and increases its durability.
+machineupgrade.immersiveintelligence.emplacement.machinegun.additional_fortifications=Additional Fortifications
+machineupgrade.immersiveintelligence.emplacement.machinegun.additional_fortifications.desc=Placing additional sandbags around the machinegun nest gives it additional armor and increases its durability.
 
 machineupgrade.immersiveintelligence.emplacement.mortar=Mortar
 machineupgrade.immersiveintelligence.emplacement.mortar.desc=Mortar provides indirect fire support on close range, bombarding enemies at an almost vertical angle.
@@ -1382,7 +1384,7 @@ desc.immersiveintelligence.diplomacy.law_form.dynasty.tier5_long=A lineage of em
 
 desc.immersiveintelligence.diplomacy.action.disband=Disband
 desc.immersiveintelligence.diplomacy.action.merge=Merge
-desc.immersiveintelligence.diplomacy.action.add_members=Add Members
+desc.immersiveintelligence.diplomacy.action.invite_members=Invite Members
 desc.immersiveintelligence.diplomacy.action.propose=Propose
 desc.immersiveintelligence.diplomacy.action.demand=Demand
 desc.immersiveintelligence.diplomacy.action.declare_war=Declare War
@@ -1390,7 +1392,9 @@ desc.immersiveintelligence.diplomacy.action.declare_alliance=Declare Alliance
 
 desc.immersiveintelligence.diplomacy.permission.disband=Disband
 desc.immersiveintelligence.diplomacy.permission.merge=Merge
-desc.immersiveintelligence.diplomacy.permission.add_members=Add Members
+desc.immersiveintelligence.diplomacy.permission.foreign_affairs=Foreign Affairs
+desc.immersiveintelligence.diplomacy.permission.modify_insignia=Modify Insignia
+desc.immersiveintelligence.diplomacy.permission.invite_members=Add Members
 desc.immersiveintelligence.diplomacy.permission.remove_members=Remove Members
 desc.immersiveintelligence.diplomacy.permission.military_aid=Military Aid
 desc.immersiveintelligence.diplomacy.permission.transit=Transit
@@ -1398,6 +1402,7 @@ desc.immersiveintelligence.diplomacy.permission.trade=Trade
 desc.immersiveintelligence.diplomacy.permission.research=Research
 desc.immersiveintelligence.diplomacy.permission.logistics=Logistics
 desc.immersiveintelligence.diplomacy.permission.container_access=Container Access
+desc.immersiveintelligence.diplomacy.permission.breaking_structures=Breaking Structures
 
 desc.immersiveintelligence.diplomacy.permission_level.owner_allow=Owners
 desc.immersiveintelligence.diplomacy.permission_level.member_allow=Members

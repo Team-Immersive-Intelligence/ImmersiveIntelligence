@@ -28,6 +28,7 @@ import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.UpgradeOperatio
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Emplacement;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
+import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockEmplacement;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockFlagpole;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.task.EmplacementTargetManager;
@@ -38,9 +39,9 @@ import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileManager;
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileManager.ITactileListener;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyUtils;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.IOwnableProperty;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyHandler;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.OwnerIdentity;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.property.IOwnableProperty;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.TargetCoordinateReference;
@@ -97,7 +98,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 		this.upgradeManager = new UpgradeManager<>(this);
 		this.style = new StyleCustomization(MultiblockFlagpole.STYLE_CONSTRAINTS);
 		this.baseHealth = new MultiblockHealth(this, Emplacement.baseHealth);
-		this.ownerIdentity = DiplomacyUtils.NEUTRAL;
+		this.ownerIdentity = DiplomacyHandler.NEUTRAL;
 		this.currentTarget = new TargetCoordinateReference(this::getWorld);
 		this.currentWeapon = null;
 	}
@@ -437,7 +438,9 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 	public void setOwnerIdentity(OwnerIdentity ownerIdentity)
 	{
 		this.ownerIdentity = ownerIdentity;
-		updateTileForEvent(SyncEvents.TILE_OWNERSHIP_MODIFIED);
+		if(!world.isRemote)
+			updateTileForEvent(SyncEvents.TILE_OWNERSHIP_MODIFIED);
+		IILogger.debug("Owner Identity for "+uuid+" : "+ownerIdentity+" / world is "+(world.isRemote?"remote": "local"));
 	}
 
 	@Override

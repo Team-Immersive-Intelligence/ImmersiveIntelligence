@@ -2,6 +2,12 @@
 
 newmtl flagpole
 map_Kd immersiveintelligence:blocks/multiblock/fortification/flagpole
+newmtl flagpole_mod
+map_Kd immersiveintelligence:blocks/multiblock/fortification/flagpole_mod
+newmtl alarm_siren2
+map_Kd immersiveintelligence:blocks/metal_device/alarm_siren2
+newmtl alarm_siren_pole2
+map_Kd immersiveintelligence:blocks/metal_device/alarm_siren_pole2
 newmtl base_steel
 map_Kd immersiveintelligence:blocks/multiblock/fortification/base_steel
 newmtl base_concrete
