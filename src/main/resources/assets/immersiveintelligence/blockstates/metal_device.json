@@ -23,14 +23,6 @@
         }
       }
     ],
-    "inventory,type=ammunition_crate": [
-      {}
-    ],
-    "inventory,type=latex_collector": [
-      {
-        "model": "immersiveintelligence:metal_device/latex_collector"
-      }
-    ],
     "inventory,type=punchtape_reader": [
       {
         "model": "immersiveintelligence:metal_device/punchtape_reader_flipped.obj",
@@ -49,9 +41,6 @@
         "textures": {
           "all": "immersiveintelligence:blocks/metal_device/data_router"
         }
-      },
-      "latex_collector": {
-        "model": "immersiveintelligence:metal_device/latex_collector"
       },
       "punchtape_reader": {
         "model": "immersiveintelligence:metal_device/punchtape_reader.obj",
@@ -91,9 +80,7 @@
     },
     "boolean0": {
       "false": {},
-      "true": {
-        "model": "immersiveintelligence:metal_device/latex_collector_bucket"
-      }
+      "true": {}
     },
     "boolean1": {
       "false": {},

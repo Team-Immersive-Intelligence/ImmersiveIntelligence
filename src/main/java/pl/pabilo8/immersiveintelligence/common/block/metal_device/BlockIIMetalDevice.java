@@ -54,21 +54,6 @@ public class BlockIIMetalDevice extends BlockIITileProvider<IIBlockTypes_MetalDe
 				IIBlockTypes_MetalDevice.SMALL_DATA_BUFFER, IIBlockTypes_MetalDevice.DATA_MERGER);
 	}
 
-	@Override
-	public String getMappingsExtension(int meta, boolean itemBlock)
-	{
-		switch(IIBlockTypes_MetalDevice.values()[meta])
-		{
-			default:
-				return null;
-
-			case AMMUNITION_CRATE:
-			case MEDIC_CRATE:
-			case REPAIR_CRATE:
-				return IIBlockTypes_MetalDevice.values()[meta].getName();
-		}
-	}
-
 	@Nonnull
 	public EnumBlockRenderType getRenderType(IBlockState state)
 	{
@@ -109,7 +94,7 @@ public class BlockIIMetalDevice extends BlockIITileProvider<IIBlockTypes_MetalDe
 		@IIBlockProperties(category = IICategory.ELECTRONICS)
 		@EnumTileProvider(tile = TileEntityMetalCrate.class)
 		METAL_CRATE,
-		@IIBlockProperties(category = IICategory.LOGISTICS)
+		@IIBlockProperties(category = IICategory.LOGISTICS, needsCustomState = true)
 		@EnumTileProvider(tile = TileEntityAmmunitionCrate.class)
 		AMMUNITION_CRATE,
 		@IIBlockProperties(category = IICategory.ELECTRONICS)
@@ -130,13 +115,13 @@ public class BlockIIMetalDevice extends BlockIITileProvider<IIBlockTypes_MetalDe
 		@IIBlockProperties(category = IICategory.ELECTRONICS)
 		@EnumTileProvider(tile = TileEntityDataMerger.class)
 		DATA_MERGER,
-		@IIBlockProperties(category = IICategory.LOGISTICS)
+		@IIBlockProperties(category = IICategory.LOGISTICS, needsCustomState = true)
 		@EnumTileProvider(tile = TileEntityMedicalCrate.class)
 		MEDIC_CRATE,
-		@IIBlockProperties(category = IICategory.LOGISTICS)
+		@IIBlockProperties(category = IICategory.LOGISTICS, needsCustomState = true)
 		@EnumTileProvider(tile = TileEntityRepairCrate.class)
 		REPAIR_CRATE,
-		@IIBlockProperties(category = IICategory.TOOLS)
+		@IIBlockProperties(category = IICategory.TOOLS, needsCustomState = true)
 		@EnumTileProvider(tile = TileEntityLatexCollector.class)
 		LATEX_COLLECTOR
 	}

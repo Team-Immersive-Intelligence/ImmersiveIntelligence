@@ -1,0 +1,63 @@
+{
+  "comment": "Made by Pabilo8 with Blockbench",
+  "groups": {
+    "bucket": {
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, 8, -14]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "alpha": [
+        {
+          "time": 0,
+          "alpha": 0.0
+        },
+        {
+          "time": 1,
+          "alpha": 1.0
+        }
+      ],
+      "visibility": [
+        {
+          "time": 0,
+          "visibility": false
+        },
+        {
+          "time": 0.1,
+          "visibility": true
+        },
+        {
+          "time": 1.0,
+          "visibility": true
+        }
+      ]
+    },
+    "handle": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 1,
+          "transform": [145, 0, 0]
+        }
+      ],
+      "alpha": [
+        {
+          "time": 0,
+          "alpha": 0.0
+        },
+        {
+          "time": 1,
+          "alpha": 1.0
+        }
+      ]
+    }
+  }
+}

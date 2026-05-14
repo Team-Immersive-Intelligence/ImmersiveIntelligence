@@ -1,0 +1,70 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "transform": "forge:default-block",
+    "model": "cube_all",
+    "textures": {
+      "particle": "immersiveintelligence:blocks/metal_device/latex_collector"
+    }
+  },
+  "variants": {
+    "inventory,type=latex_collector": [
+      {
+        "model": "immersiveintelligence:metal_device/latex_collector/latex_collector_inv.obj",
+        "custom": {
+          "flip-v": true
+        }
+      }
+    ],
+    "type": {
+      "latex_collector": {
+        "model": "immersiveengineering:smartmodel/connector",
+        "custom": {
+          "base": "immersiveintelligence:block/metal_device/latex_collector/latex_collector_base.obj",
+          "layers": ["CUTOUT_MIPPED"],
+          "flip-v": true
+        }
+      }
+    },
+    "facing": {
+      "down": {},
+      "up": {},
+      "north": {
+        "transform": {
+          "rotation": {
+            "y": 180
+          }
+        }
+      },
+      "south": {},
+      "west": {
+        "transform": {
+          "rotation": {
+            "y": -90
+          }
+        }
+      },
+      "east": {
+        "transform": {
+          "rotation": {
+            "y": 90
+          }
+        }
+      }
+    },
+    "boolean0": {
+      "false": {},
+      "true": {}
+    },
+    "boolean1": {
+      "false": {},
+      "true": {}
+    },
+    "_1dynamicrender": {
+      "false": {},
+      "true": {
+        "model": "immersiveintelligence:metal_device/latex_collector/latex_collector.obj.ie"
+      }
+    }
+  }
+}

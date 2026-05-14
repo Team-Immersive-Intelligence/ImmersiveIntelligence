@@ -102,16 +102,14 @@ public enum ParticleDrawStages implements ISerializableEnum
 		else
 			GlStateManager.disableTexture2D();
 
+		if(applyLighting)
+			GlStateManager.enableLighting();
+
 		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, destFactor);
 		if(this.renderThroughBlocks)
 			GlStateManager.disableDepth();
 		if(shader!=null)
 			ShaderUtil.useShader(shader, shaderParameters.apply(partialTicks));
-		if(applyLighting)
-		{
-			GlStateManager.enableLighting();
-
-		}
 
 		buffer.begin(GL11.GL_QUADS, vertexFormat);
 	}
