@@ -137,6 +137,9 @@ import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.*;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.naval_mine.EntityNavalMine;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.naval_mine.EntityNavalMineAnchor;
+import pl.pabilo8.immersiveintelligence.common.entity.mounted_weapon.EntityMachinegun;
+import pl.pabilo8.immersiveintelligence.common.entity.mounted_weapon.EntityMortar;
+import pl.pabilo8.immersiveintelligence.common.entity.mounted_weapon.EntityTripodPeriscope;
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.EntityAMTTactile;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityDrone;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityMotorbike;
@@ -179,6 +182,7 @@ public class ClientProxy extends CommonProxy
 	public static KeyBinding keybindManualReload, keybindArmorHelmet, keybindArmorExosuit, keybindZoom;
 	public static KeyBinding keybindVehicleEngine, keybindVehicleClutch, keybindVehicleTowing;
 	public static KeyBinding keybindVehicleGearUp, keybindVehicleGearDown, keybindVehicleReductionSwitch;
+	public static KeyBinding keybindVehicleGunUp, keybindVehicleGunDown, keybindVehicleGunLeft, keybindVehicleGunRight;
 	private EasyNBT storedGuiData = EasyNBT.newNBT();
 
 	private HashMap<Class<? extends TileEntityItemStackRenderer>, Block> TEISRRegistryQueue = new HashMap<>();
@@ -681,6 +685,16 @@ public class ClientProxy extends CommonProxy
 		keybindVehicleGearDown = new IIKeybind("vehicle.gear.down", Keyboard.KEY_H, IIKeybind.CATEGORY_VEHICLES)
 				.withContext(IIKeybind.VEHICLE_KEY_CONTEXT).register();
 		keybindVehicleReductionSwitch = new IIKeybind("vehicle.gear2.toggle", Keyboard.KEY_G, IIKeybind.CATEGORY_VEHICLES)
+				.withContext(IIKeybind.VEHICLE_KEY_CONTEXT).register();
+
+		//Vehicle Gun Keybinds
+		keybindVehicleGunUp = new IIKeybind("vehicle.gun.up", Keyboard.KEY_UP, IIKeybind.CATEGORY_VEHICLES)
+				.withContext(IIKeybind.VEHICLE_KEY_CONTEXT).register();
+		keybindVehicleGunDown = new IIKeybind("vehicle.gun.down", Keyboard.KEY_DOWN, IIKeybind.CATEGORY_VEHICLES)
+				.withContext(IIKeybind.VEHICLE_KEY_CONTEXT).register();
+		keybindVehicleGunLeft = new IIKeybind("vehicle.gun.left", Keyboard.KEY_LEFT, IIKeybind.CATEGORY_VEHICLES)
+				.withContext(IIKeybind.VEHICLE_KEY_CONTEXT).register();
+		keybindVehicleGunRight = new IIKeybind("vehicle.gun.right", Keyboard.KEY_RIGHT, IIKeybind.CATEGORY_VEHICLES)
 				.withContext(IIKeybind.VEHICLE_KEY_CONTEXT).register();
 
 		//Register shaders

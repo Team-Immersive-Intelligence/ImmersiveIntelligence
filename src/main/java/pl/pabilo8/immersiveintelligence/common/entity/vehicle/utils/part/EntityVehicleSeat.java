@@ -316,29 +316,7 @@ public class EntityVehicleSeat extends Entity implements ISyncNBTEntity<EntityVe
 		{
 			if(controls==null)
 				return false;
-
-			if(event.getDwheel()!=0)
-				controls.setKey(event.getDwheel() > 0?"mouse_wheelup": "mouse_wheeldown", true);
-			switch(event.getButton())
-			{
-				//Mouse main
-				case 0:
-					controls.setKey("mouse_left", event.isButtonstate());
-					break;
-				case 1:
-					controls.setKey("mouse_right", event.isButtonstate());
-					break;
-				case 2:
-					controls.setKey("mouse_middle", event.isButtonstate());
-					break;
-				//Mouse extra buttons
-				case 3:
-					controls.setKey("mouse_next", event.isButtonstate());
-					break;
-				case 4:
-					controls.setKey("mouse_prev", event.isButtonstate());
-					break;
-			}
+			controls.passMouseButtonEvent(event);
 			return true;
 		}
 	}

@@ -32,9 +32,9 @@ import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseType;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityMortar;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.HansUtils;
+import pl.pabilo8.immersiveintelligence.common.entity.mounted_weapon.EntityMachinegun;
+import pl.pabilo8.immersiveintelligence.common.entity.mounted_weapon.EntityMortar;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.towable.gun.EntityFieldHowitzer;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleSeat;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine.Magazines;
@@ -296,7 +296,7 @@ public class CommandIIHans extends CommandBase
 						IIContent.itemMachinegun.recalculateUpgrades(mgstack);
 						IIContent.itemMachinegun.finishUpgradeRecalculation(mgstack);
 
-						EntityMachinegun mg = new EntityMachinegun(world, new BlockPos(pos).down(), yaw, 0, mgstack);
+						EntityMachinegun mg = new EntityMachinegun(world, new BlockPos(pos).down(), yaw, mgstack);
 						world.spawnEntity(mg);
 
 						EntityDonkey donkey = new EntityDonkey(world);
@@ -717,7 +717,7 @@ public class CommandIIHans extends CommandBase
 			IIContent.itemMachinegun.recalculateUpgrades(mgstack);
 			IIContent.itemMachinegun.finishUpgradeRecalculation(mgstack);
 
-			EntityMachinegun mg = new EntityMachinegun(world, new BlockPos(pos).down(), yaw, 0, mgstack);
+			EntityMachinegun mg = new EntityMachinegun(world, new BlockPos(pos).down(), yaw, mgstack);
 			world.spawnEntity(mg);
 			return mg;
 		}

@@ -20,7 +20,7 @@ public class MachinegunItemStackRenderer extends TileEntityItemStackRenderer
 		GlStateManager.pushMatrix();
 
 		RenderHelper.enableStandardItemLighting();
-		MachinegunRenderer.renderMachinegun(itemStackIn, null);
+		MachinegunRenderer.renderMachinegun(itemStackIn, null, 0);
 
 		GlStateManager.popMatrix();
 	}

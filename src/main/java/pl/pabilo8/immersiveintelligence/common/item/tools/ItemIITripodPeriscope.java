@@ -13,7 +13,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityTripodPeriscope;
+import pl.pabilo8.immersiveintelligence.common.entity.mounted_weapon.EntityTripodPeriscope;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
@@ -82,7 +82,8 @@ public class ItemIITripodPeriscope extends ItemIIBase
 							periscope.setPosition(d0+0.5D, d1, d2+0.5D);
 							float f = (float)MathHelper.floor((MathHelper.wrapDegrees(player.rotationYaw-180.0F)+22.5F)/45.0F)*45.0F;
 							periscope.setLocationAndAngles(d0+0.5D, d1, d2+0.5D, f, 0.0F);
-							periscope.periscopeYaw = f;
+							periscope.aim.withCurrentAngles(f, 0f);
+							periscope.aim.setTarget(f, 0f);
 							ItemMonsterPlacer.applyItemEntityDataToEntity(worldIn, player, itemstack, periscope);
 							worldIn.spawnEntity(periscope);
 							worldIn.playSound(null, periscope.posX, periscope.posY, periscope.posZ, SoundEvents.ENTITY_ARMORSTAND_PLACE, SoundCategory.BLOCKS, 0.75F, 0.8F);

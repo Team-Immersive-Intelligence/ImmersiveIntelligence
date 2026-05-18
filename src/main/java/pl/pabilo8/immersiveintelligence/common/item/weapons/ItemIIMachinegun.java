@@ -41,7 +41,7 @@ import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.Machinegun;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
+import pl.pabilo8.immersiveintelligence.common.entity.mounted_weapon.EntityMachinegun;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponUpgrade;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
@@ -198,12 +198,12 @@ public class ItemIIMachinegun extends ItemIIUpgradableTool implements IAdvancedF
 				if(!intersects)
 					return new ActionResult<>(EnumActionResult.PASS, itemstack);
 
-				EntityMachinegun maschinengewehr = new EntityMachinegun(worldIn, raytraceresult.getBlockPos(), playerIn.getRotationYawHead(), pitch, itemstack.copy());
-
 				if(!worldIn.isRemote)
-					worldIn.spawnEntity(maschinengewehr);
-				playerIn.startRiding(maschinengewehr);
-
+				{
+					EntityMachinegun mg = new EntityMachinegun(worldIn, raytraceresult.getBlockPos().up(), playerIn.getRotationYawHead(), itemstack.copy());
+					worldIn.spawnEntity(mg);
+					playerIn.startRiding(mg);
+				}
 				itemstack.shrink(1);
 
 				playerIn.addStat(StatList.getObjectUseStats(this));

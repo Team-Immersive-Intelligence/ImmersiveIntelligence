@@ -17,6 +17,7 @@ import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
+import pl.pabilo8.immersiveintelligence.common.util.gun.GunAimCoordinate;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -193,6 +194,12 @@ public class AmmoFactory<E extends EntityAmmoBase<? super E>>
 		setDirection(dir);
 		setVelocityModifier(velocityModifier);
 		return this;
+	}
+
+	public AmmoFactory<E> setPositionAndVelocity(Vec3d positionVector, GunAimCoordinate aim, float offset, float velocity)
+	{
+		Vec3d target = aim.getTarget(0);
+		return setPositionAndVelocity(positionVector.add(target.scale(offset)), target, offset);
 	}
 
 	/**

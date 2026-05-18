@@ -1822,7 +1822,7 @@ public class IIConfigHandler
 				public static int clipReloadTime = 35;
 
 				@Comment({"Time required to fire a single bullet in MG."})
-				public static int bulletFireTime = 2;
+				public static int fireDelay = 2;
 
 				@Comment({"Time required to set up the MG (in ticks)."})
 				public static int setupTime = 50;
@@ -1836,8 +1836,10 @@ public class IIConfigHandler
 				@Comment({"Amount of vertical recoil after taking a shot."})
 				public static float recoilVertical = 2.5f;
 
+				//Upgrades
+
 				@Comment({"Fire rate multiplier when heavy barrel is mouted on mg."})
-				public static float heavyBarrelFireRateMultiplier = 0.25f;
+				public static int heavyBarrelFireDelay = 1;
 
 				@Comment({"Horizontal recoil after taking a shot with heavy barrel mounted."})
 				public static float recoilHBHorizontal = 1.25f;
@@ -1884,7 +1886,7 @@ public class IIConfigHandler
 				public static float[] machinegunScopeMaxZoom = new float[]{0.55f, 0.35f, 0.15f};
 
 				@Comment({"Shield's initial strength (resistance vs attacks)."})
-				public static float shieldStrengthInitial = 45;
+				public static int shieldStrengthInitial = 45;
 
 				@Comment({"Setup time multiplier when a shield is mouted on mg."})
 				public static float shieldSetupTimeMultiplier = 0.5f;

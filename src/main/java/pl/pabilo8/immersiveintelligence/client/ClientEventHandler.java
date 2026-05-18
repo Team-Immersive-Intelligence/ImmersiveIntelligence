@@ -31,7 +31,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumHand;
@@ -72,7 +71,6 @@ import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoUtils;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IAdvancedTooltipItem;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IItemScrollable;
-import pl.pabilo8.immersiveintelligence.api.utils.camera.IEntityZoomProvider;
 import pl.pabilo8.immersiveintelligence.client.fx.ScreenShake;
 import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleSystem;
 import pl.pabilo8.immersiveintelligence.client.gui.GuiWidgetAustralianTabs;
@@ -101,16 +99,16 @@ import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Graphics;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools.TripodPeriscope;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityMortar;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityTripodPeriscope;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
+import pl.pabilo8.immersiveintelligence.common.entity.mounted_weapon.EntityMachinegun;
+import pl.pabilo8.immersiveintelligence.common.entity.mounted_weapon.EntityMortar;
+import pl.pabilo8.immersiveintelligence.common.entity.mounted_weapon.EntityMountedWeapon;
+import pl.pabilo8.immersiveintelligence.common.entity.mounted_weapon.EntityTripodPeriscope;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleSeat;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIIPrintedPage.PageType;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIGunBase;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIRailgunOverride;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.messages.MessageEntityNBTSync;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageItemScrollableSwitch;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageManualClose;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
@@ -664,7 +662,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 
 		RayTraceResult mop = ClientUtils.mc().objectMouseOver;
 		EntityPlayer player = ClientUtils.mc().player;
-		//
+		float partialTicks = event.getPartialTicks();
 
 		//Iterate HUD backgrounds
 		for(GuiOverlayBase hud : HUD_BACKGROUNDS)
@@ -678,23 +676,6 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		Entity ridden = player.getRidingEntity();
 		Entity lowestRidden = ridden==null?null: ridden.getLowestRidingEntity();
 
-		//--- Entity Zoom Handling ---//
-
-		if(lowestRidden instanceof IEntityZoomProvider)
-		{
-			boolean pressed = ClientProxy.keybindZoom.isKeyDown();
-			if(pressed^mgAiming&&ridden instanceof EntityMachinegun)
-			{
-				NBTTagCompound tag = new NBTTagCompound();
-				tag.setBoolean("clientMessage", true);
-				tag.setBoolean("aiming", pressed);
-				IIPacketHandler.sendToServer(new MessageEntityNBTSync(ridden, tag));
-				((EntityMachinegun)ridden).aiming = pressed;
-			}
-			mgAiming = pressed;
-		}
-		else mgAiming = false;
-
 		//--- Camera Handling ---//
 		if(mgAiming)
 		{
@@ -705,36 +686,13 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 				EntityMachinegun mg = (EntityMachinegun)lowestRidden;
 				float px = (float)mg.posX, py = (float)mg.posY, pz = (float)mg.posZ;
 
-				float yaw = mg.gunYaw;
-				float pitch = mg.gunPitch;
-
-				EntityLivingBase psg = (EntityLivingBase)mg.getPassengers().get(0);
-				float true_head_angle = MathHelper.wrapDegrees(psg.prevRotationYawHead-mg.setYaw);
-				float true_head_angle2 = MathHelper.wrapDegrees(psg.rotationPitch);
-
-				if(mg.gunYaw < true_head_angle)
-					yaw += ClientUtils.mc().getRenderPartialTicks()*2f;
-				else if(mg.gunYaw > true_head_angle)
-					yaw -= ClientUtils.mc().getRenderPartialTicks()*2f;
-
-				if(Math.ceil(mg.gunYaw) <= Math.ceil(true_head_angle)+1f&&Math.ceil(mg.gunYaw) >= Math.ceil(true_head_angle)-1f)
-					yaw = true_head_angle;
-
-				if(mg.gunPitch < true_head_angle2)
-					pitch += ClientUtils.mc().getRenderPartialTicks();
-				else if(mg.gunPitch > true_head_angle2)
-					pitch -= ClientUtils.mc().getRenderPartialTicks();
-
-				yaw = mg.tripod?MathHelper.clamp(yaw, -82.5F, 82.5F): MathHelper.clamp(yaw, -45.0F, 45.0F);
-				pitch = MathHelper.clamp(pitch, -20, 20);
-
-				yaw += mg.recoilYaw;
-				pitch += mg.recoilPitch;
+				float yaw = mg.getGunYaw(partialTicks);
+				float pitch = mg.getGunPitch(partialTicks);
 
 				double true_angle = Math.toRadians(180-mg.setYaw-yaw);
 				double true_angle2 = Math.toRadians(pitch);
 
-				boolean hasScope = mg.getZoom().shouldZoom(mg.gun, null);
+				boolean hasScope = mg.getZoom().shouldZoom(mg.getZoomStack(), null);
 
 				Vec3d gun_end = IIMath.offsetPosDirection(2.25f-(hasScope?1.25f: 0), true_angle, true_angle2);
 				Vec3d gun_height = IIMath.offsetPosDirection(0.25f+(hasScope?0.125f: 0f), true_angle, true_angle2+90);
@@ -764,8 +722,8 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 				ClientUtils.mc().player.rotationPitch = MathHelper.clamp(ClientUtils.mc().player.rotationPitch, -50, 50);
 				ClientUtils.mc().player.prevRotationPitch = MathHelper.clamp(ClientUtils.mc().player.prevRotationPitch, -50, 50);
 
-				float y = MathHelper.wrapDegrees(360+mg.periscopeNextYaw-mg.periscopeYaw);
-				float currentYaw = MathHelper.wrapDegrees(mg.periscopeYaw+event.getPartialTicks()*(Math.signum(y)*MathHelper.clamp(Math.abs(y), 0, TripodPeriscope.turnSpeed)));
+				float y = MathHelper.wrapDegrees(360+mg.aim.getTargetYaw()-mg.aim.getCurrentYaw());
+				float currentYaw = MathHelper.wrapDegrees(mg.aim.getCurrentYaw()+event.getPartialTicks()*(Math.signum(y)*MathHelper.clamp(Math.abs(y), 0, TripodPeriscope.turnSpeed)));
 
 				CameraHandler.setCameraAngle(currentYaw, ClientUtils.mc().player.rotationPitch, 0);
 				CameraHandler.setEnabled(true);
@@ -839,18 +797,15 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		if(ridingEntity instanceof EntityVehicleSeat)
 		{
 			EntityVehicleSeat riding = (EntityVehicleSeat)ridingEntity;
-			if(riding.info!=null&&riding.info.passMouseButtonEvent(event))
+			if(riding.info!=null&&riding.info.passMouseButtonEvent(event)&&event.isButtonstate())
 				event.setCanceled(true);
 		}
-		else if(ridingEntity instanceof EntityMachinegun)
-			if(event.getButton()==1)
-			{
-				NBTTagCompound tag = new NBTTagCompound();
-				tag.setBoolean("clientMessage", true);
-				tag.setBoolean("shoot", event.isButtonstate());
-				IIPacketHandler.sendToServer(new MessageEntityNBTSync(ridingEntity, tag));
+		else if(ridingEntity instanceof EntityMountedWeapon)
+		{
+			EntityMountedWeapon weapon = (EntityMountedWeapon)ridingEntity;
+			if(weapon.controls!=null&&weapon.controls.passMouseButtonEvent(event)&&event.isButtonstate())
 				event.setCanceled(true);
-			}
+		}
 	}
 
 	/**

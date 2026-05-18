@@ -1,13 +1,13 @@
-package pl.pabilo8.immersiveintelligence.common.util;
+package pl.pabilo8.immersiveintelligence.common.util.gun;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.util.INBTSerializable;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * Stores yaw and pitch coordinates of a gun and provides utility methods for targetting and rendering.
@@ -24,7 +24,7 @@ public class GunAimCoordinate implements INBTSerializable<NBTTagCompound>
 	//Target
 	protected float targetPitch = 0, targetYaw = 0;
 	@Nonnull
-	protected AimCorrectionFunction aimCorrectionFunction = GunAimCoordinate::getDefaultAnglePrediction;
+	protected AimCorrectionFunction aimCorrectionFunction = GunAimCoordinate::getTargetLead;
 	protected Vec3d target = Vec3d.ZERO;
 	//Rotation speeds
 	protected float aimSpeedPitch = 1, aimSpeedYaw = 1;
@@ -41,7 +41,7 @@ public class GunAimCoordinate implements INBTSerializable<NBTTagCompound>
 		return this;
 	}
 
-	public GunAimCoordinate withAimCorrectionFunction(@Nullable AimCorrectionFunction aimCorrectionFunction)
+	public GunAimCoordinate withAimCorrectionFunction(@Nonnull AimCorrectionFunction aimCorrectionFunction)
 	{
 		this.aimCorrectionFunction = aimCorrectionFunction;
 		return this;
@@ -113,8 +113,8 @@ public class GunAimCoordinate implements INBTSerializable<NBTTagCompound>
 	public void update()
 	{
 		//Lerp towards the target angles
-		this.yaw = getPitch(1f);
-		this.pitch = getYaw(1f);
+		this.yaw = getYaw(1f);
+		this.pitch = getPitch(1f);
 	}
 
 	//--- NBT ---//
@@ -125,8 +125,8 @@ public class GunAimCoordinate implements INBTSerializable<NBTTagCompound>
 		return EasyNBT.newNBT()
 				.withFloat("pitch", pitch)
 				.withFloat("yaw", yaw)
-				.withFloat("targetPitch", targetPitch)
-				.withFloat("targetYaw", targetYaw)
+				.withFloat("target_pitch", targetPitch)
+				.withFloat("target_yaw", targetYaw)
 				.unwrap();
 	}
 
@@ -135,8 +135,8 @@ public class GunAimCoordinate implements INBTSerializable<NBTTagCompound>
 	{
 		pitch = nbt.getFloat("pitch");
 		yaw = nbt.getFloat("yaw");
-		targetPitch = nbt.getFloat("targetPitch");
-		targetYaw = nbt.getFloat("targetYaw");
+		targetPitch = nbt.getFloat("target_pitch");
+		targetYaw = nbt.getFloat("target_yaw");
 	}
 
 	//--- Utils ---//
@@ -147,7 +147,7 @@ public class GunAimCoordinate implements INBTSerializable<NBTTagCompound>
 			return yaw;
 		if(yaw==targetYaw)
 			return yaw;
-		return MathHelper.clamp(yaw+(partialTicks*aimSpeedYaw*Math.signum(yaw-targetYaw)), yawLimitMin, yawLimitMax);
+		return MathHelper.clamp(yaw+(partialTicks*aimSpeedYaw*Math.signum(targetYaw-yaw)), yawLimitMin, yawLimitMax);
 	}
 
 	public float getYawNormalized(float partialTicks)
@@ -163,7 +163,7 @@ public class GunAimCoordinate implements INBTSerializable<NBTTagCompound>
 			return pitch;
 		if(pitch==targetPitch)
 			return pitch;
-		return MathHelper.clamp(pitch+(partialTicks*aimSpeedPitch*Math.signum(pitch-targetPitch)), pitchLimitMin, pitchLimitMax);
+		return MathHelper.clamp(pitch+(partialTicks*aimSpeedPitch*Math.signum(targetPitch-pitch)), pitchLimitMin, pitchLimitMax);
 	}
 
 	public float getPitchNormalized(float partialTicks)
@@ -184,6 +184,43 @@ public class GunAimCoordinate implements INBTSerializable<NBTTagCompound>
 				&&Math.abs(MathHelper.wrapDegrees(pitch-targetPitch)) <= allowedInaccuracy;
 	}
 
+	public float getCurrentYaw()
+	{
+		return yaw;
+	}
+
+	public float getCurrentPitch()
+	{
+		return pitch;
+	}
+
+	public float getTargetYaw()
+	{
+		return targetYaw;
+	}
+
+	public float getTargetPitch()
+	{
+		return targetPitch;
+	}
+
+	public float clampYawToRange(float yaw)
+	{
+		return MathHelper.clamp(yaw, yawLimitMin, yawLimitMax);
+	}
+
+	public float clampPitchToRange(float pitch)
+	{
+		return MathHelper.clamp(pitch, pitchLimitMin, pitchLimitMax);
+	}
+
+	public Vec3d getTarget(float partialTicks)
+	{
+		float yaw = getYaw(partialTicks);
+		float pitch = getPitch(partialTicks);
+		return IIMath.offsetPosDirection(1, yaw, pitch);
+	}
+
 	@FunctionalInterface
 	public interface AimCorrectionFunction
 	{
@@ -197,7 +234,7 @@ public class GunAimCoordinate implements INBTSerializable<NBTTagCompound>
 		float[] getAnglePrediction(Vec3d shooterPos, Vec3d shooterMotion, Vec3d targetPos, Vec3d targetMotion);
 	}
 
-	private static float[] getDefaultAnglePrediction(Vec3d shooterPos, Vec3d shooterMotion, Vec3d targetPos, Vec3d targetMotion)
+	private static float[] getTargetLead(Vec3d shooterPos, Vec3d shooterMotion, Vec3d targetPos, Vec3d targetMotion)
 	{
 		Vec3d vv = shooterPos.subtract(targetPos).add(targetMotion).normalize();
 		float yy = (float)((Math.atan2(vv.x, vv.z)*180D)/3.1415927410125732D);

@@ -34,7 +34,7 @@ public class VehicleDurability implements INBTSerializable<NBTTagInt>
 	public void attackFrom(DamageSource source, float amount)
 	{
 		int damage = (int)Math.max(0, amount-(this.isDead()?this.armor*0.25: this.armor));
-		if(durability==0&&this.parent!=null)
+		if(isDead()&&this.parent!=null)
 			this.parent.attackFrom(source, damage);
 		else
 			this.durability = MathHelper.clamp(durability-damage, 0, maxDurability);

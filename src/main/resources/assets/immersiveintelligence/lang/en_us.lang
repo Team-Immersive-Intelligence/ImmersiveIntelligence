@@ -2700,6 +2700,11 @@ key.immersiveintelligence.vehicle.tow.toggle=Tow/Untow
 key.immersiveintelligence.vehicle.tow.start=Tow
 key.immersiveintelligence.vehicle.tow.stop=Untow
 
+key.immersiveintelligence.vehicle.gun.up=Elevate Gun
+key.immersiveintelligence.vehicle.gun.down=Depress Gun
+key.immersiveintelligence.vehicle.gun.left=Traverse Gun Left
+key.immersiveintelligence.vehicle.gun.right=Traverse Gun Right
+
 #Advancements
 advancement.immersiveintelligence.root=Immersive Intelligence
 advancement.immersiveintelligence.root.desc=RTFM?

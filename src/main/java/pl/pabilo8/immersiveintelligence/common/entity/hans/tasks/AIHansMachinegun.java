@@ -3,19 +3,9 @@ package pl.pabilo8.immersiveintelligence.common.entity.hans.tasks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseType;
-import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
-import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine.Magazines;
-import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.messages.MessageEntityNBTSync;
-import pl.pabilo8.immersiveintelligence.common.util.IIColor;
-import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
+import pl.pabilo8.immersiveintelligence.common.entity.mounted_weapon.EntityMachinegun;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 
 import javax.annotation.Nullable;
 
@@ -67,30 +57,23 @@ public class AIHansMachinegun extends EntityAIBase
 		target = hans.getAttackTarget();
 		if(mg!=null)
 		{
-			mg.shoot = false;
-
-			NBTTagCompound update = new NBTTagCompound();
-			mg.writeEntityToNBT(update);
-			IIPacketHandler.INSTANCE.sendToAllAround(new MessageEntityNBTSync(mg, update), IIPacketHandler.targetPointFromEntity(mg, 24));
-
-			if(mg.magazine1.isEmpty())
+			if(mg.controls!=null)
 			{
-				if(hans.getHeldItemMainhand().isEmpty())
-				{
-
-					ItemStack ammoStack = IIContent.itemAmmoMachinegun.getAmmoStack(IIContent.ammoCoreBrass, CoreType.PIERCING, FuseType.CONTACT, IIContent.ammoComponentTracerPowder);
-					IIContent.itemAmmoMachinegun.setComponentNBT(ammoStack, EasyNBT.parseNBT("{colour: %s}", IIColor.MC_DARK_RED));
-					ItemStack magazine = IIContent.itemBulletMagazine.getMagazine(Magazines.MACHINEGUN, ammoStack);
-
-
-					hans.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, magazine);
-				}
+				mg.controls.setKey("fire", false);
+				if(mg.controls.isDirty())
+					mg.updateEntityForEvent(SyncEvents.ENTITY_VEHICLE_CONTROLS);
 			}
-			else if(target!=null)
+
+			if(target!=null)
 			{
 				hans.getLookHelper().setLookPositionWithEntity(target, hans.getHorizontalFaceSpeed(), hans.getVerticalFaceSpeed());
 				if(isAimedAt())
-					mg.shoot = true;
+					if(mg.controls!=null)
+					{
+						mg.controls.setKey("fire", true);
+						if(mg.controls.isDirty())
+							mg.updateEntityForEvent(SyncEvents.ENTITY_VEHICLE_CONTROLS);
+					}
 			}
 
 		}
@@ -98,7 +81,7 @@ public class AIHansMachinegun extends EntityAIBase
 
 	public boolean isAimedAt()
 	{
-		//TODO: 15.02.2024 use new calculation method
-		return MathHelper.wrapDegrees(hans.rotationPitch)-mg.gunPitch < 5&&MathHelper.wrapDegrees(hans.rotationYawHead)-MathHelper.wrapDegrees(mg.rotationYaw) < 5;
+		return MathHelper.wrapDegrees(hans.rotationPitch)-mg.getGunPitch(0f) < 5
+				&&MathHelper.wrapDegrees(hans.rotationYawHead)-MathHelper.wrapDegrees(mg.rotationYaw) < 5;
 	}
 }
