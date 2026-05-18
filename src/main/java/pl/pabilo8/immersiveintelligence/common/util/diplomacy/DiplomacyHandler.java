@@ -189,7 +189,7 @@ public class DiplomacyHandler
 		propertyTickets.clear();
 		pendingTickets.clear();
 		pendingTicketCheckTimer = 0;
-		NEUTRAL = GLOBAL_ENEMY = null;
+		//NEUTRAL = GLOBAL_ENEMY = null;
 	}
 
 	//--- Update Loop ---//
