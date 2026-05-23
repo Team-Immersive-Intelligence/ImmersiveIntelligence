@@ -13,8 +13,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoFactory;
-import pl.pabilo8.immersiveintelligence.api.utils.camera.IEntityZoomProvider;
-import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedZoomTool;
+import pl.pabilo8.immersiveintelligence.api.utils.camera.ICameraEntity;
+import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedZoom;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Vehicles.FieldHowitzer;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
@@ -29,6 +29,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityV
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleSeat.SeatInfo;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleWheel;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.WheelType;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 
@@ -37,7 +38,7 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
  * @since 18.07.2020
  */
 @VehicleBlueprint(id = "immersiveintelligence:towed/field_howitzer", mass = 4, type = VehicleType.TOWED_WEAPON)
-public class EntityFieldHowitzer extends EntityVehicleTowable<EntityFieldHowitzer> implements IEntityZoomProvider
+public class EntityFieldHowitzer extends EntityVehicleTowable<EntityFieldHowitzer> implements ICameraEntity
 {
 	//--- AABBs ---//
 	static final AxisAlignedBB AABB_WHEEL = new AxisAlignedBB(-0.25, 0d, 0.25, 0.25, 1d, -0.25);
@@ -101,8 +102,8 @@ public class EntityFieldHowitzer extends EntityVehicleTowable<EntityFieldHowitze
 					.withKeyBinding(settings.keyBindLeft, "turnLeft")
 					.withKeyBinding(settings.keyBindRight, "turnRight");
 			this.gunnerControls
-					.withKeyBinding(settings.keyBindForward, "up")
-					.withKeyBinding(settings.keyBindBack, "down")
+					.withKeyBinding(ClientProxy.keybindVehicleGunUp, "up")
+					.withKeyBinding(ClientProxy.keybindVehicleGunDown, "down")
 					.withKeyBinding(settings.keyBindJump, "fire")
 					.withKeyBinding(ClientProxy.keybindZoom, "scope")
 					.withKeyBinding(ClientProxy.keybindManualReload, "reload");
@@ -199,10 +200,34 @@ public class EntityFieldHowitzer extends EntityVehicleTowable<EntityFieldHowitze
 		return false;
 	}
 
-	//--- Binoculars Zoom Feature ---//
+	//--- ICameraEntity ---//
 
 	@Override
-	public IAdvancedZoomTool getZoom()
+	public float getCameraPitch(EntityPlayer cameraPlayer, float partialTicks)
+	{
+		return (float)IIMath.clampedLerp(cameraPlayer.prevCameraYaw, cameraPlayer.cameraYaw, partialTicks);
+	}
+
+	@Override
+	public float getCameraYaw(EntityPlayer cameraPlayer, float partialTicks)
+	{
+		return (float)IIMath.clampedLerp(cameraPlayer.prevCameraYaw, cameraPlayer.cameraYaw, partialTicks);
+	}
+
+	@Override
+	public Vec3d getCameraPos(EntityPlayer cameraPlayer, float partialTicks)
+	{
+		return cameraPlayer.getLook(partialTicks);
+	}
+
+	@Override
+	public boolean isCameraEnabled(EntityPlayer player)
+	{
+		return seatGunner!=null&&seatGunner.isClientPlayerOnSeat();
+	}
+
+	@Override
+	public IAdvancedZoom getZoom()
 	{
 		return Minecraft.getMinecraft().player.getHeldItem(EnumHand.MAIN_HAND).getItem()==IIContent.itemBinoculars?IIContent.itemBinoculars: null;
 	}

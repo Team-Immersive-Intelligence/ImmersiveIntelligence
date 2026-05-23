@@ -8,6 +8,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -18,14 +20,16 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 22.09.2022
  */
-public class MessageIITileSync extends IIMessage
+public class MessageIITileSync extends IIMessage implements IPositionBoundMessage
 {
+	World world;
 	BlockPos pos;
 	NBTTagCompound nbt;
 
 	public MessageIITileSync(TileEntityIEBase tile, NBTTagCompound nbt)
 	{
 		this.pos = tile.getPos();
+		this.world = tile.getWorld();
 		this.nbt = nbt;
 	}
 
@@ -86,5 +90,17 @@ public class MessageIITileSync extends IIMessage
 	{
 		writePos(buf, pos);
 		writeTagCompound(buf, nbt);
+	}
+
+	@Override
+	public World getWorld()
+	{
+		return world;
+	}
+
+	@Override
+	public Vec3d getPosition()
+	{
+		return new Vec3d(pos);
 	}
 }

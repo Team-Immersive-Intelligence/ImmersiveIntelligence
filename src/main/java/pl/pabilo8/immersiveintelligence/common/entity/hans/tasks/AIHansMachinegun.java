@@ -3,9 +3,7 @@ package pl.pabilo8.immersiveintelligence.common.entity.hans.tasks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.common.entity.mounted_weapon.EntityMachinegun;
-import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 
 import javax.annotation.Nullable;
 
@@ -58,30 +56,14 @@ public class AIHansMachinegun extends EntityAIBase
 		if(mg!=null)
 		{
 			if(mg.controls!=null)
-			{
 				mg.controls.setKey("fire", false);
-				if(mg.controls.isDirty())
-					mg.updateEntityForEvent(SyncEvents.ENTITY_VEHICLE_CONTROLS);
-			}
 
 			if(target!=null)
 			{
 				hans.getLookHelper().setLookPositionWithEntity(target, hans.getHorizontalFaceSpeed(), hans.getVerticalFaceSpeed());
-				if(isAimedAt())
-					if(mg.controls!=null)
-					{
-						mg.controls.setKey("fire", true);
-						if(mg.controls.isDirty())
-							mg.updateEntityForEvent(SyncEvents.ENTITY_VEHICLE_CONTROLS);
-					}
+				if(mg.aim.isAimed()&&mg.controls!=null)
+					mg.controls.setKey("fire", true);
 			}
-
 		}
-	}
-
-	public boolean isAimedAt()
-	{
-		return MathHelper.wrapDegrees(hans.rotationPitch)-mg.getGunPitch(0f) < 5
-				&&MathHelper.wrapDegrees(hans.rotationYawHead)-MathHelper.wrapDegrees(mg.rotationYaw) < 5;
 	}
 }

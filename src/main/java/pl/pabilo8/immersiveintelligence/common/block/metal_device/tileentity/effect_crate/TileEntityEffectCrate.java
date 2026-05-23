@@ -19,7 +19,6 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.*;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.storage.loot.ILootContainer;
@@ -28,7 +27,6 @@ import net.minecraft.world.storage.loot.LootTable;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.upgrade.IManagedUpgradableDevice;
 import pl.pabilo8.immersiveintelligence.api.upgrade.IUpgradableDevice;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeManager;
@@ -117,7 +115,7 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 	@Nullable
 	public ITextComponent getDisplayName()
 	{
-		return name!=null?new TextComponentString(name): new TextComponentTranslation("tile."+ImmersiveIntelligence.MODID+".metal_device.metal_crate.name");
+		return name!=null?new TextComponentString(name): null;
 	}
 
 	@Override
@@ -177,6 +175,8 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 			open = nbt.getBoolean("open");
 		if(nbt.hasKey("facing"))
 			setFacing(EnumFacing.getFront(nbt.getInteger("facing")));
+		if(nbt.hasKey("upgrades"))
+			upgradeManager.deserializeNBT(nbt.getCompoundTag("upgrades"));
 
 		energyStorage = nbt.getInteger("energyStorage");
 		if(!descPacket)
@@ -197,6 +197,7 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 		nbt.setBoolean("open", open);
 		nbt.setInteger("facing", facing.getIndex());
 		nbt.setInteger("energyStorage", energyStorage);
+		nbt.setTag("upgrades", upgradeManager.serializeNBT());
 		if(!descPacket)
 		{
 			if(lootTable!=null)
@@ -221,6 +222,8 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 	@Override
 	public void receiveMessageFromServer(NBTTagCompound message)
 	{
+		if(message.hasKey("upgrades"))
+			upgradeManager.deserializeNBT(message.getCompoundTag("upgrades"));
 		if(message.hasKey("focused"))
 			focusedEntity = world.getEntityByID(message.getInteger("focused"));
 		else

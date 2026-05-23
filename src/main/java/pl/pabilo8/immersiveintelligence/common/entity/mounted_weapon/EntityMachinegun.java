@@ -4,9 +4,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
@@ -17,10 +15,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.MachinegunCoolantHandler;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoFactory;
 import pl.pabilo8.immersiveintelligence.api.utils.IEntitySpecialRepairable;
-import pl.pabilo8.immersiveintelligence.api.utils.camera.IEntityZoomProvider;
+import pl.pabilo8.immersiveintelligence.api.utils.camera.ICameraEntity;
 import pl.pabilo8.immersiveintelligence.api.utils.camera.ZoomSettings;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedTextOverlay;
-import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedZoomTool;
+import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedZoom;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.Machinegun;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
@@ -28,8 +26,6 @@ import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProje
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleControls;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleDurability;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponUpgrade;
-import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.messages.MessagePlayerAimAnimationSync;
 import pl.pabilo8.immersiveintelligence.common.util.FilteredFluidTank;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
@@ -47,7 +43,7 @@ import java.util.EnumSet;
  * @ii-approved 0.3.1
  * @since 01.11.2019
  */
-public class EntityMachinegun extends EntityMountedWeapon implements IAdvancedTextOverlay, IEntitySpecialRepairable, IEntityZoomProvider
+public class EntityMachinegun extends EntityMountedWeapon implements IAdvancedTextOverlay, IEntitySpecialRepairable, ICameraEntity
 {
 	private final static ZoomSettings SCOPE = new ZoomSettings(Machinegun.machinegunScopeMaxZoom,
 			IIReference.RES_TEXTURES_GUI.with("item/machinegun/scope.png"));
@@ -65,8 +61,8 @@ public class EntityMachinegun extends EntityMountedWeapon implements IAdvancedTe
 	@SyncNBT(events = SyncEvents.ENTITY_CUSTOM1)
 	public ItemStack magazine1 = ItemStack.EMPTY, magazine2 = ItemStack.EMPTY;
 
-	@SyncNBT(events = {SyncEvents.ENTITY_CUSTOM1, SyncEvents.ENTITY_CUSTOM2})
-	public float setYaw = 0;
+	@SyncNBT(events = SyncEvents.ENTITY_CUSTOM1)
+	public boolean aiming = false;
 	@SyncNBT(events = SyncEvents.ENTITY_CUSTOM1)
 	public VehicleDurability shield = new VehicleDurability(Machinegun.shieldStrengthInitial, 2);
 
@@ -74,12 +70,9 @@ public class EntityMachinegun extends EntityMountedWeapon implements IAdvancedTe
 	public FilteredFluidTank tank = new FilteredFluidTank(0)
 			.withInputFilter(MachinegunCoolantHandler::isValidCoolant);
 
-	private boolean lastAimState = false;
-
 	public EntityMachinegun(World world)
 	{
 		super(world);
-		this.baseAabb = new AxisAlignedBB(-0.35, 0, -0.35, 0.35, 0.65, 0.35);
 		this.controls = new VehicleControls().withStates("fire", "reload", "aim");
 		if(world.isRemote)
 			this.controls
@@ -93,7 +86,7 @@ public class EntityMachinegun extends EntityMountedWeapon implements IAdvancedTe
 	{
 		this(world);
 		this.setPosition(pos.getX(), pos.getY(), pos.getZ());
-		this.setYaw = yaw;
+		this.aim.withCenterYaw(yaw);
 		setOriginStack(stack);
 	}
 
@@ -108,10 +101,11 @@ public class EntityMachinegun extends EntityMountedWeapon implements IAdvancedTe
 		this.aim.withAimCorrectionFunction(this.ammoFactory::getAnglePrediction)
 				.withPitchLimit(-25.0f, 25f)
 				.withYawLimit(-55.0f, 55f)
-				.withAimSpeed(2f, 1f);
+				.withAimSpeed(3.5f, 3f);
 		this.recoil.withRecoilLimits(22.5f, 22.5f)
 				.withRecoilStrength(Machinegun.recoilVertical, Machinegun.recoilHorizontal, 0.5f, 0.05f)
 				.withOverheating(Machinegun.maxOverheat, 0.75f, () -> tank);
+		this.setSize(0.77f, 0.65f);
 
 		//Set upgrade parameters
 		assert stack.getItem()==IIContent.itemMachinegun;
@@ -121,9 +115,9 @@ public class EntityMachinegun extends EntityMountedWeapon implements IAdvancedTe
 			{
 				case HEAVY_BARREL:
 					this.shooting.withMaxShotDelay(Machinegun.heavyBarrelFireDelay);
+					this.recoil.withRecoilStrength(Machinegun.recoilHBVertical, Machinegun.recoilHBHorizontal, 0.5f, 0.05f);
 					break;
 				case WATER_COOLING:
-					//TODO: 17.05.2026
 					this.shooting.withMaxShotDelay(Machinegun.heavyBarrelFireDelay);
 					break;
 				case SECOND_MAGAZINE:
@@ -146,7 +140,8 @@ public class EntityMachinegun extends EntityMountedWeapon implements IAdvancedTe
 					break;
 				case TRIPOD:
 					this.maxSetupTime = (int)(this.maxSetupTime*Machinegun.tripodSetupTimeMultiplier);
-					this.aim.withYawLimit(-82.5f, 82.5f);
+					this.aim.withYawLimit(-180, 180f);
+					this.setSize(0.77f, 1.65f);
 					break;
 				default:
 					break;
@@ -157,8 +152,8 @@ public class EntityMachinegun extends EntityMountedWeapon implements IAdvancedTe
 	@Nonnull
 	protected Vec3d getPassengerPosition(Entity passenger)
 	{
-		return IIMath.offsetPosDirectionXZ(-1.65f, -0.25f, rotationYaw, rotationPitch)
-				.addVector(0.5, -1.15, 0.5);
+		return IIMath.offsetPosDirectionXZ(-0.65f-1f, 0f, aim.getYaw(0), 0)
+				.addVector(0, -1.15+(upgrades.contains(WeaponUpgrade.TRIPOD)?1f: 0f), 0);
 	}
 
 	@Override
@@ -171,16 +166,17 @@ public class EntityMachinegun extends EntityMountedWeapon implements IAdvancedTe
 		shooting.update();
 
 		//Apply controls
-		if(!world.isRemote&&isBeingRidden())
+		if(isBeingRidden())
 		{
-			Entity operator = getPassengers().get(0);
-			boolean currentAim = isAiming();
-			if(currentAim!=lastAimState)
-			{
-				IIPacketHandler.INSTANCE.sendToDimension(new MessagePlayerAimAnimationSync(operator, currentAim),
-						this.world.provider.getDimension());
-				lastAimState = currentAim;
-			}
+//			Entity operator = getPassengers().get(0);
+			aiming = controls.getKey("aim");
+			Entity user = getPassengers().get(0);
+			aim.setTarget(aim.clampYawToRange(user.getRotationYawHead()), aim.clampPitchToRange(user.rotationPitch));
+		}
+		else
+		{
+			aim.setTarget(aim.getTargetYaw(), aim.clampPitchToRange(-10f));
+			aim.update();
 		}
 	}
 
@@ -205,9 +201,6 @@ public class EntityMachinegun extends EntityMountedWeapon implements IAdvancedTe
 			controls.setKey("fire", false);
 			controls.setKey("aim", false);
 		}
-		lastAimState = false;
-		if(!world.isRemote)
-			IIPacketHandler.INSTANCE.sendToDimension(new MessagePlayerAimAnimationSync(passenger, false), this.world.provider.getDimension());
 		super.removePassenger(passenger);
 	}
 
@@ -215,51 +208,19 @@ public class EntityMachinegun extends EntityMountedWeapon implements IAdvancedTe
 	@Override
 	public void applyOrientationToEntity(Entity entityToUpdate)
 	{
-		entityToUpdate.prevRotationYaw = aim.clampYawToRange(entityToUpdate.prevRotationYaw);
 		entityToUpdate.rotationYaw = aim.clampYawToRange(entityToUpdate.rotationYaw);
-		entityToUpdate.prevRotationPitch = aim.clampPitchToRange(entityToUpdate.prevRotationYaw);
 		entityToUpdate.rotationPitch = aim.clampPitchToRange(entityToUpdate.rotationPitch);
 	}
 
 	@Override
 	public boolean attackEntityFrom(DamageSource source, float amount)
 	{
-		if(!isDead&&source.isProjectile())
+		if(source.isProjectile()&&upgrades.contains(WeaponUpgrade.SHIELD))
 		{
-			Vec3d attackVector = source.getDamageLocation();
-			if(attackVector!=null)
-			{
-				attackVector = attackVector.subtract(posX, posY, posZ);
-				if(getHorizontalFacing()==EnumFacing.getFacingFromVector((float)attackVector.x, (float)attackVector.y, (float)attackVector.z))
-				{
-					shield.attackFrom(source, amount);
-					return shield.isDead();
-				}
-			}
+			shield.attackFrom(source, amount);
+			return shield.isDead();
 		}
 		return super.attackEntityFrom(source, amount);
-	}
-
-	//--- Getters ---//
-
-	public float getGunYaw(float partialTicks)
-	{
-		return aim.getYaw(partialTicks);
-	}
-
-	public float getGunPitch(float partialTicks)
-	{
-		return aim.getPitch(partialTicks);
-	}
-
-	private boolean isFiring()
-	{
-		return controls.getKey("fire");
-	}
-
-	private boolean isAiming()
-	{
-		return controls.getKey("aim");
 	}
 
 	//--- IEntitySpecialRepairable ---//
@@ -282,15 +243,6 @@ public class EntityMachinegun extends EntityMountedWeapon implements IAdvancedTe
 		return 1;
 	}
 
-	//--- IEntityZoomProvider ---//
-
-	@Override
-	public IAdvancedZoomTool getZoom()
-	{
-		//TODO: 15.05.2026 check for scope
-		return null;
-	}
-
 	//--- IAdvancedTextOverlay ---//
 
 	@SideOnly(Side.CLIENT)
@@ -298,5 +250,47 @@ public class EntityMachinegun extends EntityMountedWeapon implements IAdvancedTe
 	public String[] getOverlayText(EntityPlayer player, RayTraceResult mop)
 	{
 		return new String[0];
+	}
+
+	//--- ICameraEntity ---//
+
+	@Override
+	public boolean isCameraEnabled(EntityPlayer player)
+	{
+		SCOPE.withZoomEnabled(aiming);
+		SCOPE_IR.withZoomEnabled(aiming);
+		return aiming;
+	}
+
+	@Override
+	public float getCameraPitch(EntityPlayer cameraPlayer, float partialTicks)
+	{
+		return aim.getPitch(partialTicks);
+	}
+
+	@Override
+	public float getCameraYaw(EntityPlayer cameraPlayer, float partialTicks)
+	{
+		return aim.getYaw(partialTicks);
+	}
+
+	@Override
+	public Vec3d getCameraPos(EntityPlayer cameraPlayer, float partialTicks)
+	{
+		float cameraYaw = getCameraYaw(cameraPlayer, partialTicks);
+		float cameraPitch = getCameraPitch(cameraPlayer, partialTicks);
+		return getPositionVector()
+				.addVector(0, (0.34375+0.0625)*0.85-1.75f+0.5+(upgrades.contains(WeaponUpgrade.TRIPOD)?1f: 0f), 0)
+				.add(IIMath.offsetPosDirectionXYZ(new Vec3d(-1.5, 0.0625, 0), cameraYaw, -cameraPitch, 0));
+	}
+
+	//--- IEntityZoomProvider ---//
+
+	@Override
+	public IAdvancedZoom getZoom()
+	{
+		if(upgrades.contains(WeaponUpgrade.SCOPE))
+			return SCOPE;
+		return upgrades.contains(WeaponUpgrade.INFRARED_SCOPE)?SCOPE_IR: null;
 	}
 }

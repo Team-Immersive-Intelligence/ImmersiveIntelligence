@@ -10,7 +10,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 27.09.2019
  */
-public interface IAdvancedZoomTool
+public interface IAdvancedZoom
 {
 	/**
 	 * @return whether this item is valid for zooming in

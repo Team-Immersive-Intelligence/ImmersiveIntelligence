@@ -5,14 +5,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedZoomTool;
+import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedZoom;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
  * @since 15.05.2026
  */
-public class ZoomSettings implements IAdvancedZoomTool
+public class ZoomSettings implements IAdvancedZoom
 {
 	private boolean zoomEnabled = false;
 	private final float[] zoomSteps;

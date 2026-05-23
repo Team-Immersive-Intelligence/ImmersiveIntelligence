@@ -948,7 +948,8 @@ subtitle.immersiveintelligence.mortar_shot=Mortar Firing
 subtitle.immersiveintelligence.mortar_load=Mortar Loading
 
 subtitle.immersiveintelligence.mine_detector=Mine Detector Beeps
-subtitle.immersiveintelligence.construction=Hammer-Assisted Construction
+subtitle.immersiveintelligence.construction=Ongoing Construction
+subtitle.immersiveintelligence.weapon_placed=Mounted Weapon Deploying
 
 subtitle.immersiveintelligence.gate_open=Gate Opening
 subtitle.immersiveintelligence.gate_close=Gate Closing

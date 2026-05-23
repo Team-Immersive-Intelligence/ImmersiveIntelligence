@@ -11,7 +11,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedZoomTool;
+import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedZoom;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.Rifle;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
@@ -32,7 +32,7 @@ import javax.annotation.Nullable;
  * @since 01.11.2019
  */
 @IIItemProperties(category = IICategory.WARFARE)
-public class ItemIIRifle extends ItemIIGunBase implements IAdvancedZoomTool
+public class ItemIIRifle extends ItemIIGunBase implements IAdvancedZoom
 {
 	//--- NBT Values Reference ---//
 	public static final String HANDMADE = "handmade";

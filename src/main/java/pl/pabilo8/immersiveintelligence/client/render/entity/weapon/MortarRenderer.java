@@ -52,7 +52,7 @@ public class MortarRenderer extends Render<EntityMortar> implements IReloadableM
 
 		float progress = MathHelper.clamp(((entity.setupTime+partialTicks)/Mortar.setupTime), 0, 1);
 		bindTexture(TEXTURE);
-		GlStateManager.rotate(-entityYaw+90, 0, 1, 0);
+		GlStateManager.rotate(-entity.aim.getYaw(partialTicks)+90, 0, 1, 0);
 
 		if(progress==1)
 			renderNormal(entity, entityYaw, partialTicks, (entity.shootingProgress+partialTicks)/Mortar.shootTime);
@@ -68,7 +68,7 @@ public class MortarRenderer extends Render<EntityMortar> implements IReloadableM
 	{
 		GlStateManager.pushMatrix();
 
-		float pitch = MathHelper.clamp((((entity.rotationPitch)+80)/25f), 0, 1);
+		float pitch = entity.aim.getPitchNormalized(partialTicks);
 
 		//0.0625f, 35f, 0.60625f, 0.25f
 		//-0.25f, 10f, 0f, 0.125f
@@ -102,7 +102,7 @@ public class MortarRenderer extends Render<EntityMortar> implements IReloadableM
 		{
 			float f = (progress-0.2f)/0.3f;
 
-			if(entity.getPassengers().size() > 0)
+			if(!entity.getPassengers().isEmpty())
 			{
 				Entity psg = entity.getPassengers().get(0);
 				if(psg instanceof EntityLivingBase)

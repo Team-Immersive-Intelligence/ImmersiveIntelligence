@@ -49,9 +49,9 @@ public class TripodPeriscopeRenderer extends Render<EntityTripodPeriscope> imple
 		ClientUtils.bindTexture(texture);
 
 		if(progress==1)
-			renderNormal(entity, entityYaw, partialTicks, progress);
+			renderNormal(entity, 0, partialTicks, progress);
 		else
-			renderProgress(entity, entityYaw, partialTicks, progress);
+			renderProgress(entity, 0, partialTicks, progress);
 
 		GlStateManager.disableBlend();
 		GlStateManager.disableRescaleNormal();
@@ -61,7 +61,6 @@ public class TripodPeriscopeRenderer extends Render<EntityTripodPeriscope> imple
 	private void renderNormal(EntityTripodPeriscope entity, float entityYaw, float partialTicks, float progress)
 	{
 		GlStateManager.pushMatrix();
-		GlStateManager.rotate(entityYaw, 0, 1, 0);
 
 		for(ModelRendererTurbo mod : model.baseModel)
 			mod.render();

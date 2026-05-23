@@ -277,6 +277,8 @@ public class IISounds
 	public static SoundEvent constructionElectricWrench = registerSound("construction_electric_wrench");
 	@ModSound(sounds = {"construction/wrench/wrench{0..2}"}, subtitle = "construction")
 	public static SoundEvent constructionWrench = registerSound("construction_wrench");
+	@ModSound(sounds = {"weapons/weapon_placed/weapon_placed{0..1}"}, subtitle = "*")
+	public static SoundEvent weaponPlaced = registerSound("weapon_placed");
 
 	//--- Guns ---//
 	//Ammo Pickup

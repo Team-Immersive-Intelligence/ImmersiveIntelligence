@@ -27,13 +27,14 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Optional;
 
 /**
- * @author Pabilo8 (pabilo@iiteam.net)
- * @since 06.08.2020
  * <p>
  * Just a marker for seats, doesn't do collision but it's an actual world handled entity on all sides
  * Seats are just one-sided and independent on client and server
  * <p>
  * Riding interaction must be handled by the vehicle by an additional part
+ *
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 06.08.2020
  */
 public class EntityVehicleSeat extends Entity implements ISyncNBTEntity<EntityVehicleSeat>
 {

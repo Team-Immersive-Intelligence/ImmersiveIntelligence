@@ -46,12 +46,12 @@ public abstract class EntityMountedWeapon extends Entity implements IEntityAddit
 	public int setupTime = 0, maxSetupTime = 1;
 	@SyncNBT(events = SyncEvents.ENTITY_INTERACT)
 	private ItemStack originStack = ItemStack.EMPTY;
-
-	protected AxisAlignedBB baseAabb = new AxisAlignedBB(-0.5, -0.5, -0.5, 0.5, 0.5, 0.5);
+	private AxisAlignedBB baseAabb;
 
 	public EntityMountedWeapon(World world)
 	{
 		super(world);
+		setSize(1f, 1f);
 	}
 
 	@Override
@@ -149,6 +149,15 @@ public abstract class EntityMountedWeapon extends Entity implements IEntityAddit
 
 	//--- Collisions ---//
 
+
+	@Override
+	protected void setSize(float width, float height)
+	{
+		this.width = width;
+		this.height = height;
+		this.baseAabb = new AxisAlignedBB(-width/2f, 0, -width/2f, width/2f, height, width/2f);
+	}
+
 	@Override
 	public final boolean canBeCollidedWith()
 	{
@@ -210,6 +219,8 @@ public abstract class EntityMountedWeapon extends Entity implements IEntityAddit
 		}
 		else
 			updateEntityForEvent(SyncEvents.ENTITY_PASSENGER);
+		Vec3d pos = getPositionVector().add(getPassengerPosition(passenger));
+		passenger.setPosition(pos.x, pos.y, pos.z);
 		super.removePassenger(passenger);
 	}
 
@@ -217,14 +228,15 @@ public abstract class EntityMountedWeapon extends Entity implements IEntityAddit
 	public boolean processInitialInteract(EntityPlayer player, EnumHand hand)
 	{
 		//Pick up weapon
-		if(!world.isRemote&&player.isSneaking()&&getPassengers().isEmpty())
+		if(player.isSneaking()&&getPassengers().isEmpty())
 		{
 			setDead();
-			entityDropItem(originStack, 0f);
+			if(!world.isRemote)
+				entityDropItem(originStack, 0f);
 			return true;
 		}
 		//Enter as passenger
-		if(isSetupComplete()&&player.getRidingEntity()!=this&&getPassengers().isEmpty())
+		else if(isSetupComplete()&&player.getRidingEntity()!=this&&getPassengers().isEmpty())
 		{
 			player.startRiding(this);
 			if(!world.isRemote)

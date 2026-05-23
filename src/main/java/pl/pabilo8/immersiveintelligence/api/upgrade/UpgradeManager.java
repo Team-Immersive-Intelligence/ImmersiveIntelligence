@@ -1,10 +1,13 @@
 package pl.pabilo8.immersiveintelligence.api.upgrade;
 
+import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraftforge.common.util.INBTSerializable;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.UpgradeOperation;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
+import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
@@ -204,5 +207,7 @@ public class UpgradeManager<T extends IUpgradableDevice> implements INBTSerializ
 	{
 		if(parent instanceof TileEntityMultiblockIIBase<?>)
 			((TileEntityMultiblockIIBase<?>)parent).updateTileForEvent(SyncEvents.TILE_UPGRADES_MODIFIED);
+		else if(parent instanceof TileEntityIEBase)
+			IIPacketHandler.sendToClient(new MessageIITileSync(((TileEntityIEBase)parent)));
 	}
 }
