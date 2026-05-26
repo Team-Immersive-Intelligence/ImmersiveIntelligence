@@ -8,9 +8,9 @@ import net.minecraftforge.common.util.INBTSerializable;
 import pl.pabilo8.immersiveintelligence.api.rotary.IRotaryEnergy;
 import pl.pabilo8.immersiveintelligence.api.rotary.RotaryStorage;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehicleBase;
-import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleDurability;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleWheel;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.IVehicleComponent;
+import pl.pabilo8.immersiveintelligence.common.util.entity.SyncedDurability;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -30,7 +30,7 @@ public class VehicleTransmission<T extends EntityVehicleBase<T>> implements IVeh
 	@Nonnull
 	protected IRotaryEnergy[] receivers = new IRotaryEnergy[0];
 
-	private VehicleDurability durability;
+	private SyncedDurability durability;
 	private double[] ratios = new double[0];
 	private int maxGearShiftTime = 20;
 	private int currentGear = 0, nextGear = 0, gearShiftDelay = 0;
@@ -54,7 +54,7 @@ public class VehicleTransmission<T extends EntityVehicleBase<T>> implements IVeh
 		return this;
 	}
 
-	public VehicleTransmission<T> withDurability(VehicleDurability durability)
+	public VehicleTransmission<T> withDurability(SyncedDurability durability)
 	{
 		this.durability = durability;
 		return this;
@@ -202,7 +202,7 @@ public class VehicleTransmission<T extends EntityVehicleBase<T>> implements IVeh
 
 	@Nullable
 	@Override
-	public VehicleDurability getDurability()
+	public SyncedDurability getDurability()
 	{
 		return durability;
 	}

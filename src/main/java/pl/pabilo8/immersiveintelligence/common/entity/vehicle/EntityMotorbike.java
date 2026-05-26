@@ -23,7 +23,10 @@ import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.UpgradeTier;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Vehicles.Motorbike;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.*;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleBlueprint;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleControls;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleFuelTank;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleType;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.*;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleSeat.SeatInfo;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.propulsion.VehicleEngineFuelBased;
@@ -32,6 +35,7 @@ import pl.pabilo8.immersiveintelligence.common.util.IIDamageSources;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.entity.IIEntityUtils;
+import pl.pabilo8.immersiveintelligence.common.util.entity.SyncedDurability;
 
 import javax.annotation.Nullable;
 
@@ -70,7 +74,7 @@ public class EntityMotorbike extends EntityVehicleBase<EntityMotorbike>
 	public SeatInfo<EntityMotorbike> seatRider, seatPassenger, seatTowed;
 
 	@SyncNBT(events = SyncEvents.ENTITY_DAMAGED)
-	public VehicleDurability frontWheelDurability, backWheelDurability, engineDurability, fuelTankDurability;
+	public SyncedDurability frontWheelDurability, backWheelDurability, engineDurability, fuelTankDurability;
 
 	@SyncNBT(events = SyncEvents.ENTITY_VEHICLE_FUEL, time = 40)
 	public VehicleFuelTank<EntityMotorbike> fuelTank;
@@ -91,11 +95,11 @@ public class EntityMotorbike extends EntityVehicleBase<EntityMotorbike>
 	protected EntityVehiclePart<EntityMotorbike>[] vehicleInit()
 	{
 		//Hitboxes
-		this.frontWheelDurability = new VehicleDurability(Motorbike.wheelDurability, 0);
-		this.backWheelDurability = new VehicleDurability(Motorbike.wheelDurability, 0);
-		this.engineDurability = new VehicleDurability(Motorbike.engineDurability, 7)
+		this.frontWheelDurability = new SyncedDurability(Motorbike.wheelDurability, 0);
+		this.backWheelDurability = new SyncedDurability(Motorbike.wheelDurability, 0);
+		this.engineDurability = new SyncedDurability(Motorbike.engineDurability, 7)
 				.withParent(this.durabilityMain);
-		this.fuelTankDurability = new VehicleDurability(Motorbike.fuelTankDurability, 4)
+		this.fuelTankDurability = new SyncedDurability(Motorbike.fuelTankDurability, 4)
 				.withParent(this.durabilityMain);
 
 		//Controls

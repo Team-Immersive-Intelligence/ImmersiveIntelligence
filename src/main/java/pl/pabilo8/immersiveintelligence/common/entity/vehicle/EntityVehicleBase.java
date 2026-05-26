@@ -25,7 +25,6 @@ import pl.pabilo8.immersiveintelligence.api.utils.IEntitySpecialRepairable;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleBlueprint;
-import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleDurability;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.*;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleSeat.SeatInfo;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
@@ -34,6 +33,7 @@ import pl.pabilo8.immersiveintelligence.common.util.MissingAnnotationException;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.entity.ISyncNBTEntity;
+import pl.pabilo8.immersiveintelligence.common.util.entity.SyncedDurability;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -72,7 +72,7 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 
 	//--- Motion & Orientation ---//
 	@SyncNBT(events = SyncEvents.ENTITY_DAMAGED)
-	public VehicleDurability durabilityMain;
+	public SyncedDurability durabilityMain;
 	@SyncNBT
 	public Vec3d velocity = Vec3d.ZERO;
 	@SyncNBT(events = {SyncEvents.ENTITY_VEHICLE_CONTROLS, SyncEvents.ENTITY_PASSENGER, SyncEvents.ENTITY_COLLISION})
@@ -106,7 +106,7 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 		this.blueprint = meta;
 
 		//Set main durability
-		this.durabilityMain = new VehicleDurability(blueprint.baseDurability(), blueprint.baseArmor());
+		this.durabilityMain = new SyncedDurability(blueprint.baseDurability(), blueprint.baseArmor());
 		//noinspection unchecked
 		this.upgradeManager = ((UpgradeManager<T>)new UpgradeManager<>(this));
 		this.style = new StyleCustomization(getVehicleStyleConstraints());

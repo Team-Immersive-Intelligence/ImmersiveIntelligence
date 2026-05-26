@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.common.util.gun;
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import pl.pabilo8.immersiveintelligence.api.MachinegunCoolantHandler;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
@@ -29,6 +30,7 @@ public class GunRecoil implements INBTSerializable<NBTTagCompound>
 	private float overheat = 0, maxOverheat = 0, overheatDecrease = 1;
 	@Nullable
 	private Supplier<FluidTank> coolantTank = null;
+	private int coolantPerTick = 10;
 
 	public GunRecoil()
 	{
@@ -50,7 +52,11 @@ public class GunRecoil implements INBTSerializable<NBTTagCompound>
 		if(overheat > 0)
 			overheat -= overheatDecrease;
 		if(coolantTank!=null&&MachinegunCoolantHandler.isValidCoolant(coolantTank.get().getFluid()))
-			overheat -= MachinegunCoolantHandler.getCoolAmount(coolantTank.get().getFluid());
+		{
+			FluidStack drained = coolantTank.get().drain(coolantPerTick, true);
+			assert drained!=null;
+			overheat -= MachinegunCoolantHandler.getCoolAmount(coolantTank.get().getFluid())*((float)drained.amount/coolantPerTick);
+		}
 	}
 
 	//--- With ---//
@@ -71,11 +77,17 @@ public class GunRecoil implements INBTSerializable<NBTTagCompound>
 		return this;
 	}
 
-	public GunRecoil withOverheating(float maxOverheat, float overheatDecrease, @Nullable Supplier<FluidTank> coolantTank)
+	public GunRecoil withOverheating(float maxOverheat, float overheatDecrease)
 	{
 		this.maxOverheat = maxOverheat;
 		this.overheatDecrease = overheatDecrease;
+		return this;
+	}
+
+	public GunRecoil withCoolantTank(@Nullable Supplier<FluidTank> coolantTank, int coolantPerTick)
+	{
 		this.coolantTank = coolantTank;
+		this.coolantPerTick = coolantPerTick;
 		return this;
 	}
 

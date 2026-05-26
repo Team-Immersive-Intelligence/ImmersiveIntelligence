@@ -9,6 +9,7 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.items.ItemHandlerHelper;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 
 import javax.annotation.Nonnull;
@@ -57,7 +58,8 @@ public interface IItemEntityPlacer<E extends Entity>
 		//Place the entity
 		if(!world.isRemote)
 		{
-			E placed = getPlacedEntity(world, blockpos.getX()+0.5, blockpos.getY(), blockpos.getZ()+0.5, stack, player.rotationYaw, player.rotationPitch);
+			ItemStack placedStack = ItemHandlerHelper.copyStackWithSize(stack, 1);
+			E placed = getPlacedEntity(world, blockpos.getX()+0.5, blockpos.getY(), blockpos.getZ()+0.5, placedStack, player.rotationYaw, player.rotationPitch);
 			//Clean the space
 			for(int x = (int)Math.floor(takenSpace.minX), xMax = (int)Math.ceil(takenSpace.maxX); x < xMax; x++)
 				for(int y = (int)Math.floor(takenSpace.minY), yMax = (int)Math.ceil(takenSpace.maxY); y < yMax; y++)
@@ -65,7 +67,7 @@ public interface IItemEntityPlacer<E extends Entity>
 						world.setBlockToAir(new BlockPos(x, y, z));
 
 			//Spawn the entity
-			ItemMonsterPlacer.applyItemEntityDataToEntity(world, player, stack, placed);
+			ItemMonsterPlacer.applyItemEntityDataToEntity(world, player, placedStack, placed);
 			world.spawnEntity(placed);
 
 			//Play placing sound

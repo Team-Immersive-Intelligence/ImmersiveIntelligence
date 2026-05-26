@@ -150,15 +150,8 @@ public class MachinegunRenderer extends Render<EntityMachinegun> implements IRel
 					{
 						case "ammo":
 						{
-							boolean should_render = false;
-//							if(entity.currentlyLoaded==1)
-							{
-								GlStateManager.translate(0f, 0.375f*entity.shooting.getLoadingProgress(partialTicks), 0f);
-								should_render = true;
-							}
-//							else if(!entity.magazine1.isEmpty())
-//								should_render = true;
-
+							boolean should_render = entity.loadingMagazine1.getLoadingProgress(partialTicks) > 0;
+							GlStateManager.translate(0f, 0.375f*(1f-entity.loadingMagazine1.getLoadingProgress(partialTicks)), 0f);
 							if(should_render)
 								nmod.render(0.0625f);
 							break;
@@ -234,15 +227,8 @@ public class MachinegunRenderer extends Render<EntityMachinegun> implements IRel
 							break;
 						case "second_magazine_mag":
 						{
-							boolean should_render = false;
-							//if(entity.currentlyLoaded==2)
-							{
-								GlStateManager.translate(0f, 0.375f*entity.shooting.getLoadingProgress(partialTicks), 0f);
-								should_render = true;
-							}
-//							else if(!entity.magazine2.isEmpty())
-//								should_render = true;
-
+							boolean should_render = entity.loadingMagazine2.getLoadingProgress(partialTicks) > 0;
+							GlStateManager.translate(0f, 0.375f*(entity.loadingMagazine2.getLoadingProgress(partialTicks)), 0f);
 							if(should_render)
 								nmod.render(0.0625f);
 							break;
@@ -250,7 +236,7 @@ public class MachinegunRenderer extends Render<EntityMachinegun> implements IRel
 						case "slide":
 							//if(entity.currentlyLoaded==1)
 						{
-							float curr = (entity.shooting.getLoadingProgress(partialTicks)-0.5f)/0.5f;
+							float curr = (entity.gunHandler.getLoadingProgress(partialTicks)-0.5f)/0.5f;
 							float progress;
 							if(curr > 0.65)
 								progress = 1f-(curr-0.65f)/0.35f;

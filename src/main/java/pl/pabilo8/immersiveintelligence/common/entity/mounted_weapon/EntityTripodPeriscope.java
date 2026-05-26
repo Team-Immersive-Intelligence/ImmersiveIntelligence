@@ -8,6 +8,7 @@ import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.utils.camera.ICameraEntity;
 import pl.pabilo8.immersiveintelligence.api.utils.camera.ZoomSettings;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedZoom;
+import pl.pabilo8.immersiveintelligence.client.ClientProxy;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools.TripodPeriscope;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
@@ -32,6 +33,10 @@ public class EntityTripodPeriscope extends EntityMountedWeapon implements ICamer
 	{
 		super(world);
 		this.setSize(0.77f, 2.4375f);
+		this.controls.withStates("aim");
+		if(world.isRemote)
+			this.controls.withKeyBinding(ClientProxy.keybindZoom, "aim");
+
 		this.aim.withYawLimit(-180.0f, 180f)
 				.withPitchLimit(22.5f, -22.5f)
 				.withAimSpeed(TripodPeriscope.turnSpeed, 1f);
@@ -71,7 +76,7 @@ public class EntityTripodPeriscope extends EntityMountedWeapon implements ICamer
 	@Override
 	public boolean isCameraEnabled(EntityPlayer player)
 	{
-		return true;
+		return isSetupComplete()&&controls.getKey("aim");
 	}
 
 	@Override

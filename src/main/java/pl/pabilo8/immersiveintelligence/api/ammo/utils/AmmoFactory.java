@@ -116,7 +116,7 @@ public class AmmoFactory<E extends EntityAmmoBase<? super E>>
 	public AmmoFactory<E> setStack(ItemStack stack)
 	{
 		this.stack = stack;
-		this.ammo = ((IAmmoType<?, E>)stack.getItem());
+		this.ammo = this.stack.isEmpty()?null: ((IAmmoType<?, E>)stack.getItem());
 		return this;
 	}
 
@@ -259,6 +259,8 @@ public class AmmoFactory<E extends EntityAmmoBase<? super E>>
 		return this;
 	}
 
+	//--- Ammo Entity Creation ---//
+
 	/**
 	 * Builds the ammo based on passed data and spawns it in the world.
 	 *
@@ -362,5 +364,22 @@ public class AmmoFactory<E extends EntityAmmoBase<? super E>>
 		if(!(ammo instanceof IAmmoTypeItem))
 			return false;
 		return stack.getItem()==ammo&&!((IAmmoTypeItem<?, ?>)ammo).isBulletCore(stack);
+	}
+
+	//--- Getters ---//
+
+	public World getWorld()
+	{
+		return world.get();
+	}
+
+	public Vec3d getPos()
+	{
+		return pos;
+	}
+
+	public Vec3d getDirection()
+	{
+		return dir;
 	}
 }

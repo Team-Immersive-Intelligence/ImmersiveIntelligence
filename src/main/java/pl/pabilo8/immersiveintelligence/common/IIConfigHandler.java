@@ -1883,7 +1883,7 @@ public class IIConfigHandler
 
 				@Comment({"Max zoom of a machinegun with a scope mounted (in Blu's Unit of Distance Measurement™)."})
 				@RequiresMcRestart
-				public static float[] machinegunScopeMaxZoom = new float[]{0.55f, 0.35f, 0.15f};
+				public static float[] machinegunScopeZoom = new float[]{0.15f, 0.35f, 0.55f};
 
 				@Comment({"Shield's initial strength (resistance vs attacks)."})
 				public static int shieldStrengthInitial = 45;

@@ -22,7 +22,6 @@ import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoArtil
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.towable.EntityVehicleTowable;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleBlueprint;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleControls;
-import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleDurability;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleType;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehiclePart;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleSeat;
@@ -32,6 +31,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.WheelTy
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
+import pl.pabilo8.immersiveintelligence.common.util.entity.SyncedDurability;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -51,7 +51,7 @@ public class EntityFieldHowitzer extends EntityVehicleTowable<EntityFieldHowitze
 	public SeatInfo<EntityFieldHowitzer> seatCommander, seatGunner;
 
 	@SyncNBT(events = SyncEvents.ENTITY_DAMAGED)
-	public VehicleDurability durabilityRightWheel, durabilityLeftWheel, durabilityGun, durabilityShield;
+	public SyncedDurability durabilityRightWheel, durabilityLeftWheel, durabilityGun, durabilityShield;
 	@SyncNBT(events = SyncEvents.ENTITY_VEHICLE_CONTROLS)
 	public VehicleControls commanderControls, gunnerControls;
 
@@ -83,11 +83,11 @@ public class EntityFieldHowitzer extends EntityVehicleTowable<EntityFieldHowitze
 		this.ammoFactory = new AmmoFactory<>(this);
 
 		//Hitboxes
-		this.durabilityRightWheel = new VehicleDurability(FieldHowitzer.wheelDurability, 4);
-		this.durabilityLeftWheel = new VehicleDurability(FieldHowitzer.wheelDurability, 4);
-		this.durabilityGun = new VehicleDurability(FieldHowitzer.gunDurability, 14)
+		this.durabilityRightWheel = new SyncedDurability(FieldHowitzer.wheelDurability, 4);
+		this.durabilityLeftWheel = new SyncedDurability(FieldHowitzer.wheelDurability, 4);
+		this.durabilityGun = new SyncedDurability(FieldHowitzer.gunDurability, 14)
 				.withParent(this.durabilityMain);
-		this.durabilityShield = new VehicleDurability(FieldHowitzer.shieldDurability, 32)
+		this.durabilityShield = new SyncedDurability(FieldHowitzer.shieldDurability, 32)
 				.withParent(this.durabilityMain);
 
 		//Controls

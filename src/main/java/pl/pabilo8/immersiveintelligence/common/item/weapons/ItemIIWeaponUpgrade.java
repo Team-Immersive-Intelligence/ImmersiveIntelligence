@@ -254,11 +254,7 @@ public class ItemIIWeaponUpgrade extends ItemIISubItemsBase<WeaponUpgrade> imple
 		SCOPE(new WeaponType[]{WeaponType.MACHINEGUN, WeaponType.AUTOREVOLVER, WeaponType.ASSAULT_RIFLE, WeaponType.RIFLE}, "infrared_scope"),
 		//Allows nightvision + 2 x magnification, uses energy from player's backpack
 		INFRARED_SCOPE(new WeaponType[]{WeaponType.MACHINEGUN, WeaponType.ASSAULT_RIFLE},
-				(stack, nbt) -> {
-					//Assault Rifle
-					if(stack.getItem() instanceof ItemIIGunBase)
-						nbt.setBoolean("energy", true);
-				},
+				(stack, nbt) -> nbt.setBoolean("energy_upgraded", true),
 				"scope"),
 		//Deflects projectiles
 		SHIELD(WeaponType.MACHINEGUN),

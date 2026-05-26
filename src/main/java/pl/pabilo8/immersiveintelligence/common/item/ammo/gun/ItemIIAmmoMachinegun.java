@@ -64,7 +64,7 @@ public class ItemIIAmmoMachinegun extends ItemIIAmmoBase<EntityAmmoProjectile>
 	@Override
 	public float getCasingMass()
 	{
-		return 0.046875f;
+		return 0.030468749f;
 	}
 
 	@Override

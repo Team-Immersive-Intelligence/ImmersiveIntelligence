@@ -34,12 +34,18 @@ public class GuiOverlayMachinegun extends GuiOverlayGunBase
 		final EntityMachinegun mg = (EntityMachinegun)player.getRidingEntity();
 		assert mg!=null;
 
-		if(mg.upgrades.contains(WeaponUpgrade.SECOND_MAGAZINE))
-			drawMagazine(mg.magazine2, width, height);
-
-		drawMagazine(mg.magazine1, width, height);
-
+		//Draw loaded ammo
+		if(mg.upgrades.contains(WeaponUpgrade.BELT_FED_LOADER))
+			drawMagazine(mg.loadingCrate, width, height);
+		else
+		{
+			if(mg.upgrades.contains(WeaponUpgrade.SECOND_MAGAZINE))
+				drawMagazine(mg.loadingMagazine2, width, height);
+			drawMagazine(mg.loadingMagazine1, width, height);
+		}
 		bindHUDTexture();
+
+		//Draw Overheat
 		IIDrawUtils draw = IIDrawUtils.startTexturedColored()
 				.setOffset(width-38-24, height)
 				.drawTexColorRect(0, -20, 22, 18, IIColor.WHITE, 0/256f, 22/256f, 62/256f, 80/256f)

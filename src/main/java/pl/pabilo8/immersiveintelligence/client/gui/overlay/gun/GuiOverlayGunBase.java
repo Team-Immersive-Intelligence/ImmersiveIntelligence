@@ -9,6 +9,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.overlay.GuiOverlayBase;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
+import pl.pabilo8.immersiveintelligence.common.util.gun.GunAmmoProvider;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -16,14 +17,17 @@ import pl.pabilo8.immersiveintelligence.common.util.IIColor;
  */
 public abstract class GuiOverlayGunBase extends GuiOverlayBase
 {
-	void drawMagazine(ItemStack magazine, int width, int height)
+	protected void drawMagazine(GunAmmoProvider provider, int width, int height)
 	{
-		drawMagazine(width, height,
-				IIContent.itemBulletMagazine.readInventory(magazine)
-		);
+		drawMagazine(provider.getAmmoList(), width, height);
 	}
 
-	public void drawMagazine(int width, int height, NonNullList<ItemStack> ammo)
+	protected void drawMagazine(ItemStack magazine, int width, int height)
+	{
+		drawMagazine(IIContent.itemBulletMagazine.readInventory(magazine), width, height);
+	}
+
+	protected void drawMagazine(NonNullList<ItemStack> ammo, int width, int height)
 	{
 		IIDrawUtils draw = IIDrawUtils.startTexturedColored();
 		draw.drawTexColorRect(width-38, height-27, 36, 25, IIColor.WHITE, 15/256f, (15+36)/256f, 29/256f, (29+25)/256f);

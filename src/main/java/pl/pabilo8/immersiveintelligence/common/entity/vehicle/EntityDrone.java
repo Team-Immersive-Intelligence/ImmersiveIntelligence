@@ -28,11 +28,11 @@ import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoArtilleryProjectile;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.drone.AIDroneTarget;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleBlueprint;
-import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleDurability;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehiclePart;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleSeat.SeatInfo;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.entity.ISyncNBTEntity;
+import pl.pabilo8.immersiveintelligence.common.util.entity.SyncedDurability;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -55,9 +55,9 @@ public class EntityDrone extends EntityFlying implements ISyncNBTEntity<EntityDr
 
 	//Part durability (health)
 	@SyncNBT
-	public VehicleDurability durabilityMain, durabilityTankLeft, durabilityTankRight, durabilityEngine;
+	public SyncedDurability durabilityMain, durabilityTankLeft, durabilityTankRight, durabilityEngine;
 	@SyncNBT
-	public VehicleDurability durabilityRotorFrontRight, durabilityRotorFrontLeft, durabilityRotorBackRight, durabilityRotorBackLeft;
+	public SyncedDurability durabilityRotorFrontRight, durabilityRotorFrontLeft, durabilityRotorBackRight, durabilityRotorBackLeft;
 
 	public EntityDrone(World world)
 	{
@@ -69,15 +69,15 @@ public class EntityDrone extends EntityFlying implements ISyncNBTEntity<EntityDr
 		ammoFactory.setStack(IIContent.itemAmmoGuidedMissile.getAmmoStack(IIContent.ammoCoreIron, CoreType.CANISTER, FuseType.CONTACT, IIContent.ammoComponentRDX));
 
 		//Set durability and armor
-		durabilityMain = new VehicleDurability(100, 4);
-		durabilityTankLeft = new VehicleDurability(45, 6);
-		durabilityTankRight = new VehicleDurability(45, 6);
-		durabilityEngine = new VehicleDurability(40, 2);
+		durabilityMain = new SyncedDurability(100, 4);
+		durabilityTankLeft = new SyncedDurability(45, 6);
+		durabilityTankRight = new SyncedDurability(45, 6);
+		durabilityEngine = new SyncedDurability(40, 2);
 
-		durabilityRotorFrontRight = new VehicleDurability(20, 24);
-		durabilityRotorFrontLeft = new VehicleDurability(20, 24);
-		durabilityRotorBackRight = new VehicleDurability(20, 24);
-		durabilityRotorBackLeft = new VehicleDurability(20, 24);
+		durabilityRotorFrontRight = new SyncedDurability(20, 24);
+		durabilityRotorFrontLeft = new SyncedDurability(20, 24);
+		durabilityRotorBackRight = new SyncedDurability(20, 24);
+		durabilityRotorBackLeft = new SyncedDurability(20, 24);
 
 		//Set parts
 		partArray = new EntityVehiclePart[]{

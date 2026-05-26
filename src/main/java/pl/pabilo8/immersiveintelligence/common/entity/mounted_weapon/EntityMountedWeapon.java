@@ -8,6 +8,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -28,6 +29,7 @@ import pl.pabilo8.immersiveintelligence.common.util.gun.GunAimCoordinate;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * Common class for mounted weapons
@@ -44,8 +46,10 @@ public abstract class EntityMountedWeapon extends Entity implements IEntityAddit
 	public GunAimCoordinate aim = new GunAimCoordinate();
 	@SyncNBT(events = SyncEvents.ENTITY_CUSTOM1)
 	public int setupTime = 0, maxSetupTime = 1;
+	//DO NOT modify directly outside of here, it's only public because of SyncNBT limitations
 	@SyncNBT(events = SyncEvents.ENTITY_INTERACT)
-	private ItemStack originStack = ItemStack.EMPTY;
+	public ItemStack originStack = ItemStack.EMPTY;
+
 	private AxisAlignedBB baseAabb;
 
 	public EntityMountedWeapon(World world)
@@ -139,10 +143,12 @@ public abstract class EntityMountedWeapon extends Entity implements IEntityAddit
 	 */
 	protected void setOriginStack(ItemStack stack)
 	{
-		this.originStack = stack;
+		this.originStack = stack.copy();
+		if(!world.isRemote)
+			updateEntityForEvent(SyncEvents.ENTITY_CUSTOM1);
 	}
 
-	public final ItemStack getOriginStack()
+	public ItemStack getOriginStack()
 	{
 		return originStack;
 	}
@@ -232,7 +238,7 @@ public abstract class EntityMountedWeapon extends Entity implements IEntityAddit
 		{
 			setDead();
 			if(!world.isRemote)
-				entityDropItem(originStack, 0f);
+				entityDropItem(getOriginStack(), 0f);
 			return true;
 		}
 		//Enter as passenger
@@ -246,6 +252,20 @@ public abstract class EntityMountedWeapon extends Entity implements IEntityAddit
 		return true;
 	}
 
+	@Override
+	public boolean attackEntityFrom(DamageSource source, float amount)
+	{
+		updateEntityForEvent(SyncEvents.ENTITY_DAMAGED);
+		return super.attackEntityFrom(source, amount);
+	}
+
+	@Nullable
+	protected Entity getUser()
+	{
+		List<Entity> passengers = getPassengers();
+		return passengers.isEmpty()?null: passengers.get(0);
+	}
+
 	//--- NBT ---//
 
 	@Override
@@ -254,7 +274,6 @@ public abstract class EntityMountedWeapon extends Entity implements IEntityAddit
 		NBTTagCompound tag = new NBTTagCompound();
 		writeEntityToNBT(tag);
 		ByteBufUtils.writeTag(buffer, tag);
-		ByteBufUtils.writeItemStack(buffer, originStack);
 	}
 
 	@Override
@@ -262,8 +281,10 @@ public abstract class EntityMountedWeapon extends Entity implements IEntityAddit
 	{
 		NBTTagCompound tag = ByteBufUtils.readTag(additionalData);
 		if(tag!=null)
+		{
 			readEntityFromNBT(tag);
-		setOriginStack(ByteBufUtils.readItemStack(additionalData));
+			setOriginStack(this.originStack);
+		}
 	}
 
 	@Override

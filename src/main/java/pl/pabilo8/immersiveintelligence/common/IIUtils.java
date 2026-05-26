@@ -16,9 +16,12 @@ import net.minecraft.advancements.PlayerAdvancements;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
@@ -52,11 +55,7 @@ import javax.annotation.Nullable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -398,6 +397,30 @@ public class IIUtils
 		//if can't do that, drop it on the entity's position
 		if(!stack.isEmpty())
 			Utils.dropStackAtPos(entity.world, entity.getPosition(), stack);
+	}
+
+	/**
+	 * Applies infrared vision to the entity if it's dark enough, otherwise blinds it.
+	 *
+	 * @return true if infrared vision was applied, false if the entity was blinded
+	 */
+	public static boolean applyInfraredVision(Entity entity, int duration)
+	{
+		//Entity does not support potion effects
+		if(!(entity instanceof EntityLivingBase)||entity.world.isRemote)
+			return false;
+
+		//Apply infrared in darkness or blind the entity
+		if(entity.world.getLightBrightness(entity.getPosition()) <= 0.5f)
+		{
+			((EntityLivingBase)entity).addPotionEffect(new PotionEffect(IIPotions.infraredVision, duration, 1, true, false));
+			return true;
+		}
+		else
+		{
+			((EntityLivingBase)entity).addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 240, 1, false, false));
+			return false;
+		}
 	}
 
 	@Nullable

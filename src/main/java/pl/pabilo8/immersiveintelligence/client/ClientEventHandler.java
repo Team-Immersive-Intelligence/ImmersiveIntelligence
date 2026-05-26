@@ -22,6 +22,7 @@ import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.FogMode;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.resources.IResourceManager;
@@ -56,6 +57,7 @@ import net.minecraftforge.client.resource.VanillaResourceType;
 import net.minecraftforge.event.GameRuleChangeEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.world.WorldEvent.Load;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
@@ -99,6 +101,7 @@ import pl.pabilo8.immersiveintelligence.common.*;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Graphics;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons;
+import pl.pabilo8.immersiveintelligence.common.entity.EntityCamera;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.common.entity.mounted_weapon.EntityMountedWeapon;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleSeat;
@@ -139,7 +142,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	private static final ArrayList<ScreenShake> SCREEN_SHAKE_EFFECTS = new ArrayList<>();
 	public static GuiScreen lastGui = null;
 	//Whether the Light Engineer Armor is worn
-	public static boolean gotTheDrip;
+	public static boolean gotTheDrip = false, nightVisionActive = false;
 
 	static
 	{
@@ -989,16 +992,17 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	@SubscribeEvent
 	public void onPostClientTick(ClientTickEvent event)
 	{
-		if(event.phase==Phase.END)
-		{
-			if(ParticleSystem.INSTANCE!=null)
-				ParticleSystem.INSTANCE.updateParticles();
+		if(event.phase!=Phase.END)
+			return;
+		Minecraft mc = ClientUtils.mc();
 
-			if(!Weapons.bulletsWhistleSound)
-				return;
+		if(ParticleSystem.INSTANCE!=null)
+			ParticleSystem.INSTANCE.updateParticles();
+
+		if(mc.world!=null&&mc.player!=null)
+		{
 			//Make close bullets produce a whistling sound
-			Minecraft mc = ClientUtils.mc();
-			if(mc.world!=null&&mc.player!=null)
+			if(Weapons.bulletsWhistleSound)
 			{
 				List<EntityAmmoProjectile> bullets = mc.world.getEntitiesWithinAABB(EntityAmmoProjectile.class, mc.player.getEntityBoundingBox().grow(3));
 				for(EntityAmmoProjectile bullet : bullets)
@@ -1006,8 +1010,24 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 						//higher the velocity (howitzers), lower the tone
 						bullet.playSound(IISounds.bulletFlyby, 0.6f, 1.75f-MathHelper.clamp(bullet.getVelocity()/6f, 0.5f, 1.75f));
 			}
+
+			//Handle nightvision effect
+			if(OpenGlHelper.shadersSupported)
+			{
+				PotionEffect effect = mc.player.getActivePotionEffect(IIPotions.infraredVision);
+				if(effect!=null&&!nightVisionActive)
+				{
+					mc.entityRenderer.loadShader(IIReference.RES_II.with("shaders/post/nightvision.json"));
+					ClientRegistry.registerEntityShader(EntityCamera.class, IIReference.RES_II.with("shaders/post/nightvision.json"));
+					nightVisionActive = true;
+				}
+				else if(effect==null&&nightVisionActive)
+				{
+					mc.entityRenderer.stopUseShader();
+					ClientRegistry.registerEntityShader(EntityCamera.class, null);
+					nightVisionActive = false;
+				}
+			}
 		}
 	}
-
-
 }

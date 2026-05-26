@@ -10,9 +10,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemStack;
-import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
@@ -56,7 +54,7 @@ public class ItemIIAssaultRifle extends ItemIIGunBase implements IItemScrollable
 	public static final String LAST_FIRE_MODE = "last_mode";
 	public static final String FIRE_MODE_TIMER = "mode_switch";
 	public static final String LOADED_GRENADE = "grenade";
-	public static final String ENERGY_UPGRADED = "energy";
+	public static final String ENERGY_UPGRADED = "energy_upgraded";
 
 	//--- Scope Overlay Textures ---//
 	public static final ResourceLocation OVERLAY_SCOPE = new ResourceLocation(ImmersiveIntelligence.MODID,
@@ -126,7 +124,7 @@ public class ItemIIAssaultRifle extends ItemIIGunBase implements IItemScrollable
 			if(entity instanceof EntityLivingBase&&isAimed(stack)&&hasIIUpgrade(stack, WeaponUpgrade.INFRARED_SCOPE))
 			{
 				if(extractEnergy(stack, AssaultRifle.upgradeIRScopeEnergy, false) > 0)
-					((EntityLivingBase)entity).addPotionEffect(new PotionEffect(MobEffects.NIGHT_VISION, 4, 1, true, false));
+					IIUtils.applyInfraredVision(entity, 10);
 			}
 		}
 	}

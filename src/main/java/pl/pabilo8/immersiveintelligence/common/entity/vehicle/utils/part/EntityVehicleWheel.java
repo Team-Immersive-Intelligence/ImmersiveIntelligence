@@ -10,8 +10,8 @@ import pl.pabilo8.immersiveintelligence.api.rotary.IRotaryEnergy;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehicleBase;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleBlueprint;
-import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleDurability;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
+import pl.pabilo8.immersiveintelligence.common.util.entity.SyncedDurability;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -157,7 +157,7 @@ public class EntityVehicleWheel<T extends Entity & IVehicleMultiPart<T>> extends
 	}
 
 	@Override
-	public EntityVehicleWheel<T> withHitbox(@Nonnull VehicleDurability hitbox)
+	public EntityVehicleWheel<T> withHitbox(@Nonnull SyncedDurability hitbox)
 	{
 		super.withHitbox(hitbox);
 		return this;

@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils;
+package pl.pabilo8.immersiveintelligence.common.util.entity;
 
 import net.minecraft.nbt.NBTTagInt;
 import net.minecraft.util.DamageSource;
@@ -11,21 +11,21 @@ import javax.annotation.Nullable;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 23.12.2022
  */
-public class VehicleDurability implements INBTSerializable<NBTTagInt>
+public class SyncedDurability implements INBTSerializable<NBTTagInt>
 {
 	@Nullable
-	private VehicleDurability parent;
+	private SyncedDurability parent;
 	public final int maxDurability, armor;
 	private int durability;
 
-	public VehicleDurability(int maxDurability, int armor)
+	public SyncedDurability(int maxDurability, int armor)
 	{
 		this.maxDurability = maxDurability;
 		this.durability = maxDurability;
 		this.armor = armor;
 	}
 
-	public VehicleDurability withParent(VehicleDurability parent)
+	public SyncedDurability withParent(SyncedDurability parent)
 	{
 		this.parent = parent;
 		return this;

@@ -1,7 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part;
 
 
-import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleDurability;
+import pl.pabilo8.immersiveintelligence.common.util.entity.SyncedDurability;
 
 import javax.annotation.Nullable;
 
@@ -13,7 +13,7 @@ import javax.annotation.Nullable;
 public interface IVehicleComponent
 {
 	@Nullable
-	VehicleDurability getDurability();
+	SyncedDurability getDurability();
 
 	void onUpdate();
 }

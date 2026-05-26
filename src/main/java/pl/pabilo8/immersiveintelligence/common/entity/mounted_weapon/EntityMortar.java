@@ -214,11 +214,10 @@ public class EntityMortar extends EntityMountedWeapon implements ICameraEntity
 		return getPositionVector().addVector(0, 1, 0);
 	}
 
+
 	@Override
 	public boolean isCameraEnabled(EntityPlayer player)
 	{
-		boolean aiming = controls.getKey("aim");
-		SIGHTS.withZoomEnabled(aiming);
-		return aiming;
+		return isSetupComplete()&&controls.getKey("aim");
 	}
 }
