@@ -1,0 +1,20 @@
+{
+  "type": "ParticleVanilla",
+  "textures": ["immersiveintelligence:particle/round"],
+  "color": "ab7810",
+  "max_lifetime": 6,
+  "draw_stage": "custom_additive",
+  "size": 1.65,
+  "programs": [
+    "shockwave_transition"
+  ],
+  "scheduled": [
+    {
+      "time": 1,
+      "generator": "same",
+      "distance": 0.5,
+      "amount": 1,
+      "type": "phosphorus/glow_big"
+    }
+  ]
+}

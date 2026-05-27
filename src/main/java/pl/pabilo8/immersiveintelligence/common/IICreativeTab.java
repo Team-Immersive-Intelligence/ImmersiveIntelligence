@@ -623,7 +623,7 @@ public class IICreativeTab extends CreativeTabs
 			ItemStack stackP2 = addAmmo(list, item, name+"/P2 Spitzkopfgeschoss",
 					IIContent.ammoCoreSteel, CoreType.PIERCING, FuseType.CONTACT);
 			ItemStack stackP5 = addAmmo(list, item, name+"/P5 Phosphorpatrone",
-					IIContent.ammoCoreBrass, CoreType.PIERCING, FuseType.CONTACT, IIContent.ammoComponentHMX);
+					IIContent.ammoCoreBrass, CoreType.PIERCING, FuseType.CONTACT, IIContent.ammoComponentWhitePhosphorus);
 			ItemStack stackW1 = addAmmo(list, item, name+"/W1 Flakpatrone",
 					IIContent.ammoCoreBrass, CoreType.CANISTER, FuseType.PROXIMITY,
 					IIContent.ammoComponentWhitePhosphorus, AmmoRegistry.getComponent("shrapnel_steel"), IIContent.ammoComponentTracerPowder);

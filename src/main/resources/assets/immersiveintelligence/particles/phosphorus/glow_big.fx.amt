@@ -1,0 +1,11 @@
+{
+  "type": "ParticleVanilla",
+  "textures": ["immersiveintelligence:particle/round"],
+  "color": "ab9f17",
+  "max_lifetime": 6,
+  "draw_stage": "custom_additive",
+  "size": 5.0,
+  "programs": [
+    "shockwave_transition"
+  ]
+}
