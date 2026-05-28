@@ -153,9 +153,9 @@ public abstract class IIVehicleRenderer<E extends EntityVehicleBase<E>> extends 
 
 	}
 
-	protected <T extends VehicleEngineBase<T>> void applyEngineAnimation(T engineBase,
-																		 IIAnimationCachedMap startingAnimation, IIAnimationCachedMap runningAnimation,
-																		 float partialTicks)
+	protected <T extends VehicleEngineBase<T, ?>> void applyEngineAnimation(T engineBase,
+																			IIAnimationCachedMap startingAnimation, IIAnimationCachedMap runningAnimation,
+																			float partialTicks)
 	{
 		if(engineBase.isStarting())
 			startingAnimation.apply(engineBase.getStartingProgress(partialTicks));

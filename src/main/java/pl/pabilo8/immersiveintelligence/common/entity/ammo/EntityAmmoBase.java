@@ -3,7 +3,6 @@ package pl.pabilo8.immersiveintelligence.common.entity.ammo;
 import com.elytradev.mirage.event.GatherLightsEvent;
 import com.elytradev.mirage.lighting.IEntityLightEventConsumer;
 import com.elytradev.mirage.lighting.Light;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -12,8 +11,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
@@ -41,8 +38,7 @@ import java.util.stream.Collectors;
  * @since 30.01.2024
  */
 @Optional.Interface(iface = "com.elytradev.mirage.lighting.IEntityLightEventConsumer", modid = "mirage")
-public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extends Entity implements IEntityAdditionalSpawnData, IEntityLightEventConsumer,
-		ISyncNBTEntity<EntityAmmoBase<T>>
+public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extends Entity implements IEntityLightEventConsumer, ISyncNBTEntity<EntityAmmoBase<T>>
 {
 	//--- Properties ---//
 	/**
@@ -223,22 +219,6 @@ public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extend
 		).collect(NBTTagCollector.collect()));
 		compound.setInteger("owner", owner==null?-1: owner.getEntityId());
 
-	}
-
-	@Override
-	public void writeSpawnData(ByteBuf buffer)
-	{
-		NBTTagCompound compound = new NBTTagCompound();
-		writeEntityToNBT(compound);
-		ByteBufUtils.writeTag(buffer, compound);
-	}
-
-	@Override
-	public void readSpawnData(ByteBuf additionalData)
-	{
-		NBTTagCompound compound = ByteBufUtils.readTag(additionalData);
-		if(compound!=null)
-			readEntityFromNBT(compound);
 	}
 
 	//--- Abstract ---//

@@ -1,12 +1,19 @@
 package pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.propulsion;
 
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehicleBase;
+
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
  * @since 01.10.2025
  */
-public class VehicleEngineManual extends VehicleEngineBase<VehicleEngineManual>
+public class VehicleEngineManual<V extends EntityVehicleBase<V>> extends VehicleEngineBase<VehicleEngineManual<V>, V>
 {
+	public VehicleEngineManual(V vehicle)
+	{
+		super(vehicle);
+	}
+
 	@Override
 	protected boolean canBeStarted()
 	{

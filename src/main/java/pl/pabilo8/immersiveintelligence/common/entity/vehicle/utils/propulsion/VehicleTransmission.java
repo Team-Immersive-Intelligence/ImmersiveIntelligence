@@ -23,7 +23,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * @ii-approved 0.3.1
  * @since 01.10.2025
  */
-public class VehicleTransmission<T extends EntityVehicleBase<T>> implements IVehicleComponent, INBTSerializable<NBTTagCompound>, IRotaryEnergy
+public class VehicleTransmission<V extends EntityVehicleBase<V>> implements IVehicleComponent, INBTSerializable<NBTTagCompound>, IRotaryEnergy
 {
 	@Nonnull
 	protected final IRotaryEnergy[] sources;
@@ -48,19 +48,19 @@ public class VehicleTransmission<T extends EntityVehicleBase<T>> implements IVeh
 		this.sources = new IRotaryEnergy[]{source};
 	}
 
-	public VehicleTransmission<T> withReceivers(@Nonnull IRotaryEnergy... receivers)
+	public VehicleTransmission<V> withReceivers(@Nonnull IRotaryEnergy... receivers)
 	{
 		this.receivers = receivers;
 		return this;
 	}
 
-	public VehicleTransmission<T> withDurability(SyncedDurability durability)
+	public VehicleTransmission<V> withDurability(SyncedDurability durability)
 	{
 		this.durability = durability;
 		return this;
 	}
 
-	public VehicleTransmission<T> withRatios(int shiftTime, double... ratios)
+	public VehicleTransmission<V> withRatios(int shiftTime, double... ratios)
 	{
 		this.ratios = ratios;
 		this.maxGearShiftTime = shiftTime;
@@ -69,7 +69,7 @@ public class VehicleTransmission<T extends EntityVehicleBase<T>> implements IVeh
 		return this;
 	}
 
-	public VehicleTransmission<T> withCurrentGear(int currentGear)
+	public VehicleTransmission<V> withCurrentGear(int currentGear)
 	{
 		this.nextGear = this.currentGear = MathHelper.clamp(currentGear, 0, ratios.length-1);
 		return this;

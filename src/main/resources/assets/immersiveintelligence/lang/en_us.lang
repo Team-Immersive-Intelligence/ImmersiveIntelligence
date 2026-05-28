@@ -914,9 +914,11 @@ subtitle.immersiveintelligence.bullet_flyby=Bullet Flying
 subtitle.immersiveintelligence.bullet_impact=Projectile Impact
 subtitle.immersiveintelligence.bullet_ricochet=Projectile Ricochets Off
 
-subtitle.immersiveintelligence.motorbike_start=Starting a Motorbike
-subtitle.immersiveintelligence.motorbike_engine=Motorbike Engine Noise
-subtitle.immersiveintelligence.motorbike_horn=Motorbike Horn
+subtitle.immersiveintelligence.light_engine_start=Light Vehicle Starting
+subtitle.immersiveintelligence.light_engine=Light Vehicle Engine Noise
+subtitle.immersiveintelligence.vehicle_horn=Vehicle Horn
+
+subtitle.immersiveintelligence.drone_propeller=Propellers Rotating
 
 subtitle.immersiveintelligence.fuel_station=Fuel pumping
 subtitle.immersiveintelligence.welding=Welding

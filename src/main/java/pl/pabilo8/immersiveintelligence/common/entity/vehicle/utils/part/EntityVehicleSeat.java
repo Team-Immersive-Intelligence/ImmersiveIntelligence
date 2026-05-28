@@ -110,6 +110,18 @@ public class EntityVehicleSeat extends Entity implements ISyncNBTEntity<EntityVe
 	@Override
 	public void onUpdate()
 	{
+		//Update seatInfo when not present
+		if(this.info==null&&!seatID.isEmpty()&&this.isRiding())
+		{
+			Entity vehicle = this.getRidingEntity();
+			if(vehicle instanceof IVehicleMultiPart)
+			{
+				this.info = ((IVehicleMultiPart<?>)vehicle).getSeatInfo(seatID);
+				if(!world.isRemote)
+					updateEntityForEvent(SyncEvents.ENTITY_PASSENGER);
+			}
+		}
+
 		if(world.isRemote)
 		{
 			//Try to find seat info on client
@@ -125,7 +137,8 @@ public class EntityVehicleSeat extends Entity implements ISyncNBTEntity<EntityVe
 					this.info.vehicle.sendServerUpdateForEvent(SyncEvents.ENTITY_VEHICLE_CONTROLS);
 			}
 		}
-		else if(this.ticksExisted > 20&&!this.isRiding())
+		//Remove entity when data is invalid
+		else if(this.ticksExisted > 20&&(!this.isRiding()||seatID.isEmpty()))
 			setDead();
 
 		super.onUpdate();
@@ -192,7 +205,7 @@ public class EntityVehicleSeat extends Entity implements ISyncNBTEntity<EntityVe
 	@Override
 	public void dismountRidingEntity()
 	{
-		this.setDead();
+		super.dismountRidingEntity();
 	}
 
 	@Override

@@ -1,7 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.entity.mounted_weapon;
 
 import blusunrize.immersiveengineering.api.tool.ZoomHandler;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
@@ -16,8 +15,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.client.util.CameraHandler;
@@ -38,7 +35,7 @@ import java.util.List;
  * @ii-approved 0.3.1
  * @since 15.05.2026
  */
-public abstract class EntityMountedWeapon extends Entity implements IEntityAdditionalSpawnData, ISyncNBTEntity<EntityMountedWeapon>
+public abstract class EntityMountedWeapon extends Entity implements ISyncNBTEntity<EntityMountedWeapon>
 {
 	@SyncNBT(events = SyncEvents.ENTITY_VEHICLE_CONTROLS)
 	public VehicleControls controls = new VehicleControls();
@@ -269,22 +266,9 @@ public abstract class EntityMountedWeapon extends Entity implements IEntityAddit
 	//--- NBT ---//
 
 	@Override
-	public final void writeSpawnData(ByteBuf buffer)
+	public void doPostWorldLoadSetup(NBTTagCompound tag)
 	{
-		NBTTagCompound tag = new NBTTagCompound();
-		writeEntityToNBT(tag);
-		ByteBufUtils.writeTag(buffer, tag);
-	}
-
-	@Override
-	public final void readSpawnData(ByteBuf additionalData)
-	{
-		NBTTagCompound tag = ByteBufUtils.readTag(additionalData);
-		if(tag!=null)
-		{
-			readEntityFromNBT(tag);
-			setOriginStack(this.originStack);
-		}
+		setOriginStack(this.originStack);
 	}
 
 	@Override

@@ -519,14 +519,20 @@ public class IISounds
 	public static SoundEvent impactFlesh = registerSound("impact_flesh");
 
 	//--- Vehicle ---//
-	@ModSound(sounds = {"motorbike/start"}, subtitle = "*")
-	public static SoundEvent motorbikeStart = registerSound("motorbike_start");
-	@ModSound(sounds = {"motorbike/start_no_fuel"}, subtitle = "motorbike_start")
-	public static SoundEvent motorbikeStartNoFuel = registerSound("motorbike_start_no_fuel");
-	@ModSound(sounds = {"motorbike/engine"}, subtitle = "*")
-	public static SoundEvent motorbikeEngine = registerSound("motorbike_engine");
-	@ModSound(sounds = {"motorbike/horn"}, subtitle = "*")
-	public static SoundEvent motorbikeHorn = registerSound("motorbike_horn");
+	@ModSound(sounds = {"vehicle/horn"}, subtitle = "*")
+	public static SoundEvent vehicleHorn = registerSound("vehicle_horn");
+	@ModSound(sounds = {"vehicle/engine_light/start"}, subtitle = "*")
+	public static SoundEvent engineLightStart = registerSound("light_engine_start");
+	@ModSound(sounds = {"vehicle/engine_light/start_no_fuel"}, subtitle = "light_engine_start")
+	public static SoundEvent engineLightStartNoFuel = registerSound("light_engine_start_no_fuel");
+	@ModSound(sounds = {"vehicle/engine_light/engine"}, subtitle = "*")
+	public static SoundEvent engineLight = registerSound("light_engine");
+	public static MultiSound engineLightLoop = new MultiSound(engineLight);
+
+	//--- Aircraft ---//
+	@ModSound(sounds = {"vehicle/drone/drone_propeller"}, subtitle = "*")
+	public static SoundEvent dronePropeller = registerSound("drone_propeller");
+	public static MultiSound dronePropellerLoop = new MultiSound(dronePropeller);
 
 	//--- Hans ---//
 	//public static SoundEvent hans_test_pl = registerSound("hans_test_pl");

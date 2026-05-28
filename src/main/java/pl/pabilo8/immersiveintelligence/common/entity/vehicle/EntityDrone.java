@@ -11,7 +11,6 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumHandSide;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
@@ -23,7 +22,10 @@ import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseType;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoFactory;
 import pl.pabilo8.immersiveintelligence.api.utils.IEntitySpecialRepairable;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
+import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleRegistry;
+import pl.pabilo8.immersiveintelligence.client.util.carversound.ConditionCompoundSound;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoArtilleryProjectile;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.drone.AIDroneTarget;
@@ -31,10 +33,12 @@ import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleBluep
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehiclePart;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleSeat.SeatInfo;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
+import pl.pabilo8.immersiveintelligence.common.util.entity.IIEntityUtils;
 import pl.pabilo8.immersiveintelligence.common.util.entity.ISyncNBTEntity;
 import pl.pabilo8.immersiveintelligence.common.util.entity.SyncedDurability;
 
 import javax.annotation.Nullable;
+import javax.vecmath.Vector2f;
 import java.util.List;
 
 /**
@@ -47,6 +51,8 @@ public class EntityDrone extends EntityFlying implements ISyncNBTEntity<EntityDr
 
 	//--- Parts ---//
 	private final EntityVehiclePart<EntityDrone>[] partArray;
+	@SideOnly(Side.CLIENT)
+	private ConditionCompoundSound<EntityDrone> engineNoise;
 
 	//Sub-entities for colision and hitboxes
 	private EntityVehiclePart<EntityDrone> partMain, partTankRight1, partTankRight2, partTankLeft1, partTankLeft2, partEngine;
@@ -66,21 +72,21 @@ public class EntityDrone extends EntityFlying implements ISyncNBTEntity<EntityDr
 
 		//Set ammo factory (bomb dropping)
 		this.ammoFactory = new AmmoFactory<>(this);
-		ammoFactory.setStack(IIContent.itemAmmoGuidedMissile.getAmmoStack(IIContent.ammoCoreIron, CoreType.CANISTER, FuseType.CONTACT, IIContent.ammoComponentRDX));
+		this.ammoFactory.setStack(IIContent.itemAmmoGuidedMissile.getAmmoStack(IIContent.ammoCoreIron, CoreType.CANISTER, FuseType.CONTACT, IIContent.ammoComponentRDX));
 
 		//Set durability and armor
-		durabilityMain = new SyncedDurability(100, 4);
-		durabilityTankLeft = new SyncedDurability(45, 6);
-		durabilityTankRight = new SyncedDurability(45, 6);
-		durabilityEngine = new SyncedDurability(40, 2);
+		this.durabilityMain = new SyncedDurability(100, 4);
+		this.durabilityTankLeft = new SyncedDurability(45, 6);
+		this.durabilityTankRight = new SyncedDurability(45, 6);
+		this.durabilityEngine = new SyncedDurability(40, 2);
 
-		durabilityRotorFrontRight = new SyncedDurability(20, 24);
-		durabilityRotorFrontLeft = new SyncedDurability(20, 24);
-		durabilityRotorBackRight = new SyncedDurability(20, 24);
-		durabilityRotorBackLeft = new SyncedDurability(20, 24);
+		this.durabilityRotorFrontRight = new SyncedDurability(20, 24);
+		this.durabilityRotorFrontLeft = new SyncedDurability(20, 24);
+		this.durabilityRotorBackRight = new SyncedDurability(20, 24);
+		this.durabilityRotorBackLeft = new SyncedDurability(20, 24);
 
 		//Set parts
-		partArray = new EntityVehiclePart[]{
+		this.partArray = new EntityVehiclePart[]{
 				partMain = new EntityVehiclePart<>(this, "main",
 						Vec3d.ZERO, 0.65, 0.4)
 						.withHitbox(durabilityMain),
@@ -216,23 +222,22 @@ public class EntityDrone extends EntityFlying implements ISyncNBTEntity<EntityDr
 			}
 		}
 
-		if(world.isRemote)//&&world.getTotalWorldTime()%2==0
+		if(world.isRemote)
 		{
-			Vec3d smokeDir = this.getVectorForRotation(0, this.rotationYaw).scale(-0.25);
-			spawnExhaustParticle(exhaust1.getPositionVector(), smokeDir);
-			spawnExhaustParticle(exhaust2.getPositionVector(), smokeDir);
+			//Create and sustain engine noise
+			if(engineNoise==null)
+				this.engineNoise = new ConditionCompoundSound<>(IISounds.dronePropellerLoop, this.getPositionVector(), this, drone -> !drone.isDead);
+			this.engineNoise.setPosition(getPositionVector());
+			this.engineNoise.setVolume(1f);
+			this.engineNoise.setPitch((float)IIEntityUtils.getEntityMotion(this).lengthSquared()*0.1f+0.95f);
+
+			if(ticksExisted%2==0)
+			{
+				Vec3d smokeDir = this.getVectorForRotation(0, this.rotationYaw).scale(-0.25);
+				ParticleRegistry.spawnParticle("vehicle/exhaust_light", exhaust1.getPositionVector(), smokeDir, new Vector2f(0, 0));
+				ParticleRegistry.spawnParticle("vehicle/exhaust_light", exhaust2.getPositionVector(), smokeDir, new Vector2f(0, 0));
+			}
 		}
-
-	}
-
-	@SideOnly(Side.CLIENT)
-	private void spawnExhaustParticle(Vec3d position, Vec3d smokeDir)
-	{
-		float exhaustRandom = (world.getTotalWorldTime()%20/20f)*0.2f;
-		world.spawnParticle(EnumParticleTypes.SMOKE_LARGE,
-				position.x, position.y, position.z,
-				0+smokeDir.x, 0.015625*3, smokeDir.z
-		);
 	}
 
 	@Override

@@ -6,6 +6,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.util.INBTSerializable;
 import pl.pabilo8.immersiveintelligence.api.rotary.IRotaryEnergy;
 import pl.pabilo8.immersiveintelligence.api.rotary.RotaryStorage;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehicleBase;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.IVehicleComponent;
 import pl.pabilo8.immersiveintelligence.common.util.entity.SyncedDurability;
 
@@ -18,7 +19,8 @@ import javax.annotation.Nullable;
  * @ii-approved 0.3.1
  * @since 01.10.2025
  */
-public abstract class VehicleEngineBase<T extends VehicleEngineBase<T>> implements IVehicleComponent, INBTSerializable<NBTTagCompound>, IRotaryEnergy
+public abstract class VehicleEngineBase<T extends VehicleEngineBase<T, V>, V extends EntityVehicleBase<V>>
+		implements IVehicleComponent, INBTSerializable<NBTTagCompound>, IRotaryEnergy
 {
 	@Nullable
 	protected SyncedDurability durability;
@@ -26,6 +28,12 @@ public abstract class VehicleEngineBase<T extends VehicleEngineBase<T>> implemen
 	protected int activeTicks, activationTicks = 40, animationTicks = 8;
 	protected float acceleration = 0f;
 	protected RotaryStorage rotaryStorage = new RotaryStorage(0, 0);
+	protected V vehicle;
+
+	public VehicleEngineBase(V vehicle)
+	{
+		this.vehicle = vehicle;
+	}
 
 	public boolean start()
 	{
