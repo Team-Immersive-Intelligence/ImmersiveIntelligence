@@ -51,7 +51,7 @@ public abstract class IIVehicleRenderer<E extends EntityVehicleBase<E>> extends 
 	protected ResLoc modelDirectory, animationsDirectory;
 	protected ResLoc modelFile, headerFile, mtlFile;
 
-	protected IIVehicleRenderer(RenderManager render)
+	public IIVehicleRenderer(RenderManager render)
 	{
 		super(render);
 

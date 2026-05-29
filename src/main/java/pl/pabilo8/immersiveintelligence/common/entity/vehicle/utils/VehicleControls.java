@@ -8,6 +8,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -22,7 +23,11 @@ public class VehicleControls implements INBTSerializable<NBTTagCompound>
 	private final Map<String, Boolean> states = new HashMap<>();
 	@SideOnly(Side.CLIENT)
 	private Map<KeyBinding, String> keybinds;
+	@SideOnly(Side.CLIENT)
 	private Map<MouseBinding, String> mousebinds;
+	@SideOnly(Side.CLIENT)
+	private ArrayList<VehicleAction> displayedActions;
+
 	private boolean dirty = false;
 
 	public VehicleControls()

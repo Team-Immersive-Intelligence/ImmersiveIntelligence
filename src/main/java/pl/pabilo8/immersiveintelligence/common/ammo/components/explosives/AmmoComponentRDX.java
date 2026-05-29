@@ -34,7 +34,7 @@ public class AmmoComponentRDX extends AmmoComponent
 	public void onEffect(World world, Vec3d pos, Vec3d dir, ComponentEffectShape shape, NBTTagCompound tag, float componentSize, float multiplier, Entity owner)
 	{
 		new IIExplosion(world, owner, pos, dir,
-				9*componentSize, 10*multiplier, shape, false, componentSize > 0.125f, false)
+				8*componentSize, 8*multiplier, shape, false, componentSize > 0.125f, false)
 				.doExplosion();
 	}
 }

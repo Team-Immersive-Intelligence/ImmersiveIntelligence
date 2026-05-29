@@ -220,8 +220,8 @@ public class EntityVehicleWheel<T extends Entity & IVehicleMultiPart<T>> extends
 		double latFriction = -vLat*latFrictionCoef;
 
 		//Total force in wheel's local axes
-		double fx = driveForce*sinA+latFriction*cosA;
-		double fz = driveForce*cosA-latFriction*sinA;
+		double fx = driveForce*Math.signum(speedValue)*sinA+latFriction*cosA;
+		double fz = driveForce*Math.signum(speedValue)*cosA-latFriction*sinA;
 
 		//Compile and return forces
 		Vec3d force = new Vec3d(fx*blueprint.forceFactor(), verticalForces.verticalSum, fz*blueprint.forceFactor());
@@ -256,7 +256,7 @@ public class EntityVehicleWheel<T extends Entity & IVehicleMultiPart<T>> extends
 		}
 		//Gravity
 		else if(!isGrounded)
-			targetForce = -0.04*weightShare; //*parentExt.getVehicleBlueprint().mass()
+			targetForce = -0.04*weightShare;
 
 		//Integration: gradually approach target force
 		double forceChangeRate;

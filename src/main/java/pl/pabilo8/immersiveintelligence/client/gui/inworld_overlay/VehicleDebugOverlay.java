@@ -42,7 +42,7 @@ public class VehicleDebugOverlay extends InWorldOverlayBase
 		double posY = player.lastTickPosY+(player.posY-player.lastTickPosY)*(double)partialTicks;
 		double posZ = player.lastTickPosZ+(player.posZ-player.lastTickPosZ)*(double)partialTicks;
 		boolean displayWheelBoxes = true;
-		boolean displayNames = true;
+		boolean displayNames = false;
 
 		if(!Graphics.vehicleDebugOverlay)
 			return;

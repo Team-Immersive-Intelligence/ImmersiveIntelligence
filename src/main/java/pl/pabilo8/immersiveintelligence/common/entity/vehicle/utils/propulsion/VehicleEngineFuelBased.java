@@ -70,16 +70,17 @@ public class VehicleEngineFuelBased<V extends EntityVehicleBase<V>> extends Vehi
 		//Play engine noise on client
 		if(vehicle.world.isRemote&&engineSound!=null&&isActive())
 		{
-			if(engineNoise==null)
-				this.engineNoise = new ConditionCompoundSound<>(engineSound, vehicle.getPositionVector(), this, VehicleEngineBase::isActive);
+			if(engineNoise==null||engineNoise.isDonePlaying())
+				this.engineNoise = new ConditionCompoundSound<>(engineSound, vehicle.getPositionVector(), this,
+						engine -> engine.isActive()&&!engine.vehicle.isDead);
 			this.engineNoise.setPosition(vehicle.getPositionVector());
-			this.engineNoise.setVolume(2f);
+			this.engineNoise.setVolume(1f);
 			this.engineNoise.setPitch(pitchIdle+(pitchMax-pitchIdle)*acceleration);
 		}
 
 		if(isActive())
 		{
-			FluidStack drained = fuelTank.drain((int)(idleUsage+acceleration*maxUsage), true);
+			FluidStack drained = fuelTank.drain((int)(idleUsage+acceleration*maxUsage), false);
 			if(drained==null)
 			{
 				//Out of fuel, stop the engine
@@ -90,6 +91,9 @@ public class VehicleEngineFuelBased<V extends EntityVehicleBase<V>> extends Vehi
 			this.rotaryStorage.grow(acceleration*outputSpeed, acceleration*outputTorque, 0.15f);
 		}
 		else
-			this.rotaryStorage.grow(0, 0, 0.15f);
+		{
+			this.rotaryStorage.setTorque(0);
+			this.rotaryStorage.setRotationSpeed(0);
+		}
 	}
 }

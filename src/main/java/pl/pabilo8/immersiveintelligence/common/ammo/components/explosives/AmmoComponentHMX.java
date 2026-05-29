@@ -34,7 +34,7 @@ public class AmmoComponentHMX extends AmmoComponent
 	public void onEffect(World world, Vec3d pos, Vec3d dir, ComponentEffectShape shape, NBTTagCompound tag, float componentSize, float multiplier, Entity owner)
 	{
 		new IIExplosion(world, owner, pos, dir,
-				12*componentSize, 18*multiplier, shape, false, componentSize > 0.125f, false)
+				10*componentSize, 16*multiplier, shape, false, componentSize > 0.125f, false)
 				.doExplosion();
 	}
 }

@@ -23,7 +23,7 @@ import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 @RegisteredEntityRenderer(clazz = EntityFieldHowitzer.class, name = "vehicle/tracked_motorbike")
 public class TrackedMotorbikeRenderer extends IIVehicleRenderer<EntityTrackedMotorbike>
 {
-	private IIAnimationCachedMap engine, engineStarting, transmission, turn, passengerDefault;
+	private IIAnimationCachedMap engine, engineStarting, turn, passengerDefault;
 	private IIAnimationCachedMap gearPrimary, gearSecondary;
 	private IIAnimationCachedMap gearPrimaryReverse, gearPrimary1, gearPrimary2, gearSecondaryOverdrive, gearSecondaryReduction;
 	private AMTCrossVariantReference<AMTChain> trackLeft, trackRight;
@@ -51,7 +51,6 @@ public class TrackedMotorbikeRenderer extends IIVehicleRenderer<EntityTrackedMot
 		//General animations
 		passengerDefault.apply(0);
 		turn.apply((entity.partWheelFront.getSteeringAngle()/45f)*-0.5f+0.5f);
-		transmission.apply(AMTUtils.getDebugProgress(8, partialTicks));
 
 		//Gearbox animations
 		applyGearboxAnimation(entity.transmission1, gearSecondary, partialTicks, gearSecondaryOverdrive);
@@ -105,7 +104,6 @@ public class TrackedMotorbikeRenderer extends IIVehicleRenderer<EntityTrackedMot
 		//General animations
 		engine = IIAnimationCachedMap.create(model, animationsDirectory.with("engine"));
 		engineStarting = IIAnimationCachedMap.create(model, animationsDirectory.with("start_engine"));
-		transmission = IIAnimationCachedMap.create(model, animationsDirectory.with("transmission"));
 		turn = IIAnimationCachedMap.create(model, animationsDirectory.with("turn"));
 		passengerDefault = IIAnimationCachedMap.create(model, animationsDirectory.with("hans_default"));
 		wheelAnimations = new WheelAnimationBuilder()

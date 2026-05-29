@@ -80,10 +80,7 @@ import pl.pabilo8.immersiveintelligence.client.render.ammunition.*;
 import pl.pabilo8.immersiveintelligence.client.render.ammunition.NavalMineRenderer.NavalMineItemstackRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.entity.*;
 import pl.pabilo8.immersiveintelligence.client.render.entity.hans.HansRenderer;
-import pl.pabilo8.immersiveintelligence.client.render.entity.vehicle.FieldGunRenderer;
-import pl.pabilo8.immersiveintelligence.client.render.entity.vehicle.FieldHowitzerRenderer;
-import pl.pabilo8.immersiveintelligence.client.render.entity.vehicle.MotorbikeRenderer;
-import pl.pabilo8.immersiveintelligence.client.render.entity.vehicle.TrackedMotorbikeRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.entity.vehicle.*;
 import pl.pabilo8.immersiveintelligence.client.render.entity.weapon.MachinegunRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.entity.weapon.MortarRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.entity.weapon.TripodPeriscopeRenderer;
@@ -144,6 +141,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.tactile.EntityAMTTactile;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityDrone;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityMotorbike;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityTrackedMotorbike;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.towable.gun.EntityFieldFlak;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.towable.gun.EntityFieldGun;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.towable.gun.EntityFieldHowitzer;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleSeat;
@@ -390,6 +388,7 @@ public class ClientProxy extends CommonProxy
 		registerEntityRenderer(EntityDrone.class, DroneRenderer::new);
 		//Towables
 		registerEntityRenderer(EntityFieldHowitzer.class, FieldHowitzerRenderer::new);
+		registerEntityRenderer(EntityFieldFlak.class, FieldFlakRenderer::new);
 		registerEntityRenderer(EntityFieldGun.class, FieldGunRenderer::new);
 
 		registerEntityRenderer(EntityTripodPeriscope.class, TripodPeriscopeRenderer::new);

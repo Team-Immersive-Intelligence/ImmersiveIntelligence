@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.entity.vehicle;
 
+import blusunrize.immersiveengineering.common.util.Utils;
 import com.google.common.collect.Sets;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.IEntityMultiPart;
@@ -66,9 +67,9 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 
 	//--- Systems ---//
 	@SyncNBT(events = SyncEvents.TILE_UPGRADES_MODIFIED)
-	protected StyleCustomization style;
+	public StyleCustomization style;
 	@SyncNBT(events = SyncEvents.TILE_UPGRADES_MODIFIED)
-	protected UpgradeManager<T> upgradeManager;
+	public UpgradeManager<T> upgradeManager;
 
 	//--- Motion & Orientation ---//
 	@SyncNBT(events = SyncEvents.ENTITY_DAMAGED)
@@ -110,7 +111,7 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 		//noinspection unchecked
 		this.upgradeManager = ((UpgradeManager<T>)new UpgradeManager<>(this));
 		this.style = new StyleCustomization(getVehicleStyleConstraints());
-		this.style.withColor(IIColor.fromHSV(14/64f, 0.35f, 0.85f));
+		this.style.withColor(IIColor.fromHSV(Utils.RAND.nextInt(64)/64f, 0.35f, 0.85f));
 
 		//Calculate vehicle size and collect wheels
 		double minX = Integer.MAX_VALUE, minY = Integer.MAX_VALUE, minZ = Integer.MAX_VALUE;
@@ -211,11 +212,9 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 		updateParts();
 
 		//Send an update to the clients after a collision, client has some errors in collision handling
+		//hasCollidedBefore = true;
 		if(!this.world.isRemote&&!hasCollidedBefore&&collidedHorizontally)
-		{
-			//hasCollidedBefore = true;
 			sendServerPositionMotionUpdate();
-		}
 	}
 
 	/**
@@ -345,24 +344,24 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 			double verticalForce = wheel.getVerticalForceBalance();
 
 			//Front/Rear classification
-			if(wheel.offset.x > 0)
+			if(wheel.offset.x >= 0)
 			{
 				frontForce += verticalForce;
 				frontWheels++;
 			}
-			else
+			if(wheel.offset.x <= 0)
 			{
 				rearForce += verticalForce;
 				rearWheels++;
 			}
 
 			//Left/Right classification
-			if(wheel.offset.z > 0)
+			if(wheel.offset.z >= 0)
 			{
 				rightForce += verticalForce;
 				rightWheels++;
 			}
-			else
+			if(wheel.offset.z <= 0)
 			{
 				leftForce += verticalForce;
 				leftWheels++;
@@ -544,17 +543,13 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 
 				//First pass: Find the most restrictive Y movement from ALL collision boxes
 				for(AxisAlignedBB collisionBox : collisions)
-				{
 					if(mostRestrictiveY!=0)
 					{
 						double yOffset = collisionBox.calculateYOffset(tempBB, mostRestrictiveY);
 						//Take the most restrictive (smallest absolute value) Y movement
 						if(Math.abs(yOffset) < Math.abs(mostRestrictiveY))
-						{
 							mostRestrictiveY = yOffset;
-						}
 					}
-				}
 
 				//Apply the Y movement first
 				if(mostRestrictiveY!=partAdjustedMove.y)
@@ -569,7 +564,6 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 
 				//Second pass: Find the most restrictive X movement
 				for(AxisAlignedBB collisionBox : collisions)
-				{
 					if(mostRestrictiveX!=0)
 					{
 						double xOffset = collisionBox.calculateXOffset(tempBB, mostRestrictiveX);
@@ -579,17 +573,13 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 							collided = collidedHorizontally = true;
 						}
 					}
-				}
 
 				//Apply X movement
 				if(mostRestrictiveX!=partAdjustedMove.x)
-				{
 					tempBB = tempBB.offset(mostRestrictiveX, 0.0D, 0.0D);
-				}
 
 				//Third pass: Find the most restrictive Z movement
 				for(AxisAlignedBB collisionBox : collisions)
-				{
 					if(mostRestrictiveZ!=0)
 					{
 						double zOffset = collisionBox.calculateZOffset(tempBB, mostRestrictiveZ);
@@ -599,7 +589,6 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 							collided = collidedHorizontally = true;
 						}
 					}
-				}
 
 				partAdjustedMove = new Vec3d(mostRestrictiveX, mostRestrictiveY, mostRestrictiveZ);
 

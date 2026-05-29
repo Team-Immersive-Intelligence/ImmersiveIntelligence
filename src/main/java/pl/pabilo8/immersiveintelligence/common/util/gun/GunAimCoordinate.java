@@ -378,7 +378,7 @@ public class GunAimCoordinate implements INBTSerializable<NBTTagCompound>
 
 	public Vec3d getTarget(float partialTicks)
 	{
-		double yawRad = Math.toRadians(getYaw(partialTicks));
+		double yawRad = Math.toRadians(MathHelper.wrapDegrees(getYaw(partialTicks)+centerYaw));
 		double pitchRad = Math.toRadians(-getPitch(partialTicks));
 		return IIMath.offsetPosDirection(1, -yawRad, pitchRad);
 	}

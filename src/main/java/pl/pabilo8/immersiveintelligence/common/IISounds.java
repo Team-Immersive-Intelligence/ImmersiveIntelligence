@@ -522,11 +522,11 @@ public class IISounds
 	@ModSound(sounds = {"vehicle/horn"}, subtitle = "*")
 	public static SoundEvent vehicleHorn = registerSound("vehicle_horn");
 	@ModSound(sounds = {"vehicle/engine_light/start"}, subtitle = "*")
-	public static SoundEvent engineLightStart = registerSound("light_engine_start");
+	public static SoundEvent engineLightStart = registerSound("engine_light_start");
 	@ModSound(sounds = {"vehicle/engine_light/start_no_fuel"}, subtitle = "light_engine_start")
-	public static SoundEvent engineLightStartNoFuel = registerSound("light_engine_start_no_fuel");
+	public static SoundEvent engineLightStartNoFuel = registerSound("engine_light_start_no_fuel");
 	@ModSound(sounds = {"vehicle/engine_light/engine"}, subtitle = "*")
-	public static SoundEvent engineLight = registerSound("light_engine");
+	public static SoundEvent engineLight = registerSound("engine_light");
 	public static MultiSound engineLightLoop = new MultiSound(engineLight);
 
 	//--- Aircraft ---//

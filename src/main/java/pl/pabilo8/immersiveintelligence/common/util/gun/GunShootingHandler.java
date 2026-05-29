@@ -24,7 +24,7 @@ public class GunShootingHandler implements INBTSerializable<NBTTagFloat>
 {
 	private float shotDelay, maxShotDelay;
 	private GunRecoil recoil = null;
-	private AmmoFactory<EntityAmmoProjectile> ammoFactory = null;
+	private AmmoFactory<? extends EntityAmmoProjectile> ammoFactory = null;
 	private GunAmmoProvider ammoProvider = null;
 	//Sounds
 	private AdvancedSounds.RangedSound sound = null;
@@ -100,7 +100,7 @@ public class GunShootingHandler implements INBTSerializable<NBTTagFloat>
 		return this;
 	}
 
-	public GunShootingHandler withAmmoFactory(AmmoFactory<EntityAmmoProjectile> ammoFactory)
+	public GunShootingHandler withAmmoFactory(AmmoFactory<? extends EntityAmmoProjectile> ammoFactory)
 	{
 		this.ammoFactory = ammoFactory;
 		return this;

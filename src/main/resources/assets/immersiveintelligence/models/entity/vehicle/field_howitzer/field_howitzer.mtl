@@ -1,0 +1,20 @@
+# Made by Pabilo8 with Blockbench
+
+newmtl field_howitzer
+map_Kd immersiveintelligence:entity/vehicle/field_gun/field_howitzer
+newmtl field_howitzer_paint
+map_Kd immersiveintelligence:entity/vehicle/field_gun/field_howitzer_painted
+newmtl hans
+map_Kd immersiveintelligence:entity/hans
+newmtl wheel_12_terrain
+map_Kd immersiveintelligence:entity/vehicle/suspension/wheel_12_terrain
+newmtl artillery_scope
+map_Kd immersiveintelligence:entity/vehicle/field_gun/artillery_scope
+newmtl common_camo_net
+map_Kd immersiveintelligence:blocks/common/camo_net/common_camo_net
+newmtl radio_backpack
+map_Kd immersiveintelligence:armor/radio_backpack
+newmtl radio_backpack2
+map_Kd immersiveintelligence:armor/radio_backpack2
+newmtl snow_vehicle
+map_Kd immersiveintelligence:entity/vehicle/environment_effects/snow

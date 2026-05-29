@@ -1,0 +1,165 @@
+{
+  "comment": "Made by Pabilo8 with Blockbench",
+  "groups": {
+    "turret": {
+      "rotation": [
+        {
+          "time": 0.3332,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.6668,
+          "transform": [0, 0, -1]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "cannon1": {
+      "position": [
+        {
+          "time": 0.1668,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.6668,
+          "transform": [5, 0, 0]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "hans_gunner": {
+      "position": [
+        {
+          "time": 0,
+          "transform": [-5, 2, 8]
+        }
+      ]
+    },
+    "hans_gunner_head": {
+      "rotation": [
+        {
+          "time": 0.3332,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.6668,
+          "transform": [3, 0, 0]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "hans_gunner_left_arm": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, -52.5]
+        }
+      ],
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "hans_gunner_right_arm": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [-75, 0, 0]
+        }
+      ],
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, 0, -2]
+        }
+      ]
+    },
+    "hans_gunner_right_leg": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [-90, 0, 0]
+        }
+      ]
+    },
+    "hans_gunner_left_leg": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [-90, 15, 0]
+        }
+      ],
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "hans_commander": {
+      "position": [
+        {
+          "time": 0,
+          "transform": [-5, 2, -8]
+        }
+      ]
+    },
+    "hans_commander_head": {
+      "rotation": [
+        {
+          "time": 0.3332,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.6668,
+          "transform": [4, 0, 0]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "hans_commander_right_arm": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [-28.93305, 27.81706, 2.04579]
+        }
+      ],
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, 0, -1]
+        }
+      ]
+    },
+    "hans_commander_right_leg": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [-90, 0, 0]
+        }
+      ]
+    },
+    "hans_commander_left_leg": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [-90, 0, 0]
+        }
+      ]
+    }
+  }
+}

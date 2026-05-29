@@ -24,6 +24,7 @@ import pl.pabilo8.immersiveintelligence.common.util.entity.ISyncNBTEntity;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -99,6 +100,21 @@ public class EntityVehicleSeat extends Entity implements ISyncNBTEntity<EntityVe
 			seat.info = seatInfo;
 			return seat;
 		}
+	}
+
+	public static Entity getPassengerOnSeat(SeatInfo<?> seatInfo)
+	{
+		//Try to find the seat
+		Optional<Entity> probableSeat = seatInfo.vehicle.getPassengers().stream()
+				.filter(entity -> entity instanceof EntityVehicleSeat&&((EntityVehicleSeat)entity).seatID.equals(seatInfo.seatID))
+				.findFirst();
+		//Return passenger on seat if present
+		if(probableSeat.isPresent())
+		{
+			List<Entity> passengers = probableSeat.get().getPassengers();
+			return passengers.isEmpty()?null: passengers.get(0);
+		}
+		return null;
 	}
 
 	@Override
