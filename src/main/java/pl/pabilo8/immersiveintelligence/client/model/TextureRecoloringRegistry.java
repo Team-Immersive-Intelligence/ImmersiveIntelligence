@@ -66,7 +66,7 @@ public class TextureRecoloringRegistry
 		RecolorableTexture texture = RECOLORABLE_TEXTURES.get(base);
 		if(texture==null)
 			return null;
-		return texture.recoloredVariants.get(color);
+		return texture.recoloredVariants.get(color.constraintToPaintSystem());
 	}
 
 	private static class RecolorableTexture

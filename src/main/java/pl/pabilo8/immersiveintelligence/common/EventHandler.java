@@ -2,8 +2,10 @@ package pl.pabilo8.immersiveintelligence.common;
 
 import blusunrize.immersiveengineering.api.MultiblockHandler.MultiblockFormEvent.Post;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
+import blusunrize.immersiveengineering.common.util.inventory.IIEInventory;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.MultiPartEntityPart;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,6 +16,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSourceIndirect;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.GameRules.ValueType;
@@ -28,6 +31,7 @@ import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent.EntityInteract;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickEmpty;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickItem;
@@ -43,9 +47,11 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
+import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.ammo.penetration.DamageBlockPos;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoUtils;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.PenetrationCache;
+import pl.pabilo8.immersiveintelligence.api.upgrade.IUpgradableDevice;
 import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedMultiblock;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Ammunition;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons;
@@ -303,6 +309,33 @@ public class EventHandler
 			IIPacketHandler.INSTANCE.sendToAllAround(new MessageBlockDamageSync(dpos), IIPacketHandler.targetPointFromPos(dpos, event.getWorld(), 32));
 		}
 	}
+
+	@SubscribeEvent
+	public void onPlayerInteractEntityInteract(EntityInteract event)
+	{
+		EntityPlayer player = event.getEntityPlayer();
+
+		//Display upgrade GUI for compatible entities when using a wrench
+		if(IIItemUtils.isWrench(player.getHeldItem(EnumHand.MAIN_HAND))||IIItemUtils.isWrench(player.getHeldItem(EnumHand.OFF_HAND)))
+		{
+			Entity interacted = event.getTarget();
+			if(interacted instanceof MultiPartEntityPart)
+				interacted = (Entity)((MultiPartEntityPart)interacted).parent;
+			if(interacted instanceof IUpgradableDevice)
+			{
+				if(!(interacted instanceof IIEInventory))
+				{
+					IILogger.error("Cannot open upgrade GUI for "+interacted+", it does not implement IIEInventory!");
+					return;
+				}
+				//Open entity GUI
+				player.openGui(ImmersiveIntelligence.INSTANCE, IIGUI.UPGRADE_ENTITY.ordinal(),
+						interacted.world, interacted.getEntityId(), Integer.MIN_VALUE, 0);
+			}
+		}
+
+	}
+
 
 	//--- Hanses ---//
 

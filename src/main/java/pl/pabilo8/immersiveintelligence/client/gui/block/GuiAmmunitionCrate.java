@@ -2,7 +2,7 @@ package pl.pabilo8.immersiveintelligence.client.gui.block;
 
 
 import net.minecraft.entity.player.EntityPlayer;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTileGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiCategory;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTemplate;
@@ -18,7 +18,7 @@ import pl.pabilo8.immersiveintelligence.common.util.IIColor;
  * @since 17.05.2019
  */
 @DecoTemplate(name = "ammunition_crate", category = DecoGuiCategory.GENERIC_TILE)
-public class GuiAmmunitionCrate extends DecoGui<TileEntityAmmunitionCrate, ContainerAmmunitionCrate>
+public class GuiAmmunitionCrate extends DecoTileGui<TileEntityAmmunitionCrate, ContainerAmmunitionCrate>
 {
 	public GuiAmmunitionCrate(EntityPlayer player, TileEntityAmmunitionCrate tile)
 	{
@@ -45,6 +45,8 @@ public class GuiAmmunitionCrate extends DecoGui<TileEntityAmmunitionCrate, Conta
 				.withInventorySlots(SlotStyle.VANILLA, container.inputShell)
 				.withInventoryTitleBar()
 				.build();
+
+
 
 		/*addComponents(
 

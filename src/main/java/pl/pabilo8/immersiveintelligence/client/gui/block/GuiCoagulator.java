@@ -2,7 +2,7 @@ package pl.pabilo8.immersiveintelligence.client.gui.block;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTileGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoFluidTank;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoItemStackDisplay;
@@ -21,7 +21,7 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReference;
  * @since 12.12.2025
  */
 @DecoTemplate(name = "coagulator", category = DecoGuiCategory.PRODUCTION_TILE)
-public class GuiCoagulator extends DecoGui<TileEntityCoagulator, ContainerCoagulator>
+public class GuiCoagulator extends DecoTileGui<TileEntityCoagulator, ContainerCoagulator>
 {
 	@DecoResource
 	public static final ResourceLocation TEXTURE = IIReference.RES_II.with("gui/coagulator");

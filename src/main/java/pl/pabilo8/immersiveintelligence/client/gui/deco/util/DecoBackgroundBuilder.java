@@ -2,13 +2,14 @@ package pl.pabilo8.immersiveintelligence.client.gui.deco.util;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
-import blusunrize.immersiveengineering.common.util.inventory.IIEInventory;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.DestFactor;
 import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.Entity;
+import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
@@ -23,7 +24,6 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoTitl
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
-import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
  * @ii-approved 0.3.1
  * @since 07.01.2025
  **/
-public class DecoBackgroundBuilder<T extends TileEntityIEBase & IIEInventory, C extends ContainerIIBase<T>>
+public class DecoBackgroundBuilder<T, C extends Container>
 {
 	private final List<List<DecoBackgroundTile>> backgroundTiles = new ArrayList<>();
 	private final List<DecoBackgroundTile> backgroundFrames = new ArrayList<>();
@@ -241,23 +241,34 @@ public class DecoBackgroundBuilder<T extends TileEntityIEBase & IIEInventory, C 
 	/**
 	 * Adds a title bar component to the GUI
 	 *
-	 * @param tile tile to get the title from
+	 * @param type type to get the title from
 	 */
-	public DecoBackgroundBuilder<T, C> withTitleBar(T tile)
+	public DecoBackgroundBuilder<T, C> withTitleBar(T type)
 	{
-		ITextComponent displayName = tile.getDisplayName();
-		if(displayName==null&&tile.hasWorld())
+		ITextComponent displayName = null;
+		if(type instanceof TileEntityIEBase)
 		{
-			World world = tile.getWorld();
-			BlockPos pos = tile.getPos();
-			if(world.isBlockLoaded(pos))
+			TileEntityIEBase tile = (TileEntityIEBase)type;
+			displayName = tile.getDisplayName();
+			if(displayName==null&&tile.hasWorld())
 			{
-				IBlockState state = world.getBlockState(tile.getPos());
-				displayName = new TextComponentString(new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state)).getDisplayName());
+				World world = tile.getWorld();
+				BlockPos pos = tile.getPos();
+				if(world.isBlockLoaded(pos))
+				{
+					IBlockState state = world.getBlockState(tile.getPos());
+					displayName = new TextComponentString(new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state)).getDisplayName());
+				}
 			}
-
 		}
-		return withTitleBar(displayName.getUnformattedText(), DecoAlignment.TOP);
+		else if(type instanceof ItemStack)
+			displayName = new TextComponentString(((ItemStack)type).getDisplayName());
+		else if(type instanceof Entity)
+			displayName = ((Entity)type).getDisplayName();
+
+		if(displayName!=null)
+			return withTitleBar(displayName.getUnformattedText(), DecoAlignment.TOP);
+		return this;
 	}
 
 	/**

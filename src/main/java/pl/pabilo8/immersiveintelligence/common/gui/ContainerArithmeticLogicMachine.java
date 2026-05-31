@@ -10,7 +10,7 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockArithmeticLogicMachine;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityArithmeticLogicMachine;
 import pl.pabilo8.immersiveintelligence.common.item.data.ItemIIFunctionalCircuit;
-import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
+import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIITileBase;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -18,7 +18,7 @@ import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
  * @ii-approved 0.3.1
  * @since 30.06.2019
  */
-public class ContainerArithmeticLogicMachine extends ContainerIIBase<TileEntityArithmeticLogicMachine>
+public class ContainerArithmeticLogicMachine extends ContainerIITileBase<TileEntityArithmeticLogicMachine>
 {
 	public final boolean storage;
 	public final Slot[] circuitSlots;

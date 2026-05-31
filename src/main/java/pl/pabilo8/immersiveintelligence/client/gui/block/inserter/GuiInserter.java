@@ -5,7 +5,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTileGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoDropdown;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoElementDisplays;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
@@ -41,7 +41,7 @@ import java.util.function.Supplier;
  * @since 20.01.2026
  */
 @DecoTemplate(name = "inserter", category = DecoGuiCategory.DATA_TILE)
-public class GuiInserter extends DecoGui<TileEntityInserterBase, ContainerInserter>
+public class GuiInserter extends DecoTileGui<TileEntityInserterBase, ContainerInserter>
 {
 	private static final String INSERTER_KEY = IIReference.GUI_LABEL_KEY+"inserter.";
 	private ListMode mode = ListMode.TASKS;

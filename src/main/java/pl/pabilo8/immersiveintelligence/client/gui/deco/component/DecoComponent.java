@@ -1,14 +1,12 @@
 package pl.pabilo8.immersiveintelligence.client.gui.deco.component;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
-import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
-import blusunrize.immersiveengineering.common.util.inventory.IIEInventory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.inventory.Container;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
-import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -80,7 +78,7 @@ public abstract class DecoComponent<TYPE extends DecoComponent<? super TYPE>> ex
 
 	//--- Property Setters ---//
 
-	public <T extends TileEntityIEBase & IIEInventory, C extends ContainerIIBase<T>> void setParentGUI(DecoGui<T, C> parent)
+	public <T, C extends Container> void setParentGUI(DecoGui<T, C> parent)
 	{
 		this.parentGui = parent;
 		this.x += parent.guiLeft;

@@ -2,7 +2,7 @@ package pl.pabilo8.immersiveintelligence.client.gui.block;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTileGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiCategory;
@@ -21,7 +21,7 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReference;
  * @since 24.10.2025
  */
 @DecoTemplate(name = "repaircrate", category = DecoGuiCategory.GENERIC_TILE)
-public class GuiRepairCrate extends DecoGui<TileEntityRepairCrate, ContainerRepairCrate>
+public class GuiRepairCrate extends DecoTileGui<TileEntityRepairCrate, ContainerRepairCrate>
 {
 
 	@DecoResource

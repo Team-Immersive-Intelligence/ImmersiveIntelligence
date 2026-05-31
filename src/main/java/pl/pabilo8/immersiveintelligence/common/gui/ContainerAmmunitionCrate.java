@@ -11,7 +11,7 @@ import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate.TileEntityAmmunitionCrate;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.gun.ItemIIAmmoMachinegun;
-import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
+import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIITileBase;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -19,7 +19,7 @@ import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
  * @since 17.05.2019
  * @since 08.18.2025
  */
-public class ContainerAmmunitionCrate extends ContainerIIBase<TileEntityAmmunitionCrate>
+public class ContainerAmmunitionCrate extends ContainerIITileBase<TileEntityAmmunitionCrate>
 {
 	public Slot[] inputBullet, inputShell, inputRevolver, inputMG;
 

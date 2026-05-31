@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.EntityLivingBase;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeTechTree;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTLoader;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
 import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIAnimationCachedMap;
@@ -127,6 +128,10 @@ public class TrackedMotorbikeRenderer extends IIVehicleRenderer<EntityTrackedMot
 		gearSecondary = IIAnimationCachedMap.create(model, animationsDirectory.with("gearbox_secondary"));
 		gearSecondaryOverdrive = IIAnimationCachedMap.create(model, animationsDirectory.with("gear_secondary_overdrive"));
 		gearSecondaryReduction = IIAnimationCachedMap.create(model, animationsDirectory.with("gear_secondary_reduction"));
+
+		//Upgrade system
+		UpgradeTechTree.getTreeFor(EntityTrackedMotorbike.class)
+				.withBaseModelLocation(modelFile);
 	}
 
 	@Override

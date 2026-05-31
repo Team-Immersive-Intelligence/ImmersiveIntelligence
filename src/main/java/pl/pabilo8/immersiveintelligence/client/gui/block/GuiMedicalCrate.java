@@ -2,7 +2,7 @@ package pl.pabilo8.immersiveintelligence.client.gui.block;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTileGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoFluidTank;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage;
@@ -23,7 +23,7 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReference;
  */
 
 @DecoTemplate(name = "medicalcrate", category = DecoGuiCategory.GENERIC_TILE)
-public class GuiMedicalCrate extends DecoGui<TileEntityMedicalCrate, ContainerMedicalCrate>
+public class GuiMedicalCrate extends DecoTileGui<TileEntityMedicalCrate, ContainerMedicalCrate>
 {
 
 	@DecoResource

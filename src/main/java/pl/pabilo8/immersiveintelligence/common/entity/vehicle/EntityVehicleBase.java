@@ -1,12 +1,15 @@
 package pl.pabilo8.immersiveintelligence.common.entity.vehicle;
 
 import blusunrize.immersiveengineering.common.util.Utils;
+import blusunrize.immersiveengineering.common.util.inventory.IIEInventory;
 import com.google.common.collect.Sets;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.IEntityMultiPart;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -19,9 +22,11 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.style.IStyleCustomizable;
 import pl.pabilo8.immersiveintelligence.api.style.StyleConstraints;
+import pl.pabilo8.immersiveintelligence.api.style.StyleConstraints.PaintStyleConstraint;
 import pl.pabilo8.immersiveintelligence.api.style.StyleCustomization;
 import pl.pabilo8.immersiveintelligence.api.upgrade.IManagedUpgradableDevice;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeManager;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.MachineStyle;
 import pl.pabilo8.immersiveintelligence.api.utils.IEntitySpecialRepairable;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
@@ -51,11 +56,11 @@ import java.util.List;
  * @since 29.09.2025
  */
 public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends Entity implements ISyncNBTEntity<T>, IVehicleMultiPart<T>,
-		IEntitySpecialRepairable, IManagedUpgradableDevice<T>, IStyleCustomizable
+		IEntitySpecialRepairable, IManagedUpgradableDevice<T>, IStyleCustomizable, IIEInventory
 {
 	//--- Constants ---//
 	private static final StyleConstraints DEFAULT_STYLE_CONSTRAINTS = new StyleConstraints("steel",
-			true, Sets.newHashSet("steel"), Collections.emptySet());
+			PaintStyleConstraint.PAINTS_COLOR_ONLY, Sets.newHashSet("steel"), Collections.emptySet());
 
 	//--- Parts ---//
 	private AxisAlignedBB AABB;
@@ -92,10 +97,10 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 	public EntityVehicleBase(World world)
 	{
 		super(world);
+		internalVehicleInit();
 	}
 
-	@Override
-	protected final void entityInit()
+	protected final void internalVehicleInit()
 	{
 		//Initialize part collections
 		ArrayList<EntityVehicleWheel<T>> wheelsList = new ArrayList<>();
@@ -111,7 +116,7 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 		//noinspection unchecked
 		this.upgradeManager = ((UpgradeManager<T>)new UpgradeManager<>(this));
 		this.style = new StyleCustomization(getVehicleStyleConstraints());
-		this.style.withColor(IIColor.fromHSV(Utils.RAND.nextInt(64)/64f, 0.35f, 0.85f));
+		this.style.withColor(IIColor.getPaintSystemColor(Utils.RAND.nextInt(64)));
 
 		//Calculate vehicle size and collect wheels
 		double minX = Integer.MAX_VALUE, minY = Integer.MAX_VALUE, minZ = Integer.MAX_VALUE;
@@ -164,6 +169,12 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 
 		//Initialize part positions
 		updateParts();
+	}
+
+	@Override
+	protected final void entityInit()
+	{
+		//Do not initialize here, as it is called before the constructor
 	}
 
 	/**
@@ -1094,6 +1105,12 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 	}
 
 	@Override
+	public MachineStyle getUpgradableMachineStyle()
+	{
+		return MachineStyle.STEEL;
+	}
+
+	@Override
 	public T master()
 	{
 		//noinspection unchecked
@@ -1135,5 +1152,27 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 				if(component instanceof IFluidHandler)
 					return (T)component;
 		return super.getCapability(capability, facing);
+	}
+
+	//--- IIEInventory ---//
+
+	public NonNullList<ItemStack> getInventory()
+	{
+		return NonNullList.create();
+	}
+
+	public boolean isStackValid(int slot, ItemStack stack)
+	{
+		return true;
+	}
+
+	public int getSlotLimit(int slot)
+	{
+		return 64;
+	}
+
+	public void doGraphicalUpdates(int slot)
+	{
+		updateEntityForEvent(SyncEvents.ENTITY_INTERACT);
 	}
 }

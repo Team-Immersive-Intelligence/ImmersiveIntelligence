@@ -2,7 +2,7 @@ package pl.pabilo8.immersiveintelligence.client.gui.block.ammunition_production;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTileGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.DecoTextField;
@@ -25,7 +25,7 @@ import static pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures
  */
 
 @DecoTemplate(name = "ammunition_assembler", category = DecoGuiCategory.PRODUCTION_TILE)
-public class GuiAmmunitionAssembler extends DecoGui<TileEntityAmmunitionAssembler, ContainerAmmunitionAssembler>
+public class GuiAmmunitionAssembler extends DecoTileGui<TileEntityAmmunitionAssembler, ContainerAmmunitionAssembler>
 {
 
 	@DecoResource

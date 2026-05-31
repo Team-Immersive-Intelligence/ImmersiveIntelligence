@@ -6,13 +6,13 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
-import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
+import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIITileBase;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 16.07.2021
  */
-public class ContainerEmplacement extends ContainerIIBase<TileEntityEmplacement>
+public class ContainerEmplacement extends ContainerIITileBase<TileEntityEmplacement>
 {
 	public Slot[] slotsEmplacementStorage;
 

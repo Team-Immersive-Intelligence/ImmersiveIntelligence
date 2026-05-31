@@ -7,7 +7,7 @@ import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTileGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoCheckbox;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoMapDisplay;
@@ -34,7 +34,7 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
  * @since 28.04.2023
  */
 @DecoTemplate(name = "radar", category = DecoGuiCategory.TERRITORY_CONTROL_TILE)
-public class GuiRadar extends DecoGui<TileEntityRadar, ContainerRadar>
+public class GuiRadar extends DecoTileGui<TileEntityRadar, ContainerRadar>
 {
 	@DecoResource
 	public static ResourceLocation ICON_RADAR = ResLoc.of(IIReference.RES_II, "gui/tab_icons/radar");

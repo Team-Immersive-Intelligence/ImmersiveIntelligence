@@ -142,7 +142,7 @@ public class GunAmmoProviderMagazine extends GunAmmoProvider
 
 		//Try to find a matching magazine in the operator's hotbar
 		ItemStack foundMagazine = findMagazineInHotbar(magazineType);
-		if(!foundMagazine.isEmpty())
+		if(foundMagazine!=null&&!foundMagazine.isEmpty())
 		{
 			int needed = magazineType.capacity-getBulletCount();
 			NonNullList<ItemStack> magazineBullets = IIContent.itemBulletMagazine.readInventory(foundMagazine);

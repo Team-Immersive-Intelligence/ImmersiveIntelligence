@@ -11,7 +11,7 @@ import pl.pabilo8.immersiveintelligence.api.utils.tools.ISawblade;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.multiblock.MultiblockSawmill;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySawmill;
 import pl.pabilo8.immersiveintelligence.common.util.IIDamageSources;
-import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
+import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIITileBase;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -19,7 +19,7 @@ import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
  * @ii-approved 0.3.1
  * @since 10.07.2019
  */
-public class ContainerSawmill extends ContainerIIBase<TileEntitySawmill>
+public class ContainerSawmill extends ContainerIITileBase<TileEntitySawmill>
 {
 	public final Slot slotInput, slotSaw, slotOutput, slotOutputTrash;
 

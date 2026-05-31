@@ -5,7 +5,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityPacker;
-import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
+import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIITileBase;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -15,7 +15,7 @@ import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
  * @ii-approved 0.3.1
  * @since 17.05.2019
  */
-public class ContainerPacker extends ContainerIIBase<TileEntityPacker>
+public class ContainerPacker extends ContainerIITileBase<TileEntityPacker>
 {
 	//Used by fluid and energy containers
 	public Slot[] slotsInput, slotsOutput;

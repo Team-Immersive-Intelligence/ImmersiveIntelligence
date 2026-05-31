@@ -6,7 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import pl.pabilo8.immersiveintelligence.api.LogisticTag;
 import pl.pabilo8.immersiveintelligence.api.PackerHandler.LabelingTask;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTileGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoCheckbox;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
@@ -45,7 +45,7 @@ import static pl.pabilo8.immersiveintelligence.common.util.IIReference.GUI_LABEL
  * @since 25.08.2022
  */
 @DecoTemplate(name = "packer_labeler", category = DecoGuiCategory.DATA_TILE)
-public class GuiPackerLabeler extends DecoGui<TileEntityPacker, ContainerPacker>
+public class GuiPackerLabeler extends DecoTileGui<TileEntityPacker, ContainerPacker>
 {
 	@SyncNBT(events = SyncEvents.TILE_CLIENT_MESSAGE)
 	public EasyCollection<LabelingTask, NBTTagCompound> labels;

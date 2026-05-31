@@ -2,7 +2,7 @@ package pl.pabilo8.immersiveintelligence.client.gui.block;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.Optional.Method;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTileGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoFluidTank;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage;
@@ -21,7 +21,7 @@ import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
  * @since 10.07.2019
  */
 @DecoTemplate(name = "chemical_bath", category = DecoGuiCategory.PRODUCTION_TILE)
-public class GuiChemicalBath extends DecoGui<TileEntityChemicalBath, ContainerChemicalBath>
+public class GuiChemicalBath extends DecoTileGui<TileEntityChemicalBath, ContainerChemicalBath>
 {
 	@DecoResource
 	public static ResLoc TEXTURE = IIReference.RES_II.with("gui/chemical_bath");

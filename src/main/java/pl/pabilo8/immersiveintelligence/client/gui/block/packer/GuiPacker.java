@@ -8,7 +8,7 @@ import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.api.PackerHandler;
 import pl.pabilo8.immersiveintelligence.api.PackerHandler.PackerActionType;
 import pl.pabilo8.immersiveintelligence.api.PackerHandler.PackerTask;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTileGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoCheckbox;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoDropdown;
@@ -53,7 +53,7 @@ import static pl.pabilo8.immersiveintelligence.common.util.IIReference.RES_II;
  * @since 25.08.2022
  */
 @DecoTemplate(name = "packer", category = DecoGuiCategory.DATA_TILE)
-public class GuiPacker extends DecoGui<TileEntityPacker, ContainerPacker>
+public class GuiPacker extends DecoTileGui<TileEntityPacker, ContainerPacker>
 {
 	@DecoResource
 	public static ResourceLocation ICON_LABELER = ResLoc.of(RES_II, "gui/upgrade/packer_naming");

@@ -3,7 +3,7 @@ package pl.pabilo8.immersiveintelligence.common.gui;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityAmmunitionAssembler;
-import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
+import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIITileBase;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -11,7 +11,7 @@ import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
  * @since 10.07.2019
  * @since 08.13.2025
  */
-public class ContainerAmmunitionAssembler extends ContainerIIBase<TileEntityAmmunitionAssembler>
+public class ContainerAmmunitionAssembler extends ContainerIITileBase<TileEntityAmmunitionAssembler>
 {
 	public Slot inputSlot, outputSlot;
 

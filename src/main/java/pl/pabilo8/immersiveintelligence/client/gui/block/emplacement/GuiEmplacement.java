@@ -1,7 +1,7 @@
 package pl.pabilo8.immersiveintelligence.client.gui.block.emplacement;
 
 import net.minecraft.entity.player.EntityPlayer;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTileGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
@@ -12,7 +12,7 @@ import pl.pabilo8.immersiveintelligence.common.gui.ContainerEmplacement;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 16.07.2021
  */
-public abstract class GuiEmplacement extends DecoGui<TileEntityEmplacement, ContainerEmplacement>
+public abstract class GuiEmplacement extends DecoTileGui<TileEntityEmplacement, ContainerEmplacement>
 {
 	public GuiEmplacement(EntityPlayer player, TileEntityEmplacement tile, IIGUI gui)
 	{

@@ -18,7 +18,7 @@ import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem.IIAmmoProje
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoBallisticsCache;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoBallisticsCache.CachedBallisticStats;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoUtils;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTileGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoDropdown;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoEntryPanelBuilder;
@@ -52,7 +52,7 @@ import java.util.stream.Collectors;
  * @since 10.07.2019
  */
 @DecoTemplate(name = "projectile_workshop", category = DecoGuiCategory.PRODUCTION_TILE)
-public class GuiProjectileWorkshop extends DecoGui<TileEntityProjectileWorkshop, ContainerProjectileWorkshop>
+public class GuiProjectileWorkshop extends DecoTileGui<TileEntityProjectileWorkshop, ContainerProjectileWorkshop>
 {
 	@DecoResource
 	public static ResourceLocation PROGRESS_BAR = IIReference.RES_II.with("gui/projectile_workshop");

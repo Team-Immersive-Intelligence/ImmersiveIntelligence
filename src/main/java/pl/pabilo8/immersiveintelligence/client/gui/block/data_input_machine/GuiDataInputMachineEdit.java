@@ -6,7 +6,7 @@ import pl.pabilo8.immersiveintelligence.api.data.DataVariable;
 import pl.pabilo8.immersiveintelligence.api.data.IDataMachineGui;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType.TypeMetaInfo;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTileGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoArrows;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoDropdownDataLetters;
@@ -35,7 +35,7 @@ import javax.annotation.Nullable;
  * @since 30.06.2019
  */
 @DecoTemplate(name = "data_input_machine_edit", category = DecoGuiCategory.DATA_TILE)
-public class GuiDataInputMachineEdit extends DecoGui<TileEntityDataInputMachine, ContainerDataInputMachineEditing> implements IDataMachineGui
+public class GuiDataInputMachineEdit extends DecoTileGui<TileEntityDataInputMachine, ContainerDataInputMachineEditing> implements IDataMachineGui
 {
 	@SyncNBT
 	public DataVariable variableToEdit;

@@ -1,7 +1,7 @@
 package pl.pabilo8.immersiveintelligence.client.gui.block.radar;
 
 import net.minecraft.entity.player.EntityPlayer;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTileGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiCategory;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTemplate;
@@ -15,7 +15,7 @@ import pl.pabilo8.immersiveintelligence.common.gui.ContainerRadar;
  * @since 28.04.2023
  */
 @DecoTemplate(name = "radar_config", category = DecoGuiCategory.TERRITORY_CONTROL_TILE)
-public class GuiRadarConfig extends DecoGui<TileEntityRadar, ContainerRadar>
+public class GuiRadarConfig extends DecoTileGui<TileEntityRadar, ContainerRadar>
 {
 	public GuiRadarConfig(EntityPlayer player, TileEntityRadar tile)
 	{

@@ -5,6 +5,7 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.EntityLivingBase;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeTechTree;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
 import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIAnimationCachedMap;
 import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTCachedModelBuilder;
@@ -88,6 +89,10 @@ public class FieldHowitzerRenderer extends IIVehicleRenderer<EntityFieldHowitzer
 				.withWheel(e -> e.partWheelRight, "wheel1")
 				.withWheel(e -> e.partWheelLeft, "wheel2")
 				.build();
+
+		//Upgrade system
+		UpgradeTechTree.getTreeFor(EntityFieldHowitzer.class)
+				.withBaseModelLocation(modelFile);
 	}
 
 	@Override

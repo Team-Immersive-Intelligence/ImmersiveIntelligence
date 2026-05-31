@@ -66,8 +66,9 @@ import pl.pabilo8.immersiveintelligence.api.upgrade.Upgrade;
 import pl.pabilo8.immersiveintelligence.client.fx.IIParticles;
 import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleRegistry;
 import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleSystem;
-import pl.pabilo8.immersiveintelligence.client.gui.block.GuiUpgrade;
+import pl.pabilo8.immersiveintelligence.client.gui.block.GuiTileUpgrade;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
+import pl.pabilo8.immersiveintelligence.client.gui.entity.GuiEntityUpgrade;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualCategory;
 import pl.pabilo8.immersiveintelligence.client.manual.categories.*;
 import pl.pabilo8.immersiveintelligence.client.model.IIModelRegistry;
@@ -333,13 +334,21 @@ public class ClientProxy extends CommonProxy
 		EnumHand hand;
 		TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
 		ItemStack stack = player.getHeldItem(hand = (player.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof IGuiItem?EnumHand.MAIN_HAND: EnumHand.OFF_HAND));
+		Entity entity = y==Integer.MIN_VALUE?world.getEntityByID(x): null;
 
-		if(ID==IIGUI.UPGRADE.ordinal()&&te instanceof IUpgradableDevice)
+		if(ID==IIGUI.UPGRADE_TILE.ordinal()&&te instanceof IUpgradableDevice)
 		{
 			IUpgradableDevice upgradeMaster = ((IUpgradableDevice)te).master();
 			if(upgradeMaster!=null)
 				//noinspection rawtypes,unchecked
-				return new GuiUpgrade(player, ((TileEntityIEBase)upgradeMaster));
+				return new GuiTileUpgrade(player, ((TileEntityIEBase)upgradeMaster));
+		}
+		if(ID==IIGUI.UPGRADE_ENTITY.ordinal()&&entity instanceof IUpgradableDevice)
+		{
+			IUpgradableDevice upgradeMaster = ((IUpgradableDevice)entity).master();
+			if(upgradeMaster!=null)
+				//noinspection rawtypes,unchecked
+				return new GuiEntityUpgrade(player, ((Entity)upgradeMaster));
 		}
 
 		GuiScreen gui = null;

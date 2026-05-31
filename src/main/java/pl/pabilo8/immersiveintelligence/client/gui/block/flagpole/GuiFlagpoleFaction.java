@@ -5,7 +5,7 @@ import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBanner;
 import net.minecraft.item.ItemStack;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTileGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoSwitch;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoDropdown;
@@ -43,7 +43,7 @@ import java.util.UUID;
  * @since 27.12.2025
  */
 @DecoTemplate(name = "flagpole_faction", category = DecoGuiCategory.TERRITORY_CONTROL_TILE)
-public class GuiFlagpoleFaction extends DecoGui<TileEntityFlagpole, ContainerFlagpole>
+public class GuiFlagpoleFaction extends DecoTileGui<TileEntityFlagpole, ContainerFlagpole>
 {
 	private String factionName = null;
 	private IIColor factionColor = null;

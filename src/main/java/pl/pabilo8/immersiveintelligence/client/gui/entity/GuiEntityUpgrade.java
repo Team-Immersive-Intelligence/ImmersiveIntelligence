@@ -1,10 +1,10 @@
-package pl.pabilo8.immersiveintelligence.client.gui.block;
+package pl.pabilo8.immersiveintelligence.client.gui.entity;
 
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
-import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
 import blusunrize.immersiveengineering.common.util.inventory.IIEInventory;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextFormatting;
@@ -12,7 +12,7 @@ import pl.pabilo8.immersiveintelligence.api.upgrade.IUpgradableDevice;
 import pl.pabilo8.immersiveintelligence.api.upgrade.Upgrade;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeTechTree;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.UpgradeOperation;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoEntityGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoTreeDisplay;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
@@ -28,7 +28,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
 import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
-import pl.pabilo8.immersiveintelligence.common.gui.ContainerUpgrade;
+import pl.pabilo8.immersiveintelligence.common.gui.ContainerEntityUpgrade;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBeginMachineUpgrade;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
@@ -45,8 +45,8 @@ import java.util.Objects;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 10.07.2019
  */
-@DecoTemplate(name = "upgrade", category = DecoGuiCategory.PRODUCTION_TILE)
-public class GuiUpgrade<T extends TileEntityIEBase & IIEInventory & IUpgradableDevice> extends DecoGui<T, ContainerUpgrade<T>>
+@DecoTemplate(name = "upgrade_tile", category = DecoGuiCategory.GENERIC_ENTITY)
+public class GuiEntityUpgrade<T extends Entity & IIEInventory & IUpgradableDevice> extends DecoEntityGui<T, ContainerEntityUpgrade<T>>
 {
 	private final UpgradeTechTree techTree;
 	private DecoTreeDisplay<Upgrade> techTreeDisplay;
@@ -56,9 +56,9 @@ public class GuiUpgrade<T extends TileEntityIEBase & IIEInventory & IUpgradableD
 	public String lastUpgrade;
 	private DecoScenarioDisplay scenario;
 
-	public GuiUpgrade(EntityPlayer player, T tile)
+	public GuiEntityUpgrade(EntityPlayer player, T tile)
 	{
-		super(player, tile, IIGUI.UPGRADE);
+		super(player, tile, IIGUI.UPGRADE_ENTITY);
 		this.techTree = tile!=null?UpgradeTechTree.getTreeFor(tile): null;
 	}
 
@@ -66,7 +66,7 @@ public class GuiUpgrade<T extends TileEntityIEBase & IIEInventory & IUpgradableD
 	public void onInit()
 	{
 		ResLoc style = DecoTextures.BG_STEEL;
-		switch(tile.getUpgradableMachineStyle())
+		switch(entity.getUpgradableMachineStyle())
 		{
 			case WOODEN:
 				style = DecoTextures.BG_WOODEN;
@@ -132,7 +132,7 @@ public class GuiUpgrade<T extends TileEntityIEBase & IIEInventory & IUpgradableD
 						.withBackground(DecoTextures.BG_STEEL)
 						.withBackgroundMask(DecoTextures.TEMPLATE_SQUARE),
 				techTreeDisplay = new DecoTreeDisplay<Upgrade>(118-4, 16-8-4+14+8)
-						.withTree(new UpgradeTechTreeWrapper(techTree, tile)
+						.withTree(new UpgradeTechTreeWrapper(techTree, entity)
 						{
 							@Override
 							public void onNodeClicked(@Nonnull IDecoTreeNode<Upgrade> node)
@@ -201,13 +201,13 @@ public class GuiUpgrade<T extends TileEntityIEBase & IIEInventory & IUpgradableD
 					.withHorizontalMode(true);
 
 			//Install button
-			final boolean shouldInstall = !tile.isUpgradeInstalled(upgrade);
-			final boolean canInstall = tile.addUpgrade(upgrade, UpgradeOperation.PROBE);
+			final boolean shouldInstall = !entity.isUpgradeInstalled(upgrade);
+			final boolean canInstall = entity.addUpgrade(upgrade, UpgradeOperation.PROBE);
 			DecoButton button = panelInfo.addComponent(new DecoButton(4, 22+64+28))
 					.withWidth(panelInfo.width-8)
 					.withText(IIReference.DESCRIPTION_KEY+(shouldInstall?"upgrade_gui.install": "upgrade_gui.remove"))
 					.withOnLMBPressed(() -> {
-						IIPacketHandler.sendToServer(new MessageBeginMachineUpgrade(tile, upgrade, this.mc.player, shouldInstall));
+						IIPacketHandler.sendToServer(new MessageBeginMachineUpgrade(entity, upgrade, this.mc.player, shouldInstall));
 						closeGUI();
 					});
 
@@ -226,7 +226,7 @@ public class GuiUpgrade<T extends TileEntityIEBase & IIEInventory & IUpgradableD
 			builder.add(new AMTModel(DefaultVertexFormats.ITEM, baseRes));
 
 		//Collect all installed upgrades
-		ArrayList<Upgrade> upgrades = new ArrayList<>(tile.getAllInstalledUpgrades());
+		ArrayList<Upgrade> upgrades = new ArrayList<>(entity.getAllInstalledUpgrades());
 		//Remove incompatible from preview and add requirements
 		if(upgrade!=null)
 		{

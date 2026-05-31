@@ -5,7 +5,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityProjectileWorkshop;
-import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
+import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIITileBase;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -13,7 +13,7 @@ import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
  * @since 10.07.2019
  * @since 08.13.2025
  */
-public class ContainerProjectileWorkshop extends ContainerIIBase<TileEntityProjectileWorkshop>
+public class ContainerProjectileWorkshop extends ContainerIITileBase<TileEntityProjectileWorkshop>
 {
 	public Slot inputSlot, outputSlot;
 

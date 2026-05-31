@@ -121,7 +121,7 @@ public class ItemIIBinoculars extends ItemIISubItemsBase<Binoculars> implements 
 
 				if(do_tick&&isEnabled(stack)&&isAdvanced(stack))
 				{
-					IIUtils.applyInfraredVision(entity, 10);
+					IIUtils.applyInfraredVision(entity, 25);
 					ItemNBTHelper.setBoolean(stack, "wasUsed", true);
 
 					extractEnergy(stack, Tools.advancedBinocularsEnergyUsage, false);

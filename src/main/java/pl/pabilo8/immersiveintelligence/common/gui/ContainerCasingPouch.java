@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.gui;
 
-import blusunrize.immersiveengineering.common.gui.IESlot;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
@@ -8,14 +7,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import pl.pabilo8.immersiveintelligence.common.crafting.IIRecipes;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine;
-import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIItem;
+import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIItemBase;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 23.09.2023
  */
-public class ContainerCasingPouch extends ContainerIIItem
+public class ContainerCasingPouch extends ContainerIIItemBase
 {
+	public Slot[] slotsCasing, slotsMagazine;
 
 	public ContainerCasingPouch(EntityPlayer player, ItemStack heldStack, EnumHand hand)
 	{
@@ -27,14 +27,9 @@ public class ContainerCasingPouch extends ContainerIIItem
 	public int addSlots(int i)
 	{
 		//Casing Slots
-		for(int y = 0; y < 2; y++)
-			for(int x = 0; x < 6; x++)
-				this.addSlotToContainer(new IESlot.ContainerCallback(this, this.inv, i++, 26+x*18, 21+y*18));
-
+		this.slotsCasing = addSlotArray(26, 21-5, i, 12, 6);
 		//Magazine Slots
-		for(int x = 0; x < 6; x++)
-			this.addSlotToContainer(new IESlot.ContainerCallback(this, this.inv, i++, 26+x*18, 59));
-
+		this.slotsMagazine = addSlotArray(26, 59-5, i+12, 6, 6);
 		addPlayerInventory(inventoryPlayer, 8, 92);
 		return i;
 	}
@@ -45,12 +40,6 @@ public class ContainerCasingPouch extends ContainerIIItem
 		if(slotNumer < 12)
 			return IIRecipes.AMMO_CASINGS.matchesItemStackIgnoringSize(stack);
 		return stack.getItem() instanceof ItemIIBulletMagazine;
-	}
-
-	@Override
-	public boolean canTake(ItemStack stack, int slotNumer, Slot slotObject)
-	{
-		return true;
 	}
 
 	@Override

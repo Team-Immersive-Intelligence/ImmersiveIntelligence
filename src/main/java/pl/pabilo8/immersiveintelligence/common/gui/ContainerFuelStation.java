@@ -4,7 +4,7 @@ import blusunrize.immersiveengineering.api.IEEnums.SideConfig;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityFuelStation;
-import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
+import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIITileBase;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -12,7 +12,7 @@ import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
  * @since 10.07.2019
  * @since 08.14.2025
  */
-public class ContainerFuelStation extends ContainerIIBase<TileEntityFuelStation>
+public class ContainerFuelStation extends ContainerIITileBase<TileEntityFuelStation>
 {
 	public Slot inputFluidSlot, outputFluidSlot;
 

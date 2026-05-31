@@ -22,6 +22,7 @@ import blusunrize.immersiveengineering.common.blocks.wooden.TileEntityWindmill;
 import blusunrize.immersiveengineering.common.items.IEItemInterfaces.IGuiItem;
 import blusunrize.immersiveengineering.common.util.ChatUtils;
 import blusunrize.immersiveengineering.common.util.IEPotions;
+import blusunrize.immersiveengineering.common.util.inventory.IIEInventory;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockTNT;
 import net.minecraft.block.state.IBlockState;
@@ -113,7 +114,8 @@ import pl.pabilo8.immersiveintelligence.common.entity.vehicle.towable.gun.Entity
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.towable.gun.EntityFieldGun;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.towable.gun.EntityFieldHowitzer;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleSeat;
-import pl.pabilo8.immersiveintelligence.common.gui.ContainerUpgrade;
+import pl.pabilo8.immersiveintelligence.common.gui.ContainerEntityUpgrade;
+import pl.pabilo8.immersiveintelligence.common.gui.ContainerTileUpgrade;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIIMinecart.Minecarts;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMaterialDust.MaterialsDust;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -798,12 +800,21 @@ public class CommonProxy implements IGuiHandler
 		EnumHand hand;
 		TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
 		ItemStack stack = player.getHeldItem(hand = (player.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof IGuiItem?EnumHand.MAIN_HAND: EnumHand.OFF_HAND));
+		Entity entity = y==Integer.MIN_VALUE?world.getEntityByID(x): null;
 
-		if(ID==IIGUI.UPGRADE.ordinal()&&te instanceof IUpgradableDevice)
+		if(ID==IIGUI.UPGRADE_TILE.ordinal()&&te instanceof IUpgradableDevice)
 		{
 			IUpgradableDevice upgradeMaster = ((IUpgradableDevice)te).master();
 			if(upgradeMaster!=null)
-				return new ContainerUpgrade(player, (TileEntityIEBase & IUpgradableDevice)upgradeMaster);
+				//noinspection rawtypes,unchecked
+				return new ContainerTileUpgrade(player, (TileEntityIEBase & IUpgradableDevice)upgradeMaster);
+		}
+		if(ID==IIGUI.UPGRADE_ENTITY.ordinal()&&entity instanceof IUpgradableDevice)
+		{
+			IUpgradableDevice upgradeMaster = ((IUpgradableDevice)entity).master();
+			if(upgradeMaster!=null)
+				//noinspection rawtypes,unchecked
+				return new ContainerEntityUpgrade<>(player, (Entity & IUpgradableDevice & IIEInventory)upgradeMaster);
 		}
 
 		if(IIGUI.values().length > ID)

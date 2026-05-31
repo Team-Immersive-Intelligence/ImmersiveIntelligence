@@ -1,7 +1,7 @@
 package pl.pabilo8.immersiveintelligence.client.gui.block;
 
 import net.minecraft.entity.player.EntityPlayer;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTileGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiCategory;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTemplate;
@@ -15,7 +15,7 @@ import pl.pabilo8.immersiveintelligence.common.gui.ContainerIICrate;
  * @since 17.05.2019
  */
 @DecoTemplate(name = "small_crate", category = DecoGuiCategory.GENERIC_TILE)
-public class GuiSmallCrate extends DecoGui<TileEntitySmallCrate, ContainerIICrate<TileEntitySmallCrate>>
+public class GuiSmallCrate extends DecoTileGui<TileEntitySmallCrate, ContainerIICrate<TileEntitySmallCrate>>
 {
 	public GuiSmallCrate(EntityPlayer player, TileEntitySmallCrate tile)
 	{

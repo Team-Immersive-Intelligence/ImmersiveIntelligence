@@ -11,7 +11,7 @@ import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation.DataOp
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType.TypeMetaInfo;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTileGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoArrows;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoDropdownDataLetters;
@@ -44,7 +44,7 @@ import java.util.stream.Collectors;
  * @since 30.06.2019
  */
 @DecoTemplate(name = "arithmetic_logic_machine_edit", category = DecoGuiCategory.DATA_TILE)
-public class GuiArithmeticLogicMachineEdit extends DecoGui<TileEntityArithmeticLogicMachine, ContainerArithmeticLogicMachine>
+public class GuiArithmeticLogicMachineEdit extends DecoTileGui<TileEntityArithmeticLogicMachine, ContainerArithmeticLogicMachine>
 {
 	@SyncNBT
 	public DataVariable variableToEdit;
