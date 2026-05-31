@@ -163,6 +163,7 @@ public class FillerRenderer extends IIMultiblockRenderer<TileEntityFiller>
 					float h0 = -.5f;
 					float h1 = h0+transition;
 
+					GlStateManager.pushMatrix();
 					GL11.glEnable(GL11.GL_STENCIL_TEST);
 
 					GlStateManager.colorMask(false, false, false, false);
@@ -196,6 +197,9 @@ public class FillerRenderer extends IIMultiblockRenderer<TileEntityFiller>
 					ClientUtils.mc().getRenderItem().renderItem(stackInto, TransformType.GROUND);
 
 					GL11.glDisable(GL11.GL_STENCIL_TEST);
+					GL11.glStencilMask(0xFF);
+					GlStateManager.clear(GL11.GL_STENCIL_BUFFER_BIT);
+					GlStateManager.popMatrix();
 				}
 			}
 		}
@@ -212,6 +216,12 @@ public class FillerRenderer extends IIMultiblockRenderer<TileEntityFiller>
 				bullet.setModel(null);
 				bullet.defaultize();
 			}
+		}
+
+		@Override
+		protected AMT renamedCopy(String newName)
+		{
+			return this;
 		}
 
 		@Override

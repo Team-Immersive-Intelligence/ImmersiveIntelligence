@@ -14,6 +14,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoSprite;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 import java.util.function.BiConsumer;
@@ -234,12 +235,28 @@ public class IIDrawUtils
 		return this;
 	}
 
-	public IIDrawUtils drawTexColorSprite(float x, float y, float w, float h, IIColor color, ResourceLocation texture)
+	public IIDrawUtils drawTexColorRect(float x, float y, float w, float h, IIColor color, ResourceLocation texture)
 	{
 		TextureAtlasSprite sprite = ClientUtils.getSprite(texture);
 		drawTexColorRect(x, y, w, h, color,
 				sprite.getMinU(), sprite.getMaxU(), sprite.getMinV(), sprite.getMaxV()
 		);
+		return this;
+	}
+
+	public IIDrawUtils drawTexColorRect(float x, float y, float w, float h, IIColor color, DecoSprite sprite)
+	{
+		if(sprite.getSizeX()==w&&sprite.getSizeY()==h)
+			drawTexColorRect(x, y, w, h, color, sprite.getMapUV());
+		else
+		{
+			if(sprite.isConnected())
+				drawConnectedTexColorRect(x, y, w, h, color, sprite.getSizeX(), sprite.getSizeY(),
+						Math.min(sprite.getSizeX()/2, 8), Math.min(sprite.getSizeY()/2, 8), sprite.getMapUV());
+			else
+				drawRepeatedTexColorRect(x, y, w, h, color, sprite.getSizeX(), sprite.getSizeY(), sprite.getMapUV());
+		}
+
 		return this;
 	}
 
@@ -264,7 +281,7 @@ public class IIDrawUtils
 		return this;
 	}
 
-	public IIDrawUtils drawRepeatedTexColorRect(int x, int y, int width, int height, IIColor color, ResourceLocation texture, int tileSize)
+	public IIDrawUtils drawRepeatedTexColorRect(float x, float y, float width, float height, IIColor color, ResourceLocation texture, int tileSize)
 	{
 		TextureAtlasSprite sprite = ClientUtils.getSprite(texture);
 		for(int yy = 0; yy < height; yy += tileSize)
@@ -274,22 +291,22 @@ public class IIDrawUtils
 						MathHelper.clamp(width-xx, 0, tileSize),
 						MathHelper.clamp(height-yy, 0, tileSize),
 						color,
-						sprite.getMinU(), sprite.getInterpolatedU(Math.min(width-xx, tileSize)/2f),
-						sprite.getMinV(), sprite.getInterpolatedV(Math.min(height-yy, tileSize)/2f)
+						sprite.getMinU(), sprite.getInterpolatedU(Math.min(width-xx, tileSize)),
+						sprite.getMinV(), sprite.getInterpolatedV(Math.min(height-yy, tileSize))
 				);
 			}
 		return this;
 	}
 
-	public IIDrawUtils drawRepeatedTexColorRect(int x, int y, int width, int height, IIColor color, int tWidth, int tHeight, float... uv)
+	public IIDrawUtils drawRepeatedTexColorRect(float x, float y, float width, float height, IIColor color, int tWidth, int tHeight, float... uv)
 	{
 		float u = uv[0];
 		float uu = uv[1]-u;
 		float v = uv[2];
 		float vv = uv[3]-v;
 
-		for(int yy = 0; yy < height; yy += tHeight)
-			for(int xx = 0; xx < width; xx += tWidth)
+		for(float yy = 0; yy < height; yy += tHeight)
+			for(float xx = 0; xx < width; xx += tWidth)
 			{
 				drawTexColorRect(x+xx, y+yy,
 						MathHelper.clamp(width-xx, 0, tWidth),
@@ -343,8 +360,12 @@ public class IIDrawUtils
 	public IIDrawUtils drawConnectedTexColorRect(float x, float y, float w, float h, IIColor color,
 												 int texSizeX, int texSizeY, int xMargin, int yMargin, float... uv)
 	{
-		int iSizeX = Math.min(texSizeX-2*xMargin, Math.min((int)w, texSizeX)/2);
-		int iSizeY = Math.min(texSizeY-2*yMargin, Math.min((int)h, texSizeY)/2);
+		xMargin = (int)Math.min(w/2, xMargin);
+		yMargin = (int)Math.min(h/2, yMargin);
+		int iSizeX = Math.max(0, Math.min(texSizeX-2*xMargin, Math.min((int)w, texSizeX)/2));
+		int iSizeY = Math.max(0, Math.min(texSizeY-2*yMargin, Math.min((int)h, texSizeY)/2));
+		if(iSizeX==0||iSizeY==0)
+			return this;
 		float tStartX = (xMargin/(float)texSizeX)*(uv[1]-uv[0])+uv[0];
 		float tStartY = (yMargin/(float)texSizeY)*(uv[3]-uv[2])+uv[2];
 

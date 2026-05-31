@@ -38,7 +38,7 @@ public class DecoArrows extends DecoTextBasedComponent<DecoArrows>
 
 		if(mouseY >= y&&mouseY < y+8)
 			onArrow.accept(true);
-		else if(mouseX >= y+height-8&&mouseX < y+height)
+		else if(mouseY >= y+height-8&&mouseY < y+height)
 			onArrow.accept(false);
 		return true;
 	}

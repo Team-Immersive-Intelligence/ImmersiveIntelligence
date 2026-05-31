@@ -51,7 +51,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multibloc
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySkyCrateStation;
 import pl.pabilo8.immersiveintelligence.common.block.rotary_device.tileentity.TileEntityGearbox;
 import pl.pabilo8.immersiveintelligence.common.block.simple.tileentity.TileEntitySmallCrate;
-import pl.pabilo8.immersiveintelligence.common.compat.jei.gui_handlers.DecoGuiJEIHandler;
+import pl.pabilo8.immersiveintelligence.common.compat.jei.DecoGuiJEIHandler;
 import pl.pabilo8.immersiveintelligence.common.gui.*;
 import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
@@ -105,6 +105,9 @@ public enum IIGUI implements ISerializableEnum
 	PRINTED_PAGE_TEXT(),
 	PRINTED_PAGE_CODE(),
 	PRINTED_PAGE_BLUEPRINT(),
+	PRINTED_PAGE_NEWSPAPER(),
+	PRINTED_PAGE_BOOK(),
+	PRINTED_PAGE_BOUND(),
 	PRINTED_PAGE_LOGISTIC_TAG(),
 
 	CASING_POUCH(ContainerCasingPouch::new),
@@ -131,8 +134,8 @@ public enum IIGUI implements ISerializableEnum
 	),
 	VULCANIZER(TileEntityVulcanizer.class, ContainerVulcanizer::new),
 
-	FLAGPOLE(TileEntityFlagpole.class, ContainerFlagpole::new),
-	FLAGPOLE_FACTION(TileEntityFlagpole.class, ContainerFlagpole::new),
+	FLAGPOLE(TileEntityFlagpole.class, ContainerFlagpole::getContainerForFlagpolePage),
+	FLAGPOLE_FACTION(TileEntityFlagpole.class, ContainerFlagpole::getContainerForFactionPage),
 	EMPLACEMENT_STORAGE(TileEntityEmplacement.class, ContainerEmplacement::getContainerForStoragePage),
 	EMPLACEMENT_CONFIG(TileEntityEmplacement.class, ContainerEmplacement::new),
 	EMPLACEMENT_TARGET_FILTERS(TileEntityEmplacement.class, ContainerEmplacement::new),
@@ -204,9 +207,9 @@ public enum IIGUI implements ISerializableEnum
 		IIGUI.GEARBOX.setClientDecoGui(GuiGearbox::new);
 
 		IIGUI.DATA_REDSTONE_INTERFACE_DATA
-				.setClientDecoGui(GuiDataRedstoneInterfaceData::new);
+				.setClientDecoGui(GuiDataRedstoneInterface::getDataGUI);
 		IIGUI.DATA_REDSTONE_INTERFACE_REDSTONE
-				.setClientDecoGui(GuiDataRedstoneInterfaceRedstone::new);
+				.setClientDecoGui(GuiDataRedstoneInterface::getRedstoneGUI);
 
 		IIGUI.PRINTING_PRESS.setClientDecoGui(GuiPrintingPress::new);
 		IIGUI.CHEMICAL_BATH.setClientDecoGui(GuiChemicalBath::new);
@@ -233,11 +236,15 @@ public enum IIGUI implements ISerializableEnum
 		IIGUI.ARITHMETIC_LOGIC_MACHINE_STORAGE.setClientDecoGui(GuiArithmeticLogicMachine::getStorageGui);
 		IIGUI.ARITHMETIC_LOGIC_MACHINE_VARIABLES.setClientDecoGui(GuiArithmeticLogicMachine::getVariablesGui);
 		IIGUI.ARITHMETIC_LOGIC_MACHINE_EDIT.setClientDecoGui(GuiArithmeticLogicMachineEdit::new);
+
 		//Printed Page
 		IIGUI.PRINTED_PAGE_BLANK.setClientStackGui(GuiPrintedPage::new);
 		IIGUI.PRINTED_PAGE_TEXT.setClientStackGui(GuiPrintedPage::new);
 		IIGUI.PRINTED_PAGE_CODE.setClientStackGui(GuiPrintedPage::new);
 		IIGUI.PRINTED_PAGE_BLUEPRINT.setClientStackGui(GuiPrintedPage::new);
+		IIGUI.PRINTED_PAGE_NEWSPAPER.setClientStackGui(GuiPrintedPage::new);
+		IIGUI.PRINTED_PAGE_BOUND.setClientStackGui(GuiPrintedPage::new);
+		IIGUI.PRINTED_PAGE_BOOK.setClientStackGui(GuiPrintedPage::new);
 
 		IIGUI.CASING_POUCH.setClientStackGui(GuiCasingPouch::new);
 
@@ -261,7 +268,7 @@ public enum IIGUI implements ISerializableEnum
 		IIGUI.RADAR_CONFIG.setClientDecoGui(GuiRadarConfig::new);
 		IIGUI.RADAR_TARGETS.setClientDecoGui(GuiRadarTargets::new);
 		IIGUI.COAGULATOR.setClientDecoGui(GuiCoagulator::new);
-		IIGUI.VULCANIZER.setClientGui(GuiVulcanizer::new);
+		IIGUI.VULCANIZER.setClientDecoGui(GuiVulcanizer::new);
 	}
 
 	@SideOnly(Side.CLIENT)

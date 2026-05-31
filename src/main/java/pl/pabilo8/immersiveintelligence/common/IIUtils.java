@@ -6,10 +6,10 @@ import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorage;
 import blusunrize.immersiveengineering.api.energy.wires.IImmersiveConnectable;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
-import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
 import blusunrize.immersiveengineering.common.util.Utils;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementManager;
 import net.minecraft.advancements.PlayerAdvancements;
@@ -18,7 +18,6 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -53,6 +52,8 @@ import javax.annotation.Nullable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -449,19 +450,20 @@ public class IIUtils
 		return Enum.valueOf(en, name.toUpperCase());
 	}
 
-	public static void fixupItem(Item item, String itemName)
+	/**
+	 * Returns a reversed copy of an array.
+	 *
+	 * @param array array to reverse
+	 * @param <T>   array type
+	 * @return reversed array
+	 * @implNote Does not modify the input array.
+	 */
+	public static <T> T[] reverseArray(T[] array)
 	{
-		// First, get the item out of IE's registries.
-		Item rItem = IEContent.registeredIEItems.remove(IEContent.registeredIEItems.size()-1);
-		if(rItem!=item)
-			throw new IllegalStateException("fixupItem was not called at the appropriate time");
-
-		// Now, reconfigure the block to match our mod.
-		item.setUnlocalizedName(ImmersiveIntelligence.MODID+"."+itemName);
-		item.setCreativeTab(IIContent.II_CREATIVE_TAB);
-
-		// And add it to our registries.
-		IIContent.ITEMS.add(item);
+		T[] reversed = Arrays.copyOf(array, array.length);
+		for(int i = 0; i < array.length; i++)
+			reversed[i] = array[array.length-1-i];
+		return reversed;
 	}
 
 	public static void sendToolbarMessage(EntityPlayer player, String messageFormat, Object... args)
@@ -487,4 +489,40 @@ public class IIUtils
 			return null;
 		return te.getCapability(capability, facing);
 	}
+
+	/**
+	 * @return blocks in an orb of a given radius
+	 */
+	public static Set<BlockPos> getBlocksInOrb(World world, BlockPos centerPos, float radius)
+	{
+		ArrayList<BlockPos> set = new ArrayList<>();
+		float diameter = radius*radius;
+
+		//Iterate in a cube
+		for(float x = -radius; x < radius; x++)
+			for(float y = -radius; y < radius; y++)
+				for(float z = -radius; z < radius; z++)
+				{
+					BlockPos pos = centerPos.add(x, y, z);
+					//Check if distance is in radius
+					if(pos.distanceSq(centerPos) <= diameter)
+						set.add(pos);
+				}
+
+		return Sets.newHashSet(set);
+	}
+
+	public static Set<BlockPos> getBlocksInCube(World world, BlockPos centerPos, float radius)
+	{
+		ArrayList<BlockPos> set = new ArrayList<>();
+
+		//Iterate in a cube
+		for(float x = -radius; x < radius; x++)
+			for(float y = -radius; y < radius; y++)
+				for(float z = -radius; z < radius; z++)
+					set.add(centerPos.add(x, y, z));
+
+		return Sets.newHashSet(set);
+	}
+
 }

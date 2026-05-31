@@ -27,6 +27,7 @@ import net.minecraft.block.BlockTNT;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -35,26 +36,24 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.ForgeChunkManager;
-import net.minecraftforge.common.ForgeChunkManager.LoadingCallback;
-import net.minecraftforge.common.ForgeChunkManager.Ticket;
-import net.minecraftforge.common.ForgeChunkManager.Type;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent.Register;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
@@ -74,13 +73,13 @@ import pl.pabilo8.immersiveintelligence.api.rotary.IIRotaryUtils;
 import pl.pabilo8.immersiveintelligence.api.upgrade.IUpgradableDevice;
 import pl.pabilo8.immersiveintelligence.api.utils.MinecartBlockHelper;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Factions;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.MechanicalDevices;
 import pl.pabilo8.immersiveintelligence.common.ammo.components.factory.AmmoComponentFluid;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.BlockIIDataDevice.IIBlockTypes_Connector;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.conveyors.*;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIOre.Ores;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIISmallCrate;
-import pl.pabilo8.immersiveintelligence.common.compat.CratesFeltBlueHelper;
 import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
 import pl.pabilo8.immersiveintelligence.common.crafting.IIRecipes;
 import pl.pabilo8.immersiveintelligence.common.crafting.RecipePowerpackAdvanced;
@@ -116,9 +115,10 @@ import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIFluid;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBlockEnum;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBlockProperties;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.IOwnableProperty;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.PermissionCategory;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.chunk.CapabilityChunkOwnership;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyHandler;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.permission.PermissionCategory;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.property.IOwnableProperty;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.property.chunk.chunk.CapabilityChunkOwnership;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.NBTSerialisation;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
@@ -138,18 +138,18 @@ import java.util.List;
 import static blusunrize.immersiveengineering.api.energy.wires.WireApi.registerFeedthroughForWiretype;
 
 /**
- * Created by Pabilo8 on 2019-05-07.
  * 2 days of headache, pain, lack of sleep and addict-like coffee drinking, finally i got a fix!
  * the problem why the server couldn't load was the modifier "abstract" in this class
  * why? i don't know why it was here in the first place
  * for how long? ask github
  * how did you not notice that? ... that was really unexpected, didn't even consider such a thing being there
- * @edited Avalon (avalon@iiteam.net)
- * @since 03.03.2026
- * added compat for cfb
+ *
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @ii-approved 0.3.1
+ * @since 05.07.2019
  */
 @EventBusSubscriber(modid = ImmersiveIntelligence.MODID)
-public class CommonProxy implements IGuiHandler, LoadingCallback
+public class CommonProxy implements IGuiHandler
 {
 	public CommonProxy()
 	{
@@ -303,6 +303,9 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 				} catch(IllegalAccessException ignored) {}
 			}
 		}
+
+		OreDictionary.registerOre("sandRed", new ItemStack(Blocks.SAND, 1, 1));
+		OreDictionary.registerOre("sandstoneRed", Blocks.RED_SANDSTONE);
 	}
 
 	@SubscribeEvent
@@ -321,6 +324,20 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		ExcavatorHandler.addMineral("Ferberite", 10, .2f, new String[]{"oreTungsten", "oreIron", "oreTin"}, new float[]{.2f, .4f, .3f});
 		ExcavatorHandler.addMineral("Smithsonite", 10, .15f, new String[]{"oreZinc"}, new float[]{1.0f});
 		ExcavatorHandler.addMineral("Halite", 15, .10f, new String[]{"oreSalt"}, new float[]{1.0f});
+		ExcavatorHandler.addMineral("Hardened Claypan", 15, .15f, new String[]{"terracotta", "sandstoneRed", "sandRed"}, new float[]{.6f, .3f, .1f});
+		ExcavatorHandler.addMineral("Banded Iron", 15, .15f, new String[]{"oreIron", "cobblestone"}, new float[]{.8f, .2f});
+		ExcavatorHandler.addMineral("Lazulitic Intrusion", 15, .15f, new String[]{"oreLapis", "oreGold", "dustSulfur"}, new float[]{.75f, .15f, .1f});
+		ExcavatorHandler.addMineral("Alluvial Sift", 15, .15f, new String[]{"clay", "sand", "gemDiamond"}, new float[]{.4f, .4f, .2f});
+		ExcavatorHandler.addMineral("Auricupride", 15, .15f, new String[]{"oreCopper", "oreGold"}, new float[]{.7f, .3f});
+		ExcavatorHandler.addMineral("Beryl", 15, .15f, new String[]{"blockPrismarine", "oreEmerald"}, new float[]{.7f, .3f});
+		ExcavatorHandler.addMineral("Bituminous coal", 15, .15f, new String[]{"oreCoal", "dustSulfur"}, new float[]{.8f, .2f});
+		ExcavatorHandler.addMineral("Chalcopyrite", 15, .15f, new String[]{"oreIron", "oreCopper", "dustSulfur"}, new float[]{.5f, .45f, .05f});
+		ExcavatorHandler.addMineral("Ingenious rock", 15, .15f, new String[]{"stoneGranite", "stoneDiorite", "stoneAndesite", "obsidian"}, new float[]{.3f, .3f, .3f, .1f});
+		ExcavatorHandler.addMineral("Laterite", 15, .15f, new String[]{"oreAluminum", "oreIron", "oreNickel"}, new float[]{.6f, .45f, .05f});
+		ExcavatorHandler.addMineral("Petlandite", 15, .15f, new String[]{"oreNickel", "oreIron", "dustSulfur"}, new float[]{.65f, .25f, .1f});
+		ExcavatorHandler.addMineral("Rich Auricupride", 15, .15f, new String[]{"oreGold", "oreCopper"}, new float[]{.6f, .4f});
+		ExcavatorHandler.addMineral("Emerald Geode", 15, .15f, new String[]{"terracotta", "sand", "gemEmerald"}, new float[]{.4f, .4f, .2f});
+		ExcavatorHandler.addMineral("Uranite", 15, .15f, new String[]{"oreUranium", "oreLead"}, new float[]{.4f, .6f});
 
 		LighterFuelHandler.addFuel(FluidRegistry.getFluid("creosote"), 100);
 		LighterFuelHandler.addFuel(FluidRegistry.getFluid("ethanol"), 20);
@@ -345,10 +362,8 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 			Tools.powerpack_blacklist = collect.toArray(new String[0]);
 		}
 
-		VehicleFuelHandler.addVehicle(EntityMotorbike.class,
-				FluidRegistry.getFluid("diesel"),
-				FluidRegistry.getFluid("biodiesel")
-		);
+		VehicleFuelHandler.addVehicle(EntityMotorbike.class, FluidRegistry.getFluid("diesel"), FluidRegistry.getFluid("biodiesel"));
+		VehicleFuelHandler.addVehicle(EntityTrackedMotorbike.class, FluidRegistry.getFluid("diesel"), FluidRegistry.getFluid("biodiesel"));
 
 		IIContent.itemLighter.registerBlockAction((world, pos, igniter, state, tileEntity) ->
 		{
@@ -450,7 +465,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 
 	//--- Utils ---//
 
-	public void preInit()
+	public void preInit(FMLPreInitializationEvent event)
 	{
 		IIDataWireType.init();
 		IIPacketHandler.preInit();
@@ -601,11 +616,18 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		ConveyorHandler.registerConveyorHandler(new ResourceLocation(ImmersiveIntelligence.MODID, "rubber_extract"), ConveyorRubberExtract.class, (tileEntity) -> new ConveyorRubberExtract(tileEntity instanceof IConveyorTile?((IConveyorTile)tileEntity).getFacing(): EnumFacing.NORTH));
 		ConveyorHandler.registerConveyorHandler(new ResourceLocation(ImmersiveIntelligence.MODID, "rubber_extractcovered"), ConveyorRubberCoveredExtract.class, (tileEntity) -> new ConveyorRubberCoveredExtract(tileEntity instanceof IConveyorTile?((IConveyorTile)tileEntity).getFacing(): EnumFacing.NORTH));
 
-		IICompatModule.doModulesPreInit();
-		CratesFeltBlueHelper.init();
+		if(Factions.enableFactions)
+		{
+			MinecraftForge.EVENT_BUS.register(DiplomacyHandler.getInstance(false));
+			ForgeChunkManager.setForcedChunkLoadingCallback(
+					ImmersiveIntelligence.INSTANCE,
+					(tickets, world) -> DiplomacyHandler.getInstance(world.isRemote).onTicketsLoaded(tickets, world)
+			);
+		}
+		IICompatModule.doModulesPreInit(event);
 	}
 
-	public void init()
+	public void init(FMLInitializationEvent event)
 	{
 		PenetrationRegistry.init();
 		IICompatModule.doModulesInit();
@@ -731,7 +753,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		IISounds.init();
 	}
 
-	public void postInit()
+	public void postInit(FMLPostInitializationEvent event)
 	{
 		IICompatModule.doModulesPostInit();
 		IIConfigHandler.onConfigUpdate();
@@ -749,7 +771,6 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		IIRotaryUtils.TORQUE_BLOCKS.put(tileEntity -> tileEntity instanceof TileEntityWatermill,
 				aFloat -> aFloat*MechanicalDevices.dynamoWatermillTorque
 		);
-
 
 		CorrosionHandler.addItemToBlacklist(new ItemStack(Items.DIAMOND_HELMET));
 		CorrosionHandler.addItemToBlacklist(new ItemStack(Items.DIAMOND_CHESTPLATE));
@@ -842,22 +863,6 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 	public void reloadManual()
 	{
 
-	}
-
-	@Override
-	public void ticketsLoaded(List<Ticket> tickets, World world)
-	{
-		for(Ticket ticket : tickets)
-		{
-			if(ticket.getType()==Type.NORMAL)
-			{
-				for(ChunkPos chunkPos : ticket.getChunkList())
-					ForgeChunkManager.forceChunk(ticket, chunkPos);
-				final MinecraftServer minecraftServer = world.getMinecraftServer();
-				if(minecraftServer!=null)
-					minecraftServer.addScheduledTask(() -> ForgeChunkManager.releaseTicket(ticket));
-			}
-		}
 	}
 
 	public void onMechanicalConnectorRemoved(Connection connection)

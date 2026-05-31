@@ -35,17 +35,15 @@ public class GuiPrecisionAssembler extends DecoGui<TileEntityPrecisionAssembler,
 	public GuiPrecisionAssembler(EntityPlayer player, TileEntityPrecisionAssembler tile)
 	{
 		super(player, tile, IIGUI.PRECISION_ASSEMBLER);
-
-		if(tile!=null)
-		{
-			openedDrawer = Utils.RAND.nextBoolean()?tile.drawer1: tile.drawer2;
-			openedDrawer.setState(true);
-		}
 	}
 
 	@Override
 	public void onInit()
 	{
+		//Open a selected drawer
+		this.syncAnimatedParts(openedDrawer = Utils.RAND.nextBoolean()?tile.drawer1: tile.drawer2, true);
+
+		//Initialize the background
 		startBackground()
 				.withBox(DecoTextures.BG_STEEL_ROUGH, DecoTextures.TEMPLATE_SQUARE, 0, 0, 176, 78)
 				.withFrame(DecoTextures.FRAME_STEEL, 6, false)
@@ -66,6 +64,7 @@ public class GuiPrecisionAssembler extends DecoGui<TileEntityPrecisionAssembler,
 
 				.build();
 
+		//Draw the energy bar and progress bar
 		addComponents(
 				new DecoBar(161-4, 5-6)
 						.withTemplate(DecoTemplates.BAR_ELECTRIC_ENERGY.apply(tile.energyStorage)),

@@ -97,18 +97,27 @@ import java.util.stream.Collectors;
  * @author Avalon (avalon@iiteam.net)
  * @since 22.03.2020
  * @since 28.11.2024
+ * @updated 29.4.2026
  */
 public class IIRecipes
 {
-	public static ItemStack BASIC_CIRCUIT, TOOL_HAMMER, TOOL_CUTTERS;
+	public static ItemStack BASIC_CIRCUIT;
+	public static IngredientStack TOOL_HAMMER, TOOL_CUTTERS;
 	public static IngredientStack AMMO_CASINGS;
 
 	public static void doRecipes(IForgeRegistryModifiable<IRecipe> recipeRegistry)
 	{
 		//--- Setup Items ---//
 		BASIC_CIRCUIT = new ItemStack(IEContent.itemMaterial, 1, 27);
-		TOOL_HAMMER = new ItemStack(IEContent.itemTool, 1, 0);
-		TOOL_CUTTERS = new ItemStack(IEContent.itemTool, 1, 1);
+		//Tools - include both IE and II variants for workbench recipes
+		TOOL_HAMMER = new IngredientStack(Arrays.asList(
+				new ItemStack(IEContent.itemTool, 1, 0),
+				new ItemStack(IIContent.itemHammer)
+		));
+		TOOL_CUTTERS = new IngredientStack(Arrays.asList(
+				new ItemStack(IEContent.itemTool, 1, 1),
+				new ItemStack(IIContent.itemWirecutter)
+		));
 
 		//Used by ammo pouch
 		AMMO_CASINGS = new IngredientStack(AmmoRegistry.getAllAmmoItems()
@@ -456,7 +465,7 @@ public class IIRecipes
 				new IngredientStack[]{new IngredientStack("plateIron"), new IngredientStack("wireCopper", 2), new IngredientStack("blockGlass")},
 
 				new String[]{"inserter", "solderer", "drill"},
-				new String[]{"drill work main", "solderer work first", "inserter pick first", "inserter drop main", "solderer work main", "drill work second", "inserter pick second", "inserter drop main"},
+				new String[]{"drill work main", "solderer work first", "inserter pick first", "inserter drop main", "solderer work main", "drill work second", "inserter pick second", "inserter drop main", "inserter pick third", "inserter drop main", "solder work main"},
 
 				12000,
 				1.0f
@@ -470,7 +479,7 @@ public class IIRecipes
 				new IngredientStack[]{new IngredientStack("electronTube"), new IngredientStack("plateNickel"), new IngredientStack("dustRedstone", 4)},
 
 				new String[]{"inserter", "solderer", "drill"},
-				new String[]{"inserter pick second", "drill work main", "inserter drop main", "solderer work main", "inserter pick first", "inserter drop main"},
+				new String[]{"inserter pick second", "inserter drop main", "drill work main", "inserter pick first", "inserter drop main", "solderer work main", "inserter pick third", "inserter drop main", "solderer work main"},
 
 				18000,
 				1.0f
@@ -483,7 +492,7 @@ public class IIRecipes
 				new IngredientStack[]{new IngredientStack("plateSteel"), new IngredientStack("wireTungsten", 2), new IngredientStack("electronTube", 2)},
 
 				new String[]{"inserter", "solderer", "drill"},
-				new String[]{"drill work main", "inserter pick second", "inserter drop main", "inserter pick first", "inserter drop main", "solderer work main"},
+				new String[]{ "inserter pick first", "inserter drop main", "drill work main", "inserter pick second", "inserter drop main", "solderer work main", "inserter pick third", "inserter drop main", "solderer work main"},
 
 				24000,
 				1.25f
@@ -496,7 +505,7 @@ public class IIRecipes
 				new IngredientStack[]{new IngredientStack("electronTubeAdvanced"), new IngredientStack("chipBasic")},
 
 				new String[]{"inserter", "solderer", "drill"},
-				new String[]{"inserter pick second", "drill work main", "inserter drop main", "solderer work main", "inserter pick first", "inserter drop main"},
+				new String[]{"inserter pick second", "inserter drop main", "drill work main", "solderer work main", "inserter pick first", "inserter drop main", "solderer work main"},
 
 				32000,
 				1.25f
@@ -509,7 +518,7 @@ public class IIRecipes
 				new IngredientStack[]{new IngredientStack("plateSilicon", 2), new IngredientStack("plateAdvancedElectronicAlloy"), new IngredientStack("plateAluminum"), new IngredientStack("dyeBlack")},
 
 				new String[]{"inserter", "solderer", "drill"},
-				new String[]{"drill work main", "solderer work first", "inserter pick first", "drill work main", "inserter drop main", "inserter pick second", "solderer work main", "inserter drop main", "inserter pick third", "inserter drop third", "solderer work main"},
+				new String[]{"inserter pick first", "inserter drop main", "drill work main", "solderer work first", "drill work main", "inserter pick second", "inserter drop main", "solderer work main", "inserter pick third", "inserter drop main", "solderer work main"},
 
 				50000,
 				0.9f
@@ -522,7 +531,7 @@ public class IIRecipes
 				new IngredientStack[]{new IngredientStack("transistor", 32), new IngredientStack("electronTubeAdvanced", 2)},
 
 				new String[]{"inserter", "solderer", "buzzsaw"},
-				new String[]{"solderer work first", "inserter pick first", "buzzsaw work main", "solderer work main", "inserter drop main", "buzzsaw work main", "solderer work main"},
+				new String[]{"inserter pick first", "inserter drop main", "solderer work first", "buzzsaw work main", "solderer work main", "inserter pick second", "inster drop main", "buzzsaw work main", "solderer work main"},
 
 				500000,
 				1.5f
@@ -750,9 +759,10 @@ public class IIRecipes
 				},
 				new String[]{"welder", "inserter"},
 				new String[]{
-						"welder work first", "inserter pick second", "inserter drop third",
-						"inserter pick second", "inserter drop third", "welder work third",
-						"inserter pick third", "inserter drop main",
+						"inserter pick second", "inserter drop main", "inserter pick third", "inserter drop main", "welder work main",
+						"inserter pick forth", "inserter drop main", "welder work main",
+						"inserter pick first", "inserter drop main",
+
 				},
 				32000,
 				1.2f
@@ -852,7 +862,7 @@ public class IIRecipes
 				600);
 
 		//Charred log to coke dust and sawdust
-		CrusherRecipe.addRecipe(new ItemStack(IIContent.itemMaterial, 1, 17), new IngredientStack(new ItemStack(IIContent.blockCharredLog)), 2024)
+		CrusherRecipe.addRecipe(OreDictionary.getOres("dustCoke").get(0).copy(), new IngredientStack(new ItemStack(IIContent.blockCharredLog)), 2024)
 				.addToSecondaryOutput(IIContent.itemMaterial.getStack(Materials.DUST_WOOD), 1f);
 
 	}
@@ -1467,7 +1477,7 @@ public class IIRecipes
 		);
 
 		//Motor belts
-		VulcanizerRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.RUBBER_BELT, 4),
+		new VulcanizerRecipe(IIContent.itemMaterial.getStack(Materials.RUBBER_BELT, 4),
 				IIContent.itemVulcanizerMold.getComparableStack(VulcanizerMolds.BELT),
 				new IngredientStack("plateRubberRaw", 10),
 				new IngredientStack("dustVulcanizationCompound", 3),
@@ -1475,7 +1485,7 @@ public class IIRecipes
 				24000
 		).setName("rubber_belts");
 
-		VulcanizerRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.RUBBER_TIRE, 3),
+		new VulcanizerRecipe(IIContent.itemMaterial.getStack(Materials.RUBBER_TIRE, 3),
 				IIContent.itemVulcanizerMold.getComparableStack(VulcanizerMolds.TIRE),
 				new IngredientStack("plateRubberRaw", 10),
 				new IngredientStack("dustVulcanizationCompound", 8),

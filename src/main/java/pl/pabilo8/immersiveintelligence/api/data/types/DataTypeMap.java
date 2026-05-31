@@ -61,6 +61,11 @@ public class DataTypeMap extends IterableDataType implements Map<DataType, DataT
 		return values.getOrDefault(key, new DataTypeNull());
 	}
 
+	public DataType get(String key)
+	{
+		return get(new DataTypeString(key));
+	}
+
 	@Nonnull
 	public DataType getKey(DataType value)
 	{
@@ -71,6 +76,11 @@ public class DataTypeMap extends IterableDataType implements Map<DataType, DataT
 				.map(Entry::getKey)
 				.findFirst()
 				.orElse(new DataTypeNull());
+	}
+
+	public DataTypeMap put(String key, DataType value)
+	{
+		return put(new DataTypeString(key), value);
 	}
 
 	public DataTypeMap put(DataType key, DataType value)

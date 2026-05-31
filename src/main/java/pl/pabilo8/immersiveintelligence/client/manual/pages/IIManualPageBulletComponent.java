@@ -30,10 +30,12 @@ public class IIManualPageBulletComponent extends IIManualPages
 	ItemStack stack;
 	ComponentRole type;
 	float density;
+	AmmoComponent component;
 
 	public IIManualPageBulletComponent(ManualInstance manual, AmmoComponent component)
 	{
 		this(manual, component.getName(), component.getMaterial().getExampleStack(), component.getRole(), component.getDensity());
+		this.component = component;
 	}
 
 	public IIManualPageBulletComponent(ManualInstance manual, String name, ItemStack stack, ComponentRole type, float density)
@@ -56,7 +58,7 @@ public class IIManualPageBulletComponent extends IIManualPages
 			manual.fontRenderer.setUnicodeFlag(true);
 			this.localizedText = manual.formatText(text+".desc");
 			this.localizedLore = manual.formatText(text+".lore");
-			this.localizedName = manual.formatText(text);
+			this.localizedName = component!=null?component.getTranslatedName(): manual.formatText(text);
 
 			localizedType = I18n.format(IIReference.DESCRIPTION_KEY+"bullet_type."+type.getName());
 

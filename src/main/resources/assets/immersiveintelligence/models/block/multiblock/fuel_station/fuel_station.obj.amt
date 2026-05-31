@@ -1,0 +1,16 @@
+{
+  "origins": {
+    "inserter": [-8.02172, 3.98995, 7.98434],
+    "lower": [-9.08258, 9.00159, 7.97652],
+    "upper": [-8.93182, 24.99318, 7.93636],
+    "variant_wooden": [0, -8.5, 8],
+    "lower_glass": [-3.5, 26, 12],
+    "variant_naval": [0, -16, 24],
+    "variant_steel": [-16, -41, 0]
+  },
+  "hierarchy": {
+    "lower": "inserter",
+    "upper": "lower",
+    "lower_glass": "lower"
+  }
+}

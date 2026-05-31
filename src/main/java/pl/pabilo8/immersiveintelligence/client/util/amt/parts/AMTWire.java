@@ -1,38 +1,49 @@
 package pl.pabilo8.immersiveintelligence.client.util.amt.parts;
 
-import blusunrize.immersiveengineering.api.ApiUtils;
-import blusunrize.immersiveengineering.client.ClientUtils;
+import blusunrize.immersiveengineering.api.energy.wires.WireApi;
+import blusunrize.immersiveengineering.api.energy.wires.WireType;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GLAllocation;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
-import org.lwjgl.opengl.GL11;
-import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.amt.AMTModelHeader;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
+import static pl.pabilo8.immersiveintelligence.client.IIClientUtils.bindTexture;
+
 /**
- * AMT type for drawing IE wiring
+ * AMT type for drawing IE wiring, using AMTQuadsBuilder for geometry.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 21.08.2022
  */
 public class AMTWire extends AMT
 {
-	private Vec3d[] points;
-	private int listID = -1;
-	private IIColor color;
-	private float diameter;
+	private AMTQuads wireModel;
+	private IIColor color = IIColor.WHITE;
+	private float diameter = 0.0625f;
+	private float slack = 1.02f;
+	private Vec3d start, end;
+
+	public AMTWire(String name, Vec3d originPos)
+	{
+		super(name, originPos);
+		this.start = this.end = originPos;
+	}
+
+	public AMTWire(String name, AMTModelHeader header)
+	{
+		this(name, header.getOffset(name));
+	}
 
 	public AMTWire(String name, Vec3d originPos, Vec3d start, Vec3d end, IIColor color, float diameter)
 	{
-		super(name, originPos);
-		setConnection(start, end, color);
+		this(name, originPos);
+		this.color = color;
 		this.diameter = diameter;
+		setConnection(start, end);
 	}
 
 	public AMTWire(String name, AMTModelHeader header, Vec3d start, Vec3d end, IIColor color, float diameter)
@@ -40,65 +51,63 @@ public class AMTWire extends AMT
 		this(name, header.getOffset(name), start, end, color, diameter);
 	}
 
-	public void setConnection(Vec3d start, Vec3d end, IIColor color)
+	public void setConnection(Vec3d start, Vec3d end)
 	{
+		this.start = start;
+		this.end = end;
 		disposeOf();
-		points = ApiUtils.getConnectionCatenary(start, end, 1.02);
-		this.color = color;
-
 	}
 
 	@Override
 	protected void draw(Tessellator tes, BufferBuilder buf)
 	{
-		if(listID!=-1)
-			GlStateManager.callList(listID);
-		else
+		if(wireModel==null)
 		{
-			listID = GLAllocation.generateDisplayLists(1);
-			GL11.glNewList(listID, GL11.GL_COMPILE);
-
-			ClientUtils.mc().getTextureManager().bindTexture(new ResourceLocation("immersiveengineering:textures/blocks/wire.png"));
-
-			GlStateManager.disableCull();
-
-			BufferBuilder buffer = Tessellator.getInstance().getBuffer();
-			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			//float[] rgb = IIUtils.rgbIntToRGB(color);
-
-			for(int i = 0; i < points.length-1; i++)
-			{
-				IIClientUtils.drawRope(buf, points[i].x, points[i].y, points[i].z, points[i+1].x, points[i+1].y, points[i+1].z, diameter, 0);
-				IIClientUtils.drawRope(buf, points[i].x, points[i].y, points[i].z, points[i+1].x, points[i+1].y, points[i+1].z, 0, diameter);
-			}
-
-			buf.setTranslation(0, 0, 0);
-			tes.draw();
-
-			ClientUtils.bindAtlas();
-
-			GL11.glEndList();
+			wireModel = new AMTQuadsBuilder(null)
+					.withWireSegment(start, end, diameter, slack)
+					.build("wire_"+name, new Vec3d(0, 0, 0))
+					.recolor(color);
 		}
+
+		bindTexture(new ResourceLocation("immersiveengineering:textures/blocks/wire.png"));
+		wireModel.draw(tes, buf);
 	}
 
 	@Override
 	public void disposeOf()
 	{
-		if(listID!=-1)
-			GlStateManager.glDeleteLists(listID, 1);
-		listID = -1;
+		this.wireModel = AMTUtils.disposeOf(this.wireModel);
 	}
 
 	@Override
 	public void applyProperties(EasyNBT nbt)
 	{
 		super.applyProperties(nbt);
+
+		nbt.checkSetString("wire_type", wireType -> {
+			for(WireType wire : WireApi.INFOS.keySet())
+				if(wire.getUniqueName().equalsIgnoreCase(wireType))
+					this.color = IIColor.fromPackedRGB(wire.getColour(null));
+		});
+		nbt.checkSetColor("color", color -> this.color = color);
+		nbt.checkSetFloat("diameter", diameter -> this.diameter = diameter);
+		nbt.checkSetFloat("slack", slack -> this.slack = slack);
+
 		Vec3d start = nbt.getVec3d("start");
 		Vec3d end = nbt.getVec3d("end");
-		IIColor color = nbt.getColor("color");
-		nbt.checkSetFloat("diameter", diameter -> this.diameter = diameter);
-
 		if(start!=null&&end!=null)
-			setConnection(start, end, color);
+			setConnection(start.scale(0.0625f), end.scale(0.0625f));
+	}
+
+	@Override
+	protected AMT renamedCopy(String newName)
+	{
+		AMTWire copy = new AMTWire(newName, originPos);
+		copy.color = this.color;
+		copy.diameter = this.diameter;
+		copy.slack = this.slack;
+		copy.start = this.start;
+		copy.end = this.end;
+		return copy;
 	}
 }

@@ -7,6 +7,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
 import org.apache.commons.lang3.ArrayUtils;
+import net.minecraft.entity.player.EntityPlayer;
+import javax.annotation.Nullable;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataHandlingUtils;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
@@ -35,9 +37,11 @@ import javax.annotation.Nonnull;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @author Avalon (avalon@iiteam.net)
  * @updated 08.01.2024
  * @ii-approved 0.3.1
  * @since 28.06.2019
+ * @updated 03.30.2026
  */
 public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockIIGeneric<TileEntityArithmeticLogicMachine>
 		implements IIIGuiMultiblockTile, IBooleanAnimatedPartsBlock, IManagedUpgradableDevice<TileEntityArithmeticLogicMachine>
@@ -110,7 +114,7 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockIIGene
 	{
 		switch(poi)
 		{
-			case ENERGY:
+			case ENERGY_INPUT:
 				return getPOI("energy");
 			case DATA:
 				return getPOI("data");
@@ -187,6 +191,13 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockIIGene
 	public IIGUI getGUI()
 	{
 		return IIGUI.ARITHMETIC_LOGIC_MACHINE_STORAGE;
+	}
+
+	@Override
+	public void onGuiOpened(@Nullable EntityPlayer player, boolean clientside)
+	{
+		if(!clientside)
+			forceTileUpdate();
 	}
 
 	@Override

@@ -2,7 +2,7 @@
 Explosives and Mines
 Ka-boom?
 # radio_satchel0
-When your operations require a stealthy, precise approach, [radio](radio_station.md)[-detonated satchel] charges are the right choice. Be it mining operations, demolition of buildings, or sabotage of train bridges, satchel charges are universal in their role and are beloved by both combat engineers and saboteurs.
+When your operations require a stealthy, precise approach, [radio](radio_station.md)[-detonated satchel] charges are the right choice. Be it mining operations, demolition of buildings, or sabotage of train bridges, satchel charges are universal in their permissionRole and are beloved by both combat engineers and saboteurs.
 # radio_satchel1
 |[crafting]{source:"crafting_radio_equipped_satchel"}|
 Unlike other explosive casings, the [radio-equipped satchel] needs to be crafted. Using leather, a [basic circuit](electronic_components.md#basic_general), and iron, the paragon of sabotage is born.
@@ -21,7 +21,7 @@ Explosives can also be detonated using [redstone]. Similar to other [redstone co
 Keep in mind landmines do not differentiate between their targets. **It is very important to keep a track of your own minefields** and use plans instead of placing them randomly.
 # landmine0
 **Landmines**
-|[item_display]{source:""}|
+|[item_display]{source:"landmines"}|
 Classic, reliable and cheap to produce: this type of landmine is the most widely used one. The way it works is very straightforward:
 it explodes after an [enemy steps onto it], causing serious damage. However, dropped items and lightweight critters like chickens will not cause a detonation.
 # landmine1
@@ -31,12 +31,12 @@ In order to dig the landmine into the ground, use a [shovel] on it. Although any
 Additionally, you can place [grass] on top of the landmine to [fully conceal it].
 # tripmine
 **Tripmine**
-|[item_display]{source:""}|
+|[item_display]{source:"tripmine"}|
 Sometimes called the [jumping landmine], the [Tripmine] is an explosive device, activated not by weight pressure, but by pulling the wire on the top.
 After being triggered, the mine will jump out of its casing and explode. In order to be set up, the mine requires linking with another mine or a [tripwire connector].
 # naval_mine0
 **Naval Mine**
-|[item_display]{source:""}|
+|[item_display]{source:"navalmine"}|
 Naval Mines are mines deployed in water, which prevent boats and water creatures from reaching an area, effectively killing them on contact.
 Naval Mines carry a higher amount of components inside, meaning the explosion is greater than one of a landmine and deadly in most cases.
 # naval_mine1

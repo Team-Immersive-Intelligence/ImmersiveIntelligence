@@ -35,7 +35,7 @@ public class ResLoc extends ResourceLocation
 	private ResLoc(String domain, String path)
 	{
 		super(domain, path);
-		this.extensionIndex = path.lastIndexOf('.');
+		this.extensionIndex = path.indexOf('.');
 		this.extension = extensionIndex==-1?"": path.substring(extensionIndex);
 	}
 

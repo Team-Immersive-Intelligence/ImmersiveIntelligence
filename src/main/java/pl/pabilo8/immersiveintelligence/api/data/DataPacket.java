@@ -359,7 +359,7 @@ public class DataPacket implements Iterable<DataVariable>, INBTSerializable<NBTT
 	 */
 	public void forEach(BiConsumer<Character, DataType> consumer)
 	{
-		variableMap.forEach(consumer);
+		variableList.forEach(v -> consumer.accept(v.getName(), v.getValue()));
 	}
 
 	/**

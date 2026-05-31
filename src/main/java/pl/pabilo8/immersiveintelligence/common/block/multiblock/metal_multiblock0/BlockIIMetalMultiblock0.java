@@ -4,9 +4,7 @@ import blusunrize.immersiveengineering.api.IEProperties;
 import blusunrize.immersiveengineering.client.models.IOBJModelCallback;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumBlockRenderType;
 import net.minecraftforge.common.property.Properties;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.BlockIIMetalMultiblock0.MetalMultiblocks0;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.*;
@@ -17,8 +15,6 @@ import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBl
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IITileMultiblockEnum;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.TernaryValue;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
-
-import javax.annotation.Nonnull;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -41,23 +37,6 @@ public class BlockIIMetalMultiblock0 extends BlockIIMultiblock<MetalMultiblocks0
 		setFullCube(false);
 		setBlockLayer(BlockRenderLayer.CUTOUT);
 		setToolTypes(IIReference.TOOL_HAMMER);
-
-		addToTESRMap(MetalMultiblocks0.CHEMICAL_BATH, MetalMultiblocks0.PRECISION_ASSEMBLER);
-	}
-
-	@Nonnull
-	@Override
-	public EnumBlockRenderType getRenderType(@Nonnull IBlockState state)
-	{
-		switch(state.getValue(property))
-		{
-			case CHEMICAL_BATH:
-			case PRECISION_ASSEMBLER:
-			case PERISCOPE:
-				return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
-			default:
-				return EnumBlockRenderType.MODEL;
-		}
 	}
 
 	public enum MetalMultiblocks0 implements IITileMultiblockEnum

@@ -78,7 +78,9 @@ public class SkyCrateStationRenderer extends TileEntitySpecialRenderer<TileEntit
 			if(te.hasWorld())
 			{
 				motorTick = (te.getWorld().getTotalWorldTime()%IIRotaryUtils.getRPMMax()+partialTicks)/IIRotaryUtils.getRPMMax();
-				progress = te.progress+(partialTicks*te.getEffectiveEnergy()*IIRotaryUtils.getGearEfficiency(IIItemUtils.trimInventory(te.getInventory(), 0, 3)));
+				progress = te.progress+(partialTicks*IIRotaryUtils.getEffectiveEnergy(te.rotation,
+						SkyCrateStation.speedMin, SkyCrateStation.speedEfficient, SkyCrateStation.torqueMin, SkyCrateStation.torqueEfficient)
+						*IIRotaryUtils.getGearEfficiency(IIItemUtils.trimInventory(te.getInventory(), 0, 3)));
 				crateItem = te.getInventory().get(3);
 				mountItem = te.getInventory().get(4);
 

@@ -12,12 +12,16 @@ import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIRecipeLayoutBuilde
 import pl.pabilo8.immersiveintelligence.api.utils.tools.IPrecisionTool;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.PrecisionAssembler;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.util.amt.IIAnimation;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.sound.IISoundAnimation;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Objects;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -25,14 +29,15 @@ import java.util.HashMap;
  */
 public class PrecisionAssemblerRecipe extends IIMultiblockRecipe
 {
-	public static HashMap<String, IPrecisionTool> toolMap = new HashMap<>();
+	private static HashMap<String, PrecisionToolInfo> TOOL_MAP = new HashMap<>();
+
 	public final ItemStack output, trashOutput;
 	public final IngredientStack[] inputs;
 	public final String[] tools;
+	private final String[] animations;
 	public final String toolHash;
 
 	public IISoundAnimation soundAnimation;
-	public IIAnimation animation;
 
 	public PrecisionAssemblerRecipe(ItemStack itemOutput, ItemStack trash, Object[] itemInputs, String[] tools, String[] animations, int energy, float timeMultiplier)
 	{
@@ -52,12 +57,13 @@ public class PrecisionAssemblerRecipe extends IIMultiblockRecipe
 			String[] split = animation.split(" ");
 			if(split.length < 2||split[0]==null)
 				continue;
-			if(toolMap.containsKey(split[0]))
-				processDuration += toolMap.get(split[0]).getWorkTime(split[0]);
+			if(TOOL_MAP.containsKey(split[0]))
+				processDuration += TOOL_MAP.get(split[0]).getWorkTime()+(PrecisionAssembler.toolMoveTime*2);
 		}
 
 		//Sort the tools for easier detection
 		this.toolHash = buildToolHash(tools);
+		this.animations = animations;
 		this.tools = tools;
 
 		setTimeAndEnergy((int)(processDuration*timeMultiplier), energy);
@@ -70,6 +76,11 @@ public class PrecisionAssemblerRecipe extends IIMultiblockRecipe
 
 	}
 
+	public String[] getAnimations()
+	{
+		return animations;
+	}
+
 	public static String buildToolHash(String[] tools)
 	{
 		Arrays.sort(tools, String.CASE_INSENSITIVE_ORDER);
@@ -79,15 +90,30 @@ public class PrecisionAssemblerRecipe extends IIMultiblockRecipe
 		return sb.toString();
 	}
 
-	public static void registerToolType(String name, IPrecisionTool tool)
+	public static PrecisionToolInfo[] toolsFromHash(String toolHash)
 	{
-		toolMap.put(name, tool);
+		return Arrays.stream(toolHash.split(";"))
+				.map(PrecisionAssemblerRecipe::getToolByName)
+				.filter(Objects::nonNull)
+				.toArray(PrecisionToolInfo[]::new);
 	}
 
+	public static void registerToolType(IPrecisionTool tool, PrecisionToolInfo toolInfo)
+	{
+		TOOL_MAP.put(toolInfo.getToolName(), toolInfo);
+	}
+
+	@Nullable
+	public static PrecisionToolInfo getToolByName(String name)
+	{
+		return TOOL_MAP.get(name);
+	}
+
+	@Nonnull
 	public static ItemStack getExampleToolStack(String name)
 	{
-		if(toolMap.containsKey(name))
-			return toolMap.get(name).getToolPresentationStack(name);
+		if(TOOL_MAP.containsKey(name))
+			return TOOL_MAP.get(name).getToolPresentationStack();
 		return ItemStack.EMPTY;
 	}
 
@@ -109,9 +135,8 @@ public class PrecisionAssemblerRecipe extends IIMultiblockRecipe
 		for(int i = 0; i < 3; i++)
 		{
 			ItemStack tool = ItemStack.EMPTY;
-			if(tools.length > i&&PrecisionAssemblerRecipe.toolMap.containsKey(tools[i]))
-				tool = PrecisionAssemblerRecipe.toolMap.get(tools[i])
-						.getToolPresentationStack(tools[i]);
+			if(tools.length > i&&PrecisionAssemblerRecipe.TOOL_MAP.containsKey(tools[i]))
+				tool = getExampleToolStack(tools[i]);
 			builder.withSlot(50+i*20, 44, tool, IOType.INPUT, "frame"+i);
 		}
 
@@ -122,5 +147,49 @@ public class PrecisionAssemblerRecipe extends IIMultiblockRecipe
 				.withTimeInfo()
 				.withPowerInfo()
 				.build();
+	}
+
+	@ParametersAreNonnullByDefault
+	public static class PrecisionToolInfo
+	{
+		private String toolName;
+		private ResLoc toolModelRes;
+		private ItemStack toolPresentationStack;
+		private int workTime;
+
+		public PrecisionToolInfo(String toolName, ItemStack toolPresentationStack, int workTime)
+		{
+			this(toolName, toolPresentationStack, workTime,
+					IIReference.RES_BLOCK_MODEL.with("multiblock/precision_assembler/tools/", toolName).withExtension(ResLoc.EXT_OBJ)
+			);
+		}
+
+		public PrecisionToolInfo(String toolName, ItemStack toolPresentationStack, int workTime, ResLoc toolModelRes)
+		{
+			this.toolName = toolName;
+			this.toolModelRes = toolModelRes;
+			this.toolPresentationStack = toolPresentationStack;
+			this.workTime = workTime;
+		}
+
+		public String getToolName()
+		{
+			return toolName;
+		}
+
+		public ResLoc getToolModelRes()
+		{
+			return toolModelRes;
+		}
+
+		public ItemStack getToolPresentationStack()
+		{
+			return toolPresentationStack;
+		}
+
+		public int getWorkTime()
+		{
+			return workTime;
+		}
 	}
 }

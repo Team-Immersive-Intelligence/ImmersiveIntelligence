@@ -1,7 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common;
 
 import blusunrize.immersiveengineering.api.MultiblockHandler.MultiblockFormEvent.Post;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
@@ -12,12 +11,9 @@ import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSourceIndirect;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.GameRules.ValueType;
 import net.minecraft.world.World;
@@ -51,7 +47,6 @@ import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoUtils;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.PenetrationCache;
 import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedMultiblock;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Ammunition;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Factions;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons;
 import pl.pabilo8.immersiveintelligence.common.compat.BaublesHelper;
 import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
@@ -63,19 +58,13 @@ import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine;
 import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIILightEngineerBoots;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBlockDamageSync;
-import pl.pabilo8.immersiveintelligence.common.network.messages.MessageDiplomacySync;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIIGameruleUpdate;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIIRequestChunkClaimData;
 import pl.pabilo8.immersiveintelligence.common.util.IIExplosion;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyUtils;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.IOwnableProperty;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.OwnerIdentity;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.PermissionCategory;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.chunk.CapabilityChunkOwnership;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.chunk.ChunkOwnership;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.chunk.IChunkOwnership;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.property.chunk.chunk.CapabilityChunkOwnership;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.property.chunk.chunk.ChunkOwnership;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemUtils;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradeableArmor;
 
@@ -95,13 +84,13 @@ public class EventHandler
 	@SubscribeEvent
 	public static void onSave(Save event)
 	{
-		IISaveData.setDirty(event.getWorld().provider.getDimension());
+		IISaveData.setDirty();
 	}
 
 	@SubscribeEvent
 	public static void onUnload(Unload event)
 	{
-		IISaveData.setDirty(event.getWorld().provider.getDimension());
+		IISaveData.setDirty();
 	}
 
 	@SubscribeEvent
@@ -117,7 +106,9 @@ public class EventHandler
 		//plates
 		if(event.getSource()==DamageSource.CACTUS||(event.getSource() instanceof EntityDamageSourceIndirect&&event.getSource().getImmediateSource() instanceof EntityArrow))
 		{
-			if(ItemIIUpgradeableArmor.isArmorWithUpgrade(boots, "toughness_increase"))
+			if(ItemIIUpgradeableArmor.isArmorWithUpgrade(head, "toughness_increase")
+					||ItemIIUpgradeableArmor.isArmorWithUpgrade(chest, "toughness_increase")
+					||ItemIIUpgradeableArmor.isArmorWithUpgrade(legs, "toughness_increase"))
 				event.setCanceled(true);
 		}
 		//heat resist
@@ -173,10 +164,6 @@ public class EventHandler
 		GameRules rules = event.player.world.getGameRules();
 		for(String gamerule : registeredGameRules)
 			IIPacketHandler.sendToClient(player, new MessageIIGameruleUpdate(gamerule, rules));
-
-		//Sync Diplomacy data
-		IIPacketHandler.sendToClient(player, new MessageDiplomacySync(
-				true, null, false, DiplomacyUtils.saveAllToNBT()));
 	}
 
 	@SubscribeEvent
@@ -263,37 +250,6 @@ public class EventHandler
 	public void onItemUse(RightClickBlock event)
 	{
 		EntityLivingBase living = event.getEntityLiving();
-		TileEntity tile = event.getWorld().getTileEntity(event.getPos());
-		//Prevent accessing GUI
-		if(Factions.preventContainerAccess&&tile instanceof IGuiTile)
-		{
-			TileEntity master = ((IGuiTile)tile).getGuiMaster();
-			if(master!=null)
-			{
-				//The property itself has an owner, check it
-				OwnerIdentity owner = DiplomacyUtils.NEUTRAL;
-				if(master instanceof IOwnableProperty)
-					owner = ((IOwnableProperty)master).getOwnerIdentity();
-				else
-				{
-					//Check for the chunk the property is on
-					IChunkOwnership ownership = DiplomacyUtils.getPositionOwnership(master.getWorld(), master.getPos());
-					if(ownership!=null)
-						owner = ownership.getOwner();
-				}
-
-				//Deny container access when on an enemy chunk
-				if(!owner.isPermitted(living, PermissionCategory.CONTAINER_ACCESS))
-				{
-					TextComponentTranslation text = new TextComponentTranslation(IIReference.INFO_KEY+"diplomacy.ownership.container_cannot_open");
-					text.getStyle().setColor(TextFormatting.RED);
-
-					event.getEntityPlayer().sendStatusMessage(text, true);
-					event.setResult(Result.DENY);
-					event.setCanceled(true);
-				}
-			}
-		}
 		if(living.isRiding()&&living.getRidingEntity() instanceof EntityMachinegun)
 		{
 			event.setResult(Result.DENY);
@@ -350,6 +306,10 @@ public class EventHandler
 	{
 		EntityLivingBase living = event.getEntityLiving();
 		World world = living.world;
+
+		if(!world.isRemote)
+			return;
+
 		Biome biome = world.getBiome(living.getPosition());
 		if(living instanceof EntityPlayer)
 		{
@@ -361,26 +321,6 @@ public class EventHandler
 				//Apply radiation
 				if(!player.isCreative()&&biome==IIContent.biomeWasteland)
 					living.addPotionEffect(new PotionEffect(IIPotions.radiation, 2000, 0, false, false));
-
-				//Apply faction chunk status effects
-				Chunk chunk = player.world.getChunkFromBlockCoords(player.getPosition());
-				if(chunk.hasCapability(CapabilityChunkOwnership.CHUNK_OWNERSHIP_CAP, null))
-				{
-					IChunkOwnership cap = chunk.getCapability(CapabilityChunkOwnership.CHUNK_OWNERSHIP_CAP, null);
-					assert cap!=null;
-					switch(cap.getOwner().getRelationTowards(player))
-					{
-						case ENEMY:
-							player.addPotionEffect(new PotionEffect(IIPotions.enemySoil, 40, 0, false, false));
-							break;
-						case MEMBER:
-						case ALLIED:
-							player.addPotionEffect(new PotionEffect(IIPotions.homeland, 40, 0, false, false));
-							break;
-						default:
-							break;
-					}
-				}
 			}
 
 			//Handle powerpack crafted with armor
@@ -419,10 +359,32 @@ public class EventHandler
 		legs = entity.getItemStackFromSlot(EntityEquipmentSlot.LEGS);
 		boots = entity.getItemStackFromSlot(EntityEquipmentSlot.FEET);
 
-		//plates
-		if(event.getSource()==DamageSource.CACTUS||(event.getSource() instanceof EntityDamageSourceIndirect&&event.getSource().getImmediateSource() instanceof EntityArrow))
+		//plates - deflect arrows like a shield
+		if(event.getSource() instanceof EntityDamageSourceIndirect&&event.getSource().getImmediateSource() instanceof EntityArrow)
 		{
-			if(ItemIIUpgradeableArmor.isArmorWithUpgrade(boots, "toughness_increase"))
+			if(ItemIIUpgradeableArmor.isArmorWithUpgrade(head, "toughness_increase")
+					||ItemIIUpgradeableArmor.isArmorWithUpgrade(chest, "toughness_increase")
+					||ItemIIUpgradeableArmor.isArmorWithUpgrade(legs, "toughness_increase"))
+			{
+				EntityArrow arrow = (EntityArrow)event.getSource().getImmediateSource();
+				//Reflect the arrow away from the wearer
+				arrow.motionX *= -0.5;
+				arrow.motionY = Math.abs(arrow.motionY)*0.25+0.15;
+				arrow.motionZ *= -0.5;
+				arrow.velocityChanged = true;
+				arrow.shootingEntity = null;
+				//Play metallic ricochet sound
+				entity.world.playSound(null, entity.posX, entity.posY, entity.posZ,
+						IISounds.hitMetal.getRicochetSound(), SoundCategory.PLAYERS, 1.0f, 0.9f+(entity.world.rand.nextFloat()*0.2f));
+				event.setCanceled(true);
+			}
+		}
+		//plates - cactus protection
+		else if(event.getSource()==DamageSource.CACTUS)
+		{
+			if(ItemIIUpgradeableArmor.isArmorWithUpgrade(head, "toughness_increase")
+					||ItemIIUpgradeableArmor.isArmorWithUpgrade(chest, "toughness_increase")
+					||ItemIIUpgradeableArmor.isArmorWithUpgrade(legs, "toughness_increase"))
 				event.setCanceled(true);
 		}
 		//heat resist

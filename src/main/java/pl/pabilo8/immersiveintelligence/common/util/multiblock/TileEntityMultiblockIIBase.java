@@ -30,8 +30,8 @@ import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileManager.ITa
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
 import pl.pabilo8.immersiveintelligence.common.util.IWorldPosProvider;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyUtils;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.IOwnableProperty;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyHandler;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.property.IOwnableProperty;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.NBTSerialisation;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IAdvancedBounds;
@@ -90,6 +90,9 @@ public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockI
 			dummyCleanup();
 			return;
 		}
+		//On client
+		if(isDummy())
+			return;
 
 		//First Tick
 		if(firstTick)
@@ -109,7 +112,7 @@ public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockI
 	public void onBeforeFirstTick()
 	{
 		if(!world.isRemote&&this instanceof IOwnableProperty)
-			DiplomacyUtils.validateProperty(((IOwnableProperty)this));
+			DiplomacyHandler.getInstance(world.isRemote).validateProperty(((IOwnableProperty)this));
 	}
 
 	/**
@@ -121,8 +124,6 @@ public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockI
 	public void invalidate()
 	{
 		super.invalidate();
-		if(!world.isRemote&&this instanceof IOwnableProperty&&!isDummy())
-			DiplomacyUtils.invalidateProperty(((IOwnableProperty)this));
 		forceReCacheAABB();
 	}
 
@@ -500,12 +501,14 @@ public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockI
 
 	public UUID getUUID()
 	{
-		if(isDummy())
+		if(this.uuid==null)
 		{
-			T master = master();
-			return master==null?IIUtils.getBlockPosUUID(getPos()): master.getUUID();
+			UUID uuid = IIUtils.getBlockPosUUID(getPos().add(-offset[0], -offset[1], -offset[2]));
+			if(master!=null)
+				this.uuid = uuid; //Master exists, so the position is correct
+			return uuid;
 		}
-		return this.uuid==null?this.uuid = IIUtils.getBlockPosUUID(getPos()): this.uuid;
+		return this.uuid;
 	}
 
 	public long getTicksExisted()
@@ -525,6 +528,11 @@ public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockI
 	public BlockPos getIIPos()
 	{
 		return getPos();
+	}
+
+	public boolean isValid()
+	{
+		return !tileEntityInvalid&&hasWorld();
 	}
 
 

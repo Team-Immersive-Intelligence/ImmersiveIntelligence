@@ -1,0 +1,58 @@
+{
+  "origins": {
+    "glass": [14.5, 29.875, 28],
+    "door1": [0, 17, 24],
+    "door2": [16, 17, 24],
+    "platform": [10.08333, 7.91667, 31.75],
+    "drawer1": [8, 10.3, 4.6],
+    "drawer2": [8, 4.4375, 4.625],
+    "print": [-6.97668, 17.12072, 34.5],
+    "item1": [12.5, 8, 27.5],
+    "item2": [3.5, 8, 27.5],
+    "item3": [12.5, 8, 18.5],
+    "item4": [3.5, 8, 18.5],
+    "item5": [8.5, 8, 22.5],
+    "inserter1": [18, 21, 38.99474],
+    "inserter2": [7, 21, 38.99474],
+    "inserter3": [-3, 21, 38.99474],
+    "print_image": [8, 17.5, 5]
+  },
+  "hierarchy": {
+    "item1": "platform",
+    "item2": "platform",
+    "item3": "platform",
+    "item4": "platform",
+    "item5": "platform",
+    "print_image": "print"
+  },
+  "properties": {
+    "glass": {
+    },
+    "item1": {
+      "rotation": [90.0, 0.0, 0.0],
+      "scale": [0.5, 0.5, 0.5]
+    },
+    "item2": {
+      "rotation": [90.0, 0.0, 0.0],
+      "scale": [0.5, 0.5, 0.5]
+    },
+    "item3": {
+      "rotation": [90.0, 0.0, 0.0],
+      "scale": [0.5, 0.5, 0.5]
+    },
+    "item4": {
+      "rotation": [90.0, 0.0, 0.0],
+      "scale": [0.5, 0.5, 0.5]
+    },
+    "item5": {
+      "rotation": [90.0, 0.0, 0.0],
+      "scale": [0.5, 0.5, 0.5]
+    },
+    "print_image": {
+      "rotation": [102.5, 0.0, 0.0],
+      "position": [0.25, 0.0625, 0.25],
+      "scale": [-1.0, 1.0, 1.0],
+      "schematic": true
+    }
+  }
+}

@@ -25,13 +25,13 @@ public class ElectrolyzerRenderer extends IIMultiblockRenderer<TileEntityElectro
 	{
 		applyStandardMirroring(te, true);
 
-		fluid.setFluid(te.tankInput.getFluid());
+		fluid.withFluid(te.tankInput.getFluid());
 		float tankAmount = te.tankInput.getFluidAmount();
 		if(te.currentProcess!=null)
 			tankAmount -= te.getProductionProgress(te.currentProcess, partialTicks)*te.currentProcess.recipe.fluidInput.amount;
-		fluid.setLevel(tankAmount/(float)te.tankInput.getCapacity());
+		fluid.withLevel(tankAmount/(float)te.tankInput.getCapacity());
 
-		fluid.setFlowing(false);
+		fluid.withFlowing(false);
 		fluid.render(tes, buf);
 
 		applyStandardMirroring(te, false);
@@ -46,7 +46,8 @@ public class ElectrolyzerRenderer extends IIMultiblockRenderer<TileEntityElectro
 	@Override
 	public void compileModels(IBlockState state, OBJModel model)
 	{
-		fluid = new AMTFluid("fluid", new Vec3d(-3, -6, 19.9), new Vec3d(10/16f, 14/16f, 25/16f));
+		fluid = new AMTFluid("fluid", new Vec3d(3, -6, 19.9).scale(0.0625))
+				.withSize(new Vec3d(10, 14, 25));
 	}
 
 	@Override

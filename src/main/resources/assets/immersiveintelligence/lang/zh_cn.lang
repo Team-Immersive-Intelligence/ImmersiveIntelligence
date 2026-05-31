@@ -343,6 +343,7 @@ item.immersiveintelligence.printed_page.bound_pages.name=装订页
 item.immersiveintelligence.printed_page.newspaper.name=报纸
 item.immersiveintelligence.printed_page.book.name=书册
 item.immersiveintelligence.printed_page.letter.name=信
+item.immersiveintelligence.printed_page.letter_opened.name=公开信
 
 item.immersiveintelligence.precission_tool.buzzsaw.name=精密圆锯
 item.immersiveintelligence.precission_tool.drill.name=精密钻头
@@ -1076,7 +1077,7 @@ machineupgrade.immersiveintelligence.packer_fluid=流体装载器
 machineupgrade.immersiveintelligence.packer_fluid.desc=安装流体容器和一些管道可以填充和排出容器中的流体.出于安全考虑,包装机可以处理物品,流体或能量.
 
 machineupgrade.immersiveintelligence.packer_energy=能量装载器
-machineupgrade.immersiveintelligence.packer_energy.desc=安装流体容器和一些管道可以填充和排出容器中的流体.出于安全考虑,包装机可以处理物品,流体或能量.
+machineupgrade.immersiveintelligence.packer_energy.desc=安装一对电容器和一个特斯拉线圈可以快速为能源设备充电。.出于安全考虑,包装机可以处理物品,流体或能量.
 
 machineupgrade.immersiveintelligence.packer_railway=铁路改造
 machineupgrade.immersiveintelligence.packer_railway.desc=用铁轨取代包装机的传送带，从而可以装载和卸载矿车.
@@ -1118,6 +1119,7 @@ desc.immersiveintelligence.printed_page.bound_pages=各种页面装订在一起.
 desc.immersiveintelligence.printed_page.newspaper=多页装订成一份报纸.
 desc.immersiveintelligence.printed_page.book=多页装订成一本书.
 desc.immersiveintelligence.printed_page.letter=装在信封里寄给某人的一页.
+desc.immersiveintelligence.printed_page.letter_opened=一个已拆封的信封，内含一页纸.
 
 desc.immersiveintelligence.punchtape.empty=未写入变量
 desc.immersiveintelligence.punchtape.written=被写入过的
@@ -2213,6 +2215,9 @@ ie.manual.entry.bullet_component.shrapnel_uranium=铀质弹片
 ie.manual.entry.bullet_component.shrapnel_uranium.lore=放-射-性
 ie.manual.entry.bullet_component.shrapnel_uranium.desc=铀是制造弹片的最佳材料之一,散射的碎片穿透装甲层轻而易举,可以对任何目标造成高伤害.
 
+ie.manual.entry.bullet_component.shrapnel_wood=锯末
+ie.manual.entry.bullet_component.shrapnel_wood.lore=环保！
+ie.manual.entry.bullet_component.shrapnel_wood.desc=可能不会造成太大伤害，但会留下清新的松木香味！
 
 #Logistics
 

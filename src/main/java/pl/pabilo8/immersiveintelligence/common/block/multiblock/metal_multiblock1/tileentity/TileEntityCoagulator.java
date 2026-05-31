@@ -98,8 +98,8 @@ public class TileEntityCoagulator extends TileEntityMultiblockProductionSingle<T
 				bucketProgress[i] = 0;
 				outputOrDrop(bucketStacks.get(i), null, getDirection("item_outputs"), getPOI(MultiblockPOI.ITEM_OUTPUT)[i]);
 				bucketStacks.set(i, ItemStack.EMPTY);
+				updateTileForEvent(SyncEvents.TILE_CUSTOM2);
 			}
-
 		}
 
 		//Handle crane logic
@@ -125,7 +125,7 @@ public class TileEntityCoagulator extends TileEntityMultiblockProductionSingle<T
 					//Progress the animation
 					switch(craneAnimation)
 					{
-						case MOVE_BUCKET:
+						case MOVE_TO_BUCKET:
 						case MOVE_BACK:
 						{
 							cranePosition += Integer.compare(craneCurrentBucket, cranePosition);
@@ -133,20 +133,20 @@ public class TileEntityCoagulator extends TileEntityMultiblockProductionSingle<T
 								craneAnimation = IIUtils.cycleEnum(true, CraneAnimation.class, craneAnimation);
 						}
 						break;
-						case MOVE_MIXER:
+						case MOVE_TO_MIXER:
 						{
-							cranePosition += Integer.compare(2, cranePosition);
-							if(cranePosition==2)
+							cranePosition += Integer.compare(1, cranePosition);
+							if(cranePosition==1)
 								craneAnimation = IIUtils.cycleEnum(true, CraneAnimation.class, craneAnimation);
 						}
 						break;
-						case RETURN:
+						case PLACE_BUCKET:
 						{
 							//Place down the bucket and begin its drying process
 							if(!world.isRemote)
 							{
 								ItemStack eff = outputHandler.extractItem(0, 1, false);
-								bucketProgress[craneCurrentBucket] = CoagulatorRecipe.getDryingTimeFor(eff);
+								bucketProgress[craneCurrentBucket] = CoagulatorRecipe.getDryingInformationFor(eff).getTime();
 								bucketStacks.set(craneCurrentBucket, eff);
 								updateTileForEvent(SyncEvents.TILE_RECIPE_CHANGED);
 							}
@@ -166,19 +166,15 @@ public class TileEntityCoagulator extends TileEntityMultiblockProductionSingle<T
 					{
 						case NONE:
 							break;
-						case MOVE_BUCKET:
+						case MOVE_TO_BUCKET:
 						case MOVE_BACK:
 							craneAnimationProgress = (cranePosition==craneCurrentBucket)?0: Coagulator.craneMoveTime;
 							break;
-						case MOVE_MIXER:
-							craneAnimationProgress = (cranePosition==2)?0: Coagulator.craneMoveTime;
-							break;
-						case ROTATE_IN:
-						case ROTATE_OUT:
-							craneAnimationProgress = Coagulator.craneMoveTime;
+						case MOVE_TO_MIXER:
+							craneAnimationProgress = (cranePosition==1)?0: Coagulator.craneMoveTime;
 							break;
 						default:
-							craneAnimationProgress = Coagulator.craneGrabTime;
+							craneAnimationProgress = Coagulator.craneBucketActionTime;
 							break;
 					}
 
@@ -217,11 +213,20 @@ public class TileEntityCoagulator extends TileEntityMultiblockProductionSingle<T
 		if(inventory.get(MultiblockCoagulator.SLOT_OUTPUT).getCount() >= 64)
 			return null;
 
-		return IIMultiblockRecipe.streamRecipes(CoagulatorRecipe.class)
+		//Find recipe
+		CoagulatorRecipe found = IIMultiblockRecipe.streamRecipes(CoagulatorRecipe.class)
 				.filter(recipe -> recipe.fluidInput.isFluidStackIdentical(tankInput.drain(recipe.fluidInput, false)))
 				.filter(recipe -> recipe.coagulantInput.isFluidStackIdentical(tankCoagulant.drain(recipe.coagulantInput, false)))
 				.findFirst()
-				.map(IIMultiblockProcess::new).orElse(null);
+				.orElse(null);
+		if(found==null)
+			return null;
+
+		//Drain inputs
+		tankInput.drain(found.fluidInput, true);
+		tankCoagulant.drain(found.coagulantInput, true);
+
+		return new IIMultiblockProcess<>(found);
 	}
 
 	@Override
@@ -252,14 +257,14 @@ public class TileEntityCoagulator extends TileEntityMultiblockProductionSingle<T
 		outputHandler.insertItem(0, process.recipe.itemOutput, false);
 	}
 
-	public float getDryingProgressForSlot(int slotID)
+	public float getDryingProgressForSlot(int slotID, float partialTicks)
 	{
 		if(bucketStacks.get(slotID).isEmpty())
 			return 0;
-		int totalTime = CoagulatorRecipe.getDryingTimeFor(bucketStacks.get(slotID));
+		int totalTime = CoagulatorRecipe.getDryingInformationFor(bucketStacks.get(slotID)).getTime();
 		if(totalTime <= 0)
 			return 0;
-		return 1f-(float)bucketProgress[slotID]/(float)totalTime;
+		return 1f-(((float)bucketProgress[slotID]+partialTicks)/(float)totalTime);
 	}
 
 	@Override
@@ -300,16 +305,11 @@ public class TileEntityCoagulator extends TileEntityMultiblockProductionSingle<T
 	public enum CraneAnimation implements ISerializableEnum
 	{
 		NONE,
-		MOVE_BUCKET,
-		REACH,
-		PICK,
-		MOVE_MIXER,
-		ROTATE_IN,
-		PUT,
-		PULL,
-		ROTATE_OUT,
+		MOVE_TO_BUCKET,
+		PICK_BUCKET,
+		MOVE_TO_MIXER,
+		FILL_BUCKET,
 		MOVE_BACK,
-		PLACE,
-		RETURN
+		PLACE_BUCKET
 	}
 }

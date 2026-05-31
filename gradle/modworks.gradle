@@ -14,12 +14,14 @@ idea {
 }
 
 repositories {
-	maven { url 'https://jitpack.io' }
+	maven {
+		url 'https://maven.iiteam.net/releases'
+	}
 }
 
 dependencies {
-	annotationProcessor 'pl.pabilo8:modworks-processor:1.1.2'
-	compileOnly 'pl.pabilo8:modworks-processor:1.1.2'
+	annotationProcessor 'pl.pabilo8:ModworksProcessor:1.1.2'
+	compileOnly 'pl.pabilo8:ModworksProcessor:1.1.2'
 }
 
 compileJava {

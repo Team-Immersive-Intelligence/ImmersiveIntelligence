@@ -1,7 +1,10 @@
 package pl.pabilo8.immersiveintelligence.api.utils.tools;
 
 
+import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.item.ItemStack;
+
+import static pl.pabilo8.immersiveintelligence.common.util.IIReference.NBT_DAMAGE;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -12,9 +15,24 @@ public interface IMachineTool
 {
 	String getToolID(ItemStack stack);
 
-	void damageTool(ItemStack stack, int amount);
+	default void damageTool(ItemStack stack, int amount)
+	{
+		if(!ItemNBTHelper.hasKey(stack, NBT_DAMAGE))
+			ItemNBTHelper.setInt(stack, NBT_DAMAGE, getToolMaxDamage(stack));
 
-	int getToolDamage(ItemStack stack);
+		ItemNBTHelper.setInt(stack, NBT_DAMAGE, getToolDamage(stack)-amount);
+
+		if(getToolDamage(stack) < 0)
+			stack.setCount(0);
+	}
+
+	default int getToolDamage(ItemStack stack)
+	{
+		if(!ItemNBTHelper.hasKey(stack, NBT_DAMAGE))
+			return getToolMaxDamage(stack);
+		return ItemNBTHelper.getInt(stack, NBT_DAMAGE);
+	}
 
 	int getToolMaxDamage(ItemStack stack);
+
 }

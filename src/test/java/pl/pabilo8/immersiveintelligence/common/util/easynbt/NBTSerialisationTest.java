@@ -16,6 +16,11 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @ii-approved 0.3.1
+ * @since 28.01.2026
+ */
 public class NBTSerialisationTest
 {
 	@Test

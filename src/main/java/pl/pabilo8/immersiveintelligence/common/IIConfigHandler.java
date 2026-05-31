@@ -13,6 +13,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.RadioStation;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Sawmill;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
 import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIIMineDetector;
@@ -69,6 +70,7 @@ public class IIConfigHandler
 		Config.manual_bool.put("petroleumHere", false);
 		Config.manual_bool.put("baublesHere", false);
 		Config.manual_int.put("radio_station_range", RadioStation.radioRange);
+		Config.manual_double.put("sawmill_gearbox_efficiency", (double)Sawmill.gearboxUpgradeEfficiency);
 		Config.validateAndMapValues(IIConfig.class);
 	}
 
@@ -146,6 +148,9 @@ public class IIConfigHandler
 		@Comment({"Whether Immersive Engineering liquid concrete behavior should be replaced by II."})
 		@RequiresMcRestart
 		public static boolean concreteOverride = true;
+
+		@Comment({"If disabled, II will not make any changes to IE villager trades."})
+		public static boolean enableTradeOverride = true;
 
 		@Comment({"A list of all entities for which a fakeplayer should be used when shooter is not a player"})
 		public static String[] bulletFakeplayerWhitelist = new String[]{
@@ -462,15 +467,15 @@ public class IIConfigHandler
 
 			@Comment({"The usage time of the Precision Buzzsaw."})
 			@RequiresMcRestart
-			public static int precisionToolBuzzsawUsageTime = 140;
+			public static int precisionToolBuzzsawUsageTime = 100;
 
 			@Comment({"The usage time of the Precision Drill."})
 			@RequiresMcRestart
-			public static int precisionToolDrillUsageTime = 140;
+			public static int precisionToolDrillUsageTime = 100;
 
 			@Comment({"The usage time of the Precision Inserter."})
 			@RequiresMcRestart
-			public static int precisionToolInserterUsageTime = 60;
+			public static int precisionToolInserterUsageTime = 0;
 
 			@Comment({"The usage time of the Precision Solderer."})
 			@RequiresMcRestart
@@ -478,14 +483,20 @@ public class IIConfigHandler
 
 			@Comment({"The usage time of the Precision Welder."})
 			@RequiresMcRestart
-			public static int precisionToolWelderUsageTime = 160;
+			public static int precisionToolWelderUsageTime = 100;
 
 			@Comment({"The usage time of the Precision Hammer."})
 			@RequiresMcRestart
-			public static int precisionToolHammerUsageTime = 40;
+			public static int precisionToolHammerUsageTime = 80;
+
 			@Comment({"The capacity of the Improved Capacitor Backpack (in IF)."})
 			@RequiresMcRestart
 			public static int advancedPowerpackCapacity = 1000000;
+
+			@Comment({"Whether advanced multiblock construction should be free and instantenous in creative mode."})
+			public static boolean instantCreativeConstruction = true;
+			@Comment({"Whether machine upgrading should be free and instantenous in creative mode."})
+			public static boolean instantCreativeUpgrading = true;
 
 			public static class SkycrateMounts
 			{
@@ -739,23 +750,23 @@ public class IIConfigHandler
 
 			public static class SkyCrateStation
 			{
-				@Comment({"Rotations per minute required for the Skycrate Station to Work."})
-				public static int rpmMin = 20;
+				@Comment({"Degrees/tick required by the machine to start working."})
+				public static int speedMin = 20;
 
-				@Comment({"Max rotations per minute (reaching over this level doesn't change effectiveness)."})
-				public static int rpmEffectiveMax = 80;
+				@Comment({"Degrees/tick required by the machine to work at full efficiency."})
+				public static int speedEfficient = 80;
 
-				@Comment({"Max rotations per minute (will break if over)."})
-				public static int rpmBreakingMax = 240;
+				@Comment({"Max Degrees/tick (machine will break if over)."})
+				public static int speedBreaking = 240;
 
-				@Comment({"Torque required for the Skycrate Station to Work."})
+				@Comment({"Torque required by the machine to start working."})
 				public static int torqueMin = 4;
 
-				@Comment({"Max Torque (reaching over this level doesn't change effectiveness)."})
-				public static int torqueEffectiveMax = 8;
+				@Comment({"Torque required by the machine to work at full efficiency."})
+				public static int torqueEfficient = 8;
 
-				@Comment({"Max Torque (will break if over)."})
-				public static int torqueBreakingMax = 256;
+				@Comment({"Max Torque (machine will break if over)."})
+				public static int torqueBreaking = 256;
 
 				@Comment({"How long does it take for the station to put a crate onto the line. (in ticks)"})
 				public static int outputTime = 240;
@@ -781,32 +792,50 @@ public class IIConfigHandler
 
 			public static class Sawmill
 			{
-				@Comment({"Rotations per minute required for the Sawmill to Work."})
-				public static int rpmMin = 20;
+				@Comment({"Degrees/tick required by the machine to start working."})
+				public static int speedMin = 10;
 
-				@Comment({"Max rotations per minute (will break if over)."})
-				public static int rpmBreakingMax = 160;
+				@Comment({"Degrees/tick required by the machine to work at full efficiency."})
+				public static int speedEfficient = 20;
 
-				@Comment({"Torque required for the Sawmill to Work."})
-				public static int torqueMin = 6;
+				@Comment({"Max Degrees/tick (machine will break if over)."})
+				public static int speedBreaking = 160;
 
-				@Comment({"Max Torque (will break if over)."})
-				public static int torqueBreakingMax = 140;
+				@Comment({"Torque required by the machine to start working."})
+				public static int torqueMin = 4;
+
+				@Comment({"Torque required by the machine to work at full efficiency."})
+				public static int torqueEfficient = 6;
+
+				@Comment({"Max Torque (machine will break if over)."})
+				public static int torqueBreaking = 140;
+
+				@Comment({"Degrees/tick required by the Improved Gearbox upgrade to multiply the machine's speed."})
+				public static int speedGearboxUpgrade = 40;
+
+				@Comment({"Efficiency modifier for the Improved Gearbox upgrade."})
+				public static float gearboxUpgradeEfficiency = 2.5f;
 			}
 
 			public static class MechanicalPump
 			{
-				@Comment({"Rotations per minute required for the Sawmill to Work."})
-				public static int rpmMin = 40;
+				@Comment({"Degrees/tick required by the machine to start working."})
+				public static int speedMin = 20;
 
-				@Comment({"Max rotations per minute (will break if over)."})
-				public static int rpmBreakingMax = 160;
+				@Comment({"Degrees/tick required by the machine to work at full efficiency."})
+				public static int speedEfficient = 40;
 
-				@Comment({"Torque required for the Sawmill to Work."})
+				@Comment({"Max Degrees/tick (machine will break if over)."})
+				public static int speedBreaking = 160;
+
+				@Comment({"Torque required by the machine to start working."})
 				public static int torqueMin = 2;
 
-				@Comment({"Max Torque (will break if over)."})
-				public static int torqueBreakingMax = 40;
+				@Comment({"Torque required by the machine to work at full efficiency."})
+				public static int torqueEfficient = 6;
+
+				@Comment({"Max Torque (machine will break if over)."})
+				public static int torqueBreaking = 40;
 			}
 
 			public static class RadioStation
@@ -912,6 +941,8 @@ public class IIConfigHandler
 				@Comment({"Hatch opening (or closing) time (in ticks)"})
 				public static int hatchTime = 40;
 
+				@Comment({"Tool traverse time, added to beginning and end of animation (in ticks)"})
+				public static int toolMoveTime = 30;
 			}
 
 			public static class ArtilleryHowitzer
@@ -1170,7 +1201,7 @@ public class IIConfigHandler
 				public static int craneMoveTime = 20;
 
 				@Comment({"Duration of crane bucket actions (in ticks)."})
-				public static int craneGrabTime = 20;
+				public static int craneBucketActionTime = 100;
 			}
 
 			public static class AmmunitionAssembler
@@ -1996,8 +2027,21 @@ public class IIConfigHandler
 
 		public static class Factions
 		{
+			@RequiresMcRestart
+			@Comment({"Allows to disable II's faction system completely. Chunk claiming, ownership and commanding Hanses will not work when disabled."})
+			public static boolean enableFactions = true;
+
+			@RequiresMcRestart
 			@Comment({"When enabled, players not belonging to a faction cannot access containers on chunks belonging to other factions."})
 			public static boolean preventContainerAccess = true;
+
+			@RequiresMcRestart
+			@Comment({"Determines how often faction property-bound chunkloader tickets are checked for validity. (in ticks)"})
+			public static int chunkloaderTickDelay = 200;
+
+			@RequiresMcRestart
+			@Comment({"Determines how often properties try to claim surrounding chunks. (in ticks)"})
+			public static int claimTickDelay = 200;
 		}
 
 		public static class MechanicalDevices

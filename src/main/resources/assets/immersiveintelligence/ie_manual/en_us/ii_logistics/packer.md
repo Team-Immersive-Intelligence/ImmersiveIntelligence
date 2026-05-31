@@ -38,11 +38,12 @@ The [Railway Upgrade] transforms the Packer's loading conveyor into a set of rai
 # upgrades_labeler
 |[upgrade_display]{upgrade:"immersiveintelligence:packer_naming"}|
 The [Naming Stamp] adds a label maker to the Packer and allows it to set the name of the packed item. This upgrade can be combined with other upgrades.
-# data_labeling
+# data_labeling_1
 |[data_variable]{type:"itemstack", direction:"in", letter:"f", name:"Label Filter", description:"Optional. Container filter for labeling. ItemStack or OreDict String."}|
 |[data_variable]{type:"integer", direction:"in", letter:"b", name:"Serial Batch Start", description:"Optional. Starting serial number for labeling; also sets current serial to this value."}|
 |[data_variable]{type:"logistic_tag", direction:"in", letter:"i", name:"LogiTag Input", description:"Optional. Only label containers matching this incoming tag."}|
 |[data_variable]{type:"logistic_tag", direction:"in", letter:"o", name:"LogiTag Output", description:"Tag applied to labeled containers."}|
+# data_labeling_2
 |[data_variable]{type:"itemstack", direction:"in", letter:"t", name:"LogiTag In (as ItemStack)", description:"Optional alternative to 'i'. Provide an ItemStack carrying a Logistic Tag."}|
 |[data_variable]{type:"itemstack", direction:"in", letter:"T", name:"LogiTag Out (as ItemStack)", description:"Optional alternative to 'o'. Provide an ItemStack carrying a Logistic Tag."}|
 |[data_variable]{type:"integer", direction:"in", letter:"x", name:"Index", description:"Optional. Index for remove/remove_label."}|

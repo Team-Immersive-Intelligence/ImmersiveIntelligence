@@ -9,10 +9,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
 import net.minecraftforge.client.model.obj.OBJModel;
-import pl.pabilo8.immersiveintelligence.api.upgrade.IUpgradableDevice;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTLoader;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
-import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTUpgradeCachedModel.MachineCachedUpgradeModelBuilder;
 import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMT;
 import pl.pabilo8.immersiveintelligence.common.util.amt.AMTModelHeader;
 
@@ -93,11 +91,6 @@ public final class AMTCachedModelBuilder<T>
 		return withModel(predicate, AMTUtils.modelFromRes(res));
 	}
 
-	public <K extends TileEntity & IUpgradableDevice> AMTCachedModelBuilder<K> withModel(MachineCachedUpgradeModelBuilder<K> modelBuilder)
-	{
-		return (AMTCachedModelBuilder<K>)this;
-	}
-
 	public AMTCachedModelBuilder<T> withModels(OBJModel... model)
 	{
 		this.models.addAll(Arrays.asList(model));
@@ -127,9 +120,9 @@ public final class AMTCachedModelBuilder<T>
 		return this;
 	}
 
-	public AMTCachedModelBuilder<T> withHeaderProvider(Function<T, AMTModelHeader> modelProvider)
+	public AMTCachedModelBuilder<T> withHeaderProvider(Function<T, AMTModelHeader> headerProvider)
 	{
-		this.headerProvider = modelProvider;
+		this.headerProvider = headerProvider;
 		return this;
 	}
 

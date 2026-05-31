@@ -126,6 +126,19 @@ public class AMTBullet extends AMT
 
 	}
 
+	@Override
+	protected AMT renamedCopy(String newName)
+	{
+		AMTBullet clone = new AMTBullet(newName, originPos, model);
+		clone.baseRotation = baseRotation;
+		clone.core = core;
+		clone.coreType = coreType;
+		clone.gunpowderPercentage = gunpowderPercentage;
+		clone.paintColor = paintColor;
+		clone.state = state;
+		return clone;
+	}
+
 	public void setModel(@Nullable IAmmoModel<?, ?> model)
 	{
 		this.model = model;

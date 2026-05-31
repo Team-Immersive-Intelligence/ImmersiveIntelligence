@@ -54,6 +54,12 @@ public class AmmoComponentFluid extends AmmoComponent
 	}
 
 	@Override
+	public boolean showInManual()
+	{
+		return false;
+	}
+
+	@Override
 	public void onEffect(World world, Vec3d pos, Vec3d dir, ComponentEffectShape shape, NBTTagCompound tag, float size, float multiplier, Entity owner)
 	{
 		if(world.isRemote)

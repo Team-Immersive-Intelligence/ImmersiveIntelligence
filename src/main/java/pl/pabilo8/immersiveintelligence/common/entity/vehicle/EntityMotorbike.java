@@ -24,11 +24,8 @@ import pl.pabilo8.immersiveintelligence.client.ClientProxy;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Vehicles.Motorbike;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.*;
-import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehiclePart;
-import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleSeat;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.*;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleSeat.SeatInfo;
-import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleWheel;
-import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.WheelType;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.propulsion.VehicleEngineFuelBased;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.propulsion.VehicleTransmission;
 import pl.pabilo8.immersiveintelligence.common.util.IIDamageSources;
@@ -147,6 +144,10 @@ public class EntityMotorbike extends EntityVehicleBase<EntityMotorbike>
 				.withDurability(engineDurability)
 				.withRatios(20, -0.25, 0.5, 1)
 				.withReceivers(this.partWheelBack);
+
+		this.components = new IVehicleComponent[]{
+				this.fuelTank, this.engine, this.transmission
+		};
 
 		//Parts
 		return new EntityVehiclePart[]{

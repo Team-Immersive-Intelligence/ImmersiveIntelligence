@@ -72,7 +72,7 @@ public class AMTUpgradeCachedModel<T extends TileEntity & IUpgradableDevice> imp
 		IIAnimationGroup[] groups = new AMTModel(DefaultVertexFormats.BLOCK, builder.finishedModel)
 				.stream()
 				.map(amt ->
-						new IIAnimationGroup(amt.name, null, null, null,
+						new IIAnimationGroup(amt.getName(), null, null, null,
 								new IIBooleanLine(new float[]{0, 1}, new Boolean[]{false, true}),
 								null, null)
 				)
@@ -116,16 +116,14 @@ public class AMTUpgradeCachedModel<T extends TileEntity & IUpgradableDevice> imp
 			return UpgradeStage.INSTALLED;
 		}
 
+		this.finishedAnimation.apply(0f);
 		//Skip construction animation, if the machine does not have the upgrade installed
 		if(machine.getCurrentUpgrade()!=upgrade)
-		{
-			this.finishedAnimation.apply(0f);
 			return UpgradeStage.NOT_INSTALLED;
-		}
 
 		//calculate progress per part
 		final int maxProgress = IIContent.UPGRADE_INSERTER.getProgressRequired();
-		double maxClientProgress = UpgradeUtils.getMaxClientProgress(machine.getUpgradeInstallProgress(true), upgrade);
+		double maxClientProgress = UpgradeUtils.getMaxClientProgress(machine.getUpgradeInstallProgress(false), upgrade);
 
 		double currentProgress = (int)Math.min(machine.getUpgradeInstallProgress(true)+((partialTicks*(Tools.wrenchUpgradeProgress*0.5f))), maxClientProgress);
 		float install = (float)MathHelper.clamp(currentProgress/maxProgress, 0, 1);

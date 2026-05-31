@@ -117,7 +117,7 @@ public class BlockIICharredLog extends BlockIIBase<CharredLogs>
 
 	public enum CharredLogs implements IIBlockEnum
 	{
-		@IIBlockProperties(oreDict = {"logWood", "logCharred"})
+		@IIBlockProperties(oreDict = "logCharred")
 		MAIN
 	}
 }

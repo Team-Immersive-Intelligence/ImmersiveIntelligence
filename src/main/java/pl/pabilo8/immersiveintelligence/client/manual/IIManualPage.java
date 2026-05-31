@@ -83,6 +83,7 @@ public class IIManualPage extends ManualPages
 		registeredObjects.put("data_circuit", IIManualCircuit::new);
 		registeredObjects.put("data_variable", IIManualDataVariable::new);
 		registeredObjects.put("data_callback", IIManualDataCallback::new);
+		registeredObjects.put("pol_code", IIManualPOLCode::new);
 		registeredObjects.put("wip_notice", IIManualWIPNotice::new);
 	}
 

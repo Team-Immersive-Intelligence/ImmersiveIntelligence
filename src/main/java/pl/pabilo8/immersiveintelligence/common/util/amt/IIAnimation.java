@@ -8,6 +8,7 @@ import net.minecraft.util.Tuple;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil.Shaders;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIFileUtils;
 
 import javax.annotation.Nonnull;
@@ -52,9 +53,31 @@ public class IIAnimation
 		//there is also a 'comment' tag, but it's left out intentionally
 	}
 
+	public IIAnimation getReversedAnimation()
+	{
+		IIAnimationGroup[] reversedGroups = Arrays.stream(groups)
+				.map(group -> new IIAnimationGroup(group.groupName,
+						group.position!=null?new IIVectorLine(group.position.timeframes, IIUtils.reverseArray(group.position.values)): null,
+						group.scale!=null?new IIVectorLine(group.scale.timeframes, IIUtils.reverseArray(group.scale.values)): null,
+						group.rotation!=null?new IIVectorLine(group.rotation.timeframes, IIUtils.reverseArray(group.rotation.values)): null,
+						group.visibility!=null?new IIBooleanLine(group.visibility.timeframes, IIUtils.reverseArray(group.visibility.values)): null,
+						group.shader!=null?new IIShaderLine(group.shader.getShader(), group.shader.timeframes, IIUtils.reverseArray(group.shader.values)): null,
+						group.property!=null?new IIFloatLine(group.property.timeframes, IIUtils.reverseArray(group.property.values)): null
+				)).toArray(IIAnimationGroup[]::new);
+		return new IIAnimation(res, reversedGroups);
+	}
+
 	public IIAnimationGroup getLeadingGroup()
 	{
 		return groups.length > 0?groups[0]: new IIAnimationGroup("missingno", new JsonObject());
+	}
+
+	public IIAnimation renameAnimationGroup(String oldName, String newName)
+	{
+		IIAnimationGroup[] renamedGroups = Arrays.stream(groups)
+				.map(group -> group.groupName.equals(oldName)?group.renamedCopy(newName): group)
+				.toArray(IIAnimationGroup[]::new);
+		return new IIAnimation(res, renamedGroups);
 	}
 
 	public static class IIAnimationGroup
@@ -110,6 +133,11 @@ public class IIAnimation
 
 			visibility = json.has("visibility")?loadBooleanLine(json, "visibility"): null;
 			property = json.has("property")?loadFloatLine(json, "property"): null;
+		}
+
+		public IIAnimationGroup renamedCopy(String newName)
+		{
+			return new IIAnimationGroup(newName, position, scale, rotation, visibility, shader, property);
 		}
 
 		//TODO: 05.04.2022 attempt to streamline the code more

@@ -19,13 +19,13 @@ if (ii_generateCoreJar == 'true')
 			ant.signjar(
 					destDir: "${signdir.absolutePath}",
 					jar: 'build/libs/*-core.jar',
-					alias: getOr("SIGNING_KEY_ALIAS", project.keyStoreAlias),
-					storetype: "jks",
-					keystore: "${getOr("SIGNING_KEY_STORE_PATH", project.keyStore)}",
-					storepass: getOr("SIGNING_STORE_PASSWORD", project.keyStorePass),
-					keypass: getOr("SIGNING_KEY_PASSWORD", project.keyStoreKeyPass),
-					preservelastmodified: "true"
-					//verbose:true
+					alias: project.ksalias ?: System.getenv("SIGN_ALIAS"),
+					storetype: "pkcs12",
+					keystore: project.keystore ?: System.getenv("SIGN_KEYSTORE"),
+					storepass: project.storepass ?: System.getenv("SIGN_STOREPASS"),
+					verbose: true,
+					preservelastmodified: "true",
+					tsaurl: project.timestamp_url ?: System.getenv("SIGN_TIMESTAMP")
 			)
 		}
 	}
@@ -51,13 +51,13 @@ tasks.register('signMainJar') {
 		ant.signjar(
 				destDir: "${signdir.absolutePath}",
 				jar: 'build/libs/*.jar',
-				alias: getOr("SIGNING_KEY_ALIAS", project.keyStoreAlias),
-				storetype: "jks",
-				keystore: "${getOr("SIGNING_KEY_STORE_PATH", project.keyStore)}",
-				storepass: getOr("SIGNING_STORE_PASSWORD", project.keyStorePass),
-				keypass: getOr("SIGNING_KEY_PASSWORD", project.keyStoreKeyPass),
-				preservelastmodified: "true"
-				//tsaurl:getOr("SIGNING_TIMESTAMP_URL", project.timestampUrl)
+				alias: project.ksalias ?: System.getenv("SIGN_ALIAS"),
+				storetype: "pkcs12",
+				keystore: project.keystore ?: System.getenv("SIGN_KEYSTORE"),
+				storepass: project.storepass ?: System.getenv("SIGN_STOREPASS"),
+				verbose: true,
+				preservelastmodified: "true",
+				tsaurl: project.timestamp_url ?: System.getenv("SIGN_TIMESTAMP")
 		)
 	}
 }
@@ -65,7 +65,7 @@ tasks.register('signMainJar') {
 boolean hasKeyStore()
 {
 	if (!ii_enableSigning.asBoolean()) return false
-	def keystore = getOr("SIGNING_KEY_STORE_PATH", project.keyStore)
+	def keystore = getOr("SIGNING_KEY_STORE_PATH", project.keystore)
 	if (keystore instanceof File)
 	{
 		return ((File) keystore).exists()

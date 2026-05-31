@@ -1,0 +1,49 @@
+{
+  "comment": "Made by Pabilo8 with Blockbench",
+  "groups": {
+    "gauge2": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [89.64876, 0.00766, 12.52458]
+        },
+        {
+          "time": 0.25,
+          "transform": [0, -2.5, 10]
+        },
+        {
+          "time": 0.5,
+          "transform": [-82.85764, -0.30336, 10.044]
+        },
+        {
+          "time": 0.75,
+          "transform": [-180, -2.5, 10]
+        },
+        {
+          "time": 1,
+          "transform": [-269.89088, -2.49762, 12.50238]
+        }
+      ]
+    },
+    "fluid2": {
+      "property": [
+        {
+          "time": 0,
+          "property": 1.0
+        },
+        {
+          "time": 0.6,
+          "property": 0.85
+        },
+        {
+          "time": 0.8,
+          "property": 0.82
+        },
+        {
+          "time": 1.0,
+          "property": 0.82
+        }
+      ]
+    }
+  }
+}

@@ -15,6 +15,8 @@ import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformT
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
+import pl.pabilo8.immersiveintelligence.api.crafting.DustStack;
+import pl.pabilo8.immersiveintelligence.api.crafting.DustUtils;
 import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIMultiblockRecipe;
 import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIRecipeLayout;
 import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIRecipeLayout.IOType;
@@ -62,6 +64,8 @@ public class IIRecipeJEIWrapper<T extends IIMultiblockRecipe> implements IRecipe
 		List<List<ItemStack>> itemOutputs = new ArrayList<>();
 		List<FluidStack> fluidInputs = new ArrayList<>();
 		List<FluidStack> fluidOutputs = new ArrayList<>();
+		List<DustStack> dustInputs = new ArrayList<>();
+		List<DustStack> dustOutputs = new ArrayList<>();
 
 		for(LayoutComponent component : recipeLayout.getComponents())
 		{
@@ -87,18 +91,33 @@ public class IIRecipeJEIWrapper<T extends IIMultiblockRecipe> implements IRecipe
 						fluidOutputs.add(fs);
 				}
 				break;
-				//TODO: 07.12.2025 dust tanks
 				case DUST_TANK:
-					break;
+				{
+					assert component.getData()!=null;
+					DustStack dustStack = (DustStack)component.getData();
+					if(component.getIoType()==IOType.INPUT)
+						dustInputs.add(dustStack);
+					else
+						dustOutputs.add(dustStack);
+				}
+				break;
 				default:
 					break;
 			}
 		}
 
+		//Get dust stack items for reference
+		for(DustStack dustInput : dustInputs)
+			itemInputs.add(DustUtils.getDustStacks(dustInput.name));
+		for(DustStack dustOutput : dustOutputs)
+			itemOutputs.add(DustUtils.getDustStacks(dustOutput.name));
+
 		ingredients.setInputLists(VanillaTypes.ITEM, itemInputs);
 		ingredients.setOutputLists(VanillaTypes.ITEM, itemOutputs);
 		ingredients.setInputs(VanillaTypes.FLUID, fluidInputs);
 		ingredients.setOutputs(VanillaTypes.FLUID, fluidOutputs);
+		ingredients.setInputs(JEIHelper.DUSTSTACK, dustInputs);
+		ingredients.setOutputs(JEIHelper.DUSTSTACK, dustOutputs);
 
 	}
 

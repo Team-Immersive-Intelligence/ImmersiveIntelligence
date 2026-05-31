@@ -9,11 +9,9 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoIt
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
-import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityCoagulator;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerCoagulator;
-import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIMaterial.Materials;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 /**
@@ -86,9 +84,10 @@ public class GuiCoagulator extends DecoGui<TileEntityCoagulator, ContainerCoagul
 		{
 			int slotIndex = i;
 			final DecoItemStackDisplay stackDisplay = addComponent(new DecoItemStackDisplay(10-4-2+i*26, 20+40+16+2-2))
-					.withBackgroundTexture(DecoTextures.SLOT_IE)
-					.withStack(IIContent.itemMaterial.getStack(Materials.NATURAL_RUBBER))
-					.withProgressBar(() -> tile.getDryingProgressForSlot(slotIndex), IIReference.COLOR_GUI_BRASS, IIReference.COLOR_IMMERSIVE_ORANGE);
+					.withBackgroundTexture(DecoSprite.atlasSprite(DecoTextures.SLOT_IE, 32, true))
+					.withStack(tile.bucketStacks.get(slotIndex))
+					.withProgressBar(partialTicks -> tile.getDryingProgressForSlot(slotIndex, partialTicks),
+							IIReference.COLOR_GUI_BRASS, IIReference.COLOR_IMMERSIVE_ORANGE);
 			addValueListener(() -> tile.bucketStacks.get(slotIndex))
 					.addObserver(stackDisplay::withStack);
 		}

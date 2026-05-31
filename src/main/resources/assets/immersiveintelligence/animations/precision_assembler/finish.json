@@ -1,0 +1,105 @@
+{
+  "comment": "Made by Pabilo8 with Blockbench",
+  "groups": {
+    "door1": {
+      "rotation": [
+        {
+          "time": 0.19447,
+          "transform": [0, 0, 177.5]
+        },
+        {
+          "time": 0.25,
+          "transform": [0, 0, 151.98]
+        },
+        {
+          "time": 0.36113,
+          "transform": [0, 0, 126.21]
+        },
+        {
+          "time": 0.44447,
+          "transform": [0, 0, 116.67]
+        },
+        {
+          "time": 0.55553,
+          "transform": [0, 0, 89.17]
+        },
+        {
+          "time": 0.63887,
+          "transform": [0, 0, 52.08]
+        },
+        {
+          "time": 0.69447,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.75,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.80553,
+          "transform": [0, 0, -5]
+        },
+        {
+          "time": 0.86113,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "door2": {
+      "rotation": [
+        {
+          "time": 0.25,
+          "transform": [0, 0, -177.5]
+        },
+        {
+          "time": 0.30553,
+          "transform": [0, 0, -151.98]
+        },
+        {
+          "time": 0.38887,
+          "transform": [0, 0, -126.21]
+        },
+        {
+          "time": 0.4722,
+          "transform": [0, 0, -116.67]
+        },
+        {
+          "time": 0.58333,
+          "transform": [0, 0, -89.17]
+        },
+        {
+          "time": 0.66667,
+          "transform": [0, 0, -52.08]
+        },
+        {
+          "time": 0.75,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.80553,
+          "transform": [0, 0, 5]
+        },
+        {
+          "time": 0.86113,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "platform": {
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, 9.9, 0]
+        },
+        {
+          "time": 0.08333,
+          "transform": [0, 10.4, 0]
+        },
+        {
+          "time": 0.44447,
+          "transform": [0, 0, 0]
+        }
+      ]
+    }
+  }
+}

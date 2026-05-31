@@ -194,6 +194,8 @@ public class IISounds
 	//--- Machines ---//
 	@ModSound(sounds = {"device/*"}, subtitle = "device_*")
 	public static SoundEvent rolling = registerSound("rolling");
+	public static MultiSound rollingLoop = new MultiSound("rolling_loop",
+			electricMotorStart, rolling, electricMotorEnd);
 
 	@ModSound(sounds = {"device/*"}, subtitle = "device_*")
 	public static SoundEvent chain = registerSound("chain");
@@ -225,10 +227,6 @@ public class IISounds
 	public static SoundEvent fuelStationEnd = registerSound("fuel_station_end");
 	public static MultiSound fuelStationLoop = new MultiSound("fuel_station_loop",
 			fuelStationStart, fuelStationMid, fuelStationEnd);
-
-	//--- Printing Press---//
-	public static MultiSound printingPressLoop = new MultiSound("printing_press_loop",
-			electricMotorStart, rolling, electricMotorEnd);
 
 	//--- Hatches ---//
 	@ModSound(sounds = {"device/hatch/drawer/open{0..1}"}, subtitle = "drawer_open")

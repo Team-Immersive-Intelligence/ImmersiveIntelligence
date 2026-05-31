@@ -411,6 +411,7 @@ public class TactileManager
 			return;
 
 		entities.forEach(EntityAMTTactile::defaultizeAnimation);
+		applyAnimationPositions();
 	}
 
 	/**
@@ -426,7 +427,10 @@ public class TactileManager
 			return;
 
 		if(animation==null)
+		{
+			applyAnimationPositions();
 			return;
+		}
 
 		//Load a cached animation or from JSON
 		IIAnimationCollisionMap anim;
@@ -439,7 +443,62 @@ public class TactileManager
 			return;
 
 		anim.apply(time);
+		applyAnimationPositions();
+	}
 
+	private void applyAnimationPositions()
+	{
+		BlockPos handlerPos = getPos();
+		Set<EntityAMTTactile> applied = new HashSet<>();
+		for(EntityAMTTactile e : entities)
+			applyEntityTransformRecursive(e, handlerPos, applied);
+	}
+
+	private void applyEntityTransformRecursive(EntityAMTTactile e, BlockPos handlerPos, Set<EntityAMTTactile> applied)
+	{
+		if(applied.contains(e))
+			return;
+
+		EntityAMTTactile parent = e.getParent();
+		if(parent!=null)
+			applyEntityTransformRecursive(parent, handlerPos, applied);
+
+		e.prevPosX = e.posX;
+		e.prevPosY = e.posY;
+		e.prevPosZ = e.posZ;
+
+		if(parent==null)
+		{
+			e.posX = handlerPos.getX()+e.offset.x+e.translation.x;
+			e.posY = handlerPos.getY()+e.offset.y+e.translation.y;
+			e.posZ = handlerPos.getZ()-0.5+e.offset.z+e.translation.z;
+			e.rotationPitch = (float)e.rotation.x;
+			e.rotationYaw = (float)e.rotation.y;
+			e.setRotationRoll((float)e.rotation.z);
+		}
+		else
+		{
+			Vec3d relativeOffset = e.offset.subtract(parent.offset);
+			e.rotationYaw = (float)(parent.rotationYaw+e.rotation.y);
+			e.rotationPitch = (float)(parent.rotationPitch+e.rotation.x);
+			e.setRotationRoll((float)(parent.getRotationRoll()+e.rotation.z));
+
+			Vec3d angle = new Matrix4().setIdentity()
+					.rotate(Math.toRadians(-e.rotationYaw), 0, 1, 0)
+					.rotate(Math.toRadians(e.getRotationRoll()), 0, 0, 1)
+					.rotate(Math.toRadians(e.rotationPitch), 1, 0, 0)
+					.apply(relativeOffset.add(e.translation));
+
+			e.posX = parent.posX+angle.x;
+			e.posY = parent.posY+angle.y;
+			e.posZ = parent.posZ+angle.z;
+		}
+
+		e.motionX = e.posX-e.prevPosX;
+		e.motionY = e.posY-e.prevPosY;
+		e.motionZ = e.posZ-e.prevPosZ;
+
+		applied.add(e);
 	}
 
 	/**

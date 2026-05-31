@@ -26,7 +26,9 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @author Avalon (avalon@iiteam.net)
  * @since 11.06.2019
+ * @updated 03.15.2026
  */
 public class TileEntityPunchtapeReader extends TileEntityIEBase implements ITickable, IRedstoneOutput, IDataDevice, IPlayerInteraction, IHammerInteraction, IDirectionalTile
 {
@@ -103,9 +105,9 @@ public class TileEntityPunchtapeReader extends TileEntityIEBase implements ITick
 	{
 		if(player.isSneaking())
 		{
-			IIUtils.cycleEnum(true, PunchtapeReaderMode.class, mode);
+			mode = IIUtils.cycleEnum(true, PunchtapeReaderMode.class, mode);
 			IIPacketHandler.sendChatTranslation(player, IIReference.INFO_KEY+"punchtape_reader_mode",
-					new TextComponentTranslation(IIReference.INFO_KEY+"punchtape_reader_mode."+mode));
+					new TextComponentTranslation(IIReference.INFO_KEY+"punchtape_reader_mode."+mode.ordinal()));
 			markDirty();
 			markBlockForUpdate(getPos(), null);
 		}

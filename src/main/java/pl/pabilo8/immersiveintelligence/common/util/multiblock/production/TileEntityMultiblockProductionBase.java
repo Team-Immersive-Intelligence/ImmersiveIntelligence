@@ -208,11 +208,13 @@ public abstract class TileEntityMultiblockProductionBase<T extends TileEntityMul
 		@Override
 		public NBTTagCompound serializeNBT()
 		{
-			return EasyNBT.newNBT()
+			EasyNBT nbt = EasyNBT.newNBT()
 					.withString("recipe", recipe.getName())
 					.withFloat("ticks", ticks)
-					.withInt("maxTicks", maxTicks)
-					.unwrap();
+					.withInt("maxTicks", maxTicks);
+			if(processData!=null)
+				nbt.mergeWith(processData);
+			return nbt.unwrap();
 		}
 
 		@Override

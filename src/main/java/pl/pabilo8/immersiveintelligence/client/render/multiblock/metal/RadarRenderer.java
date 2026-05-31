@@ -7,10 +7,11 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.obj.OBJModel;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeTechTree;
-import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
 import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIAnimationCompiledMap;
 import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTConstructionModel;
 import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTUpgradeModel;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTUpgradeModel.UpgradeStage;
 import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIMultiblockRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IITileRenderer.RegisteredTileRenderer;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
@@ -29,6 +30,7 @@ public class RadarRenderer extends IIMultiblockRenderer<TileEntityRadar>
 {
 	private AMTModel model;
 	private AMTConstructionModel constructionModel;
+	private AMTUpgradeModel radioLocatorsUpgrade;
 	private IIAnimationCompiledMap animationDish;
 
 	@Override
@@ -41,7 +43,14 @@ public class RadarRenderer extends IIMultiblockRenderer<TileEntityRadar>
 		//Draw construction model or finished one
 		if(constructionModel.renderProgress(te, tes, buf, partialTicks)==AMTConstructionModel.ConstructionStage.FINISHED)
 		{
-			animationDish.apply(AMTUtils.getAnimationProgress(te.dishRotation, 360, te.active, false, 1, 0, partialTicks));
+			if(radioLocatorsUpgrade.renderProgress(te, tes, buf, partialTicks)==UpgradeStage.INSTALLED)
+			{
+				radioLocatorsUpgrade.defaultize();
+				radioLocatorsUpgrade.render(tes, buf);
+			}
+
+			float progress = (((te.dishRotation+(te.active?partialTicks: 0))%360)/360f);
+			animationDish.apply(te.mirrored?progress: (1f-progress));
 			model.render(tes, buf);
 		}
 	}
@@ -63,12 +72,17 @@ public class RadarRenderer extends IIMultiblockRenderer<TileEntityRadar>
 				modelDir.with("radar_construction.obj.ie"),
 				new ResourceLocation(ImmersiveIntelligence.MODID, "radar/construction")
 		);
+		this.radioLocatorsUpgrade = new AMTUpgradeModel(
+				IIContent.UPGRADE_RADIO_LOCATORS,
+				modelDir.with("upgrade_traingulators.obj.ie"),
+				new ResourceLocation(ImmersiveIntelligence.MODID, "radar/upgrade_triangulators")
+		);
 
 		this.animationDish = IIAnimationCompiledMap.create(this.model, IIReference.RES_II.with("radar/dish"));
 
 		UpgradeTechTree.getTreeFor(TileEntityRadar.class)
-				.withBaseModelLocation(modelDir.with("upgrade_triangulators.obj.ie"))
-				.withUpgradeModelLocation(IIContent.UPGRADE_EMPLACEMENT_WEAPON_MACHINEGUN, modelDir.with("radar.obj.ie"));
+				.withBaseModelLocation(modelDir.with("radar_inv.obj"))
+				.withUpgradeModelLocation(IIContent.UPGRADE_RADIO_LOCATORS, modelDir.with("upgrade_traingulators.obj.ie"));
 
 	}
 }

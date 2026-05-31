@@ -47,6 +47,7 @@ import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemUtils;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradableTool;
 
 import javax.annotation.Nullable;
@@ -63,7 +64,7 @@ public class ItemIIMachinegun extends ItemIIUpgradableTool implements IAdvancedF
 	{
 		super("machinegun", 1, "MACHINEGUN");
 		//Use interfaces pls Blu
-		IIUtils.fixupItem(this, "machinegun");
+		IIItemUtils.fixupItem(this, "machinegun");
 	}
 
 	@Override

@@ -1,16 +1,20 @@
 package pl.pabilo8.immersiveintelligence.api.crafting;
 
+import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIMultiblockRecipe;
 import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIRecipeLayout;
 import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIRecipeLayoutBuilder;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Coagulator;
+import pl.pabilo8.immersiveintelligence.common.IILogger;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
-import java.util.function.Predicate;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -18,7 +22,7 @@ import java.util.function.Predicate;
  */
 public class CoagulatorRecipe extends IIMultiblockRecipe
 {
-	private static HashMap<Predicate<ItemStack>, Integer> bucketTimeMap = new HashMap<>();
+	private static List<DryingInformation> dryingInformation = new ArrayList<>();
 	public final FluidStack fluidInput, coagulantInput;
 	public final ItemStack itemOutput;
 
@@ -38,19 +42,37 @@ public class CoagulatorRecipe extends IIMultiblockRecipe
 		setDryingTime(this.itemOutput, dryingTime);
 	}
 
-	private static void setDryingTime(ItemStack output, int dryingTime)
+	private static void setDryingTime(ItemStack outputStack, int dryingTime)
 	{
-		Optional<Predicate<ItemStack>> found = bucketTimeMap.keySet().stream().filter(predicate -> predicate.test(output)).findFirst();
-		found.ifPresent(itemStackPredicate -> bucketTimeMap.remove(itemStackPredicate));
-		bucketTimeMap.put(output::isItemEqual, dryingTime);
+		for(DryingInformation information : dryingInformation)
+			if(information.outputPredicate.matchesItemStackIgnoringSize(outputStack))
+			{
+				information.time = dryingTime;
+				return;
+			}
+
+		IngredientStack outputPredicate = new IngredientStack(outputStack);
+		Optional<CoagulatorRecipe> first = streamRecipes(CoagulatorRecipe.class)
+				.filter(recipe -> outputPredicate.matchesItemStack(recipe.itemOutput))
+				.findFirst();
+
+		assert first.isPresent();
+
+		IILogger.error("Could not find drying information for stack "+outputStack);
+		dryingInformation.add(new DryingInformation(outputPredicate, first.get().fluidInput, dryingTime));
 	}
 
-	public static int getDryingTimeFor(ItemStack stack)
+	@Nonnull
+	public static DryingInformation getDryingInformationFor(ItemStack outputStack)
 	{
-		for(Predicate<ItemStack> predicate : bucketTimeMap.keySet())
-			if(predicate.test(stack))
-				return bucketTimeMap.get(predicate);
-		return Coagulator.bucketTime;
+		for(DryingInformation information : dryingInformation)
+			if(information.outputPredicate.matchesItemStackIgnoringSize(outputStack))
+				return information;
+
+		if(!outputStack.isEmpty())
+			IILogger.error("Could not find drying information for stack "+outputStack);
+		return new DryingInformation(new IngredientStack(ItemStack.EMPTY),
+				new FluidStack(FluidRegistry.WATER, 1000), Coagulator.bucketTime);
 	}
 
 	@Nullable
@@ -65,5 +87,34 @@ public class CoagulatorRecipe extends IIMultiblockRecipe
 				.withTimeInfo()
 				.withPowerInfo()
 				.build();
+	}
+
+	public static class DryingInformation
+	{
+		private final IngredientStack outputPredicate;
+		private final FluidStack fluid;
+		private int time;
+
+		public DryingInformation(IngredientStack outputPredicate, FluidStack fluid, int time)
+		{
+			this.outputPredicate = outputPredicate;
+			this.fluid = fluid;
+			this.time = time;
+		}
+
+		public IngredientStack getOutputPredicate()
+		{
+			return outputPredicate;
+		}
+
+		public FluidStack getFluid()
+		{
+			return fluid;
+		}
+
+		public int getTime()
+		{
+			return time;
+		}
 	}
 }

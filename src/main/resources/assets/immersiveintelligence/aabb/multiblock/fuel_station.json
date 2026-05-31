@@ -138,5 +138,8 @@
     "energy_input": 6,
     "redstone": 9,
     "table": [0, 1]
+  },
+  "rotations": {
+    "facing_clients": "clockwise_180"
   }
 }

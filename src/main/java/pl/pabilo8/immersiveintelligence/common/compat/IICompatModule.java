@@ -1,14 +1,23 @@
 package pl.pabilo8.immersiveintelligence.common.compat;
 
 import blusunrize.immersiveengineering.common.util.Utils;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
+import pl.pabilo8.immersiveintelligence.common.compat.dd.DeeperDepthsHelper;
 import pl.pabilo8.immersiveintelligence.common.compat.it.ImmersiveTechnologyHelper;
+import pl.pabilo8.immersiveintelligence.common.compat.nb.NetherBackportHelper;
+import pl.pabilo8.immersiveintelligence.common.compat.thaum.ThaumcraftHelper;
+import pl.pabilo8.immersiveintelligence.common.compat.thaumaugment.ThaumicAugmentationHelper;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map.Entry;
@@ -24,8 +33,9 @@ public abstract class IICompatModule
 	public static HashMap<String, Class<? extends IICompatModule>> moduleClasses = new HashMap<>();
 	public static HashMap<String, String> moduleMinModVersions = new HashMap<>();
 	public static Set<IICompatModule> modules = new HashSet<>();
+	public static File configurationDirectory = null;
 
-	public static boolean serene = false, baubles = false, petroleum = false;
+	public static boolean serene = false, baubles = false, petroleum = false, cfb = false;
 	//We don't want this to happen multiple times after all >_>
 	public static boolean serverStartingDone = false;
 
@@ -45,16 +55,23 @@ public abstract class IICompatModule
 		moduleClasses.put("mysticalmechanics", MysticalMechanicsAPIHelper.class);
 		moduleClasses.put("tfc", TerrafirmaHelper.class);
 		moduleClasses.put("betterwithmods", BetterWithModsHelper.class);
+		moduleClasses.put("deeperdepths", DeeperDepthsHelper.class);
+		moduleClasses.put("nb", NetherBackportHelper.class);
+		moduleClasses.put("thaumcraft", ThaumcraftHelper.class);
+		moduleClasses.put("thaumicaugmentation", ThaumicAugmentationHelper.class);
+		moduleClasses.put("cfb", CratesFeltBlueHelper.class);
+		moduleClasses.put("fluidlogged_api", FluidloggedAPIHelper.class);
 	}
 
-	public static void doModulesPreInit()
+	public static void doModulesPreInit(FMLPreInitializationEvent event)
 	{
+		configurationDirectory = event.getModConfigurationDirectory();
 		for(Entry<String, Class<? extends IICompatModule>> e : moduleClasses.entrySet())
 			if(Loader.isModLoaded(e.getKey()))
 				try
 				{
 					Boolean enabled = IIConfig.compat.get(e.getKey());
-					IILogger.info(e.getKey()+Utils.getModVersion(e.getKey()));
+					IILogger.info("Adding compat for "+e.getKey()+" version "+Utils.getModVersion(e.getKey()));
 
 					if(moduleMinModVersions.containsKey(e.getKey())&&
 							new DefaultArtifactVersion(moduleMinModVersions.get(e.getKey()))
@@ -156,5 +173,23 @@ public abstract class IICompatModule
 	@SideOnly(Side.CLIENT)
 	public void clientPostInit()
 	{
+	}
+
+	//--- Utils ---//
+
+	protected ItemStack getModItem(ResourceLocation id, int amount, int metaData)
+	{
+		Item item = Item.REGISTRY.getObject(id);
+		return item==null?ItemStack.EMPTY: new ItemStack(item, amount, metaData);
+	}
+
+	protected ItemStack getModItem(ResourceLocation id, int amount)
+	{
+		return getModItem(id, amount, 0);
+	}
+
+	protected ItemStack getModItem(ResourceLocation id)
+	{
+		return getModItem(id, 1, 0);
 	}
 }

@@ -2,7 +2,7 @@
 Engineers Crates
 Matryoshka
 # intro
-@hammer;level_advanced_industrial
+@level_advanced_industrial
 No engineer is complete without a crate to store his items. Several new types of crates have been developed to store your items in style.
 # m_crate
 |[crafting]{source:"metalbox"}|

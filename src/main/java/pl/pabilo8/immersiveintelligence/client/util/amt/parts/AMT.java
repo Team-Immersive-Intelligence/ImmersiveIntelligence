@@ -23,13 +23,13 @@ import java.util.ArrayList;
  * Introducing the Advanced Model Technology(tm)<br>
  * Brace yourselves
  */
-public abstract class AMT implements AMTRenderable
+public abstract class AMT implements AMTRenderable, Cloneable
 {
 	//--- Final Properties ---//
 	/**
 	 * The name of this ModelThingy
 	 */
-	public final String name;
+	protected String name;
 	/**
 	 * The default position and rotation, not to be modified
 	 */
@@ -150,12 +150,10 @@ public abstract class AMT implements AMTRenderable
 			GlStateManager.rotate((float)rot.z, 0, 0, 1);
 			GlStateManager.rotate((float)-rot.x, 1, 0, 0);
 		}
-
-		GlStateManager.translate(-originPos.x, -originPos.y, -originPos.z);
-
 		if(scale!=null)
 			GlStateManager.scale(scale.x, scale.y, scale.z);
 
+		GlStateManager.translate(-originPos.x, -originPos.y, -originPos.z);
 	}
 
 	protected abstract void draw(Tessellator tes, BufferBuilder buf);
@@ -296,4 +294,57 @@ public abstract class AMT implements AMTRenderable
 	{
 		this.scale = this.scale==null?scale: this.scale.add(scale);
 	}
+
+	//--- Cloning ---//
+
+	/**
+	 * @return A copy of this AMT with the same name, properties and cloned children
+	 */
+	@SuppressWarnings("MethodDoesntCallSuperMethod")
+	@Override
+	public final AMT clone()
+	{
+		return renamedClone(name);
+	}
+
+	/**
+	 * Creates a copy of the AMT under a different name, with all properties the same as the original and cloned children
+	 *
+	 * @param newName New name for the cloned AMT, should be unique within the model
+	 * @return Cloned AMT with the new name
+	 */
+	public final AMT renamedClone(String newName)
+	{
+		AMT renamed = renamedCopy(newName);
+		if(this.children!=null)
+		{
+			AMT[] children = new AMT[this.children.length];
+			for(int i = 0; i < this.children.length; i++)
+				children[i] = this.children[i].clone();
+			renamed.setChildren(children);
+		}
+		return renamed;
+	}
+
+	//--- Name ---//
+
+	/**
+	 * @return the name of this AMT
+	 * @implSpec names of AMT inside one model must be unique to prevent conflicts in calculating animations
+	 */
+	public final String getName()
+	{
+		return name;
+	}
+
+	/**
+	 * @param newName new name for the cloned AMT, should be unique within the model
+	 * @return this AMT with the name changed to newName
+	 */
+	public final void rename(String newName)
+	{
+		this.name = newName;
+	}
+
+	protected abstract AMT renamedCopy(String newName);
 }

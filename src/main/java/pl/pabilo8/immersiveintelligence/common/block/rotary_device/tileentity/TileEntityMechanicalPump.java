@@ -36,12 +36,10 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.api.rotary.CapabilityRotaryEnergy;
-import pl.pabilo8.immersiveintelligence.api.rotary.IRotaryEnergy;
-import pl.pabilo8.immersiveintelligence.api.rotary.IRotationalEnergyBlock;
-import pl.pabilo8.immersiveintelligence.api.rotary.RotaryStorage;
+import pl.pabilo8.immersiveintelligence.api.rotary.*;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedTextOverlay;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.MechanicalPump;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Sawmill;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.rotary_device.BlockIIMechanicalDevice1.IIBlockTypes_MechanicalDevice1;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -53,6 +51,8 @@ import java.util.HashMap;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 12.05.2026
+ * @ii-approved 0.3.1
  * @since 03.10.2020
  */
 public class TileEntityMechanicalPump extends TileEntityIEBase implements ITickable, IBlockBounds, IHasDummyBlocks, IConfigurableSides,
@@ -88,13 +88,16 @@ public class TileEntityMechanicalPump extends TileEntityIEBase implements ITicka
 		if(dummy||world.isRemote)
 			return;
 		if(tank.getFluidAmount() > 0)
-		{
-			int i = outputFluid(tank.getFluid(), false);
-			tank.drain(i, true);
-		}
+			tank.drain(outputFluid(tank.getFluid(), false), true);
 
+		//Self destruct
+		if(IIRotaryUtils.destroyIfOverloaded(this, rotation, Sawmill.speedBreaking, Sawmill.torqueBreaking))
+			return;
+		//Accept rotation
 		handleRotation();
 
+		int fluidThroughput = (int)(1000*IIRotaryUtils.getEffectiveEnergy(rotation, MechanicalPump.speedMin,
+				MechanicalPump.speedEfficient, MechanicalPump.torqueMin, MechanicalPump.torqueEfficient));
 		if(world.isBlockIndirectlyGettingPowered(getPos()) > 0||world.isBlockIndirectlyGettingPowered(getPos().add(0, 1, 0)) > 0)
 		{
 			for(EnumFacing f : EnumFacing.values())
@@ -105,13 +108,16 @@ public class TileEntityMechanicalPump extends TileEntityIEBase implements ITicka
 					if(tile!=null&&tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, f.getOpposite()))
 					{
 						IFluidHandler handler = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, f.getOpposite());
-						FluidStack drain = handler.drain(500, false);
+						assert handler!=null;
+						FluidStack drain = handler.drain(fluidThroughput, false);
 						if(drain==null||drain.amount <= 0)
 							continue;
 						int out = this.outputFluid(drain, false);
 						handler.drain(out, true);
 					}
-					else if(world.getTotalWorldTime()%20==((getPos().getX()^getPos().getZ())&19)&&world.getBlockState(getPos().offset(f)).getBlock()==Blocks.WATER&&IEConfig.Machines.pump_infiniteWater&&tank.fill(new FluidStack(FluidRegistry.WATER, 1000), false)==1000&&this.hasEnoughPower())
+					else if(world.getTotalWorldTime()%20==((getPos().getX()^getPos().getZ())&19)&&
+							world.getBlockState(getPos().offset(f)).getBlock()==Blocks.WATER&&IEConfig.Machines.pump_infiniteWater
+							&&tank.fill(new FluidStack(FluidRegistry.WATER, fluidThroughput), false)==1000)
 					{
 						int connectedSources = 0;
 						for(EnumFacing f2 : EnumFacing.HORIZONTALS)
@@ -121,13 +127,10 @@ public class TileEntityMechanicalPump extends TileEntityIEBase implements ITicka
 								connectedSources++;
 						}
 						if(connectedSources > 1)
-						{
-							this.tank.fill(new FluidStack(FluidRegistry.WATER, 1000), true);
-						}
+							this.tank.fill(new FluidStack(FluidRegistry.WATER, fluidThroughput), true);
 					}
 				}
 			if(world.getTotalWorldTime()%40==(((getPos().getX()^getPos().getZ()))%40+40)%40)
-			{
 				if(closedList.isEmpty())
 					prepareAreaCheck();
 				else
@@ -137,7 +140,9 @@ public class TileEntityMechanicalPump extends TileEntityIEBase implements ITicka
 					FluidStack fs = Utils.drainFluidBlock(world, pos, false);
 					if(fs==null)
 						closedList.remove(target);
-					else if(tank.fill(fs, false)==fs.amount&&hasEnoughPower())
+					else if(tank.fill(fs, false)==fs.amount&&
+							IIRotaryUtils.getEffectiveEnergy(rotation, MechanicalPump.speedMin,
+									MechanicalPump.speedEfficient, MechanicalPump.torqueMin, MechanicalPump.torqueEfficient) > 0)
 					{
 						fs = Utils.drainFluidBlock(world, pos, true);
 						if(IEConfig.Machines.pump_placeCobble&&placeCobble)
@@ -146,7 +151,6 @@ public class TileEntityMechanicalPump extends TileEntityIEBase implements ITicka
 						closedList.remove(target);
 					}
 				}
-			}
 		}
 
 		if(checkingArea)
@@ -155,34 +159,24 @@ public class TileEntityMechanicalPump extends TileEntityIEBase implements ITicka
 
 	private boolean handleRotation()
 	{
-		boolean b = false;
-		if(rotation.getRotationSpeed() > MechanicalPump.rpmBreakingMax||rotation.getTorque() > MechanicalPump.torqueBreakingMax)
-		{
-			selfDestruct();
-			return false;
-		}
-
+		boolean receivesPower = false;
 		TileEntity te = world.getTileEntity(getPos().up().offset(facing.getOpposite()));
 		if(te!=null&&te.hasCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, facing))
 		{
 			IRotaryEnergy cap = te.getCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, facing);
 			if(rotation.handleRotation(cap, facing))
-			{
 				IIPacketHandler.sendToClient(new MessageRotaryPowerSync(world, getPos(), 0, rotation));
-			}
 		}
 		else
-			b = true;
+			receivesPower = true;
 
-		if(b)
+		if(receivesPower)
 			if((rotation.getTorque() > 0||rotation.getRotationSpeed() > 0))
 			{
-				{
-					rotation.grow(0, 0, 0.98f);
-				}
+				rotation.grow(0, 0, 0.98f);
 				IIPacketHandler.sendToClient(new MessageRotaryPowerSync(world, getPos(), 0, rotation));
 			}
-		return b;
+		return receivesPower;
 	}
 
 	public void prepareAreaCheck()
@@ -253,7 +247,7 @@ public class TileEntityMechanicalPump extends TileEntityIEBase implements ITicka
 				{
 					IFluidHandler handler = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, f.getOpposite());
 					FluidStack insertResource = Utils.copyFluidStackWithAmount(fs, fs.amount, true);
-					if(tile instanceof TileEntityFluidPipe&&hasEnoughPower())
+					if(tile instanceof TileEntityFluidPipe&&canOutputPressurized(true))
 					{
 						insertResource.tag = new NBTTagCompound();
 						insertResource.tag.setBoolean("pressurized", true);
@@ -277,7 +271,7 @@ public class TileEntityMechanicalPump extends TileEntityIEBase implements ITicka
 				if(i++==sorting.size()-1)
 					amount = canAccept;
 				FluidStack insertResource = Utils.copyFluidStackWithAmount(fs, amount, true);
-				if(output.containingTile instanceof TileEntityFluidPipe&&hasEnoughPower())
+				if(output.containingTile instanceof TileEntityFluidPipe&&canOutputPressurized(true))
 				{
 					insertResource.tag = new NBTTagCompound();
 					insertResource.tag.setBoolean("pressurized", true);
@@ -397,13 +391,11 @@ public class TileEntityMechanicalPump extends TileEntityIEBase implements ITicka
 	public void updateRotationStorage(float speed, float torque, int partID)
 	{
 		if(world.isRemote&&!isDummy())
-		{
 			if(partID==0)
 			{
 				rotation.setRotationSpeed(speed);
 				rotation.setTorque(torque);
 			}
-		}
 	}
 
 	@Override
@@ -462,7 +454,9 @@ public class TileEntityMechanicalPump extends TileEntityIEBase implements ITicka
 	public void placeDummies(BlockPos pos, IBlockState state, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		world.setBlockState(pos.add(0, 1, 0), state);
-		((TileEntityMechanicalPump)world.getTileEntity(pos.add(0, 1, 0))).dummy = true;
+		TileEntity tile = world.getTileEntity(pos.add(0, 1, 0));
+		assert tile instanceof TileEntityMechanicalPump;
+		((TileEntityMechanicalPump)tile).dummy = true;
 	}
 
 	@Override
@@ -476,33 +470,21 @@ public class TileEntityMechanicalPump extends TileEntityIEBase implements ITicka
 	@Override
 	public float[] getBlockBounds()
 	{
-		if(!dummy)
-			return null;
-		return new float[]{.1875f, 0, .1875f, .8125f, 1, .8125f};
+		//noinspection DataFlowIssue
+		return !dummy?null: new float[]{.1875f, 0, .1875f, .8125f, 1, .8125f};
 	}
 
 	@Override
 	public boolean canOutputPressurized(boolean consumePower)
 	{
-		int accelPower = IEConfig.Machines.pump_consumption_accelerate;
-		return hasEnoughPower();
-	}
-
-	private boolean hasEnoughPower()
-	{
-		return this.rotation.getRotationSpeed() >= MechanicalPump.rpmMin&&this.rotation.getTorque() >= MechanicalPump.torqueMin;
+		return IIRotaryUtils.getEffectiveEnergy(rotation, MechanicalPump.speedMin, MechanicalPump.speedEfficient,
+				MechanicalPump.torqueMin, MechanicalPump.torqueEfficient) > 0;
 	}
 
 	@Override
 	public boolean hasOutputConnection(EnumFacing side)
 	{
 		return side!=null&&this.sideConfig[side.ordinal()]==1;
-	}
-
-	private void selfDestruct()
-	{
-		world.createExplosion(null, getPos().getX(), getPos().getY(), getPos().getZ(), 1, true);
-		world.setBlockToAir(this.pos);
 	}
 
 	static class SidedFluidHandler implements IFluidHandler

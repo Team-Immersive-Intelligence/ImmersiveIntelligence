@@ -34,9 +34,12 @@ public class MultiblockConstructionManager implements INBTSerializable<NBTTagInt
 		return constructionCost;
 	}
 
-	public int getCurrentConstruction(boolean client)
+	public int getCurrentConstruction(float partialTicks)
 	{
-		return client?clientConstruction: construction;
+		if(partialTicks==0)
+			return construction;
+
+		return (int)Math.min(clientConstruction+(Tools.electricHammerEnergyPerUseConstruction/4.25f*partialTicks), construction);
 	}
 
 	public void progressConstruction(int construction)
@@ -47,8 +50,8 @@ public class MultiblockConstructionManager implements INBTSerializable<NBTTagInt
 
 	public boolean update()
 	{
-		if(clientConstruction < constructionCost)
-			clientConstruction = (int)Math.min(clientConstruction+(Tools.electricHammerEnergyPerUseConstruction/4.25f), constructionCost);
+		if(clientConstruction < construction)
+			clientConstruction = (int)Math.min(clientConstruction+(Tools.electricHammerEnergyPerUseConstruction/4.25f), construction);
 		if(isConstructionFinished())
 		{
 			clientConstruction = construction = constructionCost;
@@ -59,7 +62,7 @@ public class MultiblockConstructionManager implements INBTSerializable<NBTTagInt
 
 	public boolean isConstructionFinished()
 	{
-		return getCurrentConstruction(false) >= getConstructionCost();
+		return getCurrentConstruction(0) >= getConstructionCost();
 	}
 
 	@Override

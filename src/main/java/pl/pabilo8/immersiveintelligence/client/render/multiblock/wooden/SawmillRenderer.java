@@ -11,6 +11,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.crafting.SawmillRecipe;
 import pl.pabilo8.immersiveintelligence.api.rotary.IIRotaryUtils;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeTechTree;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.ISawblade;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTLoader;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
@@ -18,6 +19,8 @@ import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIAnimationCac
 import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTCachedModel;
 import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTCachedModelBuilder;
 import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTCrossVariantReference;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTUpgradeCachedModel;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTUpgradeCachedModel.MachineCachedUpgradeModelBuilder;
 import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMT;
 import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTItem;
 import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTLocator;
@@ -40,6 +43,7 @@ import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 public class SawmillRenderer extends IIMultiblockRenderer<TileEntitySawmill>
 {
 	private AMTCachedModel<TileEntitySawmill> model;
+	private AMTUpgradeCachedModel<TileEntitySawmill> upgradeSawUnregulator, upgradeGearbox;
 	private IIAnimationCachedMap animationRotate, animationDustPile, animationInteract;
 	private IIAnimationCachedMap animationProductionStart, animationProductionLoop, animationProductionReach;
 
@@ -62,7 +66,8 @@ public class SawmillRenderer extends IIMultiblockRenderer<TileEntitySawmill>
 
 		//Get model variant, defaultize
 		applyStandardRotation(te.facing);
-		model.getVariant(te, sawBlade.isEmpty()?"": ((ISawblade)sawBlade.getItem()).getToolID(sawBlade));
+		String sawbladeName = sawBlade.isEmpty()?"": ((ISawblade)sawBlade.getItem()).getToolID(sawBlade);
+		model.getVariant(te, te.upgradeManager, sawbladeName);
 		model.defaultize();
 
 		//Set item display
@@ -99,8 +104,11 @@ public class SawmillRenderer extends IIMultiblockRenderer<TileEntitySawmill>
 			}
 
 			//Currently held item
-			partItemInserter.get().setStack(recipe.itemInput.getExampleStack());
-			partItemOutput.get().setStack(recipe.itemOutput);
+			ItemStack displayInput = te.currentProcess.processData.getItemStack("displayInput");
+			partItemInserter.get().setStack(displayInput.isEmpty()?recipe.itemInput.getExampleStack(): displayInput);
+			//Used to match output texture to input woodtype
+			ItemStack displayOutput = te.currentProcess.processData.getItemStack("correctOutput");
+			partItemOutput.get().setStack(displayOutput.isEmpty()?recipe.itemOutput: displayOutput);
 		}
 		else
 			animationProductionReach.apply(0f);
@@ -109,13 +117,18 @@ public class SawmillRenderer extends IIMultiblockRenderer<TileEntitySawmill>
 		animationInteract.apply(te.vise.getProgress(partialTicks));
 
 		//Flip
-		if(!te.mirrored) mirrorRender();
+		if(!te.mirrored)
+			mirrorRender();
+
+		//Display upgrade construction
+		upgradeGearbox.apply(te, tes, buf, partialTicks);
+		upgradeSawUnregulator.apply(te, tes, buf, partialTicks);
 
 		//Render
 		model.render(tes, buf);
-
 		//Revert
-		if(!te.mirrored) unMirrorRender();
+		if(!te.mirrored)
+			unMirrorRender();
 	}
 
 	@Override
@@ -131,11 +144,16 @@ public class SawmillRenderer extends IIMultiblockRenderer<TileEntitySawmill>
 	@Override
 	public void compileModels(IBlockState state, OBJModel model)
 	{
-		this.model = AMTCachedModelBuilder.startTileEntityModel(TileEntitySawmill.class)
+		ResLoc resFolder = IIReference.RES_BLOCK_MODEL.with("multiblock/sawmill/");
+
+		//model loading start
+		AMTCachedModelBuilder<TileEntitySawmill> modelBuilder = AMTCachedModelBuilder.startTileEntityModel(TileEntitySawmill.class)
 				.withModel(model)
-				.withModel(ResLoc.of(IIReference.RES_BLOCK_MODEL, "multiblock/sawmill/sawblade.obj"))
-				.withModel(ResLoc.of(IIReference.RES_BLOCK_MODEL, "multiblock/sawmill/sawdust.obj"))
+				.withModel(resFolder.with("sawblade.obj"))
+				.withModel(resFolder.with("sawdust.obj"))
 				.withHeader(AMTLoader.loadHeader(model))
+				.withHeader(resFolder.with("sawmill_unregulator.obj.amt"))
+				.withHeader(resFolder.with("sawmill_gearbox.obj.amt"))
 				.withModelProvider((te, header) -> new AMT[]{
 						new AMTItem("item_input", header),
 						new AMTItem("item_output", header),
@@ -154,22 +172,39 @@ public class SawmillRenderer extends IIMultiblockRenderer<TileEntitySawmill>
 						return ClientUtils.getSprite(((ISawblade)sawblade.getItem()).getSawbladeTexture(sawblade));
 
 					return ClientUtils.getSprite(res);
-				})
+				});
+
+		//upgrade models
+		this.upgradeSawUnregulator = new MachineCachedUpgradeModelBuilder<>(modelBuilder)
+				.withUpgrade(IIContent.UPGRADE_SAW_UNREGULATOR)
+				.withConstructionModel(resFolder.with("sawmill_unregulator.obj"))
+				.withAnimation(ResLoc.of(IIReference.RES_II, "sawmill/upgrade_saw_unregulator"))
+				.build();
+		this.upgradeGearbox = new MachineCachedUpgradeModelBuilder<>(modelBuilder)
+				.withUpgrade(IIContent.UPGRADE_IMPROVED_GEARBOX)
+				.withConstructionModel(resFolder.with("sawmill_gearbox.obj"))
+				.withAnimation(ResLoc.of(IIReference.RES_II, "sawmill/upgrade_gearbox"))
 				.build();
 
-		partSawblade = new AMTCrossVariantReference<>("sawblade", this.model);
-		partItemInput = new AMTCrossVariantReference<>("item_input", this.model);
-		partItemOutput = new AMTCrossVariantReference<>("item_output", this.model);
-		partItemInserter = new AMTCrossVariantReference<>("item_inserter", this.model);
+		this.model = modelBuilder.build();
 
-		animationInteract = IIAnimationCachedMap.create(this.model, ResLoc.of(IIReference.RES_II, "sawmill/interact"));
-		animationRotate = IIAnimationCachedMap.create(this.model, ResLoc.of(IIReference.RES_II, "sawmill/rotate"));
-		animationDustPile = IIAnimationCachedMap.create(this.model, ResLoc.of(IIReference.RES_II, "sawmill/sawdust"));
+		this.partSawblade = new AMTCrossVariantReference<>("sawblade", this.model);
+		this.partItemInput = new AMTCrossVariantReference<>("item_input", this.model);
+		this.partItemOutput = new AMTCrossVariantReference<>("item_output", this.model);
+		this.partItemInserter = new AMTCrossVariantReference<>("item_inserter", this.model);
 
-		animationProductionStart = IIAnimationCachedMap.create(this.model, ResLoc.of(IIReference.RES_II, "sawmill/production_start"));
-		animationProductionLoop = IIAnimationCachedMap.create(this.model, ResLoc.of(IIReference.RES_II, "sawmill/production_loop"));
-		animationProductionReach = IIAnimationCachedMap.create(this.model, ResLoc.of(IIReference.RES_II, "sawmill/production_reach"));
+		this.animationInteract = IIAnimationCachedMap.create(this.model, ResLoc.of(IIReference.RES_II, "sawmill/interact"));
+		this.animationRotate = IIAnimationCachedMap.create(this.model, ResLoc.of(IIReference.RES_II, "sawmill/rotate"));
+		this.animationDustPile = IIAnimationCachedMap.create(this.model, ResLoc.of(IIReference.RES_II, "sawmill/sawdust"));
 
+		this.animationProductionStart = IIAnimationCachedMap.create(this.model, ResLoc.of(IIReference.RES_II, "sawmill/production_start"));
+		this.animationProductionLoop = IIAnimationCachedMap.create(this.model, ResLoc.of(IIReference.RES_II, "sawmill/production_loop"));
+		this.animationProductionReach = IIAnimationCachedMap.create(this.model, ResLoc.of(IIReference.RES_II, "sawmill/production_reach"));
+
+		UpgradeTechTree.getTreeFor(TileEntitySawmill.class)
+				.withBaseModelLocation(resFolder.with("sawmill_base.obj"))
+				.withUpgradeModelLocation(IIContent.UPGRADE_IMPROVED_GEARBOX, resFolder.with("sawmill_gearbox.obj"))
+				.withUpgradeModelLocation(IIContent.UPGRADE_SAW_UNREGULATOR, resFolder.with("sawmill_unregulator.obj"));
 	}
 
 	@Override

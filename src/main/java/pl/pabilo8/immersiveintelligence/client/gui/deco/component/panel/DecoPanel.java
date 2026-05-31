@@ -24,7 +24,9 @@ import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -223,7 +225,10 @@ public class DecoPanel extends DecoComponent<DecoPanel>
 
 		GlStateManager.pushMatrix();
 		GlStateManager.enableBlend();
-		GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+		GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA,
+				GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+		GlStateManager.enableAlpha();
+
 		labels.forEach(label -> label.drawLabel(ClientUtils.mc(), mouseX, mouseY));
 		GlStateManager.disableBlend();
 		GlStateManager.popMatrix();
@@ -248,6 +253,19 @@ public class DecoPanel extends DecoComponent<DecoPanel>
 		this.xPadding = xPadding;
 		this.yPadding = yPadding;
 		return null;
+	}
+
+	@Override
+	public List<String> getTooltip()
+	{
+		List<String> list = super.getTooltip();
+		if(list.isEmpty()&&!labels.isEmpty())
+			return labels.stream()
+					.filter(DecoLabel::shouldDisplayTooltip)
+					.map(DecoLabel::getTooltip)
+					.flatMap(Collection::stream)
+					.collect(Collectors.toList());
+		return list;
 	}
 
 	@Nullable

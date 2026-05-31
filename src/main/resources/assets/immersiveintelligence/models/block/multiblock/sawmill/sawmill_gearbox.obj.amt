@@ -1,0 +1,11 @@
+{
+  "origins": {
+    "gearbox_gear1": [7.75, 11.75, 23.5],
+    "gearbox_gear2": [8, 11.75, 23.5],
+    "gearbox_gauge": [0, 3, 30.25],
+    "gearbox_base": [5.83333, 5.5, 28.56667],
+    "gearbox_lever": [2.25, 8, 28.75]
+  },
+  "hierarchy": {
+  }
+}

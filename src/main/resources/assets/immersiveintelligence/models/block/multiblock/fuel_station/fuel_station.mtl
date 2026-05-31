@@ -1,0 +1,22 @@
+# Made by Pabilo8 with Blockbench
+
+newmtl common_thingies
+map_Kd immersiveintelligence:blocks/common/common_thingies
+newmtl fuel_station
+map_Kd immersiveintelligence:blocks/multiblock/fuel_station
+newmtl common_copper_cable
+map_Kd immersiveintelligence:blocks/common/common_copper_cable
+newmtl heavy_inserter
+map_Kd immersiveintelligence:blocks/metal_device/inserter/heavy_inserter
+newmtl common_cable_and_pipe
+map_Kd immersiveintelligence:blocks/common/common_cable_and_pipe
+newmtl common_concrete
+map_Kd immersiveintelligence:blocks/common/common_concrete
+newmtl common_steel_norivets
+map_Kd immersiveintelligence:blocks/common/common_steel_norivets
+newmtl common_table
+map_Kd immersiveintelligence:blocks/common/common_table
+newmtl common_table_steel
+map_Kd immersiveintelligence:blocks/common/common_table_steel
+newmtl common_wooden_pier
+map_Kd immersiveintelligence:blocks/common/common_wooden_pier

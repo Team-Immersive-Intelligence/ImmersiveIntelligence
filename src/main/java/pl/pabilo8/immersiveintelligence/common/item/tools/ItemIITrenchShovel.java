@@ -8,11 +8,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemUtils;
 import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
 import pl.pabilo8.modworks.annotations.item.ItemModelType;
 
@@ -34,7 +34,7 @@ public class ItemIITrenchShovel extends ItemIEShovel
 	public ItemIITrenchShovel()
 	{
 		super(Lib.MATERIAL_Steel, "trench_shovel", "shovel", "plateSteel");
-		IIUtils.fixupItem(this, "trench_shovel");
+		IIItemUtils.fixupItem(this, "trench_shovel");
 	}
 
 

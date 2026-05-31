@@ -32,8 +32,14 @@ public class BlockIIConcreteDecoration extends BlockIIBase<ConcreteDecorations>
 	public static BlockIIStairs[] getStairs()
 	{
 		return Arrays.stream(ConcreteDecorations.values())
-				.map(s -> new BlockIIStairs("concrete_decoration_stairs", s.getName(),
-						IIContent.blockConcreteDecoration.getStateFromMeta(s.ordinal())))
+				.map(s -> {
+					IIBlockProperties props = s.getProperties();
+					BlockIIStairs stairs = new BlockIIStairs("concrete_decoration_stairs", s.getName(),
+							IIContent.blockConcreteDecoration.getStateFromMeta(s.ordinal()));
+					if(props!=null&&props.blastResistance()!=-1)
+						stairs.setExplosionResistance(props.blastResistance());
+					return stairs;
+				})
 				.toArray(BlockIIStairs[]::new);
 	}
 

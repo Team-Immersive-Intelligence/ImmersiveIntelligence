@@ -97,9 +97,7 @@ public abstract class DecoComponent<TYPE extends DecoComponent<? super TYPE>> ex
 
 	public TYPE withSize(int width, int height)
 	{
-		this.width = width;
-		this.height = height;
-		return (TYPE)this;
+		return (TYPE)this.withWidth(width).withHeight(height);
 	}
 
 	public TYPE withWidth(int width)

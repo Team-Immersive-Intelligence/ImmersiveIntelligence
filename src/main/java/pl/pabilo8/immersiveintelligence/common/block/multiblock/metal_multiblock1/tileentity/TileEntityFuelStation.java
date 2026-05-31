@@ -22,6 +22,8 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.VehicleFuelHandler;
+import pl.pabilo8.immersiveintelligence.api.style.IStyleCustomizable;
+import pl.pabilo8.immersiveintelligence.api.style.StyleCustomization;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedTextOverlay;
 import pl.pabilo8.immersiveintelligence.client.util.carversound.ConditionCompoundSound;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.FuelStation;
@@ -29,6 +31,7 @@ import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockFuelStation;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EntityReference;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
@@ -43,17 +46,18 @@ import java.util.Optional;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 28.06.2019
  */
-public class TileEntityFuelStation extends TileEntityMultiblockIIGeneric<TileEntityFuelStation> implements IIIGuiMultiblockTile, IPlayerInteraction, IAdvancedTextOverlay
+public class TileEntityFuelStation extends TileEntityMultiblockIIGeneric<TileEntityFuelStation> implements IIIGuiMultiblockTile, IPlayerInteraction, IAdvancedTextOverlay, IStyleCustomizable
 {
 	@SyncNBT(events = {SyncEvents.TILE_RECIPE_CHANGED, SyncEvents.TILE_GUI_OPENED})
 	public MultiFluidTank tank = new MultiFluidTank(FuelStation.fluidCapacity);
+	@SyncNBT(events = {SyncEvents.TILE_UPGRADES_MODIFIED, SyncEvents.TILE_CLIENT_MESSAGE})
+	public StyleCustomization style;
 
 	//Client only
-	float inserterAnimation = 0f;
 	float inserterAngle = 0f;
 	float inserterDistance = 0f;
 
-	@SyncNBT(events = SyncEvents.TILE_RECIPE_CHANGED)
+	@SyncNBT(events = SyncEvents.TILE_CUSTOM1, nullable = true)
 	public EntityReference<Entity> focusedEntity;
 
 	@SideOnly(Side.CLIENT)
@@ -63,9 +67,10 @@ public class TileEntityFuelStation extends TileEntityMultiblockIIGeneric<TileEnt
 	{
 		super(MultiblockFuelStation.INSTANCE);
 
+		this.style = new StyleCustomization(MultiblockFuelStation.STYLE_CONSTRAINTS);
 		this.energyStorage = new FluxStorageAdvanced(FuelStation.energyCapacity);
 		this.inventory = NonNullList.withSize(2, ItemStack.EMPTY);
-		this.focusedEntity = new EntityReference<>(this.world);
+		this.focusedEntity = new EntityReference<>(this::getWorld);
 	}
 
 	@Override
@@ -81,115 +86,121 @@ public class TileEntityFuelStation extends TileEntityMultiblockIIGeneric<TileEnt
 	{
 		if(world.isRemote)
 		{
-			inserterAnimation = calculateInserterAnimation(0);
-			inserterAngle = calculateInserterAngle(0);
+			//Update animations
+			this.inserterDistance = calculateDistance(0);
+			this.inserterAngle = calculateInserterAngle(0);
 
-			if(fuellingSound==null)
+			//Loop fueling sound
+			if(fuellingSound==null||fuellingSound.isDonePlaying())
 				fuellingSound = new ConditionCompoundSound<>(IISounds.fuelStationLoop, new Vec3d(getPOIPos("table")),
 						this, TileEntityFuelStation::canFuelCurrentTarget
 				);
 		}
-		else if(IIUtils.handleBucketTankInteraction(tank, inventory, 0, 1, false))
-			updateTileForEvent(SyncEvents.TILE_RECIPE_CHANGED);
-
-
-		//get all in range
-		//effect
-
-		Vec3d vx = new Vec3d(facing.getOpposite().getDirectionVec()).scale(1.5f).add(new Vec3d(facing.rotateY().getDirectionVec()));
-		List<Entity> entitiesWithinAABB = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(getBlockPosForPos(0)).expand(vx.x, vx.y, vx.z).expand(0, 1.5, 0).expand(0, -1.5, 0));
-		entitiesWithinAABB.removeIf(entity -> !VehicleFuelHandler.isValidVehicle(entity));
-		if(!entitiesWithinAABB.isEmpty())
+		else
 		{
-			Entity focused = focusedEntity.get();
-			if(focused!=null&&entitiesWithinAABB.contains(focused))
+			if(IIUtils.handleBucketTankInteraction(tank, inventory, 0, 1, false))
+				updateTileForEvent(SyncEvents.TILE_RECIPE_CHANGED);
+
+			//Get AABB where clients will be served
+			EnumFacing facingClients = getDirection("facing_clients");
+			assert facingClients!=null;
+			AxisAlignedBB clientsBox = new AxisAlignedBB(
+					getBlockPosForPos(getPOI("table")[0]).offset(facingClients),
+					getBlockPosForPos(getPOI("table")[1]).offset(facingClients)
+			).grow(0.5, 1.5, 0.5);
+
+			//Only handle valid vehicles
+			List<Entity> entitiesWithinAABB = world.getEntitiesWithinAABB(Entity.class, clientsBox);
+			entitiesWithinAABB.removeIf(entity -> !VehicleFuelHandler.isValidVehicle(entity));
+
+			//Attempt fueling
+			if(!entitiesWithinAABB.isEmpty())
 			{
-				IFluidHandler capability = focused.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
-				if(capability!=null)
+				//Prefer the client that's already being fueled
+				Entity focused = focusedEntity.get();
+				if(focused!=null&&entitiesWithinAABB.contains(focused))
 				{
-					boolean canFill = false;
-					for(FluidStack fluid : tank.fluids)
+					IFluidHandler capability = focused.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
+					if(capability!=null)
 					{
-						if(!VehicleFuelHandler.isFuelValidForVehicle(focused, fluid.getFluid()))
-							continue;
-						FluidStack fs = new FluidStack(fluid, Math.min(fluid.amount, FuelStation.fluidTransfer));
+						boolean canFill = false;
+						//Iterate through all available fuels from the tank and check
+						for(FluidStack fluid : tank.fluids)
+						{
+							if(!VehicleFuelHandler.isFuelValidForVehicle(focused, fluid.getFluid()))
+								continue;
+							FluidStack fs = new FluidStack(fluid, Math.min(fluid.amount, FuelStation.fluidTransfer));
 
-						int i = capability.fill(fs, false);
-						i = (energyStorage.extractEnergy(i*FuelStation.energyUsage, false)/FuelStation.energyUsage);
-						capability.fill(new FluidStack(fs, i), true);
-						tank.drain(new FluidStack(fs, i), true);
-						if(i > 0)
-							canFill = true;
+							int i = capability.fill(fs, false);
+							//Use energy, drain station's tank, fill vehicle's tank
+							i = (energyStorage.extractEnergy(i*FuelStation.energyUsage, false)/FuelStation.energyUsage);
+							capability.fill(new FluidStack(fs, i), true);
+							tank.drain(new FluidStack(fs, i), true);
+							if(i > 0)
+								canFill = true;
 
-						break;
+							break;
+						}
+
+						//Stop fueling
+						if(!canFill)
+						{
+							focusedEntity.set(null);
+							updateTileForEvent(SyncEvents.TILE_CUSTOM1);
+							world.playSound(null, getPos().up(), IISounds.fuelStationEnd, SoundCategory.BLOCKS, 0.5f, 1f);
+						}
 					}
-
-					if(!canFill)
+				}
+				else
+				{
+					//Find a new client
+					for(Entity entity : entitiesWithinAABB)
 					{
-						focusedEntity.set(null);
-						updateTileForEvent(SyncEvents.TILE_CUSTOM1);
-						world.playSound(null, getPos().up(), IISounds.fuelStationEnd, SoundCategory.BLOCKS, 0.5f, 1f);
+						IFluidHandler capability = entity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
+						if(capability==null)
+							break;
+
+						Optional<FluidStack> first = tank.fluids.stream()
+								.filter(fs -> VehicleFuelHandler.isFuelValidForVehicle(entity, fs.getFluid()))
+								.filter(fs -> capability.fill(fs, false) > 0)
+								.findFirst();
+
+						//Find new client
+						if(first.isPresent())
+						{
+							focusedEntity.set(entity);
+							updateTileForEvent(SyncEvents.TILE_CUSTOM1);
+							break;
+						}
 					}
 				}
 			}
-			else
+			//No clients in reach
+			else if(focusedEntity.get()!=null)
 			{
-				for(Entity entity : entitiesWithinAABB)
-				{
-					IFluidHandler capability = entity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
-					if(capability==null)
-						break;
-
-					Optional<FluidStack> first = tank.fluids.stream()
-							.filter(fs -> VehicleFuelHandler.isFuelValidForVehicle(entity, fs.getFluid()))
-							.filter(fs -> capability.fill(fs, false) > 0)
-							.findFirst();
-
-					if(first.isPresent())
-					{
-						focusedEntity.set(entity);
-						inserterAnimation = 0f;
-						updateTileForEvent(SyncEvents.TILE_CUSTOM1);
-						break;
-					}
-				}
+				focusedEntity.set(null);
+				updateTileForEvent(SyncEvents.TILE_CUSTOM1);
 			}
 		}
-		else if(focusedEntity.get()!=null)
-		{
-			focusedEntity.set(null);
-			inserterAnimation = 0f;
-			updateTileForEvent(SyncEvents.TILE_CUSTOM1);
-		}
+
 	}
 
 	private boolean canFuelCurrentTarget()
 	{
 		if(tileEntityInvalid)
 			return false;
-		Entity entity = focusedEntity.get();
-		return entity!=null&&tank.fluids.stream()
-				.anyMatch(fluidStack -> VehicleFuelHandler.isFuelValidForVehicle(entity, fluidStack.getFluid()));
-	}
-
-	public float calculateInserterAnimation(float partialTicks)
-	{
-		float anim;
-		if(focusedEntity.get()!=null)
-			anim = Math.min(inserterAnimation+(0.05f*(1+partialTicks)), 1f);
-		else
-			anim = Math.max(inserterAnimation-(0.025f*(1+partialTicks)), 0f);
-		return anim;
+		return this.focusedEntity.get()!=null;
 	}
 
 	public float calculateInserterAngle(float partialTicks)
 	{
 		Entity entity = focusedEntity.get();
+		float yaw = facing.getOpposite().getHorizontalAngle();
 		if(entity!=null)
 		{
 			//Subtracts two vector and calculates angle (in degrees) using atan
 			Vec3d vec3d = entity.getPositionVector().subtract(new Vec3d(getBlockPosForPos(1)).addVector(0.5, 0, 0.5));
-			float yaw;
+
 			if(vec3d.x < 0&&vec3d.z >= 0)
 				yaw = (float)(Math.atan(Math.abs(vec3d.x/vec3d.z))/Math.PI*180D);
 			else if(vec3d.x <= 0&&vec3d.z <= 0)
@@ -198,21 +209,20 @@ public class TileEntityFuelStation extends TileEntityMultiblockIIGeneric<TileEnt
 				yaw = (float)(Math.atan(Math.abs(vec3d.x/vec3d.z))/Math.PI*180D)+180;
 			else
 				yaw = (float)(Math.atan(Math.abs(vec3d.z/vec3d.x))/Math.PI*180D)+270;
-
-			return yaw;
 		}
-		return inserterAngle;
+		return (IIMath.progressValue(inserterAngle, yaw, 2.5f, partialTicks)+360)%360;
 	}
 
 	public float calculateDistance(float partialTicks)
 	{
 		Entity entity = focusedEntity.get();
+		float goalDistance = 0;
 		if(entity!=null)
 		{
-			double v = entity.getPositionVector().distanceTo(new Vec3d(getBlockPosForPos(1)).addVector(0.5, 0, 0.5));
-			inserterDistance = 0.125f+(float)((v/2f)*0.75f);
+			goalDistance = (float)entity.getPositionVector().distanceTo(new Vec3d(getBlockPosForPos(1)).addVector(0.5, 0, 0.5));
+			goalDistance = 0.125f+((goalDistance/2f)*0.75f);
 		}
-		return inserterDistance;
+		return IIMath.progressValue(inserterDistance, goalDistance, 0.125f, partialTicks);
 	}
 
 	@Override
@@ -291,5 +301,13 @@ public class TileEntityFuelStation extends TileEntityMultiblockIIGeneric<TileEnt
 		if(master!=null&&isPOI(MultiblockPOI.FLUID_INPUT))
 			return new String[]{IIUtils.getFluidNameOverlayText(master.tank.getFluid())};
 		return new String[0];
+	}
+
+	//--- IStyleCustomizable ---//
+
+	@Override
+	public StyleCustomization getStyle()
+	{
+		return style;
 	}
 }

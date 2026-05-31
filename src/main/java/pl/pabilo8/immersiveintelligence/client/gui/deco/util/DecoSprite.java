@@ -16,7 +16,7 @@ public class DecoSprite
 	private final int sizeX, sizeY;
 	private final boolean isAtlas, connected;
 
-	public DecoSprite(ResLoc location, float[] localUV, float[] mapUV, int sizeX, int sizeY, boolean isAtlas, boolean connected)
+	private DecoSprite(ResLoc location, float[] localUV, float[] mapUV, int sizeX, int sizeY, boolean isAtlas, boolean connected)
 	{
 		this.location = location;
 		this.localUV = localUV;

@@ -66,7 +66,9 @@ public class SkyCartStationRenderer extends TileEntitySpecialRenderer<TileEntity
 			if(te.hasWorld())
 			{
 				motorTick = (te.getWorld().getTotalWorldTime()%IIRotaryUtils.getRPMMax()+partialTicks)/IIRotaryUtils.getRPMMax();
-				progress = te.progress+(partialTicks*te.getEffectiveEnergy()*IIRotaryUtils.getGearEfficiency(IIItemUtils.trimInventory(te.getInventory(), 0, 3)));
+				progress = te.progress+(partialTicks*IIRotaryUtils.getEffectiveEnergy(te.rotation,
+						SkyCrateStation.speedMin, SkyCrateStation.speedEfficient, SkyCrateStation.torqueMin, SkyCrateStation.torqueEfficient)*
+						IIRotaryUtils.getGearEfficiency(IIItemUtils.trimInventory(te.getInventory(), 0, 3)));
 			}
 			double railBlock = 0, pistonDoor = 0, pistonOnly = 0, cratePusher = 0, inserterAngle = 0, inserterLength = 0;
 			//Math.abs(Math.min(Math.max(((Math.abs(ticks-0.5f)*2f)-0.5)/0.5, 0)/0.25, 1))

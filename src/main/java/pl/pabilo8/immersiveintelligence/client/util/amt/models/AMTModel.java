@@ -271,6 +271,28 @@ public class AMTModel implements Iterable<AMT>, AMTRenderable
 
 	//--- Transformations ---//
 
+
+	/**
+	 * @param shrinkAmount the amount to shrink the model by, in blocks
+	 * @return a copy of this model with all AMTQuads's vertices positions shrunk by face normals
+	 * @implNote 0.01 is usually a good value for most models
+	 */
+	public AMTModel shrinkByNormals(double shrinkAmount)
+	{
+		AMT[] shrunkModel = stream()
+				.map(amt -> amt instanceof AMTQuads?((AMTQuads)amt).shrinkByNormals(shrinkAmount): amt)
+				.toArray(AMT[]::new);
+		return new AMTModel(shrunkModel);
+	}
+
+	public AMTModel renamePart(String oldName, String newName)
+	{
+		AMT partRecursive = getPartRecursive(oldName);
+		if(partRecursive!=null)
+			partRecursive.rename(newName);
+		return this;
+	}
+
 	/**
 	 * Creates a single AMT out of all AMTQuads inside this AMTModel for more performant rendering
 	 *
@@ -303,7 +325,7 @@ public class AMTModel implements Iterable<AMT>, AMTRenderable
 	public AMT getPart(String name)
 	{
 		return stream()
-				.filter(amt -> amt.name.equals(name))
+				.filter(amt -> amt.getName().equals(name))
 				.findFirst().orElse(null);
 	}
 
@@ -313,7 +335,7 @@ public class AMTModel implements Iterable<AMT>, AMTRenderable
 		return stream()
 				.map(AMT::getChildrenRecursive)
 				.flatMap(Collection::stream)
-				.filter(amt -> amt.name.equals(name))
+				.filter(amt -> amt.getName().equals(name))
 				.findFirst().orElse(null);
 	}
 

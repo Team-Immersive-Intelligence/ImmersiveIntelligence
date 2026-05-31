@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
+import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIAnimationCompiledMap;
 import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMT;
@@ -59,11 +60,11 @@ public abstract class IIEntityRenderer<E extends Entity> extends Render<E> imple
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 
 		GlStateManager.enableBlend();
-		GlStateManager.blendFunc(770, 771);
+		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		if(Minecraft.isAmbientOcclusionEnabled())
-			GlStateManager.shadeModel(7425);
+			GlStateManager.shadeModel(GL11.GL_SMOOTH);
 		else
-			GlStateManager.shadeModel(7424);
+			GlStateManager.shadeModel(GL11.GL_FLAT);
 
 		ClientUtils.bindAtlas();
 		draw(entity, Tessellator.getInstance().getBuffer(), partialTicks, Tessellator.getInstance());

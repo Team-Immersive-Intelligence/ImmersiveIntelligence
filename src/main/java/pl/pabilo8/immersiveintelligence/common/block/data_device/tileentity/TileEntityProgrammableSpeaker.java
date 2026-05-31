@@ -154,6 +154,19 @@ public class TileEntityProgrammableSpeaker extends TileEntityImmersiveConnectabl
 		sendSoundUpdate();
 	}
 
+	@Override
+	public void receiveMessageFromServer(NBTTagCompound message)
+	{
+		if(message.hasKey("active"))
+			active = message.getBoolean("active");
+		if(message.hasKey("tone"))
+			tone = message.getFloat("tone");
+		if(message.hasKey("volume"))
+			soundVolume = message.getFloat("volume");
+		if(message.hasKey("sound"))
+			soundID = message.getString("sound");
+	}
+
 	private void sendSoundUpdate()
 	{
 		IIPacketHandler.sendToClient(this, new MessageIITileSync(this, EasyNBT.newNBT()

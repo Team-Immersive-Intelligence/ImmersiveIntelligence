@@ -195,6 +195,7 @@ public class IIPotions
 		nuclearHeat.registerPotionAttributeModifier(SharedMonsterAttributes.FOLLOW_RANGE, Utils.generateNewUUID().toString(), -1, 2);
 		nuclearHeat.registerPotionAttributeModifier(SharedMonsterAttributes.FLYING_SPEED, Utils.generateNewUUID().toString(), -1, 2);
 
+		IIPotion.iconID = 13;
 		movementAssist = new IIPotion("movement_assist", false, 0x9d5919);
 		movementAssist.registerPotionAttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED, Utils.generateNewUUID().toString(), 0.5, 1);
 		movementAssist.registerPotionAttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED, Utils.generateNewUUID().toString(), 0.5, 1);
