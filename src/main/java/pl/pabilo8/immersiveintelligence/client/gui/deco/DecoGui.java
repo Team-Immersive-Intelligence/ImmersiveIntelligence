@@ -39,6 +39,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent.
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoTab;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.widget.DecoComponentWidgetBase;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.widget.DecoManualWidget;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
@@ -511,6 +512,19 @@ public abstract class DecoGui<T, C extends Container> extends GuiContainer
 			decoTab.x = this.guiLeft+this.xSize+wSize;
 			decoTab.initialize();
 		}
+	}
+
+	protected void openManualWidget(String pageName, int index)
+	{
+		widgetList.stream()
+				.filter(widget -> widget instanceof DecoManualWidget)
+				.map(widget -> (DecoManualWidget)widget)
+				.findFirst().ifPresent(widget -> {
+					if(currentWidget!=widget)
+						setCurrentWidget(widget);
+					widget.setCurrentPage(pageName, index);
+					requestFocus(widget);
+				});
 	}
 
 	/**

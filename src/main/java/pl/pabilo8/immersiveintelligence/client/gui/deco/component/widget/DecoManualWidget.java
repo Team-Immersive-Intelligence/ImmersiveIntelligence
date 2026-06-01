@@ -150,4 +150,15 @@ public class DecoManualWidget extends DecoComponentWidgetBase<DecoManualWidget>
 				.withTranslatedTooltip(IIReference.GUI_TOOLTIP_KEY+"widget.manual.show");
 	}
 
+	public void setCurrentPage(String page)
+	{
+		setCurrentPage(page, 0);
+	}
+
+	public void setCurrentPage(String page, int index)
+	{
+		wrapper.setSelectedEntry(page);
+		wrapper.page = index;
+	}
+
 }

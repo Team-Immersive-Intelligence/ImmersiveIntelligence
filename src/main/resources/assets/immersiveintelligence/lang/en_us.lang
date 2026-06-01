@@ -3362,6 +3362,43 @@ ii.gui.redstone_data_interface.mode.integer_100=Integer 0-100
 ii.gui.redstone_data_interface.mode.float=Float 0-1
 ii.gui.redstone_data_interface.mode.string=String
 
+ii.gui.projectile_workshop.component_info=Component Info
+ii.gui.projectile_workshop.component.role=Role: %s
+ii.gui.projectile_workshop.component.density=Density: %s
+ii.gui.projectile_workshop.component.slots_taken=Slots Taken: %s
+ii.gui.projectile_workshop.entry.core=Core
+ii.gui.projectile_workshop.entry.type=Type
+ii.gui.projectile_workshop.tooltip.core_type=Core Type
+ii.gui.projectile_workshop.tooltip.ammunition_type=Ammunition Type
+ii.gui.projectile_workshop.cost=Cost:
+ii.gui.projectile_workshop.invalid_cost=Cost: 250 Pabulions
+ii.gui.projectile_workshop.material_preview=Material Preview
+ii.gui.projectile_workshop.section.core=Core
+ii.gui.projectile_workshop.section.ballistics=Ballistics
+ii.gui.projectile_workshop.tooltip.component_slots=Component Slots
+ii.gui.projectile_workshop.tooltip.component_effect_shape=Component Effect Shape
+ii.gui.projectile_workshop.tooltip.component_efficiency=Component Efficiency Modifier
+ii.gui.projectile_workshop.tooltip.component_efficiency.line1=Determines potency.
+ii.gui.projectile_workshop.tooltip.component_efficiency.line2=Responsible for explosive power, chemical gas concentration.
+ii.gui.projectile_workshop.tooltip.component_size=Component Size Multiplier
+ii.gui.projectile_workshop.tooltip.component_size.line1=Determines component volume, responsible for explosion radius, gas spread range multiplier.
+ii.gui.projectile_workshop.tooltip.core_mass=Core Mass
+ii.gui.projectile_workshop.tooltip.damage_dealt=Damage Dealt
+ii.gui.projectile_workshop.tooltip.velocity=Velocity
+ii.gui.projectile_workshop.tooltip.available_fuzes=Available Fuzes
+ii.gui.projectile_workshop.tooltip.penetration_hardness=Penetration Hardness
+ii.gui.projectile_workshop.tooltip.flat_trajectory_range=Flat-Trajectory Range
+ii.gui.projectile_workshop.tooltip.max_artillery_range=Max. Artillery Range
+ii.gui.projectile_workshop.unit.blocks=%s b
+ii.gui.projectile_workshop.unit.blocks_per_tick=%s b/t
+ii.gui.projectile_workshop.value.penetration_hardness=%s b %s
+ii.gui.projectile_workshop.unit.multiplier=%sx
+
+ii.gui.ammunition_assembler.fuse_config.timed=Time:
+ii.gui.ammunition_assembler.fuse_config.timed.tooltip=Time before fuse triggers (in ticks)
+ii.gui.ammunition_assembler.fuse_config.proximity=Distance:
+ii.gui.ammunition_assembler.fuse_config.proximity.tooltip=Required distance to a solid object to trigger the fuse (in blocks)
+
 #GUI HelpBoxes
 ii.gui_help.data_input_machine.programming=These slots allow reading a punchtape into the DIM's memory or writing its contents into an empty one.
 ii.gui_help.data_input_machine.storage=These slots allow storing empty or programmed punchtapes for convenience.
@@ -3402,6 +3439,7 @@ ii.gui_tooltip.widget.ownership.hide=Hide Ownership Data
 ii.gui_tooltip.widget.ownership=Ownership
 ii.gui_tooltip.widget.manual.show=Show Side Manual
 ii.gui_tooltip.widget.manual.hide=Hide Side Manual
+ii.gui_tooltip.widget.manual.page=Open in Engineer's Manual
 ii.gui_tooltip.widget.manual=Engineer's Manual
 
 ii.gui_tooltip.energy.stored=Energy Stored: %s/%s IF

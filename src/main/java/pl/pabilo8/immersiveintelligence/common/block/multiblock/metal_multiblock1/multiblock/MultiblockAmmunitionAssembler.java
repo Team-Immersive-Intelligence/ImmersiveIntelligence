@@ -11,6 +11,10 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctur
 
 public class MultiblockAmmunitionAssembler extends MultiblockStuctureBase<TileEntityAmmunitionAssembler>
 {
+	public static final int SLOT_CORE = 0;
+	public static final int SLOT_CASING = 1;
+	public static final int SLOT_OUTPUT = 2;
+	public static final String NBT_KEY_EFFECT = "effect";
 	public static MultiblockAmmunitionAssembler INSTANCE;
 
 	public MultiblockAmmunitionAssembler()

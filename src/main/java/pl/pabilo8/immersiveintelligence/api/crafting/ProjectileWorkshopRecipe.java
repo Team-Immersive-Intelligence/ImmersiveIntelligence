@@ -17,9 +17,27 @@ import javax.annotation.Nullable;
  **/
 public class ProjectileWorkshopRecipe extends IIMultiblockRecipe
 {
+	public static final String FILLING_RECIPE_NAME = "core_filling";
+	public static final ProjectileWorkshopRecipe CORE_FILLING = new ProjectileWorkshopRecipe();
+
+	@Nullable
 	public IAmmoTypeItem<?, ?> ammo;
 	public boolean isFilling;
-	public ItemStack effect, ingredient;
+	public ItemStack effect = ItemStack.EMPTY, ingredient = ItemStack.EMPTY;
+
+	/**
+	 * Single hard-coded recipe used by Core Filler mode.
+	 */
+	private ProjectileWorkshopRecipe()
+	{
+		super(FILLING_RECIPE_NAME);
+		this.isFilling = true;
+
+		this.setTimeAndEnergy(
+				ProjectileWorkshop.fillingTime,
+				ProjectileWorkshop.fillingEnergyUsage
+		);
+	}
 
 	/**
 	 * Production recipe
@@ -42,25 +60,9 @@ public class ProjectileWorkshopRecipe extends IIMultiblockRecipe
 		);
 	}
 
-	//Filling recipe
-	/*public ProjectileWorkshopRecipe(ItemStack inputStack, BulletComponentStack component)
-	{
-		assert inputStack.getItem() instanceof IAmmoTypeItem;
-
-		this.ammo = (IAmmoTypeItem<?, ?>)inputStack.getItem();
-		this.isFilling = true;
-
-		this.totalProcessTime = ProjectileWorkshop.fillingTime;
-		this.energyPerTick = ProjectileWorkshop.fillingEnergyUsage;
-
-		this.effect = inputStack.copy();
-		this.effect.setCount(1);
-		ammo.addComponents(this.effect, component.getComponent(), component.tagCompound);
-	}*/
-
 	public ItemStack getEffect()
 	{
-		return effect;
+		return effect.copy();
 	}
 
 	@Nullable

@@ -13,6 +13,7 @@ import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseType;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.PropellantType;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IAdvancedTooltipItem;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
@@ -183,7 +184,7 @@ public interface IAmmoTypeItem<T extends IAmmoType<T, E>, E extends EntityAmmoBa
 	{
 		if(!ItemNBTHelper.hasKey(stack, NBT_FUSE))
 			makeDefault(stack);
-		return FuseType.v(ItemNBTHelper.getString(stack, NBT_FUSE));
+		return IIUtils.enumValue(FuseType.class, ItemNBTHelper.getString(stack, NBT_FUSE));
 	}
 
 	@Override

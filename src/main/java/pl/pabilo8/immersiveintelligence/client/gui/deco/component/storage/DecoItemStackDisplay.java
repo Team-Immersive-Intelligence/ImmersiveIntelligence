@@ -11,6 +11,7 @@ import net.minecraft.util.text.TextFormatting;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoColors;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoSprite;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
@@ -23,6 +24,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * Displays an item stack inside a Deco GUI.
@@ -43,7 +45,8 @@ public class DecoItemStackDisplay extends DecoComponent<DecoItemStackDisplay>
 	private DecoSprite backgroundSprite;
 
 	private Function<Float, Float> progressBarValue;
-	private IIColor barGradientColor1 = IIColor.fromPackedRGB(0xb51500), barGradientColor2 = IIColor.fromPackedRGB(0x600b00);
+	private Supplier<IIColor[]> barGradientColorSupplier =
+			() -> new IIColor[]{DecoColors.GRADIENT1, DecoColors.GRADIENT2};
 	private DecoAlignment iconAlignment = DecoAlignment.CENTER;
 	private int iconSize = 16;
 	private int cachedIconX, cachedIconY;
@@ -75,9 +78,14 @@ public class DecoItemStackDisplay extends DecoComponent<DecoItemStackDisplay>
 
 	public DecoItemStackDisplay withProgressBar(Function<Float, Float> progressBarValue, IIColor barGradientColor1, IIColor barGradientColor2)
 	{
+		final IIColor[] array = new IIColor[]{barGradientColor1, barGradientColor2};
+		return withProgressBar(progressBarValue, () -> array);
+	}
+
+	public DecoItemStackDisplay withProgressBar(Function<Float, Float> progressBarValue, Supplier<IIColor[]> barGradientColorSupplier)
+	{
 		this.progressBarValue = progressBarValue;
-		this.barGradientColor1 = barGradientColor1;
-		this.barGradientColor2 = barGradientColor2;
+		this.barGradientColorSupplier = barGradientColorSupplier;
 		return this;
 	}
 
@@ -174,14 +182,17 @@ public class DecoItemStackDisplay extends DecoComponent<DecoItemStackDisplay>
 		}
 		if(progressBarValue!=null)
 		{
+			GlStateManager.disableTexture2D();
 			float progress = MathHelper.clamp(progressBarValue.apply(partialTicks), 0, 1);
+			IIColor[] colors = barGradientColorSupplier.get();
 			IIDrawUtils.startColored()
 					.drawColorGradient(
 							x+width+padding[0]-padding[2]+2, y-padding[1]+padding[3]+height-((height+padding[1]+padding[3]-4)*progress),
 							2, ((height+padding[1]+padding[3]-4)*progress),
-							barGradientColor1, barGradientColor2
+							colors[0], colors.length > 1?colors[1]: colors[0]
 					)
 					.finish();
+			GlStateManager.enableTexture2D();
 		}
 
 		GlStateManager.translate(cachedIconX, cachedIconY, 0);

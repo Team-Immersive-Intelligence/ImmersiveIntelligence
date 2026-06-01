@@ -191,7 +191,11 @@ public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockI
 		super.receiveMessageFromClient(message);
 		if(isDummy())
 			return;
-		NBTSerialisation.synchroniseFor(this, (tag, tile) -> tag.deserializeAll(tile, message, true));
+		if(!message.hasNoTags())
+		{
+			NBTSerialisation.synchroniseFor(this, (tag, tile) -> tag.deserializeAll(tile, message, true));
+			sendNBTMessageClient(message);
+		}
 	}
 
 	@Override

@@ -470,7 +470,13 @@ public class IIUtils
 	@Nonnull
 	public static <T extends Enum<T> & ISerializableEnum> T enumValue(Class<T> en, String name)
 	{
-		return Enum.valueOf(en, name.toUpperCase());
+		try
+		{
+			return Enum.valueOf(en, name.toUpperCase());
+		} catch(IllegalArgumentException ignored)
+		{
+			return en.getEnumConstants()[0];
+		}
 	}
 
 	/**

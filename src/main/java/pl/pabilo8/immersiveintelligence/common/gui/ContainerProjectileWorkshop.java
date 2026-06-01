@@ -2,8 +2,8 @@ package pl.pabilo8.immersiveintelligence.common.gui;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockProjectileWorkshop;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityProjectileWorkshop;
 import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIITileBase;
 
@@ -15,42 +15,23 @@ import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIITileBase;
  */
 public class ContainerProjectileWorkshop extends ContainerIITileBase<TileEntityProjectileWorkshop>
 {
-	public Slot inputSlot, outputSlot;
+	public Slot inputSlot, componentInputSlot;
 
 	public ContainerProjectileWorkshop(EntityPlayer player, TileEntityProjectileWorkshop tile)
 	{
 		super(player, tile);
 
-
 		if(tile.isUpgradeInstalled(IIContent.UPGRADE_CORE_FILLER))
 		{
-			inputSlot = this.addSlotToContainer(new Slot(this.inv, 0, 8, 46)
-			{
-				@Override
-				public boolean isItemValid(ItemStack itemStack)
-				{
-					return tile.isStackValid(0, itemStack);
-				}
-			});
-			outputSlot = this.addSlotToContainer(new Slot(this.inv, 1, 48, 20)
-			{
-				@Override
-				public boolean isItemValid(ItemStack itemStack)
-				{
-					return tile.isStackValid(1, itemStack);
-				}
-			});
+			inputSlot = addSlot(8+2+2, 45-8, MultiblockProjectileWorkshop.SLOT_INPUT);
+			componentInputSlot = addSlot(176/2-9, 12, MultiblockProjectileWorkshop.SLOT_COMPONENT_INPUT);
+			addPlayerInventory(player.inventory, 8+32+8+4-44, 141+8);
 		}
 		else
-			inputSlot = this.addSlotToContainer(new Slot(this.inv, 0, 8, 8+2)
-			{
-				@Override
-				public boolean isItemValid(ItemStack itemStack)
-				{
-					return tile.isStackValid(0, itemStack);
-				}
-			});
+		{
+			inputSlot = addSlot(8, 8+2, MultiblockProjectileWorkshop.SLOT_INPUT);
+			addPlayerInventory(player.inventory, 8+32+8+4, 141+8);
+		}
 
-		addPlayerInventory(player.inventory, 8+32+8+4, 141+8);
 	}
 }

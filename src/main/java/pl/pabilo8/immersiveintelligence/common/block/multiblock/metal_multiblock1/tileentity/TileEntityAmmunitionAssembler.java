@@ -19,6 +19,7 @@ import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.AmmunitionAssembler;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockAmmunitionAssembler;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
@@ -38,26 +39,32 @@ import javax.annotation.Nullable;
  */
 public class TileEntityAmmunitionAssembler extends TileEntityMultiblockProductionMulti<TileEntityAmmunitionAssembler, AmmunitionAssemblerRecipe> implements IBooleanAnimatedPartsBlock
 {
-	public static final int SLOT_CORE = 0, SLOT_CASING = 1, SLOT_OUTPUT = 2;
-	public static final String NBT_KEY_EFFECT = "effect";
-
 	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CLIENT_MESSAGE})
-	public FuseType fuse = FuseType.CONTACT;
+	public FuseType fuseType = FuseType.CONTACT;
+	//depends on fuse type: time for timed fuse, distance for proximity fuse
 	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CLIENT_MESSAGE})
-	public int fuseConfig = 0; //depends on fuse type: time for timed fuse, distance for proximity fuse
+	public int fuseConfig = 0;
 	@SyncNBT
 	public MultiblockInteractablePart hatch;
 
 	//inventory: core, casing
-	IItemHandler coreInputHandler = getSingleInventoryHandler(SLOT_CORE, true, false);
-	IItemHandler casingInputHandler = getSingleInventoryHandler(SLOT_CASING, true, false);
+	private IItemHandler coreInputHandler = getSingleInventoryHandler(MultiblockAmmunitionAssembler.SLOT_CORE, true, false);
+	private IItemHandler casingInputHandler = getSingleInventoryHandler(MultiblockAmmunitionAssembler.SLOT_CASING, true, false);
 
 	public TileEntityAmmunitionAssembler()
 	{
 		super(MultiblockAmmunitionAssembler.INSTANCE);
 		energyStorage = new FluxStorageAdvanced(AmmunitionAssembler.energyCapacity);
-		inventory = NonNullList.withSize(4, ItemStack.EMPTY);
+		inventory = NonNullList.withSize(3, ItemStack.EMPTY);
 		hatch = new MultiblockInteractablePart(10);
+	}
+
+	@Override
+	protected void dummyCleanup()
+	{
+		super.dummyCleanup();
+		this.coreInputHandler = this.casingInputHandler = null;
+		this.hatch = null;
 	}
 
 	@Override
@@ -99,9 +106,9 @@ public class TileEntityAmmunitionAssembler extends TileEntityMultiblockProductio
 	{
 		switch(i)
 		{
-			case SLOT_CORE:
+			case MultiblockAmmunitionAssembler.SLOT_CORE:
 				return stack.getItem() instanceof IAmmoTypeItem&&((IAmmoTypeItem<?, ?>)stack.getItem()).isBulletCore(stack);
-			case SLOT_CASING:
+			case MultiblockAmmunitionAssembler.SLOT_CASING:
 				return AmmunitionAssemblerRecipe.streamRecipes(AmmunitionAssemblerRecipe.class)
 						.anyMatch(a -> a.casingInput.matchesItemStackIgnoringSize(stack));
 			default:
@@ -132,17 +139,17 @@ public class TileEntityAmmunitionAssembler extends TileEntityMultiblockProductio
 	@Override
 	protected IIMultiblockProcess<AmmunitionAssemblerRecipe> findNewProductionProcess()
 	{
-		if(!inventory.get(SLOT_CORE).isEmpty()&&!inventory.get(SLOT_CASING).isEmpty())
+		if(!inventory.get(MultiblockAmmunitionAssembler.SLOT_CORE).isEmpty()&&!inventory.get(MultiblockAmmunitionAssembler.SLOT_CASING).isEmpty())
 			for(AmmunitionAssemblerRecipe recipe : AmmunitionAssemblerRecipe.getRecipes(AmmunitionAssemblerRecipe.class))
-				if(!recipe.advanced&&recipe.casingInput.matchesItemStack(inventory.get(SLOT_CASING))&&recipe.coreInput.matches(inventory.get(SLOT_CORE)))
+				if(!recipe.advanced&&recipe.casingInput.matchesItemStack(inventory.get(MultiblockAmmunitionAssembler.SLOT_CASING))&&recipe.coreInput.matches(inventory.get(MultiblockAmmunitionAssembler.SLOT_CORE)))
 				{
 					IIMultiblockProcess<AmmunitionAssemblerRecipe> process = new IIMultiblockProcess<>(recipe)
-							.withNBT(nbt -> nbt.withItemStack(NBT_KEY_EFFECT, recipe.process.apply(inventory.get(SLOT_CORE), inventory.get(SLOT_CASING)))
-									.withItemStack("core", inventory.get(SLOT_CORE))
+							.withNBT(nbt -> nbt.withItemStack(MultiblockAmmunitionAssembler.NBT_KEY_EFFECT, recipe.process.apply(inventory.get(MultiblockAmmunitionAssembler.SLOT_CORE), inventory.get(MultiblockAmmunitionAssembler.SLOT_CASING)))
+									.withItemStack("core", inventory.get(MultiblockAmmunitionAssembler.SLOT_CORE))
 									.withString("ammo", recipe.ammoItem.getName())
 							);
-					inventory.get(SLOT_CORE).shrink(1);
-					inventory.get(SLOT_CASING).shrink(1);
+					inventory.get(MultiblockAmmunitionAssembler.SLOT_CORE).shrink(1);
+					inventory.get(MultiblockAmmunitionAssembler.SLOT_CASING).shrink(1);
 					return process;
 				}
 		return null;
@@ -173,7 +180,7 @@ public class TileEntityAmmunitionAssembler extends TileEntityMultiblockProductio
 	@Override
 	protected void onProductionFinish(IIMultiblockProcess<AmmunitionAssemblerRecipe> process)
 	{
-		outputOrDrop(process.processData.getItemStack(NBT_KEY_EFFECT), null, facing.getOpposite(), 34);
+		outputOrDrop(process.processData.getItemStack(MultiblockAmmunitionAssembler.NBT_KEY_EFFECT), null, facing.getOpposite(), 34);
 	}
 
 	//--- Data Handling ---//
@@ -182,14 +189,14 @@ public class TileEntityAmmunitionAssembler extends TileEntityMultiblockProductio
 	public void receiveData(DataPacket packet, int pos)
 	{
 		if(packet.has('f'))
-			fuse = FuseType.v(packet.get('f').toString());
+			fuseType = IIUtils.enumValue(FuseType.class, packet.get('f').toString());
 	}
 
 	public ItemStack getProductionResult(int processID)
 	{
 		if(processQueue.size() <= processID)
 			return ItemStack.EMPTY;
-		return this.processQueue.get(processID).processData.getItemStack(NBT_KEY_EFFECT);
+		return this.processQueue.get(processID).processData.getItemStack(MultiblockAmmunitionAssembler.NBT_KEY_EFFECT);
 
 	}
 

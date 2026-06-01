@@ -28,7 +28,8 @@ import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
  */
 public class AmmoComponentFluid extends AmmoComponent
 {
-	Fluid fluid;
+	private final Fluid fluid;
+	private IIColor overrideColor = null;
 
 	public AmmoComponentFluid(Fluid fluid)
 	{
@@ -57,6 +58,24 @@ public class AmmoComponentFluid extends AmmoComponent
 	public boolean showInManual()
 	{
 		return false;
+	}
+
+	@Override
+	public IIColor getColor()
+	{
+		if(this.overrideColor!=null)
+			return this.overrideColor;
+		return super.getColor();
+	}
+
+	public Fluid getFluid()
+	{
+		return fluid;
+	}
+
+	public void setOverrideColor(IIColor overrideColor)
+	{
+		this.overrideColor = overrideColor;
 	}
 
 	@Override

@@ -48,7 +48,7 @@ public class GuiInserter extends DecoTileGui<TileEntityInserterBase, ContainerIn
 	private DecoTaskJobList<InserterTask> taskJobList;
 	private DecoPanel panelDetails;
 	@SyncNBT(events = SyncEvents.TILE_CLIENT_MESSAGE)
-	private EasyMultiTypeCollection<InserterTask> tasks;
+	public EasyMultiTypeCollection<InserterTask> tasks;
 	@Nullable
 	private InserterTask selected;
 
