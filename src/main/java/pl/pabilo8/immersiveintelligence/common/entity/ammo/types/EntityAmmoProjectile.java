@@ -344,6 +344,13 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 		PenetrationHardness blockHardness = penHandler.getPenetrationHardness();
 		boolean canPenetrate = penetrationHardness.compareTo(blockHardness) > 0;
 
+		//Explode when canister core contacts a non-fragile block
+		if(coreType==CoreType.CANISTER&&blockHardness.compareTo(PenetrationHardness.FRAGILE) > 0)
+		{
+			detonate();
+			return true;
+		}
+
 		//ricochet if the block is unbreakable or the projectile can't penetrate it
 		if(blockHardness!=PenetrationHardness.BEDROCK&&penHandler.canRicochet()&&!canPenetrate)
 		{
