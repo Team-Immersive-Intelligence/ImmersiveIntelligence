@@ -3188,10 +3188,10 @@ ii.config.Light_Engineer_Armor=Light Engineer Armor
 #GUI Labels
 ii.gui.editor.editor_style=Visual/POL Editor
 
-ii.gui.task_editor.tasks=Tasks
-ii.gui.task_editor.tasks.tooltip=Tasks are assignments, that are repeated indefinitely.
 ii.gui.task_editor.jobs=Jobs
-ii.gui.task_editor.jobs.tooltip=Jobs are assignments, that are discarded from memory, after a set amount of resource is transfered.
+ii.gui.task_editor.jobs.tooltip=Jobs are assignments, that are repeated indefinitely.
+ii.gui.task_editor.requests=Requests
+ii.gui.task_editor.requests.tooltip=Requests are assignments, that are discarded from memory, after a set amount of resource is transfered.
 
 ii.gui.inserter.task_editor=Task Editor
 ii.gui.inserter.type=Type:

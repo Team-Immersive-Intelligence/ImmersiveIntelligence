@@ -17,8 +17,8 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoEntr
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoIngredientStackPickerPanel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoIngredientStackPickerPanel.PickerPanelMode;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPanel;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoTaskJobList;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoTaskJobList.ListMode;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoTaskList;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoTaskList.ListMode;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoFluidTank;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoItemStackDisplay;
@@ -61,10 +61,10 @@ public class GuiPacker extends DecoTileGui<TileEntityPacker, ContainerPacker>
 	@SyncNBT(events = SyncEvents.TILE_CLIENT_MESSAGE)
 	public EasyCollection<PackerTask, NBTTagCompound> tasks;
 	@SyncNBT
-	public ListMode mode = ListMode.TASKS;
+	public ListMode mode = ListMode.JOBS;
 
 	private PackerActionType actionType;
-	private DecoTaskJobList<PackerTask> taskJobList;
+	private DecoTaskList<PackerTask> taskList;
 	private DecoPanel panelDetails, panelResources;
 	private DecoCheckbox expiresCheckbox;
 	private DecoTextField expiresTextField;
@@ -117,14 +117,14 @@ public class GuiPacker extends DecoTileGui<TileEntityPacker, ContainerPacker>
 		}
 
 		// Replace mode tabs + list + action buttons with a single component
-		addComponent((taskJobList = new DecoTaskJobList<>(0, 0))
+		addComponent((taskList = new DecoTaskList<>(0, 0))
 				.withSize(108, 116+12-8)
 				.withEntries(tasks)
-				.withIsJobPredicate(t -> t.expirationAmount!=-1)
+				.withIsJobPredicate(t -> t.expirationAmount==-1)
 				.withModeHandling(mode, m -> mode = m)
 				.withBlankTaskSupplier(() -> {
 					PackerTask created = new PackerTask(PackerHandler.PackerPutMode.ALL_POSSIBLE, actionType, new IngredientStack("*"));
-					created.expirationAmount = (taskJobList.getMode()==ListMode.TASKS)?-1: 1;
+					created.expirationAmount = (taskList.getMode()==ListMode.JOBS)?-1: 1;
 					return created;
 				})
 				.withOnSelectedChanged(task -> {
@@ -390,6 +390,8 @@ public class GuiPacker extends DecoTileGui<TileEntityPacker, ContainerPacker>
 			expiresCheckbox.withChecked(selected.expirationAmount!=-1);
 		if(expiresTextField!=null)
 			expiresTextField.withText(selected.expirationAmount==-1?"": String.valueOf(selected.expirationAmount));
+		if(taskList!=null)
+			taskList.setMode(selected.expirationAmount==-1?ListMode.JOBS: ListMode.REQUESTS);
 
 	}
 

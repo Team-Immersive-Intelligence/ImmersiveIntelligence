@@ -22,9 +22,9 @@ import java.util.stream.Collectors;
 import static pl.pabilo8.immersiveintelligence.common.util.IIReference.GUI_LABEL_KEY;
 
 /**
- * Generic "task/job editor list" component:
+ * Generic "request/job editor list" component:
  * <ul>
- *     <li>mode tabs (Tasks/Jobs)</li>
+ *     <li>mode tabs (Requests/Jobs)</li>
  *     <li>scrolled list</li>
  *     <li>add/remove/duplicate/clear buttons</li>
  * </ul>
@@ -33,20 +33,20 @@ import static pl.pabilo8.immersiveintelligence.common.util.IIReference.GUI_LABEL
  * @ii-approved 0.3.1
  * @implSpec Callers must provide: <ul>
  * <li>entries (full list)</li>
- * <li>predicate telling whether entry is a "job"</li>
+ * <li>predicate telling whether entry is a "job"; non-job entries are shown as requests</li>
  * <li>entry renderer + click callback</li>
  * <li>button actions (usually implemented by the GUI owning the data)</li>
  * </ul>
  * @since 08.02.2026
  */
-public class DecoTaskJobList<T extends INBTSerializable<NBTTagCompound>> extends DecoPanel
+public class DecoTaskList<T extends INBTSerializable<NBTTagCompound>> extends DecoPanel
 {
 	private static final int TAB_H = 18;
 	private static final int BTN_W = 25, BTN_H = 14, BTN_GAP = 1;
 	private static final int LIST_Y_OFF = 8+TAB_H-4;
 	private int listWidth, listHeight;
 
-	private ListMode mode = ListMode.TASKS;
+	private ListMode mode = ListMode.JOBS;
 	private EasyCollection<T, NBTTagCompound> allEntries;
 	private Predicate<T> isJobPredicate = t -> false;
 	private DecoList<T> list;
@@ -66,7 +66,7 @@ public class DecoTaskJobList<T extends INBTSerializable<NBTTagCompound>> extends
 	@Nullable
 	private Consumer<T> onSelectedChanged;
 
-	public DecoTaskJobList(int x, int y)
+	public DecoTaskList(int x, int y)
 	{
 		super(x, y);
 		withBackground(null);
@@ -76,29 +76,29 @@ public class DecoTaskJobList<T extends INBTSerializable<NBTTagCompound>> extends
 	//--- Setters ---//
 
 	@Override
-	public DecoTaskJobList<T> withSize(int width, int height)
+	public DecoTaskList<T> withSize(int width, int height)
 	{
 		this.listWidth = width;
 		this.listHeight = height;
 		//noinspection unchecked
-		return (DecoTaskJobList<T>)super.withSize(listWidth, LIST_Y_OFF+listHeight+4+BTN_H+4);
+		return (DecoTaskList<T>)super.withSize(listWidth, LIST_Y_OFF+listHeight+4+BTN_H+4);
 	}
 
-	public DecoTaskJobList<T> withEntries(EasyCollection<T, NBTTagCompound> entries)
+	public DecoTaskList<T> withEntries(EasyCollection<T, NBTTagCompound> entries)
 	{
 		this.allEntries = entries;
 		refreshListEntries();
 		return this;
 	}
 
-	public DecoTaskJobList<T> withIsJobPredicate(Predicate<T> predicate)
+	public DecoTaskList<T> withIsJobPredicate(Predicate<T> predicate)
 	{
 		this.isJobPredicate = predicate!=null?predicate: (t -> false);
 		refreshListEntries();
 		return this;
 	}
 
-	public DecoTaskJobList<T> withDisplayFunction(DecoEntryPanelBuilder<T> builder)
+	public DecoTaskList<T> withDisplayFunction(DecoEntryPanelBuilder<T> builder)
 	{
 		this.displayFunction = builder;
 		if(list!=null)
@@ -106,9 +106,9 @@ public class DecoTaskJobList<T extends INBTSerializable<NBTTagCompound>> extends
 		return this;
 	}
 
-	public DecoTaskJobList<T> withModeHandling(@Nullable ListMode initialMode, Consumer<ListMode> onModeChanged)
+	public DecoTaskList<T> withModeHandling(@Nullable ListMode initialMode, Consumer<ListMode> onModeChanged)
 	{
-		this.mode = mode==null?ListMode.TASKS: mode;
+		this.mode = normalizeMode(initialMode);
 		this.onModeChanged = onModeChanged;
 		return this;
 	}
@@ -116,7 +116,7 @@ public class DecoTaskJobList<T extends INBTSerializable<NBTTagCompound>> extends
 	/**
 	 * Fired whenever selection changes (including becoming null due to filtering/mode change).
 	 */
-	public DecoTaskJobList<T> withOnSelectedChanged(@Nullable Consumer<T> onSelectedChanged)
+	public DecoTaskList<T> withOnSelectedChanged(@Nullable Consumer<T> onSelectedChanged)
 	{
 		this.onSelectedChanged = onSelectedChanged;
 		return this;
@@ -125,7 +125,7 @@ public class DecoTaskJobList<T extends INBTSerializable<NBTTagCompound>> extends
 	/**
 	 * Supplies a new blank task for the Add button.
 	 */
-	public DecoTaskJobList<T> withBlankTaskSupplier(@Nullable Supplier<T> blankTaskSupplier)
+	public DecoTaskList<T> withBlankTaskSupplier(@Nullable Supplier<T> blankTaskSupplier)
 	{
 		this.blankTaskSupplier = blankTaskSupplier;
 		return this;
@@ -134,7 +134,7 @@ public class DecoTaskJobList<T extends INBTSerializable<NBTTagCompound>> extends
 	/**
 	 * For GUIs that only have a single list type but still want standardized list + buttons.
 	 */
-	public DecoTaskJobList<T> withShowJobsTab(boolean showJobsTab)
+	public DecoTaskList<T> withShowJobsTab(boolean showJobsTab)
 	{
 		this.showJobsTab = showJobsTab;
 		return this;
@@ -147,10 +147,15 @@ public class DecoTaskJobList<T extends INBTSerializable<NBTTagCompound>> extends
 
 	public void setMode(ListMode mode)
 	{
-		this.mode = mode==null?ListMode.TASKS: mode;
+		this.mode = normalizeMode(mode);
 		if(onModeChanged!=null)
 			onModeChanged.accept(this.mode);
 		refreshListEntries();
+	}
+
+	private static ListMode normalizeMode(@Nullable ListMode mode)
+	{
+		return mode==null||mode==ListMode.TASKS?ListMode.REQUESTS: mode;
 	}
 
 	@Nullable
@@ -160,7 +165,7 @@ public class DecoTaskJobList<T extends INBTSerializable<NBTTagCompound>> extends
 	}
 
 	/**
-	 * @return entries visible in the current tab (after applying TASKS/JOBS filter).
+	 * @return entries visible in the current tab (after applying REQUESTS/JOBS filter).
 	 */
 	public List<T> getFilteredEntries()
 	{
@@ -181,7 +186,7 @@ public class DecoTaskJobList<T extends INBTSerializable<NBTTagCompound>> extends
 
 		//Drop selection if it moved out of current view
 		if(selected!=null&&((mode==ListMode.JOBS)!=isJobPredicate.test(selected)))
-			setSelected(selected);
+			setSelected(null);
 	}
 
 	@Override
@@ -191,29 +196,29 @@ public class DecoTaskJobList<T extends INBTSerializable<NBTTagCompound>> extends
 			return false;
 
 		//Mode tabs
-		DecoButton tabTasks = new DecoButton(0, 4)
-				.withSize(listWidth/2, TAB_H)
-				.withBackground(DecoTextures.COMPONENT_TAB_VERTICAL)
-				.withText(GUI_LABEL_KEY+"task_editor.tasks")
-				.withTranslatedTooltip(GUI_LABEL_KEY+"task_editor.tasks.tooltip")
-				.withOnLMBPressed(() -> setMode(ListMode.TASKS));
-
-		DecoButton tabJobs = new DecoButton(listWidth/2, 4)
+		DecoButton tabJobs = new DecoButton(0, 4)
 				.withSize(listWidth/2, TAB_H)
 				.withBackground(DecoTextures.COMPONENT_TAB_VERTICAL)
 				.withText(GUI_LABEL_KEY+"task_editor.jobs")
 				.withTranslatedTooltip(GUI_LABEL_KEY+"task_editor.jobs.tooltip")
 				.withOnLMBPressed(() -> setMode(ListMode.JOBS));
 
-		addComponent(tabTasks);
+		DecoButton tabRequests = new DecoButton(listWidth/2, 4)
+				.withSize(listWidth/2, TAB_H)
+				.withBackground(DecoTextures.COMPONENT_TAB_VERTICAL)
+				.withText(GUI_LABEL_KEY+"task_editor.requests")
+				.withTranslatedTooltip(GUI_LABEL_KEY+"task_editor.requests.tooltip")
+				.withOnLMBPressed(() -> setMode(ListMode.REQUESTS));
+
 		addComponent(tabJobs);
+		addComponent(tabRequests);
 
 		if(!showJobsTab)
 		{
-			//stretch tasks tab; hide jobs tab
-			tabTasks.withSize(listWidth, TAB_H);
+			//stretch requests tab; hide jobs tab
+			tabRequests.withSize(listWidth, TAB_H);
 			tabJobs.visible = tabJobs.enabled = false;
-			this.mode = ListMode.TASKS;
+			this.mode = ListMode.REQUESTS;
 		}
 
 		//List
@@ -292,7 +297,7 @@ public class DecoTaskJobList<T extends INBTSerializable<NBTTagCompound>> extends
 		//Create a new blank task and copy data from selected into it.
 		T created = allEntries.copyEntry(selected);
 		//Ensure duplicate is visible in current mode, otherwise switch mode to match it
-		setMode(isJobPredicate.test(created)?ListMode.JOBS: ListMode.TASKS);
+		setMode(isJobPredicate.test(created)?ListMode.JOBS: ListMode.REQUESTS);
 
 		refreshListEntries();
 	}
@@ -302,7 +307,7 @@ public class DecoTaskJobList<T extends INBTSerializable<NBTTagCompound>> extends
 		if(allEntries==null)
 			return;
 		//Clear only current mode
-		allEntries.removeIf(t -> isJobPredicate.test(t)^this.mode!=ListMode.JOBS);
+		allEntries.removeIf(t -> isJobPredicate.test(t)!=(this.mode==ListMode.JOBS));
 		selected = null;
 		refreshListEntries();
 	}
@@ -318,7 +323,12 @@ public class DecoTaskJobList<T extends INBTSerializable<NBTTagCompound>> extends
 
 	public enum ListMode implements ISerializableEnum
 	{
-		TASKS,
-		JOBS
+		REQUESTS,
+		JOBS,
+		/**
+		 * @deprecated Use REQUESTS. Kept only so older GUI-sync data and external references do not hard-fail.
+		 */
+		@Deprecated
+		TASKS
 	}
 }

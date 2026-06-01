@@ -12,8 +12,8 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabe
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoEntryPanelBuilder;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoIngredientStackPickerPanel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPanel;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoTaskJobList;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoTaskJobList.ListMode;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoTaskList;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoTaskList.ListMode;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoItemStackDisplay;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.DecoTextField;
@@ -44,8 +44,8 @@ import java.util.function.Supplier;
 public class GuiInserter extends DecoTileGui<TileEntityInserterBase, ContainerInserter>
 {
 	private static final String INSERTER_KEY = IIReference.GUI_LABEL_KEY+"inserter.";
-	private ListMode mode = ListMode.TASKS;
-	private DecoTaskJobList<InserterTask> taskJobList;
+	private ListMode mode = ListMode.JOBS;
+	private DecoTaskList<InserterTask> taskList;
 	private DecoPanel panelDetails;
 	@SyncNBT(events = SyncEvents.TILE_CLIENT_MESSAGE)
 	public EasyMultiTypeCollection<InserterTask> tasks;
@@ -74,7 +74,7 @@ public class GuiInserter extends DecoTileGui<TileEntityInserterBase, ContainerIn
 				.withBox(DecoTextures.BG_STEEL, DecoTextures.TEMPLATE_SQUARE, 108, 8+3, 120+16, 130+16-2)
 				.build();
 
-		addComponent((taskJobList = new DecoTaskJobList<>(0, 2))
+		addComponent((taskList = new DecoTaskList<>(0, 2))
 				.withSize(108, 116)
 				.withEntries(tasks)
 				.withIsJobPredicate(InserterTask::isJob)
@@ -84,7 +84,7 @@ public class GuiInserter extends DecoTileGui<TileEntityInserterBase, ContainerIn
 					if(!taskSupplier.isPresent())
 						return null;
 					InserterTask created = taskSupplier.get().get();
-					created.isJob = (taskJobList.getMode()==ListMode.JOBS);
+					created.isJob = (taskList.getMode()==ListMode.JOBS);
 					return created;
 				})
 				.withOnSelectedChanged(task -> {
