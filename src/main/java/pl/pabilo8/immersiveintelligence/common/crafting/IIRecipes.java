@@ -293,7 +293,7 @@ public class IIRecipes
 			@Override
 			public ItemStack apply(ItemStack input, DataPacket data)
 			{
-				return IIContent.itemPrintedPage.getStack(PageType.TEXT,
+				return IIContent.itemPrintedPage.getStack(PageType.CODE,
 						nbt -> nbt.withString("text", data.get('t').toString())
 				);
 			}

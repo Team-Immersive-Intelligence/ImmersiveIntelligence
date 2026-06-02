@@ -34,9 +34,10 @@ public class MultiblockFlagpole extends MultiblockStuctureBase<TileEntityFlagpol
 		UpgradeTechTree.getTreeFor(TileEntityFlagpole.class)
 				.reset()
 				.withUpgrade(IIContent.UPGRADE_FLAGPOLE_CAPTURE_DEFIANCE, UpgradeTier.TIER_1)
-				.withUpgrade(IIContent.UPGRADE_FLAGPOLE_TASER_LOCKS, UpgradeTier.TIER_1)
+				.withUpgrade(IIContent.UPGRADE_FLAGPOLE_TASER_LOCKS, UpgradeTier.TIER_2)
 				.withUpgrade(IIContent.UPGRADE_FLAGPOLE_UNIT_POST, UpgradeTier.TIER_1)
 				.withUpgrade(IIContent.UPGRADE_FLAGPOLE_DISTRESS_SIGNAL, UpgradeTier.TIER_1)
+				.withDependency(IIContent.UPGRADE_FLAGPOLE_CAPTURE_DEFIANCE, IIContent.UPGRADE_FLAGPOLE_TASER_LOCKS)
 				.withLockOut(IIContent.UPGRADE_FLAGPOLE_UNIT_POST, IIContent.UPGRADE_FLAGPOLE_TASER_LOCKS);
 	}
 

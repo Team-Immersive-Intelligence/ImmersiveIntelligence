@@ -14,6 +14,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.Dec
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.data_editor.DecoDataEditor;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityDataInputMachine;
@@ -117,7 +118,7 @@ public class GuiDataInputMachineEdit extends DecoTileGui<TileEntityDataInputMach
 						.withSize(116, 18)
 						.withDropdownWidth(116)
 						.withMaxDisplayedEntries(5)
-						.withEntries(DecoDataEditor.getEditorTypes(false))
+						.withEntries(DecoDataEditor.getEditorTypes(tile.isUpgradeInstalled(IIContent.UPGRADE_ADVANCED_DATA)))
 						.withSelectedEntry(variableToEdit.getValue().getTypeMeta())
 						.withDisplayFunction(DecoTemplates.getDataTypeEntryDisplay())
 						.withOnSelectedEntry((typeMetaInfo, typeMetaInfo2) -> {

@@ -38,7 +38,7 @@ public class IIDataTypeUtils
 		//number types
 		registerType("integer", DataTypeInteger.class, DataTypeInteger::new, IIColor.fromPackedRGB(0x26732e), false);
 		registerType("float", DataTypeFloat.class, DataTypeFloat::new, IIColor.fromPackedRGB(0x0d6b68), false);
-		registerType("vector", DataTypeVector.class, DataTypeVector::new, IIColor.fromPackedRGB(0x9d8900), false);
+		registerType("vector", DataTypeVector.class, DataTypeVector::new, IIColor.fromPackedRGB(0x9d8900), true);
 		registerGenericType("number", NumericDataType.class);
 
 		//text types

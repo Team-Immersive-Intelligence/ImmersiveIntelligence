@@ -2,6 +2,7 @@
 Flagpole
 Stand for anthem!
 # 0
+@hammer;upgradeable;repairable;paintable
 |[multiblock]{mb:"II:Flagpole"}|
 The [flagpole] is a multiblock that allows marking of nearby territory, keeping it loaded and under control, while also
 displaying a [stylish banner] for friends and foes to recognise. To form it, use a [hammer](introduction#introductionHammer) on the middle razor wire block.

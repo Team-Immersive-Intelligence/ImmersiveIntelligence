@@ -37,7 +37,7 @@ public class GuiRadarTargets extends DecoTileGui<TileEntityRadar, ContainerRadar
 
 		//Tabs
 		addLinkTab(IIGUI.RADAR, GuiRadar.ICON_RADAR, "radar_module");
-		addLinkTab(IIGUI.RADAR_CONFIG, DecoTextures.ICON_CONFIG, "config_module");
+		addLinkTab(IIGUI.RADAR_CONFIG, DecoTextures.ICON_CONFIG, "configuration_module");
 		addLinkTab(IIGUI.RADAR_TARGETS, DecoTextures.ICON_TARGETS, "targets_module");
 
 	}

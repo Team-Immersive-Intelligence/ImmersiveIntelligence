@@ -1137,6 +1137,16 @@ machineupgrade.immersiveintelligence.emplacement.guided_missile_launcher.desc=Th
 machineupgrade.immersiveintelligence.emplacement.tesla=Tesla Tower
 machineupgrade.immersiveintelligence.emplacement.tesla.desc=The Tesla Tower uses high voltage to decimate enemies in its radius, it's especially effective against electronics
 
+#Data Input Machine
+machineupgrade.immersiveintelligence.advanced_data=Advanced Input Device
+machineupgrade.immersiveintelligence.advanced_data.desc=Replaces the converted typewriter with a proper, fully electronic control panel, allowing the user to enter in advanced data types like Vector, Map and Array.
+
+#Arithmetic-Logic Machine
+machineupgrade.immersiveintelligence.memory=Built-in Memory
+machineupgrade.immersiveintelligence.memory.desc=Adds a page of built in memory to load and save the data operation results.
+machineupgrade.immersiveintelligence.circuit_racks=Additional Circuit Racks
+machineupgrade.immersiveintelligence.circuit_racks.desc=Adds racks that allow mounting two more circuit inside the machine.
+
 #Other upgrades
 machineupgrade.immersiveintelligence.core_filler=Projectile Filler
 machineupgrade.immersiveintelligence.core_filler.desc=Equipping the Projectile Workshop with an inserter allows precise filling of the projectiles with desired components.
@@ -2937,6 +2947,7 @@ ie.manual.entry.traits.paintable=Paintable
 
 ie.manual.entry.wip_warning0=Warning! Work-in-Progress Content.
 ie.manual.entry.wip_warning1=The Engineering Department is working hard to bring it to the front!
+ie.manual.entry.wip_warning.upgrade=The feature may lack visuals or have no functionality, no not report this.
 
 ie.manual.entry.data_operation.inputs=Inputs
 ie.manual.entry.data_operation.output=Output

@@ -13,6 +13,7 @@ import pl.pabilo8.immersiveintelligence.api.upgrade.IManagedUpgradableDevice;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeManager;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.MachineStyle;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Flagpole;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockFlagpole;
@@ -224,9 +225,17 @@ public class TileEntityFlagpole extends TileEntityMultiblockIIBase<TileEntityFla
 	}
 
 	@Override
+	public boolean damageHealth(float damage)
+	{
+		if(isUpgradeInstalled(IIContent.UPGRADE_FLAGPOLE_CAPTURE_DEFIANCE))
+			damage /= 2;
+		return IManagedDamageResistantMultiblock.super.damageHealth(damage);
+	}
+
+	@Override
 	public float getExplosionResistance()
 	{
-		return 3;
+		return isUpgradeInstalled(IIContent.UPGRADE_FLAGPOLE_CAPTURE_DEFIANCE)?6: 3;
 	}
 
 	//--- IIIGuiMultiblockTile ---//
