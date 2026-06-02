@@ -20,6 +20,8 @@ import pl.pabilo8.immersiveintelligence.client.gui.block.arithmetic_logic_machin
 import pl.pabilo8.immersiveintelligence.client.gui.block.arithmetic_logic_machine.GuiArithmeticLogicMachineEdit;
 import pl.pabilo8.immersiveintelligence.client.gui.block.data_input_machine.GuiDataInputMachine;
 import pl.pabilo8.immersiveintelligence.client.gui.block.data_input_machine.GuiDataInputMachineEdit;
+import pl.pabilo8.immersiveintelligence.client.gui.block.data_merger.GuiDataMerger;
+import pl.pabilo8.immersiveintelligence.client.gui.block.data_merger.GuiDataMergerEdit;
 import pl.pabilo8.immersiveintelligence.client.gui.block.data_router.GuiDataRouter;
 import pl.pabilo8.immersiveintelligence.client.gui.block.data_router.GuiDataRouterEdit;
 import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageConfig;
@@ -127,6 +129,7 @@ public enum IIGUI implements ISerializableEnum
 	FUEL_STATION(TileEntityFuelStation.class, ContainerFuelStation::new),
 
 	DATA_MERGER(TileEntityDataMerger.class, ContainerDataMerger::new),
+	DATA_MERGER_EDIT(TileEntityDataMerger.class, ContainerDataMerger::new),
 	DATA_ROUTER(TileEntityDataRouter.class, ContainerDataRouter::getMainGui),
 	DATA_ROUTER_EDIT(TileEntityDataRouter.class, ContainerDataRouter::getEditGui),
 	INSERTER(TileEntityInserterBase.class, ContainerInserter::new),
@@ -253,7 +256,8 @@ public enum IIGUI implements ISerializableEnum
 		IIGUI.ELECTROLYZER.setClientTileGui(GuiElectrolyzer::new);
 		IIGUI.PRECISION_ASSEMBLER.setClientTileGui(GuiPrecisionAssembler::new);
 		IIGUI.FUEL_STATION.setClientTileGui(GuiFuelStation::new);
-		IIGUI.DATA_MERGER.setClientGui(GuiDataMerger::new);
+		IIGUI.DATA_MERGER.setClientTileGui(GuiDataMerger::new);
+		IIGUI.DATA_MERGER_EDIT.setClientTileGui(GuiDataMergerEdit::new);
 		IIGUI.DATA_ROUTER.setClientTileGui(GuiDataRouter::new);
 		IIGUI.DATA_ROUTER_EDIT.setClientTileGui(GuiDataRouterEdit::new);
 		IIGUI.INSERTER.setClientTileGui(GuiInserter::new);
@@ -319,13 +323,6 @@ public enum IIGUI implements ISerializableEnum
 		for(IIGUI gui : values())
 			if(gui.guiClass!=null)
 				registry.addAdvancedGuiHandlers(new DecoGuiJEIHandler<>(gui));
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Deprecated
-	public <T extends TileEntity> void setClientGui(BiFunction<EntityPlayer, T, GuiScreen> guiFromTile)
-	{
-		this.guiFromTile = (player, tileEntity) -> guiFromTile.apply(player, (T)tileEntity);
 	}
 
 	@SideOnly(Side.CLIENT)

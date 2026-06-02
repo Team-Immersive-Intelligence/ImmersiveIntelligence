@@ -2,10 +2,8 @@ package pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity;
 
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IBlockBounds;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IDirectionalTile;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IPlayerInteraction;
 import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
-import blusunrize.immersiveengineering.common.util.inventory.IIEInventory;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -15,47 +13,105 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.NonNullList;
+import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.common.util.INBTSerializable;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataHandlingUtils;
 import pl.pabilo8.immersiveintelligence.api.data.device.IDataDevice;
+import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyCollection;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IIIGuiMultiblockTile;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IIIInventory;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 24.06.2025
+ * @updated 02.06.2026
  * @since 17.05.2019
  */
-public class TileEntityDataMerger extends TileEntityIEBase implements IPlayerInteraction, ITickable, IBlockBounds, IDirectionalTile, IDataDevice, IGuiTile, IIEInventory
+public class TileEntityDataMerger extends TileEntityIEBase implements IPlayerInteraction, ITickable, IBlockBounds, IDirectionalTile, IDataDevice, IIIGuiMultiblockTile, IIIInventory
 {
 	public EnumFacing facing = EnumFacing.NORTH;
-	public DataPacket settingsPacket = new DataPacket();
-	public DataMergerSendMode mode = DataMergerSendMode.SEND_ON_BOTH;
-	DataPacket packetLeft = new DataPacket();
-	DataPacket packetRight = new DataPacket();
+
+	public EasyCollection<DataMergeRule, NBTTagCompound> mergeRules = new EasyCollection<>(DataMergeRule::new);
+	public DataPacket packetLeft = new DataPacket();
+	public DataPacket packetRight = new DataPacket();
 
 	@Override
 	public void readCustomNBT(NBTTagCompound nbt, boolean descPacket)
 	{
-		mode = DataMergerSendMode.values()[nbt.getByte("mode")];
 		facing = EnumFacing.getFront(nbt.getInteger("facing"));
 
-		settingsPacket = new DataPacket(nbt.getCompoundTag("packet"));
+		if(nbt.hasKey("rules", Constants.NBT.TAG_LIST))
+			mergeRules.deserializeNBT(nbt.getTagList("rules", Constants.NBT.TAG_COMPOUND));
+		else if(nbt.hasKey("packet", Constants.NBT.TAG_COMPOUND))
+			migrateLegacySettings(new DataPacket(nbt.getCompoundTag("packet")));
+
 		packetLeft = new DataPacket(nbt.getCompoundTag("packetLeft"));
 		packetRight = new DataPacket(nbt.getCompoundTag("packetRight"));
-
 	}
 
 	@Override
 	public void writeCustomNBT(NBTTagCompound nbt, boolean descPacket)
 	{
-		nbt.setByte("mode", (byte)mode.ordinal());
 		nbt.setInteger("facing", facing.ordinal());
-
-		nbt.setTag("packet", settingsPacket.serializeNBT());
+		nbt.setTag("rules", mergeRules.serializeNBT());
 		nbt.setTag("packetLeft", packetLeft.serializeNBT());
 		nbt.setTag("packetRight", packetRight.serializeNBT());
+	}
+
+	private void migrateLegacySettings(DataPacket settingsPacket)
+	{
+		mergeRules.clear();
+
+		for(char c : DataPacket.VARIABLE_NAMES)
+			IIDataHandlingUtils.optionalInt(c, settingsPacket).ifPresent(integer -> {
+				int mode = integer+2;
+				if(mode < 0||mode >= VariableMergeMode.values().length)
+					return;
+
+				VariableMergeMode legacy = VariableMergeMode.values()[mode];
+				if(legacy==VariableMergeMode.RETAIN_ORIGINAL)
+					return;
+
+				DataMergeRule rule = new DataMergeRule();
+				rule.variable = c;
+				rule.triggerForwarding = true;
+				rule.usageLimit = -1;
+
+				switch(legacy)
+				{
+					case PREFER_RIGHT:
+						rule.acceptLeft = true;
+						rule.acceptRight = true;
+						rule.rightOverridesCachedValue = true;
+						rule.rightOverridesValue = true;
+						break;
+					case FORCE_RIGHT:
+						rule.acceptLeft = false;
+						rule.acceptRight = true;
+						rule.rightOverridesCachedValue = true;
+						rule.rightOverridesValue = true;
+						break;
+					case PREFER_LEFT:
+						rule.acceptLeft = true;
+						rule.acceptRight = true;
+						rule.rightOverridesCachedValue = false;
+						rule.rightOverridesValue = true;
+						break;
+					case FORCE_LEFT:
+						rule.acceptLeft = true;
+						rule.acceptRight = false;
+						rule.rightOverridesCachedValue = false;
+						rule.rightOverridesValue = true;
+						break;
+				}
+				mergeRules.add(rule);
+			});
 	}
 
 	@Override
@@ -74,10 +130,13 @@ public class TileEntityDataMerger extends TileEntityIEBase implements IPlayerInt
 	public void receiveMessageFromClient(NBTTagCompound message)
 	{
 		super.receiveMessageFromClient(message);
-		if(message.hasKey("mode"))
-			mode = DataMergerSendMode.values()[message.getByte("mode")];
-		if(message.hasKey("packet"))
-			settingsPacket.deserializeNBT(message.getCompoundTag("packet"));
+		if(message.hasKey("rules", Constants.NBT.TAG_LIST))
+		{
+			mergeRules.deserializeNBT(message.getTagList("rules", Constants.NBT.TAG_COMPOUND));
+			markDirty();
+			if(world!=null)
+				world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
+		}
 	}
 
 	@Override
@@ -131,53 +190,52 @@ public class TileEntityDataMerger extends TileEntityIEBase implements IPlayerInt
 	@Override
 	public void onReceive(DataPacket packet, EnumFacing side)
 	{
-		boolean send = mode==DataMergerSendMode.SEND_ON_BOTH;
+		boolean fromLeft = side==facing.rotateYCCW();
+		boolean fromRight = side==facing.rotateY();
 
-		//Incoming packet on the left
-		if(side==facing.rotateYCCW())
-		{
-			packetLeft = packet.clone();
-			send = send||mode==DataMergerSendMode.SEND_LEFT_ONLY;
-		}
-
-		//Incoming packet on the right
-		if(side==facing.rotateY())
-		{
-			packetRight = packet.clone();
-			send = send||mode==DataMergerSendMode.SEND_RIGHT_ONLY;
-		}
-
-		if(!send)
+		//The merger only listens to its two input sides.
+		if(!fromLeft&&!fromRight)
 			return;
 
-		for(char c : DataPacket.VARIABLE_NAMES)
-			IIDataHandlingUtils.optionalInt(c, packet).ifPresent(integer -> {
-				switch(VariableMergeMode.values()[integer+2])
-				{
-					//Original
-					case RETAIN_ORIGINAL:
-						break;
-					//Left
-					case FORCE_LEFT:
-						packet.set(c, packetLeft.get(c));
-						break;
-					case PREFER_LEFT:
-						if(packetLeft.has(c))
-							packet.set(c, packetLeft.get(c));
-						break;
-					//Right
-					case FORCE_RIGHT:
-						packet.set(c, packetRight.get(c));
-						break;
-					case PREFER_RIGHT:
-						if(packetRight.has(c))
-							packet.set(c, packetRight.get(c));
-						break;
-				}
-			});
+		DataPacket incoming = packet.clone();
+		DataPacket cache = fromLeft?packetLeft: packetRight;
+		boolean shouldForward = false;
+		List<DataMergeRule> expiredRules = new ArrayList<>();
 
-		//Send packet
-		IIDataHandlingUtils.sendPacketAdjacently(packet, world, this.pos, facing);
+		//Accept variables into the side cache and check if this packet should trigger output.
+		for(DataMergeRule rule : mergeRules)
+			if(rule.acceptsSide(fromLeft, fromRight)&&incoming.has(rule.variable))
+			{
+				cache.set(rule.variable, incoming.get(rule.variable).clone());
+				if(rule.triggerForwarding)
+					shouldForward = true;
+
+				rule.consumeUse();
+				if(rule.isExpired())
+					expiredRules.add(rule);
+			}
+
+		if(!shouldForward)
+		{
+			if(!expiredRules.isEmpty())
+			{
+				mergeRules.removeAll(expiredRules);
+				markDirty();
+			}
+			return;
+		}
+
+		DataPacket outgoing = incoming.clone();
+		for(DataMergeRule rule : mergeRules)
+			rule.applyTo(outgoing, incoming, packetLeft, packetRight);
+
+		if(!expiredRules.isEmpty())
+		{
+			mergeRules.removeAll(expiredRules);
+			markDirty();
+		}
+
+		IIDataHandlingUtils.sendPacketAdjacently(outgoing, world, this.pos, facing);
 	}
 
 	@Override
@@ -187,16 +245,15 @@ public class TileEntityDataMerger extends TileEntityIEBase implements IPlayerInt
 	}
 
 	@Override
-	public int getGuiID()
-	{
-		return IIGUI.DATA_MERGER.ordinal();
-	}
-
-	@Nullable
-	@Override
-	public TileEntity getGuiMaster()
+	public TileEntity master()
 	{
 		return this;
+	}
+
+	@Override
+	public IIGUI getGUI()
+	{
+		return IIGUI.DATA_MERGER;
 	}
 
 	@Override
@@ -223,14 +280,115 @@ public class TileEntityDataMerger extends TileEntityIEBase implements IPlayerInt
 
 	}
 
-	public enum DataMergerSendMode
+	public static class DataMergeRule implements INBTSerializable<NBTTagCompound>
 	{
-		SEND_ON_BOTH,
-		SEND_LEFT_ONLY,
-		SEND_RIGHT_ONLY,
+		public char variable = 'a';
+		public boolean acceptLeft = true;
+		public boolean acceptRight = true;
+		public boolean triggerForwarding = true;
+
+		/**
+		 * When both side caches hold the variable, true gives priority to right; false gives priority to left.
+		 */
+		public boolean rightOverridesCachedValue = true;
+
+		/**
+		 * When true, the selected cached value can replace the variable already present in the outgoing packet.
+		 * When false, the incoming packet's value is preserved and the cache only fills missing variables.
+		 */
+		public boolean rightOverridesValue = true;
+
+		/**
+		 * -1 means infinite Job. Non-negative values are Requests and are decremented when the rule accepts a variable.
+		 */
+		public int usageLimit = -1;
+
+		public boolean isJob()
+		{
+			return usageLimit < 0;
+		}
+
+		public boolean acceptsSide(boolean fromLeft, boolean fromRight)
+		{
+			return (fromLeft&&acceptLeft)||(fromRight&&acceptRight);
+		}
+
+		public void consumeUse()
+		{
+			if(usageLimit > 0)
+				usageLimit--;
+		}
+
+		public boolean isExpired()
+		{
+			return usageLimit==0;
+		}
+
+		public DataMergeRule copy()
+		{
+			DataMergeRule copy = new DataMergeRule();
+			copy.deserializeNBT(serializeNBT());
+			return copy;
+		}
+
+		public void applyTo(DataPacket outgoing, DataPacket incoming, DataPacket leftCache, DataPacket rightCache)
+		{
+			DataType cached = getSelectedCachedValue(leftCache, rightCache);
+			if(cached==null)
+				return;
+
+			//Preserve the incoming packet value unless this rule is allowed to override it.
+			if(incoming.has(variable)&&!rightOverridesValue)
+				return;
+
+			outgoing.set(variable, cached.clone());
+		}
+
+		private DataType getSelectedCachedValue(DataPacket leftCache, DataPacket rightCache)
+		{
+			boolean hasLeft = acceptLeft&&leftCache.has(variable);
+			boolean hasRight = acceptRight&&rightCache.has(variable);
+
+			if(hasLeft&&hasRight)
+				return rightOverridesCachedValue?rightCache.get(variable): leftCache.get(variable);
+			else if(hasRight)
+				return rightCache.get(variable);
+			else if(hasLeft)
+				return leftCache.get(variable);
+			return null;
+		}
+
+		@Nonnull
+		@Override
+		public NBTTagCompound serializeNBT()
+		{
+			NBTTagCompound nbt = new NBTTagCompound();
+			nbt.setString("variable", String.valueOf(variable));
+			nbt.setBoolean("accept_left", acceptLeft);
+			nbt.setBoolean("accept_right", acceptRight);
+			nbt.setBoolean("trigger_forwarding", triggerForwarding);
+			nbt.setBoolean("right_overrides_cached", rightOverridesCachedValue);
+			nbt.setBoolean("right_overrides_value", rightOverridesValue);
+			nbt.setInteger("usage_limit", usageLimit);
+			return nbt;
+		}
+
+		@Override
+		public void deserializeNBT(NBTTagCompound nbt)
+		{
+			String variableString = nbt.getString("variable");
+			variable = variableString.isEmpty()?'a': variableString.charAt(0);
+
+			acceptLeft = !nbt.hasKey("accept_left")||nbt.getBoolean("accept_left");
+			acceptRight = !nbt.hasKey("accept_right")||nbt.getBoolean("accept_right");
+			triggerForwarding = !nbt.hasKey("trigger_forwarding")||nbt.getBoolean("trigger_forwarding");
+			rightOverridesCachedValue = !nbt.hasKey("right_overrides_cached")||nbt.getBoolean("right_overrides_cached");
+			rightOverridesValue = !nbt.hasKey("right_overrides_value")||nbt.getBoolean("right_overrides_value");
+			usageLimit = nbt.hasKey("usage_limit")?nbt.getInteger("usage_limit"): -1;
+		}
 	}
 
-	enum VariableMergeMode
+	private enum VariableMergeMode
 	{
 		PREFER_RIGHT,
 		FORCE_RIGHT,

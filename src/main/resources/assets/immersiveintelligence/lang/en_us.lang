@@ -629,7 +629,7 @@ tile.immersiveintelligence.metal_device.timed_buffer.name=Timed Buffer
 tile.immersiveintelligence.metal_device.redstone_buffer.name=Redstone Buffer
 tile.immersiveintelligence.metal_device.punchtape_reader.name=Punchtape Reader
 tile.immersiveintelligence.metal_device.data_router.name=Data Router
-tile.immersiveintelligence.metal_device.data_merger.name=Data Combiner
+tile.immersiveintelligence.metal_device.data_merger.name=Data Merger
 
 tile.immersiveintelligence.metal_device.ammunition_crate.name=Ammunition Crate
 tile.immersiveintelligence.metal_device.medic_crate.name=Medical Crate
@@ -1500,10 +1500,6 @@ desc.immersiveintelligence.bullets.armor_penetration=Armor Penetration:
 
 desc.immersiveintelligence.bullet_magazine.remaining=Remaining Bullets: %s
 desc.immersiveintelligence.bullet_magazine.empty=Empty
-
-desc.immersiveintelligence.data_merger.0=Both
-desc.immersiveintelligence.data_merger.1=Left
-desc.immersiveintelligence.data_merger.2=Right
 
 desc.immersiveintelligence.medical_crate.heal=Heal Wounded Entities
 desc.immersiveintelligence.medical_crate.boost=Apply Effects to Entities
@@ -3435,6 +3431,27 @@ ii.gui.data_router.remove_control_variable=Remove Control Variable
 ii.gui.data_router.remove_control_variable.tooltip=When enabled, the control variable will be omitted in the outgoing packet
 ii.gui.data_router.action.allow=Allow
 ii.gui.data_router.action.deny=Deny
+
+ii.gui.data_merger.rule_properties=Merge Rule
+ii.gui.data_merger.inputs=Inputs
+ii.gui.data_merger.override_policy=Overwrite Policy
+ii.gui.data_merger.variable=Variable
+ii.gui.data_merger.accept_left=Accept Left
+ii.gui.data_merger.accept_left.tooltip=Packets coming to the left side of the device will be accepted.
+ii.gui.data_merger.accept_right=Accept Right
+ii.gui.data_merger.accept_right.tooltip=Packets coming to the right side of the device will be accepted.
+ii.gui.data_merger.trigger_forwarding=Mark for sending
+ii.gui.data_merger.trigger_forwarding.tooltip=When this variable is present in a packet, the machine will send the merged data.
+ii.gui.data_merger.usage_limit=Uses left:
+ii.gui.data_merger.usage_limit.tooltip=Empty means this rule is a repeating Job. A number makes it an expiring Request.
+ii.gui.data_merger.right_overrides_cached=Right Overrides Cache
+ii.gui.data_merger.right_overrides_cached.tooltip=When both side caches contain this variable, the right-side cached value wins.
+ii.gui.data_merger.right_overrides_value=Right Overrides Output
+ii.gui.data_merger.right_overrides_value.tooltip=When enabled, the selected cached value may replace the value already present in the outgoing packet.
+ii.gui.data_merger.left=Left
+ii.gui.data_merger.right=Right
+ii.gui.data_merger.send=Send
+
 
 #GUI HelpBoxes
 ii.gui_help.data_input_machine.programming=These slots allow reading a punchtape into the DIM's memory or writing its contents into an empty one.
