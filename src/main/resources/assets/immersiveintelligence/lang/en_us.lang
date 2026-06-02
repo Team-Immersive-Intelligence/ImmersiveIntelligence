@@ -1423,8 +1423,15 @@ desc.immersiveintelligence.diplomacy.permission_level.allies_allow=Allies
 desc.immersiveintelligence.diplomacy.permission_level.others_allow=Others
 desc.immersiveintelligence.diplomacy.permission_level.enemy_allow=Enemies
 
-#Bullets
+#Directions
+desc.immersiveintelligence.side.down=Down
+desc.immersiveintelligence.side.up=Up
+desc.immersiveintelligence.side.north=North
+desc.immersiveintelligence.side.south=South
+desc.immersiveintelligence.side.west=West
+desc.immersiveintelligence.side.east=East
 
+#Bullets
 desc.immersiveintelligence.bullet_type.general_purpose=General Purpose
 desc.immersiveintelligence.bullet_type.shrapnel=Shrapnel
 desc.immersiveintelligence.bullet_type.piercing=Armor Piercing
@@ -3408,6 +3415,26 @@ ii.gui.ammunition_assembler.fuse_config.timed=Time:
 ii.gui.ammunition_assembler.fuse_config.timed.tooltip=Time before fuse triggers (in ticks)
 ii.gui.ammunition_assembler.fuse_config.proximity=Distance:
 ii.gui.ammunition_assembler.fuse_config.proximity.tooltip=Required distance to a solid object to trigger the fuse (in blocks)
+
+ii.gui.data_router.into=Into side: %s
+ii.gui.data_router.rule_editor=Data Routing Rule
+ii.gui.data_router.rule_properties=Rule Properties
+ii.gui.data_router.routing=Routing
+ii.gui.data_router.packet_filters=Packet Filters
+ii.gui.data_router.incoming=Inputs:
+ii.gui.data_router.incoming.tooltip=Direction of the inbound packet for this rule to apply.
+ii.gui.data_router.outgoing=Output:
+ii.gui.data_router.outgoing.tooltip=Direction the outbound packet will be sent to under this rule.
+ii.gui.data_router.action=Action:
+ii.gui.data_router.action.tooltip=Determines what happens to packets matching this rule.
+ii.gui.data_router.filter.color=Color
+ii.gui.data_router.filter.address=Address
+ii.gui.data_router.required_variables=Required Variables
+ii.gui.data_router.filter.value=Match Value
+ii.gui.data_router.remove_control_variable=Remove Control Variable
+ii.gui.data_router.remove_control_variable.tooltip=When enabled, the control variable will be omitted in the outgoing packet
+ii.gui.data_router.action.allow=Allow
+ii.gui.data_router.action.deny=Deny
 
 #GUI HelpBoxes
 ii.gui_help.data_input_machine.programming=These slots allow reading a punchtape into the DIM's memory or writing its contents into an empty one.

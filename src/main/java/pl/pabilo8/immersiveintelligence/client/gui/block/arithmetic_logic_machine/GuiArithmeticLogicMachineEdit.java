@@ -203,7 +203,7 @@ public class GuiArithmeticLogicMachineEdit extends DecoTileGui<TileEntityArithme
 		addComponents(
 				new DecoButton(xSize-48-4-4-4-2, 128+8-16+32-2+3+16+2+4)
 						.withBackground(DecoTextures.COMPONENT_BUTTON_ROUND)
-						.withText("desc.immersiveintelligence.variable_apply")
+						.withText("ii.gui.button.apply")
 						.withSize(48, 12)
 						.withOnPressed((gui, button, mouseX, mouseY) -> {
 							cancel = false;
@@ -211,7 +211,7 @@ public class GuiArithmeticLogicMachineEdit extends DecoTileGui<TileEntityArithme
 						}),
 				new DecoButton(xSize-48*2-4-4-4-2, 128+8+32-16-2+3+16+2+4)
 						.withBackground(DecoTextures.COMPONENT_BUTTON_ROUND)
-						.withText("Cancel")
+						.withText("ii.gui.button.cancel")
 						.withSize(48, 12)
 						.withOnPressed((gui, button, mouseX, mouseY) -> {
 							cancel = true;

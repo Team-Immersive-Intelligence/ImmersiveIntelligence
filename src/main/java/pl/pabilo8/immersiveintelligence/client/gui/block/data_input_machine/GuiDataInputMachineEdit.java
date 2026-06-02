@@ -128,7 +128,7 @@ public class GuiDataInputMachineEdit extends DecoTileGui<TileEntityDataInputMach
 
 				new DecoButton(xSize-48-4-4-4-2, 153)
 						.withBackground(DecoTextures.COMPONENT_BUTTON_ROUND)
-						.withText("Apply")
+						.withText("ii.gui.button.apply")
 						.withSize(48, 12)
 						.withOnPressed((gui, button, mouseX, mouseY) -> {
 							cancel = false;
@@ -136,7 +136,7 @@ public class GuiDataInputMachineEdit extends DecoTileGui<TileEntityDataInputMach
 						}),
 				new DecoButton(xSize-96-4-4-4-2, 153)
 						.withBackground(DecoTextures.COMPONENT_BUTTON_ROUND)
-						.withText("Cancel")
+						.withText("ii.gui.button.cancel")
 						.withSize(48, 12)
 						.withOnPressed((gui, button, mouseX, mouseY) -> {
 							cancel = true;

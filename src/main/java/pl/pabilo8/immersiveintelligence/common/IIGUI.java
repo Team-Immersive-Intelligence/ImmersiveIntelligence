@@ -20,6 +20,8 @@ import pl.pabilo8.immersiveintelligence.client.gui.block.arithmetic_logic_machin
 import pl.pabilo8.immersiveintelligence.client.gui.block.arithmetic_logic_machine.GuiArithmeticLogicMachineEdit;
 import pl.pabilo8.immersiveintelligence.client.gui.block.data_input_machine.GuiDataInputMachine;
 import pl.pabilo8.immersiveintelligence.client.gui.block.data_input_machine.GuiDataInputMachineEdit;
+import pl.pabilo8.immersiveintelligence.client.gui.block.data_router.GuiDataRouter;
+import pl.pabilo8.immersiveintelligence.client.gui.block.data_router.GuiDataRouterEdit;
 import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageConfig;
 import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageFireMissions;
 import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageStorage;
@@ -40,6 +42,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.entity.GuiEntityUpgrade;
 import pl.pabilo8.immersiveintelligence.client.gui.item.GuiCasingPouch;
 import pl.pabilo8.immersiveintelligence.client.gui.item.GuiPrintedPage;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity.TileEntityDataMerger;
+import pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity.TileEntityDataRouter;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.TileEntityMetalCrate;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate.TileEntityAmmunitionCrate;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate.TileEntityMedicalCrate;
@@ -124,6 +127,8 @@ public enum IIGUI implements ISerializableEnum
 	FUEL_STATION(TileEntityFuelStation.class, ContainerFuelStation::new),
 
 	DATA_MERGER(TileEntityDataMerger.class, ContainerDataMerger::new),
+	DATA_ROUTER(TileEntityDataRouter.class, ContainerDataRouter::getMainGui),
+	DATA_ROUTER_EDIT(TileEntityDataRouter.class, ContainerDataRouter::getEditGui),
 	INSERTER(TileEntityInserterBase.class, ContainerInserter::new),
 
 	GEARBOX(TileEntityGearbox.class, ContainerGearbox::new),
@@ -249,6 +254,8 @@ public enum IIGUI implements ISerializableEnum
 		IIGUI.PRECISION_ASSEMBLER.setClientTileGui(GuiPrecisionAssembler::new);
 		IIGUI.FUEL_STATION.setClientTileGui(GuiFuelStation::new);
 		IIGUI.DATA_MERGER.setClientGui(GuiDataMerger::new);
+		IIGUI.DATA_ROUTER.setClientTileGui(GuiDataRouter::new);
+		IIGUI.DATA_ROUTER_EDIT.setClientTileGui(GuiDataRouterEdit::new);
 		IIGUI.INSERTER.setClientTileGui(GuiInserter::new);
 		//Crates
 		IIGUI.METAL_CRATE.setClientTileGui(GuiMetalCrate::new);
