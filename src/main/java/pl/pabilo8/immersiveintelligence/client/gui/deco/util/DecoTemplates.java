@@ -5,6 +5,7 @@ import net.minecraft.item.EnumDyeColor;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType.TypeMetaInfo;
 import pl.pabilo8.immersiveintelligence.api.rotary.IRotaryEnergy;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent.DecoComponentTemplate;
@@ -165,4 +166,30 @@ public class DecoTemplates
 					})
 			);
 
+	public static DecoEntryPanelBuilder<TypeMetaInfo<?>> getDataTypeEntryDisplay()
+	{
+		return new DecoEntryPanelBuilder<TypeMetaInfo<?>>()
+				.withHeight(18)
+				.withBackground(DecoTextures.BG_PAPER)
+				.withBackgroundMask(DecoTextures.TEMPLATE_PAPER)
+				//Type Icon, Label, and Letter
+				.withComponent("image", new DecoImage(3, 1)
+						.withSize(16, 16))
+				.withLabel("typeLabel",
+						new DecoLabel(IIClientUtils.fontRegular, 20, 1)
+								.withSize(48, 18)
+								.withAlign(DecoAlignment.LEFT)
+								.withText("Integer")
+				)
+				.withElementApplyMethod((typeMeta, panel) -> {
+					//type label (f.e. integer)
+					panel.label("typeLabel")
+							.withText(typeMeta.getTranslatedName())
+							.withTextColor(typeMeta.color.withBrightness(0.4f));
+					//type icon
+					panel.component("image", DecoImage.class)
+							.withImageLocation(typeMeta.getTextureLocation(), true);
+				})
+				.withElementTooltip(typeMeta -> "a");
+	}
 }

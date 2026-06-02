@@ -1270,13 +1270,23 @@ desc.immersiveintelligence.variable_send_packet=Send Packet
 desc.immersiveintelligence.variable_send_packet_desc=Sends the current packet to data network
 desc.immersiveintelligence.variable_remove_desc=Remove a variable
 desc.immersiveintelligence.variable_properties=Properties
+desc.immersiveintelligence.variable_properties.tooltip=Edit expression properties, like conditional variables.
 desc.immersiveintelligence.variable_value=Value:
 desc.immersiveintelligence.operation=Operation:
+
 desc.immersiveintelligence.conditional_variable=Conditional Variable:
+desc.immersiveintelligence.conditional_variable.enabled=Use condition
+desc.immersiveintelligence.conditional_variable.enabled.tooltip=When enabled, the expression will not run, unless the selected variable is present in the packet operated on
+desc.immersiveintelligence.conditional_variable.tooltip=Variable required for this expression to run
+
+desc.immersiveintelligence.expression.accessor.tooltip=Use a variable from the received packet instead of a literal value
+desc.immersiveintelligence.expression.condition.info=When enabled, this expression only runs if the selected variable exists in the received packet.
+
 desc.immersiveintelligence.no_variable=None
 desc.immersiveintelligence.variable=Variable:
 desc.immersiveintelligence.variable_apply=Apply
 desc.immersiveintelligence.variable_remove=Remove
+desc.immersiveintelligence.no_editor=No editor available.
 
 desc.immersiveintelligence.diplomacy.ownedby=Property of %s
 desc.immersiveintelligence.diplomacy.noowner=Abandoned Property

@@ -2,15 +2,12 @@ package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multibloc
 
 import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
 import blusunrize.immersiveengineering.common.util.Utils;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
-import org.apache.commons.lang3.ArrayUtils;
-import net.minecraft.entity.player.EntityPlayer;
-import javax.annotation.Nullable;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
-import pl.pabilo8.immersiveintelligence.api.data.IIDataHandlingUtils;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.api.upgrade.IManagedUpgradableDevice;
@@ -34,14 +31,15 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockIn
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @author Avalon (avalon@iiteam.net)
  * @updated 08.01.2024
  * @ii-approved 0.3.1
- * @since 28.06.2019
  * @updated 03.30.2026
+ * @since 28.06.2019
  */
 public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockIIGeneric<TileEntityArithmeticLogicMachine>
 		implements IIIGuiMultiblockTile, IBooleanAnimatedPartsBlock, IManagedUpgradableDevice<TileEntityArithmeticLogicMachine>
@@ -85,18 +83,25 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockIIGene
 	public void receiveMessageFromClient(@Nonnull NBTTagCompound message)
 	{
 		super.receiveMessageFromClient(message);
-		//Receive edits from GUI
+		//Receive expression edits from the circuit editor GUI
 		if(message.hasKey("expressions"))
 		{
-			//Get updated expressions
 			NBTTagCompound expressions = message.getCompoundTag("expressions");
 			int page = expressions.getInteger("page");
 
+			if(page < 0||page >= inventory.size())
+				return;
+
 			//Update circuit stack
 			ItemStack stack = inventory.get(page);
+			if(stack.isEmpty()||!(stack.getItem() instanceof ItemIIFunctionalCircuit))
+				return;
+
 			DataPacket packet = new DataPacket(expressions.getCompoundTag("list"));
 			((ItemIIFunctionalCircuit)stack.getItem()).writeDataToItem(stack, packet);
 			inventory.set(page, stack);
+			markDirty();
+			forceTileUpdate();
 		}
 	}
 
@@ -116,8 +121,10 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockIIGene
 		{
 			case ENERGY_INPUT:
 				return getPOI("energy");
-			case DATA:
-				return getPOI("data");
+			case DATA_INPUT:
+				return getPOI("data_in");
+			case DATA_OUTPUT:
+				return getPOI("data_out");
 			case MISC_CONTROL_PANEL:
 				return getPOI("front_panel");
 			case MISC_CRATE:
@@ -132,11 +139,11 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockIIGene
 	public void receiveData(DataPacket packet, int pos)
 	{
 		//Prepare reply packet
-		boolean fromLeft = ArrayUtils.contains(getPOI("data_left"), pos);
 		DataPacket newPacket = packet.clone();
 
 		//Process received packet with circuits
-		int circuitsAmount = isUpgradeInstalled(IIContent.UPGRADE_CIRCUIT_RACKS)?MultiblockArithmeticLogicMachine.CIRCUITS_UPGRADED: MultiblockArithmeticLogicMachine.CIRCUITS_BASE;
+		int circuitsAmount = isUpgradeInstalled(IIContent.UPGRADE_CIRCUIT_RACKS)?MultiblockArithmeticLogicMachine.CIRCUITS_UPGRADED:
+				MultiblockArithmeticLogicMachine.CIRCUITS_BASE;
 		boolean[] circuit = new boolean[circuitsAmount];
 		DataPacket[] cPacket = new DataPacket[circuitsAmount];
 
@@ -168,17 +175,14 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockIIGene
 					DataTypeExpression exp = ((DataTypeExpression)var);
 					char condition = exp.getRequiredVariable();
 
-					//Respect condition, if set
-					if(condition==' '||IIDataHandlingUtils.asBoolean(condition, packet))
+					//Respect condition, if set: expressions with a required variable only run when that variable is present in the input packet.
+					if(condition==' '||packet.has(condition))
 						newPacket.set(c, exp.getValue(newPacket));
 				}
 			}
 
 		//Send reply to opposite side
-		sendData(newPacket,
-				fromLeft?facing.rotateY(): facing.rotateYCCW(),
-				(fromLeft?getPOI("data_right"): getPOI("data_left"))[0]
-		);
+		sendData(newPacket, getDirection("data_out"), getPOI("data_out")[0]);
 	}
 
 	@Override
