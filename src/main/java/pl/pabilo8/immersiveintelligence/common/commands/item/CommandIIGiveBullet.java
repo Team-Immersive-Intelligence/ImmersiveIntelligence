@@ -17,6 +17,7 @@ import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoFactory;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -63,7 +64,7 @@ public class CommandIIGiveBullet extends CommandBase
 			IAmmoTypeItem<?, ?> ammoType = AmmoRegistry.getAmmoItem(args[1]);
 			AmmoCore core = AmmoRegistry.getCore(args[2]);
 			CoreType coreType = CoreType.v(args[3]);
-			FuseType fuse = FuseType.v(args[4]);
+			FuseType fuse = IIUtils.enumValue(FuseType.class, args[4]);
 
 			//Load components
 			ArrayList<AmmoComponent> components = new ArrayList<>();

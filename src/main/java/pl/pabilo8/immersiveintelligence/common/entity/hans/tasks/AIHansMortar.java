@@ -12,7 +12,7 @@ import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseType;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoUtils;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityMortar;
+import pl.pabilo8.immersiveintelligence.common.entity.mounted_weapon.EntityMortar;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
@@ -74,8 +74,13 @@ public class AIHansMortar extends EntityAIBase
 
 			float pp = getAnglePrediction(mortar.getPositionVector().addVector(0, 1, 0), t.getPositionVector(), new Vec3d(t.motionX, t.motionY, t.motionZ))[1];
 
-			mortar.gunPitchUp = (90+mortar.rotationPitch)-pp < 0;
-			mortar.gunPitchDown = (90+mortar.rotationPitch)-pp > 0;
+			boolean pitchUp = (90+mortar.rotationPitch)-pp < 0;
+			boolean pitchDown = (90+mortar.rotationPitch)-pp > 0;
+			if(mortar.controls!=null)
+			{
+				mortar.controls.setKey("pitchUp", pitchUp);
+				mortar.controls.setKey("pitchDown", pitchDown);
+			}
 			if(Math.abs((90+mortar.rotationPitch)-pp) <= 5)
 			{
 				if(hans.getHeldItemMainhand().isEmpty())
@@ -86,11 +91,13 @@ public class AIHansMortar extends EntityAIBase
 					hans.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, shell);
 				}
 
-				if(mortar.shootingProgress==0)
-					mortar.fireKeyPress = true;
-
-				if(mortar.fireKeyPress)
-					mortar.getEntityWorld().getEntitiesWithinAABB(EntityItem.class, mortar.getEntityBoundingBox()).forEach(Entity::setDead);
+				if(mortar.controls!=null)
+				{
+					if(mortar.shootingProgress==0)
+						mortar.controls.setKey("fire", true);
+					if(mortar.controls.getKey("fire"))
+						mortar.getEntityWorld().getEntitiesWithinAABB(EntityItem.class, mortar.getEntityBoundingBox()).forEach(Entity::setDead);
+				}
 			}
 		}
 	}

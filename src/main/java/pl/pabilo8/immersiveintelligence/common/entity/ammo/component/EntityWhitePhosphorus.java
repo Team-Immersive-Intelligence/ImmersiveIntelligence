@@ -1,31 +1,28 @@
 package pl.pabilo8.immersiveintelligence.common.entity.ammo.component;
 
 import blusunrize.immersiveengineering.common.entities.EntityIEProjectile;
-import blusunrize.immersiveengineering.common.util.IEPotions;
-import blusunrize.immersiveengineering.common.util.Utils;
 import com.elytradev.mirage.event.GatherLightsEvent;
 import com.elytradev.mirage.lighting.ILightEventConsumer;
 import com.elytradev.mirage.lighting.Light;
-import net.minecraft.entity.EntityAreaEffectCloud;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
-import net.minecraft.world.Explosion;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.Optional.Interface;
+import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.client.fx.utils.IIParticleUtils;
 import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleProperties;
 import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleRegistry;
-import pl.pabilo8.immersiveintelligence.common.IIPotions;
-import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.entity.IIEntityUtils;
 
 import javax.vecmath.Vector2f;
@@ -35,11 +32,12 @@ import javax.vecmath.Vector2f;
  * @since 26.10.2019
  */
 @Interface(iface = "com.elytradev.mirage.lighting.ILightEventConsumer", modid = "mirage")
-public class EntityWhitePhosphorus extends EntityIEProjectile implements ILightEventConsumer
+public class EntityWhitePhosphorus extends EntityIEProjectile implements ILightEventConsumer, IEntityAdditionalSpawnData
 {
 	public EntityWhitePhosphorus(World world)
 	{
 		super(world);
+		setTickLimit(8);
 	}
 
 	public EntityWhitePhosphorus(World world, double x, double y, double z, double ax, double ay, double az)
@@ -56,7 +54,7 @@ public class EntityWhitePhosphorus extends EntityIEProjectile implements ILightE
 	@Override
 	public double getGravity()
 	{
-		return 0.07F;
+		return 0.004F;
 	}
 
 	/**
@@ -66,17 +64,24 @@ public class EntityWhitePhosphorus extends EntityIEProjectile implements ILightE
 	public void onEntityUpdate()
 	{
 		super.onEntityUpdate();
-		if(getEntityWorld().isRemote)
+		if(world.isRemote)
 			spawnTracerParticles();
 	}
 
 	@SideOnly(Side.CLIENT)
 	private void spawnTracerParticles()
 	{
-		ParticleRegistry.spawnParticle("ammo/tracer", getPositionVector(), IIEntityUtils.getEntityMotion(this), new Vector2f(0, 0))
-				.withProperty(ParticleProperties.COLOR, IIColor.WHITE)
-				.withProperty(ParticleProperties.SIZE, 0.4f)
-				.withProperty(ParticleProperties.MAX_LIFETIME, 20);
+		ParticleRegistry.spawnParticle("phosphorus/ember", getPositionVector(), IIEntityUtils.getEntityMotion(this), new Vector2f(0, 0))
+				.withProperty(ParticleProperties.SIZE, 0.25f-(0.07f*(ticksExisted/7f)));
+		ParticleRegistry.spawnParticle("phosphorus/smoke_trace", getPositionVector(), Vec3d.ZERO, new Vector2f(0, 0))
+				.withProperty(ParticleProperties.SIZE, 0.8f-(0.5f*(ticksExisted/7f)));
+		if(ticksExisted < 7)
+			for(int i = 0; i < IIParticleUtils.randInt.get()%3; i++)
+				ParticleRegistry.spawnParticle("phosphorus/smoke_graceful", getPositionVector()
+								.addVector(0, 0.5, 0)
+								.add(IIParticleUtils.getRandXZ().scale(0.5f)),
+						Vec3d.ZERO, new Vector2f(0, 0));
+
 	}
 
 	/**
@@ -85,32 +90,22 @@ public class EntityWhitePhosphorus extends EntityIEProjectile implements ILightE
 	@Override
 	public void setFire(int seconds)
 	{
-		super.setFire(seconds);
+
 	}
 
 	@Override
 	public void onImpact(RayTraceResult mop)
 	{
-		if(!this.world.isRemote&&mop.typeOfHit!=Type.MISS&&world!=null&&mop.getBlockPos()!=null)
+		if(!this.world.isRemote&&mop.typeOfHit!=Type.MISS)
 		{
-			Explosion explosion = new Explosion(world, this, posX, posY, posZ, 1, true, false);
-			explosion.doExplosionA();
-			explosion.doExplosionB(false);
-
-			world.playSound(null, mop.getBlockPos(), SoundEvents.BLOCK_LAVA_EXTINGUISH, SoundCategory.BLOCKS, 0.125f, 1f);
-
-			EntityAreaEffectCloud cloud = new EntityAreaEffectCloud(world, mop.getBlockPos().getX(), mop.getBlockPos().getY()+1f, mop.getBlockPos().getZ());
-			cloud.addEffect(new PotionEffect(IIPotions.brokenArmor, Math.round(180), 1));
-			cloud.addEffect(new PotionEffect(IEPotions.flammable, Math.round(180), 2));
-			cloud.addEffect(new PotionEffect(IEPotions.stunned, Math.round(80), 1));
-			cloud.addEffect(new PotionEffect(IEPotions.flashed, Math.round(120), 1));
-			cloud.setRadius(6f);
-			cloud.setDuration(Math.round(30f+(10f*Utils.RAND.nextFloat())));
-			cloud.setParticle(EnumParticleTypes.CLOUD);
-			world.spawnEntity(cloud);
-
-			world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(getPosition()).grow(0.5f)).forEach(entityLivingBase -> entityLivingBase.setFire(40));
-
+			//Ignore other white phosphorus
+			if(mop.typeOfHit==Type.ENTITY&&mop.entityHit instanceof EntityWhitePhosphorus)
+				return;
+			//Set hit entity to fire
+			BlockPos hitPos = new BlockPos(mop.hitVec);
+			world.playSound(null, hitPos, SoundEvents.BLOCK_LAVA_EXTINGUISH, SoundCategory.BLOCKS, 0.125f, 1f);
+			world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(hitPos).grow(0.5f))
+					.forEach(entityLivingBase -> entityLivingBase.setFire(40));
 			setDead();
 		}
 	}
@@ -147,5 +142,27 @@ public class EntityWhitePhosphorus extends EntityIEProjectile implements ILightE
 				.color(1, 1, 1)
 				.radius(.05f)
 				.build());
+	}
+
+	@Override
+	public void writeSpawnData(ByteBuf buffer)
+	{
+		buffer.writeDouble(posX);
+		buffer.writeDouble(posY);
+		buffer.writeDouble(posZ);
+		buffer.writeDouble(motionX);
+		buffer.writeDouble(motionY);
+		buffer.writeDouble(motionZ);
+	}
+
+	@Override
+	public void readSpawnData(ByteBuf additionalData)
+	{
+		posX = additionalData.readDouble();
+		posY = additionalData.readDouble();
+		posZ = additionalData.readDouble();
+		motionX = additionalData.readDouble();
+		motionY = additionalData.readDouble();
+		motionZ = additionalData.readDouble();
 	}
 }

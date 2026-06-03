@@ -19,7 +19,11 @@ import net.minecraftforge.fluids.FluidUtil;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeTechTree;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Vehicles.Motorbike;
-import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.*;
+import pl.pabilo8.immersiveintelligence.common.IISounds;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleBlueprint;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleControls;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleFuelTank;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleType;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.*;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleSeat.SeatInfo;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.propulsion.VehicleEngineFuelBased;
@@ -29,6 +33,7 @@ import pl.pabilo8.immersiveintelligence.common.util.IIDamageSources;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.entity.IIEntityUtils;
+import pl.pabilo8.immersiveintelligence.common.util.entity.SyncedDurability;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -50,15 +55,16 @@ public class EntityTrackedMotorbike extends EntityVehicleBase<EntityTrackedMotor
 	public EntityVehiclePart<EntityTrackedMotorbike> partDriverSeat, partPassengerSeat;
 	public SeatInfo<EntityTrackedMotorbike> seatDriver, seatPassenger, seatTowed;
 
+	@SyncNBT(events = SyncEvents.ENTITY_VEHICLE_CONTROLS)
+	public VehicleControls driverControls;
+
 	@SyncNBT(events = SyncEvents.ENTITY_DAMAGED)
-	public VehicleDurability frontWheelDurability, backWheelDurability, engineDurability, fuelTankDurability;
+	public SyncedDurability frontWheelDurability, backWheelDurability, engineDurability, fuelTankDurability;
 
 	@SyncNBT(events = SyncEvents.ENTITY_VEHICLE_FUEL, time = 40)
 	public VehicleFuelTank<EntityTrackedMotorbike> fuelTank;
-	@SyncNBT(events = SyncEvents.ENTITY_VEHICLE_CONTROLS)
-	public VehicleControls driverControls;
 	@SyncNBT(events = SyncEvents.ENTITY_VEHICLE_FUEL)
-	public VehicleEngineFuelBased engine;
+	public VehicleEngineFuelBased<EntityTrackedMotorbike> engine;
 	@SyncNBT(events = SyncEvents.ENTITY_VEHICLE_FUEL)
 	public VehicleTransmission<EntityTrackedMotorbike> transmission1, transmission2;
 
@@ -72,11 +78,11 @@ public class EntityTrackedMotorbike extends EntityVehicleBase<EntityTrackedMotor
 	protected EntityVehiclePart<EntityTrackedMotorbike>[] vehicleInit()
 	{
 		//Hitboxes
-		this.frontWheelDurability = new VehicleDurability(Motorbike.wheelDurability, 0);
-		this.backWheelDurability = new VehicleDurability(Motorbike.wheelDurability, 0);
-		this.engineDurability = new VehicleDurability(Motorbike.engineDurability, 7)
+		this.frontWheelDurability = new SyncedDurability(Motorbike.wheelDurability, 0);
+		this.backWheelDurability = new SyncedDurability(Motorbike.wheelDurability, 0);
+		this.engineDurability = new SyncedDurability(Motorbike.engineDurability, 7)
 				.withParent(this.durabilityMain);
-		this.fuelTankDurability = new VehicleDurability(Motorbike.fuelTankDurability, 4)
+		this.fuelTankDurability = new SyncedDurability(Motorbike.fuelTankDurability, 4)
 				.withParent(this.durabilityMain);
 
 		//Controls
@@ -155,8 +161,11 @@ public class EntityTrackedMotorbike extends EntityVehicleBase<EntityTrackedMotor
 		//Components
 		this.fuelTank = new VehicleFuelTank<>(this, 12000)
 				.withDurability(fuelTankDurability);
-		this.engine = new VehicleEngineFuelBased(fuelTank)
-				.withDurability(engineDurability);
+		this.engine = new VehicleEngineFuelBased<>(this, fuelTank)
+				.withDurability(engineDurability)
+				.withEngineSound(IISounds.engineLightLoop, 0.95f, 1.25f)
+				.withSpeedTorque(360, 80)
+				.withFuelUsage(4, 40);
 		this.transmission1 = new VehicleTransmission<EntityTrackedMotorbike>(this.engine)
 				.withDurability(engineDurability)
 				.withRatios(20, 0.5, 1)

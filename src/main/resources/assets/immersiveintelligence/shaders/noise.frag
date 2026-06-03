@@ -2,7 +2,9 @@
 
 //Author: Pabilo8 (pabilo@iiteam.net)
 uniform float time;
-uniform sampler2D bgl_RenderedTexture;
+
+uniform sampler2D texture;
+uniform sampler2D lightmap;
 
 float noise(in vec2 coordinate, in float seed)
 {
@@ -12,6 +14,9 @@ float noise(in vec2 coordinate, in float seed)
 
 void main()
 {
+    vec4 tex = texture2D(texture, gl_TexCoord[0].st);
+    vec4 light = texture2D(lightmap, gl_TexCoord[1].st);
     float n = (noise(vec2(gl_TexCoord[0]), time) - 0.5) * 0.25;
-    gl_FragColor = texture2D(bgl_RenderedTexture, vec2(gl_TexCoord[0])) * gl_Color * vec4(1-n, 1-n, 1-n, 1);
+
+    gl_FragColor = tex * gl_Color * light * vec4(1-n, 1-n, 1-n, 1);
 }

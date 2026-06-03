@@ -1,0 +1,12 @@
+# Made by Pabilo8 with Blockbench
+
+newmtl hans
+map_Kd immersiveintelligence:entity/hans
+newmtl wheel_12
+map_Kd immersiveintelligence:entity/vehicle/suspension/wheel_12
+newmtl anti_aircraft_gun_painted
+map_Kd immersiveintelligence:entity/vehicle/field_gun/anti_aircraft_gun_painted
+newmtl anti_aircraft_gun
+map_Kd immersiveintelligence:entity/vehicle/field_gun/anti_aircraft_gun
+newmtl common_camo_net
+map_Kd immersiveintelligence:blocks/common/camo_net/common_camo_net

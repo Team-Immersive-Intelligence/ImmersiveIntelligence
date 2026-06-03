@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.api.crafting;
 
-import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -30,7 +29,7 @@ public class BulletComponentStack implements INBTSerializable<NBTTagCompound>
 	{
 		this.name = name;
 		this.amount = amount;
-		this.tagCompound = tag;
+		this.tagCompound = tag.copy();
 
 		Optional<AmmoComponent> first = AmmoRegistry.getAllComponents().stream()
 				.filter(comp -> this.name.equals(comp.getName()))
@@ -41,12 +40,22 @@ public class BulletComponentStack implements INBTSerializable<NBTTagCompound>
 
 	public BulletComponentStack(AmmoComponent component, @Nullable NBTTagCompound tag)
 	{
-		this(component.getName(), 16, tag==null?new NBTTagCompound(): tag);
+		this(component, 16, tag);
+	}
+
+	public BulletComponentStack(AmmoComponent component, int amount, @Nullable NBTTagCompound tag)
+	{
+		this(component.getName(), amount, tag==null?new NBTTagCompound(): tag);
 	}
 
 	public BulletComponentStack()
 	{
 		this("", 0, new NBTTagCompound());
+	}
+
+	public BulletComponentStack copy()
+	{
+		return new BulletComponentStack(name, amount, tagCompound);
 	}
 
 	@Override
@@ -55,7 +64,7 @@ public class BulletComponentStack implements INBTSerializable<NBTTagCompound>
 		NBTTagCompound nbt = new NBTTagCompound();
 		nbt.setString("name", name);
 		nbt.setInteger("amount", amount);
-		nbt.setTag("nbt", tagCompound);
+		nbt.setTag("nbt", tagCompound.copy());
 
 		return nbt;
 	}
@@ -65,7 +74,7 @@ public class BulletComponentStack implements INBTSerializable<NBTTagCompound>
 	{
 		name = nbt.getString("name");
 		amount = nbt.getInteger("amount");
-		tagCompound = nbt.getCompoundTag("nbt");
+		tagCompound = nbt.getCompoundTag("nbt").copy();
 
 		Optional<AmmoComponent> first = AmmoRegistry.getAllComponents().stream()
 				.filter(comp -> this.name.equals(comp.getName()))
@@ -76,7 +85,7 @@ public class BulletComponentStack implements INBTSerializable<NBTTagCompound>
 
 	public boolean isEmpty()
 	{
-		return name.isEmpty()||amount==0;
+		return name.isEmpty()||amount==0||component==null;
 	}
 
 	public boolean isFluid()
@@ -86,30 +95,34 @@ public class BulletComponentStack implements INBTSerializable<NBTTagCompound>
 
 	public boolean matches(ItemStack stack)
 	{
-		if(isEmpty()||component==null)
+		if(isEmpty())
 			return true;
+		if(stack.isEmpty()||component==null)
+			return false;
 
 		NBTTagCompound stackTag = stack.getTagCompound();
 		if(stackTag==null)
 			stackTag = new NBTTagCompound();
 
-		return component.getName().equals(name)&&this.tagCompound.equals(stackTag);
+		return component.getMaterial().matchesItemStackIgnoringSize(stack)&&this.tagCompound.equals(stackTag);
 	}
 
 	public boolean matches(FluidStack fs)
 	{
 		if(isEmpty())
 			return true;
+		if(fs==null||component==null||component.getMaterial().fluid==null)
+			return false;
 
 		NBTTagCompound stackTag = fs.tag==null?new NBTTagCompound(): fs.tag;
 
-		return fs.getFluid().getName().equals(name)&&this.tagCompound.equals(stackTag);
+		return fs.isFluidEqual(component.getMaterial().fluid)&&this.tagCompound.equals(stackTag);
 	}
 
 	public void subtract(int amount)
 	{
 		this.amount = Math.max(0, this.amount-amount);
-		if(amount==0)
+		if(this.amount==0)
 		{
 			tagCompound = new NBTTagCompound();
 			name = "";
@@ -135,7 +148,7 @@ public class BulletComponentStack implements INBTSerializable<NBTTagCompound>
 	@SideOnly(Side.CLIENT)
 	public String getTranslatedName()
 	{
-		return I18n.format("ie.manual.entry.bullet_component."+name);
+		return component!=null?component.getTranslatedName(): "";
 	}
 
 	public AmmoComponent getComponent()

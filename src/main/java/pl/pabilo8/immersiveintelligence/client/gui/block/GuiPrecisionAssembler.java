@@ -3,7 +3,7 @@ package pl.pabilo8.immersiveintelligence.client.gui.block;
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTileGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage.ImageAnimationDirection;
@@ -25,7 +25,7 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockIn
  */
 
 @DecoTemplate(name = "precision_assembler", category = DecoGuiCategory.PRODUCTION_TILE)
-public class GuiPrecisionAssembler extends DecoGui<TileEntityPrecisionAssembler, ContainerPrecisionAssembler>
+public class GuiPrecisionAssembler extends DecoTileGui<TileEntityPrecisionAssembler, ContainerPrecisionAssembler>
 {
 	@DecoResource
 	public static final ResourceLocation TEXTURE_PRE = IIReference.RES_II.with("gui/precision_assembler");

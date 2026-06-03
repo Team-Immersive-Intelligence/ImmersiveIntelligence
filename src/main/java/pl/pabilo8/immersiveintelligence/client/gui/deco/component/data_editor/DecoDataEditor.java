@@ -75,7 +75,7 @@ public abstract class DecoDataEditor<T extends DataType> extends DecoPanel
 	{
 		return EDITORS.keySet().stream()
 				.map(IIDataTypeUtils.metaTypesByClass::get)
-				//.filter(typeMetaInfo -> !advanced||typeMetaInfo.isAdvancedType())
+				.filter(typeMetaInfo -> advanced||!typeMetaInfo.isAdvancedType())
 				.collect(Collectors.toList());
 	}
 

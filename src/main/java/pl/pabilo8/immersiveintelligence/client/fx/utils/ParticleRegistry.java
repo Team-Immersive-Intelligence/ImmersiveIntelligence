@@ -2,10 +2,7 @@ package pl.pabilo8.immersiveintelligence.client.fx.utils;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
 import com.google.gson.JsonObject;
-import net.minecraft.client.particle.Particle;
-import net.minecraft.client.particle.ParticleCloud;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -16,17 +13,20 @@ import net.minecraftforge.fml.common.toposort.TopologicalSort;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.ammo.PenetrationRegistry;
+import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.fx.factories.ParticleFactory;
 import pl.pabilo8.immersiveintelligence.client.fx.particles.AbstractParticle;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
-import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.util.*;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import javax.annotation.Nullable;
 import javax.vecmath.Vector2f;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -395,89 +395,24 @@ public class ParticleRegistry
 
 			}
 		}
-
-	}
-
-	public static void spawnGunfireFX(Vec3d pos, Vec3d direction, float size)
-	{
-		ParticleRegistry.spawnParticle("ammo/gunfire", pos, Vec3d.ZERO, IIParticleUtils.toVector2f(direction))
-				.withProperty(ParticleProperties.SIZE, size*0.25f);
-		/*ParticleGunfire particle = new ParticleGunfire(getWorld(), pos, motion, size);
-		ParticleSystem.addEffect(particle);*/
-	}
-
-	//TODO: 04.05.2024 replace with AMT models
-	public static void spawnTMTModelFX(Vec3d pos, Vec3d motion, float size, ModelRendererTurbo model, ResourceLocation texture)
-	{
-		/*Particle particle = new ParticleTMTModel(getWorld(), pos, motion, size, model, texture);
-		Minecraft.getMinecraft().effectRenderer.addEffect(particle);*/
-	}
-
-	public static void spawnFlameFX(Vec3d pos, Vec3d motion, float size, int lifeTime)
-	{
-		/*ParticleFlame particle = new ParticleFlame(getWorld(), pos, motion, size, lifeTime);
-		ParticleSystem.addEffect(particle);*/
-	}
-
-	public static void spawnFlameExplosion(Vec3d pos, float size, Random rand)
-	{
-
-		for(int i = 0; i < 20*size; i += 1)
-		{
-			Vec3d v = new Vec3d(1, 0, 0).rotateYaw(i/20f*360f);
-
-			ParticleCloud particle = (ParticleCloud)spawnVanillaParticle(EnumParticleTypes.CLOUD, pos, IIParticleUtils.withY(v.scale(0.25), 0.125));
-			if(particle!=null)
-			{
-				particle.setRBGColorF(rand.nextFloat()*0.125f, rand.nextFloat()*0.125f, 0);
-				particle.multipleParticleScaleBy(2.5f);
-				particle.setMaxAge(10);
-			}
-
-		}
-
-
 	}
 
 	public static void spawnGasCloud(Vec3d pos, float size, Fluid fluid)
 	{
 		//Check if fluid is not null
-		if(fluid==null) return;
+		if(fluid==null)
+			return;
 
-		//Get the color of the fluid
-		int color = fluid.getColor(); //Assuming the Fluid class has this method
-		float red = ((color>>16)&255)/255.0F;
-		float green = ((color>>8)&255)/255.0F;
-		float blue = (color&255)/255.0F;
+		IIColor color = IIClientUtils.getFluidTextureColor(fluid);
 
-		//Spawn multiple particles for the gas cloud effect
-		for(int i = 0; i < 40*size; i++)
-		{
-			//Randomly distribute particles in a larger spherical area
-			double offsetX = (Math.random()-0.5)*size*3.5; //Increased spread
-			double offsetY = (Math.random()-0.5)*size*2; //Increased vertical spread
-			double offsetZ = (Math.random()-0.5)*size*3.5; //Increased spread
-
-			Vec3d particlePos = pos.add(new Vec3d(offsetX, offsetY-1.0, offsetZ)); //Lower spawn point by 1 block
-
-			ParticleCloud particle = (ParticleCloud)spawnVanillaParticle(EnumParticleTypes.CLOUD, particlePos, Vec3d.ZERO);
-			if(particle!=null)
-			{
-				particle.setRBGColorF(red, green, blue); //Set the color of the particle
-				particle.setMaxAge(160); //Adjust lifespan as needed
-				particle.multipleParticleScaleBy(5f); //Adjust scale if necessary
-			}
-		}
+		for(int i = 0; i < 10; i++)
+			spawnParticle("smoke/gas_cloud", pos.add(IIParticleUtils.getRandXZ().scale(size/2)), Vec3d.ZERO, new Vector2f(0, 0))
+					.withProperty(ParticleProperties.SIZE, size*1.5f)
+					.withProperty(ParticleProperties.MAX_LIFETIME, (int)size*55)
+					.withProperty(ParticleProperties.COLOR, color);
 	}
 
 	//--- Utils ---//
-
-	private static Particle spawnVanillaParticle(EnumParticleTypes particle, Vec3d pos, Vec3d motion)
-	{
-		return ClientUtils.mc().effectRenderer.spawnEffectParticle(particle.getParticleID(),
-				pos.x, pos.y, pos.z,
-				motion.x, motion.y, motion.z);
-	}
 
 	private static class ParticleFileEntry
 	{

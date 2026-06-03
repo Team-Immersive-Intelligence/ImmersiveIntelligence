@@ -3,8 +3,8 @@ package pl.pabilo8.immersiveintelligence.common.util.diplomacy;
 import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.permission.PermissionCategory;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.permission.PermissionRole;
-import scala.actors.threadpool.Arrays;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -224,7 +224,6 @@ public enum LawForm implements ISerializableEnum
 	{
 		this.startingRole = startingRole;
 		this.ownerRole = ownerRole;
-		//noinspection unchecked
 		this.roles = () -> Arrays.asList(roles);
 	}
 

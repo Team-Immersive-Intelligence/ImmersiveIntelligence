@@ -6,7 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import pl.pabilo8.immersiveintelligence.api.LogisticTag;
 import pl.pabilo8.immersiveintelligence.api.PackerHandler.LabelingTask;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTileGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoCheckbox;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
@@ -14,7 +14,8 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoEntr
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoIngredientStackPickerPanel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoIngredientStackPickerPanel.PickerPanelMode;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPanel;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoTaskJobList;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoTaskList;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoTaskList.ListMode;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoItemStackDisplay;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.DecoTextField;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.util.TextFilter;
@@ -45,12 +46,14 @@ import static pl.pabilo8.immersiveintelligence.common.util.IIReference.GUI_LABEL
  * @since 25.08.2022
  */
 @DecoTemplate(name = "packer_labeler", category = DecoGuiCategory.DATA_TILE)
-public class GuiPackerLabeler extends DecoGui<TileEntityPacker, ContainerPacker>
+public class GuiPackerLabeler extends DecoTileGui<TileEntityPacker, ContainerPacker>
 {
 	@SyncNBT(events = SyncEvents.TILE_CLIENT_MESSAGE)
 	public EasyCollection<LabelingTask, NBTTagCompound> labels;
+	@SyncNBT
+	public ListMode mode = ListMode.JOBS;
 
-	private DecoTaskJobList<LabelingTask> taskList;
+	private DecoTaskList<LabelingTask> taskList;
 	private DecoPanel panelDetails;
 	private DecoCheckbox expiresCheckbox, serialStartCheckbox;
 	private DecoTextField expiresTextField, serialStartTextField;
@@ -96,15 +99,16 @@ public class GuiPackerLabeler extends DecoGui<TileEntityPacker, ContainerPacker>
 		addLinkTab(IIGUI.PACKER, DecoTextures.ICON_TASKS, "tasks_module");
 		addLinkTab(IIGUI.PACKER_LABELER, GuiPacker.ICON_LABELER, "labeler_module");
 
-		// Replace list + action buttons with a standardized component (no Jobs tab here)
-		addComponent((taskList = new DecoTaskJobList<>(0, 0))
+		// Replace mode tabs + list + action buttons with a standardized component
+		addComponent((taskList = new DecoTaskList<>(0, 0))
 				.withSize(108, 116+12-8)
 				.withEntries(labels)
-				.withIsJobPredicate(t -> false)
+				.withIsJobPredicate(t -> t.expirationAmount==-1)
+				.withModeHandling(mode, m -> mode = m)
 				.withBlankTaskSupplier(() -> {
 					LabelingTask created = new LabelingTask();
 					created.filter = new IngredientStack("*");
-					created.expirationAmount = -1;
+					created.expirationAmount = (taskList.getMode()==ListMode.JOBS)?-1: 1;
 					created.serialBatch = 0;
 					return created;
 				})
@@ -298,6 +302,8 @@ public class GuiPackerLabeler extends DecoGui<TileEntityPacker, ContainerPacker>
 			expiresCheckbox.withChecked(selected.expirationAmount!=-1);
 		if(expiresTextField!=null)
 			expiresTextField.withText(selected.expirationAmount==-1?"": String.valueOf(selected.expirationAmount));
+		if(taskList!=null)
+			taskList.setMode(selected.expirationAmount==-1?ListMode.JOBS: ListMode.REQUESTS);
 	}
 
 	@Override

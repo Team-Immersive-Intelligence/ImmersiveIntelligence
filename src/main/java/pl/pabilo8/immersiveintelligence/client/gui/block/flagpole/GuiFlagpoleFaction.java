@@ -5,7 +5,7 @@ import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBanner;
 import net.minecraft.item.ItemStack;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTileGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoSwitch;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoDropdown;
@@ -43,7 +43,7 @@ import java.util.UUID;
  * @since 27.12.2025
  */
 @DecoTemplate(name = "flagpole_faction", category = DecoGuiCategory.TERRITORY_CONTROL_TILE)
-public class GuiFlagpoleFaction extends DecoGui<TileEntityFlagpole, ContainerFlagpole>
+public class GuiFlagpoleFaction extends DecoTileGui<TileEntityFlagpole, ContainerFlagpole>
 {
 	private String factionName = null;
 	private IIColor factionColor = null;
@@ -202,32 +202,36 @@ public class GuiFlagpoleFaction extends DecoGui<TileEntityFlagpole, ContainerFla
 				.withTitleLabel("Permissions", DecoAlignment.TOP)
 		);
 
-		panelPerms.addLabel("Role:", 4, 8+2-1)
-				.withSize(panelPerms.width-72-2, 14)
-				.withAlign(DecoAlignment.LEFT);
-		panelPerms.addComponents(
-				new DecoDropdown<PermissionRole>(panelPerms.width-72, 8+2-2)
-						.withSize(72-4, 14)
-						.withEntries(identity.getAvailableRoles().values())
-						.withDisplayFunction(DecoElementDisplays.getSimpleTextDisplay(PermissionRole::getDisplayName))
-						.withSelectedEntry(selectedRole = identity.getRoleOf(playerContainer.player.getUniqueID()))
-						.withOnSelectedEntry((oldRole, newRole) -> selectedRole = newRole),
-				new DecoList<PermissionCategory>(2, 12+8+2+1)
-						.withSize(panelPerms.width-4-2, panelPerms.height-32+8-2)
-						.withEntries(PermissionCategory.values())
-						.withDisplayFunction(new DecoEntryPanelBuilder<PermissionCategory>()
-								.withHeight(18)
-								.withComponent("toggle", p -> new DecoSwitch(2, 2)
-										.withOnToggle(change -> IIPacketHandler.sendToServer(MessageDiplomacyAction.changePermission(selectedRole,
-												p.getCurrentElement(), change)))
-								)
-								.withElementApplyMethod((permission, panel) -> {
-									panel.component("toggle", DecoSwitch.class)
-											.withCurrentState(selectedRole.isAllowed(permission))
-											.withText(permission.getFullLocaleKey());
-								})
-						)
-		);
+		selectedRole = identity.getRoleOf(playerContainer.player.getUniqueID());
+		if(selectedRole!=null)
+		{
+			panelPerms.addLabel("Role:", 4, 8+2-1)
+					.withSize(panelPerms.width-72-2, 14)
+					.withAlign(DecoAlignment.LEFT);
+			panelPerms.addComponents(
+					new DecoDropdown<PermissionRole>(panelPerms.width-72, 8+2-2)
+							.withSize(72-4, 14)
+							.withEntries(identity.getAvailableRoles().values())
+							.withDisplayFunction(DecoElementDisplays.getSimpleTextDisplay(PermissionRole::getDisplayName))
+							.withSelectedEntry(selectedRole)
+							.withOnSelectedEntry((oldRole, newRole) -> selectedRole = newRole),
+					new DecoList<PermissionCategory>(2, 12+8+2+1)
+							.withSize(panelPerms.width-4-2, panelPerms.height-32+8-2)
+							.withEntries(PermissionCategory.values())
+							.withDisplayFunction(new DecoEntryPanelBuilder<PermissionCategory>()
+									.withHeight(18)
+									.withComponent("toggle", p -> new DecoSwitch(2, 2)
+											.withOnToggle(change -> IIPacketHandler.sendToServer(MessageDiplomacyAction.changePermission(selectedRole,
+													p.getCurrentElement(), change)))
+									)
+									.withElementApplyMethod((permission, panel) -> {
+										panel.component("toggle", DecoSwitch.class)
+												.withCurrentState(selectedRole.isAllowed(permission))
+												.withText(permission.getFullLocaleKey());
+									})
+							)
+			);
+		}
 
 
 	}

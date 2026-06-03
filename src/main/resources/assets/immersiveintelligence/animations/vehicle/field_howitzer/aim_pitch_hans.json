@@ -1,0 +1,107 @@
+{
+  "comment": "Made by Pabilo8 with Blockbench",
+  "groups": {
+    "hans_gunner": {
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, -1, 0]
+        }
+      ]
+    },
+    "hans_gunner_body": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [25, 0, 0]
+        },
+        {
+          "time": 0.5,
+          "transform": [26, 0, 0]
+        },
+        {
+          "time": 1,
+          "transform": [25, 0, 0]
+        }
+      ],
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, -1, 0]
+        },
+        {
+          "time": 1,
+          "transform": [0, -1, 0]
+        }
+      ]
+    },
+    "hans_gunner_left_arm": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [-24.28915, -22.33076, 27.6048]
+        },
+        {
+          "time": 0.5,
+          "transform": [-25.32585, -23.3401, 30.08658]
+        },
+        {
+          "time": 1,
+          "transform": [-24.28915, -22.33076, 27.6048]
+        }
+      ],
+      "position": [
+        {
+          "time": 0,
+          "transform": [1.05105, -1.13014, -1.32887]
+        },
+        {
+          "time": 1,
+          "transform": [1.05105, -1.13014, -1.32887]
+        }
+      ]
+    },
+    "hans_gunner_right_arm": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [-32.10382, 5.35355, -8.45862]
+        },
+        {
+          "time": 0.5,
+          "transform": [-31.95268, -1.00741, -12.43697]
+        },
+        {
+          "time": 1,
+          "transform": [-32.10382, 5.35355, -8.45862]
+        }
+      ],
+      "position": [
+        {
+          "time": 0,
+          "transform": [0.17365, -0.01281, -0.00816]
+        },
+        {
+          "time": 1,
+          "transform": [0.17365, -0.01281, -0.00816]
+        }
+      ]
+    },
+    "hans_gunner_right_leg": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [-5, 0, 0]
+        }
+      ]
+    },
+    "hans_gunner_left_leg": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [7.5, 0, 0]
+        }
+      ]
+    }
+  }
+}

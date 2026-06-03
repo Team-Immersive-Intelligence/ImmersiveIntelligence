@@ -22,6 +22,7 @@ import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.FogMode;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.resources.IResourceManager;
@@ -31,7 +32,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumHand;
@@ -57,6 +57,7 @@ import net.minecraftforge.client.resource.VanillaResourceType;
 import net.minecraftforge.event.GameRuleChangeEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.world.WorldEvent.Load;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
@@ -72,7 +73,7 @@ import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoUtils;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IAdvancedTooltipItem;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IItemScrollable;
-import pl.pabilo8.immersiveintelligence.api.utils.camera.IEntityZoomProvider;
+import pl.pabilo8.immersiveintelligence.api.utils.camera.ICameraEntity;
 import pl.pabilo8.immersiveintelligence.client.fx.ScreenShake;
 import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleSystem;
 import pl.pabilo8.immersiveintelligence.client.gui.GuiWidgetAustralianTabs;
@@ -99,18 +100,15 @@ import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTBipedAdapter;
 import pl.pabilo8.immersiveintelligence.common.*;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Graphics;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools.TripodPeriscope;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityMortar;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityTripodPeriscope;
+import pl.pabilo8.immersiveintelligence.common.entity.EntityCamera;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
+import pl.pabilo8.immersiveintelligence.common.entity.mounted_weapon.EntityMountedWeapon;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleSeat;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIIPrintedPage.PageType;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIGunBase;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIRailgunOverride;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.messages.MessageEntityNBTSync;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageItemScrollableSwitch;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageManualClose;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
@@ -142,11 +140,9 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	private static final ArrayList<TextOverlayBase> TEXT_OVERLAYS = new ArrayList<>();
 	private static final ArrayList<InWorldOverlayBase> IN_WORLD_OVERLAYS = new ArrayList<>();
 	private static final ArrayList<ScreenShake> SCREEN_SHAKE_EFFECTS = new ArrayList<>();
-	public static boolean mgAiming = false;
-	public static ArrayList<EntityLivingBase> aimingPlayers = new ArrayList<>();
 	public static GuiScreen lastGui = null;
 	//Whether the Light Engineer Armor is worn
-	public static boolean gotTheDrip;
+	public static boolean gotTheDrip = false, nightVisionActive = false;
 
 	static
 	{
@@ -194,13 +190,6 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		{
 			model.bipedHead.rotateAngleZ = 0f;
 			model.bipedHeadwear.rotateAngleZ = 0f;
-
-
-			if(aimingPlayers.contains(entity))
-			{
-				model.bipedHead.rotateAngleZ = -0.35f;
-				model.bipedHeadwear.rotateAngleZ = -0.35f;
-			}
 
 			//Handle a vehicle's passenger animations
 			Entity vehicle = living.getRidingEntity();
@@ -279,53 +268,49 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 
 							model.bipedRightArm.rotationPointZ += IIMath.clampedLerp3Par(0, 2f, 0, v);
 						}
-						else
+						else if(living.isSneaking()&&item==IIContent.itemBinoculars)
 						{
-							// TODO: 19.09.2021 animation for left hand (requires model offset changes)
+							model.bipedRightArm.rotateAngleY = model.bipedHead.rotateAngleY-0.25f;
+							model.bipedLeftArm.rotateAngleY = model.bipedHead.rotateAngleY+0.25f;
+
+							model.bipedRightArm.rotateAngleX = model.bipedHead.rotateAngleX-2f;
+							model.bipedLeftArm.rotateAngleX = model.bipedRightArm.rotateAngleX;
+
+							int id = heldItem.getMetadata();
+							BinocularsRenderer.INSTANCE.render(id==1?ItemNBTHelper.getBoolean(heldItem, "wasUsed")?2: 1: id, model.bipedHead, true);
 						}
-					else if(living.isSneaking()&&item==IIContent.itemBinoculars)
-					{
-						model.bipedRightArm.rotateAngleY = model.bipedHead.rotateAngleY-0.25f;
-						model.bipedLeftArm.rotateAngleY = model.bipedHead.rotateAngleY+0.25f;
-
-						model.bipedRightArm.rotateAngleX = model.bipedHead.rotateAngleX-2f;
-						model.bipedLeftArm.rotateAngleX = model.bipedRightArm.rotateAngleX;
-
-						int id = heldItem.getMetadata();
-						BinocularsRenderer.INSTANCE.render(id==1?ItemNBTHelper.getBoolean(heldItem, "wasUsed")?2: 1: id, model.bipedHead, true);
-					}
-					else if(item==IIContent.itemMineDetector)
-					{
-						float v = MineDetectorRenderer.instance.renderBase(living, 2.125f, true);
-
-						model.bipedRightArm.rotateAngleY = model.bipedBody.rotateAngleY-0.45f;
-						model.bipedLeftArm.rotateAngleY = model.bipedBody.rotateAngleY+0.45f;
-
-						model.bipedRightArm.rotateAngleX = -1.25f-(1f-v)*0.5f;
-						model.bipedLeftArm.rotateAngleX = model.bipedRightArm.rotateAngleX;
-					}
-					else if(item==IIContent.itemNavalMine)
-						if(right)
+						else if(item==IIContent.itemMineDetector)
 						{
-							model.bipedRightArm.rotateAngleX -= 0.5f;
+							float v = MineDetectorRenderer.instance.renderBase(living, 2.125f, true);
+
+							model.bipedRightArm.rotateAngleY = model.bipedBody.rotateAngleY-0.45f;
+							model.bipedLeftArm.rotateAngleY = model.bipedBody.rotateAngleY+0.45f;
+
+							model.bipedRightArm.rotateAngleX = -1.25f-(1f-v)*0.5f;
 							model.bipedLeftArm.rotateAngleX = model.bipedRightArm.rotateAngleX;
 						}
-						else
+						else if(item==IIContent.itemNavalMine)
+							if(right)
+							{
+								model.bipedRightArm.rotateAngleX -= 0.5f;
+								model.bipedLeftArm.rotateAngleX = model.bipedRightArm.rotateAngleX;
+							}
+							else
+							{
+								model.bipedLeftArm.rotateAngleX -= 0.5f;
+								model.bipedRightArm.rotateAngleX = model.bipedLeftArm.rotateAngleX;
+							}
+						else if(item==IIContent.itemGrenade)
 						{
-							model.bipedLeftArm.rotateAngleX -= 0.5f;
-							model.bipedRightArm.rotateAngleX = model.bipedLeftArm.rotateAngleX;
+							float use = 1f-MathHelper.clamp(((EntityLivingBase)entity).getItemInUseCount()/(float)heldItem.getMaxItemUseDuration(), 0, 1);
+							if(right)
+							{
+								model.rightArmPose = ArmPose.EMPTY;
+								//model.leftArmPose=ArmPose.EMPTY;
+								float hh = -(4.5f-model.bipedHead.rotateAngleX);
+								model.bipedRightArm.rotateAngleX = use!=1?use > 0f?use < 0.35f?use/0.35f*hh: hh: 0f: 0f;
+							}
 						}
-					else if(item==IIContent.itemGrenade)
-					{
-						float use = 1f-MathHelper.clamp(((EntityLivingBase)entity).getItemInUseCount()/(float)heldItem.getMaxItemUseDuration(), 0, 1);
-						if(right)
-						{
-							model.rightArmPose = ArmPose.EMPTY;
-							//model.leftArmPose=ArmPose.EMPTY;
-							float hh = -(4.5f-model.bipedHead.rotateAngleX);
-							model.bipedRightArm.rotateAngleX = use!=1?use > 0f?use < 0.35f?use/0.35f*hh: hh: 0f: 0f;
-						}
-					}
 
 				}
 			}
@@ -648,12 +633,13 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public void onRenderOverlayPre(Pre event)
 	{
-		if(ClientUtils.mc().player==null||event.getType()!=ElementType.CROSSHAIRS)
+		Minecraft mc = ClientUtils.mc();
+		if(mc.player==null||event.getType()!=ElementType.CROSSHAIRS)
 			return;
 
 		for(EnumHand hand : EnumHand.values())
 		{
-			ItemStack stack = ClientUtils.mc().player.getHeldItem(hand);
+			ItemStack stack = mc.player.getHeldItem(hand);
 			if(stack.getItem().getTileEntityItemStackRenderer() instanceof ISpecificHandRenderer)
 				if(((ISpecificHandRenderer)stack.getItem().getTileEntityItemStackRenderer()).shouldCancelCrosshair(stack, hand))
 				{
@@ -662,9 +648,9 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 				}
 		}
 
-		RayTraceResult mop = ClientUtils.mc().objectMouseOver;
-		EntityPlayer player = ClientUtils.mc().player;
-		//
+		RayTraceResult mop = mc.objectMouseOver;
+		EntityPlayer player = mc.player;
+		float partialTicks = event.getPartialTicks();
 
 		//Iterate HUD backgrounds
 		for(GuiOverlayBase hud : HUD_BACKGROUNDS)
@@ -678,99 +664,32 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		Entity ridden = player.getRidingEntity();
 		Entity lowestRidden = ridden==null?null: ridden.getLowestRidingEntity();
 
-		//--- Entity Zoom Handling ---//
-
-		if(lowestRidden instanceof IEntityZoomProvider)
-		{
-			boolean pressed = ClientProxy.keybindZoom.isKeyDown();
-			if(pressed^mgAiming&&ridden instanceof EntityMachinegun)
-			{
-				NBTTagCompound tag = new NBTTagCompound();
-				tag.setBoolean("clientMessage", true);
-				tag.setBoolean("aiming", pressed);
-				IIPacketHandler.sendToServer(new MessageEntityNBTSync(ridden, tag));
-				((EntityMachinegun)ridden).aiming = pressed;
-			}
-			mgAiming = pressed;
-		}
-		else mgAiming = false;
-
 		//--- Camera Handling ---//
-		if(mgAiming)
+		if(lowestRidden instanceof ICameraEntity)
 		{
-			ClientUtils.mc().gameSettings.thirdPersonView = 0;
-
-			if(lowestRidden instanceof EntityMachinegun)
+			ICameraEntity cameraEntity = (ICameraEntity)lowestRidden;
+			if(!cameraEntity.isCameraEnabled(player))
+				CameraHandler.setEnabled(false);
+			else
 			{
-				EntityMachinegun mg = (EntityMachinegun)lowestRidden;
-				float px = (float)mg.posX, py = (float)mg.posY, pz = (float)mg.posZ;
+				if(!cameraEntity.isThirdPersonAllowed(player))
+					mc.gameSettings.thirdPersonView = -1;
 
-				float yaw = mg.gunYaw;
-				float pitch = mg.gunPitch;
-
-				EntityLivingBase psg = (EntityLivingBase)mg.getPassengers().get(0);
-				float true_head_angle = MathHelper.wrapDegrees(psg.prevRotationYawHead-mg.setYaw);
-				float true_head_angle2 = MathHelper.wrapDegrees(psg.rotationPitch);
-
-				if(mg.gunYaw < true_head_angle)
-					yaw += ClientUtils.mc().getRenderPartialTicks()*2f;
-				else if(mg.gunYaw > true_head_angle)
-					yaw -= ClientUtils.mc().getRenderPartialTicks()*2f;
-
-				if(Math.ceil(mg.gunYaw) <= Math.ceil(true_head_angle)+1f&&Math.ceil(mg.gunYaw) >= Math.ceil(true_head_angle)-1f)
-					yaw = true_head_angle;
-
-				if(mg.gunPitch < true_head_angle2)
-					pitch += ClientUtils.mc().getRenderPartialTicks();
-				else if(mg.gunPitch > true_head_angle2)
-					pitch -= ClientUtils.mc().getRenderPartialTicks();
-
-				yaw = mg.tripod?MathHelper.clamp(yaw, -82.5F, 82.5F): MathHelper.clamp(yaw, -45.0F, 45.0F);
-				pitch = MathHelper.clamp(pitch, -20, 20);
-
-				yaw += mg.recoilYaw;
-				pitch += mg.recoilPitch;
-
-				double true_angle = Math.toRadians(180-mg.setYaw-yaw);
-				double true_angle2 = Math.toRadians(pitch);
-
-				boolean hasScope = mg.getZoom().shouldZoom(mg.gun, null);
-
-				Vec3d gun_end = IIMath.offsetPosDirection(2.25f-(hasScope?1.25f: 0), true_angle, true_angle2);
-				Vec3d gun_height = IIMath.offsetPosDirection(0.25f+(hasScope?0.125f: 0f), true_angle, true_angle2+90);
-
-				CameraHandler.setCameraPos(px+0.85*(gun_end.x+gun_height.x), py-1.5f+0.4025+0.85*(gun_end.y+gun_height.y), pz+0.85*(gun_end.z+gun_height.z));
-				CameraHandler.setCameraAngle(mg.setYaw+yaw, pitch, 0);
-				CameraHandler.setEnabled(true);
-			}
-			else if(lowestRidden instanceof EntityMortar)
-			{
-				EntityMortar mg = (EntityMortar)lowestRidden;
-				//					CameraHandler.isZooming = false;
-				if(mg.shootingProgress!=0)
-					CameraHandler.fovZoom = 0;
-
-				CameraHandler.setCameraPos(mg.posX, mg.posY+0.75, mg.posZ);
-				CameraHandler.setCameraAngle(mg.rotationYaw, 1+(1f-mg.rotationPitch/-90f)*-1.5f, 0);
-				CameraHandler.setEnabled(mg.shootingProgress==0);
-			}
-			else if(lowestRidden instanceof EntityTripodPeriscope)
-			{
-				EntityTripodPeriscope mg = (EntityTripodPeriscope)lowestRidden;
-				float px = (float)mg.posX, py = (float)mg.posY, pz = (float)mg.posZ;
-
-				CameraHandler.setCameraPos(px, py+1.25, pz);
-
-				ClientUtils.mc().player.rotationPitch = MathHelper.clamp(ClientUtils.mc().player.rotationPitch, -50, 50);
-				ClientUtils.mc().player.prevRotationPitch = MathHelper.clamp(ClientUtils.mc().player.prevRotationPitch, -50, 50);
-
-				float y = MathHelper.wrapDegrees(360+mg.periscopeNextYaw-mg.periscopeYaw);
-				float currentYaw = MathHelper.wrapDegrees(mg.periscopeYaw+event.getPartialTicks()*(Math.signum(y)*MathHelper.clamp(Math.abs(y), 0, TripodPeriscope.turnSpeed)));
-
-				CameraHandler.setCameraAngle(currentYaw, ClientUtils.mc().player.rotationPitch, 0);
+				CameraHandler.setCameraPos(cameraEntity.getCameraPos(player, partialTicks));
+				CameraHandler.setCameraAngle(
+						cameraEntity.getCameraYaw(player, partialTicks),
+						cameraEntity.getCameraPitch(player, partialTicks),
+						cameraEntity.getCameraRoll(player, partialTicks)
+				);
 				CameraHandler.setEnabled(true);
 			}
 
+
+//mc.gameSettings.thirdPersonView = -1;
+
+//			CameraHandler.setCameraPos(mg.posX, mg.posY+0.75, mg.posZ);
+//			CameraHandler.setCameraAngle(mg.rotationYaw, 1+(1f-mg.rotationPitch/-90f)*-1.5f, 0);
+//			CameraHandler.setEnabled(mg.shootingProgress==0);
 		}
 		else
 			CameraHandler.setEnabled(false);
@@ -839,18 +758,15 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		if(ridingEntity instanceof EntityVehicleSeat)
 		{
 			EntityVehicleSeat riding = (EntityVehicleSeat)ridingEntity;
-			if(riding.info!=null&&riding.info.passMouseButtonEvent(event))
+			if(riding.info!=null&&riding.info.passMouseButtonEvent(event)&&event.isButtonstate())
 				event.setCanceled(true);
 		}
-		else if(ridingEntity instanceof EntityMachinegun)
-			if(event.getButton()==1)
-			{
-				NBTTagCompound tag = new NBTTagCompound();
-				tag.setBoolean("clientMessage", true);
-				tag.setBoolean("shoot", event.isButtonstate());
-				IIPacketHandler.sendToServer(new MessageEntityNBTSync(ridingEntity, tag));
+		else if(ridingEntity instanceof EntityMountedWeapon)
+		{
+			EntityMountedWeapon weapon = (EntityMountedWeapon)ridingEntity;
+			if(weapon.controls!=null&&weapon.controls.passMouseButtonEvent(event)&&event.isButtonstate())
 				event.setCanceled(true);
-			}
+		}
 	}
 
 	/**
@@ -963,7 +879,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	{
 		//Check ridden entity for custom hand rendering
 		Entity ridden = ClientUtils.mc().player.getRidingEntity();
-		if(ridden instanceof EntityVehicleSeat)
+		if(ridden instanceof EntityVehicleSeat||ridden instanceof EntityMountedWeapon)
 		{
 			event.setCanceled(true);
 			return;
@@ -1061,7 +977,6 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 			return;
 
 		//Reset static variables
-		aimingPlayers.clear();
 		blockDamageClient.clear();
 
 		//Reload the particle system
@@ -1077,16 +992,17 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	@SubscribeEvent
 	public void onPostClientTick(ClientTickEvent event)
 	{
-		if(event.phase==Phase.END)
-		{
-			if(ParticleSystem.INSTANCE!=null)
-				ParticleSystem.INSTANCE.updateParticles();
+		if(event.phase!=Phase.END)
+			return;
+		Minecraft mc = ClientUtils.mc();
 
-			if(!Weapons.bulletsWhistleSound)
-				return;
+		if(ParticleSystem.INSTANCE!=null)
+			ParticleSystem.INSTANCE.updateParticles();
+
+		if(mc.world!=null&&mc.player!=null)
+		{
 			//Make close bullets produce a whistling sound
-			Minecraft mc = ClientUtils.mc();
-			if(mc.world!=null&&mc.player!=null)
+			if(Weapons.bulletsWhistleSound)
 			{
 				List<EntityAmmoProjectile> bullets = mc.world.getEntitiesWithinAABB(EntityAmmoProjectile.class, mc.player.getEntityBoundingBox().grow(3));
 				for(EntityAmmoProjectile bullet : bullets)
@@ -1094,8 +1010,24 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 						//higher the velocity (howitzers), lower the tone
 						bullet.playSound(IISounds.bulletFlyby, 0.6f, 1.75f-MathHelper.clamp(bullet.getVelocity()/6f, 0.5f, 1.75f));
 			}
+
+			//Handle nightvision effect
+			if(OpenGlHelper.shadersSupported)
+			{
+				PotionEffect effect = mc.player.getActivePotionEffect(IIPotions.infraredVision);
+				if(effect!=null&&!nightVisionActive)
+				{
+					mc.entityRenderer.loadShader(IIReference.RES_II.with("shaders/post/nightvision.json"));
+					ClientRegistry.registerEntityShader(EntityCamera.class, IIReference.RES_II.with("shaders/post/nightvision.json"));
+					nightVisionActive = true;
+				}
+				else if(effect==null&&nightVisionActive)
+				{
+					mc.entityRenderer.stopUseShader();
+					ClientRegistry.registerEntityShader(EntityCamera.class, null);
+					nightVisionActive = false;
+				}
+			}
 		}
 	}
-
-
 }

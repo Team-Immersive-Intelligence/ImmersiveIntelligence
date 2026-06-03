@@ -30,6 +30,7 @@ public class Upgrade
 	private final ResLoc id, icon;
 	private int progressRequired, progressStages;
 	private UpgradePurpose purpose;
+	private boolean isWorkInProgress = false;
 
 	public Upgrade(String name)
 	{
@@ -70,21 +71,48 @@ public class Upgrade
 	}
 
 
+	/**
+	 * Sets the required progress, used for calculating the time it takes to install the upgrade. Adjusted by the amount of animated components drawn during the upgrade install.*
+	 *
+	 * @return this
+	 */
 	public Upgrade withRequiredProgress(int progress)
 	{
 		this.progressRequired = progress;
 		return this;
 	}
 
+	/**
+	 * Sets the upgrade purpose, used for categorizing upgrades in the tech tree and applying special rules to them.
+	 *
+	 * @return this
+	 */
 	public Upgrade withType(UpgradePurpose type)
 	{
 		this.purpose = type;
 		return this;
 	}
 
+	/**
+	 * Adds information about a benefit that this upgrade provides, shown in the upgrade tooltip.
+	 * Benefits are purely informational and do not have to be applied in any way.
+	 *
+	 * @return this
+	 */
 	public Upgrade withBenefit(UpgradeBenefit benefit)
 	{
 		this.benefits.add(benefit);
+		return this;
+	}
+
+	/**
+	 * Marks the upgrade as Work-In-Progress and does not allow players to install it.
+	 *
+	 * @return this
+	 */
+	public Upgrade withWIPStatus()
+	{
+		this.isWorkInProgress = true;
 		return this;
 	}
 
@@ -99,6 +127,11 @@ public class Upgrade
 	public String getName()
 	{
 		return id.getResourcePath();
+	}
+
+	public boolean isWorkInProgress()
+	{
+		return this.isWorkInProgress;
 	}
 
 	public UpgradePurpose getPurpose()

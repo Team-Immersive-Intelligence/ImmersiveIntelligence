@@ -8,9 +8,9 @@ import net.minecraftforge.common.util.INBTSerializable;
 import pl.pabilo8.immersiveintelligence.api.rotary.IRotaryEnergy;
 import pl.pabilo8.immersiveintelligence.api.rotary.RotaryStorage;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehicleBase;
-import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleDurability;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleWheel;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.IVehicleComponent;
+import pl.pabilo8.immersiveintelligence.common.util.entity.SyncedDurability;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -23,14 +23,14 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * @ii-approved 0.3.1
  * @since 01.10.2025
  */
-public class VehicleTransmission<T extends EntityVehicleBase<T>> implements IVehicleComponent, INBTSerializable<NBTTagCompound>, IRotaryEnergy
+public class VehicleTransmission<V extends EntityVehicleBase<V>> implements IVehicleComponent, INBTSerializable<NBTTagCompound>, IRotaryEnergy
 {
 	@Nonnull
 	protected final IRotaryEnergy[] sources;
 	@Nonnull
 	protected IRotaryEnergy[] receivers = new IRotaryEnergy[0];
 
-	private VehicleDurability durability;
+	private SyncedDurability durability;
 	private double[] ratios = new double[0];
 	private int maxGearShiftTime = 20;
 	private int currentGear = 0, nextGear = 0, gearShiftDelay = 0;
@@ -48,19 +48,19 @@ public class VehicleTransmission<T extends EntityVehicleBase<T>> implements IVeh
 		this.sources = new IRotaryEnergy[]{source};
 	}
 
-	public VehicleTransmission<T> withReceivers(@Nonnull IRotaryEnergy... receivers)
+	public VehicleTransmission<V> withReceivers(@Nonnull IRotaryEnergy... receivers)
 	{
 		this.receivers = receivers;
 		return this;
 	}
 
-	public VehicleTransmission<T> withDurability(VehicleDurability durability)
+	public VehicleTransmission<V> withDurability(SyncedDurability durability)
 	{
 		this.durability = durability;
 		return this;
 	}
 
-	public VehicleTransmission<T> withRatios(int shiftTime, double... ratios)
+	public VehicleTransmission<V> withRatios(int shiftTime, double... ratios)
 	{
 		this.ratios = ratios;
 		this.maxGearShiftTime = shiftTime;
@@ -69,7 +69,7 @@ public class VehicleTransmission<T extends EntityVehicleBase<T>> implements IVeh
 		return this;
 	}
 
-	public VehicleTransmission<T> withCurrentGear(int currentGear)
+	public VehicleTransmission<V> withCurrentGear(int currentGear)
 	{
 		this.nextGear = this.currentGear = MathHelper.clamp(currentGear, 0, ratios.length-1);
 		return this;
@@ -202,7 +202,7 @@ public class VehicleTransmission<T extends EntityVehicleBase<T>> implements IVeh
 
 	@Nullable
 	@Override
-	public VehicleDurability getDurability()
+	public SyncedDurability getDurability()
 	{
 		return durability;
 	}

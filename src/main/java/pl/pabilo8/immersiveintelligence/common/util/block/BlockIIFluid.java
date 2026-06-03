@@ -16,10 +16,14 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidUtil;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.CorrosionHandler.IAcidProtectionEquipment;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.EntityGasCloud;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -30,7 +34,7 @@ import javax.annotation.Nullable;
  */
 public class BlockIIFluid extends BlockFluidClassic
 {
-	public boolean isAcid;
+	public boolean isAcid, isGasseous;
 	private int flammability = 0;
 	private int fireSpread = 0;
 	private PotionEffect[] potionEffects;
@@ -42,6 +46,7 @@ public class BlockIIFluid extends BlockFluidClassic
 		this.setCreativeTab(IIContent.II_CREATIVE_TAB);
 		IIContent.BLOCKS.add(this);
 		isAcid = name.endsWith("acid");
+		isGasseous = fluid.isGaseous();
 	}
 
 	public BlockIIFluid setFlammability(int flammability, int fireSpread)
@@ -55,6 +60,19 @@ public class BlockIIFluid extends BlockFluidClassic
 	{
 		this.potionEffects = potionEffects;
 		return this;
+	}
+
+	@Override
+	public int place(World world, BlockPos pos, @Nonnull FluidStack fluidStack, boolean doPlace)
+	{
+		if(isGasseous&&doPlace&&fluidStack.amount > 0)
+		{
+			FluidUtil.destroyBlockOnFluidPlacement(world, pos);
+			world.spawnEntity(new EntityGasCloud(world, pos.getX(), pos.getY(), pos.getZ(), fluidStack));
+			return fluidStack.amount;
+		}
+
+		return super.place(world, pos, fluidStack, doPlace);
 	}
 
 	@Override

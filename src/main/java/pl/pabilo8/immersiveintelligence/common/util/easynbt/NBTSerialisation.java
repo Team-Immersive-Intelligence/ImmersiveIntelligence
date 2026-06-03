@@ -7,6 +7,7 @@ import net.minecraft.nbt.*;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import pl.pabilo8.immersiveintelligence.api.data.DataVariable;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataTypeUtils;
@@ -149,6 +150,11 @@ public class NBTSerialisation
 		);
 
 		registerSerializer(ItemStack.class, NBTTagCompound.class, ItemStack::serializeNBT, nbt -> new ItemStack(nbt));
+		registerSerializer(FluidStack.class, NBTTagCompound.class, fluidStack -> {
+			NBTTagCompound nbt = new NBTTagCompound();
+			fluidStack.writeToNBT(nbt);
+			return nbt;
+		}, FluidStack::loadFluidStackFromNBT);
 
 		registerSerializer(UUID.class, NBTTagString.class,
 				uuid -> new NBTTagString(uuid.toString()),

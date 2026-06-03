@@ -25,6 +25,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
@@ -706,17 +707,13 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 			NBTTagCompound nbt = new NBTTagCompound();
 			nbt.setString("name", getName());
 			if(facingIn!=null)
-			{
 				nbt.setInteger("facingIn", facingIn.getIndex());
-				if(distanceIn!=-1)
-					nbt.setInteger("distanceIn", distanceIn);
-			}
+			if(distanceIn!=-1)
+				nbt.setInteger("distanceIn", MathHelper.clamp(distanceIn, -1, 2));
 			if(facingOut!=null)
-			{
 				nbt.setInteger("facingOut", facingOut.getIndex());
-				if(distanceOut!=-1)
-					nbt.setInteger("distanceOut", distanceOut);
-			}
+			if(distanceOut!=-1)
+				nbt.setInteger("distanceOut", MathHelper.clamp(distanceOut, -1, 2));
 			nbt.setTag("stack", stack.writeToNBT(new NBTTagCompound()));
 
 			nbt.setBoolean("isJob", isJob);
@@ -731,17 +728,13 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 		public void deserializeNBT(NBTTagCompound nbt)
 		{
 			if(nbt.hasKey("facingIn"))
-			{
 				facingIn = EnumFacing.getFront(nbt.getInteger("facingIn"));
-				if(nbt.hasKey("distanceIn"))
-					distanceIn = nbt.getInteger("distanceIn");
-			}
+			if(nbt.hasKey("distanceIn"))
+				distanceIn = MathHelper.clamp(nbt.getInteger("distanceIn"), -1, 2);
 			if(nbt.hasKey("facingOut"))
-			{
 				facingOut = EnumFacing.getFront(nbt.getInteger("facingOut"));
-				if(nbt.hasKey("distanceOut"))
-					distanceOut = nbt.getInteger("distanceOut");
-			}
+			if(nbt.hasKey("distanceOut"))
+				distanceOut = MathHelper.clamp(nbt.getInteger("distanceOut"), -1, 2);
 			if(nbt.hasKey("stack"))
 			{
 				stack = IngredientStack.readFromNBT(nbt.getCompoundTag("stack"));

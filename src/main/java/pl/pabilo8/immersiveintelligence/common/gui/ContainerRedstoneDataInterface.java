@@ -5,13 +5,13 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockRedstoneInterface;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityRedstoneDataInterface;
-import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
+import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIITileBase;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 30.06.2019
  */
-public class ContainerRedstoneDataInterface extends ContainerIIBase<TileEntityRedstoneDataInterface>
+public class ContainerRedstoneDataInterface extends ContainerIITileBase<TileEntityRedstoneDataInterface>
 {
 	public Slot punchtapeInput, punchtapeOutput;
 

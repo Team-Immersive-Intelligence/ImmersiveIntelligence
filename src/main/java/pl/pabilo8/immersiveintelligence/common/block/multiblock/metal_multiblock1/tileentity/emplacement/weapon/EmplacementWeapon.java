@@ -123,9 +123,51 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable
 	}
 
 	@Nullable
+	public IItemHandler getPlatformItemHandler()
+	{
+		return null;
+	}
+
+	@Nullable
 	public IFluidHandler getBaseFluidHandler()
 	{
 		return null;
+	}
+
+	/**
+	 * @return true when this weapon cannot operate until the platform is lowered and serviced.
+	 */
+	public boolean needsSupply(TileEntityEmplacement te)
+	{
+		return false;
+	}
+
+	public boolean needsRestock(TileEntityEmplacement te)
+	{
+		return false;
+	}
+
+	public boolean restockFromBase(TileEntityEmplacement te)
+	{
+		return false;
+	}
+
+	public boolean isBelowHealthThreshold(float threshold)
+	{
+		return getMaxHealth() > 0&&getHealth()/getMaxHealth() < threshold;
+	}
+
+	public boolean isRepairedTo(float threshold)
+	{
+		return getMaxHealth() <= 0||getHealth()/getMaxHealth() >= threshold;
+	}
+
+	public boolean repair(float amount)
+	{
+		if(amount <= 0||health >= getMaxHealth())
+			return false;
+		health = Math.min(getMaxHealth(), health+amount);
+		return true;
 	}
 
 	public abstract int getEnergyUpkeepCost();

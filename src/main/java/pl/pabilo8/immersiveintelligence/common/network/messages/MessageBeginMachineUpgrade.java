@@ -24,10 +24,12 @@ import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.UpgradeOperatio
 import pl.pabilo8.immersiveintelligence.common.network.IIMessage;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
+import javax.annotation.Nullable;
+
 public class MessageBeginMachineUpgrade extends IIMessage implements IPositionBoundMessage
 {
 	private Upgrade upgrade;
-	private int installingUserID;
+	private int installingUserID, upgradedEntityID = -1;
 	private World world;
 	private BlockPos pos;
 	private boolean install;
@@ -35,8 +37,19 @@ public class MessageBeginMachineUpgrade extends IIMessage implements IPositionBo
 	public MessageBeginMachineUpgrade(TileEntity tile, Upgrade upgrade, Entity user, boolean install)
 	{
 		this.installingUserID = user.getEntityId();
-		this.pos = tile.getPos();
 		this.install = install;
+		this.pos = tile.getPos();
+		this.world = tile.getWorld();
+		this.upgrade = upgrade;
+	}
+
+	public MessageBeginMachineUpgrade(Entity upgradedEntity, Upgrade upgrade, Entity user, boolean install)
+	{
+		this.installingUserID = user.getEntityId();
+		this.upgradedEntityID = upgradedEntity.getEntityId();
+		this.install = install;
+		this.pos = upgradedEntity.getPosition();
+		this.world = upgradedEntity.getEntityWorld();
 		this.upgrade = upgrade;
 	}
 
@@ -52,11 +65,10 @@ public class MessageBeginMachineUpgrade extends IIMessage implements IPositionBo
 		if(!(entity instanceof EntityLivingBase)||!world.isBlockLoaded(this.pos))
 			return;
 
-		TileEntity tile = world.getTileEntity(this.pos);
-		if(!(tile instanceof IUpgradableDevice))
+		IUpgradableDevice machine = getDevice(world);
+		if(machine==null)
 			return;
 
-		IUpgradableDevice machine = (IUpgradableDevice)tile;
 		if(!this.install)
 			machine.removeUpgrade(upgrade);
 		else if(machine.addUpgrade(upgrade, UpgradeOperation.PROBE))
@@ -65,7 +77,7 @@ public class MessageBeginMachineUpgrade extends IIMessage implements IPositionBo
 			if(capability==null)
 				return;
 
-			//check if ingredients are sufficient
+			//check if player has the necessary items to install the upgrade
 			if(!(entity instanceof EntityPlayer&&((EntityPlayer)entity).isCreative()))
 				for(IngredientStack requiredStack : upgrade.getRequiredStacks())
 				{
@@ -94,11 +106,9 @@ public class MessageBeginMachineUpgrade extends IIMessage implements IPositionBo
 	{
 		if(world!=null) // This can happen if the task is scheduled right before leaving the world
 		{
-			TileEntity tile = world.getTileEntity(this.pos);
-			if(!(tile instanceof IUpgradableDevice))
+			IUpgradableDevice machine = getDevice(world);
+			if(machine==null)
 				return;
-			IUpgradableDevice machine = (IUpgradableDevice)tile;
-
 			if(!install)
 				machine.removeUpgrade(upgrade);
 			else
@@ -106,10 +116,29 @@ public class MessageBeginMachineUpgrade extends IIMessage implements IPositionBo
 		}
 	}
 
+	private @Nullable IUpgradableDevice getDevice(World world)
+	{
+		if(this.upgradedEntityID!=-1)
+		{
+			Entity entity = world.getEntityByID(this.upgradedEntityID);
+			if(!(entity instanceof IUpgradableDevice))
+				return null;
+			return (IUpgradableDevice)entity;
+		}
+		else
+		{
+			TileEntity tile = world.getTileEntity(this.pos);
+			if(!(tile instanceof IUpgradableDevice))
+				return null;
+			return (IUpgradableDevice)tile;
+		}
+	}
+
 	@Override
 	public void fromBytes(ByteBuf buf)
 	{
 		this.installingUserID = buf.readInt();
+		this.upgradedEntityID = buf.readInt();
 		this.pos = readPos(buf);
 		this.install = buf.readBoolean();
 		this.upgrade = Upgrade.getUpgradeByID(ResLoc.of(readString(buf)));
@@ -119,6 +148,7 @@ public class MessageBeginMachineUpgrade extends IIMessage implements IPositionBo
 	public void toBytes(ByteBuf buf)
 	{
 		buf.writeInt(installingUserID);
+		buf.writeInt(upgradedEntityID);
 		writePos(buf, pos);
 		buf.writeBoolean(install);
 		writeString(buf, upgrade.getId().toString());

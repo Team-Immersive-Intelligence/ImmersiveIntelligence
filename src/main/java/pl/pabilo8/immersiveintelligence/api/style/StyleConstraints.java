@@ -10,14 +10,14 @@ import java.util.Set;
 public class StyleConstraints
 {
 	private final String defaultStyle;
-	private final boolean allowColorCustomization;
+	private final PaintStyleConstraint colorCustomization;
 	private final Set<String> styles;
 	private final Set<String> decorations;
 
-	public StyleConstraints(String defaultStyle, boolean allowColorCustomization, Set<String> styles, Set<String> decorations)
+	public StyleConstraints(String defaultStyle, PaintStyleConstraint colorCustomization, Set<String> styles, Set<String> decorations)
 	{
 		this.defaultStyle = defaultStyle;
-		this.allowColorCustomization = allowColorCustomization;
+		this.colorCustomization = colorCustomization;
 		this.styles = styles;
 		this.decorations = decorations;
 	}
@@ -27,9 +27,9 @@ public class StyleConstraints
 		return defaultStyle;
 	}
 
-	public boolean allowsColorCustomization()
+	public PaintStyleConstraint getColorCustomization()
 	{
-		return allowColorCustomization;
+		return colorCustomization;
 	}
 
 	public Set<String> getStyles()
@@ -40,5 +40,12 @@ public class StyleConstraints
 	public Set<String> getDecorations()
 	{
 		return decorations;
+	}
+
+	public enum PaintStyleConstraint
+	{
+		NOT_APPLICABLE,
+		ANY_COLOR,
+		PAINTS_COLOR_ONLY
 	}
 }

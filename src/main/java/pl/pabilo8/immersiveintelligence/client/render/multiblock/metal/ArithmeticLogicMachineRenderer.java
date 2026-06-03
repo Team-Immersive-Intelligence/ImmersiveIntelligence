@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.model.obj.OBJModel;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeTechTree;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
 import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIAnimationCachedMap;
 import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTCachedModel;
@@ -125,6 +126,11 @@ public class ArithmeticLogicMachineRenderer extends IIMultiblockRenderer<TileEnt
 		this.animationDrawer = IIAnimationCachedMap.create(this.model, ResLoc.of(IIReference.RES_II, "arithmetic_logic_machine/open_drawer"));
 		this.animationDoor = IIAnimationCachedMap.create(this.model, ResLoc.of(IIReference.RES_II, "arithmetic_logic_machine/open_door"));
 		this.animationKeyboard = IIAnimationCachedMap.create(this.model, ResLoc.of(IIReference.RES_II, "arithmetic_logic_machine/open_keyboard"));
+
+		UpgradeTechTree.getTreeFor(TileEntityArithmeticLogicMachine.class)
+				.withBaseModelLocation(IIReference.RES_BLOCK_MODEL.with("multiblock/arithmetic_logic_machine/arithmetic_logic_machine_preview.obj"))
+				.withUpgradeModelLocation(IIContent.UPGRADE_MEMORY, resFolder.with("upgrades/circuit_racks.obj"))
+				.withUpgradeModelLocation(IIContent.UPGRADE_CIRCUIT_RACKS, resFolder.with("upgrades/memory.obj"));
 	}
 
 	@Override

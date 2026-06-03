@@ -4,7 +4,7 @@ import blusunrize.immersiveengineering.api.IEEnums.SideConfig;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityElectrolyzer;
-import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
+import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIITileBase;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -12,7 +12,7 @@ import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
  * @ii-approved 0.3.1
  * @since 10.07.2019
  */
-public class ContainerElectrolyzer extends ContainerIIBase<TileEntityElectrolyzer>
+public class ContainerElectrolyzer extends ContainerIITileBase<TileEntityElectrolyzer>
 {
 	public final Slot[] slotsInput, slotsOutput;
 

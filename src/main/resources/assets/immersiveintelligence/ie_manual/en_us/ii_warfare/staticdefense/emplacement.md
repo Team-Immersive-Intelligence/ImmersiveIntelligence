@@ -2,6 +2,7 @@
 Emplacement
 Locked and Loaded!
 # 0
+@hammer;level_circuits;upgradeable;repairable;paintable
 |[multiblock]{mb:"II:Emplacement"}|
 **The Emplacement** is a heavy defensive structure used for protecting the perimeter of your factory. To form it, use a [hammer](introduction#introductionHammer) on the upper middle sandbag block.
 # 1

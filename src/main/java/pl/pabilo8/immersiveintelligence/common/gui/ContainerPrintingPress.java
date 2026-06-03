@@ -7,7 +7,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.api.crafting.PrintingRecipe;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityPrintingPress;
-import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
+import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIITileBase;
 
 import javax.annotation.Nonnull;
 
@@ -16,7 +16,7 @@ import javax.annotation.Nonnull;
  * @updated 14.06.2025
  * @since 10.07.2019
  */
-public class ContainerPrintingPress extends ContainerIIBase<TileEntityPrintingPress>
+public class ContainerPrintingPress extends ContainerIITileBase<TileEntityPrintingPress>
 {
 	public Slot slotInput, slotOutput;
 	public Slot slotBucketIn, slotBucketOut;

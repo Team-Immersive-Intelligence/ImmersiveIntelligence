@@ -38,9 +38,7 @@ public class TileEntityAmmunitionCrate extends TileEntityEffectCrate
 	static
 	{
 		UpgradeTechTree.getTreeFor(TileEntityAmmunitionCrate.class)
-				.withUpgrade(IIContent.UPGRADE_INSERTER, UpgradeTier.TIER_1)
-				.withUpgrade(IIContent.UPGRADE_MG_LOADER, UpgradeTier.TIER_2)
-				.withDependency(IIContent.UPGRADE_INSERTER, IIContent.UPGRADE_MG_LOADER);
+				.withUpgrade(IIContent.UPGRADE_MG_LOADER, UpgradeTier.TIER_1);
 	}
 
 	public TileEntityAmmunitionCrate()

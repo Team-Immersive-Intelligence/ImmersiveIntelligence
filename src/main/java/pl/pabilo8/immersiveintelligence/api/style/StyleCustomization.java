@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.api.style;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraftforge.common.util.INBTSerializable;
+import pl.pabilo8.immersiveintelligence.api.style.StyleConstraints.PaintStyleConstraint;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
@@ -62,6 +63,8 @@ public class StyleCustomization implements INBTSerializable<NBTTagCompound>
 
 	public StyleCustomization withColor(IIColor color)
 	{
+		if(constraints.getColorCustomization()==PaintStyleConstraint.PAINTS_COLOR_ONLY)
+			color = color.constraintToPaintSystem();
 		this.color = color;
 		return this;
 	}

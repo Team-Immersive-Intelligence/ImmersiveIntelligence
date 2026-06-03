@@ -629,7 +629,7 @@ tile.immersiveintelligence.metal_device.timed_buffer.name=Timed Buffer
 tile.immersiveintelligence.metal_device.redstone_buffer.name=Redstone Buffer
 tile.immersiveintelligence.metal_device.punchtape_reader.name=Punchtape Reader
 tile.immersiveintelligence.metal_device.data_router.name=Data Router
-tile.immersiveintelligence.metal_device.data_merger.name=Data Combiner
+tile.immersiveintelligence.metal_device.data_merger.name=Data Merger
 
 tile.immersiveintelligence.metal_device.ammunition_crate.name=Ammunition Crate
 tile.immersiveintelligence.metal_device.medic_crate.name=Medical Crate
@@ -914,9 +914,11 @@ subtitle.immersiveintelligence.bullet_flyby=Bullet Flying
 subtitle.immersiveintelligence.bullet_impact=Projectile Impact
 subtitle.immersiveintelligence.bullet_ricochet=Projectile Ricochets Off
 
-subtitle.immersiveintelligence.motorbike_start=Starting a Motorbike
-subtitle.immersiveintelligence.motorbike_engine=Motorbike Engine Noise
-subtitle.immersiveintelligence.motorbike_horn=Motorbike Horn
+subtitle.immersiveintelligence.light_engine_start=Light Vehicle Starting
+subtitle.immersiveintelligence.light_engine=Light Vehicle Engine Noise
+subtitle.immersiveintelligence.vehicle_horn=Vehicle Horn
+
+subtitle.immersiveintelligence.drone_propeller=Propellers Rotating
 
 subtitle.immersiveintelligence.fuel_station=Fuel pumping
 subtitle.immersiveintelligence.welding=Welding
@@ -948,7 +950,8 @@ subtitle.immersiveintelligence.mortar_shot=Mortar Firing
 subtitle.immersiveintelligence.mortar_load=Mortar Loading
 
 subtitle.immersiveintelligence.mine_detector=Mine Detector Beeps
-subtitle.immersiveintelligence.construction=Hammer-Assisted Construction
+subtitle.immersiveintelligence.construction=Ongoing Construction
+subtitle.immersiveintelligence.weapon_placed=Mounted Weapon Deploying
 
 subtitle.immersiveintelligence.gate_open=Gate Opening
 subtitle.immersiveintelligence.gate_close=Gate Closing
@@ -1134,6 +1137,16 @@ machineupgrade.immersiveintelligence.emplacement.guided_missile_launcher.desc=Th
 machineupgrade.immersiveintelligence.emplacement.tesla=Tesla Tower
 machineupgrade.immersiveintelligence.emplacement.tesla.desc=The Tesla Tower uses high voltage to decimate enemies in its radius, it's especially effective against electronics
 
+#Data Input Machine
+machineupgrade.immersiveintelligence.advanced_data=Advanced Input Device
+machineupgrade.immersiveintelligence.advanced_data.desc=Replaces the converted typewriter with a proper, fully electronic control panel, allowing the user to enter in advanced data types like Vector, Map and Array.
+
+#Arithmetic-Logic Machine
+machineupgrade.immersiveintelligence.memory=Built-in Memory
+machineupgrade.immersiveintelligence.memory.desc=Adds a page of built in memory to load and save the data operation results.
+machineupgrade.immersiveintelligence.circuit_racks=Additional Circuit Racks
+machineupgrade.immersiveintelligence.circuit_racks.desc=Adds racks that allow mounting two more circuit inside the machine.
+
 #Other upgrades
 machineupgrade.immersiveintelligence.core_filler=Projectile Filler
 machineupgrade.immersiveintelligence.core_filler.desc=Equipping the Projectile Workshop with an inserter allows precise filling of the projectiles with desired components.
@@ -1267,13 +1280,23 @@ desc.immersiveintelligence.variable_send_packet=Send Packet
 desc.immersiveintelligence.variable_send_packet_desc=Sends the current packet to data network
 desc.immersiveintelligence.variable_remove_desc=Remove a variable
 desc.immersiveintelligence.variable_properties=Properties
+desc.immersiveintelligence.variable_properties.tooltip=Edit expression properties, like conditional variables.
 desc.immersiveintelligence.variable_value=Value:
 desc.immersiveintelligence.operation=Operation:
+
 desc.immersiveintelligence.conditional_variable=Conditional Variable:
+desc.immersiveintelligence.conditional_variable.enabled=Use condition
+desc.immersiveintelligence.conditional_variable.enabled.tooltip=When enabled, the expression will not run, unless the selected variable is present in the packet operated on
+desc.immersiveintelligence.conditional_variable.tooltip=Variable required for this expression to run
+
+desc.immersiveintelligence.expression.accessor.tooltip=Use a variable from the received packet instead of a literal value
+desc.immersiveintelligence.expression.condition.info=When enabled, this expression only runs if the selected variable exists in the received packet.
+
 desc.immersiveintelligence.no_variable=None
 desc.immersiveintelligence.variable=Variable:
 desc.immersiveintelligence.variable_apply=Apply
 desc.immersiveintelligence.variable_remove=Remove
+desc.immersiveintelligence.no_editor=No editor available.
 
 desc.immersiveintelligence.diplomacy.ownedby=Property of %s
 desc.immersiveintelligence.diplomacy.noowner=Abandoned Property
@@ -1410,8 +1433,15 @@ desc.immersiveintelligence.diplomacy.permission_level.allies_allow=Allies
 desc.immersiveintelligence.diplomacy.permission_level.others_allow=Others
 desc.immersiveintelligence.diplomacy.permission_level.enemy_allow=Enemies
 
-#Bullets
+#Directions
+desc.immersiveintelligence.side.down=Down
+desc.immersiveintelligence.side.up=Up
+desc.immersiveintelligence.side.north=North
+desc.immersiveintelligence.side.south=South
+desc.immersiveintelligence.side.west=West
+desc.immersiveintelligence.side.east=East
 
+#Bullets
 desc.immersiveintelligence.bullet_type.general_purpose=General Purpose
 desc.immersiveintelligence.bullet_type.shrapnel=Shrapnel
 desc.immersiveintelligence.bullet_type.piercing=Armor Piercing
@@ -1480,10 +1510,6 @@ desc.immersiveintelligence.bullets.armor_penetration=Armor Penetration:
 
 desc.immersiveintelligence.bullet_magazine.remaining=Remaining Bullets: %s
 desc.immersiveintelligence.bullet_magazine.empty=Empty
-
-desc.immersiveintelligence.data_merger.0=Both
-desc.immersiveintelligence.data_merger.1=Left
-desc.immersiveintelligence.data_merger.2=Right
 
 desc.immersiveintelligence.medical_crate.heal=Heal Wounded Entities
 desc.immersiveintelligence.medical_crate.boost=Apply Effects to Entities
@@ -2700,6 +2726,11 @@ key.immersiveintelligence.vehicle.tow.toggle=Tow/Untow
 key.immersiveintelligence.vehicle.tow.start=Tow
 key.immersiveintelligence.vehicle.tow.stop=Untow
 
+key.immersiveintelligence.vehicle.gun.up=Elevate Gun
+key.immersiveintelligence.vehicle.gun.down=Depress Gun
+key.immersiveintelligence.vehicle.gun.left=Traverse Gun Left
+key.immersiveintelligence.vehicle.gun.right=Traverse Gun Right
+
 #Advancements
 advancement.immersiveintelligence.root=Immersive Intelligence
 advancement.immersiveintelligence.root.desc=RTFM?
@@ -2916,6 +2947,7 @@ ie.manual.entry.traits.paintable=Paintable
 
 ie.manual.entry.wip_warning0=Warning! Work-in-Progress Content.
 ie.manual.entry.wip_warning1=The Engineering Department is working hard to bring it to the front!
+ie.manual.entry.wip_warning.upgrade=The feature may lack visuals or have no functionality, no not report this.
 
 ie.manual.entry.data_operation.inputs=Inputs
 ie.manual.entry.data_operation.output=Output
@@ -3180,10 +3212,10 @@ ii.config.Light_Engineer_Armor=Light Engineer Armor
 #GUI Labels
 ii.gui.editor.editor_style=Visual/POL Editor
 
-ii.gui.task_editor.tasks=Tasks
-ii.gui.task_editor.tasks.tooltip=Tasks are assignments, that are repeated indefinitely.
 ii.gui.task_editor.jobs=Jobs
-ii.gui.task_editor.jobs.tooltip=Jobs are assignments, that are discarded from memory, after a set amount of resource is transfered.
+ii.gui.task_editor.jobs.tooltip=Jobs are assignments, that are repeated indefinitely.
+ii.gui.task_editor.requests=Requests
+ii.gui.task_editor.requests.tooltip=Requests are assignments, that are discarded from memory, after a set amount of resource is transfered.
 
 ii.gui.inserter.task_editor=Task Editor
 ii.gui.inserter.type=Type:
@@ -3287,23 +3319,35 @@ ii.gui.radar.targets=Targets
 
 ii.gui.emplacement.platform_inventory=Platform Inventory
 ii.gui.emplacement.base_inventory=Base Inventory
+ii.gui.emplacement.no_weapon=No weapon installed.
 
-ii.gui.emplacement.weapon=Mounted: %s
-ii.gui.emplacement.weapon_none=None
-ii.gui.emplacement.upgrades=Installed Upgrades
-ii.gui.emplacement.settings=Settings
-ii.gui.emplacement.redstone_control=Redstone Controlled
-ii.gui.emplacement.data_control=Data Controlled
-ii.gui.emplacement.send_attack_signal=Output target(s) trough data
-ii.gui.emplacement.auto_repair_threshold=Repair when health is below:
+ii.gui.emplacement.config.reacts_redstone=React to Redstone
+ii.gui.emplacement.config.reacts_redstone.tooltip=When enabled, the weapon surfaces only while the Emplacement receives redstone.
+ii.gui.emplacement.config.reacts_data=React to Data
+ii.gui.emplacement.config.reacts_data.tooltip=When disabled, the Emplacement will not react to data input.
+ii.gui.emplacement.config.hide_health=Hide when health is below:
+ii.gui.emplacement.config.hide_health.tooltip=Minimum weapon health percentage. Below this value, the platform hides for repairs.
+ii.gui.emplacement.config.resurface_health=Repair until health reaches:
+ii.gui.emplacement.config.resurface_health.tooltip=Weapon health percentage considered sufficient to surface again after repairs.
+
+ii.gui.emplacement.config.vision_range=Vision Range: %s b
+ii.gui.emplacement.config.attack_range=Attack Range: %s b
+
+ii.gui.emplacement.fire_missions.editor=Fire Mission
+ii.gui.emplacement.fire_missions.type=Type
+ii.gui.emplacement.fire_missions.type.position=Position
+ii.gui.emplacement.fire_missions.type.entity=Entity
+ii.gui.emplacement.fire_missions.position=Target Position
+ii.gui.emplacement.fire_missions.entity_id=Entity ID
+ii.gui.emplacement.fire_missions.finite_shots=Limit Shots
+ii.gui.emplacement.fire_missions.shots=Shots
+ii.gui.emplacement.fire_missions.shots_left=%s shots
+ii.gui.emplacement.fire_missions.until_done=until done
+
 ii.gui.emplacement.selector_preset=Selector Preset
 ii.gui.emplacement.filter=Filter
 ii.gui.emplacement.task_enabled=Enabled
 ii.gui.emplacement.task_negation=Negation
-ii.gui.emplacement.add=Add Task
-ii.gui.emplacement.remove=Remove Task
-ii.gui.emplacement.duplicate=Duplicate Task
-ii.gui.emplacement.clear=Clear ALL Tasks (Caution!)
 
 ii.gui.emplacement.target.mobs=Mobs
 ii.gui.emplacement.target.animals=Animals
@@ -3354,6 +3398,84 @@ ii.gui.redstone_data_interface.mode.integer_100=Integer 0-100
 ii.gui.redstone_data_interface.mode.float=Float 0-1
 ii.gui.redstone_data_interface.mode.string=String
 
+ii.gui.projectile_workshop.component_info=Component Info
+ii.gui.projectile_workshop.component.role=Role: %s
+ii.gui.projectile_workshop.component.density=Density: %s
+ii.gui.projectile_workshop.component.slots_taken=Slots Taken: %s
+ii.gui.projectile_workshop.entry.core=Core
+ii.gui.projectile_workshop.entry.type=Type
+ii.gui.projectile_workshop.tooltip.core_type=Core Type
+ii.gui.projectile_workshop.tooltip.ammunition_type=Ammunition Type
+ii.gui.projectile_workshop.cost=Cost:
+ii.gui.projectile_workshop.invalid_cost=Cost: 250 Pabulions
+ii.gui.projectile_workshop.material_preview=Material Preview
+ii.gui.projectile_workshop.section.core=Core
+ii.gui.projectile_workshop.section.ballistics=Ballistics
+ii.gui.projectile_workshop.tooltip.component_slots=Component Slots
+ii.gui.projectile_workshop.tooltip.component_effect_shape=Component Effect Shape
+ii.gui.projectile_workshop.tooltip.component_efficiency=Component Efficiency Modifier
+ii.gui.projectile_workshop.tooltip.component_efficiency.line1=Determines potency.
+ii.gui.projectile_workshop.tooltip.component_efficiency.line2=Responsible for explosive power, chemical gas concentration.
+ii.gui.projectile_workshop.tooltip.component_size=Component Size Multiplier
+ii.gui.projectile_workshop.tooltip.component_size.line1=Determines component volume, responsible for explosion radius, gas spread range multiplier.
+ii.gui.projectile_workshop.tooltip.core_mass=Core Mass
+ii.gui.projectile_workshop.tooltip.damage_dealt=Damage Dealt
+ii.gui.projectile_workshop.tooltip.velocity=Velocity
+ii.gui.projectile_workshop.tooltip.available_fuzes=Available Fuzes
+ii.gui.projectile_workshop.tooltip.penetration_hardness=Penetration Hardness
+ii.gui.projectile_workshop.tooltip.flat_trajectory_range=Flat-Trajectory Range
+ii.gui.projectile_workshop.tooltip.max_artillery_range=Max. Artillery Range
+ii.gui.projectile_workshop.unit.blocks=%s b
+ii.gui.projectile_workshop.unit.blocks_per_tick=%s b/t
+ii.gui.projectile_workshop.value.penetration_hardness=%s b %s
+ii.gui.projectile_workshop.unit.multiplier=%sx
+
+ii.gui.ammunition_assembler.fuse_config.timed=Time:
+ii.gui.ammunition_assembler.fuse_config.timed.tooltip=Time before fuse triggers (in ticks)
+ii.gui.ammunition_assembler.fuse_config.proximity=Distance:
+ii.gui.ammunition_assembler.fuse_config.proximity.tooltip=Required distance to a solid object to trigger the fuse (in blocks)
+
+ii.gui.data_router.into=Into side: %s
+ii.gui.data_router.rule_editor=Data Routing Rule
+ii.gui.data_router.rule_properties=Rule Properties
+ii.gui.data_router.routing=Routing
+ii.gui.data_router.packet_filters=Packet Filters
+ii.gui.data_router.incoming=Inputs:
+ii.gui.data_router.incoming.tooltip=Direction of the inbound packet for this rule to apply.
+ii.gui.data_router.outgoing=Output:
+ii.gui.data_router.outgoing.tooltip=Direction the outbound packet will be sent to under this rule.
+ii.gui.data_router.action=Action:
+ii.gui.data_router.action.tooltip=Determines what happens to packets matching this rule.
+ii.gui.data_router.filter.color=Color
+ii.gui.data_router.filter.address=Address
+ii.gui.data_router.required_variables=Required Variables
+ii.gui.data_router.filter.value=Match Value
+ii.gui.data_router.remove_control_variable=Remove Control Variable
+ii.gui.data_router.remove_control_variable.tooltip=When enabled, the control variable will be omitted in the outgoing packet
+ii.gui.data_router.action.allow=Allow
+ii.gui.data_router.action.deny=Deny
+
+ii.gui.data_merger.rule_properties=Merge Rule
+ii.gui.data_merger.inputs=Inputs
+ii.gui.data_merger.override_policy=Overwrite Policy
+ii.gui.data_merger.variable=Variable
+ii.gui.data_merger.accept_left=Accept Left
+ii.gui.data_merger.accept_left.tooltip=Packets coming to the left side of the device will be accepted.
+ii.gui.data_merger.accept_right=Accept Right
+ii.gui.data_merger.accept_right.tooltip=Packets coming to the right side of the device will be accepted.
+ii.gui.data_merger.trigger_forwarding=Mark for sending
+ii.gui.data_merger.trigger_forwarding.tooltip=When this variable is present in a packet, the machine will send the merged data.
+ii.gui.data_merger.usage_limit=Uses left:
+ii.gui.data_merger.usage_limit.tooltip=Empty means this rule is a repeating Job. A number makes it an expiring Request.
+ii.gui.data_merger.right_overrides_cached=Right Overrides Cache
+ii.gui.data_merger.right_overrides_cached.tooltip=When both side caches contain this variable, the right-side cached value wins.
+ii.gui.data_merger.right_overrides_value=Right Overrides Output
+ii.gui.data_merger.right_overrides_value.tooltip=When enabled, the selected cached value may replace the value already present in the outgoing packet.
+ii.gui.data_merger.left=Left
+ii.gui.data_merger.right=Right
+ii.gui.data_merger.send=Send
+
+
 #GUI HelpBoxes
 ii.gui_help.data_input_machine.programming=These slots allow reading a punchtape into the DIM's memory or writing its contents into an empty one.
 ii.gui_help.data_input_machine.storage=These slots allow storing empty or programmed punchtapes for convenience.
@@ -3394,6 +3516,7 @@ ii.gui_tooltip.widget.ownership.hide=Hide Ownership Data
 ii.gui_tooltip.widget.ownership=Ownership
 ii.gui_tooltip.widget.manual.show=Show Side Manual
 ii.gui_tooltip.widget.manual.hide=Hide Side Manual
+ii.gui_tooltip.widget.manual.page=Open in Engineer's Manual
 ii.gui_tooltip.widget.manual=Engineer's Manual
 
 ii.gui_tooltip.energy.stored=Energy Stored: %s/%s IF

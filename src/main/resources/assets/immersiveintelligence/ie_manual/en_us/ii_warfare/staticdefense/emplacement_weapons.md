@@ -13,7 +13,7 @@ Take note, this weapon does not use [magazines](magazines.md). [Loose bullets ha
 # mg1
 The **Machinegun** Emplacement comes in 3 variants: [Default], [Heavy Barreled], and [Water-Cooled], which are identical in function to those present in the [infantry version](machinegun.md).<br>
 |[upgrade_display]{upgrade:"immersiveintelligence:emplacement/machinegun/heavy_barrel"}|
-|[upgrade_display]{upgrade:"immersiveintelligence:emplacement/machinegun/water_cooled_barrel"}|
+|[upgrade_display]{upgrade:"immersiveintelligence:emplacement/machinegun/watercooled"}|
 # mg2
 The **Machinegun** Emplacement can also be [fortified] to increase survivability in the field.
 |[upgrade_display]{upgrade:"immersiveintelligence:emplacement/machinegun/additional_fortifications"}|
@@ -62,11 +62,11 @@ A beefed-up [Field Mortar](mortar.md), the [Mortar] emplacement provides powerfu
 A scaled-down version of the [Artillery Howitzer](artillery_howitzer.md), the [Light Howitzer] provides medium-range support and its mobility allows for quick and precise barrage of enemy positions.
 # mlrs
 **Rocket Launcher (MLRS)**
-|[upgrade_display]{upgrade:"immersiveintelligence:emplacement/mlrs"}|
+|[upgrade_display]{upgrade:"immersiveintelligence:emplacement/rocket_launcher"}|
 The [Multiple Launch Rocket System (MLRS)], or simply, the [Rocket Launcher], launches multiple unguided [rockets](bullet_production.md#heavy_ammuniton_assembler) at a specified target. Rockets are slow compared to bullets, so complex targeting in conjunction with the [Infrared Observer](#ir_observer0) may be required for maximum efficiency on moving targets.
 # guided_launcher0
 **Guided Rocket Launcher**
-|[upgrade_display]{upgrade:"immersiveintelligence:emplacement/guided_launcher"}|
+|[upgrade_display]{upgrade:"immersiveintelligence:emplacement/guided_missile_launcher"}|
 Instead of multiple dumbfire rockets, the [Guided Rocket Launcher] fires a single, smart rocket that is steered toward the target. It is easier to hit moving targets compared to the dumbfire MLRS.
 # ir_observer0
 **Infrared Observer**

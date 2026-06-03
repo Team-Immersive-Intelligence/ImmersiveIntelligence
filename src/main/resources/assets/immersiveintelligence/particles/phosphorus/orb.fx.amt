@@ -1,0 +1,25 @@
+{
+  "type": "ParticleModel",
+  "models": ["smoke/smoke_trace.obj"],
+  "max_lifetime": 25,
+  "draw_stage": "custom_smoke_noise_shader",
+  "programs": [
+    "smoke_transition"
+  ],
+  "scheduled": [
+    {
+      "time": 0,
+      "generator": "same",
+      "distance": -0.5,
+      "amount": 1,
+      "type": "phosphorus/glow"
+    },
+    {
+      "time": 20,
+      "generator": "rand_xz",
+      "distance": 2.0,
+      "amount": 4,
+      "type": "phosphorus/smoke_main"
+    }
+  ]
+}

@@ -46,6 +46,14 @@ public class FilteredFluidTank extends FluidTank
 		return this;
 	}
 
+	public float getFillPercentage()
+	{
+		int cap = getCapacity();
+		if(cap==0)
+			return 0;
+		return getFluidAmount()/(float)cap;
+	}
+
 	@Override
 	public boolean canDrainFluidType(@Nullable FluidStack fluid)
 	{

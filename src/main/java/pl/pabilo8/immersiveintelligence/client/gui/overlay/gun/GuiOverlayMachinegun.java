@@ -6,8 +6,8 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.fluids.FluidStack;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.Machinegun;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
+import pl.pabilo8.immersiveintelligence.common.entity.mounted_weapon.EntityMachinegun;
+import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponUpgrade;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 import javax.annotation.Nonnull;
@@ -19,7 +19,8 @@ import javax.annotation.Nullable;
  */
 public class GuiOverlayMachinegun extends GuiOverlayGunBase
 {
-	private IIColor colorFrom = IIColor.fromPackedRGB(0xdf9916), colorTo = IIColor.fromPackedRGB(0xba0f0f);
+	private final IIColor colorFrom = IIColor.fromPackedRGB(0xdf9916);
+	private final IIColor colorTo = IIColor.fromPackedRGB(0xba0f0f);
 
 	@Override
 	public boolean shouldDraw(@Nonnull EntityPlayer player, @Nullable RayTraceResult mouseOver)
@@ -33,34 +34,37 @@ public class GuiOverlayMachinegun extends GuiOverlayGunBase
 		final EntityMachinegun mg = (EntityMachinegun)player.getRidingEntity();
 		assert mg!=null;
 
-		IIDrawUtils draw;
-
-		if(mg.hasSecondMag)
-			drawMagazine(mg.magazine2, width, height);
-
-		drawMagazine(mg.magazine1, width, height);
-
+		//Draw loaded ammo
+		if(mg.upgrades.contains(WeaponUpgrade.BELT_FED_LOADER))
+			drawMagazine(mg.loadingCrate, width, height);
+		else
+		{
+			if(mg.upgrades.contains(WeaponUpgrade.SECOND_MAGAZINE))
+				drawMagazine(mg.loadingMagazine2, width, height);
+			drawMagazine(mg.loadingMagazine1, width, height);
+		}
 		bindHUDTexture();
-		draw = IIDrawUtils.startTexturedColored()
+
+		//Draw Overheat
+		IIDrawUtils draw = IIDrawUtils.startTexturedColored()
 				.setOffset(width-38-24, height)
 				.drawTexColorRect(0, -20, 22, 18, IIColor.WHITE, 0/256f, 22/256f, 62/256f, 80/256f)
 				.inBetween((x, y) -> {
-					IIClientUtils.drawGradientBar(x+1, y-19, 3, 16, colorFrom, colorTo, mg.overheating/(float)Machinegun.maxOverheat);
+					IIClientUtils.drawGradientBar(x+1, y-19, 3, 16, colorFrom, colorTo, mg.recoil.getOverheat(0));
 					bindHUDTexture();
 				})
 				.drawTexColorRect(5, -19, 16, 16, IIColor.WHITE, 16/256f, 32/256f, 0, 16/256f);
 		draw.addOffset(0, -18);
 
 		//Draw Water
-		if(mg.tankCapacity > 0)
+		if(mg.upgrades.contains(WeaponUpgrade.WATER_COOLING))
 		{
 			final FluidStack fluid = mg.tank.getFluid();
 			draw.drawTexColorRect(0, -20, 22, 18, IIColor.WHITE, 0/256f, 22/256f, 62/256f, 80/256f)
 					.inBetween((x, y) -> {
 						if(fluid==null)
 							return;
-
-						float hh = 16*((float)mg.tank.getFluidAmount()/(float)mg.tankCapacity);
+						float hh = 16f*mg.tank.getFillPercentage();
 						ClientUtils.drawRepeatedFluidSprite(fluid, x+1, y-3-hh, 3, hh);
 						bindHUDTexture();
 					})
@@ -68,11 +72,11 @@ public class GuiOverlayMachinegun extends GuiOverlayGunBase
 					.addOffset(0, -18);
 		}
 		//Draw Shield
-		if(mg.maxShieldStrength > 0)
+		if(mg.upgrades.contains(WeaponUpgrade.SHIELD))
 		{
 			draw
 					.drawTexColorRect(0, -20, 22, 18, IIColor.WHITE, 0/256f, 22/256f, 62/256f, 80/256f)
-					.inBetween((x, y) -> IIClientUtils.drawArmorBar(x+1, y-19, 3, 16, mg.shieldStrength/mg.maxShieldStrength))
+					.inBetween((x, y) -> IIClientUtils.drawArmorBar(x+1, y-19, 3, 16, (float)mg.shield.getDamageFactor()))
 					.drawTexColorRect(5, -19, 16, 16, IIColor.WHITE, 32/256f, 48/256f, 0, 16/256f);
 		}
 		draw.finish();

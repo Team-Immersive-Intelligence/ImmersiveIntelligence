@@ -2,7 +2,7 @@ package pl.pabilo8.immersiveintelligence.client.gui.block;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTileGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBarGroup;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage.ImageAnimationDirection;
@@ -21,7 +21,7 @@ import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
  * @since 10.07.2019
  */
 @DecoTemplate(name = "wooden_gearbox", category = DecoGuiCategory.PRODUCTION_TILE)
-public class GuiSawmill extends DecoGui<TileEntitySawmill, ContainerSawmill>
+public class GuiSawmill extends DecoTileGui<TileEntitySawmill, ContainerSawmill>
 {
 	@DecoResource
 	public static final ResourceLocation PROGRESS_ARROW = ResLoc.of(IIReference.RES_II, "gui/sawmill");

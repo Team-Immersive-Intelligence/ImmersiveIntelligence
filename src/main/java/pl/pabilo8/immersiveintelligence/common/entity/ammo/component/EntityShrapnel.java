@@ -96,12 +96,11 @@ public class EntityShrapnel extends EntityIEProjectile implements IEntityLightEv
 	@Override
 	public void onImpact(RayTraceResult mop)
 	{
-		if(!this.world.isRemote&&ShrapnelHandler.registry.get(shrapnel)!=null)
+		if(!this.world.isRemote&&shrapnel!=null)
 		{
-			Shrapnel s = ShrapnelHandler.registry.get(shrapnel);
 			if(mop.entityHit!=null)
 			{
-				mop.entityHit.attackEntityFrom(causeShrapnelDamage(this, shootingEntity, mop.entityHit), s.damage);
+				mop.entityHit.attackEntityFrom(causeShrapnelDamage(this, shootingEntity, mop.entityHit), shrapnel.damage);
 				mop.entityHit.hurtResistantTime *= .5;
 				if(this.isBurning())
 				{

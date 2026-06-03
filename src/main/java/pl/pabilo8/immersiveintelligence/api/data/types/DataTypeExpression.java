@@ -100,7 +100,8 @@ public class DataTypeExpression extends DataType
 	{
 		this.operation = IIDataOperationUtils.getOperationInstance(nbt.getString("Operation"));
 		this.meta = this.operation.getMeta();
-		this.requiredVariable = nbt.getString("requiredVariable").charAt(0);
+		String required = nbt.getString("requiredVariable");
+		this.requiredVariable = required.isEmpty()?' ': required.charAt(0);
 
 		this.data = new DataType[meta.allowedTypes().length];
 		for(int i = 0; i < meta.allowedTypes().length; i++)

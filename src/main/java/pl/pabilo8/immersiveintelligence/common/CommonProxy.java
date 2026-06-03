@@ -22,6 +22,7 @@ import blusunrize.immersiveengineering.common.blocks.wooden.TileEntityWindmill;
 import blusunrize.immersiveengineering.common.items.IEItemInterfaces.IGuiItem;
 import blusunrize.immersiveengineering.common.util.ChatUtils;
 import blusunrize.immersiveengineering.common.util.IEPotions;
+import blusunrize.immersiveengineering.common.util.inventory.IIEInventory;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockTNT;
 import net.minecraft.block.state.IBlockState;
@@ -84,7 +85,10 @@ import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
 import pl.pabilo8.immersiveintelligence.common.crafting.IIRecipes;
 import pl.pabilo8.immersiveintelligence.common.crafting.RecipePowerpackAdvanced;
 import pl.pabilo8.immersiveintelligence.common.crafting.RecipeSkinCraftingHandler;
-import pl.pabilo8.immersiveintelligence.common.entity.*;
+import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
+import pl.pabilo8.immersiveintelligence.common.entity.EntityParachute;
+import pl.pabilo8.immersiveintelligence.common.entity.EntitySkyCrate;
+import pl.pabilo8.immersiveintelligence.common.entity.EntitySkycrateInternal;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.*;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.*;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.naval_mine.EntityNavalMine;
@@ -99,14 +103,19 @@ import pl.pabilo8.immersiveintelligence.common.entity.minecart.capacitor.EntityM
 import pl.pabilo8.immersiveintelligence.common.entity.minecart.crate.EntityMinecartCrateReinforced;
 import pl.pabilo8.immersiveintelligence.common.entity.minecart.crate.EntityMinecartCrateSteel;
 import pl.pabilo8.immersiveintelligence.common.entity.minecart.crate.EntityMinecartCrateWooden;
+import pl.pabilo8.immersiveintelligence.common.entity.mounted_weapon.EntityMachinegun;
+import pl.pabilo8.immersiveintelligence.common.entity.mounted_weapon.EntityMortar;
+import pl.pabilo8.immersiveintelligence.common.entity.mounted_weapon.EntityTripodPeriscope;
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.EntityAMTTactile;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityDrone;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityMotorbike;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityTrackedMotorbike;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.towable.gun.EntityFieldFlak;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.towable.gun.EntityFieldGun;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.towable.gun.EntityFieldHowitzer;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleSeat;
-import pl.pabilo8.immersiveintelligence.common.gui.ContainerUpgrade;
+import pl.pabilo8.immersiveintelligence.common.gui.ContainerEntityUpgrade;
+import pl.pabilo8.immersiveintelligence.common.gui.ContainerTileUpgrade;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIIMinecart.Minecarts;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMaterialDust.MaterialsDust;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -724,6 +733,7 @@ public class CommonProxy implements IGuiHandler
 		registerEntity(i++, EntityMotorbike.class, "motorbike", 64, 1, false);
 		registerEntity(i++, EntityTrackedMotorbike.class, "tracked_motorbike", 64, 1, false);
 		registerEntity(i++, EntityFieldHowitzer.class, "field_howitzer", 64, 1, false);
+		registerEntity(i++, EntityFieldFlak.class, "field_flak", 64, 1, false);
 		registerEntity(i++, EntityFieldGun.class, "field_gun", 64, 1, false);
 
 		registerEntity(i++, EntityTripodPeriscope.class, "tripod_periscope", 64, 1, true);
@@ -790,12 +800,21 @@ public class CommonProxy implements IGuiHandler
 		EnumHand hand;
 		TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
 		ItemStack stack = player.getHeldItem(hand = (player.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof IGuiItem?EnumHand.MAIN_HAND: EnumHand.OFF_HAND));
+		Entity entity = y==Integer.MIN_VALUE?world.getEntityByID(x): null;
 
-		if(ID==IIGUI.UPGRADE.ordinal()&&te instanceof IUpgradableDevice)
+		if(ID==IIGUI.UPGRADE_TILE.ordinal()&&te instanceof IUpgradableDevice)
 		{
 			IUpgradableDevice upgradeMaster = ((IUpgradableDevice)te).master();
 			if(upgradeMaster!=null)
-				return new ContainerUpgrade(player, (TileEntityIEBase & IUpgradableDevice)upgradeMaster);
+				//noinspection rawtypes,unchecked
+				return new ContainerTileUpgrade(player, (TileEntityIEBase & IUpgradableDevice)upgradeMaster);
+		}
+		if(ID==IIGUI.UPGRADE_ENTITY.ordinal()&&entity instanceof IUpgradableDevice)
+		{
+			IUpgradableDevice upgradeMaster = ((IUpgradableDevice)entity).master();
+			if(upgradeMaster!=null)
+				//noinspection rawtypes,unchecked
+				return new ContainerEntityUpgrade<>(player, (Entity & IUpgradableDevice & IIEInventory)upgradeMaster);
 		}
 
 		if(IIGUI.values().length > ID)

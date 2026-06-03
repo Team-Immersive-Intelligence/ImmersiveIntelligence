@@ -8,7 +8,7 @@ import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.api.PackerHandler;
 import pl.pabilo8.immersiveintelligence.api.PackerHandler.PackerActionType;
 import pl.pabilo8.immersiveintelligence.api.PackerHandler.PackerTask;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTileGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoCheckbox;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoDropdown;
@@ -17,8 +17,8 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoEntr
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoIngredientStackPickerPanel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoIngredientStackPickerPanel.PickerPanelMode;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPanel;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoTaskJobList;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoTaskJobList.ListMode;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoTaskList;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoTaskList.ListMode;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoFluidTank;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoItemStackDisplay;
@@ -53,7 +53,7 @@ import static pl.pabilo8.immersiveintelligence.common.util.IIReference.RES_II;
  * @since 25.08.2022
  */
 @DecoTemplate(name = "packer", category = DecoGuiCategory.DATA_TILE)
-public class GuiPacker extends DecoGui<TileEntityPacker, ContainerPacker>
+public class GuiPacker extends DecoTileGui<TileEntityPacker, ContainerPacker>
 {
 	@DecoResource
 	public static ResourceLocation ICON_LABELER = ResLoc.of(RES_II, "gui/upgrade/packer_naming");
@@ -61,10 +61,10 @@ public class GuiPacker extends DecoGui<TileEntityPacker, ContainerPacker>
 	@SyncNBT(events = SyncEvents.TILE_CLIENT_MESSAGE)
 	public EasyCollection<PackerTask, NBTTagCompound> tasks;
 	@SyncNBT
-	public ListMode mode = ListMode.TASKS;
+	public ListMode mode = ListMode.JOBS;
 
 	private PackerActionType actionType;
-	private DecoTaskJobList<PackerTask> taskJobList;
+	private DecoTaskList<PackerTask> taskList;
 	private DecoPanel panelDetails, panelResources;
 	private DecoCheckbox expiresCheckbox;
 	private DecoTextField expiresTextField;
@@ -117,14 +117,14 @@ public class GuiPacker extends DecoGui<TileEntityPacker, ContainerPacker>
 		}
 
 		// Replace mode tabs + list + action buttons with a single component
-		addComponent((taskJobList = new DecoTaskJobList<>(0, 0))
+		addComponent((taskList = new DecoTaskList<>(0, 0))
 				.withSize(108, 116+12-8)
 				.withEntries(tasks)
-				.withIsJobPredicate(t -> t.expirationAmount!=-1)
+				.withIsJobPredicate(t -> t.expirationAmount==-1)
 				.withModeHandling(mode, m -> mode = m)
 				.withBlankTaskSupplier(() -> {
 					PackerTask created = new PackerTask(PackerHandler.PackerPutMode.ALL_POSSIBLE, actionType, new IngredientStack("*"));
-					created.expirationAmount = (taskJobList.getMode()==ListMode.TASKS)?-1: 1;
+					created.expirationAmount = (taskList.getMode()==ListMode.JOBS)?-1: 1;
 					return created;
 				})
 				.withOnSelectedChanged(task -> {
@@ -390,6 +390,8 @@ public class GuiPacker extends DecoGui<TileEntityPacker, ContainerPacker>
 			expiresCheckbox.withChecked(selected.expirationAmount!=-1);
 		if(expiresTextField!=null)
 			expiresTextField.withText(selected.expirationAmount==-1?"": String.valueOf(selected.expirationAmount));
+		if(taskList!=null)
+			taskList.setMode(selected.expirationAmount==-1?ListMode.JOBS: ListMode.REQUESTS);
 
 	}
 

@@ -7,11 +7,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.api.utils.camera.IEntityZoomProvider;
-import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedZoomTool;
-import pl.pabilo8.immersiveintelligence.client.ClientEventHandler;
+import pl.pabilo8.immersiveintelligence.api.utils.camera.ICameraEntity;
+import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedZoom;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityCamera;
 
 /**
@@ -25,11 +25,17 @@ public class CameraHandler
 	//--- ZoomHandler ---//
 	public static float fovZoom = 1;
 	public static ZoomType type = null;
-	public static IAdvancedZoomTool zoom;
+	public static IAdvancedZoom zoom;
 	public static ItemStack stack;
+
 	//--- CameraHandler ---//
 	private static EntityCamera camera;
 	private static boolean enabled = false;
+
+	public static void setCameraPos(Vec3d pos)
+	{
+		setCameraPos(pos.x, pos.y, pos.z);
+	}
 
 	public static void setCameraPos(BlockPos pos)
 	{
@@ -101,21 +107,24 @@ public class CameraHandler
 		Entity lowestRidden;
 
 		//Zoom provider is an item in player's hand
-		if((stack = player.getHeldItem(EnumHand.MAIN_HAND)).getItem() instanceof IAdvancedZoomTool)
+		if((stack = player.getHeldItem(EnumHand.MAIN_HAND)).getItem() instanceof IAdvancedZoom)
 		{
 			type = ZoomType.ITEM_MAINHAND;
-			zoom = (IAdvancedZoomTool)(stack.getItem());
+			zoom = (IAdvancedZoom)(stack.getItem());
 		}
-		else if((stack = player.getHeldItem(EnumHand.OFF_HAND)).getItem() instanceof IAdvancedZoomTool)
+		else if((stack = player.getHeldItem(EnumHand.OFF_HAND)).getItem() instanceof IAdvancedZoom)
 		{
 			type = ZoomType.ITEM_OFFHAND;
-			zoom = (IAdvancedZoomTool)(stack.getItem());
+			zoom = (IAdvancedZoom)(stack.getItem());
 		}
 		//Zoom provider is an entity ridden by player
-		else if(ClientEventHandler.mgAiming&&(lowestRidden = player.getLowestRidingEntity()) instanceof IEntityZoomProvider)
+		else if((lowestRidden = player.getLowestRidingEntity()) instanceof ICameraEntity)
 		{
+			ICameraEntity camera = (ICameraEntity)lowestRidden;
+			if(!camera.isCameraEnabled(player))
+				return false;
 			type = ZoomType.RIDING;
-			zoom = ((IEntityZoomProvider)lowestRidden).getZoom();
+			zoom = camera.getZoom();
 		}
 		else
 			return false;

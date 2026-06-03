@@ -1,0 +1,205 @@
+{
+  "comment": "Made by Pabilo8 with Blockbench",
+  "groups": {
+    "hans_gunner": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "hans_gunner_left_arm": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "hans_gunner_right_arm": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "hans_gunner_right_leg": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "hans_gunner_left_leg": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "hans_commander": {
+      "position": [
+        {
+          "time": 0,
+          "transform": [-5, 2, -8]
+        }
+      ]
+    },
+    "hans_commander_right_arm": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [-28.93305, 27.81706, 2.04579]
+        },
+        {
+          "time": 0.14286,
+          "transform": [-87.01834, -3.56781, -6.71413]
+        },
+        {
+          "time": 0.28571,
+          "transform": [-130.5888, -29.62566, -27.21733]
+        },
+        {
+          "time": 0.40474,
+          "transform": [-130.5888, -29.62566, -27.21733]
+        },
+        {
+          "time": 0.57143,
+          "transform": [-101.19583, -38.51104, -4.52898]
+        },
+        {
+          "time": 0.71429,
+          "transform": [-87.01834, -3.56781, -6.71413]
+        },
+        {
+          "time": 1,
+          "transform": [-28.93305, 27.81706, 2.04579]
+        }
+      ],
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, 0, -1]
+        },
+        {
+          "time": 0.14286,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.28571,
+          "transform": [0, 0, -5]
+        },
+        {
+          "time": 0.40474,
+          "transform": [0, 0, -5]
+        },
+        {
+          "time": 0.57143,
+          "transform": [0, 0, -4]
+        },
+        {
+          "time": 0.71429,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, -1]
+        }
+      ]
+    },
+    "hans_commander_right_leg": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [-90, 0, 0]
+        }
+      ]
+    },
+    "hans_commander_left_leg": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [-90, 0, 0]
+        }
+      ]
+    },
+    "magazine2": {
+      "position": [
+        {
+          "time": 0.28571,
+          "transform": [0, 6, 0]
+        },
+        {
+          "time": 0.40474,
+          "transform": [0, 6, 0]
+        },
+        {
+          "time": 0.57143,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.71429,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "scale": [
+        {
+          "time": 0.28571,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.40474,
+          "transform": [1, 1, 1]
+        }
+      ]
+    },
+    "hans_gunner_body": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        }
+      ]
+    }
+  }
+}

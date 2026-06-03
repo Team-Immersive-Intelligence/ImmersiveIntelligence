@@ -6,6 +6,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Graphics;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -442,6 +443,33 @@ public class IIColor implements Comparable<IIColor>, ToIntFunction<IIColor>
 		Optional<EnumDyeColor> min = Arrays.stream(EnumDyeColor.values()).min(Comparator.comparingInt(value ->
 				IIColor.fromFloatRGB(value.getColorComponentValues()).compareTo(this)));
 		return min.orElse(EnumDyeColor.BLACK);
+	}
+
+	//--- II Paint Textures ---//
+
+	/**
+	 * @param hue a hue value from 0 up to {@link Graphics#dynamiclyColoredTextureVariants}
+	 * @return A color from the paint system palette based on the hue value, with fixed saturation and brightness.
+	 * @implNote The hue value is wrapped around the number of available variants, so it can be any integer.
+	 */
+	public static IIColor getPaintSystemColor(int hue)
+	{
+		//White is a special case, meaning an unpainted object
+		if(hue < 0)
+			return WHITE;
+		return IIColor.fromHSV((hue%Graphics.dynamiclyColoredTextureVariants)/((float)Graphics.dynamiclyColoredTextureVariants), 0.35f, 0.85f);
+	}
+
+	/**
+	 * @return A color from the paint system palette based on this color's hue, with fixed saturation and brightness.
+	 */
+	public IIColor constraintToPaintSystem()
+	{
+		//White is a special case, meaning an unpainted object
+		if(this.equals(WHITE))
+			return WHITE;
+		float[] hsv = getHSV();
+		return IIColor.fromHSV(Math.round(hsv[0]*64)/64f, 0.35f, 0.85f);
 	}
 
 	//--- "With" Type Methods ---//

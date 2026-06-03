@@ -6,17 +6,15 @@ import pl.pabilo8.immersiveintelligence.api.data.DataVariable;
 import pl.pabilo8.immersiveintelligence.api.data.IDataMachineGui;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType.TypeMetaInfo;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTileGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoArrows;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoDropdownDataLetters;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoDropdown;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.data_editor.DecoDataEditor;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoEntryPanelBuilder;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityDataInputMachine;
@@ -35,7 +33,7 @@ import javax.annotation.Nullable;
  * @since 30.06.2019
  */
 @DecoTemplate(name = "data_input_machine_edit", category = DecoGuiCategory.DATA_TILE)
-public class GuiDataInputMachineEdit extends DecoGui<TileEntityDataInputMachine, ContainerDataInputMachineEditing> implements IDataMachineGui
+public class GuiDataInputMachineEdit extends DecoTileGui<TileEntityDataInputMachine, ContainerDataInputMachineEditing> implements IDataMachineGui
 {
 	@SyncNBT
 	public DataVariable variableToEdit;
@@ -120,32 +118,9 @@ public class GuiDataInputMachineEdit extends DecoGui<TileEntityDataInputMachine,
 						.withSize(116, 18)
 						.withDropdownWidth(116)
 						.withMaxDisplayedEntries(5)
-						.withEntries(DecoDataEditor.getEditorTypes(false))
+						.withEntries(DecoDataEditor.getEditorTypes(tile.isUpgradeInstalled(IIContent.UPGRADE_ADVANCED_DATA)))
 						.withSelectedEntry(variableToEdit.getValue().getTypeMeta())
-						.withDisplayFunction(new DecoEntryPanelBuilder<TypeMetaInfo<?>>()
-								.withHeight(18)
-								.withBackground(DecoTextures.BG_PAPER)
-								.withBackgroundMask(DecoTextures.TEMPLATE_PAPER)
-								//Type Icon, Label, and Letter
-								.withComponent("image", new DecoImage(3, 1)
-										.withSize(16, 16))
-								.withLabel("typeLabel",
-										new DecoLabel(fontRenderer, 20, 1)
-												.withSize(48, 18)
-												.withAlign(DecoAlignment.LEFT)
-												.withText("Integer")
-								)
-								.withElementApplyMethod((typeMeta, panel) -> {
-									//type label (f.e. integer)
-									panel.label("typeLabel")
-											.withText(typeMeta.getTranslatedName())
-											.withTextColor(typeMeta.color.withBrightness(0.4f));
-									//type icon
-									panel.component("image", DecoImage.class)
-											.withImageLocation(typeMeta.getTextureLocation(), true);
-								})
-								.withElementTooltip(typeMeta -> "a")
-						)
+						.withDisplayFunction(DecoTemplates.getDataTypeEntryDisplay())
 						.withOnSelectedEntry((typeMetaInfo, typeMetaInfo2) -> {
 							cancel = true;
 							variableToEdit = new DataVariable(variableToEdit.getName(), typeMetaInfo2.supplier.get());
@@ -154,7 +129,7 @@ public class GuiDataInputMachineEdit extends DecoGui<TileEntityDataInputMachine,
 
 				new DecoButton(xSize-48-4-4-4-2, 153)
 						.withBackground(DecoTextures.COMPONENT_BUTTON_ROUND)
-						.withText("Apply")
+						.withText("ii.gui.button.apply")
 						.withSize(48, 12)
 						.withOnPressed((gui, button, mouseX, mouseY) -> {
 							cancel = false;
@@ -162,7 +137,7 @@ public class GuiDataInputMachineEdit extends DecoGui<TileEntityDataInputMachine,
 						}),
 				new DecoButton(xSize-96-4-4-4-2, 153)
 						.withBackground(DecoTextures.COMPONENT_BUTTON_ROUND)
-						.withText("Cancel")
+						.withText("ii.gui.button.cancel")
 						.withSize(48, 12)
 						.withOnPressed((gui, button, mouseX, mouseY) -> {
 							cancel = true;

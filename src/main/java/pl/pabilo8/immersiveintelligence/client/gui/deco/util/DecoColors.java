@@ -38,4 +38,7 @@ public class DecoColors
 	public static final IIColor REACTIVE_ARMOR_INTEGRITY_2 = IIColor.fromPackedRGB(0x30383b);
 	public static final IIColor STRUCTURAL_INTEGRITY_1 = IIColor.fromPackedRGB(0x79675a);
 	public static final IIColor STRUCTURAL_INTEGRITY_2 = IIColor.fromPackedRGB(0x4a3035);
+
+	public static final IIColor GRADIENT1 = IIColor.fromPackedRGB(0xb51500);
+	public static final IIColor GRADIENT2 = IIColor.fromPackedRGB(0x600b00);
 }

@@ -2,7 +2,10 @@ package pl.pabilo8.immersiveintelligence.common;
 
 import blusunrize.immersiveengineering.api.MultiblockHandler.MultiblockFormEvent.Post;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
+import blusunrize.immersiveengineering.common.util.inventory.IIEInventory;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.MultiPartEntityPart;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,6 +16,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSourceIndirect;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.GameRules.ValueType;
@@ -27,6 +31,7 @@ import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent.EntityInteract;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickEmpty;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickItem;
@@ -42,9 +47,11 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
+import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.ammo.penetration.DamageBlockPos;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoUtils;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.PenetrationCache;
+import pl.pabilo8.immersiveintelligence.api.upgrade.IUpgradableDevice;
 import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedMultiblock;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Ammunition;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons;
@@ -52,8 +59,9 @@ import pl.pabilo8.immersiveintelligence.common.compat.BaublesHelper;
 import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
 import pl.pabilo8.immersiveintelligence.common.crafting.IIRecipes;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
+import pl.pabilo8.immersiveintelligence.common.entity.mounted_weapon.EntityMountedWeapon;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleSeat;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine;
 import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIILightEngineerBoots;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -119,10 +127,8 @@ public class EventHandler
 		}
 		//springs
 		else if(event.getSource()==DamageSource.FALL)
-		{
 			if(ItemIIUpgradeableArmor.isArmorWithUpgrade(boots, "springs"))
 				event.setCanceled(true);
-		}
 	}
 
 	//--- World Load Handling ---//
@@ -232,9 +238,8 @@ public class EventHandler
 	@SubscribeEvent
 	public void onMultiblockForm(Post event)
 	{
+		//Required by Advanced Structures!
 		if(event.isCancelable()&&!event.isCanceled()&&event.getMultiblock().getClass().isAnnotationPresent(IAdvancedMultiblock.class))
-		{
-			//Required by Advanced Structures!
 			if(!IIItemUtils.isAdvancedHammer(event.getHammer()))
 			{
 				if(!event.getEntityPlayer().getEntityWorld().isRemote)
@@ -242,15 +247,16 @@ public class EventHandler
 							IIStringUtil.getItemStackTextComponent(IIContent.itemHammer.getStack(1)));
 				event.setCanceled(true);
 			}
-		}
 	}
 
-	//Cancel when using a machinegun
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public void onItemUse(RightClickBlock event)
 	{
-		EntityLivingBase living = event.getEntityLiving();
-		if(living.isRiding()&&living.getRidingEntity() instanceof EntityMachinegun)
+		if(!event.getEntity().isRiding())
+			return;
+		Entity baseEntity = event.getEntity().getRidingEntity();
+		//Cancel when using a vehicle
+		if(baseEntity instanceof EntityMountedWeapon||baseEntity instanceof EntityVehicleSeat)
 		{
 			event.setResult(Result.DENY);
 			event.setCanceled(true);
@@ -261,8 +267,11 @@ public class EventHandler
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public void onBlockUse(RightClickItem event)
 	{
-		//Machinegun
-		if(event.getEntity().isRiding()&&event.getEntity().getRidingEntity() instanceof EntityMachinegun)
+		if(!event.getEntity().isRiding())
+			return;
+		Entity baseEntity = event.getEntity().getRidingEntity();
+		//Cancel when using a vehicle
+		if(baseEntity instanceof EntityMountedWeapon||baseEntity instanceof EntityVehicleSeat)
 		{
 			event.setResult(Result.DENY);
 			event.setCanceled(true);
@@ -273,10 +282,12 @@ public class EventHandler
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public void onEmptyRightclick(RightClickEmpty event)
 	{
-		if(event.getEntity().isRiding()&&event.getEntity().getRidingEntity() instanceof EntityMachinegun)
-		{
+		if(!event.getEntity().isRiding())
+			return;
+		Entity baseEntity = event.getEntity().getRidingEntity();
+		//Cancel when using a vehicle
+		if(baseEntity instanceof EntityMountedWeapon||baseEntity instanceof EntityVehicleSeat)
 			event.setResult(Result.DENY);
-		}
 	}
 
 	@SubscribeEvent
@@ -299,6 +310,33 @@ public class EventHandler
 		}
 	}
 
+	@SubscribeEvent
+	public void onPlayerInteractEntityInteract(EntityInteract event)
+	{
+		EntityPlayer player = event.getEntityPlayer();
+
+		//Display upgrade GUI for compatible entities when using a wrench
+		if(IIItemUtils.isWrench(player.getHeldItem(EnumHand.MAIN_HAND))||IIItemUtils.isWrench(player.getHeldItem(EnumHand.OFF_HAND)))
+		{
+			Entity interacted = event.getTarget();
+			if(interacted instanceof MultiPartEntityPart)
+				interacted = (Entity)((MultiPartEntityPart)interacted).parent;
+			if(interacted instanceof IUpgradableDevice)
+			{
+				if(!(interacted instanceof IIEInventory))
+				{
+					IILogger.error("Cannot open upgrade GUI for "+interacted+", it does not implement IIEInventory!");
+					return;
+				}
+				//Open entity GUI
+				player.openGui(ImmersiveIntelligence.INSTANCE, IIGUI.UPGRADE_ENTITY.ordinal(),
+						interacted.world, interacted.getEntityId(), Integer.MIN_VALUE, 0);
+			}
+		}
+
+	}
+
+
 	//--- Hanses ---//
 
 	@SubscribeEvent(priority = EventPriority.LOW)
@@ -316,12 +354,10 @@ public class EventHandler
 			EntityPlayer player = (EntityPlayer)living;
 
 			//Potion effects
+			//Apply radiation
 			if(world.getTotalWorldTime()%20==0)
-			{
-				//Apply radiation
 				if(!player.isCreative()&&biome==IIContent.biomeWasteland)
 					living.addPotionEffect(new PotionEffect(IIPotions.radiation, 2000, 0, false, false));
-			}
 
 			//Handle powerpack crafted with armor
 			if(!living.getItemStackFromSlot(EntityEquipmentSlot.CHEST).isEmpty()
@@ -395,10 +431,8 @@ public class EventHandler
 		}
 		//springs
 		else if(event.getSource()==DamageSource.FALL)
-		{
 			if(ItemIIUpgradeableArmor.isArmorWithUpgrade(boots, "springs"))
 				event.setCanceled(true);
-		}
 	}
 
 	/**
@@ -418,9 +452,7 @@ public class EventHandler
 				if(!(piece.getItem() instanceof ItemIILightEngineerBoots)) continue;
 				ItemIILightEngineerBoots boots = (ItemIILightEngineerBoots)piece.getItem();
 				if(boots.hasUpgrade(piece, "internal_springs"))
-				{
 					event.setDistance(0);
-				}
 			}
 		}
 	}

@@ -88,7 +88,7 @@ public class AMTLoader
 	public static IIAnimation loadAnimation(@Nonnull ResourceLocation res)
 	{
 		ResourceLocation fullRes = new ResourceLocation(res.getResourceDomain(), "animations/"+res.getResourcePath()+".json");
-		return new IIAnimation(res, readFileToJSON(fullRes, "model header"));
+		return new IIAnimation(res, readFileToJSON(fullRes, "animation"));
 	}
 
 	public static IIAnimation loadAnimationServer(@Nonnull ResourceLocation res)

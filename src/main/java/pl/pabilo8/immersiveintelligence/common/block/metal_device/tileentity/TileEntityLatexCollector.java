@@ -5,6 +5,7 @@ import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IDirectio
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IPlayerInteraction;
 import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -13,9 +14,15 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedTextOverlay;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.LatexCollector;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIRubberLog;
@@ -28,7 +35,7 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 19.05.2021
  */
-public class TileEntityLatexCollector extends TileEntityIEBase implements IPlayerInteraction, ITickable, IBlockBounds, IDirectionalTile
+public class TileEntityLatexCollector extends TileEntityIEBase implements IPlayerInteraction, ITickable, IBlockBounds, IDirectionalTile, IAdvancedTextOverlay
 {
 	public EnumFacing facing = EnumFacing.NORTH;
 	public ItemStack bucket = ItemStack.EMPTY;
@@ -43,7 +50,7 @@ public class TileEntityLatexCollector extends TileEntityIEBase implements IPlaye
 		bucket = new ItemStack(nbt.getCompoundTag("bucket"));
 		if(nbt.hasKey("noSetup"))
 			bucketTime = 0;
-		this.timer = nbt.getFloat("timer"); // FIX: was writing into NBT, should read from it
+		this.timer = nbt.getFloat("timer");
 	}
 
 	@Override
@@ -53,7 +60,7 @@ public class TileEntityLatexCollector extends TileEntityIEBase implements IPlaye
 		nbt.setTag("bucket", bucket.serializeNBT());
 		if(bucketTime < 10)
 			nbt.setBoolean("noSetup", true);
-		nbt.setFloat("timer", timer); // FIX: was reading from NBT, should write into it
+		nbt.setFloat("timer", timer);
 	}
 
 	/**
@@ -225,5 +232,21 @@ public class TileEntityLatexCollector extends TileEntityIEBase implements IPlaye
 	public boolean canRotate(EnumFacing axis)
 	{
 		return false;
+	}
+
+	//--- IAdvancedTextOverlay ---//
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public String[] getOverlayText(EntityPlayer player, RayTraceResult mop)
+	{
+		int latex = (int)MathHelper.clamp(timer/LatexCollector.collectTime*1000, 0f, 1000f);
+		if(latex==0)
+			return new String[]{I18n.format("gui.immersiveengineering.empty")};
+
+		return new String[]{
+				IIContent.fluidLatex.getLocalizedName(new FluidStack(IIContent.fluidLatex, latex)),
+				TextFormatting.GRAY.toString()+latex+"/1000 mB"
+		};
 	}
 }

@@ -1,10 +1,7 @@
 package pl.pabilo8.immersiveintelligence.client.gui.deco;
 
 import blusunrize.immersiveengineering.api.ApiUtils;
-import blusunrize.immersiveengineering.api.DimensionBlockPos;
 import blusunrize.immersiveengineering.client.ClientUtils;
-import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
-import blusunrize.immersiveengineering.common.util.inventory.IIEInventory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiLabel;
@@ -16,6 +13,7 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.shader.Framebuffer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
@@ -33,7 +31,6 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.style.IStyleCustomizable;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent;
@@ -43,25 +40,17 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoTab
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.widget.DecoComponentWidgetBase;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.widget.DecoManualWidget;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.widget.DecoOwnershipWidget;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.widget.DecoStyleWidget;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageGuiNBT;
-import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
-import pl.pabilo8.immersiveintelligence.common.util.diplomacy.property.IOwnableProperty;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.NBTSerialisation;
-import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
-import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -78,47 +67,43 @@ import java.util.List;
 import java.util.function.Supplier;
 
 /**
+ * Common base for Deco GUIs.
  * <p>
- * Introducing Deco, Immersive Intelligence's new GUI framework designed to be
- *     <ul>
- *         <li>Dynamic</li>
- *         <li>Elegant</li>
- *         <li>Compact</li>
- *         <li>Optimized</li>
- *     </ul>
- *     Offering a variety of {@link pl.pabilo8.immersiveintelligence.client.gui.deco.component components},
- *     {@link pl.pabilo8.immersiveintelligence.client.gui.deco.component.widget widgets} and a tile-based
- *     {@link DecoBackgroundBuilder} to make GUI creation easier and more efficient
+ * This class owns the reusable GUI mechanics: component lifecycle, widgets, labels, tooltips,
+ * value listeners, background drawing, JEI taken-space data and GUI screenshot export.
+ * Context-specific behaviour is supplied by subclasses such as {@link DecoTileGui},
+ * {@link DecoEntityGui} and {@link DecoItemGui}.
  * </p>
- * Class for advanced GUIs that store data in the client proxy NBT and use components for their display<br>
- * Use annotation {@link DecoTemplate} to specify traits
+ * Use annotation {@link DecoTemplate} to specify traits.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 04.01.2025
  */
-public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C extends ContainerIIBase<T>> extends GuiContainer
+@SuppressWarnings({"rawtypes", "unchecked"})
+public abstract class DecoGui<T, C extends Container> extends GuiContainer
 {
 	private static final int MAX_WIDGET_TIME = 40;
+	private static final String NBT_GUI_NAME = "decoGui";
 
 	//Gui basics
 	protected final String name;
-	protected final T tile;
+	protected final T context;
 	protected final C container;
 	protected final DecoGuiCategory category;
 	protected final InventoryPlayer playerContainer;
+	protected final IIGUI gui;
 
 	//Components
 	protected final List<DecoTab> tabList = new ArrayList<>();
 	protected final List<DecoTab> widgetTabList = new ArrayList<>();
 	private final List<DecoComponentWidgetBase<?>> widgetList = new ArrayList<>();
 	private final List<ValueListener<?>> valueListeners = new ArrayList<>();
-	private final IIGUI gui;
 	/**
-	 * if true, the GUI won't perform saving to NBT during {@link #onGuiClosed()}, used for transitions between GUIs
+	 * if true, the GUI won't perform default closing cleanup during {@link #onGuiClosed()}, used for transitions between GUIs
 	 */
 	protected boolean changeGUIFlag = false, refreshGUIFlag = false;
 	//Background
-	private DecoBackgroundBuilder<T, C> backgroundBuilder;
+	private DecoBackgroundBuilder backgroundBuilder;
 	private List<Rectangle> takenSpace;
 	private DecoComponent<?> focusedElement;
 	private DecoComponent<?> hoveredElement;
@@ -130,26 +115,15 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	 */
 	private boolean screenshotMode = false;
 
-	public DecoGui(EntityPlayer player, T tile, IIGUI iigui)
+	protected DecoGui(EntityPlayer player, @Nullable C container, @Nullable T context, IIGUI iigui)
 	{
 		//The player can be null ONLY for the GUI's resource annotation loading
 		//In a normal scenario the player is never null
-		super(player==null?null: iigui.containerFromTile.apply(player, tile));
+		super(container);
 		this.gui = iigui;
-		if(player==null)
-		{
-			this.name = null;
-			this.tile = null;
-			this.container = null;
-			this.playerContainer = null;
-			this.category = null;
-			return;
-		}
-
-		this.tile = tile;
-		//noinspection unchecked
-		this.container = ((C)this.inventorySlots);
-		this.playerContainer = player.inventory;
+		this.context = context;
+		this.container = container;
+		this.playerContainer = player==null?null: player.inventory;
 
 		//Get meta data from annotation
 		DecoTemplate annotation = this.getClass().getAnnotation(DecoTemplate.class);
@@ -213,7 +187,7 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 			Arrays.stream(backgroundBuilder.getTitleLabel()).forEach(this::addLabel);
 		}
 		else
-			xSize = ySize = 64;
+			onNoBackgroundBuilder();
 
 		//Resize using vanilla method
 		super.initGui();
@@ -232,8 +206,6 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 				((DecoComponent<?>)button).setParentGUI(this);
 		for(DecoComponentWidgetBase<?> widget : widgetList)
 			widget.setParentGUI(this);
-
-
 	}
 
 	/**
@@ -246,12 +218,15 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	 */
 	protected void onInitStandardAddons()
 	{
-		if(category==DecoGuiCategory.DATA_TILE||category==DecoGuiCategory.PRODUCTION_TILE||category==DecoGuiCategory.TERRITORY_CONTROL_TILE)
-			addWidget(new DecoManualWidget());
-		if(tile instanceof IOwnableProperty)
-			addWidget(new DecoOwnershipWidget(((IOwnableProperty)tile)));
-		if(tile instanceof IStyleCustomizable)
-			addWidget(new DecoStyleWidget(((IStyleCustomizable)tile)));
+
+	}
+
+	/**
+	 * Called when no {@link DecoBackgroundBuilder} was supplied.
+	 */
+	protected void onNoBackgroundBuilder()
+	{
+		xSize = ySize = 64;
 	}
 
 	/**
@@ -427,7 +402,7 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	 */
 	protected DecoBackgroundBuilder<T, C> startBackground()
 	{
-		return this.backgroundBuilder = new DecoBackgroundBuilder<>(this);
+		return this.backgroundBuilder = new DecoBackgroundBuilder(this);
 	}
 
 	//--- GUI Rendering Methods ---//
@@ -460,15 +435,7 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	{
 		if(refreshGUIFlag)
 		{
-			if(backgroundBuilder!=null)
-				backgroundBuilder.cleanup();
-			//Cleanup components
-			for(GuiButton b : buttonList)
-				if(b instanceof DecoComponent)
-					((DecoComponent<?>)b).cleanup();
-			//Cleanup widgets
-			for(DecoComponentWidgetBase<?> widget : widgetList)
-				widget.cleanup();
+			cleanupDecoGui();
 			initGui();
 			refreshGUIFlag = false;
 		}
@@ -545,6 +512,19 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 			decoTab.x = this.guiLeft+this.xSize+wSize;
 			decoTab.initialize();
 		}
+	}
+
+	protected void openManualWidget(String pageName, int index)
+	{
+		widgetList.stream()
+				.filter(widget -> widget instanceof DecoManualWidget)
+				.map(widget -> (DecoManualWidget)widget)
+				.findFirst().ifPresent(widget -> {
+					if(currentWidget!=widget)
+						setCurrentWidget(widget);
+					widget.setCurrentPage(pageName, index);
+					requestFocus(widget);
+				});
 	}
 
 	/**
@@ -690,27 +670,26 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	}
 
 	/**
-	 * Triggered upon closing the GUI. Saves the GUI data to {@link ClientProxy} and (optionally) sends a sync message to the tile entity.
+	 * Triggered upon closing the GUI. Saves the GUI data to {@link ClientProxy} and delegates context-specific sync to subclasses.
 	 */
 	@Override
 	public void onGuiClosed()
 	{
 		super.onGuiClosed();
 
-		//Save GUI data
 		if(!changeGUIFlag)
 		{
-			//Send an NBT sync message to the tile entity
-			EasyNBT nbt = onSaveTileData();
-			if(!nbt.isEmpty())
-				IIPacketHandler.sendToServer(new MessageIITileSync(tile, nbt));
-			//Clean stored data
-			((ClientProxy)ImmersiveIntelligence.proxy).setStoredGuiData();
+			onGuiClosedWithoutTransition();
+			clearStoredGuiData();
 		}
 		else
 			saveGuiData();
 
-		//Perform background and component cleanup
+		cleanupDecoGui();
+	}
+
+	protected void cleanupDecoGui()
+	{
 		if(backgroundBuilder!=null)
 			backgroundBuilder.cleanup();
 		for(GuiButton b : buttonList)
@@ -719,6 +698,14 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 		//Labels shouldn't create VBOs, so no cleanup needed
 		for(DecoComponentWidgetBase<?> widget : widgetList)
 			widget.cleanup();
+	}
+
+	/**
+	 * Called when the GUI is closed normally, not when it is changing to another GUI.
+	 */
+	protected void onGuiClosedWithoutTransition()
+	{
+
 	}
 
 	//--- Component Events ---//
@@ -763,19 +750,16 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	//--- NBT ---//
 
 	/**
-	 * Called upon start and synchronisation, loads the data from the client proxy
+	 * Called upon start and synchronisation, loads the data from the client proxy.
 	 *
 	 * @return The NBT compound containing the data
 	 */
-	private EasyNBT loadGuiData()
+	protected EasyNBT loadGuiData()
 	{
-		//Load GUI data from the proxy
-		assert ImmersiveIntelligence.proxy instanceof ClientProxy;
-		ClientProxy proxy = (ClientProxy)ImmersiveIntelligence.proxy;
+		ClientProxy proxy = getClientProxy();
 		EasyNBT nbt = proxy.getStoredGuiData();
 
-		//Return a valid compound or an empty one if location mismatch
-		if(!nbt.hasKey("pos")||!new DimensionBlockPos(tile).equals(nbt.getDimPos("pos")))
+		if(!isStoredGuiDataValid(nbt))
 			return proxy.setStoredGuiData();
 
 		//Deserialize all SyncNBT fields
@@ -785,16 +769,23 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	}
 
 	/**
+	 * Checks whether stored GUI NBT belongs to this GUI instance.
+	 */
+	protected boolean isStoredGuiDataValid(EasyNBT nbt)
+	{
+		final boolean[] valid = {false};
+		nbt.checkSetString(NBT_GUI_NAME, s -> valid[0] = s.equals(name));
+		return valid[0];
+	}
+
+	/**
 	 * Called upon closing the GUI, gathers and saves the data to the client proxy.
 	 *
 	 * @return The NBT compound containing the data
 	 */
-	private EasyNBT saveGuiData()
+	protected EasyNBT saveGuiData()
 	{
-		//Save basic identification
-		assert ImmersiveIntelligence.proxy instanceof ClientProxy;
-		EasyNBT nbt = ((ClientProxy)ImmersiveIntelligence.proxy).setStoredGuiData()
-				.withDimPos("pos", new DimensionBlockPos(tile));
+		EasyNBT nbt = createGuiDataTag();
 
 		//Save component data
 		for(GuiButton button : buttonList)
@@ -812,15 +803,23 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	}
 
 	/**
-	 * Called upon closing the GUI, collects data to be passed in a {@link MessageIITileSync} to the tile entity.
-	 *
-	 * @return The NBT compound containing the data
+	 * Creates the client-side GUI persistence tag. Subclasses add their own identity keys here.
 	 */
-	protected EasyNBT onSaveTileData()
+	protected EasyNBT createGuiDataTag()
 	{
-		EasyNBT nbt = EasyNBT.newNBT();
-		NBTSerialisation.synchroniseFor(this, (tag, gui) -> tag.serializeForEvent(gui, nbt.unwrap(), SyncEvents.TILE_CLIENT_MESSAGE));
-		return nbt;
+		return getClientProxy().setStoredGuiData()
+				.withString(NBT_GUI_NAME, name);
+	}
+
+	protected final void clearStoredGuiData()
+	{
+		getClientProxy().setStoredGuiData();
+	}
+
+	protected final ClientProxy getClientProxy()
+	{
+		assert ImmersiveIntelligence.proxy instanceof ClientProxy;
+		return (ClientProxy)ImmersiveIntelligence.proxy;
 	}
 
 	@Nullable
@@ -867,8 +866,11 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 		List<Rectangle> takenSpace = new ArrayList<>();
 		//Add rectangles from the background builder
 		if(backgroundBuilder!=null)
-			for(DecoBackgroundTile rect : backgroundBuilder.getTakenSpace())
+			for(Object object : backgroundBuilder.getTakenSpace())
+			{
+				DecoBackgroundTile rect = (DecoBackgroundTile)object;
 				takenSpace.add(new Rectangle(guiLeft+rect.x, guiTop+rect.y, rect.width, rect.height));
+			}
 
 		//Add rectangles for each tab
 		for(DecoTab tab : tabList)
@@ -880,26 +882,13 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 
 		//Previous widget
 		takenSpace.add(new Rectangle(0, 0, 0, 0));
-		//Current wigdet
+		//Current widget
 		takenSpace.add(new Rectangle(0, 0, 0, 0));
 
 		return this.takenSpace = takenSpace;
 	}
 
-	/**
-	 * @return the tile entity associated with this GUI
-	 */
-	public T getTile()
-	{
-		return tile;
-	}
-
 	//--- Utilities ---//
-
-	public void syncAnimatedParts(MultiblockInteractablePart part, boolean state)
-	{
-		IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(part.getID(), state, tile));
-	}
 
 	public final boolean refreshGUI()
 	{
@@ -925,32 +914,45 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	}
 
 	/**
-	 * Changes the GUI to the specified one, ensuring data is saved and sent to the server
+	 * Changes the GUI to the specified one, ensuring data is saved and sent to the server.
 	 *
-	 * @param newGUI   the new GUI to change to, null will close the current GUI
-	 * @param guiData  additional data to save for the GUI
-	 * @param tileData additional data to save for the tile entity
+	 * @param newGUI      the new GUI to change to, null will close the current GUI
+	 * @param guiData     additional data to save for the GUI
+	 * @param contextData additional data to save for the backing object
 	 */
-	public final boolean changeGUI(@Nullable IIGUI newGUI, @Nullable EasyNBT guiData, @Nullable EasyNBT tileData)
+	public final boolean changeGUI(@Nullable IIGUI newGUI, @Nullable EasyNBT guiData, @Nullable EasyNBT contextData)
 	{
 		//Switch the Change GUI flag to prevent double saving
 		this.changeGUIFlag = true;
 
-		//Save Tile Entity data
-		EasyNBT nbt = onSaveTileData().conditionally(tileData!=null, e -> e.mergeWith(tileData));
-		if(!nbt.isEmpty())
-			IIPacketHandler.sendToServer(new MessageIITileSync(tile, nbt));
+		//Save context-specific data first
+		onBeforeGuiChange(contextData);
 
 		//Save GUI data
 		saveGuiData().conditionally(guiData!=null, e -> e.mergeWith(guiData));
 
-		//Send change GUI message
+		return sendGuiChangeMessage(newGUI);
+	}
+
+	/**
+	 * Gives subclasses a chance to sync their backing object before a GUI transition.
+	 */
+	protected void onBeforeGuiChange(@Nullable EasyNBT contextData)
+	{
+
+	}
+
+	/**
+	 * Sends the actual GUI transition message.
+	 */
+	protected boolean sendGuiChangeMessage(@Nullable IIGUI newGUI)
+	{
 		if(newGUI==null)
 			IIPacketHandler.sendToServer(MessageGuiNBT.closeGuiMessage());
-		else if(newGUI!=gui)
-			IIPacketHandler.sendToServer(new MessageGuiNBT(newGUI, tile));
-		else
+		else if(newGUI==gui)
 			refreshGUIFlag = true;
+		else
+			return false;
 		return true;
 	}
 
@@ -1056,8 +1058,9 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 
 			//Draw widgets
 			drawWidgets(0, 0, 0);
-			//Draw tiled background,
-			backgroundBuilder.draw();
+			//Draw tiled background, if present
+			if(backgroundBuilder!=null)
+				backgroundBuilder.draw();
 
 			GlStateManager.color(1f, 1f, 1f, 1f);
 			GlStateManager.enableAlpha();

@@ -12,11 +12,14 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 02.06.2026
  * @since 16.07.2021
  */
 @DecoTemplate(name = "emplacement_storage", category = DecoGuiCategory.TERRITORY_CONTROL_TILE)
 public class GuiEmplacementPageStorage extends GuiEmplacement
 {
+	private static final String KEY = IIReference.GUI_LABEL_KEY+"emplacement.";
+
 	public GuiEmplacementPageStorage(EntityPlayer player, TileEntityEmplacement tile)
 	{
 		super(player, tile, IIGUI.EMPLACEMENT_STORAGE);
@@ -28,17 +31,12 @@ public class GuiEmplacementPageStorage extends GuiEmplacement
 		super.onInit();
 		DecoPanel panelPlatform, panelBase;
 		addComponents(
-				panelPlatform = new DecoPanel(4, 8+8)
+				panelPlatform = new DecoPanel(4, 8+8-4)
 						.withSize(152+96-8, 76-8)
-						.withBackground(DecoTextures.BG_STEEL)
-						.withBackgroundMask(DecoTextures.TEMPLATE_SQUARE)
-						.withTitleLabel(IIReference.GUI_LABEL_KEY+"emplacement.platform_inventory", DecoAlignment.TOP_LEFT),
-
-				panelBase = new DecoPanel(4, 76+4+8)
+						.withBackground(null),
+				panelBase = new DecoPanel(4, 76+4+8-4)
 						.withSize(152+96-8, 76-8)
-						.withBackground(DecoTextures.BG_STEEL)
-						.withBackgroundMask(DecoTextures.TEMPLATE_SQUARE)
-						.withTitleLabel(IIReference.GUI_LABEL_KEY+"emplacement.base_inventory", DecoAlignment.TOP_LEFT)
+						.withBackground(null)
 		);
 
 		panelBase.addComponents(
@@ -63,6 +61,17 @@ public class GuiEmplacementPageStorage extends GuiEmplacement
 							.withHeight(panelPlatform.height-8)
 			);
 			tile.currentWeapon.initializeGUI(panelBase, panelPlatform);
+		}
+		else
+		{
+			panelPlatform.addLabel(KEY+"no_weapon", 8, 18)
+					.withSize(panelPlatform.width-16, 12)
+					.withAlign(DecoAlignment.CENTER)
+					.withTextColor(DecoColors.H2);
+			panelBase.addLabel(KEY+"no_weapon", 8, 18)
+					.withSize(panelBase.width-16, 12)
+					.withAlign(DecoAlignment.CENTER)
+					.withTextColor(DecoColors.H2);
 		}
 
 	}

@@ -24,16 +24,18 @@ import pl.pabilo8.immersiveintelligence.common.util.entity.ISyncNBTEntity;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.List;
 import java.util.Optional;
 
 /**
- * @author Pabilo8 (pabilo@iiteam.net)
- * @since 06.08.2020
  * <p>
  * Just a marker for seats, doesn't do collision but it's an actual world handled entity on all sides
  * Seats are just one-sided and independent on client and server
  * <p>
  * Riding interaction must be handled by the vehicle by an additional part
+ *
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 06.08.2020
  */
 public class EntityVehicleSeat extends Entity implements ISyncNBTEntity<EntityVehicleSeat>
 {
@@ -100,6 +102,21 @@ public class EntityVehicleSeat extends Entity implements ISyncNBTEntity<EntityVe
 		}
 	}
 
+	public static Entity getPassengerOnSeat(SeatInfo<?> seatInfo)
+	{
+		//Try to find the seat
+		Optional<Entity> probableSeat = seatInfo.vehicle.getPassengers().stream()
+				.filter(entity -> entity instanceof EntityVehicleSeat&&((EntityVehicleSeat)entity).seatID.equals(seatInfo.seatID))
+				.findFirst();
+		//Return passenger on seat if present
+		if(probableSeat.isPresent())
+		{
+			List<Entity> passengers = probableSeat.get().getPassengers();
+			return passengers.isEmpty()?null: passengers.get(0);
+		}
+		return null;
+	}
+
 	@Override
 	protected void entityInit()
 	{
@@ -109,6 +126,18 @@ public class EntityVehicleSeat extends Entity implements ISyncNBTEntity<EntityVe
 	@Override
 	public void onUpdate()
 	{
+		//Update seatInfo when not present
+		if(this.info==null&&!seatID.isEmpty()&&this.isRiding())
+		{
+			Entity vehicle = this.getRidingEntity();
+			if(vehicle instanceof IVehicleMultiPart)
+			{
+				this.info = ((IVehicleMultiPart<?>)vehicle).getSeatInfo(seatID);
+				if(!world.isRemote)
+					updateEntityForEvent(SyncEvents.ENTITY_PASSENGER);
+			}
+		}
+
 		if(world.isRemote)
 		{
 			//Try to find seat info on client
@@ -124,7 +153,8 @@ public class EntityVehicleSeat extends Entity implements ISyncNBTEntity<EntityVe
 					this.info.vehicle.sendServerUpdateForEvent(SyncEvents.ENTITY_VEHICLE_CONTROLS);
 			}
 		}
-		else if(this.ticksExisted > 20&&!this.isRiding())
+		//Remove entity when data is invalid
+		else if(this.ticksExisted > 20&&(!this.isRiding()||seatID.isEmpty()))
 			setDead();
 
 		super.onUpdate();
@@ -191,7 +221,7 @@ public class EntityVehicleSeat extends Entity implements ISyncNBTEntity<EntityVe
 	@Override
 	public void dismountRidingEntity()
 	{
-		this.setDead();
+		super.dismountRidingEntity();
 	}
 
 	@Override
@@ -316,29 +346,7 @@ public class EntityVehicleSeat extends Entity implements ISyncNBTEntity<EntityVe
 		{
 			if(controls==null)
 				return false;
-
-			if(event.getDwheel()!=0)
-				controls.setKey(event.getDwheel() > 0?"mouse_wheelup": "mouse_wheeldown", true);
-			switch(event.getButton())
-			{
-				//Mouse main
-				case 0:
-					controls.setKey("mouse_left", event.isButtonstate());
-					break;
-				case 1:
-					controls.setKey("mouse_right", event.isButtonstate());
-					break;
-				case 2:
-					controls.setKey("mouse_middle", event.isButtonstate());
-					break;
-				//Mouse extra buttons
-				case 3:
-					controls.setKey("mouse_next", event.isButtonstate());
-					break;
-				case 4:
-					controls.setKey("mouse_prev", event.isButtonstate());
-					break;
-			}
+			controls.passMouseButtonEvent(event);
 			return true;
 		}
 	}

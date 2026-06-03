@@ -14,7 +14,7 @@ import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeNull;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType.TypeMetaInfo;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTileGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoTab;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoList;
@@ -45,7 +45,7 @@ import javax.annotation.Nullable;
  * @since 30.06.2019
  */
 @DecoTemplate(name = "arithmetic_logic_machine", category = DecoGuiCategory.DATA_TILE)
-public class GuiArithmeticLogicMachine extends DecoGui<TileEntityArithmeticLogicMachine, ContainerArithmeticLogicMachine> implements IDataMachineGui
+public class GuiArithmeticLogicMachine extends DecoTileGui<TileEntityArithmeticLogicMachine, ContainerArithmeticLogicMachine> implements IDataMachineGui
 {
 	@SyncNBT
 	public int editedCircuit = 0;

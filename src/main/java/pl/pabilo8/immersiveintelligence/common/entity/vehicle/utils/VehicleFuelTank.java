@@ -10,6 +10,7 @@ import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehicleBase;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.IVehicleComponent;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
+import pl.pabilo8.immersiveintelligence.common.util.entity.SyncedDurability;
 
 import javax.annotation.Nullable;
 
@@ -20,7 +21,7 @@ import javax.annotation.Nullable;
  */
 public class VehicleFuelTank<T extends EntityVehicleBase<T>> implements IFluidHandler, INBTSerializable<NBTTagCompound>, IVehicleComponent
 {
-	private VehicleDurability durability;
+	private SyncedDurability durability;
 	private final T vehicle;
 	private final FluidTank tank;
 
@@ -30,7 +31,7 @@ public class VehicleFuelTank<T extends EntityVehicleBase<T>> implements IFluidHa
 		this.tank = new FluidTank(capacity);
 	}
 
-	public VehicleFuelTank<T> withDurability(VehicleDurability durability)
+	public VehicleFuelTank<T> withDurability(SyncedDurability durability)
 	{
 		this.durability = durability;
 		return this;
@@ -109,7 +110,7 @@ public class VehicleFuelTank<T extends EntityVehicleBase<T>> implements IFluidHa
 
 	@Nullable
 	@Override
-	public VehicleDurability getDurability()
+	public SyncedDurability getDurability()
 	{
 		return null;
 	}

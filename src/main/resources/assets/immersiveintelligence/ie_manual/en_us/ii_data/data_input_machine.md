@@ -19,4 +19,7 @@ When editing a variable, you can change its letter by using the up and down arro
 # punchtapes
 The **Data Input Machine** is capable of reading a **Packet** from a [written punchtape] and writing the currently stored **Packet** to [a blank one].
 Both operations can be performed by inserting a [Punchtape] into the *upper slot*. After processing, the [Punchtape] will be outputted into the *lower slot*.
+# punchtapes
+The **DIM** can be upgraded with a specialized control panel to allow input of advanced data types like [Vector], [Map] and [Array].
+
 

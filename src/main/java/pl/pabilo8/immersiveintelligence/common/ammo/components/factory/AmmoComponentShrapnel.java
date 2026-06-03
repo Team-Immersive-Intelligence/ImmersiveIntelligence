@@ -50,7 +50,7 @@ public class AmmoComponentShrapnel extends AmmoComponent
 	{
 		Vec3d v = new Vec3d(0, -1, 0);
 		Vec3d throwerPos = pos.addVector(0, 3, 0);
-		for(int i = 0; i < 50*multiplier; i++)
+		for(int i = 0; i < 20*size; i++)
 		{
 			Vec3d vecDir = v.addVector(Utils.RAND.nextGaussian()*.25f, Utils.RAND.nextGaussian()*.25f, Utils.RAND.nextGaussian()*.25f);
 
