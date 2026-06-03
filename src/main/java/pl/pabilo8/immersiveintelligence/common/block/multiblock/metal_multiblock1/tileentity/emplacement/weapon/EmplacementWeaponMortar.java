@@ -18,10 +18,7 @@ public class EmplacementWeaponMortar extends EmplacementWeaponGunBase<EntityAmmo
 		this.visionAABB = this.visionAABB.grow(Autocannon.detectionRadius);
 		this.attackAABB = this.attackAABB.grow(Autocannon.attackRadius);
 
-		setupItemHandlers(te, 12, 6,
-				stack -> this.ammoFactory!=null&&this.ammoFactory.isValidAmmo(stack),
-				stack -> this.ammoFactory!=null&&this.ammoFactory.isValidAmmo(stack));
-
+		setupItemHandlers(te, 12, 6, this.ammoFactory::isValidAmmo, this.ammoFactory::isValidAmmo);
 		this.aim.withAimSpeed(CPDS.yawRotateSpeed, CPDS.pitchRotateSpeed);
 		this.ammoFactory.setUseArtilleryAngles(true);
 	}

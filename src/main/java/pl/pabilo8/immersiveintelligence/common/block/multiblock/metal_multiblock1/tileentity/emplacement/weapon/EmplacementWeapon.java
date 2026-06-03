@@ -11,6 +11,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.common.Optional;
@@ -52,7 +53,7 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable
 	protected void onInit(TileEntityEmplacement te)
 	{
 		this.initialized = true;
-		this.health = getMaxHealth();
+		this.health = MathHelper.clamp(this.health, 0, getMaxHealth());
 		this.visionAABB = new AxisAlignedBB(new BlockPos(te.getWeaponCenter()));
 		this.attackAABB = new AxisAlignedBB(new BlockPos(te.getWeaponCenter()));
 
@@ -132,6 +133,57 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable
 	public IFluidHandler getBaseFluidHandler()
 	{
 		return null;
+	}
+
+
+	/**
+	 * @return true when the weapon cannot operate because its ready stock is empty.
+	 */
+	public boolean needsSupply(TileEntityEmplacement te)
+	{
+		return false;
+	}
+
+	/**
+	 * @return true when the weapon should keep the platform hidden until it can restock its ready inventory.
+	 */
+	public boolean needsRestock(TileEntityEmplacement te)
+	{
+		return false;
+	}
+
+	/**
+	 * Called by the Emplacement while the platform is fully hidden.
+	 * Implementations should move supplies from base storage into weapon/platform storage.
+	 *
+	 * @return true if any stock was moved
+	 */
+	public boolean restockFromBase(TileEntityEmplacement te)
+	{
+		return false;
+	}
+
+	public boolean isBelowHealthThreshold(float threshold)
+	{
+		return getHealthPercentage() < threshold;
+	}
+
+	public boolean isRepairedTo(float threshold)
+	{
+		return getHealthPercentage() >= threshold;
+	}
+
+	public float getHealthPercentage()
+	{
+		return getMaxHealth() <= 0?1f: MathHelper.clamp(health/(float)getMaxHealth(), 0f, 1f);
+	}
+
+	public boolean repair(float amount)
+	{
+		if(amount <= 0||health >= getMaxHealth())
+			return false;
+		health = Math.min(getMaxHealth(), health+amount);
+		return true;
 	}
 
 	public abstract int getEnergyUpkeepCost();

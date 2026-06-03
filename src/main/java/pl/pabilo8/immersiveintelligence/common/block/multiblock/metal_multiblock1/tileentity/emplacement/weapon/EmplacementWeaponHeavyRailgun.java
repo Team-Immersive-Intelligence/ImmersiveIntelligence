@@ -24,10 +24,7 @@ public class EmplacementWeaponHeavyRailgun extends EmplacementWeaponGunBase<Enti
 		super.onInit(te);
 		this.visionAABB = this.visionAABB.grow(HeavyRailgun.detectionRadius);
 		this.attackAABB = this.attackAABB.grow(HeavyRailgun.attackRadius);
-
-		setupItemHandlers(te, 18, 6,
-				ItemIIRailgunOverride::isAmmo,
-				ItemIIRailgunOverride::isAmmo);
+		setupItemHandlers(te, 18, 6, ItemIIRailgunOverride::isAmmo, ItemIIRailgunOverride::isAmmo);
 		this.aim.withAimSpeed(HeavyRailgun.yawRotateSpeed, HeavyRailgun.pitchRotateSpeed);
 	}
 

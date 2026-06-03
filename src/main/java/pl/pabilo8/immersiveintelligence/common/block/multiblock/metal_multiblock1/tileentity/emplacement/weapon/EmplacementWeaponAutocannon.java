@@ -20,14 +20,11 @@ public class EmplacementWeaponAutocannon extends EmplacementWeaponGunBase<Entity
 		super.onInit(te);
 		this.visionAABB = this.visionAABB.grow(Autocannon.detectionRadius);
 		this.attackAABB = this.attackAABB.grow(Autocannon.attackRadius);
-
-		setupItemHandlers(te, 18, 8,
-				stack -> OreDictionary.itemMatches(stack,
-						IIContent.itemBulletMagazine.getMagazine(Magazines.AUTOCANNON), false),
-				stack -> OreDictionary.itemMatches(stack,
-						IIContent.itemBulletMagazine.getMagazine(Magazines.AUTOCANNON), false));
 		this.aim.withAimSpeed(Autocannon.yawRotateSpeed, Autocannon.pitchRotateSpeed);
 
+		setupItemHandlers(te, 18, 8, stack -> OreDictionary.itemMatches(stack,
+				IIContent.itemBulletMagazine.getMagazine(Magazines.AUTOCANNON), false), stack -> OreDictionary.itemMatches(stack,
+				IIContent.itemBulletMagazine.getMagazine(Magazines.AUTOCANNON), false));
 	}
 
 	@Override

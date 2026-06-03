@@ -32,10 +32,14 @@ public class ContainerEmplacement extends ContainerIITileBase<TileEntityEmplacem
 
 		if(tile.currentWeapon!=null)
 		{
+			//Ensure initialization
 			tile.currentWeapon.init(tile);
-			IEInventoryHandler platformHandler = tile.getPlatformItemHandler();
-			IEInventoryHandler baseHandler = tile.getBaseItemHandler();
 
+			//Get inventory handlers
+			IEInventoryHandler platformHandler = tile.currentWeapon.getPlatformItemHandler();
+			IEInventoryHandler baseHandler = tile.currentWeapon.getBaseItemHandler();
+
+			//Add slots
 			if(platformHandler!=null)
 				container.slotsPlatformInventory = container.addSlotArray(8, 24, 0, platformHandler.getSlots(), 9,
 						(container1, inv1, id, x, y) -> new SlotItemHandler(platformHandler, id, x, y)
@@ -52,7 +56,6 @@ public class ContainerEmplacement extends ContainerIITileBase<TileEntityEmplacem
 								return false;
 							}
 						});
-
 			if(baseHandler!=null)
 				container.slotsBaseInventory = container.addSlotArray(8, 80+16, 0, baseHandler.getSlots(), 9,
 						(container1, inv1, id, x, y) -> new SlotItemHandler(baseHandler, id, x, y));

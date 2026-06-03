@@ -217,6 +217,7 @@ public class DecoTaskList<T extends INBTSerializable<NBTTagCompound>> extends De
 		{
 			//stretch requests tab; hide jobs tab
 			tabRequests.withSize(listWidth, TAB_H);
+			tabRequests.x = tabJobs.x;
 			tabJobs.visible = tabJobs.enabled = false;
 			this.mode = ListMode.REQUESTS;
 		}

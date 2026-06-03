@@ -3319,6 +3319,19 @@ ii.gui.radar.targets=Targets
 
 ii.gui.emplacement.platform_inventory=Platform Inventory
 ii.gui.emplacement.base_inventory=Base Inventory
+ii.gui.emplacement.no_weapon=No weapon installed.
+
+ii.gui.emplacement.config.reacts_redstone=React to Redstone
+ii.gui.emplacement.config.reacts_redstone.tooltip=When enabled, the weapon surfaces only while the Emplacement receives redstone.
+ii.gui.emplacement.config.reacts_data=React to Data
+ii.gui.emplacement.config.reacts_data.tooltip=When disabled, the Emplacement will not react to data input.
+ii.gui.emplacement.config.hide_health=Hide when health is below:
+ii.gui.emplacement.config.hide_health.tooltip=Minimum weapon health percentage. Below this value, the platform hides for repairs.
+ii.gui.emplacement.config.resurface_health=Repair until health reaches:
+ii.gui.emplacement.config.resurface_health.tooltip=Weapon health percentage considered sufficient to surface again after repairs.
+
+ii.gui.emplacement.config.vision_range=Vision Range: %s b
+ii.gui.emplacement.config.attack_range=Attack Range: %s b
 
 ii.gui.emplacement.weapon=Mounted: %s
 ii.gui.emplacement.weapon_none=None
@@ -3332,10 +3345,6 @@ ii.gui.emplacement.selector_preset=Selector Preset
 ii.gui.emplacement.filter=Filter
 ii.gui.emplacement.task_enabled=Enabled
 ii.gui.emplacement.task_negation=Negation
-ii.gui.emplacement.add=Add Task
-ii.gui.emplacement.remove=Remove Task
-ii.gui.emplacement.duplicate=Duplicate Task
-ii.gui.emplacement.clear=Clear ALL Tasks (Caution!)
 
 ii.gui.emplacement.target.mobs=Mobs
 ii.gui.emplacement.target.animals=Animals

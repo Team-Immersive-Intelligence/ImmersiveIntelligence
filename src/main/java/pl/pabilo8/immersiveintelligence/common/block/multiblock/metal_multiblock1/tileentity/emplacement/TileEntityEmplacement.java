@@ -1,7 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement;
 
 import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
-import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
 import com.elytradev.mirage.event.GatherLightsEvent;
 import com.elytradev.mirage.lighting.ILightEventConsumer;
 import net.minecraft.entity.Entity;
@@ -11,6 +10,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -91,8 +91,16 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 	@SyncNBT(events = SyncEvents.TILE_DAMAGED)
 	public MultiblockHealth baseHealth;
 
+	private static final int WEAPON_REPAIR_INTERVAL = 20;
+	private static final int WEAPON_REPAIR_ENERGY_COST = 80;
+	private static final float WEAPON_REPAIR_AMOUNT = 1.0f;
+
 	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CLIENT_MESSAGE})
 	public boolean redstoneControlEnabled = true, dataControlEnabled = true;
+	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CLIENT_MESSAGE})
+	public float weaponHideHealthThreshold = 0.25f, weaponRepairSatisfactoryThreshold = 0.85f;
+	private int weaponRepairTicker = 0;
+	private boolean weaponRepairing = false;
 	@SyncNBT
 	public MultiblockInteractablePart door;
 
@@ -145,23 +153,29 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 			if(currentTarget==null)
 				currentTarget = taskManager.provideNextTask();
 
-			//Handle the base behavior (without redstone control, it can be only changed through data)
-			EmplacementStateNeeds baseNeeds = EmplacementStateNeeds.WANTS_HIDE;
-			if(redstoneControlEnabled)
-				baseNeeds = getRedstoneAtPos(0)?EmplacementStateNeeds.WANTS_SURFACE: EmplacementStateNeeds.MUST_HIDE;
+			//Base behaviour: redstone control either gates surfacing, or the platform wants to surface by default.
+			EmplacementStateNeeds baseNeeds = redstoneControlEnabled?
+					(getRedstoneAtPos(0)?EmplacementStateNeeds.WANTS_SURFACE: EmplacementStateNeeds.MUST_HIDE):
+					EmplacementStateNeeds.WANTS_SURFACE;
 
-			//When no task at hand, emplacement could use the time to reload and repair
+			//When no task is waiting, use the downtime to reload and repair.
 			if(currentTarget==null&&baseNeeds==EmplacementStateNeeds.WANTS_SURFACE)
 				baseNeeds = EmplacementStateNeeds.WANTS_HIDE;
 
-			//Handle the weapon, weapons need additional energy to operate
-			EmplacementStateNeeds weaponNeeds = baseNeeds;
-			if(currentWeapon!=null&&energyStorage.extractEnergy(currentWeapon.getEnergyUpkeepCost(), false)==currentWeapon.getEnergyUpkeepCost())
-				weaponNeeds = this.currentWeapon.onUpdate(this, baseNeeds, currentTarget);
+			EmplacementStateNeeds serviceNeeds = getServiceNeeds();
+			EmplacementStateNeeds weaponNeeds = combineNeeds(baseNeeds, serviceNeeds);
+
+			//Handle the weapon only when it has enough upkeep power and is not forced into servicing.
+			if(currentWeapon!=null&&serviceNeeds!=EmplacementStateNeeds.MUST_HIDE
+					&&energyStorage.extractEnergy(currentWeapon.getEnergyUpkeepCost(), false)==currentWeapon.getEnergyUpkeepCost())
+				weaponNeeds = this.currentWeapon.onUpdate(this, weaponNeeds, currentTarget);
 
 			//Handle the door/platform
 			door.setState(combineNeeds(baseNeeds, weaponNeeds)==EmplacementStateNeeds.WANTS_SURFACE);
 			door.update();
+
+			if(!door.getState()&&door.isFullyClosed())
+				serviceWeaponInBase();
 		}
 		if(!this.world.isRemote)
 			this.tactileHandler.update(MultiblockEmplacement.animationPlatform, door.getProgress(0));
@@ -169,11 +183,62 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 
 	private EmplacementStateNeeds combineNeeds(EmplacementStateNeeds base, EmplacementStateNeeds weapon)
 	{
-		if(base==EmplacementStateNeeds.WANTS_SURFACE||weapon==EmplacementStateNeeds.WANTS_SURFACE)
-			return EmplacementStateNeeds.WANTS_SURFACE;
+		//Hard requirements win over soft wishes. Otherwise a redstone signal could keep a broken or empty weapon exposed.
 		if(base==EmplacementStateNeeds.MUST_HIDE||weapon==EmplacementStateNeeds.MUST_HIDE)
 			return EmplacementStateNeeds.MUST_HIDE;
+		if(base==EmplacementStateNeeds.WANTS_SURFACE||weapon==EmplacementStateNeeds.WANTS_SURFACE)
+			return EmplacementStateNeeds.WANTS_SURFACE;
 		return EmplacementStateNeeds.WANTS_HIDE;
+	}
+
+	private EmplacementStateNeeds getServiceNeeds()
+	{
+		if(currentWeapon==null)
+			return EmplacementStateNeeds.WANTS_HIDE;
+
+		float hideThreshold = MathHelper.clamp(weaponHideHealthThreshold, 0f, 1f);
+		float readyThreshold = MathHelper.clamp(Math.max(weaponRepairSatisfactoryThreshold, hideThreshold), 0f, 1f);
+
+		if(currentWeapon.isBelowHealthThreshold(hideThreshold))
+			weaponRepairing = true;
+		if(weaponRepairing)
+		{
+			if(currentWeapon.isRepairedTo(readyThreshold))
+				weaponRepairing = false;
+			else
+				return EmplacementStateNeeds.MUST_HIDE;
+		}
+
+		if(currentWeapon.needsSupply(this))
+			return EmplacementStateNeeds.MUST_HIDE;
+
+		return EmplacementStateNeeds.WANTS_SURFACE;
+	}
+
+	private void serviceWeaponInBase()
+	{
+		if(currentWeapon==null||world.isRemote)
+			return;
+
+		boolean changed = false;
+		if(currentWeapon.needsRestock(this))
+			changed |= currentWeapon.restockFromBase(this);
+
+		if(currentWeapon.getHealth() < currentWeapon.getMaxHealth())
+		{
+			weaponRepairTicker++;
+			if(weaponRepairTicker >= WEAPON_REPAIR_INTERVAL)
+			{
+				weaponRepairTicker = 0;
+				if(energyStorage.extractEnergy(WEAPON_REPAIR_ENERGY_COST, true)==WEAPON_REPAIR_ENERGY_COST)
+					changed |= currentWeapon.repair(WEAPON_REPAIR_AMOUNT);
+			}
+		}
+		else
+			weaponRepairTicker = 0;
+
+		if(changed)
+			updateTileForEvent(SyncEvents.TILE_CUSTOM2);
 	}
 
 	@Override
@@ -427,41 +492,10 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 	}
 
 
-	//--- Weapon Inventory ---//
-
-	public int getBaseInventorySlots()
-	{
-		IEInventoryHandler handler = getBaseItemHandler();
-		return handler==null?0: handler.getSlots();
-	}
-
-	public int getPlatformInventorySlots()
-	{
-		IEInventoryHandler handler = getPlatformItemHandler();
-		return handler==null?0: handler.getSlots();
-	}
-
-	public int getWeaponInventorySlots()
-	{
-		return getBaseInventorySlots()+getPlatformInventorySlots();
-	}
-
-	@Nullable
-	public IEInventoryHandler getBaseItemHandler()
-	{
-		return currentWeapon==null?null: currentWeapon.getBaseItemHandler();
-	}
-
-	@Nullable
-	public IEInventoryHandler getPlatformItemHandler()
-	{
-		return currentWeapon==null?null: currentWeapon.getPlatformItemHandler();
-	}
-
 	@Override
 	public boolean isStackValid(int slot, ItemStack stack)
 	{
-		return currentWeapon!=null&&!stack.isEmpty()&&slot >= 0&&slot < getWeaponInventorySlots();
+		return currentWeapon!=null;
 	}
 
 	//--- Capabilities ---//
@@ -473,7 +507,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 		if(master!=null&&master.currentWeapon!=null)
 		{
 			if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY&&(isPOI("input")||isPOI("output")))
-				return master.getWeaponInventorySlots() > 0;
+				return master.currentWeapon.getBaseItemHandler()!=null;
 			if(capability==CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY&&(isPOI("input")||isPOI("output")))
 				return master.currentWeapon.getBaseFluidHandler()!=null;
 		}
@@ -488,8 +522,8 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 		TileEntityEmplacement master = master();
 		if(master!=null&&master.currentWeapon!=null&&(isPOI("input")||isPOI("output")))
 		{
-			if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY&&master.getWeaponInventorySlots() > 0)
-				return (T)master.getBaseItemHandler();
+			if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY&&master.currentWeapon.getBaseItemHandler()!=null)
+				return (T)master.currentWeapon.getBaseItemHandler();
 			if(capability==CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
 			{
 				IFluidHandler handler = master.currentWeapon.getBaseFluidHandler();

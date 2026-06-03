@@ -64,10 +64,63 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 
 	}
 
+
 	@Override
 	public boolean canShoot(TileEntityEmplacement te)
 	{
-		return false;
+		return inventoryPlatformHandler==null||!isHandlerEmpty(inventoryPlatformHandler);
+	}
+
+	@Override
+	public boolean needsSupply(TileEntityEmplacement te)
+	{
+		return inventoryPlatformHandler!=null&&isHandlerEmpty(inventoryPlatformHandler);
+	}
+
+	@Override
+	public boolean needsRestock(TileEntityEmplacement te)
+	{
+		return inventoryBaseHandler!=null&&inventoryPlatformHandler!=null
+				&&isHandlerEmpty(inventoryPlatformHandler)
+				&&!isHandlerEmpty(inventoryBaseHandler);
+	}
+
+	@Override
+	public boolean restockFromBase(TileEntityEmplacement te)
+	{
+		if(inventoryBaseHandler==null||inventoryPlatformHandler==null)
+			return false;
+
+		boolean changed = false;
+		for(int baseSlot = 0; baseSlot < inventoryBaseHandler.getSlots(); baseSlot++)
+		{
+			ItemStack available = inventoryBaseHandler.getStackInSlot(baseSlot);
+			if(available.isEmpty())
+				continue;
+
+			ItemStack moving = available.copy();
+			for(int platformSlot = 0; platformSlot < inventoryPlatformHandler.getSlots()&&!moving.isEmpty(); platformSlot++)
+				moving = inventoryPlatformHandler.insertItem(platformSlot, moving, false);
+
+			int moved = available.getCount()-moving.getCount();
+			if(moved > 0)
+			{
+				inventoryBaseHandler.extractItem(baseSlot, moved, false);
+				changed = true;
+			}
+
+			if(!isHandlerEmpty(inventoryPlatformHandler))
+				break;
+		}
+		return changed;
+	}
+
+	protected boolean isHandlerEmpty(IEInventoryHandler handler)
+	{
+		for(int i = 0; i < handler.getSlots(); i++)
+			if(!handler.getStackInSlot(i).isEmpty())
+				return false;
+		return true;
 	}
 
 	@Override
