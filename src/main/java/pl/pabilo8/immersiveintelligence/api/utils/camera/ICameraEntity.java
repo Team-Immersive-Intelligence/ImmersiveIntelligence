@@ -3,8 +3,6 @@ package pl.pabilo8.immersiveintelligence.api.utils.camera;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedZoom;
 
 import javax.annotation.Nonnull;
@@ -14,7 +12,6 @@ import javax.annotation.Nullable;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 14.02.2023
  */
-@SideOnly(Side.CLIENT)
 public interface ICameraEntity
 {
 	/**
