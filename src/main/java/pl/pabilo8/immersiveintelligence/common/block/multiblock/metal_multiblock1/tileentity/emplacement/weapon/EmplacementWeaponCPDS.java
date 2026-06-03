@@ -1,14 +1,11 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
 import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.CPDS;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine.Magazines;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.FilteredItemHandler;
 
 /**
  * CPDS Q&A
@@ -32,8 +29,6 @@ public class EmplacementWeaponCPDS extends EmplacementWeaponGunBase<EntityAmmoPr
 {
 	public EmplacementWeaponCPDS()
 	{
-		this.inventoryPlatform = NonNullList.withSize(3, ItemStack.EMPTY);
-		this.inventoryBase = NonNullList.withSize(8, ItemStack.EMPTY);
 	}
 
 	@Override
@@ -42,8 +37,11 @@ public class EmplacementWeaponCPDS extends EmplacementWeaponGunBase<EntityAmmoPr
 		super.onInit(te);
 		this.visionAABB = this.visionAABB.grow(CPDS.detectionRadius);
 		this.attackAABB = this.attackAABB.grow(CPDS.attackRadius);
-		this.inventoryBaseHandler = new FilteredItemHandler(inventoryBase)
-				.withFilter(stack -> OreDictionary.itemMatches(stack,
+
+		setupItemHandlers(te, 8, 3,
+				stack -> OreDictionary.itemMatches(stack,
+						IIContent.itemBulletMagazine.getMagazine(Magazines.CPDS_DRUM), false),
+				stack -> OreDictionary.itemMatches(stack,
 						IIContent.itemBulletMagazine.getMagazine(Magazines.CPDS_DRUM), false));
 		this.aim.withAimSpeed(CPDS.yawRotateSpeed, CPDS.pitchRotateSpeed);
 	}

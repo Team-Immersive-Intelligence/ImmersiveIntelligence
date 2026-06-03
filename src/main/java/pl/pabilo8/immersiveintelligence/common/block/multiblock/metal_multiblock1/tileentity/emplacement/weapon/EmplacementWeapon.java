@@ -2,6 +2,7 @@ package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multibloc
 
 import blusunrize.immersiveengineering.common.util.IEDamageSources;
 import blusunrize.immersiveengineering.common.util.IEDamageSources.ElectricDamageSource;
+import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
 import com.elytradev.mirage.event.GatherLightsEvent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -15,7 +16,6 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeNull;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
@@ -117,7 +117,13 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable
 	//--- Inventory ---//
 
 	@Nullable
-	public IItemHandler getBaseItemHandler()
+	public IEInventoryHandler getBaseItemHandler()
+	{
+		return null;
+	}
+
+	@Nullable
+	public IEInventoryHandler getPlatformItemHandler()
 	{
 		return null;
 	}

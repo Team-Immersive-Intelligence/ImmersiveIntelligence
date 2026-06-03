@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement;
 
 import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
+import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
 import com.elytradev.mirage.event.GatherLightsEvent;
 import com.elytradev.mirage.lighting.ILightEventConsumer;
 import net.minecraft.entity.Entity;
@@ -8,12 +9,17 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.common.Optional.Interface;
 import net.minecraftforge.fml.common.Optional.Method;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.items.CapabilityItemHandler;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataHandlingUtils;
@@ -94,6 +100,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 	{
 		super(MultiblockEmplacement.INSTANCE);
 		this.energyStorage = new FluxStorageAdvanced(Emplacement.energyCapacity);
+		this.inventory = NonNullList.withSize(32, ItemStack.EMPTY);
 		this.door = new MultiblockInteractablePart(Emplacement.lidTime);
 		this.upgradeManager = new UpgradeManager<>(this);
 		this.style = new StyleCustomization(MultiblockFlagpole.STYLE_CONSTRAINTS);
@@ -420,10 +427,77 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 	}
 
 
+	//--- Weapon Inventory ---//
+
+	public int getBaseInventorySlots()
+	{
+		IEInventoryHandler handler = getBaseItemHandler();
+		return handler==null?0: handler.getSlots();
+	}
+
+	public int getPlatformInventorySlots()
+	{
+		IEInventoryHandler handler = getPlatformItemHandler();
+		return handler==null?0: handler.getSlots();
+	}
+
+	public int getWeaponInventorySlots()
+	{
+		return getBaseInventorySlots()+getPlatformInventorySlots();
+	}
+
+	@Nullable
+	public IEInventoryHandler getBaseItemHandler()
+	{
+		return currentWeapon==null?null: currentWeapon.getBaseItemHandler();
+	}
+
+	@Nullable
+	public IEInventoryHandler getPlatformItemHandler()
+	{
+		return currentWeapon==null?null: currentWeapon.getPlatformItemHandler();
+	}
+
 	@Override
 	public boolean isStackValid(int slot, ItemStack stack)
 	{
-		return false;
+		return currentWeapon!=null&&!stack.isEmpty()&&slot >= 0&&slot < getWeaponInventorySlots();
+	}
+
+	//--- Capabilities ---//
+
+	@Override
+	public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable net.minecraft.util.EnumFacing facing)
+	{
+		TileEntityEmplacement master = master();
+		if(master!=null&&master.currentWeapon!=null)
+		{
+			if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY&&(isPOI("input")||isPOI("output")))
+				return master.getWeaponInventorySlots() > 0;
+			if(capability==CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY&&(isPOI("input")||isPOI("output")))
+				return master.currentWeapon.getBaseFluidHandler()!=null;
+		}
+		return super.hasCapability(capability, facing);
+	}
+
+	@Nullable
+	@Override
+	@SuppressWarnings("unchecked")
+	public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable net.minecraft.util.EnumFacing facing)
+	{
+		TileEntityEmplacement master = master();
+		if(master!=null&&master.currentWeapon!=null&&(isPOI("input")||isPOI("output")))
+		{
+			if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY&&master.getWeaponInventorySlots() > 0)
+				return (T)master.getBaseItemHandler();
+			if(capability==CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+			{
+				IFluidHandler handler = master.currentWeapon.getBaseFluidHandler();
+				if(handler!=null)
+					return (T)handler;
+			}
+		}
+		return super.getCapability(capability, facing);
 	}
 
 	//--- IOwnableProperty ---//

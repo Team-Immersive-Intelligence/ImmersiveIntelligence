@@ -1,19 +1,14 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.Autocannon;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.CPDS;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.FilteredItemHandler;
 
 public class EmplacementWeaponRocketLauncher extends EmplacementWeaponGunBase<EntityAmmoProjectile>
 {
 	public EmplacementWeaponRocketLauncher()
 	{
-		this.inventoryBase = NonNullList.withSize(12, ItemStack.EMPTY);
-		this.inventoryPlatform = NonNullList.withSize(6, ItemStack.EMPTY);
 	}
 
 	@Override
@@ -23,8 +18,10 @@ public class EmplacementWeaponRocketLauncher extends EmplacementWeaponGunBase<En
 		this.visionAABB = this.visionAABB.grow(Autocannon.detectionRadius);
 		this.attackAABB = this.attackAABB.grow(Autocannon.attackRadius);
 
-		this.inventoryBaseHandler = new FilteredItemHandler(inventoryBase)
-				.withFilter(this.ammoFactory::isValidAmmo);
+		setupItemHandlers(te, 12, 6,
+				stack -> this.ammoFactory!=null&&this.ammoFactory.isValidAmmo(stack),
+				stack -> this.ammoFactory!=null&&this.ammoFactory.isValidAmmo(stack));
+
 		this.aim.withAimSpeed(CPDS.yawRotateSpeed, CPDS.pitchRotateSpeed);
 		this.ammoFactory.setUseArtilleryAngles(true);
 	}

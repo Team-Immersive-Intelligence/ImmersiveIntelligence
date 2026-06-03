@@ -219,7 +219,6 @@ public class IIMultiblockInterfaces
 		}
 
 		/**
-		 * @param client Whether to get the client or server progress
 		 * @return Current construction progress in IF
 		 */
 		default int getCurrentConstruction(float partialTicks)

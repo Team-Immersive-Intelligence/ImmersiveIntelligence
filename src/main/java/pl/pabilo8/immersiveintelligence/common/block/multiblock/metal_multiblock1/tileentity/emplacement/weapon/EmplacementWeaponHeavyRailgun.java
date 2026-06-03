@@ -1,12 +1,9 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.HeavyRailgun;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIRailgunOverride;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.FilteredItemHandler;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
 
 /**
@@ -18,8 +15,6 @@ public class EmplacementWeaponHeavyRailgun extends EmplacementWeaponGunBase<Enti
 {
 	public EmplacementWeaponHeavyRailgun()
 	{
-		this.inventoryBase = NonNullList.withSize(18, ItemStack.EMPTY);
-		this.inventoryPlatform = NonNullList.withSize(6, ItemStack.EMPTY);
 		this.setup = new MultiblockInteractablePart(HeavyRailgun.setupTime);
 	}
 
@@ -29,8 +24,10 @@ public class EmplacementWeaponHeavyRailgun extends EmplacementWeaponGunBase<Enti
 		super.onInit(te);
 		this.visionAABB = this.visionAABB.grow(HeavyRailgun.detectionRadius);
 		this.attackAABB = this.attackAABB.grow(HeavyRailgun.attackRadius);
-		this.inventoryBaseHandler = new FilteredItemHandler(inventoryBase)
-				.withFilter(ItemIIRailgunOverride::isAmmo);
+
+		setupItemHandlers(te, 18, 6,
+				ItemIIRailgunOverride::isAmmo,
+				ItemIIRailgunOverride::isAmmo);
 		this.aim.withAimSpeed(HeavyRailgun.yawRotateSpeed, HeavyRailgun.pitchRotateSpeed);
 	}
 
