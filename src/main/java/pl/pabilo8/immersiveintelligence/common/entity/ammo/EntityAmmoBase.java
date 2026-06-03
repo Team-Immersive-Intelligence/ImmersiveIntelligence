@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.common.entity.ammo;
 import com.elytradev.mirage.event.GatherLightsEvent;
 import com.elytradev.mirage.lighting.IEntityLightEventConsumer;
 import com.elytradev.mirage.lighting.Light;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -11,6 +12,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
@@ -78,12 +80,12 @@ public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extend
 	 * Axis alligned bounding box of the bullet, because fuck minecraft's bloody AABB (de)sync wankfest.
 	 */
 	protected AxisAlignedBB aabb;
+	protected boolean clientLoaded = false;
 
 	//--- Initialization ---//
 
 	public EntityAmmoBase(World world)
 	{
-
 		super(world);
 		ammoType = null;
 	}
@@ -139,6 +141,9 @@ public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extend
 	@Override
 	public void onUpdate()
 	{
+		if(world.isRemote&&!clientLoaded)
+			return;
+
 		this.prevDistanceWalkedModified = this.distanceWalkedModified;
 		this.prevPosX = this.posX;
 		this.prevPosY = this.posY;
@@ -219,6 +224,25 @@ public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extend
 		).collect(NBTTagCollector.collect()));
 		compound.setInteger("owner", owner==null?-1: owner.getEntityId());
 
+	}
+
+	@Override
+	public void writeSpawnData(ByteBuf buffer)
+	{
+		NBTTagCompound tag = new NBTTagCompound();
+		writeEntityToNBT(tag);
+		ByteBufUtils.writeTag(buffer, tag);
+	}
+
+	@Override
+	public void readSpawnData(ByteBuf additionalData)
+	{
+		NBTTagCompound tag = ByteBufUtils.readTag(additionalData);
+		if(tag!=null)
+		{
+			readEntityFromNBT(tag);
+			this.clientLoaded = true;
+		}
 	}
 
 	//--- Abstract ---//

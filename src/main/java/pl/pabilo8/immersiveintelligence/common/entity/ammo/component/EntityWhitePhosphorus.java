@@ -4,6 +4,7 @@ import blusunrize.immersiveengineering.common.entities.EntityIEProjectile;
 import com.elytradev.mirage.event.GatherLightsEvent;
 import com.elytradev.mirage.lighting.ILightEventConsumer;
 import com.elytradev.mirage.lighting.Light;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -16,6 +17,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.Optional.Interface;
+import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.client.fx.utils.IIParticleUtils;
@@ -30,7 +32,7 @@ import javax.vecmath.Vector2f;
  * @since 26.10.2019
  */
 @Interface(iface = "com.elytradev.mirage.lighting.ILightEventConsumer", modid = "mirage")
-public class EntityWhitePhosphorus extends EntityIEProjectile implements ILightEventConsumer
+public class EntityWhitePhosphorus extends EntityIEProjectile implements ILightEventConsumer, IEntityAdditionalSpawnData
 {
 	public EntityWhitePhosphorus(World world)
 	{
@@ -140,5 +142,27 @@ public class EntityWhitePhosphorus extends EntityIEProjectile implements ILightE
 				.color(1, 1, 1)
 				.radius(.05f)
 				.build());
+	}
+
+	@Override
+	public void writeSpawnData(ByteBuf buffer)
+	{
+		buffer.writeDouble(posX);
+		buffer.writeDouble(posY);
+		buffer.writeDouble(posZ);
+		buffer.writeDouble(motionX);
+		buffer.writeDouble(motionY);
+		buffer.writeDouble(motionZ);
+	}
+
+	@Override
+	public void readSpawnData(ByteBuf additionalData)
+	{
+		posX = additionalData.readDouble();
+		posY = additionalData.readDouble();
+		posZ = additionalData.readDouble();
+		motionX = additionalData.readDouble();
+		motionY = additionalData.readDouble();
+		motionZ = additionalData.readDouble();
 	}
 }

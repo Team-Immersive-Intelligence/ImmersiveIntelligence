@@ -121,10 +121,10 @@ public class FieldFlakRenderer extends IIVehicleRenderer<EntityFieldFlak>
 		switch(seat.info.getSeatID())
 		{
 			case "gunner":
-				bipedGunner.get().applyAnimationStateTo(model);
+				//bipedGunner.get().applyAnimationStateTo(model);
 				return true;
 			case "commander":
-				bipedCommander.get().applyAnimationStateTo(model);
+				//bipedCommander.get().applyAnimationStateTo(model);
 				return true;
 			default:
 				return false;

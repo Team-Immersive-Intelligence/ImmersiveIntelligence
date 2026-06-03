@@ -44,7 +44,7 @@ public class FactoryTracer
 		this.precision = Math.abs(this.aabb.getAverageEdgeLength());
 	}
 
-	public static FactoryTracer create(@Nonnull AxisAlignedBB aabb)
+	public static FactoryTracer create(@Nullable AxisAlignedBB aabb)
 	{
 		return new FactoryTracer(aabb);
 	}

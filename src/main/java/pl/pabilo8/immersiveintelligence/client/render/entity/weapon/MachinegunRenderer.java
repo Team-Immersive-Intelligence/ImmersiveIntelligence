@@ -98,6 +98,9 @@ public class MachinegunRenderer extends Render<EntityMachinegun> implements IRel
 		{
 			float yaw = entity.aim.getYaw(partialTicks)-entity.aim.getCenterYaw(), pitch = entity.aim.getPitch(partialTicks);
 			boolean tripod = entity.upgrades.contains(WeaponUpgrade.TRIPOD);
+			if(tripod)
+				GlStateManager.translate(0f, 0.5, 0f);
+
 			GlStateManager.translate(0f, -0.34375, 0f);
 			float setup = AMTUtils.getAnimationProgress(entity.setupTime, entity.maxSetupTime, true, partialTicks);
 			GlStateManager.rotate(-25f*setup, 1, 0, 0);

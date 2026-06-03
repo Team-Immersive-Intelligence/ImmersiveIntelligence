@@ -58,7 +58,8 @@ public class GunAmmoProviderMagazine extends GunAmmoProvider
 			if(!b.isEmpty())
 				bulletList.add(b);
 
-		magazineStack = IIContent.itemBulletMagazine.getMagazine(magazineType, bulletList.toArray(new ItemStack[0]));
+		magazineStack = IIContent.itemBulletMagazine.getMagazine(magazineType);
+		IIContent.itemBulletMagazine.writeInventory(magazineStack, bulletList);
 	}
 
 	/**

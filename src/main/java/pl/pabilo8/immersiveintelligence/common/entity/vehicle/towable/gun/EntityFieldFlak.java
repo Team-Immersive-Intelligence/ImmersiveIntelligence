@@ -168,20 +168,27 @@ public class EntityFieldFlak extends EntityVehicleTowable<EntityFieldFlak> imple
 		this.ammoFactory.setShooterAndGun(gunner, this)
 				.setPositionAndVelocity(partGun.getPositionVector(), this.aim, 3f, 1f);
 
+
 		//Intentionally swapped, because it's a push-gun, and that's how pushing works
-		float right = this.commanderControls.getKey("turnLeft")?0.5f: 0;
+		/*float right = this.commanderControls.getKey("turnLeft")?0.5f: 0;
 		float left = this.commanderControls.getKey("turnRight")?0.5f: 0;
 		boolean backwards = this.commanderControls.getKey("backwards");
 		if(backwards||this.commanderControls.getKey("forward"))
 		{
 			left = Math.max(0.5f, left+0.25f)*(backwards?-1: 1);
 			right = Math.max(0.5f, right+0.25f)*(backwards?-1: 1);
-		}
+		}*/
 
-		partWheelLeft.setRotationSpeed(360f*left);
+		/*partWheelLeft.setRotationSpeed(360f*left);
 		partWheelLeft.setTorque(5f*left);
 		partWheelRight.setRotationSpeed(360f*right);
-		partWheelRight.setTorque(5f*right);
+		partWheelRight.setTorque(5f*right);*/
+
+		//Seats rotation
+		this.seatGunner.withSettings(false, IIMath.offsetPosDirectionXYZ(new Vec3d(0.5, 0, 0.125),
+				aim.getYaw(0), 0, 0));
+		this.seatCommander.withSettings(false, IIMath.offsetPosDirectionXYZ(new Vec3d(-0.5, 0, 0.125),
+				aim.getYaw(0), 0, 0));
 
 		//Gunner controls
 		if(gunner!=null)

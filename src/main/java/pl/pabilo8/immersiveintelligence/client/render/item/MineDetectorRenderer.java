@@ -75,15 +75,15 @@ public class MineDetectorRenderer extends TileEntityItemStackRenderer implements
 				v *= 1.125f;
 			}
 
-			//v=distance;
-			//v=distance-(((player.world.getTotalWorldTime()%100)/100f)*distance);
+			v = distance;
+			v = distance-(((player.world.getTotalWorldTime()%100)/100f)*distance);
 
-			//GlStateManager.rotate(player.cameraPitch,1,0,0);
+			GlStateManager.rotate(player.cameraPitch, 1, 0, 0);
 			GlStateManager.translate(0, 1, -v);
 			GlStateManager.rotate(90, 0, 1, 0);
 			GlStateManager.scale(-1, -1, 1);
-			//GlStateManager.rotate(player.rotationYawHead,0,1,0);
-			//GlStateManager.rotate(180,0,1,0);
+			GlStateManager.rotate(player.rotationYawHead, 0, 1, 0);
+			GlStateManager.rotate(180, 0, 1, 0);
 			for(ModelRendererTurbo mod : model.baseModel)
 				mod.render();
 

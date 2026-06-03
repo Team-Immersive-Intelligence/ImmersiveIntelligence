@@ -202,32 +202,36 @@ public class GuiFlagpoleFaction extends DecoTileGui<TileEntityFlagpole, Containe
 				.withTitleLabel("Permissions", DecoAlignment.TOP)
 		);
 
-		panelPerms.addLabel("Role:", 4, 8+2-1)
-				.withSize(panelPerms.width-72-2, 14)
-				.withAlign(DecoAlignment.LEFT);
-		panelPerms.addComponents(
-				new DecoDropdown<PermissionRole>(panelPerms.width-72, 8+2-2)
-						.withSize(72-4, 14)
-						.withEntries(identity.getAvailableRoles().values())
-						.withDisplayFunction(DecoElementDisplays.getSimpleTextDisplay(PermissionRole::getDisplayName))
-						.withSelectedEntry(selectedRole = identity.getRoleOf(playerContainer.player.getUniqueID()))
-						.withOnSelectedEntry((oldRole, newRole) -> selectedRole = newRole),
-				new DecoList<PermissionCategory>(2, 12+8+2+1)
-						.withSize(panelPerms.width-4-2, panelPerms.height-32+8-2)
-						.withEntries(PermissionCategory.values())
-						.withDisplayFunction(new DecoEntryPanelBuilder<PermissionCategory>()
-								.withHeight(18)
-								.withComponent("toggle", p -> new DecoSwitch(2, 2)
-										.withOnToggle(change -> IIPacketHandler.sendToServer(MessageDiplomacyAction.changePermission(selectedRole,
-												p.getCurrentElement(), change)))
-								)
-								.withElementApplyMethod((permission, panel) -> {
-									panel.component("toggle", DecoSwitch.class)
-											.withCurrentState(selectedRole.isAllowed(permission))
-											.withText(permission.getFullLocaleKey());
-								})
-						)
-		);
+		selectedRole = identity.getRoleOf(playerContainer.player.getUniqueID());
+		if(selectedRole!=null)
+		{
+			panelPerms.addLabel("Role:", 4, 8+2-1)
+					.withSize(panelPerms.width-72-2, 14)
+					.withAlign(DecoAlignment.LEFT);
+			panelPerms.addComponents(
+					new DecoDropdown<PermissionRole>(panelPerms.width-72, 8+2-2)
+							.withSize(72-4, 14)
+							.withEntries(identity.getAvailableRoles().values())
+							.withDisplayFunction(DecoElementDisplays.getSimpleTextDisplay(PermissionRole::getDisplayName))
+							.withSelectedEntry(selectedRole)
+							.withOnSelectedEntry((oldRole, newRole) -> selectedRole = newRole),
+					new DecoList<PermissionCategory>(2, 12+8+2+1)
+							.withSize(panelPerms.width-4-2, panelPerms.height-32+8-2)
+							.withEntries(PermissionCategory.values())
+							.withDisplayFunction(new DecoEntryPanelBuilder<PermissionCategory>()
+									.withHeight(18)
+									.withComponent("toggle", p -> new DecoSwitch(2, 2)
+											.withOnToggle(change -> IIPacketHandler.sendToServer(MessageDiplomacyAction.changePermission(selectedRole,
+													p.getCurrentElement(), change)))
+									)
+									.withElementApplyMethod((permission, panel) -> {
+										panel.component("toggle", DecoSwitch.class)
+												.withCurrentState(selectedRole.isAllowed(permission))
+												.withText(permission.getFullLocaleKey());
+									})
+							)
+			);
+		}
 
 
 	}

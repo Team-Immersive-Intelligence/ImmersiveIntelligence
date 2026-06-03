@@ -16,8 +16,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-
-import java.util.Random;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentEffectShape;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
@@ -29,6 +27,7 @@ import pl.pabilo8.immersiveintelligence.common.util.block.ItemBlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 
 import javax.annotation.Nullable;
+import java.util.Random;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -153,7 +152,7 @@ public class BlockIIAdvancedExplosives extends BlockIIBase<HMX_Explosives>
 				default:
 					return; //Nie wolno, nie można, nie potrzeba nam tego
 			}
-			component.onEffect(world, new Vec3d(pos), Vec3d.ZERO, ComponentEffectShape.ORB, new NBTTagCompound(), 1.0f, 1.0f, igniter);
+			component.onEffect(world, new Vec3d(pos), new Vec3d(0, -1, 0), ComponentEffectShape.ORB, new NBTTagCompound(), 1.0f, 1.0f, igniter);
 		}
 	}
 

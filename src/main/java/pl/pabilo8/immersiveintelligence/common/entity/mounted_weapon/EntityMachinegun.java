@@ -106,6 +106,8 @@ public class EntityMachinegun extends EntityMountedWeapon implements IAdvancedTe
 		this.setPosition(pos.getX(), pos.getY(), pos.getZ());
 		this.aim.withCenterYaw(yaw);
 		setOriginStack(stack);
+		if(upgrades.contains(WeaponUpgrade.TRIPOD))
+			this.posY += 0.385f;
 	}
 
 	@Override

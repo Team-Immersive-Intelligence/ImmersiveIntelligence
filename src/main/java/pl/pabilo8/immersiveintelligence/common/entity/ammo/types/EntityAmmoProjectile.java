@@ -123,7 +123,7 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 	 * Raytracer used for the projectile
 	 */
 	@Nonnull
-	protected FactoryTracer flightTracer;
+	protected FactoryTracer flightTracer = FactoryTracer.create(null);
 
 	/**
 	 * Once true, the bullet will detonate at the end of the tick
@@ -180,6 +180,9 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 	public void onUpdate()
 	{
 		super.onUpdate();
+
+		if(world.isRemote&&!clientLoaded)
+			return;
 
 		//Yep, that's it, that's the entire motion code
 		updatePhysics();

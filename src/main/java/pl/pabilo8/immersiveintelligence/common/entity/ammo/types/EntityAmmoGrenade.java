@@ -59,6 +59,9 @@ public class EntityAmmoGrenade extends EntityAmmoProjectile
 	public void onUpdate()
 	{
 		super.onUpdate();
+		if(world.isRemote&&!clientLoaded)
+			return;
+
 		spinTicks = Math.max(0, spinTicks-1);
 		if(onGround)
 			spin = (spin > 180?Math.min(360, spin+SPIN_DEGREES): Math.max(0, spin-SPIN_DEGREES))%360;

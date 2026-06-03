@@ -107,7 +107,7 @@ public class GuiAmmunitionAssembler extends DecoTileGui<TileEntityAmmunitionAsse
 							//Contact fuse has no config value
 							if(this.fuseType==FuseType.CONTACT)
 								textField.withText(newValue = "0");
-							this.fuseConfig = Integer.parseInt(newValue);
+							this.fuseConfig = newValue.isEmpty()?0: Integer.parseInt(newValue);
 						}),
 				new DecoDropdown<FuseType>(4, 2)
 						.withEntries(FuseType.values())

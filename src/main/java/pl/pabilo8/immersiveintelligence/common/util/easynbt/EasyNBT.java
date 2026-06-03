@@ -15,7 +15,6 @@ import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
@@ -1283,10 +1282,13 @@ public class EasyNBT extends Constants.NBT
 	/**
 	 * @return the NBT Compound as Map
 	 */
-	@SuppressWarnings("deprecation")
 	public Map<String, NBTBase> asMap()
 	{
-		return ReflectionHelper.getPrivateValue(NBTTagCompound.class, wrapped.copy(), "tagMap");
+		Set<String> keySet = wrapped.getKeySet();
+		HashMap<String, NBTBase> map = new HashMap<>();
+		for(String key : keySet)
+			map.put(key, wrapped.getTag(key));
+		return map;
 	}
 
 	/**

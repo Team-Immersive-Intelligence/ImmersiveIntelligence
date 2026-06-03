@@ -158,21 +158,23 @@ public class EntityFieldHowitzer extends EntityVehicleTowable<EntityFieldHowitze
 		this.ammoFactory.setShooterAndGun(EntityVehicleSeat.getPassengerOnSeat(seatGunner), this)
 				.setPositionAndVelocity(partGun.getPositionVector(), this.aim, 1f, 1f);
 
-		//Intentionally swapped, because it's a push-gun, and that's how pushing works
-		float right = this.commanderControls.getKey("turnLeft")?0.5f: 0;
-		float left = this.commanderControls.getKey("turnRight")?0.5f: 0;
-		boolean backwards = this.commanderControls.getKey("backwards");
-		if(backwards||this.commanderControls.getKey("forward"))
+		float left = 0, right = 0;
+		if(EntityVehicleSeat.getPassengerOnSeat(seatCommander)!=null)
 		{
-			left = Math.max(0.5f, left+0.25f)*(backwards?-1: 1);
-			right = Math.max(0.5f, right+0.25f)*(backwards?-1: 1);
+			//Intentionally swapped, because it's a push-gun, and that's how pushing works
+			right = this.commanderControls.getKey("turnLeft")?0.5f: 0;
+			left = this.commanderControls.getKey("turnRight")?0.5f: 0;
+			boolean backwards = this.commanderControls.getKey("backwards");
+			if(backwards||this.commanderControls.getKey("forward"))
+			{
+				left = Math.max(0.5f, left+0.25f)*(backwards?-1: 1);
+				right = Math.max(0.5f, right+0.25f)*(backwards?-1: 1);
+			}
 		}
-
 		partWheelLeft.setRotationSpeed(360f*left);
 		partWheelLeft.setTorque(5f*left);
 		partWheelRight.setRotationSpeed(360f*right);
 		partWheelRight.setTorque(5f*right);
-
 
 		//Gun elevation
 		this.aim.withCenterYaw(this.rotationYaw);
