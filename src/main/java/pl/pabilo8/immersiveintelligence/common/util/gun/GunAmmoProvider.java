@@ -165,6 +165,16 @@ public abstract class GunAmmoProvider implements INBTSerializable<NBTTagCompound
 		return loadingState==GunLoadingState.LOAD||loadingState==GunLoadingState.UNLOAD;
 	}
 
+	public boolean isLoaded()
+	{
+		return loadingState==GunLoadingState.LOADED;
+	}
+
+	public boolean isEmpty()
+	{
+		return loadingState==GunLoadingState.EMPTY;
+	}
+
 	public float getLoadingProgress(float partialTicks)
 	{
 		switch(loadingState)

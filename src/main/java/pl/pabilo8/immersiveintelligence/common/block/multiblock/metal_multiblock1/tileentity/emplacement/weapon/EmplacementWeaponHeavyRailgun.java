@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon;
 
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.HeavyRailgun;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIRailgunOverride;
@@ -22,6 +23,7 @@ public class EmplacementWeaponHeavyRailgun extends EmplacementWeaponGunBase<Enti
 	protected void onInit(TileEntityEmplacement te)
 	{
 		super.onInit(te);
+		this.ammoFactory.setAmmo(IIContent.itemRailgunGrenade);
 		this.visionAABB = this.visionAABB.grow(HeavyRailgun.detectionRadius);
 		this.attackAABB = this.attackAABB.grow(HeavyRailgun.attackRadius);
 		setupItemHandlers(te, 18, 6, ItemIIRailgunOverride::isAmmo, ItemIIRailgunOverride::isAmmo);

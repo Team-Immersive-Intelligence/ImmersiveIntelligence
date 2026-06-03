@@ -2,6 +2,7 @@ package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multibloc
 
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.Autocannon;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.CPDS;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
 
@@ -15,6 +16,7 @@ public class EmplacementWeaponLightHowitzer extends EmplacementWeaponGunBase<Ent
 	protected void onInit(TileEntityEmplacement te)
 	{
 		super.onInit(te);
+		this.ammoFactory.setAmmo(IIContent.itemAmmoLightArtillery);
 		this.visionAABB = this.visionAABB.grow(Autocannon.detectionRadius);
 		this.attackAABB = this.attackAABB.grow(Autocannon.attackRadius);
 

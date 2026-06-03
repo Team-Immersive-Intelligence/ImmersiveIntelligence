@@ -35,6 +35,7 @@ public class EmplacementWeaponCPDS extends EmplacementWeaponGunBase<EntityAmmoPr
 	protected void onInit(TileEntityEmplacement te)
 	{
 		super.onInit(te);
+		this.ammoFactory.setAmmo(IIContent.itemAmmoMachinegun);
 		this.visionAABB = this.visionAABB.grow(CPDS.detectionRadius);
 		this.attackAABB = this.attackAABB.grow(CPDS.attackRadius);
 		setupItemHandlers(te, 8, 3, stack -> OreDictionary.itemMatches(stack,

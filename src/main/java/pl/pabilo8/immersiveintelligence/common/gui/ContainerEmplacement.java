@@ -1,9 +1,9 @@
 package pl.pabilo8.immersiveintelligence.common.gui;
 
-import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIITileBase;
@@ -36,8 +36,8 @@ public class ContainerEmplacement extends ContainerIITileBase<TileEntityEmplacem
 			tile.currentWeapon.init(tile);
 
 			//Get inventory handlers
-			IEInventoryHandler platformHandler = tile.currentWeapon.getPlatformItemHandler();
-			IEInventoryHandler baseHandler = tile.currentWeapon.getBaseItemHandler();
+			IItemHandler platformHandler = tile.currentWeapon.getPlatformItemHandler();
+			IItemHandler baseHandler = tile.currentWeapon.getBaseItemHandler();
 
 			//Add slots
 			if(platformHandler!=null)

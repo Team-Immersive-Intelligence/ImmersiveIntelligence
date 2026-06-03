@@ -36,10 +36,22 @@ public abstract class EmplacementWeaponTurretBase extends EmplacementWeapon
 	@Override
 	public EmplacementStateNeeds onUpdate(TileEntityEmplacement te, EmplacementStateNeeds baseNeeds, TargetCoordinateReference currentTarget)
 	{
+		if(shootDelay > 0)
+			shootDelay--;
+
+		if(currentTarget==null||!currentTarget.shouldBeExecuted(te.getWorld()))
+		{
+			if(this.setup!=null)
+			{
+				this.setup.setState(false);
+				this.setup.update();
+			}
+			return super.onUpdate(te, baseNeeds, currentTarget);
+		}
+
 		Vec3d target = currentTarget.supplyCoordinates();
 		if(target!=null)
-			this.aim.setTarget(te.getWeaponCenter(), Vec3d.ZERO,
-					target, Vec3d.ZERO);
+			this.aim.setTarget(te.getWeaponCenter(), Vec3d.ZERO, target, getTargetMotion(currentTarget));
 		this.aim.update();
 
 		if(this.setup!=null)
@@ -48,19 +60,36 @@ public abstract class EmplacementWeaponTurretBase extends EmplacementWeapon
 			this.setup.update();
 		}
 
-		return super.onUpdate(te, baseNeeds, currentTarget);
+		if(isReadyToShoot(te)&&shoot(te, currentTarget))
+			currentTarget.notifyAfterShot();
+
+		return EmplacementStateNeeds.WANTS_SURFACE;
+	}
+
+	protected Vec3d getTargetMotion(TargetCoordinateReference target)
+	{
+		if(target.getEntity()!=null)
+			return new Vec3d(target.getEntity().motionX, target.getEntity().motionY, target.getEntity().motionZ);
+		return Vec3d.ZERO;
+	}
+
+	protected boolean isReadyToShoot(TileEntityEmplacement te)
+	{
+		return shootDelay <= 0&&te.door.isFullyOpened()&&(setup==null||setup.isFullyOpened())&&aim.isAimed(1.5f)&&canShoot(te);
 	}
 
 	public abstract boolean canShoot(TileEntityEmplacement te);
 
 	/**
-	 * Used for shooting action
+	 * Used for shooting action. Base turret logic only handles attract/noise bookkeeping;
+	 * concrete weapons should return true only after actually spawning a projectile/effect.
 	 */
-	public void shoot(TileEntityEmplacement te)
+	protected boolean shoot(TileEntityEmplacement te, TargetCoordinateReference target)
 	{
 		if(baseEntity!=null)
 			Utils.attractEnemies(baseEntity, 24);
 		this.shootDelay = getShotDelay();
+		return false;
 	}
 
 	public boolean requiresZeroingBeforeReload()
@@ -79,6 +108,7 @@ public abstract class EmplacementWeaponTurretBase extends EmplacementWeapon
 		nbt.setTag("aim", aim.serializeNBT());
 		if(setup!=null)
 			nbt.setTag("setup", setup.serializeNBT());
+		nbt.setInteger("shootDelay", shootDelay);
 		return nbt;
 	}
 
@@ -89,5 +119,6 @@ public abstract class EmplacementWeaponTurretBase extends EmplacementWeapon
 		aim.deserializeNBT(nbt.getCompoundTag("aim"));
 		if(setup!=null)
 			setup.deserializeNBT(nbt.getCompoundTag("setup"));
+		shootDelay = nbt.getInteger("shootDelay");
 	}
 }

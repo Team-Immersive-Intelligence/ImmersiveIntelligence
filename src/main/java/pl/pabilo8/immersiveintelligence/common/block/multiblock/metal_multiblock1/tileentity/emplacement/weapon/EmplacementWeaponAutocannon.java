@@ -18,6 +18,7 @@ public class EmplacementWeaponAutocannon extends EmplacementWeaponGunBase<Entity
 	protected void onInit(TileEntityEmplacement te)
 	{
 		super.onInit(te);
+		this.ammoFactory.setAmmo(IIContent.itemAmmoAutocannon);
 		this.visionAABB = this.visionAABB.grow(Autocannon.detectionRadius);
 		this.attackAABB = this.attackAABB.grow(Autocannon.attackRadius);
 		this.aim.withAimSpeed(Autocannon.yawRotateSpeed, Autocannon.pitchRotateSpeed);

@@ -2,6 +2,7 @@ package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multibloc
 
 import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoFactory;
@@ -9,7 +10,11 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPane
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement.EmplacementStateNeeds;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.TargetCoordinateReference;
+import pl.pabilo8.immersiveintelligence.common.util.gun.GunRecoil;
+import pl.pabilo8.immersiveintelligence.common.util.gun.GunShootingHandler;
+import pl.pabilo8.immersiveintelligence.common.util.gun.ammoprovider.GunAmmoProviderItemHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -19,13 +24,13 @@ import java.util.function.Predicate;
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
- * @updated 30.12.2025
+ * @updated 03.06.2026
  * @since 04.09.2025
  */
 public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> extends EmplacementWeaponTurretBase
 {
 	/**
-	 * Used to fire ammo for the weapon
+	 * Used to fire ammo for the weapon.
 	 */
 	protected AmmoFactory<A> ammoFactory;
 	@Nullable
@@ -33,9 +38,14 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 	@Nullable
 	protected IEInventoryHandler inventoryPlatformHandler;
 
+	protected GunShootingHandler gunHandler = new GunShootingHandler();
+	protected GunRecoil recoil = new GunRecoil();
+	@Nullable
+	protected GunAmmoProviderItemHandler platformAmmoProvider;
+
 	/**
-	 * Called after the weapon is installed or loaded from NBT
-	 * Initialize sight AABB here
+	 * Called after the weapon is installed or loaded from NBT.
+	 * Initialize sight AABB here.
 	 */
 	protected void onInit(TileEntityEmplacement te)
 	{
@@ -54,7 +64,26 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 	{
 		if(!te.getWorld().isRemote&&te.getOwnerIdentity()!=null)
 			ammoFactory.setOwner(te.getOwnerIdentity().getFirstResponsibleMember(te.getWorld()));
+
+		ensureShootingComponents();
+		if(gunHandler!=null)
+			gunHandler.update();
+
 		return super.onUpdate(te, baseNeeds, currentTarget);
+	}
+
+	protected void ensureShootingComponents()
+	{
+		if(platformAmmoProvider==null&&inventoryPlatformHandler!=null)
+		{
+			platformAmmoProvider = new GunAmmoProviderItemHandler(null, () -> null, inventoryPlatformHandler,
+					ammoFactory::isValidAmmo, getReloadDelay());
+			//noinspection unchecked
+			gunHandler.withAmmoProvider(platformAmmoProvider)
+					.withAmmoFactory((AmmoFactory<? extends EntityAmmoProjectile>)ammoFactory)
+					.withRecoilHandler(recoil)
+					.withMaxShotDelay(getShotDelay());
+		}
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -64,17 +93,40 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 
 	}
 
-
 	@Override
 	public boolean canShoot(TileEntityEmplacement te)
 	{
-		return inventoryPlatformHandler==null||!isHandlerEmpty(inventoryPlatformHandler);
+		ensureShootingComponents();
+		return platformAmmoProvider!=null&&(platformAmmoProvider.isLoaded()||platformAmmoProvider.hasAvailableAmmo());
 	}
 
 	@Override
+	protected boolean shoot(TileEntityEmplacement te, TargetCoordinateReference target)
+	{
+		ensureShootingComponents();
+		if(te.getWorld().isRemote||platformAmmoProvider==null||gunHandler==null)
+			return false;
+
+		if(platformAmmoProvider.isEmpty()&&platformAmmoProvider.hasAvailableAmmo())
+			gunHandler.startReloading();
+		if(!platformAmmoProvider.isLoaded())
+			return false;
+
+		if(baseEntity!=null)
+			blusunrize.immersiveengineering.common.util.Utils.attractEnemies(baseEntity, 24);
+
+		ammoFactory.setPositionAndVelocity(te.getWeaponCenter(), this.aim, 0.25f, 1f);
+		return gunHandler.fire();
+	}
+
+	/**
+	 * The weapon should be brought down when the platform has no available shot.
+	 */
+	@Override
 	public boolean needsSupply(TileEntityEmplacement te)
 	{
-		return inventoryPlatformHandler!=null&&isHandlerEmpty(inventoryPlatformHandler);
+		ensureShootingComponents();
+		return platformAmmoProvider!=null&&!platformAmmoProvider.isLoaded()&&!platformAmmoProvider.hasAvailableAmmo();
 	}
 
 	@Override
@@ -127,9 +179,10 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 	public void setDead()
 	{
 		super.setDead();
-		this.ammoFactory
-				.setShooterAndGun(null, null)
-				.setIgnoredEntities(Collections.emptyList());
+		if(this.ammoFactory!=null)
+			this.ammoFactory
+					.setShooterAndGun(null, null)
+					.setIgnoredEntities(Collections.emptyList());
 	}
 
 	@Nullable
@@ -173,6 +226,7 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 				new FilteredEmplacementInventoryHandler(baseSlots, te, 0, baseFilter): null;
 		this.inventoryPlatformHandler = platformSlots > 0?
 				new FilteredEmplacementInventoryHandler(platformSlots, te, baseSlots, platformFilter): null;
+		this.platformAmmoProvider = null;
 	}
 
 	/**
@@ -209,5 +263,24 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 		{
 			return !stack.isEmpty()&&filter.test(stack);
 		}
+	}
+
+	@Override
+	public NBTTagCompound serializeNBT()
+	{
+		NBTTagCompound nbt = super.serializeNBT();
+		nbt.setTag("gunHandler", gunHandler.serializeNBT());
+		nbt.setTag("recoil", recoil.serializeNBT());
+		return nbt;
+	}
+
+	@Override
+	public void deserializeNBT(NBTTagCompound nbt)
+	{
+		super.deserializeNBT(nbt);
+		if(nbt.hasKey("gunHandler"))
+			gunHandler.deserializeNBT((net.minecraft.nbt.NBTTagFloat)nbt.getTag("gunHandler"));
+		if(nbt.hasKey("recoil"))
+			recoil.deserializeNBT(nbt.getCompoundTag("recoil"));
 	}
 }

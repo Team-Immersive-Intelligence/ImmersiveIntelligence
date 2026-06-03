@@ -116,7 +116,21 @@ public class AmmoFactory<E extends EntityAmmoBase<? super E>>
 	public AmmoFactory<E> setStack(ItemStack stack)
 	{
 		this.stack = stack;
-		this.ammo = this.stack.isEmpty()?null: ((IAmmoType<?, E>)stack.getItem());
+		this.ammo = this.ammo==null?((IAmmoType<?, E>)stack.getItem()): this.ammo;
+		return this;
+	}
+
+	/**
+	 * Sets the ammo to create, used when the ammo type can't be determined directly from the stack, f.e. in turrets
+	 *
+	 * @param ammo The ammo to create
+	 * @return The factory
+	 */
+	@SuppressWarnings("rawtypes")
+	public AmmoFactory<E> setAmmo(@Nonnull IAmmoType ammo)
+	{
+		//noinspection unchecked
+		this.ammo = (IAmmoType<?, E>)ammo;
 		return this;
 	}
 
@@ -281,7 +295,7 @@ public class AmmoFactory<E extends EntityAmmoBase<? super E>>
 	public E create(@Nullable Consumer<E> action)
 	{
 		//Invalid ammo type
-		if(ammo==null)
+		if(ammo==null||stack==null||stack.isEmpty())
 			return null;
 
 		//No position or direction passed

@@ -45,6 +45,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileManager;
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileManager.ITactileListener;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyHandler;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.OwnerIdentity;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.property.IOwnableProperty;
@@ -73,6 +74,10 @@ import java.util.Optional;
 public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEntityEmplacement> implements IBooleanAnimatedPartsBlock,
 		IManagedUpgradableDevice<TileEntityEmplacement>, IOwnableProperty, IStyleCustomizable, IIIGuiMultiblockTile, IManagedDamageResistantMultiblock, ITactileListener, ILightEventConsumer
 {
+	private static final int WEAPON_REPAIR_INTERVAL = 20;
+	private static final int WEAPON_REPAIR_ENERGY_COST = 80;
+	private static final float WEAPON_REPAIR_AMOUNT = 1.0f;
+
 	@SyncNBT(events = SyncEvents.TILE_OWNERSHIP_MODIFIED)
 	public OwnerIdentity ownerIdentity;
 	@SyncNBT(name = "upgrades", events = SyncEvents.TILE_UPGRADES_MODIFIED)
@@ -91,16 +96,11 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 	@SyncNBT(events = SyncEvents.TILE_DAMAGED)
 	public MultiblockHealth baseHealth;
 
-	private static final int WEAPON_REPAIR_INTERVAL = 20;
-	private static final int WEAPON_REPAIR_ENERGY_COST = 80;
-	private static final float WEAPON_REPAIR_AMOUNT = 1.0f;
-
 	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CLIENT_MESSAGE})
-	public boolean redstoneControlEnabled = true, dataControlEnabled = true;
+	public boolean redstoneControlEnabled = true, dataControlEnabled = true, weaponRepairing = false;
 	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CLIENT_MESSAGE})
 	public float weaponHideHealthThreshold = 0.25f, weaponRepairSatisfactoryThreshold = 0.85f;
 	private int weaponRepairTicker = 0;
-	private boolean weaponRepairing = false;
 	@SyncNBT
 	public MultiblockInteractablePart door;
 
@@ -115,6 +115,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 		this.baseHealth = new MultiblockHealth(this, Emplacement.baseHealth);
 		this.ownerIdentity = DiplomacyHandler.NEUTRAL;
 		this.currentTarget = new TargetCoordinateReference(this::getWorld);
+		this.taskManager.setWorldSupplier(this::getWorld);
 		this.currentWeapon = null;
 	}
 
@@ -149,6 +150,14 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 		//Extract energy for merely existing
 		if(energyStorage.extractEnergy(Emplacement.baseEnergyUsage, false)==Emplacement.baseEnergyUsage)
 		{
+			//Finish previous task, if condition is met or the task is no longer valid.
+			if(currentTarget!=null&&!currentTarget.shouldBeExecuted(world))
+			{
+				currentTarget = null;
+				taskManager.pruneFinishedMissions();
+				updateTileForEvent(SyncEvents.TILE_CUSTOM1);
+			}
+
 			//Handle targeting
 			if(currentTarget==null)
 				currentTarget = taskManager.provideNextTask();
@@ -351,18 +360,14 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 					this.taskManager.resumeTask(true);
 					updateTileForEvent(SyncEvents.TILE_CUSTOM1);
 					break;
-				case "targetshells":
-//					this.taskManager.addTask(new EmplacementFireMissionShells());
-					updateTileForEvent(SyncEvents.TILE_CUSTOM1);
-					break;
 				case "fire":
 					Optional<DataTypeEntity> e = IIDataHandlingUtils.optionalEntity('e', packet);
 
-					/*if(e.isPresent())
+					if(e.isPresent())
 					{
 						Entity entityByID = world.getEntityByID(e.get().entityID);
 						if(entityByID!=null)
-							this.taskManager.addTask(new EmplacementFireMissionEntity(entityByID));
+							this.taskManager.addEntityMission(entityByID, IIDataHandlingUtils.optionalInt('a', packet).orElse(1));
 						updateTileForEvent(SyncEvents.TILE_CUSTOM1);
 					}
 					else
@@ -370,7 +375,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 						int amount = IIDataHandlingUtils.optionalInt('a', packet).orElse(1);
 						IIDataHandlingUtils.expectingVectorParam(packet, vec -> {
 									//Block/Vector based
-									this.taskManager.addTask(new EmplacementFireMissionPosition(new BlockPos(vec).add(getPOIPos("weapon")), amount));
+									this.taskManager.addPositionMission(new BlockPos(vec).add(getPOIPos("weapon")), amount);
 								},
 								angle -> {
 									//Yaw+Pitch based
@@ -378,10 +383,10 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 									double true_angle2 = Math.toRadians(angle.y);
 									int distance = IIDataHandlingUtils.optionalInt('d', packet).orElse(40);
 
-									this.taskManager.addTask(new EmplacementFireMissionPosition(new BlockPos(IIMath.offsetPosDirection(distance,
-											true_angle, true_angle2)).add(getPOIPos("weapon")), amount));
+									this.taskManager.addPositionMission(new BlockPos(IIMath.offsetPosDirection(distance,
+											true_angle, true_angle2)).add(getPOIPos("weapon")), amount);
 								});
-					}*/
+					}
 					//Synchronize the task
 					updateTileForEvent(SyncEvents.TILE_CUSTOM1);
 					break;

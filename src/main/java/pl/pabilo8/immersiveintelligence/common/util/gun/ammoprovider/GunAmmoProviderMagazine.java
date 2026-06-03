@@ -46,7 +46,7 @@ public class GunAmmoProviderMagazine extends GunAmmoProvider
 	 */
 	private void rebuildMagazineFromBullets()
 	{
-		if(isEmpty())
+		if(getBulletCount()==0)
 		{
 			magazineStack = ItemStack.EMPTY;
 			return;
@@ -96,7 +96,7 @@ public class GunAmmoProviderMagazine extends GunAmmoProvider
 	@Override
 	protected void onUnloadFinished()
 	{
-		if(!isEmpty())
+		if(getBulletCount() > 0)
 		{
 			//Drop or give the magazine stack (which reflects the current bullets)
 			giveOrDrop(magazineStack);
@@ -109,7 +109,7 @@ public class GunAmmoProviderMagazine extends GunAmmoProvider
 	@Override
 	protected ItemStack provideNextBullet()
 	{
-		if(isEmpty())
+		if(getBulletCount()==0)
 			return ItemStack.EMPTY;
 
 		//Find the first non‑empty bullet
@@ -186,11 +186,6 @@ public class GunAmmoProviderMagazine extends GunAmmoProvider
 	private void clear()
 	{
 		Collections.fill(bullets, ItemStack.EMPTY);
-	}
-
-	private boolean isEmpty()
-	{
-		return getBulletCount()==0;
 	}
 
 	private int getBulletCount()

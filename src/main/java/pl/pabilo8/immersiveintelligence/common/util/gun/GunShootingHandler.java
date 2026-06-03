@@ -47,43 +47,50 @@ public class GunShootingHandler implements INBTSerializable<NBTTagFloat>
 			this.ammoProvider.update();
 	}
 
-	public void fire()
+	public boolean fire()
 	{
 		//Check basic conditions
 		if(!canShoot()||ammoProvider==null||ammoFactory==null)
-			return;
+			return false;
 		World world = ammoFactory.getWorld();
 
 		//Cannot fire when the provider is still reloading
 		if(ammoProvider.isReloading())
-			return;
+			return false;
 
 		//Load ammo from provider
 		ItemStack firedStack = ammoProvider.provideAmmo();
+		boolean fired = false;
 		if(!world.isRemote)
 		{
 			if(!firedStack.isEmpty())
 			{
 				ammoFactory.setStack(firedStack);
 				EntityAmmoProjectile projectile = ammoFactory.create();
-				if(projectile!=null&&sound!=null)
+				fired = projectile!=null;
+				if(fired&&sound!=null)
 					IIPacketHandler.sendToAllClients(new MessagePlayIISound(sound, SoundCategory.BLOCKS, shootSoundRange, ammoFactory.getPos(), 1f, 1f));
 			}
-			else
+			else if(soundDryFire!=null)
 				world.playSound(null, new BlockPos(ammoFactory.getPos()), soundDryFire, SoundCategory.BLOCKS, 1f, 1f);
-
 		}
+		else
+			fired = !firedStack.isEmpty();
+
+		if(!fired)
+			return false;
+
 		//Reset shot delay
 		this.shotDelay = maxShotDelay;
 		//Add recoil and gun overheat
-		if(recoil!=null&&!firedStack.isEmpty())
+		if(recoil!=null)
 			recoil.addRecoil();
+		return true;
 	}
 
-	public void startReloading()
+	public boolean startReloading()
 	{
-		if(ammoProvider!=null)
-			ammoProvider.startReloading();
+		return ammoProvider!=null&&ammoProvider.startReloading();
 	}
 
 	//--- With ---//

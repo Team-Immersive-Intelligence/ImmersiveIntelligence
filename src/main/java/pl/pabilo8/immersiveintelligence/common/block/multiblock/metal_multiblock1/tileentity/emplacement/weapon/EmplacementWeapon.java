@@ -2,7 +2,6 @@ package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multibloc
 
 import blusunrize.immersiveengineering.common.util.IEDamageSources;
 import blusunrize.immersiveengineering.common.util.IEDamageSources.ElectricDamageSource;
-import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
 import com.elytradev.mirage.event.GatherLightsEvent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -11,12 +10,12 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeNull;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
@@ -53,7 +52,7 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable
 	protected void onInit(TileEntityEmplacement te)
 	{
 		this.initialized = true;
-		this.health = MathHelper.clamp(this.health, 0, getMaxHealth());
+		this.health = getMaxHealth();
 		this.visionAABB = new AxisAlignedBB(new BlockPos(te.getWeaponCenter()));
 		this.attackAABB = new AxisAlignedBB(new BlockPos(te.getWeaponCenter()));
 
@@ -118,13 +117,13 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable
 	//--- Inventory ---//
 
 	@Nullable
-	public IEInventoryHandler getBaseItemHandler()
+	public IItemHandler getBaseItemHandler()
 	{
 		return null;
 	}
 
 	@Nullable
-	public IEInventoryHandler getPlatformItemHandler()
+	public IItemHandler getPlatformItemHandler()
 	{
 		return null;
 	}
@@ -135,29 +134,19 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable
 		return null;
 	}
 
-
 	/**
-	 * @return true when the weapon cannot operate because its ready stock is empty.
+	 * @return true when this weapon cannot operate until the platform is lowered and serviced.
 	 */
 	public boolean needsSupply(TileEntityEmplacement te)
 	{
 		return false;
 	}
 
-	/**
-	 * @return true when the weapon should keep the platform hidden until it can restock its ready inventory.
-	 */
 	public boolean needsRestock(TileEntityEmplacement te)
 	{
 		return false;
 	}
 
-	/**
-	 * Called by the Emplacement while the platform is fully hidden.
-	 * Implementations should move supplies from base storage into weapon/platform storage.
-	 *
-	 * @return true if any stock was moved
-	 */
 	public boolean restockFromBase(TileEntityEmplacement te)
 	{
 		return false;
@@ -165,17 +154,12 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable
 
 	public boolean isBelowHealthThreshold(float threshold)
 	{
-		return getHealthPercentage() < threshold;
+		return getMaxHealth() > 0&&getHealth()/getMaxHealth() < threshold;
 	}
 
 	public boolean isRepairedTo(float threshold)
 	{
-		return getHealthPercentage() >= threshold;
-	}
-
-	public float getHealthPercentage()
-	{
-		return getMaxHealth() <= 0?1f: MathHelper.clamp(health/(float)getMaxHealth(), 0f, 1f);
+		return getMaxHealth() <= 0||getHealth()/getMaxHealth() >= threshold;
 	}
 
 	public boolean repair(float amount)
