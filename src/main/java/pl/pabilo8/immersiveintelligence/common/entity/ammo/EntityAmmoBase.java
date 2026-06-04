@@ -135,7 +135,27 @@ public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extend
 		this.components = components;
 		this.height = this.width = Math.max(0.25f, (ammoType.getCaliber()/16f));
 		float fraction = height/2f;
-		this.setEntityBoundingBox(this.aabb = new AxisAlignedBB(-fraction, -fraction, -fraction, fraction, fraction, fraction));
+		this.aabb = new AxisAlignedBB(-fraction, -fraction, -fraction, fraction, fraction, fraction);
+		this.setPosition(this.posX, this.posY, this.posZ);
+	}
+
+	@Override
+	public void setPosition(double x, double y, double z)
+	{
+		this.posX = x;
+		this.posY = y;
+		this.posZ = z;
+		float fraction = this.width / 2.0F;
+		this.setEntityBoundingBox(new AxisAlignedBB(x - fraction, y - fraction, z - fraction, x + fraction, y + fraction, z + fraction));
+	}
+
+	@Override
+	public void resetPositionToBB()
+	{
+		AxisAlignedBB box = this.getEntityBoundingBox();
+		this.posX = (box.minX + box.maxX) / 2.0D;
+		this.posY = (box.minY + box.maxY) / 2.0D; // We use center instead of minY
+		this.posZ = (box.minZ + box.maxZ) / 2.0D;
 	}
 
 	@Override
