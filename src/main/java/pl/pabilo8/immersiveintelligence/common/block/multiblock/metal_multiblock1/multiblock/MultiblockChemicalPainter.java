@@ -8,11 +8,11 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.BlockIIMetalMultiblock1.MetalMultiblocks1;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityChemicalPainter;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStructureBase;
 
 import java.util.function.Predicate;
 
-public class MultiblockChemicalPainter extends MultiblockStuctureBase<TileEntityChemicalPainter>
+public class MultiblockChemicalPainter extends MultiblockStructureBase<TileEntityChemicalPainter>
 {
 	public static MultiblockChemicalPainter INSTANCE;
 

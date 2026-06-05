@@ -5,7 +5,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNullableSyncMechanism;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStructureBase;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionBase.IIIMultiblockRecipe;
 
 import javax.annotation.Nullable;
@@ -33,7 +33,7 @@ public abstract class TileEntityMultiblockProductionSingle<T extends TileEntityM
 			getProcessByName(nbt.getString("recipe")).withNBT(easyNBT -> easyNBT.mergeWith(nbt))
 	);
 
-	public TileEntityMultiblockProductionSingle(MultiblockStuctureBase<T> multiblock)
+	public TileEntityMultiblockProductionSingle(MultiblockStructureBase<T> multiblock)
 	{
 		super(multiblock);
 	}

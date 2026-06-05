@@ -9,9 +9,9 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.BlockIIMetalMultiblock1.MetalMultiblocks1;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityProjectileWorkshop;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStructureBase;
 
-public class MultiblockProjectileWorkshop extends MultiblockStuctureBase<TileEntityProjectileWorkshop>
+public class MultiblockProjectileWorkshop extends MultiblockStructureBase<TileEntityProjectileWorkshop>
 {
 	public static final int SLOT_INPUT = 0;
 	public static final int SLOT_COMPONENT_INPUT = 1;

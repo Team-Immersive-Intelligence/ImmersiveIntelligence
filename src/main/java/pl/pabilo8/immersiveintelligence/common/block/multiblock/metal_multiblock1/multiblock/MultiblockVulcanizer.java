@@ -9,10 +9,10 @@ import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.BlockIIMetalMultiblock1.MetalMultiblocks1;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityVulcanizer;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStructureBase;
 import pl.pabilo8.immersiveintelligence.common.util.sound.IISoundAnimation;
 
-public class MultiblockVulcanizer extends MultiblockStuctureBase<TileEntityVulcanizer>
+public class MultiblockVulcanizer extends MultiblockStructureBase<TileEntityVulcanizer>
 {
 	public static MultiblockVulcanizer INSTANCE;
 	public static final int SLOT_RUBBER = 0, SLOT_COMPOUND = 1, SLOT_SULFUR = 2;

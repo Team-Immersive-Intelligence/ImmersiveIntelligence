@@ -9,13 +9,13 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.BlockIIMetalMultiblock0.MetalMultiblocks0;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityDataInputMachine;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStructureBase;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 28.06.2019
  */
-public class MultiblockDataInputMachine extends MultiblockStuctureBase<TileEntityDataInputMachine>
+public class MultiblockDataInputMachine extends MultiblockStructureBase<TileEntityDataInputMachine>
 {
 	public static final int SLOT_INPUT = 0;
 	public static final int SLOT_OUTPUT = 1;

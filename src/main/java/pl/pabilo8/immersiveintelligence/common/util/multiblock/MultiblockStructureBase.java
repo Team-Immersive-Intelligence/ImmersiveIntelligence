@@ -62,7 +62,7 @@ import java.util.stream.Collectors;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 31.05.2021
  */
-public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<T>> implements IMultiblock
+public abstract class MultiblockStructureBase<T extends TileEntityMultiblockPart<T>> implements IMultiblock
 {
 	static final TemplateManager RES_LOC_TEMPLATE_MANAGER = new TemplateManager("Blue Sunrise is a wanker", DataFixesManager.createFixer());
 
@@ -126,7 +126,7 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 	@SideOnly(Side.CLIENT)
 	private TileEntitySpecialRenderer<T> tesr;
 
-	public MultiblockStuctureBase(ResourceLocation loc)
+	public MultiblockStructureBase(ResourceLocation loc)
 	{
 		this.loc = loc;
 		String[] split = loc.getResourcePath().split("/");

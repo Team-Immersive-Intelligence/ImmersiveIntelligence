@@ -19,7 +19,7 @@ import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.amt.AMTModelHeader;
 import pl.pabilo8.immersiveintelligence.common.util.amt.IIAnimation;
 import pl.pabilo8.immersiveintelligence.common.util.amt.IIAnimationCollisionMap;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStructureBase;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -84,7 +84,7 @@ public class TactileManager
 	 *
 	 * @param multiblock multiblock with an AABB file
 	 */
-	public <T extends TileEntityMultiblockPart<T> & ITactileListener> TactileManager(MultiblockStuctureBase<T> multiblock, T listener)
+	public <T extends TileEntityMultiblockPart<T> & ITactileListener> TactileManager(MultiblockStructureBase<T> multiblock, T listener)
 	{
 		this.baseAabbLoc = multiblock.getAABBFileLocation();
 		this.aabbLocations = new LinkedHashMap<>();

@@ -7,9 +7,9 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.BlockIIMetalMultiblock1.MetalMultiblocks1;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityHeavyAmmunitionAssembler;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStructureBase;
 
-public class MultiblockHeavyAmmunitionAssembler extends MultiblockStuctureBase<TileEntityHeavyAmmunitionAssembler>
+public class MultiblockHeavyAmmunitionAssembler extends MultiblockStructureBase<TileEntityHeavyAmmunitionAssembler>
 {
 	public static MultiblockHeavyAmmunitionAssembler INSTANCE;
 

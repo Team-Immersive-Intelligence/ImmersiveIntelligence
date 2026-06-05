@@ -12,14 +12,14 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStructureBase;
 import pl.pabilo8.immersiveintelligence.common.util.sound.IISoundAnimation;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 28.06.2019
  */
-public class MultiblockArtilleryHowitzer extends MultiblockStuctureBase<TileEntityArtilleryHowitzer>
+public class MultiblockArtilleryHowitzer extends MultiblockStructureBase<TileEntityArtilleryHowitzer>
 {
 	public static MultiblockArtilleryHowitzer INSTANCE;
 

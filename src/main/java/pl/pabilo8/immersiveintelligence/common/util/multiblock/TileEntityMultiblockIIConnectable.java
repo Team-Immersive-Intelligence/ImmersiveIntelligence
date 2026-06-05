@@ -44,7 +44,7 @@ public abstract class TileEntityMultiblockIIConnectable<T extends TileEntityMult
 	protected WireType limitType = null;
 	private long lastSourceUpdate = 0;
 
-	public TileEntityMultiblockIIConnectable(MultiblockStuctureBase<T> multiblock)
+	public TileEntityMultiblockIIConnectable(MultiblockStructureBase<T> multiblock)
 	{
 		super(multiblock);
 	}

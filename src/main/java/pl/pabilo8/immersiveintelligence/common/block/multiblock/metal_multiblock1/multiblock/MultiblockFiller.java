@@ -7,9 +7,9 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.BlockIIMetalMultiblock1.MetalMultiblocks1;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityFiller;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStructureBase;
 
-public class MultiblockFiller extends MultiblockStuctureBase<TileEntityFiller>
+public class MultiblockFiller extends MultiblockStructureBase<TileEntityFiller>
 {
 	public static MultiblockFiller INSTANCE;
 	public static int SLOT_DUST = 0;

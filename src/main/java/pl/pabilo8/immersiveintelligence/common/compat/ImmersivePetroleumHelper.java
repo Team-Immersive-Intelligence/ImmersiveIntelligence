@@ -51,7 +51,7 @@ import pl.pabilo8.immersiveintelligence.api.VehicleFuelHandler;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.util.block.ItemBlockIISlabs;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStructureBase;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -127,7 +127,7 @@ public class ImmersivePetroleumHelper extends IICompatModule
 		IMultiblock mb = event.getMultiblock();
 		ItemStack stack = event.getItemStack();
 
-		if(mb instanceof MultiblockStuctureBase)
+		if(mb instanceof MultiblockStructureBase)
 			if(stack.getItem() instanceof ItemBlockIESlabs||stack.getItem() instanceof ItemBlockIISlabs)
 			{
 				Block block = ((ItemBlock)stack.getItem()).getBlock();
@@ -147,7 +147,7 @@ public class ImmersivePetroleumHelper extends IICompatModule
 					{
 						GlStateManager.pushMatrix();
 
-						Tuple<ResourceLocation, EnumFacing> entry = ((MultiblockStuctureBase<?>)mb).getConveyorKey(event.getH(), event.getL(), event.getW(), EnumFacing.SOUTH);
+						Tuple<ResourceLocation, EnumFacing> entry = ((MultiblockStructureBase<?>)mb).getConveyorKey(event.getH(), event.getL(), event.getW(), EnumFacing.SOUTH);
 						EnumFacing facing = entry.getSecond().getOpposite();
 						IConveyorBelt conv = ConveyorHandler.functionRegistry.get(entry.getFirst()).apply(null);
 
@@ -196,9 +196,9 @@ public class ImmersivePetroleumHelper extends IICompatModule
 				EnumFacing facing = null;
 				ResourceLocation rl = null;
 
-				if(mb instanceof MultiblockStuctureBase)
+				if(mb instanceof MultiblockStructureBase)
 				{
-					Tuple<ResourceLocation, EnumFacing> key = ((MultiblockStuctureBase<?>)mb).getConveyorKey(event.getH(), event.getL(), event.getW(), event.getRotate());
+					Tuple<ResourceLocation, EnumFacing> key = ((MultiblockStructureBase<?>)mb).getConveyorKey(event.getH(), event.getL(), event.getW(), event.getRotate());
 					rl = key.getFirst();
 					facing = key.getSecond();
 				}

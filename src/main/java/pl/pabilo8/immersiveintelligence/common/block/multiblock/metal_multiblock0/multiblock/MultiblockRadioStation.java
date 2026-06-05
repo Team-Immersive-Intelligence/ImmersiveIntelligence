@@ -8,14 +8,14 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.BlockIIMetalMultiblock0.MetalMultiblocks0;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityRadioStation;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStructureBase;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 20.06.2019
  */
 @IAdvancedMultiblock
-public class MultiblockRadioStation extends MultiblockStuctureBase<TileEntityRadioStation>
+public class MultiblockRadioStation extends MultiblockStructureBase<TileEntityRadioStation>
 {
 	public static MultiblockRadioStation INSTANCE;
 

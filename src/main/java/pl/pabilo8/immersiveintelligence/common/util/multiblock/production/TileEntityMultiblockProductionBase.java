@@ -16,7 +16,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IIIGuiMultiblockTile;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStructureBase;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIGeneric;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionBase.IIIMultiblockRecipe;
 
@@ -38,7 +38,7 @@ public abstract class TileEntityMultiblockProductionBase<T extends TileEntityMul
 		extends TileEntityMultiblockIIGeneric<T>
 		implements IIIGuiMultiblockTile
 {
-	public TileEntityMultiblockProductionBase(MultiblockStuctureBase<T> multiblock)
+	public TileEntityMultiblockProductionBase(MultiblockStructureBase<T> multiblock)
 	{
 		super(multiblock);
 	}

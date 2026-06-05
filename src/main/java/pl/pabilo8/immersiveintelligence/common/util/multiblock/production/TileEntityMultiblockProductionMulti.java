@@ -3,7 +3,7 @@ package pl.pabilo8.immersiveintelligence.common.util.multiblock.production;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStructureBase;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionBase.IIIMultiblockRecipe;
 
 import java.util.Iterator;
@@ -26,7 +26,7 @@ public abstract class TileEntityMultiblockProductionMulti<T extends TileEntityMu
 	@SyncNBT(events = {SyncEvents.TILE_RECIPE_CHANGED, SyncEvents.TILE_GUI_OPENED})
 	public ProcessQueue<T, R> processQueue = new ProcessQueue<>(this);
 
-	public TileEntityMultiblockProductionMulti(MultiblockStuctureBase<T> multiblock)
+	public TileEntityMultiblockProductionMulti(MultiblockStructureBase<T> multiblock)
 	{
 		super(multiblock);
 	}

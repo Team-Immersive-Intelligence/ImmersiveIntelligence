@@ -58,7 +58,7 @@ public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockI
 	public static final String KEY_SYNC_AABB = "_sync_aabb";
 	public static final String KEY_SYNC_ALL_VALUES = "_sync_all_values";
 	//The multiblock INSTANCE, for easy access
-	protected final MultiblockStuctureBase<T> multiblock;
+	protected final MultiblockStructureBase<T> multiblock;
 
 	//--- Reference Variables ---//
 	protected List<AxisAlignedBB> aabb = null;
@@ -71,7 +71,7 @@ public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockI
 	@SyncNBT(nullable = true)
 	public UUID uuid = null;
 
-	protected TileEntityMultiblockIIBase(MultiblockStuctureBase<T> multiblock)
+	protected TileEntityMultiblockIIBase(MultiblockStructureBase<T> multiblock)
 	{
 		super(multiblock.getSize());
 		this.multiblock = multiblock;

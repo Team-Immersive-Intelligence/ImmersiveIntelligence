@@ -7,13 +7,13 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.BlockIIMetalMultiblock0.MetalMultiblocks0;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityElectrolyzer;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStructureBase;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 28.06.2019
  */
-public class MultiblockElectrolyzer extends MultiblockStuctureBase<TileEntityElectrolyzer>
+public class MultiblockElectrolyzer extends MultiblockStructureBase<TileEntityElectrolyzer>
 {
 	public static MultiblockElectrolyzer INSTANCE;
 	public static int SLOT_T0_BUCKET_INPUT = 0;

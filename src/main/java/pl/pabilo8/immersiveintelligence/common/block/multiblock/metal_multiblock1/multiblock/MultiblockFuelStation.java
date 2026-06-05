@@ -10,7 +10,7 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.BlockIIMetalMultiblock1.MetalMultiblocks1;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityFuelStation;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStructureBase;
 
 import java.util.Collections;
 
@@ -18,7 +18,7 @@ import java.util.Collections;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 28.06.2019
  */
-public class MultiblockFuelStation extends MultiblockStuctureBase<TileEntityFuelStation>
+public class MultiblockFuelStation extends MultiblockStructureBase<TileEntityFuelStation>
 {
 	public static MultiblockFuelStation INSTANCE;
 	public static StyleConstraints STYLE_CONSTRAINTS;

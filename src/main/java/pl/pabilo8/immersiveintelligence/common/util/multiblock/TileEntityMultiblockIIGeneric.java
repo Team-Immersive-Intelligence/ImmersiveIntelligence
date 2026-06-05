@@ -59,7 +59,7 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 
 	//--- Constructor, Initialization ---//
 
-	public TileEntityMultiblockIIGeneric(MultiblockStuctureBase<T> multiblock)
+	public TileEntityMultiblockIIGeneric(MultiblockStructureBase<T> multiblock)
 	{
 		super(multiblock);
 		inventory = NonNullList.create();

@@ -15,7 +15,7 @@ import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
 import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTQuads;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStructureBase;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIBase;
 
 /**
@@ -109,7 +109,7 @@ public abstract class IIMultiblockRenderer<T extends TileEntityMultiblockIIBase<
 		AMTUtils.disposeOf(baseModel);
 	}
 
-	public void setFastMultiblockState(MultiblockStuctureBase<T> mb, IBlockState state)
+	public void setFastMultiblockState(MultiblockStructureBase<T> mb, IBlockState state)
 	{
 		this.baseState = state.withProperty(IEProperties.FACING_HORIZONTAL, EnumFacing.EAST);
 		this.offset = new Vec3d(mb.getOffset());

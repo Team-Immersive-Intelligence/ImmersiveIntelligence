@@ -15,7 +15,7 @@ import net.minecraft.util.text.TextFormatting;
 import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedMultiblock;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStructureBase;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -112,11 +112,11 @@ public abstract class IIManualObject extends GuiButtonManual
 			String mbName = nbt.getString("mb");
 			IMultiblock multiblock = MultiblockHandler.getMultiblocks().stream().filter(mb -> mb.getUniqueName().equals(mbName)).findFirst().orElse(null);
 
-			if(multiblock instanceof MultiblockStuctureBase)
+			if(multiblock instanceof MultiblockStructureBase)
 			{
 				//Get offset and size of master block
-				Vec3i offset = ((MultiblockStuctureBase<?>)multiblock).getOffset();
-				int[] size = ((MultiblockStuctureBase<?>)multiblock).getSize();
+				Vec3i offset = ((MultiblockStructureBase<?>)multiblock).getOffset();
+				int[] size = ((MultiblockStructureBase<?>)multiblock).getSize();
 
 				//Get hammer and master block
 				ItemStack hammerStack = multiblock.getClass().isAnnotationPresent(IAdvancedMultiblock.class)?

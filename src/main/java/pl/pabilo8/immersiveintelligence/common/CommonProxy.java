@@ -132,7 +132,7 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.NBTSerialisation;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStructureBase;
 import pl.pabilo8.immersiveintelligence.common.wire.IIDataWireType;
 import pl.pabilo8.immersiveintelligence.common.world.IIWorldGen;
 import pl.pabilo8.immersiveintelligence.common.world.IIWorldGen.EnumOreType;
@@ -757,8 +757,8 @@ public class CommonProxy implements IGuiHandler
 		registerEntity(i, EntityAMTTactile.class, "tactile", 64, 1, true);
 
 		for(IMultiblock mb : IIContent.MULTIBLOCKS)
-			if(mb instanceof MultiblockStuctureBase)
-				((MultiblockStuctureBase<?>)mb).updateStructure();
+			if(mb instanceof MultiblockStructureBase)
+				((MultiblockStructureBase<?>)mb).updateStructure();
 
 		IISounds.init();
 	}

@@ -7,9 +7,9 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.BlockIIMetalMultiblock1.MetalMultiblocks1;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityCoagulator;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStructureBase;
 
-public class MultiblockCoagulator extends MultiblockStuctureBase<TileEntityCoagulator>
+public class MultiblockCoagulator extends MultiblockStructureBase<TileEntityCoagulator>
 {
 	public static MultiblockCoagulator INSTANCE;
 	public static int SLOT_INPUT1, SLOT_INPUT2, SLOT_OUTPUT1, SLOT_OUTPUT2, SLOT_OUTPUT;

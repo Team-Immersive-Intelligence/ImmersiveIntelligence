@@ -7,13 +7,13 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.BlockIIWoodenMultiblock.WoodenMultiblocks;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySkyCartStation;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStructureBase;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 01.06.2019
  */
-public class MultiblockSkyCartStation extends MultiblockStuctureBase<TileEntitySkyCartStation>
+public class MultiblockSkyCartStation extends MultiblockStructureBase<TileEntitySkyCartStation>
 {
 	public static MultiblockSkyCartStation INSTANCE;
 

@@ -12,11 +12,11 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.BlockIIMetalMultiblock1.MetalMultiblocks1;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityFlagpole;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStructureBase;
 
 import java.util.Collections;
 
-public class MultiblockFlagpole extends MultiblockStuctureBase<TileEntityFlagpole>
+public class MultiblockFlagpole extends MultiblockStructureBase<TileEntityFlagpole>
 {
 	public static MultiblockFlagpole INSTANCE;
 	public static StyleConstraints STYLE_CONSTRAINTS;

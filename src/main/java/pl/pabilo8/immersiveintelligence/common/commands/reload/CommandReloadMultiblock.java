@@ -10,7 +10,7 @@ import net.minecraftforge.server.command.CommandTreeBase;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.util.CommandIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStructureBase;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIBase;
 
 import javax.annotation.Nonnull;
@@ -59,9 +59,9 @@ public class CommandReloadMultiblock extends CommandIIBase
 						.filter(mb -> Objects.equals(mb.getUniqueName(), arg))
 						.findFirst().orElse(null);
 
-				if(multiblock instanceof MultiblockStuctureBase)
+				if(multiblock instanceof MultiblockStructureBase)
 				{
-					((MultiblockStuctureBase<?>)multiblock).updateStructure();
+					((MultiblockStructureBase<?>)multiblock).updateStructure();
 					success = true;
 
 					for(TileEntity te : sender.getEntityWorld().loadedTileEntityList)
@@ -83,9 +83,9 @@ public class CommandReloadMultiblock extends CommandIIBase
 		else
 		{
 			IIContent.MULTIBLOCKS.stream()
-					.filter(mb -> mb instanceof MultiblockStuctureBase)
-					.map(mb -> ((MultiblockStuctureBase<?>)mb))
-					.forEach(MultiblockStuctureBase::updateStructure);
+					.filter(mb -> mb instanceof MultiblockStructureBase)
+					.map(mb -> ((MultiblockStructureBase<?>)mb))
+					.forEach(MultiblockStructureBase::updateStructure);
 
 			//Technically, it should always be true, but who knows ^^
 			success = IIContent.MULTIBLOCKS.size() > 0;
@@ -106,7 +106,7 @@ public class CommandReloadMultiblock extends CommandIIBase
 	public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos)
 	{
 		List<String> multiblocks = IIContent.MULTIBLOCKS.stream()
-				.filter(mb -> mb instanceof MultiblockStuctureBase)
+				.filter(mb -> mb instanceof MultiblockStructureBase)
 				.map(IMultiblock::getUniqueName)
 				.collect(Collectors.toList());
 

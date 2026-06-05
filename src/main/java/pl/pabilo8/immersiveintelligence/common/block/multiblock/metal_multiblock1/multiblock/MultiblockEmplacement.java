@@ -15,11 +15,11 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStructureBase;
 
 import java.util.Collections;
 
-public class MultiblockEmplacement extends MultiblockStuctureBase<TileEntityEmplacement>
+public class MultiblockEmplacement extends MultiblockStructureBase<TileEntityEmplacement>
 {
 	public static MultiblockEmplacement INSTANCE;
 	public static StyleConstraints STYLE_CONSTRAINTS;
