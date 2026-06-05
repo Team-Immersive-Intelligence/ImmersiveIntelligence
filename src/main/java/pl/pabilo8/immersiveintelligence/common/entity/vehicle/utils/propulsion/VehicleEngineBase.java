@@ -54,6 +54,20 @@ public abstract class VehicleEngineBase<T extends VehicleEngineBase<T, V>, V ext
 		return active?stop(): start();
 	}
 
+	/**
+	 * Immediately stalls the engine and clears rotary output. Used by semi-automatic gearboxes when an unsafe
+	 * downshift shocks the drivetrain. The player must start the engine again afterwards.
+	 */
+	public void stall()
+	{
+		this.active = false;
+		this.nextState = false;
+		this.activeTicks = 0;
+		this.acceleration = 0;
+		this.rotaryStorage.setTorque(0);
+		this.rotaryStorage.setRotationSpeed(0);
+	}
+
 	public float getStartingProgress(float partialTicks)
 	{
 		return MathHelper.clamp((activeTicks+(nextState?partialTicks: -partialTicks))/activationTicks, 0f, 1f);
@@ -108,6 +122,15 @@ public abstract class VehicleEngineBase<T extends VehicleEngineBase<T, V>, V ext
 	public float getAcceleration()
 	{
 		return acceleration;
+	}
+
+	/**
+	 * Convenience output for vehicle balancing. A wheel group can use this as a single power-like
+	 * value instead of making the vehicle author reason about speed and torque separately.
+	 */
+	public float getDrivePower()
+	{
+		return getOutputRotationSpeed()*getOutputTorque();
 	}
 
 	@Override

@@ -14,10 +14,7 @@ import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EntityDamageSourceIndirect;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.util.*;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.GameRules.ValueType;
 import net.minecraft.world.World;
@@ -53,6 +50,7 @@ import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoUtils;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.PenetrationCache;
 import pl.pabilo8.immersiveintelligence.api.upgrade.IUpgradableDevice;
 import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedMultiblock;
+import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Ammunition;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons;
 import pl.pabilo8.immersiveintelligence.common.compat.BaublesHelper;
@@ -61,6 +59,7 @@ import pl.pabilo8.immersiveintelligence.common.crafting.IIRecipes;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.common.entity.mounted_weapon.EntityMountedWeapon;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehiclePart;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleSeat;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine;
 import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIILightEngineerBoots;
@@ -310,10 +309,43 @@ public class EventHandler
 		}
 	}
 
+	/**
+	 * Vanilla entity interaction still picks entities using enclosing AABBs. Vehicles use those AABBs only as
+	 * broad-phase shells, then resolve the actually clicked part by tracing precise OBBs.
+	 */
+	private boolean handleVehicleOBBInteraction(EntityInteract event)
+	{
+		if(event.getEntityPlayer().world.isRemote)
+			return false;
+
+		Entity target = event.getTarget();
+		IVehicleMultiPart<?> vehicle = null;
+
+		if(target instanceof EntityVehiclePart)
+			vehicle = ((EntityVehiclePart<?>)target).parentExt;
+		else if(target instanceof IVehicleMultiPart)
+			vehicle = (IVehicleMultiPart<?>)target;
+		else if(target instanceof MultiPartEntityPart&&((MultiPartEntityPart)target).parent instanceof IVehicleMultiPart)
+			vehicle = (IVehicleMultiPart<?>)((MultiPartEntityPart)target).parent;
+
+		if(vehicle==null)
+			return false;
+
+		if(vehicle.interactRayTracedPart(event.getEntityPlayer(), event.getHand()))
+		{
+			event.setCancellationResult(EnumActionResult.SUCCESS);
+			event.setCanceled(true);
+			return true;
+		}
+		return false;
+	}
+
 	@SubscribeEvent
 	public void onPlayerInteractEntityInteract(EntityInteract event)
 	{
 		EntityPlayer player = event.getEntityPlayer();
+		if(handleVehicleOBBInteraction(event))
+			return;
 
 		//Display upgrade GUI for compatible entities when using a wrench
 		if(IIItemUtils.isWrench(player.getHeldItem(EnumHand.MAIN_HAND))||IIItemUtils.isWrench(player.getHeldItem(EnumHand.OFF_HAND)))

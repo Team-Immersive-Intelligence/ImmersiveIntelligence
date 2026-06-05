@@ -51,6 +51,7 @@ public class EntityTrackedMotorbike extends EntityVehicleBase<EntityTrackedMotor
 	public EntityVehicleWheel<EntityTrackedMotorbike> partWheelFront;
 	public EntityVehicleWheel<EntityTrackedMotorbike> partWheelLeftFront, partWheelLeft1, partWheelLeft2, partWheelLeftBack;
 	public EntityVehicleWheel<EntityTrackedMotorbike> partWheelRightFront, partWheelRight1, partWheelRight2, partWheelRightBack;
+	public VehicleWheelGroup<EntityTrackedMotorbike> groupFrontWheel, groupLeftTrack, groupRightTrack;
 	public EntityVehiclePart<EntityTrackedMotorbike> partFuelTank, partEngine;
 	public EntityVehiclePart<EntityTrackedMotorbike> partDriverSeat, partPassengerSeat;
 	public SeatInfo<EntityTrackedMotorbike> seatDriver, seatPassenger, seatTowed;
@@ -105,56 +106,65 @@ public class EntityTrackedMotorbike extends EntityVehicleBase<EntityTrackedMotor
 
 		//Seats
 		this.seatDriver = new SeatInfo<>(this, "rider")
-				.withSettings(true, new Vec3d(-4/16f, 27/16f-1.25f-0.125, 0))
+				.withSettings(true, new Vec3d(0, 27/16f-1.25f-0.125, 4/16f))
 				.withYawAngleLimits(0, -45, 45)
 				.withControls(this.driverControls);
 		this.seatPassenger = new SeatInfo<>(this, "passenger")
-				.withSettings(true, new Vec3d(-2.25+0.25, 0.25-0.0625, 0))
+				.withSettings(true, new Vec3d(0, 0.25-0.0625, 2.25-0.25))
 				.withYawAngleLimits(180, -90, 90);
 		this.seatTowed = new SeatInfo<>(this, "tow")
-				.withSettings(true, new Vec3d(-3, 0, 0))
+				.withSettings(true, new Vec3d(0, 0, 3))
 				.withYawAngleLimits(180, -75, 75);
 
 		//Wheels
-		AxisAlignedBB AABB_WHEEL = new AxisAlignedBB(-0.5, 0d, 0.5, 0.5, 1d, -0.5);
-		AxisAlignedBB AABB_WHEEL_TRACK = new AxisAlignedBB(-0.385, 0.125, 0.385, 0.385, 0.875, -0.385);
-		this.partWheelFront = new EntityVehicleWheel<>(this, "wheel_front", new Vec3d(1.25, 0, 0), AABB_WHEEL)
+		AxisAlignedBB AABB_WHEEL = new AxisAlignedBB(-0.5/2, 0d, 0.5, 0.5/2, 1d, -0.5);
+		AxisAlignedBB AABB_WHEEL_TRACK = new AxisAlignedBB(-0.385/2, 0.125, 0.385, 0.385/2, 0.875, -0.385);
+		this.partWheelFront = new EntityVehicleWheel<>(this, "wheel_front", new Vec3d(0, 0, -1.25), AABB_WHEEL)
 				.withType(WheelType.STEERABLE)
+				.withSuspension(0.35, 0.35)
 				.withHitbox(frontWheelDurability)
 				.withWeightShare(0.3);
 
-		this.partWheelLeftFront = new EntityVehicleWheel<>(this, "wheel_right_front", new Vec3d(0.5, 0.25, -0.75), AABB_WHEEL_TRACK)
+		this.partWheelLeftFront = new EntityVehicleWheel<>(this, "wheel_left_front", new Vec3d(-0.75, 0.25, -0.5), AABB_WHEEL_TRACK)
 				.withType(WheelType.DRIVE)
+				.withSuspension(0.35, 0.5)
 				.withHitbox(frontWheelDurability)
 				.withWeightShare(0);
-		this.partWheelRightFront = new EntityVehicleWheel<>(this, "wheel_left_front", new Vec3d(0.5, 0.25, 0.75), AABB_WHEEL_TRACK)
+		this.partWheelRightFront = new EntityVehicleWheel<>(this, "wheel_right_front", new Vec3d(0.75, 0.25, -0.5), AABB_WHEEL_TRACK)
 				.withType(WheelType.DRIVE)
+				.withSuspension(0.35, 0.5)
 				.withHitbox(backWheelDurability)
 				.withWeightShare(0);
 
-		this.partWheelLeft1 = new EntityVehicleWheel<>(this, "wheel_right_1", new Vec3d(-0.5, 0, -0.75), AABB_WHEEL_TRACK)
+		this.partWheelLeft1 = new EntityVehicleWheel<>(this, "wheel_left_1", new Vec3d(-0.75, 0, 0.5), AABB_WHEEL_TRACK)
 				.withType(WheelType.STEERABLE)
+				.withSuspension(0.35, 0.5)
 				.withHitbox(backWheelDurability)
 				.withWeightShare(0.175);
-		this.partWheelRight1 = new EntityVehicleWheel<>(this, "wheel_left_1", new Vec3d(-0.5, 0, 0.75), AABB_WHEEL_TRACK)
+		this.partWheelRight1 = new EntityVehicleWheel<>(this, "wheel_right_1", new Vec3d(0.75, 0, 0.5), AABB_WHEEL_TRACK)
 				.withType(WheelType.STEERABLE)
+				.withSuspension(0.35, 0.5)
 				.withHitbox(backWheelDurability)
 				.withWeightShare(0.175);
-		this.partWheelLeft2 = new EntityVehicleWheel<>(this, "wheel_right_2", new Vec3d(-1.27, 0, -0.75), AABB_WHEEL_TRACK)
+		this.partWheelLeft2 = new EntityVehicleWheel<>(this, "wheel_left_2", new Vec3d(-0.75, 0, 1.27), AABB_WHEEL_TRACK)
 				.withType(WheelType.DRIVE)
+				.withSuspension(0.35, 0.5)
 				.withHitbox(backWheelDurability)
 				.withWeightShare(0.175);
-		this.partWheelRight2 = new EntityVehicleWheel<>(this, "wheel_left_2", new Vec3d(-1.27, 0, 0.75), AABB_WHEEL_TRACK)
+		this.partWheelRight2 = new EntityVehicleWheel<>(this, "wheel_right_2", new Vec3d(0.75, 0, 1.27), AABB_WHEEL_TRACK)
 				.withType(WheelType.DRIVE)
+				.withSuspension(0.35, 0.5)
 				.withHitbox(backWheelDurability)
 				.withWeightShare(0.175);
 
-		this.partWheelLeftBack = new EntityVehicleWheel<>(this, "wheel_right_back", new Vec3d(-2.25, 0.25, -0.75), AABB_WHEEL_TRACK)
+		this.partWheelLeftBack = new EntityVehicleWheel<>(this, "wheel_left_back", new Vec3d(-0.75, 0.25, 2.25), AABB_WHEEL_TRACK)
 				.withType(WheelType.DRIVE)
+				.withSuspension(0.35, 0.5)
 				.withHitbox(backWheelDurability)
 				.withWeightShare(0);
-		this.partWheelRightBack = new EntityVehicleWheel<>(this, "wheel_left_back", new Vec3d(-2.25, 0.25, 0.75), AABB_WHEEL_TRACK)
+		this.partWheelRightBack = new EntityVehicleWheel<>(this, "wheel_right_back", new Vec3d(0.75, 0.25, 2.25), AABB_WHEEL_TRACK)
 				.withType(WheelType.DRIVE)
+				.withSuspension(0.35, 0.5)
 				.withHitbox(backWheelDurability)
 				.withWeightShare(0);
 
@@ -164,22 +174,31 @@ public class EntityTrackedMotorbike extends EntityVehicleBase<EntityTrackedMotor
 		this.engine = new VehicleEngineFuelBased<>(this, fuelTank)
 				.withDurability(engineDurability)
 				.withEngineSound(IISounds.engineLightLoop, 0.95f, 1.25f)
-				.withSpeedTorque(360, 80)
+				.withSpeedTorque(1080, 160)
 				.withFuelUsage(4, 40);
 		this.transmission1 = new VehicleTransmission<EntityTrackedMotorbike>(this.engine)
 				.withDurability(engineDurability)
 				.withRatios(20, 0.5, 1)
+				.withManualInstantShift()
 				.withCurrentGear(0);
 		this.transmission2 = new VehicleTransmission<EntityTrackedMotorbike>(this.transmission1)
 				.withDurability(engineDurability)
-				.withRatios(20, -0.75, 0.5, 1, 1.25)
-				.withCurrentGear(1);
+				.withRatios(20, -0.75, 0, 0.75, 1.25)
+				.withSemiAutomaticShift(120, 60, 380)
+				.withDownshiftShockDamage(12)
+				.withCurrentGear(2);
+		this.groupFrontWheel = new VehicleWheelGroup<>(this, "front_wheel")
+				.withMode(VehicleWheelGroup.Mode.SINGLE)
+				.withWheels(partWheelFront);
+		this.groupLeftTrack = new VehicleWheelGroup<>(this, "left_track")
+				.withMode(VehicleWheelGroup.Mode.TRACK)
+				.withWheels(partWheelLeftFront, partWheelLeft1, partWheelLeft2, partWheelLeftBack);
+		this.groupRightTrack = new VehicleWheelGroup<>(this, "right_track")
+				.withMode(VehicleWheelGroup.Mode.TRACK)
+				.withWheels(partWheelRightFront, partWheelRight1, partWheelRight2, partWheelRightBack);
+
 		this.transmission1.withReceivers(this.transmission2);
-		this.transmission2.withReceivers(
-				partWheelLeftFront, partWheelRightFront,
-				partWheelLeft1, partWheelLeft2, partWheelRight1, partWheelRight2,
-				partWheelLeftBack, partWheelRightBack
-		);
+		this.transmission2.withReceivers(groupLeftTrack, groupRightTrack);
 
 		AxisAlignedBB SIDEBOX_AABB = new AxisAlignedBB(-0.3225, -0.25, -0.3225, 0.3225, 0.25, 0.3225);
 
@@ -196,38 +215,45 @@ public class EntityTrackedMotorbike extends EntityVehicleBase<EntityTrackedMotor
 				partWheelLeft1, partWheelLeft2, partWheelRight1, partWheelRight2,
 				partWheelLeftBack, partWheelRightBack,
 
-				partFuelTank = new EntityVehiclePart<>(this, "fuel_tank", new Vec3d(-1.385-0.0625, 0.935-0.0625-0.25, 0),
+				partFuelTank = new EntityVehiclePart<>(this, "fuel_tank", new Vec3d(0, 0.935-0.0625-0.25, 1.385+0.0625),
 						new AxisAlignedBB(-0.3225, 0d, -0.3225, 0.3225, 0.55d, 0.3225))
 						.withHitbox(fuelTankDurability),
-				partEngine = new EntityVehiclePart<>(this, "engine", new Vec3d(-1.25, 0.935-0.0625, 0),
+				partEngine = new EntityVehiclePart<>(this, "engine", new Vec3d(0, 0.935-0.0625, 1.25),
 						new AxisAlignedBB(-0.5, -0.5625, 0.5, 0.5, 0.5625, -0.5))
 						.withHitbox(engineDurability),
 				partDriverSeat = new EntityVehiclePart<>(this, "seat_driver", new Vec3d(0, 0.5, 0),
 						new AxisAlignedBB(-0.5, -0.25d, -0.5, 0.5, 0.25d, 0.5))
 						.withHitbox(durabilityMain, false)
 						.withSeat(seatDriver),
-				partPassengerSeat = new EntityVehiclePart<>(this, "seat_passenger", new Vec3d(-2, 0.5, 0),
+				partPassengerSeat = new EntityVehiclePart<>(this, "seat_passenger", new Vec3d(0, 0.5, 2),
 						new AxisAlignedBB(-0.425, -0.25d, 0.425, 0.425, 0.25d, -0.425))
 						.withHitbox(durabilityMain, false)
 						.withSeat(seatPassenger),
 
-				new EntityVehiclePart<>(this, "sidebox_right2", new Vec3d(-0.3225, 1, -0.75-0.0625), SIDEBOX_AABB)
+				new EntityVehiclePart<>(this, "sidebox_right2", new Vec3d(0.75+0.0625, 1, 0.3225), SIDEBOX_AABB)
 						.withHitbox(durabilityMain),
-				new EntityVehiclePart<>(this, "sidebox_right3", new Vec3d(-0.3225*3, 1, -0.75-0.0625), SIDEBOX_AABB)
+				new EntityVehiclePart<>(this, "sidebox_right3", new Vec3d(0.75+0.0625, 1, 0.3225*3), SIDEBOX_AABB)
 						.withHitbox(durabilityMain),
-				new EntityVehiclePart<>(this, "sidebox_right4", new Vec3d(-0.3225*5, 1, -0.75-0.0625), SIDEBOX_AABB)
-						.withHitbox(durabilityMain),
-
-				new EntityVehiclePart<>(this, "sidebox_left2", new Vec3d(-0.3225, 1, 0.75+0.0625), SIDEBOX_AABB)
-						.withHitbox(durabilityMain),
-				new EntityVehiclePart<>(this, "sidebox_left3", new Vec3d(-0.3225*3, 1, 0.75+0.0625), SIDEBOX_AABB)
-						.withHitbox(durabilityMain),
-				new EntityVehiclePart<>(this, "sidebox_left4", new Vec3d(-0.3225*5, 1, 0.75+0.0625), SIDEBOX_AABB)
+				new EntityVehiclePart<>(this, "sidebox_right4", new Vec3d(0.75+0.0625, 1, 0.3225*5), SIDEBOX_AABB)
 						.withHitbox(durabilityMain),
 
-				new EntityVehiclePart<>(this, "sidebox_front", new Vec3d(0.3225*3-0.125, 1, 0), SIDEBOX_AABB.grow(0.0625))
+				new EntityVehiclePart<>(this, "sidebox_left2", new Vec3d(-0.75-0.0625, 1, 0.3225), SIDEBOX_AABB)
+						.withHitbox(durabilityMain),
+				new EntityVehiclePart<>(this, "sidebox_left3", new Vec3d(-0.75-0.0625, 1, 0.3225*3), SIDEBOX_AABB)
+						.withHitbox(durabilityMain),
+				new EntityVehiclePart<>(this, "sidebox_left4", new Vec3d(-0.75-0.0625, 1, 0.3225*5), SIDEBOX_AABB)
+						.withHitbox(durabilityMain),
+
+				new EntityVehiclePart<>(this, "sidebox_front", new Vec3d(0, 1, -0.3225*3+0.125), SIDEBOX_AABB.grow(0.0625))
 						.withHitbox(durabilityMain),
 		};
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	protected VehicleWheelGroup<EntityTrackedMotorbike>[] vehicleWheelGroups()
+	{
+		return new VehicleWheelGroup[]{groupFrontWheel, groupLeftTrack, groupRightTrack};
 	}
 
 	//--- Main ---//
@@ -242,11 +268,17 @@ public class EntityTrackedMotorbike extends EntityVehicleBase<EntityTrackedMotor
 			engine.toggle();
 		}
 
-		//Primary Transmission
+		//Primary Transmission. The gearbox stores the request and starts the shift once shaft speed is suitable.
 		if(driverControls.getKey("gearUp"))
+		{
+			driverControls.setKey("gearUp", false);
 			transmission2.shiftUp();
+		}
 		else if(driverControls.getKey("gearDown"))
+		{
+			driverControls.setKey("gearDown", false);
 			transmission2.shiftDown();
+		}
 		//Secondary Transmission
 		if(driverControls.getKey("reduction"))
 		{
@@ -257,9 +289,9 @@ public class EntityTrackedMotorbike extends EntityVehicleBase<EntityTrackedMotor
 
 		//Apply Controls
 		if(driverControls.getKey("turnLeft"))
-			partWheelFront.setSteeringAngle(MathHelper.clamp(partWheelFront.getSteeringAngle()-5, -45, 45));
-		else if(driverControls.getKey("turnRight"))
 			partWheelFront.setSteeringAngle(MathHelper.clamp(partWheelFront.getSteeringAngle()+5, -45, 45));
+		else if(driverControls.getKey("turnRight"))
+			partWheelFront.setSteeringAngle(MathHelper.clamp(partWheelFront.getSteeringAngle()-5, -45, 45));
 		else
 			partWheelFront.setSteeringAngle(partWheelFront.getSteeringAngle()*0.9f);
 
@@ -269,10 +301,8 @@ public class EntityTrackedMotorbike extends EntityVehicleBase<EntityTrackedMotor
 		engine.accelerate(driverControls.getKey(drivingBackwards?"backward": "forward"));
 		//Handle braking
 		float brakeValue = driverControls.getKey(drivingBackwards?"forward": "backward")?1f: 0f;
-		partWheelLeft1.setBrakeFactor(brakeValue);
-		partWheelLeft2.setBrakeFactor(brakeValue);
-		partWheelRight1.setBrakeFactor(brakeValue);
-		partWheelRight2.setBrakeFactor(brakeValue);
+		groupLeftTrack.setBrakeFactor(brakeValue);
+		groupRightTrack.setBrakeFactor(brakeValue);
 
 		//Update components
 		engine.onUpdate();

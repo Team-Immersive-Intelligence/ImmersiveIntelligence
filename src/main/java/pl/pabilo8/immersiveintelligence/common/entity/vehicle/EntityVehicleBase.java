@@ -4,11 +4,12 @@ import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.IIEInventory;
 import com.google.common.collect.Sets;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.IEntityMultiPart;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -34,7 +35,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleBluep
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.*;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleSeat.SeatInfo;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
-import pl.pabilo8.immersiveintelligence.common.util.IIMath;
+import pl.pabilo8.immersiveintelligence.common.util.IIDamageSources;
 import pl.pabilo8.immersiveintelligence.common.util.MissingAnnotationException;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
@@ -46,7 +47,6 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNullableByDefault;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 /**
  * Enhanced base class for vehicle entities with comprehensive pitch/roll simulation
@@ -68,6 +68,9 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 	protected IVehicleComponent[] components;
 	protected EntityVehiclePart<T>[] partArray;
 	protected EntityVehicleWheel<T>[] wheels;
+	protected VehicleWheelGroup<T>[] wheelGroups;
+	protected VehicleSegment<T> rootSegment;
+	protected VehicleSegment<T>[] segments;
 	protected SeatInfo<?>[] seats;
 
 	//--- Systems ---//
@@ -85,6 +88,8 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 	public float prevRotationRoll = 0, rotationRoll = 0;
 	@SyncNBT
 	public double angularVelocity = 0.0;
+	@SyncNBT
+	public double angularVelocityPitch = 0.0, angularVelocityRoll = 0.0;
 	public boolean hasCollidedBefore = false;
 	private float targetPitch = 0;
 	private float targetRoll = 0;
@@ -118,9 +123,17 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 		this.style = new StyleCustomization(getVehicleStyleConstraints());
 		this.style.withColor(IIColor.getPaintSystemColor(Utils.RAND.nextInt(64)));
 
-		//Calculate vehicle size and collect wheels
-		double minX = Integer.MAX_VALUE, minY = Integer.MAX_VALUE, minZ = Integer.MAX_VALUE;
-		double maxX = Integer.MIN_VALUE, maxY = Integer.MIN_VALUE, maxZ = Integer.MIN_VALUE;
+		//Root segment is the hull. Subclasses may add independently rotated segments such as turrets.
+		//noinspection unchecked
+		this.rootSegment = new VehicleSegment<>((T)this, "hull", Vec3d.ZERO);
+		this.segments = vehicleSegments();
+		if(this.segments==null||this.segments.length==0)
+			this.segments = defaultVehicleSegments();
+
+		//Calculate vehicle size and collect wheels. This remains an enclosing AABB used by Minecraft's broad phase;
+		//individual parts perform precise OBB checks.
+		double minX = Double.MAX_VALUE, minY = Double.MAX_VALUE, minZ = Double.MAX_VALUE;
+		double maxX = -Double.MAX_VALUE, maxY = -Double.MAX_VALUE, maxZ = -Double.MAX_VALUE;
 
 		//Initialize vehicle-specific parts
 		this.components = new IVehicleComponent[0];
@@ -128,23 +141,12 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 
 		for(EntityVehiclePart<T> part : partArray)
 		{
-			//Calculate X bounds
-			if(part.offset.x-part.aabb.minX < minX)
-				minX = part.offset.x-part.aabb.minX;
-			else if(part.offset.x+part.aabb.maxX > maxX)
-				maxX = part.offset.x+part.aabb.maxX;
-
-			//Calculate Y bounds
-			if(part.offset.y-part.aabb.minY < minY)
-				minY = part.offset.y-part.aabb.minY;
-			else if(part.offset.y+part.aabb.maxY > maxY)
-				maxY = part.offset.y+part.aabb.maxY;
-
-			//Calculate Z bounds
-			if(part.offset.z-part.aabb.minZ < minZ)
-				minZ = part.offset.z-part.aabb.minZ;
-			else if(part.offset.z+part.aabb.maxZ > maxZ)
-				maxZ = part.offset.z+part.aabb.maxZ;
+			minX = Math.min(minX, part.offset.x+part.aabb.minX);
+			minY = Math.min(minY, part.offset.y+part.aabb.minY);
+			minZ = Math.min(minZ, part.offset.z+part.aabb.minZ);
+			maxX = Math.max(maxX, part.offset.x+part.aabb.maxX);
+			maxY = Math.max(maxY, part.offset.y+part.aabb.maxY);
+			maxZ = Math.max(maxZ, part.offset.z+part.aabb.maxZ);
 
 			//Collect wheels
 			if(part instanceof EntityVehicleWheel)
@@ -156,12 +158,20 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 				seatsList.add((SeatInfo<T>)part.assignedSeat);
 		}
 
+		for(EntityVehiclePart<T> part : partArray)
+			if(part.getSegment()==null)
+				part.withSegment(rootSegment);
+
 		//Simulate drive wheels first
 		wheelsList.sort((o1, o2) -> Boolean.compare(!o1.getType().isDriven(), !o2.getType().isDriven()));
 
 		//Convert wheel and seat lists to arrays
 		//noinspection unchecked
 		this.wheels = wheelsList.toArray(new EntityVehicleWheel[0]);
+		this.wheelGroups = vehicleWheelGroups();
+		if(this.wheelGroups==null)
+			this.wheelGroups = new VehicleWheelGroup[0];
+		assignDefaultWheelGroups();
 		this.seats = seatsList.toArray(new SeatInfo[0]);
 
 		//Set vehicle AABB size
@@ -183,6 +193,45 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 	 */
 	@SuppressWarnings({"unchecked", "RedundantSuppression"})
 	protected abstract EntityVehiclePart<T>[] vehicleInit();
+
+	/**
+	 * Declares independently rotated vehicle segments. The default single segment is the hull.
+	 * Subclasses should return extra segments here before assigning parts through
+	 * {@link EntityVehiclePart#withSegment(VehicleSegment)}.
+	 */
+	@SuppressWarnings("unchecked")
+	protected VehicleSegment<T>[] vehicleSegments()
+	{
+		return defaultVehicleSegments();
+	}
+
+	@SuppressWarnings("unchecked")
+	private VehicleSegment<T>[] defaultVehicleSegments()
+	{
+		return new VehicleSegment[]{rootSegment};
+	}
+
+	/**
+	 * Declares logical wheel receivers: track, axle, or single-wheel groups.
+	 * Transmissions should target these groups for easier balancing. Ungrouped wheels receive
+	 * automatic single-wheel groups so old vehicles keep working.
+	 */
+	@SuppressWarnings("unchecked")
+	protected VehicleWheelGroup<T>[] vehicleWheelGroups()
+	{
+		return new VehicleWheelGroup[0];
+	}
+
+	@SuppressWarnings("unchecked")
+	private void assignDefaultWheelGroups()
+	{
+		ArrayList<VehicleWheelGroup<T>> groups = new ArrayList<>();
+		Collections.addAll(groups, this.wheelGroups);
+		for(EntityVehicleWheel<T> wheel : this.wheels)
+			if(wheel.getWheelGroup()==null)
+				groups.add(new VehicleWheelGroup<>((T)this, wheel.partName).withMode(VehicleWheelGroup.Mode.SINGLE).withWheels(wheel));
+		this.wheelGroups = groups.toArray(new VehicleWheelGroup[0]);
+	}
 
 	@Override
 	protected void setSize(float width, float height)
@@ -212,6 +261,10 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 
 		//Perform child class' abstract update method
 		onVehicleUpdate();
+		for(VehicleSegment<T> segment : segments)
+			segment.onUpdate();
+		for(VehicleWheelGroup<T> group : wheelGroups)
+			group.onUpdate();
 
 		//Handle movement and update parts based on result
 		handleMovement();
@@ -248,7 +301,9 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 
 		Vec3d collectedForce = Vec3d.ZERO;
 		double collectedVerticalForce = 0.0;
-		double torque = 0;
+		double yawTorque = 0;
+		double pitchTorque = 0;
+		double rollTorque = 0;
 		int groundedWheels = 0;
 
 		//Simulate individual wheels and gather results
@@ -263,7 +318,9 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 			if(forces.isGrounded)
 			{
 				collectedForce = collectedForce.add(new Vec3d(forces.force.x, 0, forces.force.z));
-				torque += forces.torque;
+				yawTorque += forces.torque;
+				pitchTorque += forces.pitchTorque;
+				rollTorque += forces.rollTorque;
 				groundedWheels++;
 			}
 		}
@@ -281,13 +338,11 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 		//Apply motion damping
 		applyMotionDamping(groundedWheels);
 
-		//Update rotation with stability check
-		this.angularVelocity += torque;
-		float newYaw = (float)MathHelper.wrapDegrees(this.rotationYaw+Math.toDegrees(this.angularVelocity));
-		if(isTransformSafe(null, newYaw, null, null))
-			this.rotationYaw = newYaw;
-		else
-			this.angularVelocity *= 0.6;
+		//Update all rotation axes through the same OBB transform safety path. There are no AABB rotation checks here.
+		this.angularVelocity += yawTorque;
+		this.angularVelocityPitch += pitchTorque;
+		this.angularVelocityRoll += rollTorque;
+		applyAngularMotion();
 
 		//Use velocity-based thresholds for zeroing
 		double velocityThreshold = 0.001*mass; //Scale with mass
@@ -299,6 +354,10 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 			this.velocity = new Vec3d(this.velocity.x, this.velocity.y, 0);
 		if(Math.abs(this.angularVelocity) < angularThreshold)
 			this.angularVelocity = 0;
+		if(Math.abs(this.angularVelocityPitch) < angularThreshold)
+			this.angularVelocityPitch = 0;
+		if(Math.abs(this.angularVelocityRoll) < angularThreshold)
+			this.angularVelocityRoll = 0;
 
 		//Handle collisions and get adjusted position
 		Vec3d currentPos = new Vec3d(posX, posY, posZ);
@@ -311,17 +370,27 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 		this.motionY = nextPos.y-currentPos.y;
 		this.motionZ = nextPos.z-currentPos.z;
 
+		//Do not keep accelerating into a face after the OBB clipper has removed that component.
+		if(Math.abs(this.motionX-this.velocity.x) > 1.0E-5)
+			this.velocity = new Vec3d(0, this.velocity.y, this.velocity.z);
+		if(Math.abs(this.motionY-this.velocity.y) > 1.0E-5)
+			this.velocity = new Vec3d(this.velocity.x, 0, this.velocity.z);
+		if(Math.abs(this.motionZ-this.velocity.z) > 1.0E-5)
+			this.velocity = new Vec3d(this.velocity.x, this.velocity.y, 0);
+
 		this.posX += motionX;
 		this.posY += motionY;
 		this.posZ += motionZ;
+		setEntityBoundingBox(getEntityBoundingBox());
 	}
 
 	/**
-	 * Calculates pitch and roll based on vertical force differences and wheel geometry
+	 * Calculates pitch and roll targets from wheel vertical force differences. The resulting rotation is
+	 * applied through OBB-only transform checks, so vehicles may rotate freely on all axes while still
+	 * respecting Minecraft terrain and other vehicle OBBs.
 	 */
 	private void calculateForceBasedOrientation()
 	{
-		//A vehicle must have at least 2 wheels to calculate orientation
 		if(wheels.length < 2)
 		{
 			targetPitch = 0;
@@ -329,10 +398,8 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 			return;
 		}
 
-		//Find extreme wheel positions for distance calculation
-		double minX = Double.MAX_VALUE, maxX = Double.MIN_VALUE;
-		double minZ = Double.MAX_VALUE, maxZ = Double.MIN_VALUE;
-
+		double minX = Double.MAX_VALUE, maxX = -Double.MAX_VALUE;
+		double minZ = Double.MAX_VALUE, maxZ = -Double.MAX_VALUE;
 		for(EntityVehicleWheel<T> wheel : wheels)
 		{
 			minX = Math.min(minX, wheel.offset.x);
@@ -341,99 +408,102 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 			maxZ = Math.max(maxZ, wheel.offset.z);
 		}
 
-		//Vehicle length (front-back)
-		double xLength = maxX-minX;
-		//Vehicle width (left-right)
-		double zLength = maxZ-minZ;
-
-		double frontForce = 0, rearForce = 0;
-		double leftForce = 0, rightForce = 0;
+		// Vehicle local convention: +X right, -X left, -Z front, +Z rear.
+		double width = Math.max(0.001, maxX-minX);
+		double length = Math.max(0.001, maxZ-minZ);
+		double frontForce = 0, rearForce = 0, leftForce = 0, rightForce = 0;
 		int frontWheels = 0, rearWheels = 0, leftWheels = 0, rightWheels = 0;
 
 		for(EntityVehicleWheel<T> wheel : wheels)
 		{
 			double verticalForce = wheel.getVerticalForceBalance();
-
-			//Front/Rear classification
-			if(wheel.offset.x >= 0)
+			if(wheel.offset.z <= 0)
 			{
 				frontForce += verticalForce;
 				frontWheels++;
 			}
-			if(wheel.offset.x <= 0)
+			if(wheel.offset.z >= 0)
 			{
 				rearForce += verticalForce;
 				rearWheels++;
 			}
-
-			//Left/Right classification
-			if(wheel.offset.z >= 0)
-			{
-				rightForce += verticalForce;
-				rightWheels++;
-			}
-			if(wheel.offset.z <= 0)
+			if(wheel.offset.x <= 0)
 			{
 				leftForce += verticalForce;
 				leftWheels++;
 			}
+			if(wheel.offset.x >= 0)
+			{
+				rightForce += verticalForce;
+				rightWheels++;
+			}
 		}
 
-		///Calculate pitch angle using vertical force difference
-		if(frontWheels > 0&&rearWheels > 0&&xLength > 0)
+		if(frontWheels > 0&&rearWheels > 0)
 		{
 			frontForce /= frontWheels;
 			rearForce /= rearWheels;
-			double avgForce = (frontForce+rearForce)/2;
-
-			//Normalize force difference and convert to angle
-			double forceDifference = (frontForce-rearForce)/Math.max(1.0, Math.abs(avgForce));
-			double pitchRad = Math.atan2(forceDifference*xLength*0.5, xLength);
-			targetPitch = (float)Math.toDegrees(pitchRad)*70; //Increased sensitivity for climbing
+			double avgForce = Math.max(1.0, Math.abs((frontForce+rearForce)*0.5));
+			targetPitch = (float)Math.toDegrees(Math.atan2((frontForce-rearForce)/avgForce*length*0.5, length))*70;
 		}
-
-		//Calculate roll angle using vertical force difference
-		if(leftWheels > 0&&rightWheels > 0&&zLength > 0)
+		if(leftWheels > 0&&rightWheels > 0)
 		{
 			leftForce /= leftWheels;
 			rightForce /= rightWheels;
-			double avgForce = (leftForce+rightForce)/2;
-
-			//Normalize force difference and convert to angle
-			double forceDifference = (leftForce-rightForce)/Math.max(1.0, Math.abs(avgForce));
-			double rollRad = Math.atan2(forceDifference*zLength*0.5, zLength);
-			targetRoll = (float)Math.toDegrees(rollRad)*70; //Increased sensitivity for climbing
+			double avgForce = Math.max(1.0, Math.abs((leftForce+rightForce)*0.5));
+			targetRoll = (float)Math.toDegrees(Math.atan2((leftForce-rightForce)/avgForce*width*0.5, width))*70;
 		}
 
-		//Apply safe transformation
-		float pitchDiff = targetPitch-this.rotationPitch;
-		float rollDiff = targetRoll-this.rotationRoll;
+		float maxIncrement = (float)blueprint.rotationStepLimit();
+		float pitchStep = MathHelper.clamp(targetPitch-this.rotationPitch, -maxIncrement, maxIncrement);
+		float rollStep = MathHelper.clamp(targetRoll-this.rotationRoll, -maxIncrement, maxIncrement);
+		applySafeRotationDelta(0, pitchStep, rollStep);
+	}
 
-		//Try small increments to avoid collisions
-		float maxIncrement = 2.0f; //degrees per tick
-
-		float testPitch = this.rotationPitch+MathHelper.clamp(pitchDiff, -maxIncrement, maxIncrement);
-		float testRoll = this.rotationRoll+MathHelper.clamp(rollDiff, -maxIncrement, maxIncrement);
-
-		//Check if the new orientation is safe
-		if(isTransformSafe(null, null, testPitch, testRoll))
+	private void applyAngularMotion()
+	{
+		double scale = blueprint.angularVelocityToDegrees();
+		float yawStep = (float)MathHelper.clamp(Math.toDegrees(this.angularVelocity)*scale, -blueprint.rotationStepLimit(), blueprint.rotationStepLimit());
+		float pitchStep = (float)MathHelper.clamp(Math.toDegrees(this.angularVelocityPitch)*scale, -blueprint.rotationStepLimit(), blueprint.rotationStepLimit());
+		float rollStep = (float)MathHelper.clamp(Math.toDegrees(this.angularVelocityRoll)*scale, -blueprint.rotationStepLimit(), blueprint.rotationStepLimit());
+		if(!applySafeRotationDelta(yawStep, pitchStep, rollStep))
 		{
-			this.rotationPitch = testPitch;
-			this.rotationRoll = testRoll;
+			this.angularVelocity *= 0.6;
+			this.angularVelocityPitch *= 0.6;
+			this.angularVelocityRoll *= 0.6;
+		}
+	}
+
+	private boolean applySafeRotationDelta(float yawDelta, float pitchDelta, float rollDelta)
+	{
+		boolean changed = false;
+		float newYaw = MathHelper.wrapDegrees(this.rotationYaw+yawDelta);
+		if(Math.abs(yawDelta) < 1.0E-5||isTransformSafe(null, newYaw, null, null))
+		{
+			this.rotationYaw = newYaw;
+			changed |= Math.abs(yawDelta) >= 1.0E-5;
 		}
 		else
-		{
-			//If not safe, try to find a safe intermediate orientation
-			testPitch = this.rotationPitch+MathHelper.clamp(pitchDiff*0.5f, -maxIncrement, maxIncrement);
-			testRoll = this.rotationRoll+MathHelper.clamp(rollDiff*0.5f, -maxIncrement, maxIncrement);
+			this.angularVelocity *= 0.6;
 
-			//Transform, if safe, else maintain current orientation
-			if(isTransformSafe(null, null, testPitch, testRoll))
-			{
-				this.rotationPitch = testPitch;
-				this.rotationRoll = testRoll;
-			}
+		float newPitch = MathHelper.wrapDegrees(this.rotationPitch+pitchDelta);
+		if(Math.abs(pitchDelta) < 1.0E-5||isTransformSafe(null, null, newPitch, null))
+		{
+			this.rotationPitch = newPitch;
+			changed |= Math.abs(pitchDelta) >= 1.0E-5;
 		}
+		else
+			this.angularVelocityPitch *= 0.6;
+
+		float newRoll = MathHelper.wrapDegrees(this.rotationRoll+rollDelta);
+		if(Math.abs(rollDelta) < 1.0E-5||isTransformSafe(null, null, null, newRoll))
+		{
+			this.rotationRoll = newRoll;
+			changed |= Math.abs(rollDelta) >= 1.0E-5;
+		}
+		else
+			this.angularVelocityRoll *= 0.6;
+		return changed;
 	}
 
 	/**
@@ -515,152 +585,224 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 
 	/**
 	 * Handles collision detection and response for all vehicle parts.
-	 *
-	 * @apiNote same collision detection code as in {@link #isTransformSafe(Vec3d, Float, Float, Float)}, but performs physical actions.
+	 * <p>
+	 * Minecraft's AABB collision offsets do not understand rotated boxes, so movement is clipped by testing
+	 * the vehicle's OBB parts at candidate positions. The AABB is still used as a broad-phase query against
+	 * blocks and entities; actual acceptance is decided by OBB-vs-AABB or OBB-vs-OBB checks.
 	 */
 	private Vec3d handleCollisions(Vec3d currentPos, Vec3d attemptedMove)
 	{
+		this.collided = this.collidedHorizontally = this.collidedVertically = false;
+		this.onGround = false;
+
 		if(attemptedMove.equals(Vec3d.ZERO))
 			return currentPos;
 
-		Vec3d adjustedMove = attemptedMove;
-		//Check each part for collisions
-		for(EntityVehiclePart<T> part : partArray)
+		Vec3d adjustedMove = clipMovementToWorld(currentPos, attemptedMove);
+		Vec3d steppedMove = tryStepMovement(currentPos, attemptedMove, adjustedMove);
+		if(horizontalLengthSquared(steppedMove) > horizontalLengthSquared(adjustedMove)+1.0E-5)
+			adjustedMove = steppedMove;
+
+		if(Math.abs(adjustedMove.x-attemptedMove.x) > 1.0E-5||Math.abs(adjustedMove.z-attemptedMove.z) > 1.0E-5)
 		{
-			Vec3d partPos = this.getPositionVector().add(IIMath.offsetPosDirectionXYZ(part.offset, this.rotationYaw, this.rotationPitch, this.rotationRoll));
-			AxisAlignedBB partCurrentBB = part.aabb.offset(partPos);
-			AxisAlignedBB partNextBB = partCurrentBB.expand(attemptedMove.x, attemptedMove.y, attemptedMove.z);
-
-			//Get block collision boxes
-			List<AxisAlignedBB> collisions = new ArrayList<>(world.getCollisionBoxes(null, partNextBB));
-			//TODO: 15.11.2025 driving over/ramming entities + mutually damaging vehicles by collision (also with blocks)
-			for(Entity entity : world.getEntitiesInAABBexcluding(part, partNextBB, e -> e!=this&&e instanceof EntityVehicleBase))
-				if(entity instanceof IEntityMultiPart&&entity.getParts()!=null)
-					for(Entity entityPart : entity.getParts())
-						collisions.add(entityPart.getCollisionBoundingBox());
-				else
-					collisions.add(entity.getEntityBoundingBox());
-
-			if(!collisions.isEmpty())
-			{
-				Vec3d partAdjustedMove = attemptedMove;
-
-				//Find the most restrictive movement for each axis independently
-				double mostRestrictiveY = partAdjustedMove.y;
-				double mostRestrictiveX = partAdjustedMove.x;
-				double mostRestrictiveZ = partAdjustedMove.z;
-
-				AxisAlignedBB tempBB = partCurrentBB;
-
-				//First pass: Find the most restrictive Y movement from ALL collision boxes
-				for(AxisAlignedBB collisionBox : collisions)
-					if(mostRestrictiveY!=0)
-					{
-						double yOffset = collisionBox.calculateYOffset(tempBB, mostRestrictiveY);
-						//Take the most restrictive (smallest absolute value) Y movement
-						if(Math.abs(yOffset) < Math.abs(mostRestrictiveY))
-							mostRestrictiveY = yOffset;
-					}
-
-				//Apply the Y movement first
-				if(mostRestrictiveY!=partAdjustedMove.y)
-				{
-					tempBB = tempBB.offset(0.0D, mostRestrictiveY, 0.0D);
-					if(mostRestrictiveY < 0)
-					{
-						this.onGround = true;
-						collided = collidedVertically = true;
-					}
-				}
-
-				//Second pass: Find the most restrictive X movement
-				for(AxisAlignedBB collisionBox : collisions)
-					if(mostRestrictiveX!=0)
-					{
-						double xOffset = collisionBox.calculateXOffset(tempBB, mostRestrictiveX);
-						if(Math.abs(xOffset) < Math.abs(mostRestrictiveX))
-						{
-							mostRestrictiveX = xOffset;
-							collided = collidedHorizontally = true;
-						}
-					}
-
-				//Apply X movement
-				if(mostRestrictiveX!=partAdjustedMove.x)
-					tempBB = tempBB.offset(mostRestrictiveX, 0.0D, 0.0D);
-
-				//Third pass: Find the most restrictive Z movement
-				for(AxisAlignedBB collisionBox : collisions)
-					if(mostRestrictiveZ!=0)
-					{
-						double zOffset = collisionBox.calculateZOffset(tempBB, mostRestrictiveZ);
-						if(Math.abs(zOffset) < Math.abs(mostRestrictiveZ))
-						{
-							mostRestrictiveZ = zOffset;
-							collided = collidedHorizontally = true;
-						}
-					}
-
-				partAdjustedMove = new Vec3d(mostRestrictiveX, mostRestrictiveY, mostRestrictiveZ);
-
-				//Take the most restrictive movement across all parts
-				adjustedMove = new Vec3d(
-						Math.abs(partAdjustedMove.x) <= Math.abs(adjustedMove.x)?partAdjustedMove.x: adjustedMove.x,
-						Math.abs(partAdjustedMove.y) <= Math.abs(adjustedMove.y)?partAdjustedMove.y: adjustedMove.y,
-						Math.abs(partAdjustedMove.z) <= Math.abs(adjustedMove.z)?partAdjustedMove.z: adjustedMove.z
-				);
-			}
-
-			//Update wheel traverse
-			if(part instanceof EntityVehicleWheel)
-				((EntityVehicleWheel<T>)part).addWheelTraverse((float)adjustedMove.lengthSquared());
+			this.collided = true;
+			this.collidedHorizontally = true;
+		}
+		if(Math.abs(adjustedMove.y-attemptedMove.y) > 1.0E-5)
+		{
+			this.collided = true;
+			this.collidedVertically = true;
+			if(attemptedMove.y < 0)
+				this.onGround = true;
 		}
 
+		//Update wheel traverse after final movement choice.
+		for(EntityVehicleWheel<T> wheel : this.wheels)
+			wheel.addWheelTraverse((float)adjustedMove.lengthVector());
+
 		return currentPos.add(adjustedMove);
+	}
+
+	private Vec3d clipMovementToWorld(Vec3d currentPos, Vec3d attemptedMove)
+	{
+		Vec3d move = Vec3d.ZERO;
+		move = move.add(getMoveComponent(1, clipMoveAxis(currentPos, move, attemptedMove.y, 1)));
+		move = move.add(getMoveComponent(0, clipMoveAxis(currentPos, move, attemptedMove.x, 0)));
+		move = move.add(getMoveComponent(2, clipMoveAxis(currentPos, move, attemptedMove.z, 2)));
+		return move;
+	}
+
+	/**
+	 * Minecraft terrain is blocky enough that pure smooth-world collision feels wrong. If the horizontal move is
+	 * blocked, try the classic vehicle step: lift, move horizontally, then settle down onto the new surface.
+	 */
+	private Vec3d tryStepMovement(Vec3d currentPos, Vec3d attemptedMove, Vec3d clippedMove)
+	{
+		if(Math.abs(attemptedMove.x) < 1.0E-5&&Math.abs(attemptedMove.z) < 1.0E-5)
+			return clippedMove;
+		if(horizontalLengthSquared(clippedMove) >= horizontalLengthSquared(attemptedMove)*0.85)
+			return clippedMove;
+		if(!this.onGround&&!hasGroundedWheel())
+			return clippedMove;
+
+		double stepHeight = getStepHeightForMove();
+		if(stepHeight <= 0)
+			return clippedMove;
+
+		double up = clipMoveAxis(currentPos, Vec3d.ZERO, stepHeight, 1);
+		if(up < 0.0625)
+			return clippedMove;
+
+		Vec3d raised = new Vec3d(0, up, 0);
+		double x = clipMoveAxis(currentPos, raised, attemptedMove.x, 0);
+		Vec3d raisedX = raised.addVector(x, 0, 0);
+		double z = clipMoveAxis(currentPos, raisedX, attemptedMove.z, 2);
+		Vec3d horizontal = raisedX.addVector(0, 0, z);
+
+		//Settle onto the new block face instead of hovering at the full step height.
+		double down = clipMoveAxis(currentPos, horizontal, -up-0.0625, 1);
+		return horizontal.addVector(0, down, 0);
+	}
+
+	private double clipMoveAxis(Vec3d currentPos, Vec3d alreadyAcceptedMove, double delta, int axis)
+	{
+		if(Math.abs(delta) < 1.0E-7)
+			return 0;
+
+		Vec3d start = currentPos.add(alreadyAcceptedMove);
+		Vec3d fullMove = getMoveComponent(axis, delta);
+		if(!wouldCollideAt(start.add(fullMove), this.rotationYaw, this.rotationPitch, this.rotationRoll))
+			return delta;
+
+		if(wouldCollideAt(start, this.rotationYaw, this.rotationPitch, this.rotationRoll))
+			return 0;
+
+		double safe = 0.0;
+		double blocked = 1.0;
+		for(int i = 0; i < 10; i++)
+		{
+			double mid = (safe+blocked)*0.5;
+			Vec3d candidateMove = getMoveComponent(axis, delta*mid);
+			if(wouldCollideAt(start.add(candidateMove), this.rotationYaw, this.rotationPitch, this.rotationRoll))
+				blocked = mid;
+			else
+				safe = mid;
+		}
+
+		double clipped = delta*safe;
+		double clearance = Math.signum(delta)*0.001;
+		if(Math.abs(clipped) > Math.abs(clearance))
+			clipped -= clearance;
+		return clipped;
+	}
+
+	private Vec3d getMoveComponent(int axis, double amount)
+	{
+		switch(axis)
+		{
+			case 0:
+				return new Vec3d(amount, 0, 0);
+			case 1:
+				return new Vec3d(0, amount, 0);
+			case 2:
+				return new Vec3d(0, 0, amount);
+			default:
+				return Vec3d.ZERO;
+		}
+	}
+
+	private double horizontalLengthSquared(Vec3d vec)
+	{
+		return vec.x*vec.x+vec.z*vec.z;
+	}
+
+	private double getStepHeightForMove()
+	{
+		double max = blueprint.obstacleClimbHeight();
+		for(EntityVehicleWheel<T> wheel : wheels)
+			max = Math.max(max, Math.min(1.25, wheel.getMaxVerticalForce()*2.0));
+		return max;
+	}
+
+	private boolean hasGroundedWheel()
+	{
+		for(EntityVehicleWheel<T> wheel : wheels)
+			if(wheel.getLastVerticalForces().isGrounded)
+				return true;
+		return false;
+	}
+
+	private boolean wouldCollideAt(Vec3d position, float yaw, float pitch, float roll)
+	{
+		for(EntityVehiclePart<T> part : partArray)
+			if(part.isCollisionEnabled()&&partCollidesAt(part, position, yaw, pitch, roll))
+				return true;
+		return false;
+	}
+
+	private boolean partCollidesAt(EntityVehiclePart<T> part, Vec3d position, float yaw, float pitch, float roll)
+	{
+		VehicleOBB obb = part.getCollisionOBB(position, yaw, pitch, roll);
+		AxisAlignedBB broad = obb.getEnclosingAABB().grow(0.001);
+
+		for(AxisAlignedBB blockBox : world.getCollisionBoxes(null, broad))
+			if(obb.intersects(blockBox))
+				return true;
+
+		for(Entity entity : world.getEntitiesInAABBexcluding(this, broad, candidate -> !isIgnoredCollisionEntity(candidate)))
+		{
+			if(entity instanceof EntityVehiclePart)
+			{
+				if(obb.intersects(((EntityVehiclePart<?>)entity).getCollisionOBB()))
+					return true;
+			}
+			else if(entity instanceof EntityVehicleBase)
+			{
+				EntityVehicleBase<?> other = (EntityVehicleBase<?>)entity;
+				for(EntityVehiclePart<?> otherPart : other.getVehicleParts())
+					if(otherPart.isCollisionEnabled()&&obb.intersects(otherPart.getCollisionOBB()))
+						return true;
+			}
+			else
+			{
+				// Ordinary entities are not terrain. They are shoved out of the vehicle's way after movement
+				// instead of being allowed to hold a tracked vehicle in mid-air.
+			}
+		}
+		return false;
+	}
+
+	private boolean isIgnoredCollisionEntity(Entity entity)
+	{
+		if(entity==null||entity==this)
+			return true;
+		if(entity instanceof EntityVehicleSeat)
+			return true;
+		if(this.getRecursivePassengers().contains(entity))
+			return true;
+		if(partArray!=null)
+			for(EntityVehiclePart<T> part : partArray)
+				if(entity==part)
+					return true;
+		return !entity.canBeCollidedWith()&&!(entity instanceof EntityVehicleBase)&&!(entity instanceof EntityVehiclePart);
 	}
 
 	/**
 	 * Tests whether the vehicle at a given transform would collide with the world.
 	 *
-	 * @param position The position to test at. If null, current position is used.
+	 * @param position The absolute vehicle position to test at. If null, current position is used.
 	 * @param yaw      The yaw to test. If null, current yaw is used.
 	 * @param pitch    The pitch to test. If null, current pitch is used.
-	 * @param roll     The roll to test.If null, current roll is used.
+	 * @param roll     The roll to test. If null, current roll is used.
 	 */
 	@ParametersAreNullableByDefault
 	private boolean isTransformSafe(Vec3d position, Float yaw, Float pitch, Float roll)
 	{
-		//Null-safe parameters
 		position = position==null?this.getPositionVector(): position;
 		yaw = yaw==null?this.rotationYaw: yaw;
 		pitch = pitch==null?this.rotationPitch: pitch;
 		roll = roll==null?this.rotationRoll: roll;
-
-		//For each part (wheels + hull)
-		for(EntityVehiclePart<T> part : partArray)
-		{
-			//Compute rotated part position for the *test* yaw
-			Vec3d rotatedPos = position.add(IIMath.offsetPosDirectionXYZ(part.offset, yaw, pitch, roll));
-			AxisAlignedBB futureBB = part.aabb.offset(rotatedPos);
-
-			//Query block collisions
-			List<AxisAlignedBB> boxes = world.getCollisionBoxes(null, futureBB);
-
-			if(!boxes.isEmpty())
-				return false; //rotation causes intersection -> not safe
-
-			//Also test entity collisions (other vehicles)
-			for(Entity e : world.getEntitiesInAABBexcluding(this, futureBB,
-					ent -> ent instanceof EntityVehicleBase))
-			{
-				EntityVehicleBase<?> other = (EntityVehicleBase<?>)e;
-				for(EntityVehiclePart<?> vehiclePart : other.getVehicleParts())
-					if(vehiclePart.getEntityBoundingBox().intersects(futureBB))
-						return false;
-			}
-		}
-
-		return true;
+		return !wouldCollideAt(position, yaw, pitch, roll);
 	}
 
 	/**
@@ -669,67 +811,46 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 	 */
 	public void fixPositionErrors()
 	{
-		//threshold for inside-block correction
 		final double INSIDE_THRESHOLD = 0.125;
-		//max downward correction allowed
 		final double SNAP_MAX = 0.25;
-		//depth to scan for ground
 		final double PROBE = 0.3;
 
 		Vec3d accumulatedCorrection = Vec3d.ZERO;
 		boolean anyWheelOnGround = false;
 		boolean anyWheelClimbing = false;
 
-		//Phase 1: Fix micro-penetrations
+		//Phase 1: Fix tiny OBB penetrations. Larger intersections are left to the main movement clipper,
+		//otherwise the vehicle can jump violently when wedged between block faces.
 		for(EntityVehiclePart<T> part : partArray)
 		{
-			//Collect wheels for phase two
 			if(part instanceof EntityVehicleWheel)
 			{
-				if(part.onGround)
+				EntityVehicleWheel<T> wheel = (EntityVehicleWheel<T>)part;
+				if(wheel.getLastVerticalForces().isGrounded)
 					anyWheelOnGround = true;
-				if(((EntityVehicleWheel<T>)part).getVerticalForceBalance() > 0)
+				if(wheel.getVerticalForceBalance() > 0)
 					anyWheelClimbing = true;
 			}
 
-			//Simulate final offset
-			Vec3d partPos = this.getPositionVector().add(
-					IIMath.offsetPosDirectionXYZ(
-							part.offset,
-							this.rotationYaw,
-							this.rotationPitch,
-							this.rotationRoll
-					)
-			);
+			if(!part.isCollisionEnabled())
+				continue;
 
-			AxisAlignedBB partBB = part.aabb.offset(partPos);
-			List<AxisAlignedBB> blockBoxes = world.getCollisionBoxes(null, partBB);
-			//Check for intersections inside threshold
-			for(AxisAlignedBB block : blockBoxes)
+			VehicleOBB partOBB = part.getCollisionOBB(this.getPositionVector(), this.rotationYaw, this.rotationPitch, this.rotationRoll);
+			AxisAlignedBB broad = partOBB.getEnclosingAABB().grow(0.001);
+			for(AxisAlignedBB block : world.getCollisionBoxes(null, broad))
 			{
-				AxisAlignedBB inter = partBB.intersect(block);
-				double dx = (inter.maxX-inter.minX)/2.0;
-				double dy = (inter.maxY-inter.minY)/2.0;
-				double dz = (inter.maxZ-inter.minZ)/2.0;
-
-				if(dx < INSIDE_THRESHOLD||dy < INSIDE_THRESHOLD||dz < INSIDE_THRESHOLD)
-				{
-					//Push out any intersections
-					Vec3d direction = IIMath.getAABBCenter(partBB).subtract(IIMath.getAABBCenter(block)).normalize();
-					double depth = Math.min(dx, Math.min(dy, dz));
-					Vec3d push = direction.scale(depth);
-
-					accumulatedCorrection = accumulatedCorrection.add(push);
-				}
+				VehicleOBB.CollisionResult result = partOBB.calculateCollision(block);
+				if(result!=null&&result.depth < INSIDE_THRESHOLD)
+					accumulatedCorrection = accumulatedCorrection.add(result.getPushOut());
 			}
 		}
 
-		//Apply correction for phase 1
 		if(!accumulatedCorrection.equals(Vec3d.ZERO))
 		{
 			Vec3d finalCorrection = accumulatedCorrection.normalize()
 					.scale(Math.min(INSIDE_THRESHOLD*0.5, accumulatedCorrection.lengthVector()));
-			if(isTransformSafe(finalCorrection, null, null, null))
+			Vec3d correctedPosition = this.getPositionVector().add(finalCorrection);
+			if(isTransformSafe(correctedPosition, null, null, null))
 			{
 				this.posX += finalCorrection.x;
 				this.posY += finalCorrection.y;
@@ -737,45 +858,37 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 			}
 		}
 
-		//Phase 2: Ground snapping
+		//Phase 2: Ground snapping. Use wheel OBBs so a tilted vehicle settles against block tops naturally.
 		if(collidedVertically&&!anyWheelOnGround&&!anyWheelClimbing)
 		{
 			double minGap = Double.MAX_VALUE;
 			boolean hasGroundBelow = false;
 
-			//Try to lower each wheel until it hits the ground
-			for(EntityVehicleWheel<T> part : wheels)
+			for(EntityVehicleWheel<T> wheel : wheels)
 			{
-				Vec3d partPos = this.getPositionVector().add(
-						IIMath.offsetPosDirectionXYZ(
-								part.offset,
-								this.rotationYaw,
-								this.rotationPitch,
-								this.rotationRoll
-						)
-				);
-				AxisAlignedBB wheelBB = part.aabb.offset(partPos);
-				AxisAlignedBB probeBB = wheelBB.offset(0, -PROBE, 0);
+				VehicleOBB wheelOBB = wheel.getCollisionOBB(this.getPositionVector(), this.rotationYaw, this.rotationPitch, this.rotationRoll);
+				AxisAlignedBB wheelBox = wheelOBB.getEnclosingAABB();
+				AxisAlignedBB probeBB = wheelBox.offset(0, -PROBE, 0);
 
-				//Get blocks below the wheel
-				List<AxisAlignedBB> blocksBelow = world.getCollisionBoxes(null, probeBB);
-				for(AxisAlignedBB block : blocksBelow)
+				for(AxisAlignedBB block : world.getCollisionBoxes(null, probeBB))
 				{
-					double gap = wheelBB.minY-block.maxY;
+					double gap = wheelBox.minY-block.maxY;
 					if(gap >= 0&&gap < minGap)
 					{
-						minGap = gap;
-						hasGroundBelow = true;
+						VehicleOBB snappedWheel = wheelOBB.offset(0, -gap, 0);
+						if(snappedWheel.intersects(block))
+						{
+							minGap = gap;
+							hasGroundBelow = true;
+						}
 					}
 				}
 			}
 
-			//If ground found below within snap range, snap down
 			if(hasGroundBelow&&minGap < SNAP_MAX)
 			{
-				Vec3d snap = new Vec3d(0, -minGap, 0);
-
-				if(isTransformSafe(snap, null, null, null))
+				Vec3d correctedPosition = this.getPositionVector().addVector(0, -minGap, 0);
+				if(isTransformSafe(correctedPosition, null, null, null))
 				{
 					this.posY -= minGap;
 					this.prevPosY -= minGap;
@@ -801,26 +914,26 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 			double verticalForce = wheel.getVerticalForceBalance();
 			double expectedForce = -0.02*wheel.getWeightShare(); //Expected gravity force
 
-			if(wheel.offset.x > 0) //Front
+			if(wheel.offset.z < 0) //Front (-Z)
 			{
 				totalFrontWeight += wheel.getWeightShare();
 				frontImbalance += (verticalForce-expectedForce);
 				frontWheels++;
 			}
-			else //Rear
+			else //Rear (+Z)
 			{
 				totalRearWeight += wheel.getWeightShare();
 				rearImbalance += (verticalForce-expectedForce);
 				rearWheels++;
 			}
 
-			if(wheel.offset.z > 0) //Right
+			if(wheel.offset.x > 0) //Right (+X)
 			{
 				totalRightWeight += wheel.getWeightShare();
 				rightImbalance += (verticalForce-expectedForce);
 				rightWheels++;
 			}
-			else //Left
+			else //Left (-X)
 			{
 				totalLeftWeight += wheel.getWeightShare();
 				leftImbalance += (verticalForce-expectedForce);
@@ -878,17 +991,15 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 	 */
 	private Vec3d getForwardVector()
 	{
-		double wheelAngle = Math.toRadians(MathHelper.wrapDegrees(rotationYaw));
-		return new Vec3d(Math.sin(wheelAngle), 0, Math.cos(wheelAngle));
+		return VehicleOBB.getForwardVector(MathHelper.wrapDegrees(rotationYaw));
 	}
 
 	/**
-	 * Gets the right direction vector
+	 * Gets the right direction vector (+X in vehicle-local space).
 	 */
 	private Vec3d getRightVector()
 	{
-		double wheelAngle = Math.toRadians(MathHelper.wrapDegrees(rotationYaw));
-		return new Vec3d(Math.cos(wheelAngle), 0, Math.sin(wheelAngle));
+		return VehicleOBB.getRightVector(MathHelper.wrapDegrees(rotationYaw));
 	}
 
 	@Override
@@ -918,6 +1029,31 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 		return null;
 	}
 
+	public VehicleSegment<T> getRootSegment()
+	{
+		return rootSegment;
+	}
+
+	public VehicleSegment<T>[] getVehicleSegments()
+	{
+		return segments;
+	}
+
+	public VehicleWheelGroup<T>[] getWheelGroups()
+	{
+		return wheelGroups;
+	}
+
+	public double getAngularVelocityPitch()
+	{
+		return angularVelocityPitch;
+	}
+
+	public double getAngularVelocityRoll()
+	{
+		return angularVelocityRoll;
+	}
+
 	//--- Part Handling ---//
 
 	@Override
@@ -926,19 +1062,81 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 		//Create vectors with proper rotation accounting
 		for(EntityVehiclePart<T> part : getVehicleParts())
 		{
-			//Transform offset using the rotated vectors
-			Vec3d newPos = this.getPositionVector().add(IIMath.offsetPosDirectionXYZ(part.offset, this.rotationYaw, this.rotationPitch, this.rotationRoll));
+			//Transform offset using the part segment, then the hull rotation.
+			Vec3d newPos = part.getPartWorldPosition(this.getPositionVector(), this.rotationYaw, this.rotationPitch, this.rotationRoll);
 
 			float yawAngle = this.rotationYaw;
 			if(part instanceof EntityVehicleWheel)
 			{
 				EntityVehicleWheel<T> wheel = (EntityVehicleWheel<T>)part;
-				yawAngle = wheel.rotationYaw;
+				yawAngle = this.rotationYaw+wheel.getSteeringAngle();
 				wheel.addWheelTraverse((float)part.getPositionVector().distanceTo(newPos));
 			}
 			part.setLocationAndAngles(newPos.x, newPos.y, newPos.z, yawAngle, 0);
 			part.onUpdate();
 		}
+		setEntityBoundingBox(getEntityBoundingBox());
+		pushIntersectingEntities();
+	}
+
+	/**
+	 * Gives regular Minecraft entities a chance to react to precise vehicle part collisions.
+	 * The actual broad-phase still uses AABBs, but the contact test is the part OBB.
+	 */
+	private void pushIntersectingEntities()
+	{
+		if(world.isRemote)
+			return;
+
+		double speedSq = velocity.x*velocity.x+velocity.z*velocity.z;
+		double speed = Math.sqrt(speedSq);
+		for(EntityVehiclePart<T> part : getVehicleParts())
+		{
+			if(!part.isCollisionEnabled())
+				continue;
+			VehicleOBB obb = part.getCollisionOBB();
+			AxisAlignedBB broad = obb.getEnclosingAABB().grow(0.125);
+			for(Entity entity : world.getEntitiesInAABBexcluding(this, broad, this::isPushableCollisionEntity))
+			{
+				AxisAlignedBB entityBox = entity.getEntityBoundingBox();
+				if(entityBox==null||!obb.intersects(entityBox))
+					continue;
+
+				pushEntityAwayFromPart(entity, obb, speed);
+				if(speedSq > blueprint.entityDamageSpeedSq())
+				{
+					float damage = (float)((speedSq-blueprint.entityDamageSpeedSq())*blueprint.entityDamageScale());
+					if(damage > 0.5f)
+						entity.attackEntityFrom(IIDamageSources.causeVehicleDamage(this), damage);
+				}
+			}
+		}
+	}
+
+	private boolean isPushableCollisionEntity(Entity entity)
+	{
+		if(isIgnoredCollisionEntity(entity))
+			return false;
+		return !(entity instanceof EntityVehicleBase)&&!(entity instanceof EntityVehiclePart)&&!(entity instanceof EntityVehicleSeat);
+	}
+
+	private void pushEntityAwayFromPart(Entity entity, VehicleOBB obb, double vehicleSpeed)
+	{
+		AxisAlignedBB box = entity.getEntityBoundingBox();
+		if(box==null)
+			return;
+
+		Vec3d entityCenter = box.getCenter();
+		Vec3d push = new Vec3d(entityCenter.x-obb.center.x, 0, entityCenter.z-obb.center.z);
+		if(push.lengthSquared() < 1.0E-5)
+			push = new Vec3d(velocity.x, 0, velocity.z);
+		if(push.lengthSquared() < 1.0E-5)
+			push = VehicleOBB.getForwardVector(this.rotationYaw);
+		push = push.normalize();
+
+		double strength = blueprint.entityPushStrength()*(0.08+Math.min(0.8, vehicleSpeed*0.35));
+		entity.addVelocity(push.x*strength, Math.min(0.08, strength*0.2), push.z*strength);
+		entity.velocityChanged = true;
 	}
 
 	@Nullable
@@ -952,6 +1150,12 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 	public EntityVehiclePart<T>[] getVehicleParts()
 	{
 		return partArray;
+	}
+
+	@Override
+	public boolean processInitialInteract(EntityPlayer player, EnumHand hand)
+	{
+		return IVehicleMultiPart.super.interactRayTracedPart(player, hand);
 	}
 
 	@Override
@@ -1005,14 +1209,36 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 	@Override
 	public AxisAlignedBB getEntityBoundingBox()
 	{
-		return AABB.offset(posX, posY, posZ);
+		return getVehicleBroadphaseBox(this.getPositionVector(), this.rotationYaw, this.rotationPitch, this.rotationRoll);
+	}
+
+	@Override
+	public AxisAlignedBB getRenderBoundingBox()
+	{
+		return getEntityBoundingBox().grow(0.5);
+	}
+
+	private AxisAlignedBB getVehicleBroadphaseBox(Vec3d position, float yaw, float pitch, float roll)
+	{
+		if(AABB==null)
+			return super.getEntityBoundingBox();
+		if(partArray==null||partArray.length==0)
+			return AABB.offset(position.x, position.y, position.z);
+
+		AxisAlignedBB box = null;
+		for(EntityVehiclePart<T> part : partArray)
+		{
+			AxisAlignedBB partBox = part.getCollisionOBB(position, yaw, pitch, roll).getEnclosingAABB();
+			box = box==null?partBox: box.union(partBox);
+		}
+		return box==null?AABB.offset(position.x, position.y, position.z): box;
 	}
 
 	@Nullable
 	@Override
 	public AxisAlignedBB getCollisionBox(Entity entityIn)
 	{
-		return null;
+		return isIgnoredCollisionEntity(entityIn)?null: getEntityBoundingBox();
 	}
 
 	@Override

@@ -6,17 +6,17 @@ import net.minecraft.entity.MultiPartEntityPart;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleBlueprint;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehiclePart;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleSeat.SeatInfo;
-import pl.pabilo8.immersiveintelligence.common.util.IIMath;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.VehicleOBB;
 import pl.pabilo8.immersiveintelligence.common.util.entity.IIEntityUtils;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -41,26 +41,67 @@ public interface IVehicleMultiPart<T extends Entity & IVehicleMultiPart<T>> exte
 
 	void onSeatDismount(String seatID, Entity passenger);
 
+	/**
+	 * Ray-traces the vehicle's precise part OBBs and returns the closest hit part.
+	 * This keeps interaction selection consistent with custom vehicle collision instead of vanilla enclosing AABBs.
+	 */
+	@Nullable
+	default EntityVehiclePart<T> rayTracePart(Vec3d start, Vec3d end)
+	{
+		EntityVehiclePart<T> closest = null;
+		double closestDistanceSq = Double.MAX_VALUE;
+		for(EntityVehiclePart<T> part : getVehicleParts())
+		{
+			Vec3d hit = part.rayTraceOBB(start, end);
+			if(hit==null)
+				continue;
+
+			double distanceSq = hit.squareDistanceTo(start);
+			if(distanceSq < closestDistanceSq)
+			{
+				closestDistanceSq = distanceSq;
+				closest = part;
+			}
+		}
+		return closest;
+	}
+
+	/**
+	 * Ray-traces from a player's eyes using normal Minecraft interaction reach.
+	 */
+	@Nullable
+	default EntityVehiclePart<T> rayTracePart(EntityPlayer player)
+	{
+		double reach = player.capabilities.isCreativeMode?5.0D: 4.5D;
+		Vec3d start = player.getPositionEyes(1.0F);
+		Vec3d end = start.add(player.getLook(1.0F).scale(reach));
+		return rayTracePart(start, end);
+	}
+
+	/**
+	 * Delegates interaction to the vehicle's existing part-aware interaction method after precise OBB selection.
+	 */
+	default boolean interactRayTracedPart(EntityPlayer player, EnumHand hand)
+	{
+		EntityVehiclePart<T> part = rayTracePart(player);
+		return part!=null&&onInteractWithPart(part, player, hand);
+	}
+
 	default void updateParts()
 	{
 		//noinspection unchecked
 		T vehicle = ((T)this);
 		boolean client = vehicle.world.isRemote;
 
-		//create vectors
-		Vec3d vecX = IIMath.offsetPosDirection(1f, Math.toRadians(MathHelper.wrapDegrees(-vehicle.rotationYaw)), 0);
-		Vec3d vecZ = IIMath.offsetPosDirection(1f, Math.toRadians(MathHelper.wrapDegrees(-vehicle.rotationYaw-90)), 0);
-
 		for(EntityVehiclePart<T> part : getVehicleParts())
 		{
-			//transform offset using on the rotated vectors
-			Vec3d offsetX = vecX.scale(part.offset.x);
-			Vec3d offsetZ = vecZ.scale(part.offset.z);
+			// Vehicle-local convention: +X right, +Y up, -Z front.
+			Vec3d offset = VehicleOBB.transformLocal(part.offset, vehicle.rotationYaw, vehicle.rotationPitch, getRotationRoll());
 
 			part.setLocationAndAngles(
-					vehicle.posX+offsetX.x+offsetZ.x,
-					vehicle.posY+part.offset.y,
-					vehicle.posZ+offsetX.z+offsetZ.z,
+					vehicle.posX+offset.x,
+					vehicle.posY+offset.y,
+					vehicle.posZ+offset.z,
 					0.0F, 0);
 
 			if(client)

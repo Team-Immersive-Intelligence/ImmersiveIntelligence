@@ -41,6 +41,69 @@ public @interface VehicleBlueprint
 
 	//--- Wheels ---//
 
+
+	/**
+	 * Main developer-facing drive scalar. Higher values make the vehicle accelerate harder.
+	 * Transmission and engine settings still describe the drivetrain, but this is the primary
+	 * gameplay balance lever for wheel force.
+	 */
+	double driveForce() default 1.0;
+
+	/**
+	 * Expected wheel speed at full useful drive intent. Used to normalise engine/transmission output.
+	 */
+	double nominalWheelSpeed() default 360.0;
+
+	/**
+	 * Expected wheel torque at full useful drive intent. Used to normalise engine/transmission output.
+	 */
+	double nominalWheelTorque() default 80.0;
+
+	/**
+	 * Maximum block obstacle height that the wheel system may try to step/climb.
+	 */
+	double obstacleClimbHeight() default 0.75;
+
+	/**
+	 * How aggressively wheel contact converts obstacle height into upward force.
+	 */
+	double climbForceScale() default 0.0625;
+
+	/**
+	 * Per-wheel downward force when the wheel has no ground contact.
+	 */
+	double wheelGravityForce() default 0.04;
+
+	/**
+	 * Yaw torque scalar produced by horizontal wheel forces. Replaces most direct tuning of torqueFactor.
+	 */
+	double steeringTorque() default 0.025;
+
+	/**
+	 * Pitch/roll torque scalar produced by uneven wheel vertical forces.
+	 */
+	double orientationTorqueFactor() default 0.015;
+
+	/**
+	 * Lateral friction used by axle groups.
+	 */
+	double axleLateralFriction() default 0.7;
+
+	/**
+	 * Lateral friction used by track groups. Higher values make tracks resist side-slip.
+	 */
+	double trackLateralFriction() default 1.1;
+
+	/**
+	 * Maximum hull rotation step in degrees per tick, checked through OBB narrow-phase.
+	 */
+	double rotationStepLimit() default 2.0;
+
+	/**
+	 * Converts accumulated angular velocity into degrees-per-tick rotation before OBB validation.
+	 */
+	double angularVelocityToDegrees() default 1.0;
+
 	/**
 	 * @return the lateral friction coefficient for driven wheels (0.0-1.0)
 	 */
@@ -71,6 +134,22 @@ public @interface VehicleBlueprint
 	 * @return the energy loss factor when the suspension bounces
 	 */
 	double suspensionDamping() default 0.7;
+
+	/**
+	 * Horizontal push strength applied to ordinary entities hit by a vehicle.
+	 * Vehicles and vehicle parts are still handled by the rigid OBB collision path.
+	 */
+	double entityPushStrength() default 1.25;
+
+	/**
+	 * Horizontal vehicle speed squared above which ordinary entities take impact damage.
+	 */
+	double entityDamageSpeedSq() default 0.08;
+
+	/**
+	 * Damage scalar for high-speed vehicle impacts against ordinary entities.
+	 */
+	double entityDamageScale() default 18.0;
 
 	//--- Physics ---//
 

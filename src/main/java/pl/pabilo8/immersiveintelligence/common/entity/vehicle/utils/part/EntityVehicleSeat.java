@@ -16,7 +16,6 @@ import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
 import pl.pabilo8.immersiveintelligence.client.util.CameraHandler;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehicleBase;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleControls;
-import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.entity.ISyncNBTEntity;
@@ -207,7 +206,7 @@ public class EntityVehicleSeat extends Entity implements ISyncNBTEntity<EntityVe
 		EntityVehicleBase<?> vehicle = info.vehicle;
 
 		//Set position
-		Vec3d pos = IIMath.offsetPosDirectionXYZ(info.offset, vehicle.rotationYaw, vehicle.rotationPitch, vehicle.rotationRoll)
+		Vec3d pos = VehicleOBB.transformLocal(info.offset, vehicle.rotationYaw, vehicle.rotationPitch, vehicle.rotationRoll)
 				.addVector(vehicle.posX, vehicle.posY, vehicle.posZ);
 		passenger.setPosition(pos.x, pos.y, pos.z);
 		passenger.motionX = vehicle.motionX;

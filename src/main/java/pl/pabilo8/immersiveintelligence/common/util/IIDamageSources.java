@@ -36,7 +36,7 @@ public class IIDamageSources
 			{
 				if(seat.getPassengers().isEmpty())
 					continue;
-				Entity passenger = seat.getPassengers().get(1);
+				Entity passenger = seat.getPassengers().get(0);
 				if(passenger instanceof EntityLivingBase)
 					return new IEDamageSource_Indirect("iiVehicleNoRider", vehicle, passenger);
 			}
