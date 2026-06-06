@@ -453,7 +453,7 @@ item.immersiveintelligence.bullet.component.flare_powder.name=闪光粉
 item.immersiveintelligence.bullet.component.propaganda.name=宣传弹
 #shh! it's a secret!
 item.immersiveintelligence.bullet.component.fish.name=鱼弹(?)
-item.immersiveintelligence.bullet.component.nuke.name=热核战斗部
+item.immersiveintelligence.bullet.component.nuke.name=核战斗部
 
 #Cores
 
@@ -1128,7 +1128,7 @@ machineupgrade.immersiveintelligence.emplacement.mortar.desc=迫击炮在近距�
 machineupgrade.immersiveintelligence.emplacement.light_howitzer=轻型火炮
 machineupgrade.immersiveintelligence.emplacement.light_howitzer.desc=轻型火炮在中程提供间接火力支援,其机动性使其能够快速精确地攻击敌方阵地.
 
-machineupgrade.immersiveintelligence.emplacement.rocket_launcher=火箭投射器
+machineupgrade.immersiveintelligence.emplacement.rocket_launcher=火箭发射器
 machineupgrade.immersiveintelligence.emplacement.rocket_launcher.desc=火箭发射器可以使用最多6枚无导向火箭进行毁灭性的区域轰炸，非常适合攻击设防地点。
 
 machineupgrade.immersiveintelligence.emplacement.guided_missile_launcher=线导导弹发射器
@@ -1635,7 +1635,8 @@ rotary.immersiveintelligence.belt_system.differentAxis=皮带不能斜向连接�
 datasystem.immersiveintelligence.function.null=缺失功能
 datasystem.immersiveintelligence.function.null.desc=请将带有详细信息的错误报告提交给 II 的 GitHub 上的模组开发者。
 
-#Arithmetic
+#这部分太多了还要数学知识我就没翻
+#Arithmetic   
 datasystem.immersiveintelligence.function.add=加法
 datasystem.immersiveintelligence.function.add.desc=将所有输入相加
 datasystem.immersiveintelligence.function.add.param.summand=加数
@@ -2945,7 +2946,7 @@ ie.manual.entry.traits.repairable=可修补的
 ie.manual.entry.traits.decorations=可修饰的
 ie.manual.entry.traits.paintable=可涂漆的
 
-ie.manual.entry.wip_warning0=警告! WIP内容.
+ie.manual.entry.wip_warning0=警告! 开发中内容.
 ie.manual.entry.wip_warning1=工程部正在努力将它推到前面!
 ie.manual.entry.wip_warning.upgrade=该功能可能缺乏视觉效果或没有任何功能，不要报告此问题.
 
@@ -3032,7 +3033,7 @@ ie.manual.entry.bullet_core.core_uranium.lore=弹药"贫乏"是什么意思？
 ie.manual.entry.bullet_core.core_uranium.desc=低重量和高硬度使铀成为一种很好的穿甲材料而不会失去携带爆炸材料的能力.不错,但价格昂贵.
 
 ie.manual.entry.bullet_core.core_rubber=橡胶弹芯
-ie.manual.entry.bullet_core.core_rubber.lore=绝对惊艳！
+ie.manual.entry.bullet_core.core_rubber.lore=震人心扉！
 ie.manual.entry.bullet_core.core_rubber.desc=橡胶弹芯比金属弹芯致命性低,但具有更强的击退力,并且可以使目标晕眩.
 
 ie.manual.entry.bullet_components.name=战斗部装药
@@ -3212,19 +3213,19 @@ ii.config.Light_Engineer_Armor=工程师轻型装甲
 #GUI Labels
 ii.gui.editor.editor_style=Visual/POL Editor
 
-ii.gui.task_editor.jobs=Jobs
-ii.gui.task_editor.jobs.tooltip=Jobs are assignments, that are repeated indefinitely.
-ii.gui.task_editor.requests=Requests
-ii.gui.task_editor.requests.tooltip=Requests are assignments, that are discarded from memory, after a set amount of resource is transfered.
+ii.gui.task_editor.jobs=工作
+ii.gui.task_editor.jobs.tooltip=工作是可以无限重复的任务.
+ii.gui.task_editor.requests=请求
+ii.gui.task_editor.requests.tooltip=请求是分配任务,在传输一定量的资源后会从内存中丢弃.
 
 ii.gui.inserter.task_editor=任务编辑器
 ii.gui.inserter.type=类型:
 ii.gui.inserter.input=输入:
 ii.gui.inserter.input.facing.tooltip=机械臂应该朝哪个方向伸展.
-ii.gui.inserter.input.distance.tooltip=机械臂应该伸展多远 (格).
+ii.gui.inserter.input.distance.tooltip=机械臂应该伸展多少格.
 ii.gui.inserter.output=输出:
 ii.gui.inserter.output.facing.tooltip=机械臂应该向哪个方向伸展.
-ii.gui.inserter.output.distance.tooltip=How far should the inserter reach (blocks).
+ii.gui.inserter.output.distance.tooltip=机械臂应该伸展多少格.
 ii.gui.inserter.items_per_step=数量/转:
 ii.gui.inserter.items_per_step.tooltip=每转动一次机械臂取入和插入的数量.
 
@@ -3406,8 +3407,8 @@ ii.gui.projectile_workshop.entry.core=弹芯
 ii.gui.projectile_workshop.entry.type=类型
 ii.gui.projectile_workshop.tooltip.core_type=弹芯核心
 ii.gui.projectile_workshop.tooltip.ammunition_type=弹药种类
-ii.gui.projectile_workshop.cost=Cost:
-ii.gui.projectile_workshop.invalid_cost=总计: 250 Pabulions
+ii.gui.projectile_workshop.cost=总计:
+ii.gui.projectile_workshop.invalid_cost=总计: 67891 P数
 ii.gui.projectile_workshop.material_preview=材质预览
 ii.gui.projectile_workshop.section.core=弹芯
 ii.gui.projectile_workshop.section.ballistics=弹道
