@@ -1057,6 +1057,7 @@ skin.immersiveintelligence.zvezda.text=Советский тематически
 skin.immersiveintelligence.vaterland.name=Фатерлянд
 skin.immersiveintelligence.vaterland.desc=Железный крест
 skin.immersiveintelligence.vaterland.text=Скин на тему Германии.
+
 #Machine Upgrades
 machineupgrade.immersiveintelligence.inserter=Манипулятор
 machineupgrade.immersiveintelligence.inserter.desc=Добавление манипулятора в ящик позволяет ему автоматически работать в радиусе 3 блоков при наличии питания.
@@ -1064,32 +1065,38 @@ machineupgrade.immersiveintelligence.inserter.desc=Добавление мани
 machineupgrade.immersiveintelligence.mg_loader=Ленточный питатель
 machineupgrade.immersiveintelligence.mg_loader.desc=Расширение отсеков для боеприпасов позволяет после некоторых модификаций загружать патроны непосредственно в пулемет. Ящик с боеприпасами должен быть открыт.
 
-machineupgrade.immersiveintelligence.improved_gearbox=Улучшенная коробка передач
-machineupgrade.immersiveintelligence.improved_gearbox.desc=Замена стандартного редуктора на усовершенствованную модель значительно увеличивает скорость машины и количество энергии, требуемой для работы.
-
-machineupgrade.immersiveintelligence.saw_unregulator=Регулятор хода пилы
-machineupgrade.immersiveintelligence.saw_unregulator.desc=Нерегулируемая работа пилы приводит к увеличению выхода опилок по сравнению с основным объемом производства.
-
 machineupgrade.immersiveintelligence.sovereignty=Проектор суверенитета
 machineupgrade.immersiveintelligence.sovereignty.desc=Позволяет сооружению захватывать территорию вокруг себя для фракции владельца.
 
-machineupgrade.immersiveintelligence.emplacement.emergency_smoke=Аварийные дымовые шашки
-machineupgrade.immersiveintelligence.emplacement.emergency_smoke.desc=Когда орудие сильно повреждено, выпускает дым для обеспечения прикрытия.
+#Sawmill
+machineupgrade.immersiveintelligence.improved_gearbox=Улучшенная коробка передач
+machineupgrade.immersiveintelligence.improved_gearbox.desc=Замена стандартного редуктора на усовершенствованную модель значительно увеличивает скорость машины и количество энергии, требуемой для работы.
+machineupgrade.immersiveintelligence.saw_unregulator=Регулятор хода пилы
+machineupgrade.immersiveintelligence.saw_unregulator.desc=Нерегулируемая работа пилы приводит к увеличению выхода опилок по сравнению с основным объемом производства.
 
+#Flagpole
+machineupgrade.immersiveintelligence.flagpole.capture_defiance=Capture Defiance
+machineupgrade.immersiveintelligence.flagpole.capture_defiance.desc=Reinforces the Flagpole, raising its structural integrity and troops required to actively capture it.
+machineupgrade.immersiveintelligence.flagpole.taser_locks=Taser Locks
+machineupgrade.immersiveintelligence.flagpole.taser_locks.desc=Adds a defensive tesla coil, that strikes enemies aiming to capture the Flagpole.
+machineupgrade.immersiveintelligence.flagpole.distress_signal=Distress Signal
+machineupgrade.immersiveintelligence.flagpole.distress_signal.desc=Adds a radio-connected alarm siren, that activates when enemy troops are close.
+machineupgrade.immersiveintelligence.flagpole.unit_post=Unit Post
+machineupgrade.immersiveintelligence.flagpole.unit_post.desc=Allows forming platoons of infantry assigned to this Flagpole.
+
+#Emplacement
 machineupgrade.immersiveintelligence.emplacement.sturdy_bearings=Прочные подшипники
 machineupgrade.immersiveintelligence.emplacement.sturdy_bearings.desc=Подшипники более высокого качества увеличивают максимальную скорость вращения оружия.
-
+machineupgrade.immersiveintelligence.emplacement.emergency_smoke=Аварийные дымовые шашки
+machineupgrade.immersiveintelligence.emplacement.emergency_smoke.desc=Когда орудие сильно повреждено, выпускает дым для обеспечения прикрытия.
 machineupgrade.immersiveintelligence.emplacement.targetting=Усовершенствованные системы наведения
 machineupgrade.immersiveintelligence.emplacement.targetting.desc=Усовершенствованные системы наведения позволяют лучше обнаруживать цели, повышая точность стрельбы.
 
 #Emplacement Weapons
-
 machineupgrade.immersiveintelligence.emplacement.infrared_observer=Инфракрасный наблюдатель
 machineupgrade.immersiveintelligence.emplacement.infrared_observer.desc=Инфракрасный наблюдатель позволяет вести наблюдение за удаленными врагами и передавать их координаты по кабелям передачи данных.
-
 machineupgrade.immersiveintelligence.emplacement.spotlight_tower=Прожекторная башня
 machineupgrade.immersiveintelligence.emplacement.spotlight_tower.desc=Прожекторная башня позволяет освещать вражеские подразделения, дезориентируя их и повышая точность стрельбы союзных подразделений.
-
 machineupgrade.immersiveintelligence.emplacement.searchlight=Прожектор
 machineupgrade.immersiveintelligence.emplacement.searchlight.desc=Прожекторы работают в координации с радарами, инфракрасными наблюдателями или прожекторными вышками, дезориентируя вражеские подразделения и повышая точность огня союзников.
 
@@ -1098,22 +1105,17 @@ machineupgrade.immersiveintelligence.emplacement.cpds.desc=Система Про
 
 machineupgrade.immersiveintelligence.emplacement.autocannon=Автоматическая пушка
 machineupgrade.immersiveintelligence.emplacement.autocannon.desc=Четыре автоматические пушки 3 bCal обеспечивают большую огневую мощь, что делает это оружие универсальным средством защиты от воздушных и наземных целей.
-
 machineupgrade.immersiveintelligence.emplacement.heavy_chemthrower=Тяжёлый жидкомёт
 machineupgrade.immersiveintelligence.emplacement.heavy_chemthrower.desc=Более тяжелая версия хорошо известного химического жидкомёта с более высоким давлением позволяет атаковать врагов на расстоянии в 4 раза большем, чем у портативного.
-
 machineupgrade.immersiveintelligence.emplacement.heavy_railgun=Тяжёлый Рельсотрон
 machineupgrade.immersiveintelligence.emplacement.heavy_railgun.desc=Тяжелый рельсотрон обеспечивает прямую огневую поддержку. Он может запускать металлические стержни или гранаты с высокой скоростью, что позволяет пробивать врагов и боевую технику.
 
 machineupgrade.immersiveintelligence.emplacement.machinegun=Пулемётное гнездо
 machineupgrade.immersiveintelligence.emplacement.machinegun.desc=Пулеметное гнездо может вести подавляющий автоматический огонь, что позволяет сдерживать толпу. Из-за своей конструкции оно не может сражаться с воздушными врагами.
-
 machineupgrade.immersiveintelligence.emplacement.machinegun.heavy_barrel=Тяжелый ствол
 machineupgrade.immersiveintelligence.emplacement.machinegun.heavy_barrel.desc=Тяжелый ствол обеспечивает гораздо более высокую скорострельность и немного увеличивают максимально допустимый перегрев.
-
 machineupgrade.immersiveintelligence.emplacement.machinegun.watercooled=Ствол с водяным охлаждением
 machineupgrade.immersiveintelligence.emplacement.machinegun.watercooled.desc=Замена стандартного ствола. Когда установлено, стволы не перегреваются при подаче охлаждающей жидкости.
-
 machineupgrade.immersiveintelligence.emplacement.machinegun.bunker=Дополнительные укрепления
 machineupgrade.immersiveintelligence.emplacement.machinegun.bunker.desc=Размещение дополнительных мешков с песком вокруг пулеметного гнезда придает ему дополнительную броню и увеличивает его прочность.
 
@@ -1390,6 +1392,8 @@ desc.immersiveintelligence.diplomacy.action.declare_alliance=Заключить 
 
 desc.immersiveintelligence.diplomacy.permission.disband=Disband
 desc.immersiveintelligence.diplomacy.permission.merge=Merge
+desc.immersiveintelligence.diplomacy.permission.foreign_affairs=Foreign Affairs
+desc.immersiveintelligence.diplomacy.permission.modify_insignia=Modify Insignia
 desc.immersiveintelligence.diplomacy.permission.add_members=Добавить участников
 desc.immersiveintelligence.diplomacy.permission.remove_members=Репресировать участников
 desc.immersiveintelligence.diplomacy.permission.military_aid=Военная поиощь
@@ -1398,6 +1402,7 @@ desc.immersiveintelligence.diplomacy.permission.trade=Торговля
 desc.immersiveintelligence.diplomacy.permission.research=Исследования
 desc.immersiveintelligence.diplomacy.permission.logistics=Логистика
 desc.immersiveintelligence.diplomacy.permission.container_access=Доступ к складу
+desc.immersiveintelligence.diplomacy.permission.breaking_structures=Breaking Structures
 
 desc.immersiveintelligence.diplomacy.permission_level.owner_allow=Владельцы
 desc.immersiveintelligence.diplomacy.permission_level.member_allow=Участники
@@ -2473,7 +2478,7 @@ datasystem.immersiveintelligence.function.vector_set_z.param.z.desc=Коорди
 datasystem.immersiveintelligence.function.vector_set_z.result=Вектор
 datasystem.immersiveintelligence.function.vector_set_z.result.desc=Вектор с новым значением Z координаты
 
-datasystem.immersiveintelligence.function.vector_add=Сложить
+datasystem.immersiveintelligence.function.vector_add=Сложение
 datasystem.immersiveintelligence.function.vector_add.desc=Складывает входные векторы, например (1,2,3) + (4,5,6) = (5,7,9)
 datasystem.immersiveintelligence.function.vector_add.param.vector=Вектор
 datasystem.immersiveintelligence.function.vector_add.param.vector.desc=Вектор для сложения
@@ -2902,8 +2907,8 @@ ie.manual.entry.traits.level_industrial=Этап развития: Индуст�
 ie.manual.entry.traits.level_advanced_industrial=Этап развития: Поздний индустриальный
 ie.manual.entry.traits.level_circuits=Этап развития: Эра электроники
 ie.manual.entry.traits.level_computer=Этап развития: Эра компьютеров
-ie.manual.entry.traits.hammer=Базовый многоблок — сборка с использованием инженерного молотка
-ie.manual.entry.traits.hammer_electric=Продвинутый многоблок — сборка с использованием электрического молотка
+ie.manual.entry.traits.hammer=Базовый мультиблок — сборка молотком инженера
+ie.manual.entry.traits.hammer_electric=Продвинутый мультиблок — сборка электрическим молотком инженера
 ie.manual.entry.traits.upgradable=Улучшаемый
 ie.manual.entry.traits.repairable=Ремонтируемый
 ie.manual.entry.traits.decorations=Можно декорировать
@@ -3136,8 +3141,8 @@ ie.manual.entry.bullet_component.shrapnel_uranium.lore=§гРа-ди-о-акти
 ie.manual.entry.bullet_component.shrapnel_uranium.desc=Уран — один из лучших материалов для шрапнели. Разлетающиеся осколки без проблем пробивают броню и могут нанести большой урон любой цели.
 
 ie.manual.entry.bullet_component.shrapnel_wood=Опилки
-ie.manual.entry.bullet_component.shrapnel_wood.lore=Экологически чистый продукт!
-ie.manual.entry.bullet_component.shrapnel_wood.desc=Наверное, это не сильно повредит, но после процедуры останется свежий сосновый аромат!
+ie.manual.entry.bullet_component.shrapnel_wood.lore=Экологически чистые
+ie.manual.entry.bullet_component.shrapnel_wood.desc=Не наносит серъёзных повреждений, но оставляет свежий таёжный аромат.
 
 #Death Messages # Газовых труб не будет увы
 death.attack.iiBullet=%1$s был застрелен %2$s
@@ -3332,8 +3337,16 @@ ii.gui.map_display.marker.missiles=Ракеты
 ii.gui.map_display.marker.artillery=Артиллерия
 ii.gui.map_display.marker.bullets=Пули
 
-ii.gui.redstone_data_interface.from=Из:
-ii.gui.redstone_data_interface.to=В:
+ii.gui.redstone_data_interface.from.redstone=Из
+ii.gui.redstone_data_interface.from.redstone.tooltip=Specifies what redstone signal color will get converted into a data variable
+ii.gui.redstone_data_interface.from.data=Из переменных
+ii.gui.redstone_data_interface.from.data.tooltip=Specifies the data variable whose value will get converted into a redstone signal
+ii.gui.redstone_data_interface.to.data=В переменные
+ii.gui.redstone_data_interface.to.data.tooltip=Specifies the output data variable
+ii.gui.redstone_data_interface.to.redstone=To signal
+ii.gui.redstone_data_interface.to.redstone.tooltip=Specifies the color of the redstone signal output by the interface
+ii.gui.redstone_data_interface.mode=Mode
+ii.gui.redstone_data_interface.mode.tooltip=Specifies the conversion mode. This determines how the redstone signal strength is converted into a data variable and vice versa.
 ii.gui.redstone_data_interface.mode.boolean=Boolean
 ii.gui.redstone_data_interface.mode.integer_15=Integer 0-15
 ii.gui.redstone_data_interface.mode.integer_255=Integer 0-255
@@ -3429,3 +3442,52 @@ ii.gui_tooltip.speed=Скорость: %s
 ii.gui_tooltip.progress=Прогресс: %s %
 ii.gui_tooltip.fuel=Топливо: %s/%s mB
 ii.gui_tooltip.soil_fertility=Плодородие почвы: %s %
+
+# Nether Backport Compat
+item.immersiveintelligence.bullet.component.core_netherite.name=Netherite
+ie.manual.entry.bullet_core.core_netherite=Netherite Core
+ie.manual.entry.bullet_core.core_netherite.lore=Nether-Forged
+ie.manual.entry.bullet_core.core_netherite.desc=Ancient debris is what remains of the mining activity of the piglins, who extracted all the original netherite ore. Currently they are a product of an industrialized fallen empire and in the past they were a united front.
+
+item.immersiveintelligence.bullet.component.nether_fire.name=Nether Fire
+ie.manual.entry.bullet_component.nether_fire=Nether Fire
+ie.manual.entry.bullet_component.nether_fire.lore=This "prison"... to contain ME?
+ie.manual.entry.bullet_component.nether_fire.desc=A fire of infernal origins,  it is a permanent, non-spreading fire that deals higher damage than normal fire and keeps on burning when it should not.
+
+# Deeper Depths Compat
+item.immersiveintelligence.bullet.component.windcharge.name=Wind Charge
+ie.manual.entry.bullet_component.windcharge=Wind Charge
+ie.manual.entry.bullet_component.windcharge.lore=How?
+ie.manual.entry.bullet_component.windcharge.desc=Condensed wind obtained from Breeze, wind charges knock targets back and apply slowness and suppression in small radius. Due to properties of the charge, it remains on the same level of potency regardless of the shell size.
+
+# Thaumcraft Compat
+item.immersiveintelligence.bullet.component.primordial_pearl.name=Primordial Pearl
+ie.manual.entry.bullet_component.primordial_pearl=Primordial Pearl
+ie.manual.entry.bullet_component.primordial_pearl.lore=Magical Oppenheimer
+ie.manual.entry.bullet_component.primordial_pearl.desc=A potent artifact containing vast magical power and nearly unlimited potential that is beyond the known magical and physical laws. Despite its small size, rules of physics dictate that compression of such matter by integrated detonator explosive can only result in unparraleled levels of destruction from sheer amount of energy unleashed at once.
+
+item.immersiveintelligence.bullet.component.alumentum.name=Alumentum
+ie.manual.entry.bullet_component.alumentum=Alumentum
+ie.manual.entry.bullet_component.alumentum.lore=Alchemist's explosives
+ie.manual.entry.bullet_component.alumentum.desc=A very volatile fiery substance, Alumentum is smaller in radius compared to TNT, but contains more concentrated power. Being in explosive container allows to focus its explosive power, making it more destructive than otherwise hand-thrown Alumentum.
+
+item.immersiveintelligence.bullet.component.bottled_taint.name=Bottled Taint
+ie.manual.entry.bullet_component.bottled_taint=Bottled Taint
+ie.manual.entry.bullet_component.bottled_taint.lore=Ruinous power
+ie.manual.entry.bullet_component.bottled_taint.desc=Moving the contents of the bottle into a shell allows to deliver the corruptive Taint at much longer distances than it is possible to throw the bottle manually. Spread forth magical corruption, now at long distances!
+
+ie.manual.entry.bullet_core.core_core_thaumium=Thaumium
+ie.manual.entry.bullet_core.core_thaumium=Thaumium Core
+ie.manual.entry.bullet_core.ore_thaumium.lore=Thaumaturgicallymtallurgic
+ie.manual.entry.bullet_core.core_thaumium.desc=A result of infusing iron with raw magical energy. Harder and better than base iron, it is a good candidate for massproduced shells, provided you can make alchemical mettalurgy supply keep up with the industrial demands.
+
+ie.manual.entry.bullet_core.core_core_core_voidmetal=Void Metal
+ie.manual.entry.bullet_core.core_voidmetal=Void Metal Core
+ie.manual.entry.bullet_core.core_voidmetal.lore=Thaumaturgicallymtallurgic
+ie.manual.entry.bullet_core.core_voidmetal.desc=Disturbingly slick and warm to the touch, easy to work like gold, becoming as hard as tungsten and harder when struck - Void Metal is an excellent choice for bullets. However, properties of the metal make it somewhat difficult for conventional explosives to detonate with proper force. Furthermore, you cannot retrieve this metal core despite its regenerative properties, as it becomes unuseable after hitting the target.
+
+# Thaumic Augmentation Compat
+item.immersiveintelligence.bullet.component.impetus.name=Impetus
+ie.manual.entry.bullet_component.impetus=Impetus
+ie.manual.entry.bullet_component.impetus.lore=Rift power in a can
+ie.manual.entry.bullet_component.impetus.desc=Dangerous byproduct of Flux Rifts, and not fully understood material or phenomena, full range of usages for Impetus is shrouded in mystery. However, "infusing" the shell with the Impetus energy very significantly magnifies and supercharges its lethality.
