@@ -185,6 +185,10 @@ public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergy
 					continue;
 				if(mb.createStructure(world, pos, side, player))
 				{
+					//Consume energy from the electric hammer when forming a multiblock
+					if(stack.hasCapability(CapabilityEnergy.ENERGY, null) && !IIItemUtils.canConstructFreeOfCharge(player))
+						stack.getCapability(CapabilityEnergy.ENERGY, null).extractEnergy(Tools.electricHammerEnergyPerUseConstruction, false);
+
 					if(player instanceof EntityPlayerMP)
 						IEAdvancements.TRIGGER_MULTIBLOCK.trigger((EntityPlayerMP)player, mb, stack);
 					return doAction(player, hand);
