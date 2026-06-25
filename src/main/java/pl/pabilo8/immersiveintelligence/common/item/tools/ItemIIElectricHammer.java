@@ -216,14 +216,18 @@ public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergy
 		if(!(te instanceof IConstructionRequiringDevice))
 			return EnumActionResult.PASS;
 		IConstructionRequiringDevice mb = ((IConstructionRequiringDevice)te).master();
-		int energy = IIItemUtils.canConstructFreeOfCharge(player)?999999: cap.extractEnergy(Tools.electricHammerEnergyPerUseConstruction, false);
 
-		if(mb!=null&&!mb.isConstructionFinished()&&energy > 0)
+		if(mb!=null&&!mb.isConstructionFinished())
 		{
 			if(!IIItemUtils.canConstructFreeOfCharge(player))
-				cap.extractEnergy(Tools.electricHammerEnergyPerUseConstruction, false);
-			mb.progressConstruction(energy);
-			world.playSound(null, pos, IISounds.constructionHammer, SoundCategory.PLAYERS, 0.5f, 1);
+			int energy = IIItemUtils.canConstructFreeOfCharge(player)?999999: cap.extractEnergy(Tools.electricHammerEnergyPerUseConstruction, false);
+			if(energy > 0)
+			{
+				if(!IIItemUtils.canConstructFreeOfCharge(player))
+					cap.extractEnergy(Tools.electricHammerEnergyPerUseConstruction, false);
+				mb.progressConstruction(energy);
+				world.playSound(null, pos, IISounds.constructionHammer, SoundCategory.PLAYERS, 0.5f, 1);
+			}
 		}
 
 		return EnumActionResult.PASS;
