@@ -281,28 +281,14 @@ public class GunAimCoordinate implements INBTSerializable<NBTTagCompound>
 	/**
 	 * @return a value in [0,1] representing how far the current relative yaw is
 	 * between the yaw limits, linearly interpolated even across the wrap point.
-	 * For a wrapped range (min > max), 0 corresponds to {@code yawLimitMin},
-	 * 1 corresponds to {@code yawLimitMax} (going through +180).
 	 */
 	public float getYawNormalized(float partialTicks)
 	{
 		float relYaw = MathHelper.wrapDegrees(getYaw(partialTicks)-centerYaw);
+		if(yawLimitMin==yawLimitMax)
+			return 0.5f;
 
-		if(yawLimitMin <= yawLimitMax) //Normal range
-		{
-			if(yawLimitMin==yawLimitMax)
-				return 0.5f;
-			return (relYaw-yawLimitMin)/(yawLimitMax-yawLimitMin);
-		}
-		else //Wrapped range: map the arc [min, max+360] linearly
-		{
-			float effectiveMin = yawLimitMin;
-			float effectiveMax = yawLimitMax+360;
-			float relYaw2 = relYaw;
-			if(relYaw2 < yawLimitMin)
-				relYaw2 += 360;
-			return (relYaw2-effectiveMin)/(effectiveMax-effectiveMin);
-		}
+		return (relYaw-yawLimitMin)/(yawLimitMax-yawLimitMin);
 	}
 
 	public float getPitch(float partialTicks)

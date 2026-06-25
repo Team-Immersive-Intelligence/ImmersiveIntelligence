@@ -1,0 +1,141 @@
+{
+  "comment": "Made by Pabilo8 with Blockbench",
+  "groups": {
+    "wheel2": {
+      "rotation": [
+        {
+          "time": null,
+          "transform": [0, 0, -67.5]
+        }
+      ],
+      "position": [
+        {
+          "time": null,
+          "transform": [-0.73254, -0.84462, 0]
+        }
+      ]
+    },
+    "wheel1": {
+      "rotation": [
+        {
+          "time": null,
+          "transform": [0, 0, 67.5]
+        }
+      ],
+      "position": [
+        {
+          "time": null,
+          "transform": [0.73254, -0.84462, 0]
+        }
+      ]
+    },
+    "hans_gunner": {
+      "position": [
+        {
+          "time": null,
+          "transform": [-4, 2, -10]
+        }
+      ]
+    },
+    "hans_gunner_body": {
+      "rotation": [
+        {
+          "time": null,
+          "transform": [10, 0, 0]
+        }
+      ]
+    },
+    "hans_gunner_left_arm": {
+      "rotation": [
+        {
+          "time": null,
+          "transform": [-5, 0, -55]
+        }
+      ]
+    },
+    "hans_gunner_right_arm": {
+      "rotation": [
+        {
+          "time": null,
+          "transform": [-75, 0, 0]
+        }
+      ],
+      "position": [
+        {
+          "time": null,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "hans_gunner_right_leg": {
+      "rotation": [
+        {
+          "time": null,
+          "transform": [-90, -10, 0]
+        }
+      ]
+    },
+    "hans_gunner_left_leg": {
+      "rotation": [
+        {
+          "time": null,
+          "transform": [-90, 10, 0]
+        }
+      ]
+    },
+    "hans_commander": {
+      "position": [
+        {
+          "time": null,
+          "transform": [4, 3, -10]
+        }
+      ]
+    },
+    "hans_commander_body": {
+      "rotation": [
+        {
+          "time": null,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "hans_commander_left_arm": {
+      "rotation": [
+        {
+          "time": null,
+          "transform": [-27.4107, -2.3065, 4.4374]
+        }
+      ]
+    },
+    "hans_commander_right_arm": {
+      "rotation": [
+        {
+          "time": null,
+          "transform": [-32.2773, 4.0215, -6.3359]
+        }
+      ],
+      "position": [
+        {
+          "time": null,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "hans_commander_right_leg": {
+      "rotation": [
+        {
+          "time": null,
+          "transform": [-90, -7.5, 0]
+        }
+      ]
+    },
+    "hans_commander_left_leg": {
+      "rotation": [
+        {
+          "time": null,
+          "transform": [-90, 10, 0]
+        }
+      ]
+    }
+  }
+}

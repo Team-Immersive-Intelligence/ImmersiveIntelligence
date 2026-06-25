@@ -196,7 +196,6 @@ public class AMTModelHeader
 			AMT[] children = amts.stream()
 					.filter(child -> hierarchy.getOrDefault(child.getName(), "")
 							.equals(amt.getName()))
-					.map(AMT::setChild)
 					.toArray(AMT[]::new);
 
 			if(children.length > 0)

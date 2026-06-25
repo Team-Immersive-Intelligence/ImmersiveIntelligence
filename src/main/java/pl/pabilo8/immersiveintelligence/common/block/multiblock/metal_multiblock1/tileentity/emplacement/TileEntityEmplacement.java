@@ -268,7 +268,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 				return getPOI("energy");
 			case REDSTONE_INPUT:
 				return getPOI("redstone");
-			case DATA:
+			case DATA_INPUT:
 				return getPOI("data");
 			case ITEM_INPUT:
 			case FLUID_INPUT:

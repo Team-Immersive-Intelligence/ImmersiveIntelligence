@@ -33,17 +33,17 @@ public class AMTBipedAdapter extends AMT
 	public AMTBipedAdapter(String name, Vec3d originPos)
 	{
 		super(name, originPos);
-		// Contrary to vanilla, AMT Biped models have head and arms dependent on the body.
-		// The body part rotates from the bottom in the imitation model, but from the chest in-game
+		//Contrary to vanilla, AMT Biped models have head and arms dependent on the body.
+		//The body part rotates from the bottom in the imitation model, but from the chest in-game
 		setChildren(
-				this.partBody = new AMTLocator(name+"_body", new Vec3d(0, 12, 2)) // Body rotates from chest (y=12) in-game
+				this.partBody = new AMTLocator(name+"_body", new Vec3d(0, 12, 2)) //Body rotates from chest (y=12) in-game
 						.withChildren(
-								this.partHead = new AMTLocator(name+"_head", new Vec3d(0, 0, 0)), // Head is 12 units above body origin
-								this.partRightArm = new AMTLocator(name+"_right_arm", new Vec3d(-6, -1, 0)), // Right arm position
-								this.partLeftArm = new AMTLocator(name+"_left_arm", new Vec3d(6, -1, 0)) // Left arm position
+								this.partHead = new AMTLocator(name+"_head", new Vec3d(0, 0, 0)), //Head is 12 units above body origin
+								this.partRightArm = new AMTLocator(name+"_right_arm", new Vec3d(-6, -1, 0)), //Right arm position
+								this.partLeftArm = new AMTLocator(name+"_left_arm", new Vec3d(6, -1, 0)) //Left arm position
 						),
-				this.partRightLeg = new AMTLocator(name+"_right_leg", new Vec3d(-2, 12, 0)), // Right leg at hip level
-				this.partLeftLeg = new AMTLocator(name+"_left_leg", new Vec3d(2, 12, 0)) // Left leg at hip level
+				this.partRightLeg = new AMTLocator(name+"_right_leg", new Vec3d(-2, 12, 0)), //Right leg at hip level
+				this.partLeftLeg = new AMTLocator(name+"_left_leg", new Vec3d(2, 12, 0)) //Left leg at hip level
 		);
 	}
 
@@ -90,37 +90,29 @@ public class AMTBipedAdapter extends AMT
 		if(!drawn)
 			ModelBase.copyModelAngles(mr, defaultPart);
 
-		// Calculate the transformation matrix for this part
+		//Calculate the transformation matrix for this part
 		Matrix4 mat = new Matrix4().setIdentity();
 		if(child==partHead||child==partRightArm||child==partLeftArm)
 			applyTransformToMatrix(mat, partBody);
 
-		// Apply the child's own transformation
+		//Apply the child's own transformation
 		applyTransformToMatrix(mat, child);
 
-		// Convert matrix to ModelRenderer transformations
-		// For rotation points, we need to consider the part's original position
+		//Convert matrix to ModelRenderer transformations
 		Vec3d transformedOffset = mat.apply(child.originPos);
 
-		// Set the rotation point (adjusted for Minecraft's coordinate system)
 		mr.rotationPointX = (float)transformedOffset.x;
 		mr.rotationPointY = (float)transformedOffset.y;
 		mr.rotationPointZ = (float)transformedOffset.z;
-
-		// Extract rotation from matrix and apply to ModelRenderer
 		if(child.rot!=null)
 		{
-			// Apply rotations in Minecraft's order (Z, Y, X)
-			// Note: AMT uses degrees, ModelRenderer uses radians
-			mr.rotateAngleX = (float)Math.toRadians(-child.rot.x);
-			mr.rotateAngleY = (float)Math.toRadians(child.rot.y);
-			mr.rotateAngleZ = (float)Math.toRadians(child.rot.z);
+			mr.rotateAngleX = (float)Math.toRadians(child.rot.x);
+			mr.rotateAngleY = (float)Math.toRadians(-child.rot.y);
+			mr.rotateAngleZ = (float)Math.toRadians(-child.rot.z);
 		}
 
 		if(child==partBody)
-		{
 			mr.rotationPointY += 12.0f;
-		}
 	}
 
 	/**
@@ -135,7 +127,7 @@ public class AMTBipedAdapter extends AMT
 
 		if(amt.rot!=null)
 		{
-			// Apply rotations in YZX order (as in AMT.preDraw)
+			//Apply rotations in YZX order (as in AMT.preDraw)
 			mat.rotate((float)Math.toRadians(amt.rot.y), 0, 1, 0);
 			mat.rotate((float)Math.toRadians(amt.rot.z), 0, 0, 1);
 			mat.rotate((float)Math.toRadians(-amt.rot.x), 1, 0, 0);
@@ -161,7 +153,7 @@ public class AMTBipedAdapter extends AMT
 		if(shouldDraw)
 		{
 			//TODO: 23.11.2025 drawing a custom biped model
-			// This would be used if we want to render the AMT representation directly
+			//This would be used if we want to render the AMT representation directly
 		}
 	}
 

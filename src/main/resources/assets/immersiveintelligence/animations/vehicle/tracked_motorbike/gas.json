@@ -9,7 +9,7 @@
         },
         {
           "time": 0.5,
-          "transform": [65, 0, 0]
+          "transform": [-65, 0, 0]
         },
         {
           "time": 1,

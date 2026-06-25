@@ -1,28 +1,6 @@
 {
   "comment": "Made by Pabilo8 with Blockbench",
   "groups": {
-    "hans_gunner_left_leg": {
-      "rotation": [
-        {
-          "time": 0,
-          "transform": [-90, 15, 0]
-        }
-      ],
-      "position": [
-        {
-          "time": 0,
-          "transform": [0, 0, 0]
-        },
-        {
-          "time": 0.5,
-          "transform": [-0.25882, 0, -1.96593]
-        },
-        {
-          "time": 1,
-          "transform": [0, 0, 0]
-        }
-      ]
-    },
     "firing_pedal": {
       "rotation": [
         {
@@ -31,7 +9,7 @@
         },
         {
           "time": 0.5,
-          "transform": [0, 0, 25]
+          "transform": [12.5, 0, 0]
         },
         {
           "time": 1,

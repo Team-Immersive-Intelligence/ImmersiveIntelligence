@@ -1,9 +1,7 @@
 # Made by Pabilo8 with Blockbench
 
-newmtl hans
-map_Kd immersiveintelligence:entity/hans
-newmtl wheel_12
-map_Kd immersiveintelligence:entity/vehicle/suspension/wheel_12
+newmtl wheel_12_terrain
+map_Kd immersiveintelligence:entity/vehicle/suspension/wheel_12_terrain
 newmtl anti_aircraft_gun_painted
 map_Kd immersiveintelligence:entity/vehicle/field_gun/anti_aircraft_gun_painted
 newmtl anti_aircraft_gun

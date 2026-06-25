@@ -15,6 +15,8 @@ import javax.annotation.Nonnull;
 public class IIMath extends MathHelper
 {
 	public static final Vec3d ONE = new Vec3d(1, 1, 1);
+	public static final double EPSILON = 1e-7;
+	public static final double TWO_PI = Math.PI*2d;
 
 	/**
 	 * @param value to be squared

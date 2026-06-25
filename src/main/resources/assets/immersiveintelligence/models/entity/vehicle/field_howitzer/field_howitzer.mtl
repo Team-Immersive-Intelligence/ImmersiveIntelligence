@@ -2,7 +2,7 @@
 
 newmtl field_howitzer
 map_Kd immersiveintelligence:entity/vehicle/field_gun/field_howitzer
-newmtl field_howitzer_paint
+newmtl field_howitzer_painted
 map_Kd immersiveintelligence:entity/vehicle/field_gun/field_howitzer_painted
 newmtl hans
 map_Kd immersiveintelligence:entity/hans

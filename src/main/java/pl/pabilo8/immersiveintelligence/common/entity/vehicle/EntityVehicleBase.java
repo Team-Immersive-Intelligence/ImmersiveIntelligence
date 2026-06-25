@@ -250,6 +250,8 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 	public final void onUpdate()
 	{
 		super.onUpdate();
+		if(true)
+			return;
 
 		//Check for main damage
 		hasCollidedBefore = collidedHorizontally;

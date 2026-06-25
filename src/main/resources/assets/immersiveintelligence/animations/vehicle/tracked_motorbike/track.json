@@ -13,95 +13,95 @@
         },
         {
           "time": 0.11208,
-          "transform": [30.08, 0, 0]
+          "transform": [-30.08, 0, 0]
         },
         {
           "time": 0.15517,
-          "transform": [30.5, 0, 0]
+          "transform": [-30.5, 0, 0]
         },
         {
           "time": 0.2069,
-          "transform": [40.5, 0, 0]
+          "transform": [-40.5, 0, 0]
         },
         {
           "time": 0.25862,
-          "transform": [68, 0, 0]
+          "transform": [-68, 0, 0]
         },
         {
           "time": 0.28448,
-          "transform": [79, 0, 0]
+          "transform": [-79, 0, 0]
         },
         {
           "time": 0.31035,
-          "transform": [90, 0, 0]
+          "transform": [-90, 0, 0]
         },
         {
           "time": 0.33621,
-          "transform": [101.25, 0, 0]
+          "transform": [-101.25, 0, 0]
         },
         {
           "time": 0.36207,
-          "transform": [112.5, 0, 0]
+          "transform": [-112.5, 0, 0]
         },
         {
           "time": 0.41379,
-          "transform": [135, 0, 0]
+          "transform": [-135, 0, 0]
         },
         {
           "time": 0.43966,
-          "transform": [145, 0, 0]
+          "transform": [-145, 0, 0]
         },
         {
           "time": 0.46552,
-          "transform": [155, 0, 0]
+          "transform": [-155, 0, 0]
         },
         {
           "time": 0.49138,
-          "transform": [167.5, 0, 0]
+          "transform": [-167.5, 0, 0]
         },
         {
           "time": 0.51724,
-          "transform": [180, 0, 0]
+          "transform": [-180, 0, 0]
         },
         {
           "time": 0.72414,
-          "transform": [180, 0, 0]
+          "transform": [-180, 0, 0]
         },
         {
           "time": 0.75,
-          "transform": [202.5, 0, 0]
+          "transform": [-202.5, 0, 0]
         },
         {
           "time": 0.77586,
-          "transform": [225, 0, 0]
+          "transform": [-225, 0, 0]
         },
         {
           "time": 0.80172,
-          "transform": [247.5, 0, 0]
+          "transform": [-247.5, 0, 0]
         },
         {
           "time": 0.82759,
-          "transform": [270, 0, 0]
+          "transform": [-270, 0, 0]
         },
         {
           "time": 0.85345,
-          "transform": [292.5, 0, 0]
+          "transform": [-292.5, 0, 0]
         },
         {
           "time": 0.87931,
-          "transform": [315, 0, 0]
+          "transform": [-315, 0, 0]
         },
         {
           "time": 0.90517,
-          "transform": [330.5, 0, 0]
+          "transform": [-330.5, 0, 0]
         },
         {
           "time": 0.98276,
-          "transform": [330.5, 0, 0]
+          "transform": [-330.5, 0, 0]
         },
         {
           "time": 0.99999,
-          "transform": [360, 0, 0]
+          "transform": [-360, 0, 0]
         }
       ],
       "position": [
@@ -131,35 +131,35 @@
         },
         {
           "time": 0.28448,
-          "transform": [0, 12.21, -33.4]
+          "transform": [0, 12.21, -33.1]
         },
         {
           "time": 0.31035,
-          "transform": [0, 13.5, -33.5]
+          "transform": [0, 13.5, -33]
         },
         {
           "time": 0.33621,
-          "transform": [0, 14.82902, -33.46616]
+          "transform": [0, 14.82902, -33.16616]
         },
         {
           "time": 0.36207,
-          "transform": [0, 16.08857, -33.03946]
+          "transform": [0, 16.08857, -32.63946]
         },
         {
           "time": 0.41379,
-          "transform": [0, 18.07918, -31.70895]
+          "transform": [0, 17.79634, -31.4261]
         },
         {
           "time": 0.43966,
-          "transform": [0, 18.88192, -30.63736]
+          "transform": [0, 18.39042, -30.29321]
         },
         {
           "time": 0.46552,
-          "transform": [0, 19.5214, -29.45903]
+          "transform": [0, 19.06824, -29.24772]
         },
         {
           "time": 0.49138,
-          "transform": [0, 19.85763, -28.25164]
+          "transform": [0, 19.46711, -28.16507]
         },
         {
           "time": 0.51724,

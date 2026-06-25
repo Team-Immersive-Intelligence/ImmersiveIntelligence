@@ -85,11 +85,9 @@ public class TrackedMotorbikeRenderer extends IIVehicleRenderer<EntityTrackedMot
 				.withModelProvider((entity, header) -> new AMT[]{
 						new AMTLocator("wheels", header),
 						new AMTChain("track_left", header)
-								.withSegmentModel((AMTQuads)trackSegment)
-								.withNodesFromAnimation(animationsDirectory.with("track")),
+								.withSegmentModel((AMTQuads)trackSegment),
 						new AMTChain("track_right", header)
-								.withSegmentModel((AMTQuads)trackSegment)
-								.withNodesFromAnimation(animationsDirectory.with("track")),
+								.withSegmentModel((AMTQuads)trackSegment),
 						new AMTBipedAdapter("hans_driver", header),
 						new AMTBipedAdapter("hans_passenger", header),
 						new AMTParticle("smoke_exhaust", header),
@@ -109,14 +107,14 @@ public class TrackedMotorbikeRenderer extends IIVehicleRenderer<EntityTrackedMot
 		passengerDefault = IIAnimationCachedMap.create(model, animationsDirectory.with("hans_default"));
 		wheelAnimations = new WheelAnimationBuilder()
 				.withWheel(e -> e.partWheelFront, "wheel")
-				.withWheel(e -> e.partWheelLeftFront, "LeftWheelLead1")
-				.withWheel(e -> e.partWheelRightFront, "RightWheelRear1")
+				.withWheel(e -> e.partWheelLeftFront, "wheel_left_lead")
+				.withWheel(e -> e.partWheelRightFront, "wheel_right_lead")
 				.withWheel(e -> e.partWheelLeft1, "wheel_left1")
 				.withWheel(e -> e.partWheelLeft2, "wheel_left2")
 				.withWheel(e -> e.partWheelRight1, "wheel_right1")
 				.withWheel(e -> e.partWheelRight2, "wheel_right2")
-				.withWheel(e -> e.partWheelLeftBack, "LeftWheelLead2")
-				.withWheel(e -> e.partWheelRightBack, "RightWheelRear2")
+				.withWheel(e -> e.partWheelLeftBack, "wheel_left_rear")
+				.withWheel(e -> e.partWheelRightBack, "wheel_right_rear")
 				.build();
 
 		//Gear switching animations

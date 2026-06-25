@@ -4,7 +4,7 @@
     "hans_driver": {
       "position": [
         {
-          "time": 0,
+          "time": null,
           "transform": [0, 0, 0]
         }
       ]
@@ -12,21 +12,21 @@
     "hans_driver_body": {
       "rotation": [
         {
-          "time": 0,
-          "transform": [-5, 0, 0]
+          "time": null,
+          "transform": [5, 0, 0]
         }
       ]
     },
     "hans_driver_left_arm": {
       "rotation": [
         {
-          "time": 0,
-          "transform": [87.44563, -27.49757, -0.1229]
+          "time": null,
+          "transform": [-87.44563, 27.49757, -0.1229]
         }
       ],
       "position": [
         {
-          "time": 0,
+          "time": null,
           "transform": [0, 0, 0]
         }
       ]
@@ -34,13 +34,13 @@
     "hans_driver_right_arm": {
       "rotation": [
         {
-          "time": 0,
-          "transform": [84.49812, 29.95259, 1.69342]
+          "time": null,
+          "transform": [-84.49812, -29.95259, 1.69342]
         }
       ],
       "position": [
         {
-          "time": 0,
+          "time": null,
           "transform": [0, 0, 0]
         }
       ]
@@ -48,29 +48,29 @@
     "hans_driver_right_leg": {
       "rotation": [
         {
-          "time": 0,
-          "transform": [82.5, 17.5, 0]
+          "time": null,
+          "transform": [-82.5, -17.5, 0]
         }
       ]
     },
     "hans_driver_left_leg": {
       "rotation": [
         {
-          "time": 0,
-          "transform": [80, -22.5, 0]
+          "time": null,
+          "transform": [-80, 22.5, 0]
         }
       ]
     },
     "hans_passenger": {
       "rotation": [
         {
-          "time": 0,
+          "time": null,
           "transform": [0, 0, 0]
         }
       ],
       "position": [
         {
-          "time": 0,
+          "time": null,
           "transform": [0, 0, 0]
         }
       ]
@@ -78,13 +78,13 @@
     "hans_passenger_left_arm": {
       "rotation": [
         {
-          "time": 0,
-          "transform": [27.3313, -5.92268, -7.08036]
+          "time": null,
+          "transform": [-27.3313, 5.92268, -7.08036]
         }
       ],
       "position": [
         {
-          "time": 0,
+          "time": null,
           "transform": [0, 0, 0]
         }
       ]
@@ -92,13 +92,13 @@
     "hans_passenger_right_arm": {
       "rotation": [
         {
-          "time": 0,
-          "transform": [24.81197, 3.1622, 6.80423]
+          "time": null,
+          "transform": [-24.81197, -3.1622, 6.80423]
         }
       ],
       "position": [
         {
-          "time": 0,
+          "time": null,
           "transform": [0, 0, 0]
         }
       ]
@@ -106,16 +106,16 @@
     "hans_passenger_right_leg": {
       "rotation": [
         {
-          "time": 0,
-          "transform": [57.5, 27.5, 0]
+          "time": null,
+          "transform": [-57.5, -27.5, 0]
         }
       ]
     },
     "hans_passenger_left_leg": {
       "rotation": [
         {
-          "time": 0,
-          "transform": [57.5, -27.5, 0]
+          "time": null,
+          "transform": [-57.5, 27.5, 0]
         }
       ]
     }

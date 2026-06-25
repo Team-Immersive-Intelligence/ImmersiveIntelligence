@@ -67,6 +67,10 @@ public abstract class AMT implements AMTRenderable, Cloneable
 	 */
 	private AMT[] children;
 	/**
+	 * Parent AMT, used for calculating animations based on parent transforms
+	 */
+	private AMT parent;
+	/**
 	 * Whether this AMT is a child<br>
 	 * If it is - it shouldn't be rendered on its own
 	 */
@@ -200,6 +204,8 @@ public abstract class AMT implements AMTRenderable, Cloneable
 	public final void setChildren(AMT... children)
 	{
 		this.children = children;
+		for(AMT child : children)
+			child.setChild(this);
 	}
 
 	/**
@@ -216,9 +222,10 @@ public abstract class AMT implements AMTRenderable, Cloneable
 		return list;
 	}
 
-	public final AMT setChild()
+	public final AMT setChild(@Nullable AMT parent)
 	{
-		this.isChild = true;
+		this.isChild = parent!=null;
+		this.parent = parent;
 		return this;
 	}
 

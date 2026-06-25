@@ -2,11 +2,9 @@ package pl.pabilo8.immersiveintelligence.client.render.entity.vehicle;
 
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeTechTree;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
 import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIAnimationCachedMap;
@@ -24,7 +22,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityV
 public class FieldFlakRenderer extends IIVehicleRenderer<EntityFieldFlak>
 {
 	private IIAnimationCachedMap aimYaw, aimPitch, load1, load2, unload1, unload2, fire1, fire2;
-	private IIAnimationCachedMap forward, backward, left, right;
+	private IIAnimationCachedMap passengerDefault, forward, backward, left, right;
 	private AMTCrossVariantReference<AMTBipedAdapter> bipedGunner, bipedCommander;
 
 	public FieldFlakRenderer(RenderManager renderManager)
@@ -36,18 +34,17 @@ public class FieldFlakRenderer extends IIVehicleRenderer<EntityFieldFlak>
 	public void draw(EntityFieldFlak entity, BufferBuilder buf, float partialTicks, Tessellator tes)
 	{
 		//Apply vehicle transforms
-		double rotYaw = MathHelper.clampedLerp(entity.prevRotationYaw, entity.rotationYaw, partialTicks);
-		GlStateManager.rotate((float)(rotYaw-90), 0, 1, 0);
-		//TODO: 29.05.2026 proper rotations after Trej fixes the model
-
+		applyVehicleTransforms(entity, partialTicks);
 		model.getVariant(entity, entity.getStyle());
+		model.defaultize();
 
 		//Animate wheels
 		applyWheelAnimations(entity, partialTicks);
 
 		//General animations
+		passengerDefault.apply(1f);
 		aimPitch.apply(1f-entity.aim.getPitchNormalized(partialTicks));
-		aimYaw.apply(1f-entity.aim.getYawNormalized(partialTicks));
+		aimYaw.apply((0.5f+entity.aim.getYawNormalized(partialTicks))%1);
 
 		if(entity.ammoProviderMagazine1.isReloading())
 			load1.apply(entity.ammoProviderMagazine1.getLoadingProgress(partialTicks));
@@ -67,6 +64,7 @@ public class FieldFlakRenderer extends IIVehicleRenderer<EntityFieldFlak>
 				.withHeader(headerFile)
 				.withTextureProvider(this::replaceVehicleTextures)
 				.withModelProvider((entity, header) -> new AMT[]{
+						new AMTLocator("hanses", header),
 						new AMTBipedAdapter("hans_gunner", header),
 						new AMTBipedAdapter("hans_commander", header),
 						new AMTLocator("turret_base", header),
@@ -89,6 +87,8 @@ public class FieldFlakRenderer extends IIVehicleRenderer<EntityFieldFlak>
 
 		aimYaw = IIAnimationCachedMap.create(model, animationsDirectory.with("aim_yaw"));
 		aimPitch = IIAnimationCachedMap.create(model, animationsDirectory.with("aim_pitch"));
+
+		passengerDefault = IIAnimationCachedMap.create(model, animationsDirectory.with("hans_default"));
 
 		forward = IIAnimationCachedMap.create(model, animationsDirectory.with("forward"));
 		backward = IIAnimationCachedMap.create(model, animationsDirectory.with("backward"));
@@ -121,10 +121,10 @@ public class FieldFlakRenderer extends IIVehicleRenderer<EntityFieldFlak>
 		switch(seat.info.getSeatID())
 		{
 			case "gunner":
-				//bipedGunner.get().applyAnimationStateTo(model);
+				bipedGunner.get().applyAnimationStateTo(model);
 				return true;
 			case "commander":
-				//bipedCommander.get().applyAnimationStateTo(model);
+				bipedCommander.get().applyAnimationStateTo(model);
 				return true;
 			default:
 				return false;

@@ -78,7 +78,7 @@ public class EntityFieldFlak extends EntityVehicleTowable<EntityFieldFlak> imple
 		//Gun internals
 		this.ammoFactory = new AmmoFactory<>(this);
 		this.aim = new GunAimCoordinate()
-				.withPitchLimit(-89, 13.5f)
+				.withPitchLimit(-89, 15f)
 				.withYawLimit(-180, 180)
 				.withCenterYaw(this.rotationYaw);
 		//Gun 1

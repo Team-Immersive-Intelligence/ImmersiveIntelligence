@@ -22,6 +22,7 @@ public class FieldHowitzerRenderer extends IIVehicleRenderer<EntityFieldHowitzer
 {
 	private IIAnimationCachedMap load, fire, aimPitch;
 	private IIAnimationCachedMap forward, backward, left, right;
+	private IIAnimationCachedMap passengerDefault;
 	private AMTCrossVariantReference<AMTBipedAdapter> bipedGunner, bipedCommander;
 
 	public FieldHowitzerRenderer(RenderManager renderManager)
@@ -41,6 +42,7 @@ public class FieldHowitzerRenderer extends IIVehicleRenderer<EntityFieldHowitzer
 		applyWheelAnimations(entity, partialTicks);
 
 		//General animations
+		passengerDefault.apply(1f);
 		aimPitch.apply(1f-entity.aim.getPitchNormalized(partialTicks));
 
 		if(entity.ammoProvider.isReloading())
@@ -81,6 +83,9 @@ public class FieldHowitzerRenderer extends IIVehicleRenderer<EntityFieldHowitzer
 		load = IIAnimationCachedMap.create(model, animationsDirectory.with("load"));
 		fire = IIAnimationCachedMap.create(model, animationsDirectory.with("fire"));
 		aimPitch = IIAnimationCachedMap.create(model, animationsDirectory.with("aim_pitch"));
+
+		passengerDefault = IIAnimationCachedMap.create(model, animationsDirectory.with("hans_default"));
+
 		forward = IIAnimationCachedMap.create(model, animationsDirectory.with("forward"));
 		backward = IIAnimationCachedMap.create(model, animationsDirectory.with("backward"));
 		left = IIAnimationCachedMap.create(model, animationsDirectory.with("left"));

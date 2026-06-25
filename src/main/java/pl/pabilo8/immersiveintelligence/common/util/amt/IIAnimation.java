@@ -8,6 +8,7 @@ import net.minecraft.util.Tuple;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil.Shaders;
+import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIFileUtils;
 
@@ -44,9 +45,18 @@ public class IIAnimation
 		if(json.has("groups"))
 		{
 			JsonObject groups = json.getAsJsonObject("groups");
-			this.groups = groups.entrySet().stream()
-					.map(e -> new IIAnimationGroup(e.getKey(), e.getValue().getAsJsonObject()))
-					.toArray(IIAnimationGroup[]::new);
+			IIAnimationGroup[] found;
+			try
+			{
+				found = groups.entrySet().stream()
+						.map(e -> new IIAnimationGroup(e.getKey(), e.getValue().getAsJsonObject()))
+						.toArray(IIAnimationGroup[]::new);
+			} catch(Exception e)
+			{
+				found = new IIAnimationGroup[0];
+				IILogger.error("Error reading json file for animation "+res+", "+e.getMessage());
+			}
+			this.groups = found;
 		}
 		else
 			this.groups = new IIAnimationGroup[0];
