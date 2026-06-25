@@ -219,7 +219,6 @@ public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergy
 
 		if(mb!=null&&!mb.isConstructionFinished())
 		{
-			if(!IIItemUtils.canConstructFreeOfCharge(player))
 			int energy = IIItemUtils.canConstructFreeOfCharge(player)?999999: cap.extractEnergy(Tools.electricHammerEnergyPerUseConstruction, false);
 			if(energy > 0)
 			{
