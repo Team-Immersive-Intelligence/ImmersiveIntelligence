@@ -720,6 +720,8 @@ public abstract class DecoGui<T, C extends Container> extends GuiContainer
 		for(int i = buttonList.size()-1; i >= 0; i--)
 		{
 			GuiButton guiButton = buttonList.get(i);
+			if(!guiButton.enabled)
+				continue;
 			if(guiButton instanceof DecoComponent&&guiButton.isMouseOver())
 			{
 				this.hoveredElement = (DecoComponent<?>)guiButton;

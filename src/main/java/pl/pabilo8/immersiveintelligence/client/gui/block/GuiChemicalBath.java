@@ -50,14 +50,6 @@ public class GuiChemicalBath extends DecoTileGui<TileEntityChemicalBath, Contain
 				new DecoBar(176-8-8-2, -2)
 						.withTemplate(DecoTemplates.BAR_ELECTRIC_ENERGY.apply(tile.energyStorage)),
 
-				imageProgress1 = new DecoImage(20-4, 5+18-4+24+2+2)
-						.withSize(19, 12)
-						.withImageLocation(TEXTURE, true)
-						.withUV(128, 0, 80, 19, 80+12),
-				imageProgress2 = new DecoImage(120-4+18-2-1, 5+18-4+24+2+2)
-						.withSize(21, 12)
-						.withImageLocation(TEXTURE, true)
-						.withUV(128, 19, 80, 19+21, 80+12),
 				new DecoImage(20-4, 5+18-4+24+2+2)
 						.withSize(19, 12)
 						.withImageLocation(TEXTURE, true)
@@ -76,6 +68,16 @@ public class GuiChemicalBath extends DecoTileGui<TileEntityChemicalBath, Contain
 						.withSize(106, 36)
 						.withImageLocation(TEXTURE, true)
 						.withUV(128, 0, 32, 106, 32+36)
+						.withDisabled(true),
+
+				imageProgress1 = new DecoImage(20-4, 5+18-4+24+2+2)
+						.withSize(19, 12)
+						.withImageLocation(TEXTURE, true)
+						.withUV(128, 0, 80, 19, 80+12),
+				imageProgress2 = new DecoImage(120-4+18-2-1, 5+18-4+24+2+2)
+						.withSize(21, 12)
+						.withImageLocation(TEXTURE, true)
+						.withUV(128, 19, 80, 19+21, 80+12)
 
 		);
 	}
