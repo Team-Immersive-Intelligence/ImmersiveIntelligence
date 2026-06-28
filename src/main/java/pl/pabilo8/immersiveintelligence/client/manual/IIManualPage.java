@@ -221,6 +221,9 @@ public class IIManualPage extends ManualPages
 
 		GlStateManager.enableBlend();
 
+		//sets tooltip to null to ensure it's cleared if not moused over
+		this.tooltipWrapper.tooltip = null;
+
 		GlStateManager.pushMatrix();
 		GlStateManager.color(1, 1, 1, 0.25f);
 		PageTraits hoveredTrait = null;
