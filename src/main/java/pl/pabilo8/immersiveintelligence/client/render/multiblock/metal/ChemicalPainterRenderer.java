@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.client.render.multiblock.metal;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.model.obj.OBJModel;
 import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil.Shaders;
 import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIAnimationCompiledMap;
@@ -47,14 +48,7 @@ public class ChemicalPainterRenderer extends IIMultiblockRenderer<TileEntityChem
 			paintSmall.setShader(Shaders.COLOR, colors);
 			paintBig.setShader(Shaders.COLOR, colors);
 			paintAtomizer.setShader(Shaders.COLOR, colors);
-			/*if(productionProgress > 0.583f)
-				IIAnimationUtils.setModelShader(item, Shaders.COLOR, colors);
-			else if(productionProgress > 0.33)
-			{
-				IIColor mixed = IIColor.WHITE.mixedWith(te.color, (productionProgress-0.33f)/.253f);
-				colors = new Float[]{mixed.red/255f, mixed.green/255f, mixed.blue/255f};
-				IIAnimationUtils.setModelShader(item, Shaders.COLOR, colors);
-			}*/
+			item.setProperty(MathHelper.clamp((productionProgress-0.2f)/(0.5f-0.2f), 0, 1));
 		}
 		else
 			animationProduction.apply(0f);
