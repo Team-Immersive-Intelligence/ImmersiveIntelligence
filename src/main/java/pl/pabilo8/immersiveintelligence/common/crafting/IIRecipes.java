@@ -638,10 +638,10 @@ public class IIRecipes
 				new IngredientStack("plateSteel", 4),
 				PressMolds.NAVAL_MINE, 4800);
 		addMetalPressBullet(Casing.TRIPMINE,
-				new IngredientStack("plateBrass", 2),
+				new IngredientStack("plateSteel", 2),
 				PressMolds.TRIPMINE, 3600);
 		addMetalPressBullet(Casing.TELLERMINE,
-				new IngredientStack("plateBrass", 2),
+				new IngredientStack("plateSteel", 2),
 				PressMolds.TELLERMINE, 3600);
 
 		MetalPressRecipe.removeRecipes(new ItemStack(IEContent.itemBullet, 2, 0));
