@@ -7,9 +7,9 @@
 Сигнал данных можно использовать для установки звука, высоты тона, громкости и режима повтора. В качестве альтернативы, сигнал красного камня также позволяет устанавливать громкость.
 # data
 **Data inputs:**<br>
-|[data_variable]{type:"boolean", direction:"out", letter:"o", name:"Play Once", description:"If true, sound is played once, regardless of redstone signal"}|
-|[data_variable]{type:"string", direction:"out", letter:"s", name:"Sound ID", description:"Example: immersiveintelligence:siren"}|
-|[data_variable]{type:"integer", direction:"out", letter:"v", name:"Громкость", description:"Value must be between 0 and 100"}|
-|[data_variable]{type:"integer", direction:"out", letter:"t", name:"Tone/Pitch", description:"Value must be between 0 and 200. 100 is normal pitch."}|
+|[data_variable]{type:"boolean", direction:"out", letter:"o", name:"Воспроизвести 1 раз", description:"Если true, звук воспроизводится один раз, независимо от сигнала редстоуна."}|
+|[data_variable]{type:"string", direction:"out", letter:"s", name:"ID Звука", description:"По умолчанию: immersiveintelligence:siren"}|
+|[data_variable]{type:"integer", direction:"out", letter:"v", name:"Громкость", description:"Значение между 0 и 100"}|
+|[data_variable]{type:"integer", direction:"out", letter:"t", name:"Высота тона", description:"Значение между 0 и 200. 100 - нормальная высота."}|
 
 

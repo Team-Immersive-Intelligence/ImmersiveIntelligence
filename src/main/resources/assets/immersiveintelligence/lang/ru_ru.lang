@@ -808,7 +808,7 @@ fluid.ink_cyan=Бирюзовые чернила
 fluid.ink_magenta=Пурпурные чернила
 fluid.ink_yellow=Жёлтые чернила
 
-fluid.etching_acid=Кислота для травки
+fluid.etching_acid=Хлорид железа III
 fluid.hydrofluoric_acid=Плавиковая кислота
 fluid.sulfuric_acid=Серная кислота
 fluid.nitric_acid=Азотная кислота
@@ -1075,14 +1075,14 @@ machineupgrade.immersiveintelligence.saw_unregulator=Регулятор хода
 machineupgrade.immersiveintelligence.saw_unregulator.desc=Нерегулируемая работа пилы приводит к увеличению выхода опилок по сравнению с основным объемом производства.
 
 #Flagpole
-machineupgrade.immersiveintelligence.flagpole.capture_defiance=Capture Defiance
-machineupgrade.immersiveintelligence.flagpole.capture_defiance.desc=Reinforces the Flagpole, raising its structural integrity and troops required to actively capture it.
-machineupgrade.immersiveintelligence.flagpole.taser_locks=Taser Locks
-machineupgrade.immersiveintelligence.flagpole.taser_locks.desc=Adds a defensive tesla coil, that strikes enemies aiming to capture the Flagpole.
-machineupgrade.immersiveintelligence.flagpole.distress_signal=Distress Signal
-machineupgrade.immersiveintelligence.flagpole.distress_signal.desc=Adds a radio-connected alarm siren, that activates when enemy troops are close.
-machineupgrade.immersiveintelligence.flagpole.unit_post=Unit Post
-machineupgrade.immersiveintelligence.flagpole.unit_post.desc=Allows forming platoons of infantry assigned to this Flagpole.
+machineupgrade.immersiveintelligence.flagpole.capture_defiance=Сопротивление захвату
+machineupgrade.immersiveintelligence.flagpole.capture_defiance.desc=Укрепляет флагшток, повышая его структурную целостность и количество войск, необходимых для его захвата.
+machineupgrade.immersiveintelligence.flagpole.taser_locks=Электрошокер
+machineupgrade.immersiveintelligence.flagpole.taser_locks.desc=Добавляет защитную катушку Тесла, которая поражает противника, стремящигося захватить флагшток.
+machineupgrade.immersiveintelligence.flagpole.distress_signal=Сигнал бедствия
+machineupgrade.immersiveintelligence.flagpole.distress_signal.desc=Добавляет радиосигнадизацию, которая активируется при приближении групп противника.
+machineupgrade.immersiveintelligence.flagpole.unit_post=Гарнизон
+machineupgrade.immersiveintelligence.flagpole.unit_post.desc=Позволяет сформировать взводы пехоты, приписанные к этому флагштоку.
 
 #Emplacement
 machineupgrade.immersiveintelligence.emplacement.sturdy_bearings=Прочные подшипники
@@ -1192,7 +1192,7 @@ desc.immersiveintelligence.printed_page.bound_pages=Разные страниц�
 desc.immersiveintelligence.printed_page.newspaper=Несколько страниц, переплетенных в газету.
 desc.immersiveintelligence.printed_page.book=Несколько страниц, переплетенных в печатную книгу.
 desc.immersiveintelligence.printed_page.letter=Страница, упакованная в конверт для отправки кому-либо.
-desc.immersiveintelligence.printed_page.letter_opened=Раскрытый конверт с одной страницей.
+desc.immersiveintelligence.printed_page.letter_opened=Раскрытый конверт.
 
 desc.immersiveintelligence.logistic_tag.none=Логистические данные отсутвуют
 desc.immersiveintelligence.logistic_tag.info.hold=%s - Логистический манифест
@@ -1245,7 +1245,7 @@ desc.immersiveintelligence.labeler_module=Метки
 
 desc.immersiveintelligence.map_module=Карта
 desc.immersiveintelligence.radar_module=Радар
-desc.immersiveintelligence.faction_module=Управление фракциями
+desc.immersiveintelligence.faction_module=Фракции
 
 desc.immersiveintelligence.configuration_module=Конфигурация
 desc.immersiveintelligence.targets_module=Цели
@@ -1281,17 +1281,17 @@ desc.immersiveintelligence.diplomacy.noowner_long=У этого объекта �
 desc.immersiveintelligence.diplomacy.noowner_long.company=У этого объекта собственности нет владельца. Его активы ожидают приобретения.
 desc.immersiveintelligence.diplomacy.noowner_long.republic=Этот объект собственности не представлен. Он ожидает нового представителя власти.
 desc.immersiveintelligence.diplomacy.noowner_long.commune=Эта собственность оставлена, ожидая передачи в руки рабочих и крестьян.
-desc.immersiveintelligence.diplomacy.noowner_long.commisariat=Эта собственность оставлена без присмотра. Она жаждет нашего нового порядка.
+desc.immersiveintelligence.diplomacy.noowner_long.commisariat=Эта собственность оставлена без присмотра. Она жаждет нового порядка.
 desc.immersiveintelligence.diplomacy.noowner_long.free_city=Никакая хартия не защищает эту собственность. На её рынках и улицах нет закона.
 desc.immersiveintelligence.diplomacy.noowner_long.dynasty=Ни один правитель не претендует на эту собственность. Она ждет, когда над её поднимется наше знамя.
 
 desc.immersiveintelligence.diplomacy.status.member=Участник
 desc.immersiveintelligence.diplomacy.status.member_long=Вы принадлежите к этой фракции.
-desc.immersiveintelligence.diplomacy.status.ally=Союзная
+desc.immersiveintelligence.diplomacy.status.ally=Союзник
 desc.immersiveintelligence.diplomacy.status.ally_long=Связанная доверием и сотрудничеством, эта фракция стоит с вами плечом к плечу.
-desc.immersiveintelligence.diplomacy.status.neutral=Нейтральная
+desc.immersiveintelligence.diplomacy.status.neutral=Нейтрал
 desc.immersiveintelligence.diplomacy.status.neutral_long=Вас не связывают прочные узы с этой фракцией. Отношения сбалансированы и неопределенны.
-desc.immersiveintelligence.diplomacy.status.hostile=Враждебная
+desc.immersiveintelligence.diplomacy.status.hostile=Враг
 desc.immersiveintelligence.diplomacy.status.hostile_long=Эта фракция считает вас врагом. Конфликт неизбежен.
 
 desc.immersiveintelligence.diplomacy.ownership.claim=Претензии
@@ -1382,27 +1382,27 @@ desc.immersiveintelligence.diplomacy.law_form.dynasty.tier4_long=Правяща�
 desc.immersiveintelligence.diplomacy.law_form.dynasty.tier5=Императорская династия
 desc.immersiveintelligence.diplomacy.law_form.dynasty.tier5_long=Династия императоров, обладающих непревзойденным могуществом и наследием.
 # осталось дождаться анархистов и военной диктатуры и ------- (ждать ещё лет 10)
-desc.immersiveintelligence.diplomacy.action.disband=Disband
-desc.immersiveintelligence.diplomacy.action.merge=Merge
-desc.immersiveintelligence.diplomacy.action.add_members=Добавить участников
+desc.immersiveintelligence.diplomacy.action.disband=Отклонить
+desc.immersiveintelligence.diplomacy.action.merge=Принять
+desc.immersiveintelligence.diplomacy.action.invite_members=Добавить участников
 desc.immersiveintelligence.diplomacy.action.propose=Предложить
 desc.immersiveintelligence.diplomacy.action.demand=Потребовать
 desc.immersiveintelligence.diplomacy.action.declare_war=Объявить войну
 desc.immersiveintelligence.diplomacy.action.declare_alliance=Заключить союз
 
-desc.immersiveintelligence.diplomacy.permission.disband=Disband
-desc.immersiveintelligence.diplomacy.permission.merge=Merge
-desc.immersiveintelligence.diplomacy.permission.foreign_affairs=Foreign Affairs
-desc.immersiveintelligence.diplomacy.permission.modify_insignia=Modify Insignia
-desc.immersiveintelligence.diplomacy.permission.add_members=Добавить участников
+desc.immersiveintelligence.diplomacy.permission.disband=Отклонить
+desc.immersiveintelligence.diplomacy.permission.merge=Принять
+desc.immersiveintelligence.diplomacy.permission.foreign_affairs=Международные отношения
+desc.immersiveintelligence.diplomacy.permission.modify_insignia=Изменить эмблему
+desc.immersiveintelligence.diplomacy.permission.invite_members=Добавить участников
 desc.immersiveintelligence.diplomacy.permission.remove_members=Репресировать участников
-desc.immersiveintelligence.diplomacy.permission.military_aid=Военная поиощь
+desc.immersiveintelligence.diplomacy.permission.military_aid=Военная помощь
 desc.immersiveintelligence.diplomacy.permission.transit=Транзит
 desc.immersiveintelligence.diplomacy.permission.trade=Торговля
 desc.immersiveintelligence.diplomacy.permission.research=Исследования
 desc.immersiveintelligence.diplomacy.permission.logistics=Логистика
 desc.immersiveintelligence.diplomacy.permission.container_access=Доступ к складу
-desc.immersiveintelligence.diplomacy.permission.breaking_structures=Breaking Structures
+desc.immersiveintelligence.diplomacy.permission.breaking_structures=Разрушение структур
 
 desc.immersiveintelligence.diplomacy.permission_level.owner_allow=Владельцы
 desc.immersiveintelligence.diplomacy.permission_level.member_allow=Участники
@@ -3337,13 +3337,13 @@ ii.gui.map_display.marker.missiles=Ракеты
 ii.gui.map_display.marker.artillery=Артиллерия
 ii.gui.map_display.marker.bullets=Пули
 
-ii.gui.redstone_data_interface.from.redstone=Из
+ii.gui.redstone_data_interface.from.redstone=Из редстоун-сигнала
 ii.gui.redstone_data_interface.from.redstone.tooltip=Specifies what redstone signal color will get converted into a data variable
 ii.gui.redstone_data_interface.from.data=Из переменных
 ii.gui.redstone_data_interface.from.data.tooltip=Specifies the data variable whose value will get converted into a redstone signal
 ii.gui.redstone_data_interface.to.data=В переменные
 ii.gui.redstone_data_interface.to.data.tooltip=Specifies the output data variable
-ii.gui.redstone_data_interface.to.redstone=To signal
+ii.gui.redstone_data_interface.to.redstone=В редстоун-сигнал
 ii.gui.redstone_data_interface.to.redstone.tooltip=Specifies the color of the redstone signal output by the interface
 ii.gui.redstone_data_interface.mode=Mode
 ii.gui.redstone_data_interface.mode.tooltip=Specifies the conversion mode. This determines how the redstone signal strength is converted into a data variable and vice versa.
@@ -3444,13 +3444,13 @@ ii.gui_tooltip.fuel=Топливо: %s/%s mB
 ii.gui_tooltip.soil_fertility=Плодородие почвы: %s %
 
 # Nether Backport Compat
-item.immersiveintelligence.bullet.component.core_netherite.name=Netherite
-ie.manual.entry.bullet_core.core_netherite=Netherite Core
+item.immersiveintelligence.bullet.component.core_netherite.name=Незерит
+ie.manual.entry.bullet_core.core_netherite=Незеритовый сердечник пули
 ie.manual.entry.bullet_core.core_netherite.lore=Nether-Forged
 ie.manual.entry.bullet_core.core_netherite.desc=Ancient debris is what remains of the mining activity of the piglins, who extracted all the original netherite ore. Currently they are a product of an industrialized fallen empire and in the past they were a united front.
 
-item.immersiveintelligence.bullet.component.nether_fire.name=Nether Fire
-ie.manual.entry.bullet_component.nether_fire=Nether Fire
+item.immersiveintelligence.bullet.component.nether_fire.name=Адский огонь
+ie.manual.entry.bullet_component.nether_fire=Адский огонь
 ie.manual.entry.bullet_component.nether_fire.lore=This "prison"... to contain ME?
 ie.manual.entry.bullet_component.nether_fire.desc=A fire of infernal origins,  it is a permanent, non-spreading fire that deals higher damage than normal fire and keeps on burning when it should not.
 
@@ -3461,14 +3461,14 @@ ie.manual.entry.bullet_component.windcharge.lore=How?
 ie.manual.entry.bullet_component.windcharge.desc=Condensed wind obtained from Breeze, wind charges knock targets back and apply slowness and suppression in small radius. Due to properties of the charge, it remains on the same level of potency regardless of the shell size.
 
 # Thaumcraft Compat
-item.immersiveintelligence.bullet.component.primordial_pearl.name=Primordial Pearl
-ie.manual.entry.bullet_component.primordial_pearl=Primordial Pearl
-ie.manual.entry.bullet_component.primordial_pearl.lore=Magical Oppenheimer
+item.immersiveintelligence.bullet.component.primordial_pearl.name=Первородная Жемчужина
+ie.manual.entry.bullet_component.primordial_pearl=Первородная Жемчужина
+ie.manual.entry.bullet_component.primordial_pearl.lore=Магический Оппенгеймер
 ie.manual.entry.bullet_component.primordial_pearl.desc=A potent artifact containing vast magical power and nearly unlimited potential that is beyond the known magical and physical laws. Despite its small size, rules of physics dictate that compression of such matter by integrated detonator explosive can only result in unparraleled levels of destruction from sheer amount of energy unleashed at once.
 
-item.immersiveintelligence.bullet.component.alumentum.name=Alumentum
-ie.manual.entry.bullet_component.alumentum=Alumentum
-ie.manual.entry.bullet_component.alumentum.lore=Alchemist's explosives
+item.immersiveintelligence.bullet.component.alumentum.name=Алюментум
+ie.manual.entry.bullet_component.alumentum=Алюментум
+ie.manual.entry.bullet_component.alumentum.lore=Взрывчатка алхимика
 ie.manual.entry.bullet_component.alumentum.desc=A very volatile fiery substance, Alumentum is smaller in radius compared to TNT, but contains more concentrated power. Being in explosive container allows to focus its explosive power, making it more destructive than otherwise hand-thrown Alumentum.
 
 item.immersiveintelligence.bullet.component.bottled_taint.name=Bottled Taint
@@ -3476,13 +3476,13 @@ ie.manual.entry.bullet_component.bottled_taint=Bottled Taint
 ie.manual.entry.bullet_component.bottled_taint.lore=Ruinous power
 ie.manual.entry.bullet_component.bottled_taint.desc=Moving the contents of the bottle into a shell allows to deliver the corruptive Taint at much longer distances than it is possible to throw the bottle manually. Spread forth magical corruption, now at long distances!
 
-ie.manual.entry.bullet_core.core_core_thaumium=Thaumium
-ie.manual.entry.bullet_core.core_thaumium=Thaumium Core
+ie.manual.entry.bullet_core.core_core_thaumium=Таумиум
+ie.manual.entry.bullet_core.core_thaumium=Таумиумный сердечник пули
 ie.manual.entry.bullet_core.ore_thaumium.lore=Thaumaturgicallymtallurgic
 ie.manual.entry.bullet_core.core_thaumium.desc=A result of infusing iron with raw magical energy. Harder and better than base iron, it is a good candidate for massproduced shells, provided you can make alchemical mettalurgy supply keep up with the industrial demands.
 
-ie.manual.entry.bullet_core.core_core_core_voidmetal=Void Metal
-ie.manual.entry.bullet_core.core_voidmetal=Void Metal Core
+ie.manual.entry.bullet_core.core_core_core_voidmetal=Пустотный металл
+ie.manual.entry.bullet_core.core_voidmetal=Пустотнометаллческий сердечник пули
 ie.manual.entry.bullet_core.core_voidmetal.lore=Thaumaturgicallymtallurgic
 ie.manual.entry.bullet_core.core_voidmetal.desc=Disturbingly slick and warm to the touch, easy to work like gold, becoming as hard as tungsten and harder when struck - Void Metal is an excellent choice for bullets. However, properties of the metal make it somewhat difficult for conventional explosives to detonate with proper force. Furthermore, you cannot retrieve this metal core despite its regenerative properties, as it becomes unuseable after hitting the target.
 

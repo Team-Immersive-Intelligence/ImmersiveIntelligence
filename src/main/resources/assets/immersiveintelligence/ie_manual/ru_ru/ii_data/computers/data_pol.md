@@ -12,10 +12,10 @@ POL это язык программирования, используемый [
 # code_compilation0_example
 |[pol_code]{code:"use BASIC\\n\\ninteger @a = 5\\nfloat @b = 3.14\\nstring @c = \"hello\"\\nboolean @d = 1"}|
 # code_compilation1
-A **POL** program is a sequence of statements, each occupying a single line. Before using any data operations, you must import the required [Circuit](_functional_circuits.md) library with the **USE** statement.
-Variables are declared using their type name, followed by the variable letter prefixed with **@**, and an optional initial value.
-# code_compilation0_example
-|[pol_code]{code:"use BASIC\\n\\ninteger @a = 5\\nfloat @b = 3.14\\nstring @c = \"hello\"\\nboolean @d = 1"}|
+Operations are called using **Polish Notation** - the operator comes first, followed by its arguments.
+The result of an operation can be stored in a variable using the **=** sign. Operations can also be called by their full name instead of their symbol.
+# code_compilation1_example
+|[pol_code]{code:";assign the sum of 2 and 3 to @a\\ninteger @a = + 2 3\\n\\n;nested operations\\ninteger @b = * @a + 1 2\\n\\n;using full operation name\\nfloat @c = add 1.5 2.5"}|
 # code_execution0
 Programs are executed **one statement per tick** by default. The **WAIT** statement pauses execution for a given number of ticks.
 The **IF** statement checks a condition and executes the next statement or code block only when it is met. **ELSE** handles the opposite case.
