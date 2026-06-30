@@ -1,8 +1,14 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock;
 
+import blusunrize.immersiveengineering.api.IEProperties;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3i;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.BlockIIMetalMultiblock1.MetalMultiblocks1;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityRedstoneDataInterface;
@@ -41,5 +47,24 @@ public class MultiblockRedstoneInterface extends MultiblockStuctureBase<TileEnti
 	protected TileEntityRedstoneDataInterface getMBInstance()
 	{
 		return new TileEntityRedstoneDataInterface();
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void renderFormedStructure()
+	{
+		GlStateManager.pushMatrix();
+
+		GlStateManager.rotate(EnumFacing.EAST.getHorizontalAngle(), 0, 1, 0);
+		GlStateManager.translate(offset.getX()+1, offset.getY(), -offset.getZ()-(useNewOffset()?1: 0));
+		GlStateManager.rotate(EnumFacing.EAST.getHorizontalAngle(), 0, -1, 0);
+
+		AMTUtils.getBRD().renderBlockBrightness(
+				IIContent.blockMetalMultiblock1.getStateFromMeta(MetalMultiblocks1.REDSTONE_DATA_INTERFACE.getMeta())
+						.withProperty(IEProperties.FACING_HORIZONTAL, EnumFacing.SOUTH)
+						.withProperty(IEProperties.DYNAMICRENDER, true),
+				1f
+		);
+		GlStateManager.popMatrix();
 	}
 }
