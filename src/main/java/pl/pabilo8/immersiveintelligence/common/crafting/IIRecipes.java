@@ -1177,7 +1177,7 @@ public class IIRecipes
 				.withCost(
 						new IngredientStack(IIContent.itemMotorGear.getStack(MotorGear.STEEL)),
 						new IngredientStack(new ItemStack(IEContent.itemMaterial, 1, 8)),
-						new IngredientStack("stickSteel", 2)
+						new IngredientStack("stickSteel", 1)
 				)
 				.withRequiredProgress(32000);
 
