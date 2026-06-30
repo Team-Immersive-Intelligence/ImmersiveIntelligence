@@ -1,0 +1,12 @@
+{
+  "type": "ParticleModel",
+  "models": ["fluid/latex_drip.obj"],
+  "max_lifetime": 28,
+  "draw_stage": "custom_solid",
+  "color": "ffffff",
+  "aabb": 0.25,
+  "size": 1,
+  "programs": [
+    "lifetime_retexture"
+  ]
+}
