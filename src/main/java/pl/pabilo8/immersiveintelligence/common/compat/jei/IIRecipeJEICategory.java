@@ -181,8 +181,8 @@ public class IIRecipeJEICategory<T extends IIMultiblockRecipe> implements IRecip
 	//--- Layout setup methods ---//
 
 	private void setupSlot(LayoutComponent component, IGuiItemStackGroup itemStacks,
-						   IIngredients ingredients, int x, int y,
-						   int itemInputIndex, int itemOutputIndex)
+	                       IIngredients ingredients, int x, int y,
+	                       int itemInputIndex, int itemOutputIndex)
 	{
 
 		IOType ioType = component.getIoType();
@@ -209,8 +209,8 @@ public class IIRecipeJEICategory<T extends IIMultiblockRecipe> implements IRecip
 	}
 
 	private void setupFluidTank(LayoutComponent component, IGuiFluidStackGroup fluidStacks,
-								IIngredients ingredients, int x, int y,
-								int fluidInputIndex, int fluidOutputIndex)
+	                            IIngredients ingredients, int x, int y,
+	                            int fluidInputIndex, int fluidOutputIndex)
 	{
 
 		IOType ioType = component.getIoType();
@@ -226,7 +226,7 @@ public class IIRecipeJEICategory<T extends IIMultiblockRecipe> implements IRecip
 			{
 				int tankIndex = getFluidTankIndex(true, fluidInputIndex, ingredients);
 				fluidStacks.init(tankIndex, true, x+1, y+1,
-						width-2, height-1, 1000, true, null);
+						width-2, height-1, 1000, false, null);
 				fluidStacks.set(tankIndex, ingredients.getInputs(VanillaTypes.FLUID).get(fluidInputIndex));
 			}
 		}
@@ -236,14 +236,14 @@ public class IIRecipeJEICategory<T extends IIMultiblockRecipe> implements IRecip
 				{
 					int tankIndex = getFluidTankIndex(false, fluidOutputIndex, ingredients);
 					fluidStacks.init(tankIndex, false, x+1, y+1,
-							width-2, height-1, 1000, true, null);
+							width-2, height-1, 1000, false, null);
 					fluidStacks.set(tankIndex, ingredients.getOutputs(VanillaTypes.FLUID).get(fluidOutputIndex));
 				}
 	}
 
 	private void setupDustTank(LayoutComponent component, IRecipeLayout recipeLayout,
-							   IIngredients ingredients, int x, int y,
-							   int dustInputIndex, int dustOutputIndex)
+	                           IIngredients ingredients, int x, int y,
+	                           int dustInputIndex, int dustOutputIndex)
 	{
 		IOType ioType = component.getIoType();
 		boolean isInput = ioType==IOType.INPUT;
