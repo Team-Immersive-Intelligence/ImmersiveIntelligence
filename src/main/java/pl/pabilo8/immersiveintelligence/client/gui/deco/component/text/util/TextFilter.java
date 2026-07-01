@@ -13,10 +13,10 @@ public enum TextFilter
 	ALPHANUMERIC((s) -> s.matches("[a-zA-Z0-9_]*")),
 	LOWERCASE((s) -> s.matches("[a-z0-9_]*")),
 	UPPERCASE((s) -> s.matches("[A-Z0-9_]*")),
-	DECIMAL((s) -> s.matches("[0-9.-]*")),
+	DECIMAL((s) -> s.matches("[0-9-]*")),
 	HEXADECIMAL((s) -> s.matches("[0-9A-Fa-f]*")),
 	BINARY((s) -> s.matches("[01]*")),
-	FLOAT((s) -> s.matches("[0-9.-]*")||s.matches("[0-9.-]*[eE][+-]?[0-9]+"));
+	FLOAT((s) -> s.matches("[0-9.-]*"));
 
 	private final Predicate<String> filter;
 

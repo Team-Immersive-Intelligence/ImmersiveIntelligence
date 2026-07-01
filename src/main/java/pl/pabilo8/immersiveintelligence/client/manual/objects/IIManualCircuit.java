@@ -1,11 +1,15 @@
 package pl.pabilo8.immersiveintelligence.client.manual.objects;
 
+import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.lib.manual.gui.GuiClickableList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualObject;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualPage;
 import pl.pabilo8.immersiveintelligence.common.item.data.ItemIIFunctionalCircuit.Circuits;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import javax.annotation.Nonnull;
@@ -46,7 +50,11 @@ public class IIManualCircuit extends IIManualObject
 			{
 				boolean b = super.mousePressed(mc, mx, my);
 				if(selectedOption==-1)
-					return b;
+					return false;
+				gui.previousSelectedEntry.push(gui.getSelectedEntry());
+				gui.setSelectedEntry(circuit.getName());
+				gui.page = selectedOption;
+				gui.initGui();
 				return b;
 			}
 		};
@@ -64,6 +72,14 @@ public class IIManualCircuit extends IIManualObject
 	@Override
 	public boolean mousePressed(Minecraft mc, int mouseX, int mouseY)
 	{
+		if(IIMath.isPointInRectangle(this.x+list.width, this.y, this.x+list.width+8, this.y+list.height, mouseX, mouseY))
+		{
+			int maxOffset = ReflectionHelper.getPrivateValue(GuiClickableList.class, list, "maxOffset");
+			int clickedOffset = (int)MathHelper.clamp((float)(mouseY-this.y)/(list.height)*1.25*maxOffset, 0, maxOffset);
+			ReflectionHelper.setPrivateValue(GuiClickableList.class, list, clickedOffset, "offset");
+			return true;
+		}
+
 		return list.mousePressed(mc, mouseX, mouseY);
 	}
 
@@ -77,7 +93,7 @@ public class IIManualCircuit extends IIManualObject
 	@Override
 	public void mouseDragged(int x, int y, int clickX, int clickY, int mx, int my, int lastX, int lastY, int button)
 	{
-
+		this.mousePressed(ClientUtils.mc(), lastX, lastY);
 	}
 
 	@Override

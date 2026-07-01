@@ -35,8 +35,7 @@ import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSyn
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
-
-import javax.annotation.Nullable;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -47,16 +46,15 @@ import javax.annotation.Nullable;
 @DecoTemplate(name = "arithmetic_logic_machine", category = DecoGuiCategory.DATA_TILE)
 public class GuiArithmeticLogicMachine extends DecoTileGui<TileEntityArithmeticLogicMachine, ContainerArithmeticLogicMachine> implements IDataMachineGui
 {
-	@SyncNBT
+	@SyncNBT(name = "page", events = SyncEvents.TILE_CLIENT_MESSAGE)
 	public int editedCircuit = 0;
 	@SyncNBT
 	public int scroll = 0;
+	@SyncNBT(events = SyncEvents.TILE_CLIENT_MESSAGE)
+	public DataPacket expressions = new DataPacket();
 	@SyncNBT
 	public DataVariable variableToEdit = new DataVariable('a', new DataTypeNull());
-
-	@Nullable
-	protected DecoList<DataVariable> list;
-	boolean isStorage;
+	private boolean isStorage;
 
 	private GuiArithmeticLogicMachine(EntityPlayer player, TileEntityArithmeticLogicMachine tile, IIGUI gui)
 	{
@@ -78,8 +76,8 @@ public class GuiArithmeticLogicMachine extends DecoTileGui<TileEntityArithmeticL
 	@Override
 	public void onInit()
 	{
-		syncAnimatedParts(tile.door, true);
-		syncAnimatedParts(tile.drawer, true);
+		syncAnimatedParts(tile.door, !isStorage);
+		syncAnimatedParts(tile.drawer, isStorage);
 		syncAnimatedParts(tile.keyboard, false);
 
 		//Refresh page when circuit slots change
@@ -124,7 +122,7 @@ public class GuiArithmeticLogicMachine extends DecoTileGui<TileEntityArithmeticL
 		else if(tile.inventory.size() > editedCircuit)
 		{
 			ItemStack stack = tile.inventory.get(editedCircuit);
-			DataPacket storedData = IIContent.itemCircuit.getStoredData(stack);
+			this.expressions = IIContent.itemCircuit.getStoredData(stack);
 
 			addLabel(stack.getDisplayName(), 4+2+16, 8)
 					.withTextColor(DecoColors.H2)
@@ -139,10 +137,10 @@ public class GuiArithmeticLogicMachine extends DecoTileGui<TileEntityArithmeticL
 					.withSize(16, 16)
 			);
 
-			list = addComponent(
+			addComponent(
 					new DecoList<DataVariable>(4+1, 8+16+2)
 							.withSize(136+32-3, 120-16)
-							.withEntries(storedData.getAllVariables())
+							.withEntries(expressions.getAllVariables())
 							.withCreateLaterAction(this::addVariable)
 							.withGuiSaveAction(gui -> this.scroll = gui.getScroll())
 							//Display
@@ -165,12 +163,15 @@ public class GuiArithmeticLogicMachine extends DecoTileGui<TileEntityArithmeticL
 											.withTemplate(DecoTemplates.ACTION_BUTTON_EDIT)
 											.withOnLMBPressed(() -> {
 												editVariable(p.getCurrentElement());
+												expressions.remove(p.getCurrentElement().getName());
 											})
 									)
 									.withComponent(p -> new DecoButton(p.width-17+1, 2)
 											.withTemplate(DecoTemplates.ACTION_BUTTON_REMOVE)
 											.withOnLMBPressed(() -> {
-												p.getCurrentList().removeEntry(p.getCurrentElement());
+												DataVariable current = p.getCurrentElement();
+												p.getCurrentList().removeEntry(current);
+												expressions.remove(current.getName());
 												IIPacketHandler.sendToServer(new MessageIITileSync(tile, onSaveTileData()));
 											})
 									)
@@ -272,12 +273,9 @@ public class GuiArithmeticLogicMachine extends DecoTileGui<TileEntityArithmeticL
 
 	private char findNextFreeVariableName()
 	{
-		if(list==null)
+		if(expressions.size() >= DataPacket.VARIABLE_NAMES.length)
 			return '\0';
-		DataPacket currentPacket = new DataPacket(list.getEntries());
-		if(currentPacket.size() >= DataPacket.VARIABLE_NAMES.length)
-			return '\0';
-		return IIUtils.cycleDataPacketCharsAvoiding('a', true, false, currentPacket);
+		return IIUtils.cycleDataPacketCharsAvoiding('0', true, false, expressions);
 	}
 
 	private void addVariable()
@@ -291,10 +289,8 @@ public class GuiArithmeticLogicMachine extends DecoTileGui<TileEntityArithmeticL
 	@Override
 	public void editVariable(char name, DataType initialValue)
 	{
-		DataPacket currentPacket = list==null?getCircuitPacket(): new DataPacket(list.getEntries());
-
-		if(!currentPacket.has(name)||currentPacket.get(name).getClass()!=initialValue.getClass())
-			currentPacket.set(name, initialValue);
+		if(!expressions.has(name)||expressions.get(name).getClass()!=initialValue.getClass())
+			expressions.set(name, initialValue);
 
 		this.variableToEdit = new DataVariable(name, initialValue);
 		changeGUI(IIGUI.ARITHMETIC_LOGIC_MACHINE_EDIT);

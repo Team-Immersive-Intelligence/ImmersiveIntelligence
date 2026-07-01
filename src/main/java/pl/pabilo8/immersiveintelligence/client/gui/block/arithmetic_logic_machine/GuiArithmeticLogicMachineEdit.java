@@ -53,7 +53,7 @@ public class GuiArithmeticLogicMachineEdit extends DecoTileGui<TileEntityArithme
 {
 	@SyncNBT
 	public DataVariable variableToEdit;
-	@SyncNBT
+	@SyncNBT(name = "page")
 	public int editedCircuit;
 
 	private Collection<DataOperationMeta> circuitOperations;
@@ -326,5 +326,17 @@ public class GuiArithmeticLogicMachineEdit extends DecoTileGui<TileEntityArithme
 							.withImageLocation(metaInfo.getTextureLocation(), true);
 				})
 				.withElementTooltip(operation -> "datasystem.immersiveintelligence.function."+operation.name()+".desc");
+	}
+
+	@Override
+	public void onGuiClosed()
+	{
+		if(!changeGUIFlag)
+		{
+			syncAnimatedParts(tile.door, false);
+			syncAnimatedParts(tile.drawer, false);
+			syncAnimatedParts(tile.keyboard, false);
+		}
+		super.onGuiClosed();
 	}
 }

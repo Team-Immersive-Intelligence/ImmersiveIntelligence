@@ -57,6 +57,8 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockProductionSi
 	 */
 	@SyncNBT(name = "variables", events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_RECIPE_CHANGED, SyncEvents.TILE_CLIENT_MESSAGE})
 	public DataPacket storedData = new DataPacket();
+	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_RECIPE_CHANGED, SyncEvents.TILE_CLIENT_MESSAGE})
+	public DataPacket packet1 = new DataPacket(), packet2 = new DataPacket(), packet3 = new DataPacket(), packet4 = new DataPacket();
 	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CLIENT_MESSAGE})
 	public int selectedDataSlot = 0;
 
@@ -92,6 +94,28 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockProductionSi
 		upgradeManager = null;
 	}
 
+	/*@Override
+	public void onBeforeFirstTick()
+	{
+		super.onBeforeFirstTick();
+		if(!world.isRemote)
+			switch(selectedDataSlot)
+			{
+				case 0:
+					packet1 = storedData;
+					break;
+				case 1:
+					packet2 = storedData;
+					break;
+				case 2:
+					packet3 = storedData;
+					break;
+				case 3:
+					packet4 = storedData;
+					break;
+			}
+	}*/
+
 	@Override
 	protected void onUpdate()
 	{
@@ -105,7 +129,7 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockProductionSi
 
 		//Send packet on rising edge redstone signal or ui button press
 		boolean currentSignal = getRedstoneAtPos(0);
-		if(sendPacket || ((prevSignal ^ currentSignal) & currentSignal))
+		if(sendPacket||((prevSignal^currentSignal)&currentSignal))
 		{
 			this.sendData(storedData, getDirection("data"), getPOI(MultiblockPOI.DATA_OUTPUT)[0]);
 			sendPacket = false;

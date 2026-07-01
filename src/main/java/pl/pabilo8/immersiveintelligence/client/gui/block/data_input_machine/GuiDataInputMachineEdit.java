@@ -51,6 +51,10 @@ public class GuiDataInputMachineEdit extends DecoTileGui<TileEntityDataInputMach
 	@Override
 	public void onInit()
 	{
+		//Sync machine's animated parts
+		syncAnimatedParts(tile.drawer, false);
+		syncAnimatedParts(tile.hatch, true);
+
 		//Use a copy of the tile data
 		packet = tile.storedData.clone();
 
@@ -170,6 +174,12 @@ public class GuiDataInputMachineEdit extends DecoTileGui<TileEntityDataInputMach
 	@Override
 	public void onGuiClosed()
 	{
+		//Close the hatches
+		if(!refreshGUIFlag)
+		{
+			syncAnimatedParts(tile.drawer, false);
+			syncAnimatedParts(tile.hatch, false);
+		}
 		super.onGuiClosed();
 	}
 

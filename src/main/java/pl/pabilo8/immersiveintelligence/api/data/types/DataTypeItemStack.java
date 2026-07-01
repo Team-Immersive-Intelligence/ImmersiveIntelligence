@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.api.data.types;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemUtils;
 
 import javax.annotation.Nonnull;
 
@@ -57,10 +58,6 @@ public class DataTypeItemStack extends DataType
 	@Override
 	public String toString()
 	{
-		return String.format("%d*%s@%d%s",
-				value.getCount(),
-				value.getItem().getRegistryName(),
-				value.getMetadata(),
-				value.hasTagCompound()?value.getTagCompound().toString(): "");
+		return IIItemUtils.getUniqueStackString(value);
 	}
 }
