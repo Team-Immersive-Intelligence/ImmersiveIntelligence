@@ -97,7 +97,9 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockIIGene
 			if(stack.isEmpty()||!(stack.getItem() instanceof ItemIIFunctionalCircuit))
 				return;
 
-			DataPacket packet = new DataPacket(expressions.getCompoundTag("list"));
+			DataPacket packet = expressions.hasKey("list")?
+					new DataPacket(expressions.getCompoundTag("list")):
+					new DataPacket(expressions);
 			((ItemIIFunctionalCircuit)stack.getItem()).writeDataToItem(stack, packet);
 			inventory.set(page, stack);
 			markDirty();

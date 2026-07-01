@@ -26,16 +26,13 @@ public class DecoDataEditorVector extends DecoDataEditor<DataTypeVector>
 		addComponents(
 				this.x = new DecoTextField(2, 12)
 						.withSize(width-8, 16)
-						.withText(dataType.x)
-						.withFilter(dataType.integerVector?TextFilter.DECIMAL: TextFilter.FLOAT),
+						.withText(dataType.x),
 				this.y = new DecoTextField(2, 12+18)
 						.withSize(width-8, 16)
-						.withText(dataType.y)
-						.withFilter(dataType.integerVector?TextFilter.DECIMAL: TextFilter.FLOAT),
+						.withText(dataType.y),
 				this.z = new DecoTextField(2, 12+18+18)
 						.withSize(width-8, 16)
-						.withText(dataType.z)
-						.withFilter(dataType.integerVector?TextFilter.DECIMAL: TextFilter.FLOAT),
+						.withText(dataType.z),
 
 				new DecoSwitch(2, 12+18+18+18)
 						.withText(IIReference.DESCRIPTION_KEY+"variable_value.integer_vector")
@@ -49,6 +46,9 @@ public class DecoDataEditorVector extends DecoDataEditor<DataTypeVector>
 						})
 						.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+"variable_value.integer_vector.tooltip")
 		);
+		refreshFieldFormatting(x);
+		refreshFieldFormatting(y);
+		refreshFieldFormatting(z);
 		return super.initialize();
 	}
 
@@ -57,17 +57,6 @@ public class DecoDataEditorVector extends DecoDataEditor<DataTypeVector>
 		float currentValue = parseFloatValue(field.getText());
 		field.withFilter(dataType.integerVector?TextFilter.DECIMAL: TextFilter.FLOAT)
 				.withText(dataType.integerVector?Integer.toString((int)currentValue): Float.toString(currentValue));
-	}
-
-	private int parseIntValue(String text)
-	{
-		try
-		{
-			return Integer.parseInt(text);
-		} catch(NumberFormatException e)
-		{
-			return 0;
-		}
 	}
 
 	private float parseFloatValue(String text)

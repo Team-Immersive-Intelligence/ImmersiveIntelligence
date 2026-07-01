@@ -149,12 +149,16 @@ public class GuiDataInputMachine extends DecoTileGui<TileEntityDataInputMachine,
 						.withSize(xSize, 11)
 						.withAlign(DecoAlignment.TOP);
 
-				addComponent(new DecoDropdown<String>(32+8-4-2, 8+76+8+8+8-4+4)
+				addComponent(new DecoDropdown<Integer>(32+8-4-2, 8+76+8+8+8-4+4)
 						.withWidth(96+8+4)
-						.withEntries("Slot 1", "Slot 2", "Slot 3", "Slot 4")
+						.withEntries(0, 1, 2, 3)
 						.withSelectedEntry(tile.selectedDataSlot)
 						.withOnSelectedEntry((oldEntry, newEntry) -> {
-
+							tile.switchDataSlot(newEntry);
+							IIPacketHandler.sendToServer(new MessageIITileSync(tile, EasyNBT.newNBT()
+									.withInt("selectedDataSlot", newEntry)
+							));
+							refreshGUI();
 						})
 				);
 			}
@@ -184,7 +188,7 @@ public class GuiDataInputMachine extends DecoTileGui<TileEntityDataInputMachine,
 												char name = findNextFreeVariableName();
 												if(name=='\0')
 													return;
-												editVariable(name, current.getValue());
+												editVariable(name, current.getValue().clone());
 											})
 									)
 									.withComponent(p -> new DecoButton(p.width-17-16+3, 2)
@@ -253,9 +257,11 @@ public class GuiDataInputMachine extends DecoTileGui<TileEntityDataInputMachine,
 	protected EasyNBT onSaveTileData()
 	{
 		return super.onSaveTileData()
-				.conditionally(list!=null, e -> e
-						.withSerializable("variables", new DataPacket(list.getEntries()))
-				);
+				.conditionally(list!=null, e -> {
+					DataPacket packet = new DataPacket(list.getEntries());
+					tile.setStoredDataPacket(packet);
+					e.withSerializable("variables", packet);
+				});
 	}
 
 	private char findNextFreeVariableName()
@@ -282,7 +288,7 @@ public class GuiDataInputMachine extends DecoTileGui<TileEntityDataInputMachine,
 		if(!currentPacket.has(name)||currentPacket.get(name).getClass()!=initialValue.getClass())
 			currentPacket.set(name, initialValue);
 
-		variableToEdit = new DataVariable(name, initialValue);
+		variableToEdit = new DataVariable(name, initialValue.clone());
 		changeGUI(IIGUI.DATA_INPUT_MACHINE_EDIT);
 	}
 }
