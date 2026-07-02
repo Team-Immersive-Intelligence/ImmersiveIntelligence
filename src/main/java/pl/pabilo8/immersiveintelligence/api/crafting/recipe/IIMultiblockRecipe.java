@@ -9,6 +9,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemUtils;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionBase.IIIMultiblockRecipe;
 
 import javax.annotation.Nonnull;
@@ -53,7 +54,7 @@ public abstract class IIMultiblockRecipe extends MultiblockRecipe implements III
 				//IngredientStacks don't have a custom toString method, but NBT does
 				.map(o -> {
 					if(o instanceof ItemStack)
-						return o+"_"+((ItemStack)o).getCount();
+						return IIItemUtils.getUniqueStackString(((ItemStack)o));
 					if(o instanceof IngredientStack)
 						return createIngredientStackName(((IngredientStack)o));
 					if(o instanceof FluidStack)
@@ -83,12 +84,12 @@ public abstract class IIMultiblockRecipe extends MultiblockRecipe implements III
 				{
 					if(!first)
 						sb.append("_");
-					sb.append(contained);
+					sb.append(IIItemUtils.getUniqueStackString(contained));
 					first = false;
 				}
 		}
 		else
-			sb.append(stack.stack);
+			sb.append(IIItemUtils.getUniqueStackString(stack.stack));
 		sb.append("_").append(stack.inputSize);
 
 		return sb.toString();

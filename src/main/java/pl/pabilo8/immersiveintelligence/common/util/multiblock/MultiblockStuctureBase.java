@@ -274,20 +274,24 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 		JsonObject poiJSON = file.get("poi").getAsJsonObject();
 		//Multiple Values
 		for(Entry<String, JsonElement> poi : poiJSON.entrySet())
+		{
 			if(poi.getValue() instanceof JsonArray)
 			{
 				JsonArray arr = poi.getValue().getAsJsonArray();
-				int[] posArray = new int[arr.size()];
-				for(int i = 0; i < arr.size(); i++)
-					posArray[i] = arr.get(i).getAsInt();
-
-				POIs.put(poi.getKey(), posArray);
+				ArrayList<Integer> positions = new ArrayList<>();
+				for(JsonElement jsonElement : arr)
+					positions.addAll(Arrays.asList(IIStringUtil.parseNumberListString(jsonElement.getAsString())));
+				POIs.put(poi.getKey(), positions.stream().mapToInt(Integer::intValue).toArray());
 			}
-			//Single Value
+			//Single Value or Range
 			else if(poi.getValue() instanceof JsonPrimitive)
-				POIs.put(poi.getKey(), new int[]{poi.getValue().getAsInt()});
+			{
+				Integer[] IDs = IIStringUtil.parseNumberListString(poi.getValue().getAsString());
+				POIs.put(poi.getKey(), Arrays.stream(IDs).mapToInt(Integer::intValue).toArray());
+			}
 			else
 				IILogger.warn("Invalid POI value for \""+poi.getKey()+"\" in multiblock "+loc.toString()+", expected array or primitive, got "+poi.getValue().getClass().getSimpleName());
+		}
 
 		//Sorting needed for binary search to work
 		POIs.values().forEach(Arrays::sort);

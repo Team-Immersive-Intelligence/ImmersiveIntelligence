@@ -236,6 +236,18 @@
           "transform": [1, 0, 0]
         }
       ]
+    },
+    "item_output": {
+      "visibility": [
+        {
+          "time": 0,
+          "visibility": false
+        },
+        {
+          "time": 1,
+          "visibility": false
+        }
+      ]
     }
   }
 }

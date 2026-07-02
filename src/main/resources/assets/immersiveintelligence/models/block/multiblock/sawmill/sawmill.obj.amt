@@ -18,7 +18,8 @@
     "item_output": [3, 20, 21],
     "sawblade": [0, 0, 0],
     "item_inserter": [26, 20, 18],
-    "item_input": [26, 20, 21]
+    "item_input": [26, 20, 21],
+    "particle_sawdust": [8, 14, 15]
   },
   "hierarchy": {
     "vise_rotato": "vise",
@@ -34,5 +35,10 @@
     "grabber_clamp_right": "grabber",
     "sawblade": "sawblade_axis",
     "item_inserter": "inserter"
+  },
+  "properties": {
+    "particle_sawdust": {
+      "particle": "machine/sawdust"
+    }
   }
 }

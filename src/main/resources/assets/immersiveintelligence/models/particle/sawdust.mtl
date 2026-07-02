@@ -1,0 +1,21 @@
+# Made by Pabilo8 with Blockbench
+newmtl sawdust0
+map_Kd immersiveintelligence:blocks/empty
+newmtl sawdust1
+map_Kd immersiveintelligence:particle/dust/sawdust0
+newmtl sawdust2
+map_Kd immersiveintelligence:particle/dust/sawdust1
+newmtl sawdust3
+map_Kd immersiveintelligence:particle/dust/sawdust2
+newmtl sawdust4
+map_Kd immersiveintelligence:particle/dust/sawdust3
+newmtl sawdust5
+map_Kd immersiveintelligence:particle/dust/sawdust4
+newmtl sawdust6
+map_Kd immersiveintelligence:particle/dust/sawdust5
+newmtl sawdust7
+map_Kd immersiveintelligence:particle/dust/sawdust6
+newmtl sawdust8
+map_Kd immersiveintelligence:particle/dust/sawdust7
+newmtl sawdust9
+map_Kd immersiveintelligence:particle/dust/sawdust8

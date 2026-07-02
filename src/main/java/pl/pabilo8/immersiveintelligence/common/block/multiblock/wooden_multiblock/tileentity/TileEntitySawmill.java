@@ -1,12 +1,8 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity;
 
 import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
-import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.CraftingManager;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
@@ -43,6 +39,7 @@ import pl.pabilo8.immersiveintelligence.common.util.sound.SoundHandler;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.multiblock.MultiblockSawmill.*;
 
@@ -68,7 +65,6 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 
 	//Inventory Handlers
 	private IItemHandler insertionHandler = getSingleInventoryHandler(SLOT_INPUT, true, false);
-	private IItemHandler dustExtractionHandler = getSingleInventoryHandler(SLOT_SAWDUST, false, true);
 	//Recipe Output Handlers
 	private IItemHandler outputHandler = getSingleInventoryHandler(SLOT_OUTPUT), sawdustOutputHandler = getSingleInventoryHandler(SLOT_SAWDUST);
 	private SoundHandler sounds;
@@ -96,7 +92,7 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 	{
 		super.dummyCleanup();
 		this.outputHandler = this.sawdustOutputHandler = null;
-		this.insertionHandler = this.dustExtractionHandler = null;
+		this.insertionHandler = null;
 		this.upgradeManager = null;
 		this.rotation = null;
 		this.vise = null;
@@ -126,10 +122,12 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 		if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
 		{
 			TileEntitySawmill master = master();
-			if(isPOI("item_input"))
+			if(isPOI("item_input")) //all directions are allowed
 				return (T)master.insertionHandler;
-			else if(isPOI("sawdust"))
-				return (T)master.dustExtractionHandler;
+			else if(isPOI("item_output")&&getDirection("output")==facing)
+				return (T)master.outputHandler;
+			else if(isPOI("sawdust")&&facing==EnumFacing.DOWN)
+				return (T)master.sawdustOutputHandler;
 		}
 		return super.getCapability(capability, facing);
 	}
@@ -148,13 +146,15 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 
 		boolean receivesPower = false;
 		//Wheel or mechanical device connected to multiblock
-		TileEntity te = world.getTileEntity(getPOIPos(MultiblockPOI.ROTARY_INPUT).offset(facing));
-		if(te!=null&&te.hasCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, facing.getOpposite()))
+		EnumFacing rotaryFacing = getDirection("rotary_input");
+		assert rotaryFacing!=null;
+		TileEntity te = world.getTileEntity(getPOIPos(MultiblockPOI.ROTARY_INPUT).offset(rotaryFacing.getOpposite()));
+		if(te!=null&&te.hasCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, rotaryFacing))
 		{
 			//Increase internal rotation if powered
-			IRotaryEnergy cap = te.getCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, facing.getOpposite());
+			IRotaryEnergy cap = te.getCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, rotaryFacing);
 			assert cap!=null;
-			if(rotation.handleRotation(cap, facing.getOpposite()))
+			if(rotation.handleRotation(cap, rotaryFacing))
 			{
 				IIPacketHandler.sendToClient(new MessageRotaryPowerSync(world, getPos(), 0, rotation));
 				receivesPower = true;
@@ -189,13 +189,24 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 		}
 		super.onUpdate();
 
-		if(world.isRemote&&currentProcess!=null)
-			currentProcess.recipe.getSoundAnimation().handleSounds(sounds, (int)currentProcess.ticks, 1f);
+		if(world.isRemote)
+		{
+			if(currentProcess!=null)
+				currentProcess.recipe.getSoundAnimation().handleSounds(sounds, (int)currentProcess.ticks, 1f);
+		}
+		else //Output items
+		{
+			attemptStackOutput(outputHandler, 1, getDirection("output"), getPOI("item_output"));
+			attemptStackOutput(sawdustOutputHandler, 1, EnumFacing.UP, getPOI("sawdust"));
+		}
 	}
 
 	@Override
 	public boolean isStackValid(int slot, ItemStack stack)
 	{
+		if(slot==SLOT_INPUT)
+			return SawmillRecipe.streamRecipes(SawmillRecipe.class)
+					.anyMatch(recipe -> recipe.itemInput.matchesItemStackIgnoringSize(stack));
 		return true;
 	}
 
@@ -219,27 +230,28 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 		ISawblade saw = (ISawblade)stackSawblade.getItem();
 
 		final int sawHardness = saw.getHardness(stackSawblade);
-		SawmillRecipe found = SawmillRecipe.streamRecipes(SawmillRecipe.class)
+		List<SawmillRecipe> recipes = SawmillRecipe.streamRecipes(SawmillRecipe.class)
 				.filter(recipe -> recipe.itemInput.matchesItemStackIgnoringSize(inventory.get(SLOT_INPUT)))
 				.filter(recipe -> recipe.getHardness() <= sawHardness)
-				.findFirst()
-				.orElse(null);
-		if(found==null)
+				.collect(Collectors.toList());
+		if(recipes.isEmpty())
 			return null;
+
+		//Compare the input item to the recipe input, and sort recipes with matching input first, so that the correct output is used for the specific log type
+		recipes.sort((recipe1, recipe2) -> {
+			int left = recipe1.itemInput.stack.isItemEqual(inventory.get(SLOT_INPUT))?0: 1;
+			int right = recipe2.itemInput.stack.isItemEqual(inventory.get(SLOT_INPUT))?0: 1;
+			return Integer.compare(left, right);
+		});
+		SawmillRecipe found = recipes.get(0);
 
 		//Store actual input item for display before consuming
 		ItemStack displayInput = inventory.get(SLOT_INPUT).copy();
 		displayInput.setCount(found.itemInput.inputSize);
 
-		//Look up the correct plank output for this specific log type
-		ItemStack correctOutput = lookupPlankOutput(displayInput, found.itemOutput);
-
 		//Consume input
 		inventory.get(SLOT_INPUT).shrink(found.itemInput.inputSize);
-		return new IIMultiblockProcess<>(found).withNBT(nbt -> {
-			nbt.withItemStack("displayInput", displayInput);
-			nbt.withItemStack("correctOutput", correctOutput);
-		});
+		return new IIMultiblockProcess<>(found).withNBT(nbt -> nbt.withItemStack("displayInput", displayInput));
 	}
 
 	@Override
@@ -268,7 +280,7 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 	protected boolean attemptProductionOutput(IIMultiblockProcess<SawmillRecipe> process)
 	{
 		//Use correct output based on actual input wood type
-		ItemStack output = process.processData.getItemStack("correctOutput");
+		ItemStack output = process.recipe.itemOutput.copy();
 		if(output.isEmpty())
 			output = process.recipe.itemOutput.copy();
 		ItemStack sawdust = process.recipe.itemSecondaryOutput.copy();
@@ -291,46 +303,6 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 		ItemStack sawblade = inventory.get(SLOT_SAWBLADE);
 		if(sawblade.getItem() instanceof ISawblade)
 			((ISawblade)sawblade.getItem()).damageTool(sawblade, process.recipe.getHardness());
-	}
-
-	/**
-	 * Looks up the correct plank output for a given log input by checking crafting recipes.
-	 * Prefers the most specific recipe (fewest matching ingredients) to ensure the output
-	 * plank type matches the input log type.
-	 *
-	 * @param logInput the actual log item being processed
-	 * @param fallback the recipe's default output to use if no crafting recipe match is found
-	 * @return the correct plank output
-	 */
-	private static ItemStack lookupPlankOutput(ItemStack logInput, ItemStack fallback)
-	{
-		ItemStack testStack = logInput.copy();
-		testStack.setCount(1);
-		ItemStack bestResult = ItemStack.EMPTY;
-		int bestSpecificity = Integer.MAX_VALUE;
-
-		for(IRecipe recipe : CraftingManager.REGISTRY)
-		{
-			if(Utils.compareToOreName(recipe.getRecipeOutput(), "plankWood"))
-			{
-				for(Ingredient ingredient : recipe.getIngredients())
-				{
-					if(ingredient.apply(testStack))
-					{
-						//Prefer recipes with fewer matching stacks (more specific to this log type)
-						int specificity = ingredient.getMatchingStacks().length;
-						if(specificity < bestSpecificity)
-						{
-							bestSpecificity = specificity;
-							bestResult = recipe.getRecipeOutput().copy();
-							bestResult.setCount(Math.round(bestResult.getCount()*1.5f));
-						}
-						break;
-					}
-				}
-			}
-		}
-		return bestResult.isEmpty()?fallback.copy(): bestResult;
 	}
 
 	//--- IRotationalEnergyBlock ---//
