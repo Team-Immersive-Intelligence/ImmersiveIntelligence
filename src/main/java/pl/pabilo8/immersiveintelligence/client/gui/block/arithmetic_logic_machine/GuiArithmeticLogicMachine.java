@@ -212,18 +212,10 @@ public class GuiArithmeticLogicMachine extends DecoTileGui<TileEntityArithmeticL
 		}
 
 		//Storage page tab
-		addComponent(new DecoTab()
-				.withLink(IIGUI.ARITHMETIC_LOGIC_MACHINE_STORAGE)
-				.withIcon(DecoTextures.ICON_STORAGE)
-				.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+"storage_module")
-		);
+		addLinkTab(IIGUI.ARITHMETIC_LOGIC_MACHINE_STORAGE, DecoTextures.ICON_STORAGE, "storage_module");
 
 		if(tile.isUpgradeInstalled(IIContent.UPGRADE_MEMORY))
-			addComponent(new DecoTab()
-					.withLink(IIGUI.ARITHMETIC_LOGIC_MACHINE_STORAGE)
-					.withIcon(DecoTextures.ICON_MEMORY)
-					.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+"memory_in_module")
-			);
+			addLinkTab(IIGUI.ARITHMETIC_LOGIC_MACHINE_MEMORY_IN, DecoTextures.ICON_MEMORY, "memory_in_module");
 
 		//Circuit tabs
 		NonNullList<ItemStack> inventory = tile.inventory;
@@ -246,11 +238,7 @@ public class GuiArithmeticLogicMachine extends DecoTileGui<TileEntityArithmeticL
 		}
 
 		if(tile.isUpgradeInstalled(IIContent.UPGRADE_MEMORY))
-			addComponent(new DecoTab()
-					.withLink(IIGUI.ARITHMETIC_LOGIC_MACHINE_STORAGE)
-					.withIcon(DecoTextures.ICON_MEMORY)
-					.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+"memory_out_module")
-			);
+			addLinkTab(IIGUI.ARITHMETIC_LOGIC_MACHINE_MEMORY_OUT, DecoTextures.ICON_MEMORY, "memory_out_module");
 	}
 
 	@Override

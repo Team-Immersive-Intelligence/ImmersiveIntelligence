@@ -3309,6 +3309,18 @@ ii.gui.data_input_machine.memory.page=Memory Page #%s
 ii.gui.data_input_machine.memory.page.tooltip=Allows to select the memory page that the machine will operate on
 
 ii.gui.arithmetic_logic_machine.storage=Circuit Storage
+ii.gui.arithmetic_logic_machine.memory.transfer=Memory Transfer Rule Editor
+ii.gui.arithmetic_logic_machine.memory.into=into
+ii.gui.arithmetic_logic_machine.memory.mode.overwrite=(Overwrite))
+ii.gui.arithmetic_logic_machine.memory.mode.supplement=(Supplement)
+ii.gui.arithmetic_logic_machine.memory.load_rule_properties=Load from Memory
+ii.gui.arithmetic_logic_machine.memory.save_rule_properties=Save into Memory
+ii.gui.arithmetic_logic_machine.memory.memory_variable=Memory variable
+ii.gui.arithmetic_logic_machine.memory.packet_variable=Packet variable
+ii.gui.arithmetic_logic_machine.memory.overwrite_existing=Overwrite existing
+ii.gui.arithmetic_logic_machine.memory.overwrite_existing.tooltip=When unchecked, the value from memory will be loaded only when the packet is missing the variable.
+ii.gui.arithmetic_logic_machine.memory.usage_limit=Usage Limit
+ii.gui.arithmetic_logic_machine.memory.usage_limit.tooltip=When set, the memory variable will be deleted after the specified amount of packets have been processed.
 
 ii.gui.packer.tasks=Tasks
 ii.gui.packer.labeling=Label Rules

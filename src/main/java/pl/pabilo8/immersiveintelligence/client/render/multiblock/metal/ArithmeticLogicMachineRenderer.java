@@ -129,8 +129,8 @@ public class ArithmeticLogicMachineRenderer extends IIMultiblockRenderer<TileEnt
 
 		UpgradeTechTree.getTreeFor(TileEntityArithmeticLogicMachine.class)
 				.withBaseModelLocation(IIReference.RES_BLOCK_MODEL.with("multiblock/arithmetic_logic_machine/arithmetic_logic_machine_preview.obj"))
-				.withUpgradeModelLocation(IIContent.UPGRADE_MEMORY, resFolder.with("upgrades/circuit_racks.obj"))
-				.withUpgradeModelLocation(IIContent.UPGRADE_CIRCUIT_RACKS, resFolder.with("upgrades/memory.obj"));
+				.withUpgradeModelLocation(IIContent.UPGRADE_MEMORY, resFolder.with("upgrades/memory.obj"))
+				.withUpgradeModelLocation(IIContent.UPGRADE_CIRCUIT_RACKS, resFolder.with("upgrades/circuit_racks.obj"));
 	}
 
 	@Override
