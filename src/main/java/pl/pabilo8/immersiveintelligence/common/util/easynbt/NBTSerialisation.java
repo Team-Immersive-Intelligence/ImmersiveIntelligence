@@ -4,6 +4,7 @@ import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorage;
 import blusunrize.immersiveengineering.common.util.inventory.MultiFluidTank;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.*;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -110,6 +111,11 @@ public class NBTSerialisation
 					double z = ((NBTTagDouble)nbt.get(2)).getDouble();
 					return new Vec3d(x, y, z);
 				}
+		);
+
+		registerSerializer(EnumFacing.class, NBTTagInt.class,
+				facing -> new NBTTagInt(facing.getIndex()),
+				nbt -> EnumFacing.getFront(nbt.getInt())
 		);
 
 		//Register serializers for IE types
@@ -232,7 +238,7 @@ public class NBTSerialisation
 	}
 
 	public static <FIELD, NBT extends NBTBase> void registerSerializer(Class<FIELD> dataClass, Class<NBT> nbtClass,
-																	   Function<FIELD, NBT> serialize, Function<NBT, FIELD> deserialize)
+	                                                                   Function<FIELD, NBT> serialize, Function<NBT, FIELD> deserialize)
 	{
 		serializerRegistry.put(dataClass, (field, annotation) -> new FieldSerializer<FIELD, NBT>(field, annotation)
 		{
@@ -252,8 +258,8 @@ public class NBTSerialisation
 	}
 
 	public static <FIELD, NBT extends NBTBase> void registerSerializer(Class<FIELD> dataClass, Class<NBT> nbtClass,
-																	   Function<FIELD, NBT> serialize,
-																	   BiFunction<NBT, FIELD, FIELD> deserialize)
+	                                                                   Function<FIELD, NBT> serialize,
+	                                                                   BiFunction<NBT, FIELD, FIELD> deserialize)
 	{
 		serializerRegistry.put(dataClass, (field, annotation) -> new FieldSerializer<FIELD, NBT>(field, annotation)
 		{

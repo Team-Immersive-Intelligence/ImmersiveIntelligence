@@ -1282,6 +1282,8 @@ desc.immersiveintelligence.variable_remove_desc=Remove a variable
 desc.immersiveintelligence.variable_properties=Properties
 desc.immersiveintelligence.variable_properties.tooltip=Edit expression properties, like conditional variables.
 desc.immersiveintelligence.variable_value=Value:
+desc.immersiveintelligence.variable_value.integer_vector=Integer Vector
+desc.immersiveintelligence.variable_value.integer_vector.tooltip=An Integer Vector does not allow numbers with decimal points.
 desc.immersiveintelligence.operation=Operation:
 
 desc.immersiveintelligence.conditional_variable=Conditional Variable:
@@ -3278,11 +3280,12 @@ ii.gui.packer.picker.logitag.tooltip=Logistic tag to be applied to the container
 
 ii.gui.itemstack_editor.count=Count:
 ii.gui.itemstack_editor.count.tooltip=The amount of items in the stack
-ii.gui.itemstack_editor.damage=Damage:
-ii.gui.itemstack_editor.damage.tooltip=The damage value of the item (leave empty for wildcard)
+ii.gui.itemstack_editor.metadata=Metadata:
+ii.gui.itemstack_editor.metadata.tooltip=The metadata value of the item, often represents item damage (leave empty for wildcard)
 ii.gui.itemstack_editor.nbt=NBT
 ii.gui.itemstack_editor.nbt.item.tooltip=When active, the item is matched by its NBT data
 ii.gui.itemstack_editor.nbt.fluid.tooltip=When active, the fluid is matched by its NBT data
+ii.gui.itemstack_editor.nbt.data_type.tooltip=When active, the variable will store the item's NBT data.
 ii.gui.itemstack_editor.oredict=OreDict
 ii.gui.itemstack_editor.oredict.tooltip=When active, the item is matched by its OreDictionary name
 ii.gui.itemstack_editor.energy=Immersive Flux
@@ -3302,10 +3305,22 @@ ii.gui.data_editor.logistics_tag.color=Color
 
 ii.gui.data_input_machine.storage=Punchtape Storage
 ii.gui.data_input_machine.memory=Built-In Memory
-ii.gui.data_input_machine.memory.switch=Switch
-ii.gui.data_input_machine.memory.switch.tooltip=Switch Current Memory Slot
+ii.gui.data_input_machine.memory.page=Memory Page #%s
+ii.gui.data_input_machine.memory.page.tooltip=Allows to select the memory page that the machine will operate on
 
 ii.gui.arithmetic_logic_machine.storage=Circuit Storage
+ii.gui.arithmetic_logic_machine.memory.transfer=Memory Transfer Rule Editor
+ii.gui.arithmetic_logic_machine.memory.into=into
+ii.gui.arithmetic_logic_machine.memory.mode.overwrite=(Overwrite))
+ii.gui.arithmetic_logic_machine.memory.mode.supplement=(Supplement)
+ii.gui.arithmetic_logic_machine.memory.load_rule_properties=Load from Memory
+ii.gui.arithmetic_logic_machine.memory.save_rule_properties=Save into Memory
+ii.gui.arithmetic_logic_machine.memory.memory_variable=Memory variable
+ii.gui.arithmetic_logic_machine.memory.packet_variable=Packet variable
+ii.gui.arithmetic_logic_machine.memory.overwrite_existing=Overwrite existing
+ii.gui.arithmetic_logic_machine.memory.overwrite_existing.tooltip=When unchecked, the value from memory will be loaded only when the packet is missing the variable.
+ii.gui.arithmetic_logic_machine.memory.usage_limit=Usage Limit
+ii.gui.arithmetic_logic_machine.memory.usage_limit.tooltip=When set, the memory variable will be deleted after the specified amount of packets have been processed.
 
 ii.gui.packer.tasks=Tasks
 ii.gui.packer.labeling=Label Rules

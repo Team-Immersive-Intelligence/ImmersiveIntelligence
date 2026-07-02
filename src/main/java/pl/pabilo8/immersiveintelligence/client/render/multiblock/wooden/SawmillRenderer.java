@@ -21,10 +21,7 @@ import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTCachedModelBui
 import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTCrossVariantReference;
 import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTUpgradeCachedModel;
 import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTUpgradeCachedModel.MachineCachedUpgradeModelBuilder;
-import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMT;
-import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTItem;
-import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTLocator;
-import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTQuads;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.*;
 import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIMultiblockRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IITileRenderer.RegisteredTileRenderer;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
@@ -159,7 +156,8 @@ public class SawmillRenderer extends IIMultiblockRenderer<TileEntitySawmill>
 						new AMTItem("item_output", header),
 						new AMTItem("item_inserter", header),
 						new AMTLocator("cardan1", header),
-						new AMTLocator("cardan3", header)
+						new AMTLocator("cardan3", header),
+						new AMTParticle("particle_sawdust", header)
 				})
 				.withTextureProvider((res, te) -> {
 					//Default

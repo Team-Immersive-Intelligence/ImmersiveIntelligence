@@ -38,6 +38,7 @@ public class GuiDataInputMachineEdit extends DecoTileGui<TileEntityDataInputMach
 	@SyncNBT
 	public DataVariable variableToEdit;
 	private boolean cancel = false;
+	private Character originalVariableName = null;
 	public DataPacket packet;
 
 	@Nullable
@@ -51,8 +52,13 @@ public class GuiDataInputMachineEdit extends DecoTileGui<TileEntityDataInputMach
 	@Override
 	public void onInit()
 	{
-		//Use a copy of the tile data
-		packet = tile.storedData.clone();
+		//Sync machine's animated parts
+		syncAnimatedParts(tile.drawer, false);
+		syncAnimatedParts(tile.hatch, true);
+
+		//Use a persistent copy of the tile data. Rebuilding the GUI after a rename must not re-clone a stale server packet.
+		if(packet==null)
+			packet = tile.storedData.clone();
 
 		//Build background
 		startBackground()
@@ -87,7 +93,7 @@ public class GuiDataInputMachineEdit extends DecoTileGui<TileEntityDataInputMach
 					.withSize(186, 106);
 
 		//A cloned packet without the currently edited variable is required, so the selector knows which variable names are unavailable
-		DataPacket cloned = tile.storedData.clone();
+		DataPacket cloned = packet.clone();
 		cloned.remove(variableToEdit.getName());
 
 		//Add type/name controls
@@ -156,20 +162,33 @@ public class GuiDataInputMachineEdit extends DecoTileGui<TileEntityDataInputMach
 	private void changeVariableName(Character newName)
 	{
 		//Do nothing if the name remains the same
-		if(newName==variableToEdit.getName()||editor==null)
+		if(newName==null||newName==variableToEdit.getName()||editor==null)
 			return;
 
-		//Remove existing variable
-		packet.remove(variableToEdit.getName());
+		cancel = true;
+		storeEditorOutput();
 
-		//Place it in the packet with the new name
-		variableToEdit = new DataVariable(newName, editor.outputType());
+		//Remove existing variable and keep the edited value under the new name in the local packet.
+		packet.remove(variableToEdit.getName());
+		variableToEdit = new DataVariable(newName, variableToEdit.getValue());
 		refreshGUI();
+	}
+
+	private void storeEditorOutput()
+	{
+		if(editor!=null)
+			variableToEdit = new DataVariable(variableToEdit.getName(), editor.outputType());
 	}
 
 	@Override
 	public void onGuiClosed()
 	{
+		//Close the hatches
+		if(!refreshGUIFlag)
+		{
+			syncAnimatedParts(tile.drawer, false);
+			syncAnimatedParts(tile.hatch, false);
+		}
 		super.onGuiClosed();
 	}
 
@@ -179,10 +198,10 @@ public class GuiDataInputMachineEdit extends DecoTileGui<TileEntityDataInputMach
 		return super.onSaveTileData()
 				.conditionally(editor!=null&&!cancel, easyNBT ->
 				{
-					variableToEdit = new DataVariable(variableToEdit.getName(), editor.outputType());
-					easyNBT.withSerializable("variables",
-							packet.with(variableToEdit)
-					);
+					storeEditorOutput();
+					DataPacket updatedPacket = packet.clone().with(variableToEdit);
+					tile.setStoredDataPacket(updatedPacket);
+					easyNBT.withSerializable("variables", updatedPacket);
 				});
 	}
 

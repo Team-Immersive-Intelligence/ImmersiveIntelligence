@@ -81,22 +81,25 @@ public class AMTItem extends AMT
 				ClientUtils.mc().getRenderItem().renderItem(stackInto, TransformType.FIXED);
 			else
 			{
+				GlStateManager.disableCull();
 				//Use stencil buffer to interpolate between stack and stackInto based on special property
 				GL11.glEnable(GL11.GL_STENCIL_TEST);
-				GL11.glClear(GL11.GL_STENCIL_BUFFER_BIT);
 
-				//Draw first item where stencil == 0
-				GL11.glStencilFunc(GL11.GL_ALWAYS, 1, 0xFF);
-				GL11.glStencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_REPLACE);
-				GL11.glColorMask(false, false, false, false);
-				GL11.glDepthMask(false);
+				GlStateManager.colorMask(false, false, false, false);
+				GlStateManager.depthMask(false);
+
+				GL11.glStencilFunc(GL11.GL_NEVER, 1, 0xFF);
+				GL11.glStencilOp(GL11.GL_REPLACE, GL11.GL_KEEP, GL11.GL_KEEP);
+
+				GL11.glStencilMask(0xFF);
+				GlStateManager.clear(GL11.GL_STENCIL_BUFFER_BIT);
 
 				//Draw mask for interpolation
 				GlStateManager.rotate(ClientUtils.mc().getRenderManager().playerViewY, 0.0F, 1.0F, 0.0F);
 
 				GlStateManager.disableTexture2D();
 				buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
-				ClientUtils.renderBox(buf, .5, .5f, .5, -.5, -.5+property, -.5);
+				ClientUtils.renderBox(buf, -0.5, -0.5, -0.5, 0.5, 0.5-property, 0.5);
 				tes.draw();
 				GlStateManager.enableTexture2D();
 
@@ -104,6 +107,7 @@ public class AMTItem extends AMT
 
 				GL11.glColorMask(true, true, true, true);
 				GL11.glDepthMask(true);
+				GL11.glStencilMask(0x00);
 
 				//Draw stack where stencil == 1
 				GL11.glStencilFunc(GL11.GL_EQUAL, 1, 0xFF);
@@ -115,6 +119,9 @@ public class AMTItem extends AMT
 				ClientUtils.mc().getRenderItem().renderItem(stackInto, TransformType.FIXED);
 
 				GL11.glDisable(GL11.GL_STENCIL_TEST);
+				GL11.glStencilMask(0xFF);
+				GlStateManager.clear(GL11.GL_STENCIL_BUFFER_BIT);
+				GlStateManager.enableCull();
 			}
 		}
 		else

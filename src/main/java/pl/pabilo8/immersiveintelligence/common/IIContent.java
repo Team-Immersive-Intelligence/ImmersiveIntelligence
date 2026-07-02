@@ -160,8 +160,7 @@ public class IIContent
 			.withType(UpgradePurpose.DATA);
 	//arithemtic logic machine upgrade
 	public static final Upgrade UPGRADE_MEMORY = new Upgrade("memory")
-			.withType(UpgradePurpose.DATA)
-			.withWIPStatus();
+			.withType(UpgradePurpose.DATA);
 	public static final Upgrade UPGRADE_CIRCUIT_RACKS = new Upgrade("circuit_racks")
 			.withType(UpgradePurpose.CAPACITY);
 

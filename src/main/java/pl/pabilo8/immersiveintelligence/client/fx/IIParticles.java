@@ -89,7 +89,7 @@ public class IIParticles
 			public void onParticleRender(AbstractParticle particle, float partialTicks)
 			{
 				int textures = (int)particle.getProperty(ParticleProperties.TEXTURES_COUNT);
-				particle.setProperty(ParticleProperties.TEXTURE_SHIFT, (int)(particle.getProgress(partialTicks)*textures));
+				particle.setProperty(ParticleProperties.TEXTURE_SHIFT, (int)MathHelper.clamp(particle.getProgress(partialTicks)*textures, 0, textures));
 			}
 		});
 		ParticleRegistry.registerProgram(() -> new ParticleProgram("retexture")

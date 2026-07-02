@@ -23,6 +23,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoIma
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage.ImageAnimationDirection;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityDataInputMachine;
@@ -111,11 +112,8 @@ public class GuiDataInputMachine extends DecoTileGui<TileEntityDataInputMachine,
 	{
 		//Set animation for the machine hatches
 		boolean isStorage = container.hasStorage;
-		if(!refreshGUIFlag)
-		{
-			syncAnimatedParts(tile.drawer, isStorage);
-			syncAnimatedParts(tile.hatch, !isStorage);
-		}
+		syncAnimatedParts(tile.drawer, isStorage);
+		syncAnimatedParts(tile.hatch, !isStorage);
 
 		//Build background
 		startBackground()
@@ -145,14 +143,25 @@ public class GuiDataInputMachine extends DecoTileGui<TileEntityDataInputMachine,
 			addLabel(IIReference.GUI_LABEL_KEY+"data_input_machine.storage", 0, 8+4)
 					.withSize(xSize, 11)
 					.withAlign(DecoAlignment.TOP);
-			addLabel(IIReference.GUI_LABEL_KEY+"data_input_machine.memory", 0, 8+4+76+4+2+4)
-					.withSize(xSize, 11)
-					.withAlign(DecoAlignment.TOP);
-			addComponent(new DecoDropdown<String>(32+8-4-2, 8+76+8+8+8-4+4)
-					.withWidth(96+8+4)
-					.withEntries("Slot 1", "Slot 2", "Slot 3", "Slot 4")
-					.withSelectedEntry(0)
-			);
+			if(tile.isUpgradeInstalled(IIContent.UPGRADE_ADVANCED_DATA))
+			{
+				addLabel(IIReference.GUI_LABEL_KEY+"data_input_machine.memory", 0, 8+4+76+4+2+4)
+						.withSize(xSize, 11)
+						.withAlign(DecoAlignment.TOP);
+
+				addComponent(new DecoDropdown<Integer>(32+8-4-2, 8+76+8+8+8-4+4)
+						.withWidth(96+8+4)
+						.withEntries(0, 1, 2, 3)
+						.withSelectedEntry(tile.selectedDataSlot)
+						.withOnSelectedEntry((oldEntry, newEntry) -> {
+							tile.switchDataSlot(newEntry);
+							IIPacketHandler.sendToServer(new MessageIITileSync(tile, EasyNBT.newNBT()
+									.withInt("selectedDataSlot", newEntry)
+							));
+							refreshGUI();
+						})
+				);
+			}
 			addComponent(new DecoBar(128+32-8+2, 24)
 					.withHeight(95)
 					.withTemplate(DecoTemplates.BAR_ELECTRIC_ENERGY.apply(tile.energyStorage))
@@ -179,7 +188,7 @@ public class GuiDataInputMachine extends DecoTileGui<TileEntityDataInputMachine,
 												char name = findNextFreeVariableName();
 												if(name=='\0')
 													return;
-												editVariable(name, current.getValue());
+												editVariable(name, current.getValue().clone());
 											})
 									)
 									.withComponent(p -> new DecoButton(p.width-17-16+3, 2)
@@ -248,9 +257,11 @@ public class GuiDataInputMachine extends DecoTileGui<TileEntityDataInputMachine,
 	protected EasyNBT onSaveTileData()
 	{
 		return super.onSaveTileData()
-				.conditionally(list!=null, e -> e
-						.withSerializable("variables", new DataPacket(list.getEntries()))
-				);
+				.conditionally(list!=null, e -> {
+					DataPacket packet = new DataPacket(list.getEntries());
+					tile.setStoredDataPacket(packet);
+					e.withSerializable("variables", packet);
+				});
 	}
 
 	private char findNextFreeVariableName()
@@ -258,7 +269,7 @@ public class GuiDataInputMachine extends DecoTileGui<TileEntityDataInputMachine,
 		DataPacket currentPacket = new DataPacket(list.getEntries());
 		if(currentPacket.size() >= DataPacket.VARIABLE_NAMES.length)
 			return '\0';
-		return IIUtils.cycleDataPacketCharsAvoiding('a', true, false, currentPacket);
+		return IIUtils.cycleDataPacketCharsAvoiding('0', true, false, currentPacket);
 	}
 
 	private void addVariable()
@@ -277,7 +288,7 @@ public class GuiDataInputMachine extends DecoTileGui<TileEntityDataInputMachine,
 		if(!currentPacket.has(name)||currentPacket.get(name).getClass()!=initialValue.getClass())
 			currentPacket.set(name, initialValue);
 
-		variableToEdit = new DataVariable(name, initialValue);
+		variableToEdit = new DataVariable(name, initialValue.clone());
 		changeGUI(IIGUI.DATA_INPUT_MACHINE_EDIT);
 	}
 }

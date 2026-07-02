@@ -33,6 +33,8 @@ import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityArithmeticLogicMachine;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerArithmeticLogicMachine;
 import pl.pabilo8.immersiveintelligence.common.item.data.ItemIIFunctionalCircuit;
+import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
@@ -53,7 +55,7 @@ public class GuiArithmeticLogicMachineEdit extends DecoTileGui<TileEntityArithme
 {
 	@SyncNBT
 	public DataVariable variableToEdit;
-	@SyncNBT
+	@SyncNBT(name = "page")
 	public int editedCircuit;
 
 	private Collection<DataOperationMeta> circuitOperations;
@@ -61,6 +63,7 @@ public class GuiArithmeticLogicMachineEdit extends DecoTileGui<TileEntityArithme
 	private DataTypeExpression edited;
 	private ItemStack circuitStack;
 	private boolean cancel = false;
+	private Character originalVariableName = null;
 
 	@Nullable
 	private DecoDataEditor<?> editor;
@@ -82,6 +85,8 @@ public class GuiArithmeticLogicMachineEdit extends DecoTileGui<TileEntityArithme
 		//Get circuit and list of all allowed operations
 		this.circuitStack = editedCircuit >= 0&&editedCircuit < tile.getInventory().size()?tile.getInventory().get(editedCircuit): ItemStack.EMPTY;
 		this.packet = this.packet==null?getCircuitPacket().clone(): this.packet;
+		if(originalVariableName==null)
+			originalVariableName = variableToEdit.getName();
 		this.circuitOperations = IIContent.itemCircuit.getOperationsList(this.circuitStack).stream()
 				.map(IIDataOperationUtils::getOperationMeta)
 				.filter(Objects::nonNull)
@@ -162,27 +167,11 @@ public class GuiArithmeticLogicMachineEdit extends DecoTileGui<TileEntityArithme
 				new DecoButton(162+16-4, 2+8+4+1)
 						.withTemplate(DecoTemplates.ACTION_BUTTON_DUPLICATE)
 						.withSize(18, 18)
-						.withOnLMBPressed(() -> {
-							char name = findNextFreeVariableName();
-							if(name=='\0')
-								return;
-							cancel = true;
-							storeEditorOutput();
-							packet.with(variableToEdit);
-							variableToEdit = new DataVariable(name, edited.clone());
-							refreshGUI();
-						}),
+						.withOnLMBPressed(this::duplicateVariable),
 				new DecoButton(162+16-4+1+18, 2+8+4+1)
-						.withTemplate(DecoTemplates.ACTION_BUTTON_CLEAR)
+						.withTemplate(DecoTemplates.ACTION_BUTTON_REMOVE)
 						.withSize(18, 18)
-						.withOnLMBPressed(() -> {
-							cancel = true;
-							edited = new DataTypeExpression();
-							if(!circuitOperations.isEmpty())
-								edited.setOperation(IIDataOperationUtils.getOperationInstance(circuitOperations.iterator().next().name()));
-							variableToEdit = new DataVariable(variableToEdit.getName(), edited);
-							refreshGUI();
-						})
+						.withOnLMBPressed(this::removeVariable)
 		);
 
 		//Add editor
@@ -237,12 +226,38 @@ public class GuiArithmeticLogicMachineEdit extends DecoTileGui<TileEntityArithme
 
 	private char findNextFreeVariableName()
 	{
-		DataPacket currentPacket = packet.clone();
-		currentPacket.remove(variableToEdit.getName());
-		for(char c : DataPacket.VARIABLE_NAMES)
-			if(!currentPacket.has(c))
-				return c;
-		return '\0';
+		if(packet.size() >= DataPacket.VARIABLE_NAMES.length)
+			return '\0';
+		return IIUtils.cycleDataPacketCharsAvoiding(variableToEdit.getName(), true, false, packet);
+	}
+
+	private void duplicateVariable()
+	{
+		if(editor==null)
+			return;
+
+		storeEditorOutput();
+		packet.with(variableToEdit);
+		savePacketToCircuit(packet);
+
+		char name = findNextFreeVariableName();
+		if(name=='\0')
+			return;
+
+		cancel = true;
+		variableToEdit = new DataVariable(name, edited.clone());
+		refreshGUI();
+	}
+
+	private void removeVariable()
+	{
+		if(originalVariableName!=null)
+			packet.remove(originalVariableName);
+		packet.remove(variableToEdit.getName());
+		savePacketToCircuit(packet);
+
+		cancel = true;
+		changeGUI(IIGUI.ARITHMETIC_LOGIC_MACHINE_VARIABLES);
 	}
 
 	private boolean isOperationAllowed(DataOperationMeta meta)
@@ -279,6 +294,18 @@ public class GuiArithmeticLogicMachineEdit extends DecoTileGui<TileEntityArithme
 			return;
 		((ItemIIFunctionalCircuit)stack.getItem()).writeDataToItem(stack, packet);
 		tile.getInventory().set(editedCircuit, stack);
+	}
+
+	private void savePacketToCircuit(DataPacket packet)
+	{
+		updateLocalCircuitStack(packet);
+		NBTTagCompound expressions = EasyNBT.newNBT()
+				.withInt("page", editedCircuit)
+				.withSerializable("list", packet)
+				.unwrap();
+		IIPacketHandler.sendToServer(new MessageIITileSync(tile, EasyNBT.newNBT()
+				.withTag("expressions", expressions)
+		));
 	}
 
 	@Override
@@ -326,5 +353,17 @@ public class GuiArithmeticLogicMachineEdit extends DecoTileGui<TileEntityArithme
 							.withImageLocation(metaInfo.getTextureLocation(), true);
 				})
 				.withElementTooltip(operation -> "datasystem.immersiveintelligence.function."+operation.name()+".desc");
+	}
+
+	@Override
+	public void onGuiClosed()
+	{
+		if(!changeGUIFlag)
+		{
+			syncAnimatedParts(tile.door, false);
+			syncAnimatedParts(tile.drawer, false);
+			syncAnimatedParts(tile.keyboard, false);
+		}
+		super.onGuiClosed();
 	}
 }

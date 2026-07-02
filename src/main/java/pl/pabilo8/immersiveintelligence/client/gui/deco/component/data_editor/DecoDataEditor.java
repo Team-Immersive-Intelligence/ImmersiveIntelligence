@@ -36,7 +36,6 @@ public abstract class DecoDataEditor<T extends DataType> extends DecoPanel
 
 	protected T dataType;
 
-
 	public DecoDataEditor(int x, int y, T dataType)
 	{
 		super(x, y);

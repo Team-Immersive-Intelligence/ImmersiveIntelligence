@@ -122,7 +122,12 @@
     "rotary": 6,
     "item_output": 4,
     "item_input": 15,
-    "sawdust": [2, 6],
+    "sawdust": ["1:3", "5:7"],
     "all_item_output": [4, 2, 6]
+  },
+  "rotations": {
+    "rotary_input": "clockwise_180",
+    "input": "counterclockwise_90",
+    "output": "none"
   }
 }

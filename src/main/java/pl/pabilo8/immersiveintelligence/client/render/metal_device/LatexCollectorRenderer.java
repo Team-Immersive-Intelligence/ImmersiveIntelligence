@@ -3,13 +3,16 @@ package pl.pabilo8.immersiveintelligence.client.render.metal_device;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.model.obj.OBJModel;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidUtil;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
 import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIAnimationCompiledMap;
 import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
 import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMT;
 import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTFluid;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTParticle;
 import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IITileRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IITileRenderer.RegisteredTileRenderer;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.LatexCollector;
@@ -29,6 +32,7 @@ public class LatexCollectorRenderer extends IITileRenderer<TileEntityLatexCollec
 	private IIAnimationCompiledMap placeBucket, extractorVisibility;
 	private AMTModel model;
 	private AMTFluid latex;
+	private AMTParticle particle;
 
 	@Override
 	public void draw(TileEntityLatexCollector te, BufferBuilder buf, float partialTicks, Tessellator tes)
@@ -37,14 +41,29 @@ public class LatexCollectorRenderer extends IITileRenderer<TileEntityLatexCollec
 		float bucketProgress = 0f;
 		if(!te.bucket.isEmpty())
 			bucketProgress = AMTUtils.getAnimationProgress(te.bucketTime, 10f, true, partialTicks);
-		placeBucket.apply(bucketProgress);
+		this.placeBucket.apply(bucketProgress);
+
 		//Chain and extractor visibility
 		boolean nextToTree = te.isNextToTree();
-		extractorVisibility.apply(nextToTree?1f: 0f);
+		this.extractorVisibility.apply(nextToTree?1f: 0f);
 
-		//Apply latex level
-		float atime = te.timer;
-		latex.withLevel(Math.min((atime+(!te.bucket.isEmpty()&&nextToTree?(partialTicks*te.getIncomeModifier()): 0))/(float)LatexCollector.collectTime, 1f));
+		//Apply latex level and drip animation
+		this.particle.setProperty(0);
+		if(FluidUtil.getFluidContained(te.bucket)!=null)
+			this.latex.withLevel(MathHelper.clamp(1f, 0f, 1f));
+		else
+		{
+			float soonCollected = 0;
+			if(!te.bucket.isEmpty())
+				soonCollected = (Math.max(0, te.collectionTimer-(LatexCollector.dropTimer-14)+partialTicks)/14f)
+						*te.getIncomeModifier()*LatexCollector.dropAmount;
+			this.latex.withLevel(MathHelper.clamp((te.collectedLatex+soonCollected)/(float)1000, 0f, 1f));
+
+			//Apply drip particle animation
+			this.particle.setProperty(AMTUtils.getAnimationProgress(Math.max(0, te.collectionTimer-(LatexCollector.dropTimer-35)+partialTicks)
+							+MathHelper.clamp((te.collectionTimer+partialTicks)/10f, 0, 7),
+					35, false, 0));
+		}
 
 		//Render
 		applyStandardRotation(te.facing);
@@ -56,7 +75,9 @@ public class LatexCollectorRenderer extends IITileRenderer<TileEntityLatexCollec
 	{
 		this.model = new AMTModel(state, model, header -> new AMT[]{
 				this.latex = new AMTFluid("latex", header)
-						.withFluid(new FluidStack(IIContent.fluidLatex, 1000))
+						.withFluid(new FluidStack(IIContent.fluidLatex, 1000)),
+				this.particle = new AMTParticle("particle", header)
+						.setParticle("machine/latex_drip")
 		});
 		this.placeBucket = IIAnimationCompiledMap.create(this.model, IIReference.RES_II.with("latex_collector/place_bucket"));
 		this.extractorVisibility = IIAnimationCompiledMap.create(this.model, IIReference.RES_II.with("latex_collector/extractor"));
@@ -67,5 +88,6 @@ public class LatexCollectorRenderer extends IITileRenderer<TileEntityLatexCollec
 	{
 		this.model = AMTUtils.disposeOf(this.model);
 		this.latex = null;
+		this.particle = null;
 	}
 }

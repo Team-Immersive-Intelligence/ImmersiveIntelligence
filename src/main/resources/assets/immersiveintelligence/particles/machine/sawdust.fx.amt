@@ -1,0 +1,12 @@
+{
+  "type": "ParticleModel",
+  "models": ["sawdust.obj"],
+  "max_lifetime": 200,
+  "draw_stage": "custom_solid",
+  "color": "ffffff",
+  "aabb": 0.25,
+  "size": 1,
+  "programs": [
+    "lifetime_retexture"
+  ]
+}

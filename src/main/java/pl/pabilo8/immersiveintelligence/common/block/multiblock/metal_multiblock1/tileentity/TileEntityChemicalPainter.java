@@ -236,7 +236,7 @@ public class TileEntityChemicalPainter extends TileEntityMultiblockProductionSin
 
 		//Take stack from inventory
 		this.recipeStack = ItemHandlerHelper.copyStackWithSize(inventory.get(SLOT_INPUT), 1);
-		this.resultStack = recipe.process.apply(color, this.recipeStack);
+		this.resultStack = recipe.process.apply(color, this.recipeStack.copy());
 		inventory.get(SLOT_INPUT).shrink(1);
 
 		//Return new process

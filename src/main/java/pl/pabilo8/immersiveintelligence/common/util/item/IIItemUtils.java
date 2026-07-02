@@ -89,4 +89,14 @@ public class IIItemUtils
 	{
 		return player.isCreative()&&Tools.instantCreativeConstruction;
 	}
+
+	public static String getUniqueStackString(ItemStack stack)
+	{
+		//noinspection DataFlowIssue
+		return String.format("%d*%s@%d%s",
+				stack.getCount(),
+				stack.getItem().getRegistryName(),
+				stack.getMetadata(),
+				stack.hasTagCompound()?stack.getTagCompound().toString(): "");
+	}
 }

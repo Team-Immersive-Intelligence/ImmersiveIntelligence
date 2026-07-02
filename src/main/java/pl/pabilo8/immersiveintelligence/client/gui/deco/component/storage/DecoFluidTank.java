@@ -34,6 +34,7 @@ public class DecoFluidTank extends DecoTankBase<DecoFluidTank, FluidStack>
 	public DecoFluidTank withFluidTank(IFluidTank fluidTank)
 	{
 		this.fluidTank = fluidTank;
+		cleanup();
 		return this;
 	}
 

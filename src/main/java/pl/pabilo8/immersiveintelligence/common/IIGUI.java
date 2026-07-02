@@ -18,6 +18,8 @@ import pl.pabilo8.immersiveintelligence.client.gui.block.*;
 import pl.pabilo8.immersiveintelligence.client.gui.block.ammunition_production.GuiAmmunitionAssembler;
 import pl.pabilo8.immersiveintelligence.client.gui.block.arithmetic_logic_machine.GuiArithmeticLogicMachine;
 import pl.pabilo8.immersiveintelligence.client.gui.block.arithmetic_logic_machine.GuiArithmeticLogicMachineEdit;
+import pl.pabilo8.immersiveintelligence.client.gui.block.arithmetic_logic_machine.GuiArithmeticLogicMachineMemory;
+import pl.pabilo8.immersiveintelligence.client.gui.block.arithmetic_logic_machine.GuiArithmeticLogicMachineMemoryEdit;
 import pl.pabilo8.immersiveintelligence.client.gui.block.data_input_machine.GuiDataInputMachine;
 import pl.pabilo8.immersiveintelligence.client.gui.block.data_input_machine.GuiDataInputMachineEdit;
 import pl.pabilo8.immersiveintelligence.client.gui.block.data_merger.GuiDataMerger;
@@ -108,6 +110,12 @@ public enum IIGUI implements ISerializableEnum
 	ARITHMETIC_LOGIC_MACHINE_EDIT(TileEntityArithmeticLogicMachine.class,
 			(player, te) -> new ContainerArithmeticLogicMachine(player, te, 2)
 	),
+	ARITHMETIC_LOGIC_MACHINE_MEMORY_IN(TileEntityArithmeticLogicMachine.class,
+			(player, te) -> new ContainerArithmeticLogicMachine(player, te, 1)),
+	ARITHMETIC_LOGIC_MACHINE_MEMORY_OUT(TileEntityArithmeticLogicMachine.class,
+			(player, te) -> new ContainerArithmeticLogicMachine(player, te, 1)),
+	ARITHMETIC_LOGIC_MACHINE_MEMORY_EDIT(TileEntityArithmeticLogicMachine.class,
+			(player, te) -> new ContainerArithmeticLogicMachine(player, te, 1)),
 
 	PRINTED_PAGE_BLANK(),
 	PRINTED_PAGE_TEXT(),
@@ -279,6 +287,9 @@ public enum IIGUI implements ISerializableEnum
 		IIGUI.ARITHMETIC_LOGIC_MACHINE_STORAGE.setClientTileGui(GuiArithmeticLogicMachine::getStorageGui);
 		IIGUI.ARITHMETIC_LOGIC_MACHINE_VARIABLES.setClientTileGui(GuiArithmeticLogicMachine::getVariablesGui);
 		IIGUI.ARITHMETIC_LOGIC_MACHINE_EDIT.setClientTileGui(GuiArithmeticLogicMachineEdit::new);
+		IIGUI.ARITHMETIC_LOGIC_MACHINE_MEMORY_IN.setClientTileGui(GuiArithmeticLogicMachineMemory::getMemoryInputGui);
+		IIGUI.ARITHMETIC_LOGIC_MACHINE_MEMORY_OUT.setClientTileGui(GuiArithmeticLogicMachineMemory::getMemoryOutputGui);
+		IIGUI.ARITHMETIC_LOGIC_MACHINE_MEMORY_EDIT.setClientTileGui(GuiArithmeticLogicMachineMemoryEdit::new);
 
 		//Printed Page
 		IIGUI.PRINTED_PAGE_BLANK.setClientStackGui(GuiPrintedPage::new);

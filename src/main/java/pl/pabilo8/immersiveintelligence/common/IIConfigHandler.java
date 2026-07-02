@@ -1161,8 +1161,18 @@ public class IIConfigHandler
 
 			public static class LatexCollector
 			{
-				@Comment({"Collection time of a single bucket (in ticks)."})
-				public static int collectTime = 12000;
+				@Comment({"Time required to place the bucket (in ticks)."})
+				public static int bucketPlaceTime = 10;
+
+				@Comment({"Delay between drops of latex into the bucket (in ticks)."})
+				public static int dropTimer = 250;
+
+				@Comment({"Amount of latex collected by each drop (in ticks)."})
+				public static int dropAmount = 4;
+
+				@Comment({"Penalty to the drop amount, when more than one collector is placed by the same tree.",
+						"Multiplied by the number of collectors placed.."})
+				public static float dropPenalty = 0.25f;
 			}
 
 			public static class CO2Collector

@@ -4,6 +4,7 @@ import blusunrize.immersiveengineering.client.ClientUtils;
 import mezz.jei.api.ingredients.IIngredientRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.util.text.TextFormatting;
 import pl.pabilo8.immersiveintelligence.api.crafting.DustStack;
 import pl.pabilo8.immersiveintelligence.api.crafting.DustUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
@@ -51,6 +52,6 @@ public class JEIDustStackRenderer implements IIngredientRenderer<DustStack>
 	@Override
 	public List<String> getTooltip(Minecraft minecraft, DustStack ingredient, ITooltipFlag tooltipFlag)
 	{
-		return Arrays.asList(DustUtils.getDustName(ingredient), ingredient.amount+" mB");
+		return Arrays.asList(DustUtils.getDustName(ingredient), TextFormatting.GRAY.toString()+ingredient.amount+" mB"+TextFormatting.RESET);
 	}
 }

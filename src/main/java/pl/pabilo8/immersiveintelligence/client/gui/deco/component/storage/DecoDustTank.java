@@ -32,6 +32,7 @@ public class DecoDustTank extends DecoTankBase<DecoDustTank, DustStack>
 	{
 		this.tank = tank;
 		this.capacity = capacity;
+		cleanup();
 		return this;
 	}
 

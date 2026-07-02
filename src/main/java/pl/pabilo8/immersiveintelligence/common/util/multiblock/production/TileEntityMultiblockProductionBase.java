@@ -66,24 +66,50 @@ public abstract class TileEntityMultiblockProductionBase<T extends TileEntityMul
 
 	}
 
-	public void attemptStackOutput(IItemHandler itemHandler, EnumFacing facing, int... outputPos)
+	/**
+	 * Attempts to output items from an item handler to inventories at given positions.<br>
+	 * If the inventory is full, it will continue to the next one.
+	 *
+	 * @param itemHandler The item handler to extract items from.
+	 * @param limiter     The maximum number of items to output.
+	 * @param facing      The facing direction for output.
+	 * @param outputPos   The positions of the inventories to output to.
+	 */
+	public void attemptStackOutput(IItemHandler itemHandler, int limiter, EnumFacing facing, int... outputPos)
 	{
 		if(facing==null)
 			facing = this.facing;
 		for(int p : outputPos)
 		{
+			if(limiter <= 0)
+				return;
 			BlockPos pos = getBlockPosForPos(p).offset(facing.getOpposite());
 			TileEntity inventoryTile = this.world.getTileEntity(pos);
 			if(inventoryTile!=null)
 			{
 				for(int i = 0; i < itemHandler.getSlots(); i++)
 				{
-					ItemStack stack = itemHandler.extractItem(i, Integer.MAX_VALUE, false);
+					if(limiter <= 0)
+						return;
+					ItemStack stack = itemHandler.extractItem(i, limiter, false);
 					stack = Utils.insertStackIntoInventory(inventoryTile, stack, facing, world.isRemote);
 					itemHandler.insertItem(i, stack, false);
+					limiter -= stack.getCount();
 				}
 			}
 		}
+	}
+
+	/**
+	 * Overload of {@link #attemptStackOutput(IItemHandler, int, EnumFacing, int...)} with no limiter
+	 *
+	 * @param itemHandler The item handler to extract items from.
+	 * @param facing      The facing direction for output.
+	 * @param outputPos   The positions of the inventories to output to.
+	 */
+	public void attemptStackOutput(IItemHandler itemHandler, EnumFacing facing, int... outputPos)
+	{
+		attemptStackOutput(itemHandler, Integer.MAX_VALUE, facing, outputPos);
 	}
 
 	/**
