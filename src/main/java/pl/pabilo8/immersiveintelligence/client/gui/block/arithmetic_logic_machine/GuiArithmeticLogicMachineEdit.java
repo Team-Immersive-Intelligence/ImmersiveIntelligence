@@ -344,6 +344,9 @@ public class GuiArithmeticLogicMachineEdit extends DecoTileGui<TileEntityArithme
 				.withElementApplyMethod((operation, panel) -> {
 					TypeMetaInfo<?> metaInfo = IIDataTypeUtils.metaTypesByClass.get(operation.expectedResult());
 
+					if(metaInfo==null)
+						return;
+
 					//type label (f.e. integer)
 					panel.label("typeLabel")
 							.withText("datasystem.immersiveintelligence.function."+operation.name())
