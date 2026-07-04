@@ -1,0 +1,17 @@
+{
+  "type": "forge:ore_shapeless",
+  "result": {
+    "item": "immersiveengineering:metal",
+    "data": 37
+  },
+  "ingredients": [
+    {
+      "type": "forge:ore_dict",
+      "ore": "ingotElectrum"
+    },
+    {
+      "item": "immersiveintelligence:electric_hammer",
+      "data": 1
+    }
+  ]
+}

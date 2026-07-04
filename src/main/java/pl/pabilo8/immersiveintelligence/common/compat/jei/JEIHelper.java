@@ -85,6 +85,10 @@ public class JEIHelper implements IModPlugin
 				return ItemNBTHelper.hasKey(stack, "bullets")?ISubtypeInterpreter.NONE: IIContent.itemBulletMagazine.getSubNames()[stack.getMetadata()];
 			return ISubtypeInterpreter.NONE;
 		});
+
+		subtypeRegistry.registerSubtypeInterpreter(IIContent.itemHammer, itemStack -> ISubtypeInterpreter.NONE);
+		subtypeRegistry.registerSubtypeInterpreter(IIContent.itemWirecutter, itemStack -> ISubtypeInterpreter.NONE);
+		subtypeRegistry.registerSubtypeInterpreter(IIContent.itemElectricWrench, itemStack -> ISubtypeInterpreter.NONE);
 	}
 
 	@Override
