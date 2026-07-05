@@ -32,6 +32,7 @@ import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -77,12 +78,13 @@ public class IIRecipeJEICategory<T extends IIMultiblockRecipe> implements IRecip
 
 	public IIRecipeJEICategory(Class<T> recipeClass, ItemStack machineStack)
 	{
-		this(recipeClass, machineStack, IIMultiblockRecipe.getRecipeClassName(recipeClass));
+		this(recipeClass, IIMultiblockRecipe.getRecipeClassName(recipeClass), machineStack.getUnlocalizedName()+".name");
+		this.displayStacks = new ItemStack[]{machineStack};
 	}
 
 	public IIRecipeJEICategory(Class<T> recipeClass, ItemStack machineStack, String recipeName)
 	{
-		this(recipeClass, recipeName, machineStack.getUnlocalizedName()+".name");
+		this(recipeClass, recipeName, "desc.immersiveintelligence.jei."+recipeName+"_recipe");
 		this.displayStacks = new ItemStack[]{machineStack};
 	}
 
@@ -306,7 +308,10 @@ public class IIRecipeJEICategory<T extends IIMultiblockRecipe> implements IRecip
 	{
 		addCatalysts(modRegistry);
 		modRegistry.handleRecipes(recipeClass, this, getRecipeCategoryUid());
-		modRegistry.addRecipes(IIMultiblockRecipe.getRecipes(recipeClass), getUid());
+		modRegistry.addRecipes(IIMultiblockRecipe.streamRecipes(recipeClass)
+				.filter(t -> t.matchesSubCategory(getUid()))
+				.collect(Collectors.toList()), getUid()
+		);
 		IILogger.info("Registered JEI compat for "+recipeClass.getSimpleName());
 	}
 

@@ -273,6 +273,16 @@ public abstract class IIMultiblockRecipe extends MultiblockRecipe implements III
 		return name;
 	}
 
+	/**
+	 * @param subCategory a name of the subcategory
+	 * @return true if the recipe matches the given subcategory, false otherwise
+	 * @implNote when the recipe does not implement a split into categories, the category name is passed as subCategory instead
+	 */
+	public boolean matchesSubCategory(String subCategory)
+	{
+		return true;
+	}
+
 	private static class MultiblockRecipeRegistry<T extends IIMultiblockRecipe>
 	{
 		private final HashMap<String, T> recipesMap = new HashMap<>();
