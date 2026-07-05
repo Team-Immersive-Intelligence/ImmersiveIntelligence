@@ -12,6 +12,7 @@ import blusunrize.lib.manual.gui.GuiManual;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.MultimapBuilder;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
@@ -245,6 +246,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 							model.bipedRightArm.rotateAngleX = model.bipedLeftArm.rotateAngleX;
 						}
 					else if((item instanceof ItemIIGunBase||item instanceof ItemIIRailgunOverride)&&hand!=EnumHand.OFF_HAND)
+					{
 						if(right)
 						{
 							living.setRenderYawOffset(living.rotationYawHead);
@@ -268,49 +270,50 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 
 							model.bipedRightArm.rotationPointZ += IIMath.clampedLerp3Par(0, 2f, 0, v);
 						}
-						else if(living.isSneaking()&&item==IIContent.itemBinoculars)
-						{
-							model.bipedRightArm.rotateAngleY = model.bipedHead.rotateAngleY-0.25f;
-							model.bipedLeftArm.rotateAngleY = model.bipedHead.rotateAngleY+0.25f;
+					}
+					else if(living.isSneaking()&&item==IIContent.itemBinoculars)
+					{
+						model.bipedRightArm.rotateAngleY = model.bipedHead.rotateAngleY-0.25f;
+						model.bipedLeftArm.rotateAngleY = model.bipedHead.rotateAngleY+0.25f;
 
-							model.bipedRightArm.rotateAngleX = model.bipedHead.rotateAngleX-2f;
+						model.bipedRightArm.rotateAngleX = model.bipedHead.rotateAngleX-2f;
+						model.bipedLeftArm.rotateAngleX = model.bipedRightArm.rotateAngleX;
+
+						int id = heldItem.getMetadata();
+						BinocularsRenderer.INSTANCE.render(id==1?ItemNBTHelper.getBoolean(heldItem, "wasUsed")?2: 1: id, model.bipedHead, true);
+					}
+					else if(item==IIContent.itemMineDetector)
+					{
+						float v = MineDetectorRenderer.instance.renderBase(living, 2.125f, true);
+
+						model.bipedRightArm.rotateAngleY = model.bipedBody.rotateAngleY-0.45f;
+						model.bipedLeftArm.rotateAngleY = model.bipedBody.rotateAngleY+0.45f;
+
+						model.bipedRightArm.rotateAngleX = -1.25f-(1f-v)*0.5f;
+						model.bipedLeftArm.rotateAngleX = model.bipedRightArm.rotateAngleX;
+					}
+					else if(item==IIContent.itemNavalMine)
+						if(right)
+						{
+							model.bipedRightArm.rotateAngleX -= 0.5f;
 							model.bipedLeftArm.rotateAngleX = model.bipedRightArm.rotateAngleX;
-
-							int id = heldItem.getMetadata();
-							BinocularsRenderer.INSTANCE.render(id==1?ItemNBTHelper.getBoolean(heldItem, "wasUsed")?2: 1: id, model.bipedHead, true);
 						}
-						else if(item==IIContent.itemMineDetector)
+						else
 						{
-							float v = MineDetectorRenderer.instance.renderBase(living, 2.125f, true);
-
-							model.bipedRightArm.rotateAngleY = model.bipedBody.rotateAngleY-0.45f;
-							model.bipedLeftArm.rotateAngleY = model.bipedBody.rotateAngleY+0.45f;
-
-							model.bipedRightArm.rotateAngleX = -1.25f-(1f-v)*0.5f;
-							model.bipedLeftArm.rotateAngleX = model.bipedRightArm.rotateAngleX;
+							model.bipedLeftArm.rotateAngleX -= 0.5f;
+							model.bipedRightArm.rotateAngleX = model.bipedLeftArm.rotateAngleX;
 						}
-						else if(item==IIContent.itemNavalMine)
-							if(right)
-							{
-								model.bipedRightArm.rotateAngleX -= 0.5f;
-								model.bipedLeftArm.rotateAngleX = model.bipedRightArm.rotateAngleX;
-							}
-							else
-							{
-								model.bipedLeftArm.rotateAngleX -= 0.5f;
-								model.bipedRightArm.rotateAngleX = model.bipedLeftArm.rotateAngleX;
-							}
-						else if(item==IIContent.itemGrenade)
+					else if(item==IIContent.itemGrenade)
+					{
+						float use = 1f-MathHelper.clamp(((EntityLivingBase)entity).getItemInUseCount()/(float)heldItem.getMaxItemUseDuration(), 0, 1);
+						if(right)
 						{
-							float use = 1f-MathHelper.clamp(((EntityLivingBase)entity).getItemInUseCount()/(float)heldItem.getMaxItemUseDuration(), 0, 1);
-							if(right)
-							{
-								model.rightArmPose = ArmPose.EMPTY;
-								//model.leftArmPose=ArmPose.EMPTY;
-								float hh = -(4.5f-model.bipedHead.rotateAngleX);
-								model.bipedRightArm.rotateAngleX = use!=1?use > 0f?use < 0.35f?use/0.35f*hh: hh: 0f: 0f;
-							}
+							model.rightArmPose = ArmPose.EMPTY;
+							//model.leftArmPose=ArmPose.EMPTY;
+							float hh = -(4.5f-model.bipedHead.rotateAngleX);
+							model.bipedRightArm.rotateAngleX = use!=1?use > 0f?use < 0.35f?use/0.35f*hh: hh: 0f: 0f;
 						}
+					}
 
 				}
 			}
@@ -564,6 +567,8 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		{
 			TileEntity te = mouseOver.typeOfHit==Type.BLOCK?player.world.getTileEntity(mouseOver.getBlockPos()): null;
 			Entity entityHit = mouseOver.entityHit;
+			GlStateManager.color(1f, 1f, 1f, 1f);
+			GlStateManager.enableBlend();
 
 			for(TextOverlayBase hud : TEXT_OVERLAYS)
 				if(hud.shouldDraw(player, mouseOver, te, entityHit))
@@ -597,6 +602,8 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		int height = event.getResolution().getScaledHeight();
 		if(ClientUtils.mc().gameSettings.showSubtitles)
 			height -= 40;
+		GlStateManager.color(1f, 1f, 1f, 1f);
+		GlStateManager.enableBlend();
 		for(GuiOverlayLayer key : HUDs.keys())
 			for(GuiOverlayBase hud : HUDs.get(key))
 				if(hud.shouldDraw(player, mouseOver))
@@ -903,7 +910,11 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 
 		if(stack.getItem()==IIContent.itemMineDetector&&event.getHand()==EnumHand.MAIN_HAND)
 		{
-			MineDetectorRenderer.instance.renderBase(ClientUtils.mc().player, 2.125f, false);
+			GlStateManager.pushMatrix();
+			EntityPlayerSP player = ClientUtils.mc().player;
+			MineDetectorRenderer.instance.renderBase(player, 2.125f, false);
+			GlStateManager.popMatrix();
+
 			event.setCanceled(true);
 		}
 

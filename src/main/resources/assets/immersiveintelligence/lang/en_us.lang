@@ -1139,7 +1139,7 @@ machineupgrade.immersiveintelligence.emplacement.tesla.desc=The Tesla Tower uses
 
 #Data Input Machine
 machineupgrade.immersiveintelligence.advanced_data=Advanced Input Device
-machineupgrade.immersiveintelligence.advanced_data.desc=Replaces the converted typewriter with a proper, fully electronic control panel, allowing the user to enter in advanced data types like Vector, Map and Array.
+machineupgrade.immersiveintelligence.advanced_data.desc=Replaces the converted typewriter with a proper, fully electronic control panel, allowing the user to enter in advanced data types like Vector and Logistic Tag.
 
 #Arithmetic-Logic Machine
 machineupgrade.immersiveintelligence.memory=Built-in Memory

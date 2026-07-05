@@ -35,7 +35,6 @@ public class GuiOverlayMineDetector extends GuiOverlayBase
 		ItemStack stack = player.getHeldItem(EnumHand.MAIN_HAND);
 
 		float value = MathHelper.clamp(ItemNBTHelper.getFloat(stack, "distance")/Tools.mineDetectorRadius, 0, 1);
-		//
 
 		ClientUtils.bindTexture(ImmersiveIntelligence.MODID+":textures/gui/hud_elements.png");
 		GlStateManager.pushMatrix();
