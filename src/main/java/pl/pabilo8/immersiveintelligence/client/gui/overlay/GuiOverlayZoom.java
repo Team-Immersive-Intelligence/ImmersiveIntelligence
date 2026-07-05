@@ -77,8 +77,9 @@ public class GuiOverlayZoom extends GuiOverlayBase
 		draw.drawTexRect(0, 0, 8/256f*resMin, 7/256f*resMin, 88/256f, 98/256f, 103/256f, 110/256f);
 		draw.finish();
 
-		//Draw magnification amount
-		ClientUtils.font().drawString(1/steps[curStep]+"x", (int)(resMin*1.385f), (int)(100/256f*resMin), 0xffffff);
+		//Draw magnification amount (rounded to nearest whole number)
+		int magnRounded = Math.round(1f/steps[curStep]);
+		ClientUtils.font().drawString(magnRounded+"x", (int)(resMin*1.385f), (int)(100/256f*resMin), 0xffffff);
 
 	}
 
