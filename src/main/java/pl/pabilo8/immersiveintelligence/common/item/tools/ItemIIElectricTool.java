@@ -3,15 +3,20 @@ package pl.pabilo8.immersiveintelligence.common.item.tools;
 import blusunrize.immersiveengineering.api.Lib;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.api.tool.ITool;
-import blusunrize.immersiveengineering.common.util.EnergyHelper;
 import blusunrize.immersiveengineering.common.util.EnergyHelper.IIEEnergyItem;
+import blusunrize.immersiveengineering.common.util.EnergyHelper.ItemEnergyStorage;
+import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.immersiveengineering.common.util.inventory.IEItemStackHandler;
+import com.google.common.collect.Multimap;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -22,6 +27,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -37,7 +43,7 @@ import java.util.List;
  * Common base for II electric tools.
  * <p>
  * The item damage/meta is intentionally not used as durability. Instead, it is kept as a tiny
- * recipe discriminator for {@link blusunrize.immersiveengineering.api.crafting.IngredientStack},
+ * recipe discriminator for {@link IngredientStack},
  * since that path compares item id and metadata, but not the tool's energy NBT.
  * </p>
  *
@@ -84,7 +90,7 @@ public abstract class ItemIIElectricTool extends ItemIIBase implements ITool, II
 
 		return new IEItemStackHandler(stack)
 		{
-			final EnergyHelper.ItemEnergyStorage energyStorage = new EnergyHelper.ItemEnergyStorage(stack)
+			final ItemEnergyStorage energyStorage = new ItemEnergyStorage(stack)
 			{
 				@Override
 				public int receiveEnergy(int maxReceive, boolean simulate)
@@ -182,6 +188,7 @@ public abstract class ItemIIElectricTool extends ItemIIBase implements ITool, II
 	{
 		if(!worldIn.isRemote)
 			updateCraftingMeta(stack);
+		;
 	}
 
 	@Override
@@ -193,7 +200,28 @@ public abstract class ItemIIElectricTool extends ItemIIBase implements ITool, II
 	@Override
 	public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged)
 	{
-		return slotChanged||oldStack.getItem()!=newStack.getItem();
+		return slotChanged;
+	}
+
+	@Override
+	public boolean onEntitySwing(EntityLivingBase entityLiving, ItemStack stack)
+	{
+		ReflectionHelper.setPrivateValue(EntityLivingBase.class, entityLiving, 40, "ticksSinceLastSwing", "field_184617_aD");
+		return true;
+	}
+
+	@Nonnull
+	@Override
+	public Multimap<String, AttributeModifier> getAttributeModifiers(@Nonnull EntityEquipmentSlot slot, @Nonnull ItemStack stack)
+	{
+		Multimap<String, AttributeModifier> multimap = super.getAttributeModifiers(slot, stack);
+		if(slot!=EntityEquipmentSlot.MAINHAND&&slot!=EntityEquipmentSlot.OFFHAND)
+			return multimap;
+
+		//slot switching / melee attack speed
+		multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getName(), new AttributeModifier(ATTACK_SPEED_MODIFIER,
+				"Slot equip time", -3.25f, 0));
+		return multimap;
 	}
 
 	//--- Energy helpers ---//
@@ -286,5 +314,6 @@ public abstract class ItemIIElectricTool extends ItemIIBase implements ITool, II
 		int meta = usable?META_CRAFTING_USABLE: META_CRAFTING_EMPTY;
 		if(stack.getMetadata()!=meta)
 			stack.setItemDamage(meta);
+		ItemNBTHelper.setInt(stack, "HideFlags", 2);
 	}
 }

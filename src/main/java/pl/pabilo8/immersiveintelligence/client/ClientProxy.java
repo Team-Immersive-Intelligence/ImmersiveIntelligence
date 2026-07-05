@@ -101,13 +101,14 @@ import pl.pabilo8.immersiveintelligence.client.render.multiblock.wooden.*;
 import pl.pabilo8.immersiveintelligence.client.util.IICustomStateMapper;
 import pl.pabilo8.immersiveintelligence.client.util.IIKeybind;
 import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil;
-import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIItemRendererAMT;
-import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIItemRendererAMT.RegisteredItemRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IITileRenderer.RegisteredTileRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.font.IIFontRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.font.IIFontRendererCustomGlyphs;
-import pl.pabilo8.immersiveintelligence.common.*;
+import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Factions;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
+import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.ammo.components.factory.AmmoComponentFluid;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity.TileEntityDataMerger;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity.TileEntityRedstoneBuffer;
@@ -417,17 +418,19 @@ public class ClientProxy extends CommonProxy
 		registerEntityRenderer(EntityAMTTactile.class, EntityRenderNone::new);
 
 		//Hand Weapons
-		registerItemRenderer(IIContent.itemAssaultRifle, new AssaultRifleRenderer());
-		registerItemRenderer(IIContent.itemAssaultRifle, new AssaultRifleRenderer());
-		registerItemRenderer(IIContent.itemRifle, new RifleRenderer());
-		registerItemRenderer(IIContent.itemSubmachinegun, new SubmachinegunRenderer());
+		new AssaultRifleRenderer();
+		new AssaultRifleRenderer();
+		new RifleRenderer();
+		new SubmachinegunRenderer();
 
 		//Tools
 		//TODO: 22.09.2024 binoculars
-		registerItemRenderer(IIContent.itemRadioTuner, new RadioTunerRenderer());
-		registerItemRenderer(IIContent.itemTachometer, new TachometerRenderer());
+		new RadioTunerRenderer();
+		new TachometerRenderer();
+		new ElectricHammerRenderer();
+		new ElectricWrenchRenderer();
+		new ElectricWirecutterRenderer();
 		//TODO: 22.09.2024 mine detector renderer
-		//TODO: 22.09.2024 power tool 3D models
 
 		for(IAmmoTypeItem<?, ?> bullet : AmmoRegistry.getAllAmmoItems())
 		{
@@ -568,14 +571,6 @@ public class ClientProxy extends CommonProxy
 
 		//Compat
 		IICompatModule.doModulesClientPreInit();
-	}
-
-	private <I extends Item> void registerItemRenderer(I item, IIItemRendererAMT<I> renderer)
-	{
-		item.setTileEntityItemStackRenderer(renderer);
-		RegisteredItemRenderer annotation = IIUtils.getAnnotation(RegisteredItemRenderer.class, renderer);
-		if(annotation!=null)
-			renderer.subscribeToList(annotation.name());
 	}
 
 	private <T extends Entity> void registerEntityRenderer(Class<T> entityClass, IRenderFactory<? super T> renderFactory)

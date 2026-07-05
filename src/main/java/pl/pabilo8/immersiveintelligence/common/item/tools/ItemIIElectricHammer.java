@@ -275,7 +275,7 @@ public class ItemIIElectricHammer extends ItemIIElectricTool
 
 	private EnumActionResult doAction(EntityPlayer player, EnumHand hand)
 	{
-		player.swingArm(hand);
+//		player.swingArm(hand);
 		return EnumActionResult.SUCCESS;
 	}
 }

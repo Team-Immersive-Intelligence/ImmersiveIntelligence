@@ -1,0 +1,49 @@
+{
+  "comment": "Made by Pabilo8 with Blockbench",
+  "groups": {
+    "hammer": {
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.14286,
+          "transform": [0, 0, -1]
+        },
+        {
+          "time": 0.42857,
+          "transform": [0, 0, -2]
+        },
+        {
+          "time": 0.71429,
+          "transform": [0, 0, 1]
+        },
+        {
+          "time": 0.85714,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "hammer_mid": {
+      "position": [
+        {
+          "time": 0.14286,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.42857,
+          "transform": [0, 0, -1]
+        },
+        {
+          "time": 0.71429,
+          "transform": [0, 0, 1]
+        },
+        {
+          "time": 0.85714,
+          "transform": [0, 0, 0]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "comment": "Made by Pabilo8 with Blockbench",
+  "groups": {
+    "wrench": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 1.0,
+          "transform": [0, 0, 360]
+        }
+      ]
+    },
+    "hammer_mid": {
+      "position": [
+        {
+          "time": 0.14286,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.42857,
+          "transform": [0, 0, -1]
+        },
+        {
+          "time": 0.71429,
+          "transform": [0, 0, 1]
+        },
+        {
+          "time": 0.85714,
+          "transform": [0, 0, 0]
+        }
+      ]
+    }
+  }
+}

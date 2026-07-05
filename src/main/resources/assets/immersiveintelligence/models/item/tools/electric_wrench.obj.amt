@@ -1,0 +1,23 @@
+{
+  "origins": {
+    "base": [0, 5, -1],
+    "wrench": [0, 8, -11.2857],
+    "offhand": [0, 0, -12],
+    "switch": [2.5, 8.1667, -3],
+    "offhand": [0, 0, 0],
+    "mainhand": [0, 1, -6.5]
+  },
+  "hierarchy": {
+    "switch": "base",
+    "wrench": "base",
+    "mainhand": "base"
+  },
+  "properties": {
+    "offhand": {
+      "hand": "off_hand"
+    },
+    "mainhand": {
+      "hand": "main_hand"
+    }
+  }
+}
