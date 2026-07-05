@@ -193,13 +193,13 @@ public class EntityMortar extends EntityMountedWeapon implements ICameraEntity
 	@Override
 	public IAdvancedZoom getZoom()
 	{
-		return SIGHTS;
+		return SIGHTS.withZoomEnabled(controls.getKey("aim"));
 	}
 
 	@Override
 	public float getCameraPitch(EntityPlayer cameraPlayer, float partialTicks)
 	{
-		return 0;
+		return aim.getPitch(partialTicks)*0.125f;
 	}
 
 	@Override
