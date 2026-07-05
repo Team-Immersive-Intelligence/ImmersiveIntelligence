@@ -1,0 +1,33 @@
+{
+  "origins": {
+    "lock": [0, 11, -1.5],
+    "blade_right": [0, 13.5833, 2.3333],
+    "blade_left": [0, 13.5833, 0.6667],
+    "handle_right": [0, 7, 3],
+    "lever": [0, 7, 3],
+    "handle_left": [0, 7, 0],
+    "mainhand": [4, 4, -0.5],
+    "offhand": [4, 4, 4.5],
+    "base": [0, 0, 0]
+  },
+  "hierarchy": {
+    "lock": "base",
+    "blade_right": "base",
+    "blade_left": "base",
+    "handle_right": "base",
+    "lever": "handle_right",
+    "handle_left": "base",
+    "mainhand": "base",
+    "offhand": "base"
+  },
+  "properties": {
+    "mainhand": {
+      "hand": "main_hand",
+      "scale": [0.5, 0.5, 0.5]
+    },
+    "offhand": {
+      "hand": "main_hand",
+      "scale": [0.5, 0.5, 0.5]
+    }
+  }
+}

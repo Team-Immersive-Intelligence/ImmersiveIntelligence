@@ -1,0 +1,24 @@
+{
+  "origins": {
+    "base": [0, 3, 6],
+    "switch": [2.5, 8.4167, -3],
+    "hammer": [23, 5.5, 3.5],
+    "hammer_mid": [20, 5.5, 3.5],
+    "offhand": [0, 0, 0],
+    "mainhand": [0, 1, -6.5]
+  },
+  "hierarchy": {
+    "switch": "base",
+    "hammer": "base",
+    "hammer_mid": "base",
+    "mainhand": "base"
+  },
+  "properties": {
+    "offhand": {
+      "hand": "off_hand"
+    },
+    "mainhand": {
+      "hand": "main_hand"
+    }
+  }
+}

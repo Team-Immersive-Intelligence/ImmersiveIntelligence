@@ -21,6 +21,8 @@ public class DataOperationIsSameType extends DataOperation
 	@Override
 	public DataType execute(DataPacket packet, DataTypeExpression data)
 	{
-		return new DataTypeBoolean(data.getArgument(0).getClass()==data.getArgument(1).getClass());
+		DataType t1 = packet.evaluateVariable(data.getArgument(0), false);
+		DataType t2 = packet.evaluateVariable(data.getArgument(1), false);
+		return new DataTypeBoolean(t1.getClass()==t2.getClass());
 	}
 }

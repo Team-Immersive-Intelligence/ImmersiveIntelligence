@@ -6,6 +6,7 @@ import blusunrize.immersiveengineering.client.ImmersiveModelRegistry.ItemModelRe
 import blusunrize.immersiveengineering.client.models.IESmartObjModel;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
@@ -13,14 +14,17 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.obj.OBJModel;
 import pl.pabilo8.immersiveintelligence.client.model.IIModelRegistry;
+import pl.pabilo8.immersiveintelligence.client.model.item.ModelDualPerspective;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTLoader;
 import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIAnimationCompiledMap;
 import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMT;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Graphics;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.amt.AMTModelHeader;
 
@@ -51,15 +55,27 @@ public abstract class IIItemRendererAMT<I extends Item> extends TileEntityItemSt
 
 	public IIItemRendererAMT(@Nonnull I item, ResLoc modelRes)
 	{
-		this.item = item;
-		this.headerRes = modelRes.withExtension(ResLoc.EXT_OBJAMT);
-		IIModelRegistry.INSTANCE.registerCustomItemModel(item, modelRes.getResourceDomain(),
-				setTransforms(this.replacementModel = new ImmersiveModelRegistry.ItemModelReplacement_OBJ(modelRes.withExtension(ResLoc.EXT_OBJ).toString(), true)));
+		this(item, modelRes, false);
 	}
 
-	public void setHeaderRes(ResLoc modelRes)
+	public IIItemRendererAMT(@Nonnull I item, ResLoc modelRes, boolean dualPerspective)
 	{
-		headerRes = modelRes;
+		this.item = item;
+		this.headerRes = modelRes.withExtension(ResLoc.EXT_OBJAMT);
+
+		//Set TEISR and register custom model
+		item.setTileEntityItemStackRenderer(this);
+		this.replacementModel = new ImmersiveModelRegistry.ItemModelReplacement_OBJ(modelRes.withExtension(ResLoc.EXT_OBJ).toString(), true);
+		ItemModelReplacement replacement = setTransforms(this.replacementModel);
+		if(dualPerspective)
+			IIModelRegistry.INSTANCE.registerDualCustomItemModel(item, modelRes.getResourceDomain(), replacement);
+		else
+			IIModelRegistry.INSTANCE.registerCustomItemModel(item, modelRes.getResourceDomain(), replacement);
+
+		//Register to the list of renderers for automatic reloading
+		RegisteredItemRenderer annotation = IIUtils.getAnnotation(RegisteredItemRenderer.class, this);
+		if(annotation!=null)
+			this.subscribeToList(annotation.name());
 	}
 
 	protected final ItemModelReplacement parseTransforms(ItemModelReplacement_OBJ model, @Nullable AMTModelHeader header)
@@ -75,13 +91,14 @@ public abstract class IIItemRendererAMT<I extends Item> extends TileEntityItemSt
 		//Get model values
 		World w = IESmartObjModel.tempEntityStatic!=null?IESmartObjModel.tempEntityStatic.world: null;
 		IBakedModel model = mc().getRenderItem().getItemModelWithOverrides(stack, w, IESmartObjModel.tempEntityStatic);
+		IBakedModel renderModel = model instanceof ModelDualPerspective?((ModelDualPerspective)model).getPerspectiveModel(): model;
 
 		if(unCompiled)
 		{
 			//IOBJModelCallback<ItemStack> callback = (IOBJModelCallback<ItemStack>)stack.getItem();
-			if(model instanceof IESmartObjModel)
+			if(renderModel instanceof IESmartObjModel)
 			{
-				this.model = ((IESmartObjModel)model);
+				this.model = ((IESmartObjModel)renderModel);
 				nullifyModels();
 
 				//load header
@@ -100,7 +117,7 @@ public abstract class IIItemRendererAMT<I extends Item> extends TileEntityItemSt
 
 			//draw the model with proper transform
 			draw(stack,
-					((model instanceof IESmartObjModel)?((IESmartObjModel)model): this.model).lastCameraTransform,
+					((renderModel instanceof IESmartObjModel)?((IESmartObjModel)renderModel): this.model).lastCameraTransform,
 					tes.getBuffer(), tes, mc().getRenderPartialTicks()
 			);
 
@@ -172,6 +189,16 @@ public abstract class IIItemRendererAMT<I extends Item> extends TileEntityItemSt
 	protected final boolean is3rdPerson(TransformType transform)
 	{
 		return transform==TransformType.THIRD_PERSON_RIGHT_HAND||transform==TransformType.THIRD_PERSON_LEFT_HAND;
+	}
+
+	protected float getItemEquipTime(EnumHand hand, float partialTicks)
+	{
+		ItemRenderer renderer = mc().entityRenderer.itemRenderer;
+		//Mainhand
+		if(hand==EnumHand.MAIN_HAND)
+			return (renderer.prevEquippedProgressMainHand+(renderer.equippedProgressMainHand-renderer.prevEquippedProgressMainHand)*partialTicks);
+		//Offhand
+		return (renderer.prevEquippedProgressOffHand+(renderer.equippedProgressOffHand-renderer.prevEquippedProgressOffHand)*partialTicks);
 	}
 
 	@Retention(RetentionPolicy.RUNTIME)

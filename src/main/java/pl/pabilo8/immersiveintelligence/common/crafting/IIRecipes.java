@@ -112,11 +112,11 @@ public class IIRecipes
 		//Tools - include both IE and II variants for workbench recipes
 		TOOL_HAMMER = new IngredientStack(Arrays.asList(
 				new ItemStack(IEContent.itemTool, 1, 0),
-				new ItemStack(IIContent.itemHammer)
+				IIContent.itemHammer.getValidCraftingStack()
 		));
 		TOOL_CUTTERS = new IngredientStack(Arrays.asList(
 				new ItemStack(IEContent.itemTool, 1, 1),
-				new ItemStack(IIContent.itemWirecutter)
+				IIContent.itemWirecutter.getValidCraftingStack()
 		));
 
 		//Used by ammo pouch

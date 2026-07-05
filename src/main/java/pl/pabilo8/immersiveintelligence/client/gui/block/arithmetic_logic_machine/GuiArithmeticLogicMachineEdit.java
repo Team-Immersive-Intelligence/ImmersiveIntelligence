@@ -10,6 +10,7 @@ import pl.pabilo8.immersiveintelligence.api.data.IIDataTypeUtils;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation.DataOperationMeta;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation.DataOperationNull;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeNull;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType.TypeMetaInfo;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTileGui;
@@ -41,6 +42,7 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -151,7 +153,7 @@ public class GuiArithmeticLogicMachineEdit extends DecoTileGui<TileEntityArithme
 						.withListBackground(DecoTextures.COMPONENT_TEXT_FIELD)
 						.withDropdownSymbol(DecoTextures.COMPONENT_DROPDOWN_SYMBOL_PAPER)
 						.withSize(116+24-8, 18)
-						.withDropdownWidth(116+24)
+						.withDropdownWidth(116+24-8)
 						.withMaxDisplayedEntries(5)
 						.withEntries(circuitOperations)
 						.withSelectedEntry(edited.getOperation().getMeta())
@@ -326,6 +328,16 @@ public class GuiArithmeticLogicMachineEdit extends DecoTileGui<TileEntityArithme
 		return nbt.withTag("expressions", expressions);
 	}
 
+	private TypeMetaInfo<?> getOperationDisplayType(DataOperationMeta operation)
+	{
+		List<TypeMetaInfo<?>> compatibleTypes = DecoDataEditor.getCompatibleEditorTypes(operation.expectedResult(), true);
+		if(!compatibleTypes.isEmpty())
+			return compatibleTypes.get(0);
+
+		TypeMetaInfo<?> metaInfo = IIDataTypeUtils.metaTypesByClass.get(operation.expectedResult());
+		return metaInfo!=null?metaInfo: IIDataTypeUtils.metaTypesByClass.get(DataTypeNull.class);
+	}
+
 	private DecoElementDisplay<DataOperationMeta> getOperationDropdownDisplayFunction()
 	{
 		return new DecoEntryPanelBuilder<DataOperationMeta>()
@@ -342,7 +354,7 @@ public class GuiArithmeticLogicMachineEdit extends DecoTileGui<TileEntityArithme
 								.withText("Addition")
 				)
 				.withElementApplyMethod((operation, panel) -> {
-					TypeMetaInfo<?> metaInfo = IIDataTypeUtils.metaTypesByClass.get(operation.expectedResult());
+					TypeMetaInfo<?> metaInfo = getOperationDisplayType(operation);
 
 					//type label (f.e. integer)
 					panel.label("typeLabel")

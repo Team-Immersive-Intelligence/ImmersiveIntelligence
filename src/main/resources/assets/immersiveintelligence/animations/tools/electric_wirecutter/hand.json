@@ -1,0 +1,29 @@
+{
+  "comment": "Made by Pabilo8 with Blockbench",
+  "groups": {
+    "mainhand": {
+      "visibility": [
+        {
+          "time": 0,
+          "visibility": false
+        },
+        {
+          "time": 1,
+          "visibility": true
+        }
+      ]
+    },
+    "offhand": {
+      "visibility": [
+        {
+          "time": 0,
+          "visibility": false
+        },
+        {
+          "time": 1,
+          "visibility": true
+        }
+      ]
+    }
+  }
+}

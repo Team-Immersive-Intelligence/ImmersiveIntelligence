@@ -22,7 +22,7 @@ public class DecoDataEditorBoolean extends DecoDataEditor<DataTypeBoolean>
 	{
 		//Add editor components
 		component = addComponent(new DecoSwitch(2, 6)
-				.withText(IIReference.DESCRIPTION_KEY+"variable_value")
+				.withText(IIReference.DESCRIPTION_KEY+"variable_value.boolean")
 				.withCurrentState(dataType.value)
 		);
 		return super.initialize();

@@ -5,6 +5,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoSwi
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.DecoTextField;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.util.TextFilter;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -54,28 +55,17 @@ public class DecoDataEditorVector extends DecoDataEditor<DataTypeVector>
 
 	private void refreshFieldFormatting(DecoTextField field)
 	{
-		float currentValue = parseFloatValue(field.getText());
+		float currentValue = IIStringUtil.parseFloat(field.getText());
 		field.withFilter(dataType.integerVector?TextFilter.DECIMAL: TextFilter.FLOAT)
 				.withText(dataType.integerVector?Integer.toString((int)currentValue): Float.toString(currentValue));
-	}
-
-	private float parseFloatValue(String text)
-	{
-		try
-		{
-			return Float.parseFloat(text);
-		} catch(NumberFormatException e)
-		{
-			return 0;
-		}
 	}
 
 	@Override
 	public DataTypeVector outputType()
 	{
-		dataType.x = parseFloatValue(x.getText());
-		dataType.y = parseFloatValue(y.getText());
-		dataType.z = parseFloatValue(z.getText());
+		dataType.x = IIStringUtil.parseFloat(x.getText());
+		dataType.y = IIStringUtil.parseFloat(y.getText());
+		dataType.z = IIStringUtil.parseFloat(z.getText());
 		return dataType;
 	}
 }

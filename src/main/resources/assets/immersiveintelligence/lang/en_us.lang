@@ -1139,7 +1139,7 @@ machineupgrade.immersiveintelligence.emplacement.tesla.desc=The Tesla Tower uses
 
 #Data Input Machine
 machineupgrade.immersiveintelligence.advanced_data=Advanced Input Device
-machineupgrade.immersiveintelligence.advanced_data.desc=Replaces the converted typewriter with a proper, fully electronic control panel, allowing the user to enter in advanced data types like Vector, Map and Array.
+machineupgrade.immersiveintelligence.advanced_data.desc=Replaces the converted typewriter with a proper, fully electronic control panel, allowing the user to enter in advanced data types like Vector and Logistic Tag.
 
 #Arithmetic-Logic Machine
 machineupgrade.immersiveintelligence.memory=Built-in Memory
@@ -1282,6 +1282,7 @@ desc.immersiveintelligence.variable_remove_desc=Remove a variable
 desc.immersiveintelligence.variable_properties=Properties
 desc.immersiveintelligence.variable_properties.tooltip=Edit expression properties, like conditional variables.
 desc.immersiveintelligence.variable_value=Value:
+desc.immersiveintelligence.variable_value.boolean=Value
 desc.immersiveintelligence.variable_value.integer_vector=Integer Vector
 desc.immersiveintelligence.variable_value.integer_vector.tooltip=An Integer Vector does not allow numbers with decimal points.
 desc.immersiveintelligence.operation=Operation:

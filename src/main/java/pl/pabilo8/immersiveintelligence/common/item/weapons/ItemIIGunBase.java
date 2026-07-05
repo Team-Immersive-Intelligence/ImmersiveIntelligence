@@ -286,7 +286,6 @@ public abstract class ItemIIGunBase extends ItemIIUpgradableTool implements ISki
 		nbt.withFloat(RECOIL_H, recoilH);
 		nbt.withFloat(RECOIL_V, recoilV);
 		nbt.withInt(FIRE_DELAY, fireDelay);
-
 	}
 
 	@Override

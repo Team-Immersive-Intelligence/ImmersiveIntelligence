@@ -2,17 +2,13 @@ package pl.pabilo8.immersiveintelligence.common.item.tools;
 
 import blusunrize.immersiveengineering.api.Lib;
 import blusunrize.immersiveengineering.api.MultiblockHandler;
-import blusunrize.immersiveengineering.api.tool.ITool;
 import blusunrize.immersiveengineering.common.blocks.BlockIEBase;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IConfigurableSides;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IDirectionalTile;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IHammerInteraction;
-import blusunrize.immersiveengineering.common.util.EnergyHelper;
-import blusunrize.immersiveengineering.common.util.EnergyHelper.IIEEnergyItem;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.immersiveengineering.common.util.RotationUtil;
 import blusunrize.immersiveengineering.common.util.advancements.IEAdvancements;
-import blusunrize.immersiveengineering.common.util.inventory.IEItemStackHandler;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiScreen;
@@ -22,7 +18,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumActionResult;
@@ -33,22 +28,16 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.items.CapabilityItemHandler;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
-import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemUtils;
-import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IConstructionRequiringDevice;
 import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
 import pl.pabilo8.modworks.annotations.item.ItemModelType;
@@ -66,21 +55,18 @@ import static blusunrize.immersiveengineering.api.Lib.TOOL_HAMMER;
  */
 @IIItemProperties(category = IICategory.TOOLS)
 @GeneratedItemModels(itemName = "electric_hammer", type = ItemModelType.ITEM_SIMPLE_TOOL, texturePath = "tools/electric_hammer")
-public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergyItem
+public class ItemIIElectricHammer extends ItemIIElectricTool
 {
 	public ItemIIElectricHammer()
 	{
-		super("electric_hammer", 1);
+		super("electric_hammer", "electric_hammer");
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> list, ITooltipFlag flag)
 	{
-		String stored = this.getEnergyStored(stack)+"/"+this.getMaxEnergyStored(stack);
-		list.add(IIStringUtil.getItalicString(I18n.format(IIReference.DESCRIPTION_KEY+"electric_hammer")));
-		list.add(IIStringUtil.getItalicString(I18n.format(IIReference.INFO_KEY+"charge_with_if")));
-		list.add(I18n.format(Lib.DESC+"info.energyStored", TextFormatting.GOLD+stored+TextFormatting.RESET));
+		super.addInformation(stack, world, list, flag);
 
 		if(ItemNBTHelper.hasKey(stack, "multiblockPermission"))
 		{
@@ -108,34 +94,6 @@ public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergy
 					list.add(TextFormatting.DARK_GRAY+" "+I18n.format(Lib.DESC_INFO+"multiblocks."+tagList.getStringTagAt(i)));
 			}
 		}
-	}
-
-	@Override
-	public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound nbt)
-	{
-		if(!stack.isEmpty())
-			return new IEItemStackHandler(stack)
-			{
-				final EnergyHelper.ItemEnergyStorage energyStorage = new EnergyHelper.ItemEnergyStorage(stack);
-
-				@Override
-				public boolean hasCapability(@Nonnull Capability<?> capability, EnumFacing facing)
-				{
-					return capability==CapabilityEnergy.ENERGY||
-							super.hasCapability(capability, facing);
-				}
-
-				@Override
-				public <T> T getCapability(@Nonnull Capability<T> capability, EnumFacing facing)
-				{
-					if(capability==CapabilityEnergy.ENERGY)
-						return (T)energyStorage;
-					if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-						return (T)this;
-					return null;
-				}
-			};
-		return null;
 	}
 
 	@Nonnull
@@ -168,17 +126,13 @@ public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergy
 				if(permittedMultiblocks!=null)
 					for(String s : permittedMultiblocks)
 						if(mb.getUniqueName().equalsIgnoreCase(s))
-						{
 							b = true;
-						}
 				if(!b)
 					break;
 				if(interdictedMultiblocks!=null)
 					for(String s : interdictedMultiblocks)
 						if(mb.getUniqueName().equalsIgnoreCase(s))
-						{
 							b = false;
-						}
 				if(!b)
 					break;
 				if(MultiblockHandler.fireMultiblockFormationEventPre(player, mb, pos, stack).isCanceled())
@@ -196,9 +150,7 @@ public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergy
 			}
 
 		if(performHammerFunctions(player, world, pos, side, hitX, hitY, hitZ, hand))
-		{
 			return doAction(player, hand);
-		}
 
 		return EnumActionResult.PASS;
 	}
@@ -208,10 +160,10 @@ public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergy
 	public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		TileEntity te = world.getTileEntity(pos);
-		if(!player.getHeldItem(hand).hasCapability(CapabilityEnergy.ENERGY, null))
+		ItemStack stack = player.getHeldItem(hand);
+		IEnergyStorage cap = getEnergyStorage(stack);
+		if(cap==null)
 			return EnumActionResult.FAIL;
-		IEnergyStorage cap = player.getHeldItem(hand).getCapability(CapabilityEnergy.ENERGY, null);
-		assert cap!=null;
 
 		if(!(te instanceof IConstructionRequiringDevice))
 			return EnumActionResult.PASS;
@@ -240,60 +192,9 @@ public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergy
 	}
 
 	@Override
-	public int getHarvestLevel(ItemStack stack, String toolClass, @Nullable EntityPlayer player, @Nullable IBlockState blockState)
-	{
-		if(getToolClasses(stack).contains(toolClass)&&hasEnoughEnergy(stack))
-			return 4;
-		else
-			return -1;
-	}
-
-	@Override
-	public boolean isDamaged(ItemStack stack)
-	{
-		return false;
-	}
-
-	@Override
-	public boolean isTool(ItemStack item)
-	{
-		return true;
-	}
-
-	@Override
 	public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer player, EntityLivingBase entity, EnumHand hand)
 	{
 		return !player.world.isRemote&&RotationUtil.rotateEntity(entity, player);
-	}
-
-	@Override
-	public double getDurabilityForDisplay(ItemStack stack)
-	{
-		return 1f-(this.getEnergyStored(stack)/(float)this.getMaxEnergyStored(stack));
-	}
-
-	@Override
-	public boolean showDurabilityBar(ItemStack stack)
-	{
-		return this.getEnergyStored(stack) < this.getMaxEnergyStored(stack);
-	}
-
-	@Override
-	public int getRGBDurabilityForDisplay(ItemStack stack)
-	{
-		return 0xff0000;
-	}
-
-	@Override
-	public float getDestroySpeed(ItemStack stack, IBlockState state)
-	{
-		if(hasEnoughEnergy(stack))
-		{
-			for(String type : this.getToolClasses(stack))
-				if(state.getBlock().isToolEffective(type, state))
-					return 16;
-		}
-		return super.getDestroySpeed(stack, state);
 	}
 
 	//Shares code with IEn, long live II-IEn Cooperation!
@@ -301,15 +202,14 @@ public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergy
 	{
 		TileEntity tile = world.getTileEntity(pos);
 		IBlockState state = world.getBlockState(pos);
+		ItemStack stack = player.getHeldItem(hand);
 
-		if(!(tile instanceof IDirectionalTile)&&!(tile instanceof IHammerInteraction)&&!(tile instanceof IConfigurableSides)&&hasEnoughEnergy(player.getHeldItem(hand)))
-		{
+		if(!(tile instanceof IDirectionalTile)&&!(tile instanceof IHammerInteraction)&&!(tile instanceof IConfigurableSides)&&hasEnoughEnergy(stack))
 			if(RotationUtil.rotateBlock(world, pos, side))
 			{
-				player.getHeldItem(hand).getCapability(CapabilityEnergy.ENERGY, null).extractEnergy(Tools.electricHammerEnergyPerUse, false);
+				drainEnergy(stack, Tools.electricHammerEnergyPerUse, false);
 				return true;
 			}
-		}
 
 		if(tile==null)
 			return false;
@@ -356,13 +256,6 @@ public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergy
 	}
 
 	@Override
-	public boolean onBlockDestroyed(ItemStack stack, World worldIn, IBlockState state, BlockPos pos, EntityLivingBase entityLiving)
-	{
-		stack.getCapability(CapabilityEnergy.ENERGY, null).extractEnergy(Tools.electricHammerEnergyPerUse, false);
-		return super.onBlockDestroyed(stack, worldIn, state, pos, entityLiving);
-	}
-
-	@Override
 	public Set<String> getToolClasses(ItemStack stack)
 	{
 		if(ItemNBTHelper.getBoolean(stack, "forbidHammer"))
@@ -375,26 +268,23 @@ public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergy
 	public boolean canHarvestBlock(@Nonnull IBlockState state, ItemStack stack)
 	{
 		if(hasEnoughEnergy(stack))
-		{
 			if(state.getBlock() instanceof BlockIEBase)
-			{
 				return ((BlockIEBase<?>)state.getBlock()).allowHammerHarvest(state);
-			}
 			else if(state.getBlock().isToolEffective(TOOL_HAMMER, state))
 				return true;
 			else return state.getBlock().isToolEffective(IIReference.TOOL_ADVANCED_HAMMER, state);
-		}
 		return false;
 	}
 
-	public boolean hasEnoughEnergy(ItemStack stack)
+	@Override
+	protected int getEnergyPerUse(ItemStack stack)
 	{
-		return stack.getCapability(CapabilityEnergy.ENERGY, null).getEnergyStored() >= Tools.electricHammerEnergyPerUse;
+		return Tools.electricHammerEnergyPerUse;
 	}
 
 	private EnumActionResult doAction(EntityPlayer player, EnumHand hand)
 	{
-		player.swingArm(hand);
+//		player.swingArm(hand);
 		return EnumActionResult.SUCCESS;
 	}
 }

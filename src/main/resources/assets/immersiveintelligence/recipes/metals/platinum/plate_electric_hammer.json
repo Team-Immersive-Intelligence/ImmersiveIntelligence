@@ -1,0 +1,17 @@
+{
+  "type": "forge:ore_shapeless",
+  "result": {
+    "item": "immersiveintelligence:material_plate",
+    "data": 2
+  },
+  "ingredients": [
+    {
+      "type": "forge:ore_dict",
+      "ore": "ingotPlatinum"
+    },
+    {
+      "item": "immersiveintelligence:electric_hammer",
+      "data": 1
+    }
+  ]
+}

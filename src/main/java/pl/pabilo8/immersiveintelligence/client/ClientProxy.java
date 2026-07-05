@@ -101,13 +101,14 @@ import pl.pabilo8.immersiveintelligence.client.render.multiblock.wooden.*;
 import pl.pabilo8.immersiveintelligence.client.util.IICustomStateMapper;
 import pl.pabilo8.immersiveintelligence.client.util.IIKeybind;
 import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil;
-import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIItemRendererAMT;
-import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIItemRendererAMT.RegisteredItemRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IITileRenderer.RegisteredTileRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.font.IIFontRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.font.IIFontRendererCustomGlyphs;
-import pl.pabilo8.immersiveintelligence.common.*;
+import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Factions;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
+import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.ammo.components.factory.AmmoComponentFluid;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity.TileEntityDataMerger;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity.TileEntityRedstoneBuffer;
@@ -417,17 +418,19 @@ public class ClientProxy extends CommonProxy
 		registerEntityRenderer(EntityAMTTactile.class, EntityRenderNone::new);
 
 		//Hand Weapons
-		registerItemRenderer(IIContent.itemAssaultRifle, new AssaultRifleRenderer());
-		registerItemRenderer(IIContent.itemAssaultRifle, new AssaultRifleRenderer());
-		registerItemRenderer(IIContent.itemRifle, new RifleRenderer());
-		registerItemRenderer(IIContent.itemSubmachinegun, new SubmachinegunRenderer());
+		new AssaultRifleRenderer();
+		new AssaultRifleRenderer();
+		new RifleRenderer();
+		new SubmachinegunRenderer();
 
 		//Tools
 		//TODO: 22.09.2024 binoculars
-		registerItemRenderer(IIContent.itemRadioTuner, new RadioTunerRenderer());
-		registerItemRenderer(IIContent.itemTachometer, new TachometerRenderer());
+		new RadioTunerRenderer();
+		new TachometerRenderer();
+		new ElectricHammerRenderer();
+		new ElectricWrenchRenderer();
+		new ElectricWirecutterRenderer();
 		//TODO: 22.09.2024 mine detector renderer
-		//TODO: 22.09.2024 power tool 3D models
 
 		for(IAmmoTypeItem<?, ?> bullet : AmmoRegistry.getAllAmmoItems())
 		{
@@ -556,26 +559,24 @@ public class ClientProxy extends CommonProxy
 
 
 		//Gate renderers
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityWoodenFenceGate.class, new FenceGateRenderer<>("multiblock/wooden_gate"));
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityWoodenChainFenceGate.class, new FenceGateRenderer<>("multiblock/wooden_chain_gate"));
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySteelFenceGate.class, new FenceGateRenderer<>("multiblock/steel_gate"));
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySteelChainFenceGate.class, new FenceGateRenderer<>("multiblock/steel_chain_gate"));
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAluminiumFenceGate.class, new FenceGateRenderer<>("multiblock/aluminium_gate"));
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAluminiumChainFenceGate.class, new FenceGateRenderer<>("multiblock/aluminium_chain_gate"));
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityWoodenFenceGate.class, new FenceGateRenderer<>(
+				TileEntityWoodenFenceGate.class, "multiblock/wooden_gate"));
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityWoodenChainFenceGate.class, new FenceGateRenderer<>(
+				TileEntityWoodenChainFenceGate.class, "multiblock/wooden_chain_gate"));
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySteelFenceGate.class, new FenceGateRenderer<>(
+				TileEntitySteelFenceGate.class, "multiblock/steel_gate"));
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySteelChainFenceGate.class, new FenceGateRenderer<>(
+				TileEntitySteelChainFenceGate.class, "multiblock/steel_chain_gate"));
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAluminiumFenceGate.class, new FenceGateRenderer<>(
+				TileEntityAluminiumFenceGate.class, "multiblock/aluminium_gate"));
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAluminiumChainFenceGate.class, new FenceGateRenderer<>(
+				TileEntityAluminiumChainFenceGate.class, "multiblock/aluminium_chain_gate"));
 
 		//GUIs (auto texture registering)
 		IIGUI.initClientGUIs();
 
 		//Compat
 		IICompatModule.doModulesClientPreInit();
-	}
-
-	private <I extends Item> void registerItemRenderer(I item, IIItemRendererAMT<I> renderer)
-	{
-		item.setTileEntityItemStackRenderer(renderer);
-		RegisteredItemRenderer annotation = IIUtils.getAnnotation(RegisteredItemRenderer.class, renderer);
-		if(annotation!=null)
-			renderer.subscribeToList(annotation.name());
 	}
 
 	private <T extends Entity> void registerEntityRenderer(Class<T> entityClass, IRenderFactory<? super T> renderFactory)

@@ -85,6 +85,10 @@ public class JEIHelper implements IModPlugin
 				return ItemNBTHelper.hasKey(stack, "bullets")?ISubtypeInterpreter.NONE: IIContent.itemBulletMagazine.getSubNames()[stack.getMetadata()];
 			return ISubtypeInterpreter.NONE;
 		});
+
+		subtypeRegistry.registerSubtypeInterpreter(IIContent.itemHammer, itemStack -> ISubtypeInterpreter.NONE);
+		subtypeRegistry.registerSubtypeInterpreter(IIContent.itemWirecutter, itemStack -> ISubtypeInterpreter.NONE);
+		subtypeRegistry.registerSubtypeInterpreter(IIContent.itemElectricWrench, itemStack -> ISubtypeInterpreter.NONE);
 	}
 
 	@Override
@@ -102,7 +106,7 @@ public class JEIHelper implements IModPlugin
 		slotDrawable = guiHelper.getSlotDrawable();
 		categories.clear();
 		categories.put(BathingRecipe.class, new IIRecipeJEICategory<>(BathingRecipe.class,
-				IIContent.blockMetalMultiblock0.getStack(MetalMultiblocks0.CHEMICAL_BATH), "bathing"));
+				IIContent.blockMetalMultiblock0.getStack(MetalMultiblocks0.CHEMICAL_BATH)));
 		categories.put(BathingRecipe.class, new IIRecipeJEICategory<>(BathingRecipe.class,
 				IIContent.blockMetalMultiblock0.getStack(MetalMultiblocks0.CHEMICAL_BATH), "washing"));
 		categories.put(ElectrolyzerRecipe.class, new IIRecipeJEICategory<>(ElectrolyzerRecipe.class,

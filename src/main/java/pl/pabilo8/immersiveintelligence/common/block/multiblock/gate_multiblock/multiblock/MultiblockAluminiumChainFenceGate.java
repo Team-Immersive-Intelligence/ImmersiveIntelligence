@@ -25,7 +25,7 @@ public class MultiblockAluminiumChainFenceGate extends MultiblockFenceGateBase<T
 
 	public MultiblockAluminiumChainFenceGate()
 	{
-		super(new ResourceLocation(ImmersiveIntelligence.MODID, "multiblocks/aluminium_chain_fence_gate"));
+		super(TileEntityAluminiumChainFenceGate.class, new ResourceLocation(ImmersiveIntelligence.MODID, "multiblocks/aluminium_chain_fence_gate"));
 		INSTANCE = this;
 	}
 

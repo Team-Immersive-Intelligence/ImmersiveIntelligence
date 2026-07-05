@@ -19,55 +19,6 @@ public class ModelIIBase extends ModelBase
 	//List of parts for group flipping / translation / rotation
 	public LinkedHashMap<String, ModelRendererTurbo[]> parts = new LinkedHashMap<>();
 
-	public static void getCommonConnectorModelRotation(EnumFacing facing, ModelIIBase model)
-	{
-		switch(facing)
-		{
-			case UP:
-			{
-				GlStateManager.rotate(180, 0, 0, 1);
-				GlStateManager.translate(-1, -1, 0);
-				//model.rotateAll(0f, 0f, TmtUtil.AngleToTMT(180));
-			}
-			break;
-			case DOWN:
-			{
-				//model.rotateAll(0f, 0f, 0f);
-			}
-			break;
-			case NORTH:
-			{
-				GlStateManager.rotate(90, 1, 0, 0);
-				GlStateManager.rotate(90, 0, 1, 0);
-				GlStateManager.translate(0, -1, 1);
-				//model.rotateAll(TmtUtil.AngleToTMT(90), 0f, 0f);
-			}
-			break;
-			case SOUTH:
-			{
-				GlStateManager.rotate(-90, 1, 0, 0);
-				GlStateManager.rotate(90, 0, 1, 0);
-				GlStateManager.translate(-1, 0, 1);
-				//model.rotateAll(TmtUtil.AngleToTMT(270), 0f, 0f);
-			}
-			break;
-			case EAST:
-			{
-				GlStateManager.rotate(90, 0, 0, 1);
-				GlStateManager.translate(0, -1, 0);
-				//model.rotateAll(0f, 0f, TmtUtil.AngleToTMT(90));
-			}
-			break;
-			case WEST:
-			{
-				GlStateManager.rotate(-90, 0, 0, 1);
-				GlStateManager.translate(-1, 0, 0);
-				//model.rotateAll(0f, 0f, TmtUtil.AngleToTMT(270));
-			}
-			break;
-		}
-	}
-
 	public void flipAll()
 	{
 		if(parts.isEmpty())

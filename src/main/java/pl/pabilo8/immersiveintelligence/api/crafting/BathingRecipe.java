@@ -59,4 +59,10 @@ public class BathingRecipe extends IIMultiblockRecipe
 				.withMultiblockModel(32+8, -8)
 				.build();
 	}
+
+	@Override
+	public boolean matchesSubCategory(String subCategory)
+	{
+		return isWashing^(!subCategory.equals("ii.washing"));
+	}
 }

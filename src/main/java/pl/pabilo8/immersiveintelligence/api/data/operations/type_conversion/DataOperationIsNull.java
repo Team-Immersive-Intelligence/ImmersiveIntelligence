@@ -20,6 +20,6 @@ public class DataOperationIsNull extends DataOperation
 	@Override
 	public DataType execute(DataPacket packet, DataTypeExpression data)
 	{
-		return new DataTypeBoolean(packet.getVarInType(DataType.class, data.getArgument(0)) instanceof DataTypeNull);
+		return new DataTypeBoolean(packet.evaluateVariable(data.getArgument(0), false) instanceof DataTypeNull);
 	}
 }

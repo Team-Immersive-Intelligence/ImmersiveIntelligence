@@ -5,6 +5,7 @@ import pl.pabilo8.immersiveintelligence.api.data.IIDataTypeUtils;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation.DataOperationMeta;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeAccessor;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeNull;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType.TypeMetaInfo;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.*;
@@ -18,6 +19,8 @@ import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Visual editor for {@link DataTypeExpression} used by the Arithmetic-Logic Machine.
@@ -147,7 +150,8 @@ public class DecoDataEditorExpression extends DecoDataEditor<DataTypeExpression>
 				.withBackgroundMask(null);
 
 		TypeMetaInfo<?> accessorMeta = IIDataTypeUtils.metaTypesByClass.get(DataTypeAccessor.class);
-		TypeMetaInfo<?> expectedMeta = IIDataTypeUtils.metaTypesByClass.get(expectedType);
+		List<TypeMetaInfo<?>> typeEntries = getArgumentTypeEntries(expectedType, accessorMeta);
+		TypeMetaInfo<?> selectedMeta = accessor?accessorMeta: getArgumentTypeMeta(argument, expectedType);
 
 		DecoPanel paperPanel;
 		editor.addComponents(
@@ -156,34 +160,35 @@ public class DecoDataEditorExpression extends DecoDataEditor<DataTypeExpression>
 						.withBackground(DecoTextures.BG_PAPER)
 						.withBackgroundMask(DecoTextures.TEMPLATE_PAPER),
 				new DecoDropdown<TypeMetaInfo<?>>(34, 3)
-						.withSize(width-34-22, 16)
-						.withDropdownWidth(width-16)
+						.withSize(width-34-22, 18)
+						.withDropdownWidth(width-34-22)
 						.withMaxDisplayedEntries(4)
 						.withScrollBarBackground(DecoTextures.COMPONENT_SLIDER_PAPER)
 						.withBackground(DecoTextures.COMPONENT_BUTTON_PAPER)
 						.withListBackground(DecoTextures.COMPONENT_TEXT_FIELD)
 						.withDropdownSymbol(DecoTextures.COMPONENT_DROPDOWN_SYMBOL_PAPER)
-						.withEntries(accessorMeta, expectedMeta)
-						.withSelectedEntry(accessor?accessorMeta: expectedMeta)
+						.withEntries(typeEntries)
+						.withSelectedEntry(selectedMeta)
 						.withDisplayFunction(DecoTemplates.getDataTypeEntryDisplay())
 						.withOnSelectedEntry((oldType, newType) -> {
 							storeCurrentPageOutput();
+							DataType current = getArgument(argumentID, expectedType);
 							if(newType!=null&&newType.type==DataTypeAccessor.class)
-								setArgument(argumentID, new DataTypeAccessor(getCurrentAccessorVariable(argument)));
-							else
-								setArgument(argumentID, normalizeArgument(argument, expectedType));
+								setArgument(argumentID, new DataTypeAccessor(getCurrentAccessorVariable(current)));
+							else if(newType!=null)
+								setArgument(argumentID, normalizeArgument(current, newType.type));
 							refreshPage();
 						}),
-				new DecoButton(width-20, 3)
+				new DecoButton(width-20-2, 3)
 						.withText("@")
-						.withSize(16, 16)
+						.withSize(18, 18)
 						.withBackground(DecoTextures.COMPONENT_BUTTON_PAPER)
 						.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+"expression.accessor.tooltip")
 						.withOnLMBPressed(() -> {
 							storeCurrentPageOutput();
 							DataType current = getArgument(argumentID, expectedType);
 							if(current instanceof DataTypeAccessor)
-								setArgument(argumentID, normalizeArgument(current, expectedType));
+								setArgument(argumentID, createDefaultArgument(expectedType));
 							else
 								setArgument(argumentID, new DataTypeAccessor('a'));
 							refreshPage();
@@ -225,10 +230,13 @@ public class DecoDataEditorExpression extends DecoDataEditor<DataTypeExpression>
 			editor.addComponent(argumentEditor)
 					.withSize(width-8, height-43);
 		else
+		{
+			TypeMetaInfo<?> typeMeta = getArgumentTypeMeta(argument, expectedType);
 			editor.addLabel(IIReference.DESCRIPTION_KEY+"no_editor", 4, 30)
 					.withSize(width-8, 16)
 					.withAlign(DecoAlignment.LEFT)
-					.withTextColor(IIDataTypeUtils.metaTypesByClass.get(expectedType).color.withBrightness(0.4f));
+					.withTextColor(typeMeta.color.withBrightness(0.4f));
+		}
 	}
 
 	//--- Utils ---//
@@ -290,18 +298,64 @@ public class DecoDataEditorExpression extends DecoDataEditor<DataTypeExpression>
 	{
 		ensureArgumentArray(dataType.getMeta());
 		if(index < 0||index >= dataType.data.length)
-			return IIDataTypeUtils.getVarInstance(expectedType);
+			return createDefaultArgument(expectedType);
 		DataType argument = dataType.data[index];
 		if(argument instanceof DataTypeAccessor)
 			return argument;
-		return normalizeArgument(argument, expectedType);
+		DataType normalized = normalizeArgument(argument, expectedType);
+		dataType.data[index] = normalized;
+		return normalized;
 	}
 
 	private DataType normalizeArgument(@Nullable DataType argument, Class<? extends DataType> expectedType)
 	{
-		if(argument!=null&&expectedType.isAssignableFrom(argument.getClass()))
+		if(argument!=null&&expectedType.isAssignableFrom(argument.getClass())&&DecoDataEditor.hasEditorFor(argument.getClass()))
 			return argument.clone();
-		return IIDataTypeUtils.getVarInstance(expectedType);
+		return createDefaultArgument(expectedType);
+	}
+
+	private DataType createDefaultArgument(Class<? extends DataType> expectedType)
+	{
+		Class<? extends DataType> type = getDefaultArgumentType(expectedType);
+		return IIDataTypeUtils.getVarInstance(type);
+	}
+
+	private Class<? extends DataType> getDefaultArgumentType(Class<? extends DataType> expectedType)
+	{
+		List<TypeMetaInfo<?>> compatibleTypes = getCompatibleArgumentTypes(expectedType);
+		if(!compatibleTypes.isEmpty())
+			return compatibleTypes.get(0).type;
+		if(IIDataTypeUtils.metaTypesByClass.containsKey(expectedType))
+			return expectedType;
+		return DataTypeNull.class;
+	}
+
+	private List<TypeMetaInfo<?>> getCompatibleArgumentTypes(Class<? extends DataType> expectedType)
+	{
+		return DecoDataEditor.getCompatibleEditorTypes(expectedType, true);
+	}
+
+	private List<TypeMetaInfo<?>> getArgumentTypeEntries(Class<? extends DataType> expectedType, @Nullable TypeMetaInfo<?> accessorMeta)
+	{
+		ArrayList<TypeMetaInfo<?>> entries = new ArrayList<>();
+		if(accessorMeta!=null)
+			entries.add(accessorMeta);
+		entries.addAll(getCompatibleArgumentTypes(expectedType));
+		return entries;
+	}
+
+	private TypeMetaInfo<?> getArgumentTypeMeta(DataType argument, Class<? extends DataType> expectedType)
+	{
+		TypeMetaInfo<?> meta = IIDataTypeUtils.metaTypesByClass.get(argument.getClass());
+		if(meta!=null&&expectedType.isAssignableFrom(meta.type))
+			return meta;
+
+		List<TypeMetaInfo<?>> compatibleTypes = getCompatibleArgumentTypes(expectedType);
+		if(!compatibleTypes.isEmpty())
+			return compatibleTypes.get(0);
+
+		meta = IIDataTypeUtils.metaTypesByClass.get(expectedType);
+		return meta!=null?meta: IIDataTypeUtils.metaTypesByClass.get(DataTypeNull.class);
 	}
 
 	private void setArgument(int index, DataType value)

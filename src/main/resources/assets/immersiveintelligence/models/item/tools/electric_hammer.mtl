@@ -1,0 +1,6 @@
+# Made by Pabilo8 with Blockbench
+
+newmtl electric_tool_base
+map_Kd immersiveintelligence:items/tools/electric_tool_base
+newmtl electric_hammer_model
+map_Kd immersiveintelligence:items/tools/electric_hammer_model

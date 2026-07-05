@@ -23,6 +23,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.client.model.item.ModelDualPerspective;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTChain;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
@@ -130,6 +131,27 @@ public class IIModelRegistry extends ImmersiveModelRegistry
 			ResourceLocation loc = new ResourceLocation(modID, ((ItemIEBase)item).itemName);
 			itemModelReplacements.put(new ModelResourceLocation(loc, "inventory"), replacement);
 		}
+	}
+
+	/**
+	 * Registers an item model that keeps the normal baked model for GUI/inventory rendering,
+	 * while delegating all world and hand perspectives to a custom replacement model.
+	 *
+	 * @param item        item to be registered
+	 * @param modID       Mod ID / domain used for model path
+	 * @param replacement replacement item model used outside GUI rendering
+	 */
+	public void registerDualCustomItemModel(Item item, String modID, final ItemModelReplacement replacement)
+	{
+		registerCustomItemModel(item, modID, new ImmersiveModelRegistry.ItemModelReplacement()
+		{
+			@Override
+			public IBakedModel createBakedModel(IBakedModel existingModel)
+			{
+				IBakedModel perspectiveModel = replacement.createBakedModel(existingModel);
+				return new ModelDualPerspective(existingModel, perspectiveModel==null?existingModel: perspectiveModel);
+			}
+		});
 	}
 
 	/**

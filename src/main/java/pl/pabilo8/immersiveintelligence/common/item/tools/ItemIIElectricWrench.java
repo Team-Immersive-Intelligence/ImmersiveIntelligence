@@ -1,50 +1,31 @@
 package pl.pabilo8.immersiveintelligence.common.item.tools;
 
-import blusunrize.immersiveengineering.api.Lib;
-import blusunrize.immersiveengineering.api.tool.ITool;
-import blusunrize.immersiveengineering.common.util.EnergyHelper;
-import blusunrize.immersiveengineering.common.util.EnergyHelper.IIEEnergyItem;
 import blusunrize.immersiveengineering.common.util.RotationUtil;
-import blusunrize.immersiveengineering.common.util.inventory.IEItemStackHandler;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.items.CapabilityItemHandler;
 import pl.pabilo8.immersiveintelligence.api.upgrade.IUpgradableDevice;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.IWrench;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
-import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemUtils;
-import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
 import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
 import pl.pabilo8.modworks.annotations.item.ItemModelType;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -53,51 +34,12 @@ import java.util.Set;
  */
 @IIItemProperties(category = IICategory.TOOLS)
 @GeneratedItemModels(itemName = "electric_wrench", type = ItemModelType.ITEM_SIMPLE_TOOL, texturePath = "tools/electric_wrench")
-public class ItemIIElectricWrench extends ItemIIBase implements ITool, IIEEnergyItem, IWrench
+public class ItemIIElectricWrench extends ItemIIElectricTool implements IWrench
 {
 	public ItemIIElectricWrench()
 	{
-		super("electric_wrench", 1);
+		super("electric_wrench", "wrench");
 	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable World world, List<String> list, ITooltipFlag flag)
-	{
-		String stored = this.getEnergyStored(stack)+"/"+this.getMaxEnergyStored(stack);
-		list.add(IIStringUtil.getItalicString(I18n.format(IIReference.DESCRIPTION_KEY+"wrench")));
-		list.add(IIStringUtil.getItalicString(I18n.format(IIReference.INFO_KEY+"charge_with_if")));
-		list.add(I18n.format(Lib.DESC+"info.energyStored", TextFormatting.GOLD+stored+TextFormatting.RESET));
-	}
-
-	@Override
-	public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound nbt)
-	{
-		if(!stack.isEmpty())
-			return new IEItemStackHandler(stack)
-			{
-				final EnergyHelper.ItemEnergyStorage energyStorage = new EnergyHelper.ItemEnergyStorage(stack);
-
-				@Override
-				public boolean hasCapability(@Nonnull Capability<?> capability, EnumFacing facing)
-				{
-					return capability==CapabilityEnergy.ENERGY||
-							super.hasCapability(capability, facing);
-				}
-
-				@Override
-				public <T> T getCapability(@Nonnull Capability<T> capability, EnumFacing facing)
-				{
-					if(capability==CapabilityEnergy.ENERGY)
-						return (T)energyStorage;
-					if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-						return (T)this;
-					return null;
-				}
-			};
-		return null;
-	}
-
 
 	@Nonnull
 	@Override
@@ -138,71 +80,15 @@ public class ItemIIElectricWrench extends ItemIIBase implements ITool, IIEEnergy
 	}
 
 	@Override
-	public int getHarvestLevel(ItemStack stack, String toolClass, @Nullable EntityPlayer player, @Nullable IBlockState blockState)
-	{
-		if(getToolClasses(stack).contains(toolClass)&&hasEnoughEnergy(stack))
-			return 4;
-		else
-			return -1;
-	}
-
-	@Override
-	public boolean isDamaged(ItemStack stack)
-	{
-		return false;
-	}
-
-	@Override
-	public boolean isTool(ItemStack item)
-	{
-		return true;
-	}
-
-	@Override
 	public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer player, EntityLivingBase entity, EnumHand hand)
 	{
 		return !player.world.isRemote&&RotationUtil.rotateEntity(entity, player);
 	}
 
 	@Override
-	public double getDurabilityForDisplay(ItemStack stack)
-	{
-		return 1f-(this.getEnergyStored(stack)/(float)this.getMaxEnergyStored(stack));
-	}
-
-	@Override
-	public boolean showDurabilityBar(ItemStack stack)
-	{
-		return this.getEnergyStored(stack) < this.getMaxEnergyStored(stack);
-	}
-
-	@Override
-	public int getRGBDurabilityForDisplay(ItemStack stack)
-	{
-		return 0xff0000;
-	}
-
-	@Override
-	public float getDestroySpeed(ItemStack stack, IBlockState state)
-	{
-		if(hasEnoughEnergy(stack))
-			for(String type : this.getToolClasses(stack))
-				if(state.getBlock().isToolEffective(type, state))
-					return 16;
-		return super.getDestroySpeed(stack, state);
-	}
-
-	@Override
 	public int getMaxEnergyStored(ItemStack container)
 	{
 		return Tools.electricWrenchCapacity;
-	}
-
-	@Override
-	public boolean onBlockDestroyed(ItemStack stack, World worldIn, IBlockState state, BlockPos pos, EntityLivingBase entityLiving)
-	{
-		stack.getCapability(CapabilityEnergy.ENERGY, null).extractEnergy(Tools.electricWirecutterEnergyPerUse, false);
-		return super.onBlockDestroyed(stack, worldIn, state, pos, entityLiving);
 	}
 
 	@Override
@@ -221,9 +107,10 @@ public class ItemIIElectricWrench extends ItemIIBase implements ITool, IIEEnergy
 		return false;
 	}
 
-	public boolean hasEnoughEnergy(ItemStack stack)
+	@Override
+	protected int getEnergyPerUse(ItemStack stack)
 	{
-		return stack.getCapability(CapabilityEnergy.ENERGY, null).getEnergyStored() >= Tools.electricWirecutterEnergyPerUse;
+		return Tools.electricWrenchEnergyPerUse;
 	}
 
 	@Override
@@ -235,6 +122,6 @@ public class ItemIIElectricWrench extends ItemIIBase implements ITool, IIEEnergy
 	@Override
 	public void damageWrench(ItemStack stack, EntityPlayer player)
 	{
-		extractEnergy(stack, Tools.electricWrenchEnergyPerUse, false);
+		drainEnergy(stack, Tools.electricWrenchEnergyPerUse, false);
 	}
 }

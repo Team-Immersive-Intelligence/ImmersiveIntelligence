@@ -59,7 +59,7 @@ public abstract class TileEntityGateBase<T extends TileEntityGateBase<T>> extend
 	{
 		super(multiblock);
 		//Use common upgrades for all sorts of gates
-		upgradeManager = new UpgradeManager<>(this, UpgradeTechTree.getTreeFor(TileEntityGateBase.class));
+		upgradeManager = new UpgradeManager<>(this, UpgradeTechTree.getTreeFor(getClass()));
 		gate = new MultiblockInteractablePart(40);
 		redstoneNetwork = new MultiblockRedstoneNetwork<>(((T)this));
 	}
