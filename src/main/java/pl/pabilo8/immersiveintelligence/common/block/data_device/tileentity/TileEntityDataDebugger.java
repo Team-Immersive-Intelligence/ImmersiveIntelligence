@@ -89,9 +89,7 @@ public class TileEntityDataDebugger extends TileEntityImmersiveConnectable imple
 				{
 					outputTime = 0;
 					markDirty();
-					IBlockState stateHere = world.getBlockState(pos);
-					markContainingBlockForUpdate(stateHere);
-					markBlockForUpdate(pos.offset(facing), stateHere);
+					markBlockForUpdate(pos, null);
 				}
 				else
 					outputTime = Math.max(outputTime-1, 0);
@@ -246,9 +244,7 @@ public class TileEntityDataDebugger extends TileEntityImmersiveConnectable imple
 		if(!isInvalid())
 		{
 			markDirty();
-			IBlockState stateHere = world.getBlockState(pos);
-			markContainingBlockForUpdate(stateHere);
-			markBlockForUpdate(pos.offset(facing), stateHere);
+			markBlockForUpdate(this.pos, null);
 		}
 	}
 

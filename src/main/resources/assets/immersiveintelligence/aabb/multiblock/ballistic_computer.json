@@ -52,5 +52,8 @@
     "data_input": 2,
     "data_output": 3,
     "cocoa": [1, 5]
+  },
+  "rotations": {
+    "data_output": "clockwise_90"
   }
 }
