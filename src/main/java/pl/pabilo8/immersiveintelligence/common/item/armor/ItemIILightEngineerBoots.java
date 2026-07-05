@@ -22,6 +22,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.client.model.armor.ModelLightEngineerArmor;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
+import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradeableArmor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -73,7 +74,7 @@ public class ItemIILightEngineerBoots extends ItemIILightEngineerArmorBase imple
 
 		if(equipmentSlot==this.armorType)
 		{
-				multimap.put(EntityLivingBase.SWIM_SPEED.getName(), new AttributeModifier(ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Flippers", 4, 2));
+			multimap.put(EntityLivingBase.SWIM_SPEED.getName(), new AttributeModifier(ItemIIUpgradeableArmor.ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Flippers", 4, 2));
 			if(ItemNBTHelper.hasKey(stack, "rackets"))
 				multimap.put(SharedMonsterAttributes.MOVEMENT_SPEED.getName(), new AttributeModifier(RACKETS_MODIFIER_UUID, "Rackets", 0.5, 1));
 			//if(getUpgrades(stack).hasKey(""))
@@ -128,7 +129,7 @@ public class ItemIILightEngineerBoots extends ItemIILightEngineerArmorBase imple
 
 	@Override
 	public void onStrike(ItemStack s, EntityEquipmentSlot eqSlot, EntityLivingBase p, Map<String, Object> cache,
-						 @Nullable DamageSource dSource, ElectricSource eSource)
+	                     @Nullable DamageSource dSource, ElectricSource eSource)
 	{
 		if(!(dSource instanceof ElectricDamageSource))
 		{

@@ -297,8 +297,8 @@ public abstract class ItemIIUpgradeableArmor extends ItemArmor implements IUpgra
 		{
 			NBTTagCompound nbt = getUpgrades(stack);
 
-			multimap.put(SharedMonsterAttributes.ARMOR.getName(), new AttributeModifier(ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Armor modifier", damageReduceAmount+nbt.getDouble("armor_increase"), 0));
-			multimap.put(SharedMonsterAttributes.ARMOR_TOUGHNESS.getName(), new AttributeModifier(ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Toughness modifier", toughness+nbt.getDouble("toughness_increase"), 0));
+			multimap.put(SharedMonsterAttributes.ARMOR.getName(), new AttributeModifier(ItemIIUpgradeableArmor.ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Armor modifier", damageReduceAmount+nbt.getDouble("armor_increase"), 0));
+			multimap.put(SharedMonsterAttributes.ARMOR_TOUGHNESS.getName(), new AttributeModifier(ItemIIUpgradeableArmor.ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Toughness modifier", toughness+nbt.getDouble("toughness_increase"), 0));
 
 		}
 		return multimap;

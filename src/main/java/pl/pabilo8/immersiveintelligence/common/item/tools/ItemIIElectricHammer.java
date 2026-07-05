@@ -135,14 +135,15 @@ public class ItemIIElectricHammer extends ItemIIElectricTool
 							b = false;
 				if(!b)
 					break;
+				if(!hasEnoughEnergy(stack)&&!IIItemUtils.canConstructFreeOfCharge(player))
+					return EnumActionResult.FAIL;
 				if(MultiblockHandler.fireMultiblockFormationEventPre(player, mb, pos, stack).isCanceled())
 					continue;
 				if(mb.createStructure(world, pos, side, player))
 				{
 					//Consume energy from the electric hammer when forming a multiblock
-					if(stack.hasCapability(CapabilityEnergy.ENERGY, null) && !IIItemUtils.canConstructFreeOfCharge(player))
-						stack.getCapability(CapabilityEnergy.ENERGY, null).extractEnergy(Tools.electricHammerEnergyPerUseConstruction, false);
-
+					if(!IIItemUtils.canConstructFreeOfCharge(player))
+						drainEnergy(stack, getEnergyPerUse(stack), false);
 					if(player instanceof EntityPlayerMP)
 						IEAdvancements.TRIGGER_MULTIBLOCK.trigger((EntityPlayerMP)player, mb, stack);
 					return doAction(player, hand);
