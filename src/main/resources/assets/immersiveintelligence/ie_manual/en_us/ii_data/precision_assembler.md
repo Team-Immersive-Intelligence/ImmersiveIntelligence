@@ -16,5 +16,5 @@ Just like an [engineer follows a blueprint during work](blueprints), the **Preci
 |[crafting]{source:"assembly_scheme"}| <br>
 The [scheme] can be installed through the user interface by placing it in the middle slot.
 # tools
-Depending on the scheme the manufacturing process requires different tools, these tools ware down over time and will need replacement.
+Depending on the scheme the manufacturing process requires different tools, these tools wear down over time and will need replacement.
 |[crafting]{source:"precision_tools"}|
