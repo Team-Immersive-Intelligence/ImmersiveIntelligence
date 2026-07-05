@@ -25,7 +25,7 @@ public class MultiblockWoodenFenceGate extends MultiblockFenceGateBase<TileEntit
 
 	public MultiblockWoodenFenceGate()
 	{
-		super(new ResourceLocation(ImmersiveIntelligence.MODID, "multiblocks/wooden_fence_gate"));
+		super(TileEntityWoodenFenceGate.class, new ResourceLocation(ImmersiveIntelligence.MODID, "multiblocks/wooden_fence_gate"));
 		INSTANCE = this;
 	}
 

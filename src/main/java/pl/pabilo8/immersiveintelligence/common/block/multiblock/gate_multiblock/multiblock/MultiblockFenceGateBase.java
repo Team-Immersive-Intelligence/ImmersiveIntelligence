@@ -2,6 +2,8 @@ package pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3i;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeTechTree;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.UpgradeTier;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.tileentity.TileEntityGateBase;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
@@ -15,10 +17,13 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctur
  */
 public abstract class MultiblockFenceGateBase<T extends TileEntityGateBase<T>> extends MultiblockStuctureBase<T>
 {
-	public MultiblockFenceGateBase(ResourceLocation loc)
+	public MultiblockFenceGateBase(Class<T> klass, ResourceLocation loc)
 	{
 		super(loc);
 		offset = new Vec3i(0, 1, 0);
+		UpgradeTechTree.getTreeFor(klass)
+				.withUpgrade(IIContent.UPGRADE_REDSTONE_ACTIVATION, UpgradeTier.TIER_1)
+				.withUpgrade(IIContent.UPGRADE_RAZOR_WIRE, UpgradeTier.TIER_1);
 	}
 
 	@Override
