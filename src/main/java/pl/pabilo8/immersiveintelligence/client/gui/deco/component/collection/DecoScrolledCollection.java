@@ -391,20 +391,22 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 		//Iterate over all entries
 		for(T entry : entries)
 		{
-			//Skip non-selectable (clickable) entries
-			if(!display.isSelectable(entry))
-				continue;
+			//Measure element height for layout for all entries
 			int elementHeight = display.displayElement(entry, entryMaxWidth, fontRenderer, true);
 
 			//Check if the mouse is over the current entry
 			if(IIMath.isPointInRectangle(xx+(currentColumn*entryMaxWidth), yy+drawOffset,
 					xx+(currentColumn*entryMaxWidth)+entryMaxWidth,
-					yy+drawOffset+display.displayElement(entry, entryMaxWidth, fontRenderer, true),
+					yy+drawOffset+elementHeight,
 					mouseX, mouseY))
-				return new Tuple<>(
-						this.entries.indexOf(entry),
-						yy+drawOffset
-				);
+			{
+				//Only return selectable entries
+				if(display.isSelectable(entry))
+					return new Tuple<>(
+							this.entries.indexOf(entry),
+							yy+drawOffset
+					);
+			}
 
 			currentColumn++;
 			//There can be multiple entries in one row

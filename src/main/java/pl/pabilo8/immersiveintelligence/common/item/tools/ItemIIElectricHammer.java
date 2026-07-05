@@ -139,6 +139,10 @@ public class ItemIIElectricHammer extends ItemIIElectricTool
 					continue;
 				if(mb.createStructure(world, pos, side, player))
 				{
+					//Consume energy from the electric hammer when forming a multiblock
+					if(stack.hasCapability(CapabilityEnergy.ENERGY, null) && !IIItemUtils.canConstructFreeOfCharge(player))
+						stack.getCapability(CapabilityEnergy.ENERGY, null).extractEnergy(Tools.electricHammerEnergyPerUseConstruction, false);
+
 					if(player instanceof EntityPlayerMP)
 						IEAdvancements.TRIGGER_MULTIBLOCK.trigger((EntityPlayerMP)player, mb, stack);
 					return doAction(player, hand);
@@ -164,12 +168,17 @@ public class ItemIIElectricHammer extends ItemIIElectricTool
 		if(!(te instanceof IConstructionRequiringDevice))
 			return EnumActionResult.PASS;
 		IConstructionRequiringDevice mb = ((IConstructionRequiringDevice)te).master();
-		int energy = IIItemUtils.canConstructFreeOfCharge(player)?999999: cap.extractEnergy(Tools.electricHammerEnergyPerUseConstruction, false);
 
-		if(mb!=null&&!mb.isConstructionFinished()&&energy > 0)
+		if(mb!=null&&!mb.isConstructionFinished())
 		{
-			mb.progressConstruction(energy);
-			world.playSound(null, pos, IISounds.constructionHammer, SoundCategory.PLAYERS, 0.5f, 1);
+			int energy = IIItemUtils.canConstructFreeOfCharge(player)?999999: cap.extractEnergy(Tools.electricHammerEnergyPerUseConstruction, false);
+			if(energy > 0)
+			{
+				if(!IIItemUtils.canConstructFreeOfCharge(player))
+					cap.extractEnergy(Tools.electricHammerEnergyPerUseConstruction, false);
+				mb.progressConstruction(energy);
+				world.playSound(null, pos, IISounds.constructionHammer, SoundCategory.PLAYERS, 0.5f, 1);
+			}
 		}
 
 		return EnumActionResult.PASS;

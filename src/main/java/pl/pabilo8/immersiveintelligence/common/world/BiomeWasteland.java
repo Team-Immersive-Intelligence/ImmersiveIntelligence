@@ -5,6 +5,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -47,6 +48,6 @@ public class BiomeWasteland extends Biome
 	@Override
 	public List<SpawnListEntry> getSpawnableList(EnumCreatureType creatureType)
 	{
-		return Collections.emptyList();
+		return new ArrayList<>();
 	}
 }

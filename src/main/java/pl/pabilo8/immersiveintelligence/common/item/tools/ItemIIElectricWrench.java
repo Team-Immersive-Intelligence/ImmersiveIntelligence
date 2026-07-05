@@ -49,16 +49,15 @@ public class ItemIIElectricWrench extends ItemIIElectricTool implements IWrench
 		if(te==null||te.getCurrentUpgrade()==null)
 			return EnumActionResult.PASS;
 
-		ItemStack stack = player.getHeldItem(hand);
-		boolean free = IIItemUtils.canUpgradeFreeOfCharge(player);
-		if(!free&&!hasEnoughEnergy(stack))
+		ItemStack heldItem = player.getHeldItem(hand);
+		//check if the powered wrench has charge
+		if(!IIItemUtils.canUpgradeFreeOfCharge(player)&&!hasEnoughEnergy(heldItem))
 			return EnumActionResult.PASS;
 
-		if(te.addUpgradeInstallProgress(free?999999: Tools.electricWrenchUpgradeProgress))
+		if(te.addUpgradeInstallProgress(IIItemUtils.canUpgradeFreeOfCharge(player)?999999: Tools.electricWrenchUpgradeProgress))
 		{
 			world.playSound(null, pos, IISounds.constructionElectricWrench, SoundCategory.PLAYERS, 0.5f, 1);
-			if(!free)
-				damageWrench(stack, player);
+			damageWrench(heldItem, player);
 		}
 		return EnumActionResult.SUCCESS;
 

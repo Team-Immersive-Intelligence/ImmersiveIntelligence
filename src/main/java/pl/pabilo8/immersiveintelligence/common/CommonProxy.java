@@ -350,6 +350,8 @@ public class CommonProxy implements IGuiHandler
 
 		LighterFuelHandler.addFuel(FluidRegistry.getFluid("creosote"), 100);
 		LighterFuelHandler.addFuel(FluidRegistry.getFluid("ethanol"), 20);
+		LighterFuelHandler.addFuel(FluidRegistry.getFluid("diesel"), 10);
+		LighterFuelHandler.addFuel(FluidRegistry.getFluid("biodiesel"), 10);
 
 		MachinegunCoolantHandler.addCoolant(FluidRegistry.WATER, 1);
 
