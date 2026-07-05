@@ -9,6 +9,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPane
 import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -74,8 +75,29 @@ public abstract class DecoDataEditor<T extends DataType> extends DecoPanel
 	{
 		return EDITORS.keySet().stream()
 				.map(IIDataTypeUtils.metaTypesByClass::get)
+				.filter(Objects::nonNull)
 				.filter(typeMetaInfo -> advanced||!typeMetaInfo.isAdvancedType())
 				.collect(Collectors.toList());
+	}
+
+	/**
+	 * @param type     expected base type
+	 * @param advanced whether advanced data types may be returned
+	 * @return concrete, editable data types compatible with the expected type
+	 */
+	public static List<TypeMetaInfo<?>> getCompatibleEditorTypes(Class<? extends DataType> type, boolean advanced)
+	{
+		return EDITORS.keySet().stream()
+				.filter(type::isAssignableFrom)
+				.map(IIDataTypeUtils.metaTypesByClass::get)
+				.filter(Objects::nonNull)
+				.filter(typeMetaInfo -> advanced||!typeMetaInfo.isAdvancedType())
+				.collect(Collectors.toList());
+	}
+
+	public static boolean hasEditorFor(Class<? extends DataType> type)
+	{
+		return EDITORS.containsKey(type);
 	}
 
 	public DecoDataEditor<T> withDataType(T dataType)
