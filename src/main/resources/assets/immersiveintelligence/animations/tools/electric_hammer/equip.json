@@ -1,0 +1,117 @@
+{
+  "comment": "Made by Pabilo8 with Blockbench",
+  "groups": {
+    "switch": {
+      "rotation": [
+        {
+          "time": 0.26667,
+          "transform": [-90, 0, 0]
+        },
+        {
+          "time": 0.5,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "offhand": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.26667,
+          "transform": [47.5, 0, -95]
+        },
+        {
+          "time": 0.5,
+          "transform": [10, 0, -95]
+        },
+        {
+          "time": 0.73333,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.26667,
+          "transform": [4, 7, 3]
+        },
+        {
+          "time": 0.5,
+          "transform": [2, 7, 0]
+        },
+        {
+          "time": 0.73333,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "scale": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.26667,
+          "transform": [1, 1, 1]
+        },
+        {
+          "time": 0.73333,
+          "transform": [1, 1, 1]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "base": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.26667,
+          "transform": [0, 0, 82.5]
+        },
+        {
+          "time": 0.66667,
+          "transform": [0, 0, 82.5]
+        },
+        {
+          "time": 0.83333,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "mainhand": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [90, 0, 0]
+        }
+      ],
+      "position": [
+        {
+          "time": 0,
+          "transform": [-2, 0, 3]
+        }
+      ],
+      "scale": [
+        {
+          "time": 0,
+          "transform": [0.75, 0.75, 0.75]
+        }
+      ]
+    }
+  }
+}

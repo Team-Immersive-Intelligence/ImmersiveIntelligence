@@ -7,8 +7,8 @@ The Packer is a machine used to batch load items into containers, such as crates
 To form it, use a [hammer](introduction#introductionHammer) on the [vertical conveyor].
 # details
 By default, the packer offers 54 input storage slots for items. They can be inserted through a single conveyor on the rear of the machine.
-To operation the machine, it requires electricity and a container to be provided on the 3 block long conveyor.
-For packing orders, the machine uses a [Task System](task_system.md). Tasks can be added, removed and tweaked through its interface, or the [data system](data_main.md).
+To operate the machine, it requires electricity and a container to be provided on the 3 block long conveyor.
+For packing the orders, the machine uses a [Task System](task_system.md). Tasks can be added, removed and tweaked through its interface using the [data system](data_main.md).
 # details_2
 The ["Pack"] task is used to load items into the provided container. By default, the packer can take any item (the * symbol) and the maximum possible amount of it.
 This can be changed by selecting a different mode. You can choose between taking in a select number of inventory slots, or number of items. The amount can be specified in the interface, in the input field below.

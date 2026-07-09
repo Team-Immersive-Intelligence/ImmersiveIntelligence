@@ -48,7 +48,6 @@ public class IIPacketHandler
 		registerMessage(MessageFireworks.class, true, false);
 		registerMessage(MessageRotaryPowerSync.class, true, false);
 		registerMessage(MessageBlockDamageSync.class, true, false);
-		registerMessage(MessagePlayerAimAnimationSync.class, true, false);
 		registerMessage(MessageItemKeybind.class, true, true);
 		registerMessage(MessageExplosion.class, true, false);
 		registerMessage(MessageParticleEffect.class, true, false);

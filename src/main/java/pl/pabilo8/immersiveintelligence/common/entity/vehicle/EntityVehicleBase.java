@@ -1,11 +1,15 @@
 package pl.pabilo8.immersiveintelligence.common.entity.vehicle;
 
+import blusunrize.immersiveengineering.common.util.Utils;
+import blusunrize.immersiveengineering.common.util.inventory.IIEInventory;
 import com.google.common.collect.Sets;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.IEntityMultiPart;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -18,14 +22,15 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.style.IStyleCustomizable;
 import pl.pabilo8.immersiveintelligence.api.style.StyleConstraints;
+import pl.pabilo8.immersiveintelligence.api.style.StyleConstraints.PaintStyleConstraint;
 import pl.pabilo8.immersiveintelligence.api.style.StyleCustomization;
 import pl.pabilo8.immersiveintelligence.api.upgrade.IManagedUpgradableDevice;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeManager;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.MachineStyle;
 import pl.pabilo8.immersiveintelligence.api.utils.IEntitySpecialRepairable;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleBlueprint;
-import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleDurability;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.*;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleSeat.SeatInfo;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
@@ -34,6 +39,7 @@ import pl.pabilo8.immersiveintelligence.common.util.MissingAnnotationException;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.entity.ISyncNBTEntity;
+import pl.pabilo8.immersiveintelligence.common.util.entity.SyncedDurability;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -50,11 +56,11 @@ import java.util.List;
  * @since 29.09.2025
  */
 public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends Entity implements ISyncNBTEntity<T>, IVehicleMultiPart<T>,
-		IEntitySpecialRepairable, IManagedUpgradableDevice<T>, IStyleCustomizable
+		IEntitySpecialRepairable, IManagedUpgradableDevice<T>, IStyleCustomizable, IIEInventory
 {
 	//--- Constants ---//
 	private static final StyleConstraints DEFAULT_STYLE_CONSTRAINTS = new StyleConstraints("steel",
-			true, Sets.newHashSet("steel"), Collections.emptySet());
+			PaintStyleConstraint.PAINTS_COLOR_ONLY, Sets.newHashSet("steel"), Collections.emptySet());
 
 	//--- Parts ---//
 	private AxisAlignedBB AABB;
@@ -66,13 +72,13 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 
 	//--- Systems ---//
 	@SyncNBT(events = SyncEvents.TILE_UPGRADES_MODIFIED)
-	protected StyleCustomization style;
+	public StyleCustomization style;
 	@SyncNBT(events = SyncEvents.TILE_UPGRADES_MODIFIED)
-	protected UpgradeManager<T> upgradeManager;
+	public UpgradeManager<T> upgradeManager;
 
 	//--- Motion & Orientation ---//
 	@SyncNBT(events = SyncEvents.ENTITY_DAMAGED)
-	public VehicleDurability durabilityMain;
+	public SyncedDurability durabilityMain;
 	@SyncNBT
 	public Vec3d velocity = Vec3d.ZERO;
 	@SyncNBT(events = {SyncEvents.ENTITY_VEHICLE_CONTROLS, SyncEvents.ENTITY_PASSENGER, SyncEvents.ENTITY_COLLISION})
@@ -91,10 +97,10 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 	public EntityVehicleBase(World world)
 	{
 		super(world);
+		internalVehicleInit();
 	}
 
-	@Override
-	protected final void entityInit()
+	protected final void internalVehicleInit()
 	{
 		//Initialize part collections
 		ArrayList<EntityVehicleWheel<T>> wheelsList = new ArrayList<>();
@@ -106,11 +112,11 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 		this.blueprint = meta;
 
 		//Set main durability
-		this.durabilityMain = new VehicleDurability(blueprint.baseDurability(), blueprint.baseArmor());
+		this.durabilityMain = new SyncedDurability(blueprint.baseDurability(), blueprint.baseArmor());
 		//noinspection unchecked
 		this.upgradeManager = ((UpgradeManager<T>)new UpgradeManager<>(this));
 		this.style = new StyleCustomization(getVehicleStyleConstraints());
-		this.style.withColor(IIColor.fromHSV(14/64f, 0.35f, 0.85f));
+		this.style.withColor(IIColor.getPaintSystemColor(Utils.RAND.nextInt(64)));
 
 		//Calculate vehicle size and collect wheels
 		double minX = Integer.MAX_VALUE, minY = Integer.MAX_VALUE, minZ = Integer.MAX_VALUE;
@@ -165,6 +171,12 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 		updateParts();
 	}
 
+	@Override
+	protected final void entityInit()
+	{
+		//Do not initialize here, as it is called before the constructor
+	}
+
 	/**
 	 * Initializes the vehicle with hitboxes and parts.
 	 * Implemented by subclasses to define vehicle-specific parts.
@@ -211,11 +223,9 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 		updateParts();
 
 		//Send an update to the clients after a collision, client has some errors in collision handling
+		//hasCollidedBefore = true;
 		if(!this.world.isRemote&&!hasCollidedBefore&&collidedHorizontally)
-		{
-			//hasCollidedBefore = true;
 			sendServerPositionMotionUpdate();
-		}
 	}
 
 	/**
@@ -345,24 +355,24 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 			double verticalForce = wheel.getVerticalForceBalance();
 
 			//Front/Rear classification
-			if(wheel.offset.x > 0)
+			if(wheel.offset.x >= 0)
 			{
 				frontForce += verticalForce;
 				frontWheels++;
 			}
-			else
+			if(wheel.offset.x <= 0)
 			{
 				rearForce += verticalForce;
 				rearWheels++;
 			}
 
 			//Left/Right classification
-			if(wheel.offset.z > 0)
+			if(wheel.offset.z >= 0)
 			{
 				rightForce += verticalForce;
 				rightWheels++;
 			}
-			else
+			if(wheel.offset.z <= 0)
 			{
 				leftForce += verticalForce;
 				leftWheels++;
@@ -544,17 +554,13 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 
 				//First pass: Find the most restrictive Y movement from ALL collision boxes
 				for(AxisAlignedBB collisionBox : collisions)
-				{
 					if(mostRestrictiveY!=0)
 					{
 						double yOffset = collisionBox.calculateYOffset(tempBB, mostRestrictiveY);
 						//Take the most restrictive (smallest absolute value) Y movement
 						if(Math.abs(yOffset) < Math.abs(mostRestrictiveY))
-						{
 							mostRestrictiveY = yOffset;
-						}
 					}
-				}
 
 				//Apply the Y movement first
 				if(mostRestrictiveY!=partAdjustedMove.y)
@@ -569,7 +575,6 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 
 				//Second pass: Find the most restrictive X movement
 				for(AxisAlignedBB collisionBox : collisions)
-				{
 					if(mostRestrictiveX!=0)
 					{
 						double xOffset = collisionBox.calculateXOffset(tempBB, mostRestrictiveX);
@@ -579,17 +584,13 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 							collided = collidedHorizontally = true;
 						}
 					}
-				}
 
 				//Apply X movement
 				if(mostRestrictiveX!=partAdjustedMove.x)
-				{
 					tempBB = tempBB.offset(mostRestrictiveX, 0.0D, 0.0D);
-				}
 
 				//Third pass: Find the most restrictive Z movement
 				for(AxisAlignedBB collisionBox : collisions)
-				{
 					if(mostRestrictiveZ!=0)
 					{
 						double zOffset = collisionBox.calculateZOffset(tempBB, mostRestrictiveZ);
@@ -599,7 +600,6 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 							collided = collidedHorizontally = true;
 						}
 					}
-				}
 
 				partAdjustedMove = new Vec3d(mostRestrictiveX, mostRestrictiveY, mostRestrictiveZ);
 
@@ -1105,6 +1105,12 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 	}
 
 	@Override
+	public MachineStyle getUpgradableMachineStyle()
+	{
+		return MachineStyle.STEEL;
+	}
+
+	@Override
 	public T master()
 	{
 		//noinspection unchecked
@@ -1146,5 +1152,27 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 				if(component instanceof IFluidHandler)
 					return (T)component;
 		return super.getCapability(capability, facing);
+	}
+
+	//--- IIEInventory ---//
+
+	public NonNullList<ItemStack> getInventory()
+	{
+		return NonNullList.create();
+	}
+
+	public boolean isStackValid(int slot, ItemStack stack)
+	{
+		return true;
+	}
+
+	public int getSlotLimit(int slot)
+	{
+		return 64;
+	}
+
+	public void doGraphicalUpdates(int slot)
+	{
+		updateEntityForEvent(SyncEvents.ENTITY_INTERACT);
 	}
 }

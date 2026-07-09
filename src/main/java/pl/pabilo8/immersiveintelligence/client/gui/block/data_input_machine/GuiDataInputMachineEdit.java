@@ -6,17 +6,15 @@ import pl.pabilo8.immersiveintelligence.api.data.DataVariable;
 import pl.pabilo8.immersiveintelligence.api.data.IDataMachineGui;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType.TypeMetaInfo;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTileGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoArrows;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoDropdownDataLetters;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoDropdown;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.data_editor.DecoDataEditor;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoEntryPanelBuilder;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityDataInputMachine;
@@ -35,11 +33,12 @@ import javax.annotation.Nullable;
  * @since 30.06.2019
  */
 @DecoTemplate(name = "data_input_machine_edit", category = DecoGuiCategory.DATA_TILE)
-public class GuiDataInputMachineEdit extends DecoGui<TileEntityDataInputMachine, ContainerDataInputMachineEditing> implements IDataMachineGui
+public class GuiDataInputMachineEdit extends DecoTileGui<TileEntityDataInputMachine, ContainerDataInputMachineEditing> implements IDataMachineGui
 {
 	@SyncNBT
 	public DataVariable variableToEdit;
 	private boolean cancel = false;
+	private Character originalVariableName = null;
 	public DataPacket packet;
 
 	@Nullable
@@ -53,8 +52,13 @@ public class GuiDataInputMachineEdit extends DecoGui<TileEntityDataInputMachine,
 	@Override
 	public void onInit()
 	{
-		//Use a copy of the tile data
-		packet = tile.storedData.clone();
+		//Sync machine's animated parts
+		syncAnimatedParts(tile.drawer, false);
+		syncAnimatedParts(tile.hatch, true);
+
+		//Use a persistent copy of the tile data. Rebuilding the GUI after a rename must not re-clone a stale server packet.
+		if(packet==null)
+			packet = tile.storedData.clone();
 
 		//Build background
 		startBackground()
@@ -89,7 +93,7 @@ public class GuiDataInputMachineEdit extends DecoGui<TileEntityDataInputMachine,
 					.withSize(186, 106);
 
 		//A cloned packet without the currently edited variable is required, so the selector knows which variable names are unavailable
-		DataPacket cloned = tile.storedData.clone();
+		DataPacket cloned = packet.clone();
 		cloned.remove(variableToEdit.getName());
 
 		//Add type/name controls
@@ -120,32 +124,9 @@ public class GuiDataInputMachineEdit extends DecoGui<TileEntityDataInputMachine,
 						.withSize(116, 18)
 						.withDropdownWidth(116)
 						.withMaxDisplayedEntries(5)
-						.withEntries(DecoDataEditor.getEditorTypes(false))
+						.withEntries(DecoDataEditor.getEditorTypes(tile.isUpgradeInstalled(IIContent.UPGRADE_ADVANCED_DATA)))
 						.withSelectedEntry(variableToEdit.getValue().getTypeMeta())
-						.withDisplayFunction(new DecoEntryPanelBuilder<TypeMetaInfo<?>>()
-								.withHeight(18)
-								.withBackground(DecoTextures.BG_PAPER)
-								.withBackgroundMask(DecoTextures.TEMPLATE_PAPER)
-								//Type Icon, Label, and Letter
-								.withComponent("image", new DecoImage(3, 1)
-										.withSize(16, 16))
-								.withLabel("typeLabel",
-										new DecoLabel(fontRenderer, 20, 1)
-												.withSize(48, 18)
-												.withAlign(DecoAlignment.LEFT)
-												.withText("Integer")
-								)
-								.withElementApplyMethod((typeMeta, panel) -> {
-									//type label (f.e. integer)
-									panel.label("typeLabel")
-											.withText(typeMeta.getTranslatedName())
-											.withTextColor(typeMeta.color.withBrightness(0.4f));
-									//type icon
-									panel.component("image", DecoImage.class)
-											.withImageLocation(typeMeta.getTextureLocation(), true);
-								})
-								.withElementTooltip(typeMeta -> "a")
-						)
+						.withDisplayFunction(DecoTemplates.getDataTypeEntryDisplay())
 						.withOnSelectedEntry((typeMetaInfo, typeMetaInfo2) -> {
 							cancel = true;
 							variableToEdit = new DataVariable(variableToEdit.getName(), typeMetaInfo2.supplier.get());
@@ -154,7 +135,7 @@ public class GuiDataInputMachineEdit extends DecoGui<TileEntityDataInputMachine,
 
 				new DecoButton(xSize-48-4-4-4-2, 153)
 						.withBackground(DecoTextures.COMPONENT_BUTTON_ROUND)
-						.withText("Apply")
+						.withText("ii.gui.button.apply")
 						.withSize(48, 12)
 						.withOnPressed((gui, button, mouseX, mouseY) -> {
 							cancel = false;
@@ -162,7 +143,7 @@ public class GuiDataInputMachineEdit extends DecoGui<TileEntityDataInputMachine,
 						}),
 				new DecoButton(xSize-96-4-4-4-2, 153)
 						.withBackground(DecoTextures.COMPONENT_BUTTON_ROUND)
-						.withText("Cancel")
+						.withText("ii.gui.button.cancel")
 						.withSize(48, 12)
 						.withOnPressed((gui, button, mouseX, mouseY) -> {
 							cancel = true;
@@ -181,20 +162,33 @@ public class GuiDataInputMachineEdit extends DecoGui<TileEntityDataInputMachine,
 	private void changeVariableName(Character newName)
 	{
 		//Do nothing if the name remains the same
-		if(newName==variableToEdit.getName()||editor==null)
+		if(newName==null||newName==variableToEdit.getName()||editor==null)
 			return;
 
-		//Remove existing variable
-		packet.remove(variableToEdit.getName());
+		cancel = true;
+		storeEditorOutput();
 
-		//Place it in the packet with the new name
-		variableToEdit = new DataVariable(newName, editor.outputType());
+		//Remove existing variable and keep the edited value under the new name in the local packet.
+		packet.remove(variableToEdit.getName());
+		variableToEdit = new DataVariable(newName, variableToEdit.getValue());
 		refreshGUI();
+	}
+
+	private void storeEditorOutput()
+	{
+		if(editor!=null)
+			variableToEdit = new DataVariable(variableToEdit.getName(), editor.outputType());
 	}
 
 	@Override
 	public void onGuiClosed()
 	{
+		//Close the hatches
+		if(!refreshGUIFlag)
+		{
+			syncAnimatedParts(tile.drawer, false);
+			syncAnimatedParts(tile.hatch, false);
+		}
 		super.onGuiClosed();
 	}
 
@@ -204,10 +198,10 @@ public class GuiDataInputMachineEdit extends DecoGui<TileEntityDataInputMachine,
 		return super.onSaveTileData()
 				.conditionally(editor!=null&&!cancel, easyNBT ->
 				{
-					variableToEdit = new DataVariable(variableToEdit.getName(), editor.outputType());
-					easyNBT.withSerializable("variables",
-							packet.with(variableToEdit)
-					);
+					storeEditorOutput();
+					DataPacket updatedPacket = packet.clone().with(variableToEdit);
+					tile.setStoredDataPacket(updatedPacket);
+					easyNBT.withSerializable("variables", updatedPacket);
 				});
 	}
 

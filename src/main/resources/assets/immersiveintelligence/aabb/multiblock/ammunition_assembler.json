@@ -61,12 +61,12 @@
   },
   "poi": {
     "lid": [49, 1],
-    "input_core": 87,
-    "input_casing": 79,
-    "item_input": [79, 87],
-    "item_output": [32, 72],
-    "redstone_input": 45,
-    "data_input": 43,
+    "input_core": 20,
+    "input_casing": 18,
+    "item_input": [18, 20],
+    "item_output": 34,
+    "redstone_input": 8,
+    "data_input": 14,
     "energy_input": 50
   }
 }

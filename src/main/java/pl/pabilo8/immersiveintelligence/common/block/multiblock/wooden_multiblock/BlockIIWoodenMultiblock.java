@@ -33,10 +33,11 @@ public class BlockIIWoodenMultiblock extends BlockIIMultiblock<WoodenMultiblocks
 				IEProperties.BOOLEANS[0], IEProperties.BOOLEANS[1], IEProperties.CONNECTIONS, IEProperties.MULTIBLOCKSLAVE,
 				Properties.AnimationProperty, IEProperties.DYNAMICRENDER, IOBJModelCallback.PROPERTY
 		);
-		setHardness(3.0F);
-		setResistance(15.0F);
+		this.setHardness(3.0F);
+		this.setResistance(15.0F);
 
-		addToTESRMap(WoodenMultiblocks.SKYCART_STATION, WoodenMultiblocks.SKYCRATE_STATION, WoodenMultiblocks.SKYCRATE_POST);
+		this.addToTESRMap(WoodenMultiblocks.SKYCART_STATION, WoodenMultiblocks.SKYCRATE_STATION, WoodenMultiblocks.SKYCRATE_POST);
+		this.setBlockLayer(BlockRenderLayer.CUTOUT);
 	}
 
 	public enum WoodenMultiblocks implements IITileMultiblockEnum

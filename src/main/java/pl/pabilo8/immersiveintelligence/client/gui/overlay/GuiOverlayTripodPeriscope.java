@@ -8,7 +8,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
 import pl.pabilo8.immersiveintelligence.client.util.CameraHandler;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityTripodPeriscope;
+import pl.pabilo8.immersiveintelligence.common.entity.mounted_weapon.EntityTripodPeriscope;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import javax.annotation.Nonnull;

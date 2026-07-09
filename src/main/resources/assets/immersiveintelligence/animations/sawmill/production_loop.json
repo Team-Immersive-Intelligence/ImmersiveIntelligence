@@ -140,6 +140,40 @@
           "visibility": true
         }
       ]
+    },
+    "particle_sawdust": {
+      "property": [
+        {
+          "time": 0.0,
+          "property": 0.0
+        },
+        {
+          "time": 0.25,
+          "property": 0.0
+        },
+        {
+          "time": 0.75,
+          "property": 1.0
+        }
+      ],
+      "visibility": [
+        {
+          "time": 0,
+          "visibility": false
+        },
+        {
+          "time": 0.25,
+          "visibility": true
+        },
+        {
+          "time": 0.75,
+          "visibility": false
+        },
+        {
+          "time": 1.0,
+          "visibility": false
+        }
+      ]
     }
   }
 }

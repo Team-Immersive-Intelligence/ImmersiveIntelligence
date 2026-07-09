@@ -1,0 +1,9 @@
+{
+  "type": "ParticleVanilla",
+  "textures": ["immersiveintelligence:particle/paint"],
+  "max_lifetime": 4,
+  "draw_stage": "custom_additive",
+  "aabb": 0.3,
+  "color": "ffde7b",
+  "size": 0.25
+}

@@ -4,17 +4,18 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.TextFormatting;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.DataVariable;
 import pl.pabilo8.immersiveintelligence.api.data.IDataMachineGui;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeNull;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType.TypeMetaInfo;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTileGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoTab;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoList;
@@ -34,9 +35,9 @@ import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
-
-import javax.annotation.Nullable;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -45,18 +46,17 @@ import javax.annotation.Nullable;
  * @since 30.06.2019
  */
 @DecoTemplate(name = "arithmetic_logic_machine", category = DecoGuiCategory.DATA_TILE)
-public class GuiArithmeticLogicMachine extends DecoGui<TileEntityArithmeticLogicMachine, ContainerArithmeticLogicMachine> implements IDataMachineGui
+public class GuiArithmeticLogicMachine extends DecoTileGui<TileEntityArithmeticLogicMachine, ContainerArithmeticLogicMachine> implements IDataMachineGui
 {
-	@SyncNBT
+	@SyncNBT(name = "page", events = SyncEvents.TILE_CLIENT_MESSAGE)
 	public int editedCircuit = 0;
 	@SyncNBT
 	public int scroll = 0;
+	public DataPacket expressions = new DataPacket();
 	@SyncNBT
 	public DataVariable variableToEdit = new DataVariable('a', new DataTypeNull());
-
-	@Nullable
-	protected DecoList<DataVariable> list;
-	boolean isStorage;
+	private boolean isStorage;
+	private int displayedCircuit = 0;
 
 	private GuiArithmeticLogicMachine(EntityPlayer player, TileEntityArithmeticLogicMachine tile, IIGUI gui)
 	{
@@ -78,8 +78,8 @@ public class GuiArithmeticLogicMachine extends DecoGui<TileEntityArithmeticLogic
 	@Override
 	public void onInit()
 	{
-		syncAnimatedParts(tile.door, true);
-		syncAnimatedParts(tile.drawer, true);
+		syncAnimatedParts(tile.door, !isStorage);
+		syncAnimatedParts(tile.drawer, isStorage);
 		syncAnimatedParts(tile.keyboard, false);
 
 		//Refresh page when circuit slots change
@@ -123,8 +123,9 @@ public class GuiArithmeticLogicMachine extends DecoGui<TileEntityArithmeticLogic
 		}
 		else if(tile.inventory.size() > editedCircuit)
 		{
-			ItemStack stack = tile.inventory.get(editedCircuit);
-			DataPacket storedData = IIContent.itemCircuit.getStoredData(stack);
+			displayedCircuit = editedCircuit;
+			ItemStack stack = tile.inventory.get(displayedCircuit);
+			this.expressions = IIContent.itemCircuit.getStoredData(stack);
 
 			addLabel(stack.getDisplayName(), 4+2+16, 8)
 					.withTextColor(DecoColors.H2)
@@ -139,10 +140,10 @@ public class GuiArithmeticLogicMachine extends DecoGui<TileEntityArithmeticLogic
 					.withSize(16, 16)
 			);
 
-			list = addComponent(
+			addComponent(
 					new DecoList<DataVariable>(4+1, 8+16+2)
 							.withSize(136+32-3, 120-16)
-							.withEntries(storedData.getAllVariables())
+							.withEntries(expressions.getAllVariables())
 							.withCreateLaterAction(this::addVariable)
 							.withGuiSaveAction(gui -> this.scroll = gui.getScroll())
 							//Display
@@ -158,19 +159,22 @@ public class GuiArithmeticLogicMachine extends DecoGui<TileEntityArithmeticLogic
 												char name = findNextFreeVariableName();
 												if(name=='\0')
 													return;
-												editVariable(name, current.getValue());
+												editVariable(name, current.getValue().clone());
 											})
 									)
 									.withComponent(p -> new DecoButton(p.width-17-16+3, 2)
 											.withTemplate(DecoTemplates.ACTION_BUTTON_EDIT)
 											.withOnLMBPressed(() -> {
 												editVariable(p.getCurrentElement());
+												expressions.remove(p.getCurrentElement().getName());
 											})
 									)
 									.withComponent(p -> new DecoButton(p.width-17+1, 2)
 											.withTemplate(DecoTemplates.ACTION_BUTTON_REMOVE)
 											.withOnLMBPressed(() -> {
-												p.getCurrentList().removeEntry(p.getCurrentElement());
+												DataVariable current = p.getCurrentElement();
+												p.getCurrentList().removeEntry(current);
+												expressions.remove(current.getName());
 												IIPacketHandler.sendToServer(new MessageIITileSync(tile, onSaveTileData()));
 											})
 									)
@@ -208,18 +212,10 @@ public class GuiArithmeticLogicMachine extends DecoGui<TileEntityArithmeticLogic
 		}
 
 		//Storage page tab
-		addComponent(new DecoTab()
-				.withLink(IIGUI.ARITHMETIC_LOGIC_MACHINE_STORAGE)
-				.withIcon(DecoTextures.ICON_STORAGE)
-				.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+"storage_module")
-		);
+		addLinkTab(IIGUI.ARITHMETIC_LOGIC_MACHINE_STORAGE, DecoTextures.ICON_STORAGE, "storage_module");
 
 		if(tile.isUpgradeInstalled(IIContent.UPGRADE_MEMORY))
-			addComponent(new DecoTab()
-					.withLink(IIGUI.ARITHMETIC_LOGIC_MACHINE_STORAGE)
-					.withIcon(DecoTextures.ICON_MEMORY)
-					.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+"memory_in_module")
-			);
+			addLinkTab(IIGUI.ARITHMETIC_LOGIC_MACHINE_MEMORY_IN, DecoTextures.ICON_MEMORY, "memory_in_module");
 
 		//Circuit tabs
 		NonNullList<ItemStack> inventory = tile.inventory;
@@ -242,11 +238,7 @@ public class GuiArithmeticLogicMachine extends DecoGui<TileEntityArithmeticLogic
 		}
 
 		if(tile.isUpgradeInstalled(IIContent.UPGRADE_MEMORY))
-			addComponent(new DecoTab()
-					.withLink(IIGUI.ARITHMETIC_LOGIC_MACHINE_STORAGE)
-					.withIcon(DecoTextures.ICON_MEMORY)
-					.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+"memory_out_module")
-			);
+			addLinkTab(IIGUI.ARITHMETIC_LOGIC_MACHINE_MEMORY_OUT, DecoTextures.ICON_MEMORY, "memory_out_module");
 	}
 
 	@Override
@@ -263,21 +255,37 @@ public class GuiArithmeticLogicMachine extends DecoGui<TileEntityArithmeticLogic
 
 	private DataPacket getCircuitPacket()
 	{
-		if(tile.inventory.size() <= editedCircuit)
+		if(tile.inventory.size() <= displayedCircuit)
 			return new DataPacket();
 
-		ItemStack stack = tile.inventory.get(editedCircuit);
+		ItemStack stack = tile.inventory.get(displayedCircuit);
 		return IIContent.itemCircuit.getStoredData(stack);
+	}
+
+	private void updateLocalCircuitStack(int circuit, DataPacket packet)
+	{
+		if(tile.getInventory().size() <= circuit)
+			return;
+		ItemStack stack = tile.getInventory().get(circuit);
+		if(stack.isEmpty()||!(stack.getItem() instanceof ItemIIFunctionalCircuit))
+			return;
+		((ItemIIFunctionalCircuit)stack.getItem()).writeDataToItem(stack, packet);
+		tile.getInventory().set(circuit, stack);
+	}
+
+	private NBTTagCompound getExpressionsTag(int circuit, DataPacket packet)
+	{
+		return EasyNBT.newNBT()
+				.withInt("page", circuit)
+				.withSerializable("list", packet)
+				.unwrap();
 	}
 
 	private char findNextFreeVariableName()
 	{
-		if(list==null)
+		if(expressions.size() >= DataPacket.VARIABLE_NAMES.length)
 			return '\0';
-		DataPacket currentPacket = new DataPacket(list.getEntries());
-		if(currentPacket.size() >= DataPacket.VARIABLE_NAMES.length)
-			return '\0';
-		return IIUtils.cycleDataPacketCharsAvoiding('a', true, false, currentPacket);
+		return IIUtils.cycleDataPacketCharsAvoiding('0', true, false, expressions);
 	}
 
 	private void addVariable()
@@ -285,18 +293,34 @@ public class GuiArithmeticLogicMachine extends DecoGui<TileEntityArithmeticLogic
 		char name = findNextFreeVariableName();
 		if(name=='\0')
 			return;
-		editVariable(name, new DataTypeInteger());
+		editVariable(name, new DataTypeExpression());
+	}
+
+	private void editExistingVariable(DataVariable variable)
+	{
+		expressions.remove(variable.getName());
+		this.variableToEdit = variable;
+		changeGUI(IIGUI.ARITHMETIC_LOGIC_MACHINE_EDIT);
+	}
+
+	@Override
+	protected EasyNBT onSaveTileData()
+	{
+		EasyNBT nbt = super.onSaveTileData();
+		if(isStorage||tile.inventory.size() <= displayedCircuit)
+			return nbt;
+
+		updateLocalCircuitStack(displayedCircuit, expressions);
+		return nbt.withTag("expressions", getExpressionsTag(displayedCircuit, expressions));
 	}
 
 	@Override
 	public void editVariable(char name, DataType initialValue)
 	{
-		DataPacket currentPacket = list==null?getCircuitPacket(): new DataPacket(list.getEntries());
+		if(!expressions.has(name)||expressions.get(name).getClass()!=initialValue.getClass())
+			expressions.set(name, initialValue);
 
-		if(!currentPacket.has(name)||currentPacket.get(name).getClass()!=initialValue.getClass())
-			currentPacket.set(name, initialValue);
-
-		this.variableToEdit = new DataVariable(name, initialValue);
+		this.variableToEdit = new DataVariable(name, initialValue.clone());
 		changeGUI(IIGUI.ARITHMETIC_LOGIC_MACHINE_EDIT);
 	}
 }

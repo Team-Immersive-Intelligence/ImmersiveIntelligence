@@ -175,6 +175,10 @@
       "visibility": [
         {
           "time": 0,
+          "visibility": false
+        },
+        {
+          "time": 0.02,
           "visibility": true
         },
         {
@@ -195,15 +199,15 @@
       "property": [
         {
           "time": 0.2,
-          "property": 0
+          "property": 0.0
         },
         {
           "time": 0.5,
-          "property": 1
+          "property": 1.0
         },
         {
           "time": 1,
-          "property": 1
+          "property": 1.0
         }
       ]
     },

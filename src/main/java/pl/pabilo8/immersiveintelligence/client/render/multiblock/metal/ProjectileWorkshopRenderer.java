@@ -99,6 +99,6 @@ public class ProjectileWorkshopRenderer extends IIMultiblockRenderer<TileEntityP
 		coreFiller = IIAnimationCompiledMap.create(this.model, ResLoc.of(IIReference.RES_II, "projectile_workshop/production_filling"));
 
 		UpgradeTechTree.getTreeFor(TileEntityProjectileWorkshop.class)
-				.withBaseModelLocation(IIReference.RES_BLOCK_MODEL.with("multiblock/projectile_workshop/projectile_workshop.obj"));
+				.withBaseModelLocation(IIReference.RES_BLOCK_MODEL.with("multiblock/projectile_workshop/projectile_workshop_inv.obj"));
 	}
 }

@@ -120,7 +120,7 @@ public class DecoDropdownDataLetters extends DecoDropdown<Character> implements 
 		}
 		else if(isSelectable(character))
 		{
-			if(IIMath.isPointInRectangle(0, 0, ENTRY_SIZE, ENTRY_SIZE, mouseX, mouseY))
+			if(getSelectedEntry()==character||IIMath.isPointInRectangle(0, 0, ENTRY_SIZE, ENTRY_SIZE, mouseX, mouseY))
 				color = IIReference.COLOR_IMMERSIVE_ORANGE;
 			else
 				color = IIColor.WHITE;

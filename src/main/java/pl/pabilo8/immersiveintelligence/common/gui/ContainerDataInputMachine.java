@@ -4,7 +4,7 @@ import blusunrize.immersiveengineering.common.gui.IESlot.Output;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityDataInputMachine;
-import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
+import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIITileBase;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -12,7 +12,7 @@ import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
  * @ii-approved 0.3.1
  * @since 30.06.2019
  */
-public class ContainerDataInputMachine extends ContainerIIBase<TileEntityDataInputMachine>
+public class ContainerDataInputMachine extends ContainerIITileBase<TileEntityDataInputMachine>
 {
 	public final Slot dataInput, dataOutput;
 	public final Slot[] punchtapeStorage;

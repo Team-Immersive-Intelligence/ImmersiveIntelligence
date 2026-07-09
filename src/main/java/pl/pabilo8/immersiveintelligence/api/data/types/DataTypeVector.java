@@ -57,8 +57,8 @@ public class DataTypeVector extends DataType
 		NBTTagCompound nbt = getHeaderTag();
 
 		nbt.setFloat("X", x);
-		nbt.setFloat("Y", x);
-		nbt.setFloat("Z", x);
+		nbt.setFloat("Y", y);
+		nbt.setFloat("Z", z);
 		nbt.setBoolean("IntegerVector", integerVector);
 
 		return nbt;

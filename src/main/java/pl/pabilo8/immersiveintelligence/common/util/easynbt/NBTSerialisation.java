@@ -4,9 +4,11 @@ import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorage;
 import blusunrize.immersiveengineering.common.util.inventory.MultiFluidTank;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.*;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import pl.pabilo8.immersiveintelligence.api.data.DataVariable;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataTypeUtils;
@@ -111,6 +113,11 @@ public class NBTSerialisation
 				}
 		);
 
+		registerSerializer(EnumFacing.class, NBTTagInt.class,
+				facing -> new NBTTagInt(facing.getIndex()),
+				nbt -> EnumFacing.getFront(nbt.getInt())
+		);
+
 		//Register serializers for IE types
 		//FluxStorage
 		registerSerializer(FluxStorage.class, NBTTagInt.class, i -> new NBTTagInt(i.getEnergyStored()), (nbt, fluxStorage) ->
@@ -149,6 +156,11 @@ public class NBTSerialisation
 		);
 
 		registerSerializer(ItemStack.class, NBTTagCompound.class, ItemStack::serializeNBT, nbt -> new ItemStack(nbt));
+		registerSerializer(FluidStack.class, NBTTagCompound.class, fluidStack -> {
+			NBTTagCompound nbt = new NBTTagCompound();
+			fluidStack.writeToNBT(nbt);
+			return nbt;
+		}, FluidStack::loadFluidStackFromNBT);
 
 		registerSerializer(UUID.class, NBTTagString.class,
 				uuid -> new NBTTagString(uuid.toString()),
@@ -226,7 +238,7 @@ public class NBTSerialisation
 	}
 
 	public static <FIELD, NBT extends NBTBase> void registerSerializer(Class<FIELD> dataClass, Class<NBT> nbtClass,
-																	   Function<FIELD, NBT> serialize, Function<NBT, FIELD> deserialize)
+	                                                                   Function<FIELD, NBT> serialize, Function<NBT, FIELD> deserialize)
 	{
 		serializerRegistry.put(dataClass, (field, annotation) -> new FieldSerializer<FIELD, NBT>(field, annotation)
 		{
@@ -246,8 +258,8 @@ public class NBTSerialisation
 	}
 
 	public static <FIELD, NBT extends NBTBase> void registerSerializer(Class<FIELD> dataClass, Class<NBT> nbtClass,
-																	   Function<FIELD, NBT> serialize,
-																	   BiFunction<NBT, FIELD, FIELD> deserialize)
+	                                                                   Function<FIELD, NBT> serialize,
+	                                                                   BiFunction<NBT, FIELD, FIELD> deserialize)
 	{
 		serializerRegistry.put(dataClass, (field, annotation) -> new FieldSerializer<FIELD, NBT>(field, annotation)
 		{

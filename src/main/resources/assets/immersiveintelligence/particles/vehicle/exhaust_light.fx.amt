@@ -1,0 +1,13 @@
+{
+  "type": "ParticleVanilla",
+  "textures": ["immersiveintelligence:particle/smoke/smoke"],
+  "max_lifetime": 35,
+  "draw_stage": "custom_smoke_noise_shader",
+  "aabb": 0.3,
+  "color": "2a2a2a",
+  "programs": [
+    "smoke_transition",
+    "gravity(1.0,-0.005)"
+  ],
+  "size": 0.385
+}

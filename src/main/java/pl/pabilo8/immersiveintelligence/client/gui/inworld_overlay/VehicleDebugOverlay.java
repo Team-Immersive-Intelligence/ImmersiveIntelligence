@@ -15,12 +15,12 @@ import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Graphics;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehicleBase;
-import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleDurability;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehiclePart;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleWheel;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.VerticalForces;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.entity.IIEntityUtils;
+import pl.pabilo8.immersiveintelligence.common.util.entity.SyncedDurability;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -42,7 +42,7 @@ public class VehicleDebugOverlay extends InWorldOverlayBase
 		double posY = player.lastTickPosY+(player.posY-player.lastTickPosY)*(double)partialTicks;
 		double posZ = player.lastTickPosZ+(player.posZ-player.lastTickPosZ)*(double)partialTicks;
 		boolean displayWheelBoxes = true;
-		boolean displayNames = true;
+		boolean displayNames = false;
 
 		if(!Graphics.vehicleDebugOverlay)
 			return;
@@ -115,7 +115,7 @@ public class VehicleDebugOverlay extends InWorldOverlayBase
 					GlStateManager.rotate(-player.rotationPitch, 1, 0, 0);
 					GlStateManager.scale(0.0625f/2, -0.0625f/2, 0.0625f/2);
 
-					VehicleDurability durability = part.getDurability();
+					SyncedDurability durability = part.getDurability();
 					String[] lines;
 					if(durability!=null)
 						lines = new String[]{

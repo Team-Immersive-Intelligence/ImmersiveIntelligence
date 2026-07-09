@@ -28,8 +28,9 @@ public class MultiblockPacker extends MultiblockStuctureBase<TileEntityPacker>
 				.withUpgrade(IIContent.UPGRADE_PACKER_FLUID, UpgradeTier.TIER_1)
 				.withUpgrade(IIContent.UPGRADE_PACKER_ENERGY, UpgradeTier.TIER_1)
 				.withLockOut(IIContent.UPGRADE_PACKER_FLUID, IIContent.UPGRADE_PACKER_ENERGY)
-				.withUpgrade(IIContent.UPGRADE_PACKER_NAMING, UpgradeTier.TIER_1)
-				.withUpgrade(IIContent.UPGRADE_PACKER_RAILWAY, UpgradeTier.TIER_1);
+				.withUpgrade(IIContent.UPGRADE_PACKER_NAMING, UpgradeTier.TIER_1);
+		//TODO: 02.06.2026 actually implement
+		//.withUpgrade(IIContent.UPGRADE_PACKER_RAILWAY, UpgradeTier.TIER_1);
 	}
 
 	@Override

@@ -4,9 +4,9 @@ import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeBoolean;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
+import pl.pabilo8.immersiveintelligence.api.data.types.generic.NumericDataType;
 
 import javax.annotation.Nonnull;
 
@@ -26,8 +26,8 @@ public class DataOperationToBoolean extends DataOperation
 			return type;
 		else if(type instanceof DataTypeString)
 			return new DataTypeBoolean(((DataTypeString)type).value.equalsIgnoreCase("TRUE"));
-		else if(type instanceof DataTypeInteger)
-			return new DataTypeBoolean(((DataTypeInteger)type).value > 0);
+		else if(type instanceof NumericDataType)
+			return new DataTypeBoolean(((NumericDataType)type).floatValue() > 0);
 
 		return new DataTypeBoolean(false);
 	}

@@ -152,7 +152,7 @@ public class TileEntityBallisticComputer extends TileEntityMultiblockIIGeneric<T
 		packet.set('y', new DataTypeFloat(yaw));
 		packet.set('p', new DataTypeFloat(pitch));
 
-		sendData(packet, facing, multiblock.getPointOfInterest("data_output"));
+		sendData(packet, getDirection("data_output"), multiblock.getPointOfInterest("data_output"));
 	}
 
 	@Override

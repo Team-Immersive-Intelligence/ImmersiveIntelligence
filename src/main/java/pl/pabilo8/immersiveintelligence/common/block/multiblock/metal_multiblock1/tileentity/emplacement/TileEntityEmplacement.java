@@ -8,12 +8,18 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.common.Optional.Interface;
 import net.minecraftforge.fml.common.Optional.Method;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.items.CapabilityItemHandler;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataHandlingUtils;
@@ -39,6 +45,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileManager;
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileManager.ITactileListener;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyHandler;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.OwnerIdentity;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.property.IOwnableProperty;
@@ -67,6 +74,10 @@ import java.util.Optional;
 public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEntityEmplacement> implements IBooleanAnimatedPartsBlock,
 		IManagedUpgradableDevice<TileEntityEmplacement>, IOwnableProperty, IStyleCustomizable, IIIGuiMultiblockTile, IManagedDamageResistantMultiblock, ITactileListener, ILightEventConsumer
 {
+	private static final int WEAPON_REPAIR_INTERVAL = 20;
+	private static final int WEAPON_REPAIR_ENERGY_COST = 80;
+	private static final float WEAPON_REPAIR_AMOUNT = 1.0f;
+
 	@SyncNBT(events = SyncEvents.TILE_OWNERSHIP_MODIFIED)
 	public OwnerIdentity ownerIdentity;
 	@SyncNBT(name = "upgrades", events = SyncEvents.TILE_UPGRADES_MODIFIED)
@@ -86,7 +97,10 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 	public MultiblockHealth baseHealth;
 
 	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CLIENT_MESSAGE})
-	public boolean redstoneControlEnabled = true, dataControlEnabled = true;
+	public boolean redstoneControlEnabled = true, dataControlEnabled = true, weaponRepairing = false;
+	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CLIENT_MESSAGE})
+	public float weaponHideHealthThreshold = 0.25f, weaponRepairSatisfactoryThreshold = 0.85f;
+	private int weaponRepairTicker = 0;
 	@SyncNBT
 	public MultiblockInteractablePart door;
 
@@ -94,12 +108,14 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 	{
 		super(MultiblockEmplacement.INSTANCE);
 		this.energyStorage = new FluxStorageAdvanced(Emplacement.energyCapacity);
+		this.inventory = NonNullList.withSize(32, ItemStack.EMPTY);
 		this.door = new MultiblockInteractablePart(Emplacement.lidTime);
 		this.upgradeManager = new UpgradeManager<>(this);
 		this.style = new StyleCustomization(MultiblockFlagpole.STYLE_CONSTRAINTS);
 		this.baseHealth = new MultiblockHealth(this, Emplacement.baseHealth);
 		this.ownerIdentity = DiplomacyHandler.NEUTRAL;
 		this.currentTarget = new TargetCoordinateReference(this::getWorld);
+		this.taskManager.setWorldSupplier(this::getWorld);
 		this.currentWeapon = null;
 	}
 
@@ -134,27 +150,41 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 		//Extract energy for merely existing
 		if(energyStorage.extractEnergy(Emplacement.baseEnergyUsage, false)==Emplacement.baseEnergyUsage)
 		{
+			//Finish previous task, if condition is met or the task is no longer valid.
+			if(currentTarget!=null&&!currentTarget.shouldBeExecuted(world))
+			{
+				currentTarget = null;
+				taskManager.pruneFinishedMissions();
+				updateTileForEvent(SyncEvents.TILE_CUSTOM1);
+			}
+
 			//Handle targeting
 			if(currentTarget==null)
 				currentTarget = taskManager.provideNextTask();
 
-			//Handle the base behavior (without redstone control, it can be only changed through data)
-			EmplacementStateNeeds baseNeeds = EmplacementStateNeeds.WANTS_HIDE;
-			if(redstoneControlEnabled)
-				baseNeeds = getRedstoneAtPos(0)?EmplacementStateNeeds.WANTS_SURFACE: EmplacementStateNeeds.MUST_HIDE;
+			//Base behaviour: redstone control either gates surfacing, or the platform wants to surface by default.
+			EmplacementStateNeeds baseNeeds = redstoneControlEnabled?
+					(getRedstoneAtPos(0)?EmplacementStateNeeds.WANTS_SURFACE: EmplacementStateNeeds.MUST_HIDE):
+					EmplacementStateNeeds.WANTS_SURFACE;
 
-			//When no task at hand, emplacement could use the time to reload and repair
+			//When no task is waiting, use the downtime to reload and repair.
 			if(currentTarget==null&&baseNeeds==EmplacementStateNeeds.WANTS_SURFACE)
 				baseNeeds = EmplacementStateNeeds.WANTS_HIDE;
 
-			//Handle the weapon, weapons need additional energy to operate
-			EmplacementStateNeeds weaponNeeds = baseNeeds;
-			if(currentWeapon!=null&&energyStorage.extractEnergy(currentWeapon.getEnergyUpkeepCost(), false)==currentWeapon.getEnergyUpkeepCost())
-				weaponNeeds = this.currentWeapon.onUpdate(this, baseNeeds, currentTarget);
+			EmplacementStateNeeds serviceNeeds = getServiceNeeds();
+			EmplacementStateNeeds weaponNeeds = combineNeeds(baseNeeds, serviceNeeds);
+
+			//Handle the weapon only when it has enough upkeep power and is not forced into servicing.
+			if(currentWeapon!=null&&serviceNeeds!=EmplacementStateNeeds.MUST_HIDE
+					&&energyStorage.extractEnergy(currentWeapon.getEnergyUpkeepCost(), false)==currentWeapon.getEnergyUpkeepCost())
+				weaponNeeds = this.currentWeapon.onUpdate(this, weaponNeeds, currentTarget);
 
 			//Handle the door/platform
 			door.setState(combineNeeds(baseNeeds, weaponNeeds)==EmplacementStateNeeds.WANTS_SURFACE);
 			door.update();
+
+			if(!door.getState()&&door.isFullyClosed())
+				serviceWeaponInBase();
 		}
 		if(!this.world.isRemote)
 			this.tactileHandler.update(MultiblockEmplacement.animationPlatform, door.getProgress(0));
@@ -162,11 +192,62 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 
 	private EmplacementStateNeeds combineNeeds(EmplacementStateNeeds base, EmplacementStateNeeds weapon)
 	{
-		if(base==EmplacementStateNeeds.WANTS_SURFACE||weapon==EmplacementStateNeeds.WANTS_SURFACE)
-			return EmplacementStateNeeds.WANTS_SURFACE;
+		//Hard requirements win over soft wishes. Otherwise a redstone signal could keep a broken or empty weapon exposed.
 		if(base==EmplacementStateNeeds.MUST_HIDE||weapon==EmplacementStateNeeds.MUST_HIDE)
 			return EmplacementStateNeeds.MUST_HIDE;
+		if(base==EmplacementStateNeeds.WANTS_SURFACE||weapon==EmplacementStateNeeds.WANTS_SURFACE)
+			return EmplacementStateNeeds.WANTS_SURFACE;
 		return EmplacementStateNeeds.WANTS_HIDE;
+	}
+
+	private EmplacementStateNeeds getServiceNeeds()
+	{
+		if(currentWeapon==null)
+			return EmplacementStateNeeds.WANTS_HIDE;
+
+		float hideThreshold = MathHelper.clamp(weaponHideHealthThreshold, 0f, 1f);
+		float readyThreshold = MathHelper.clamp(Math.max(weaponRepairSatisfactoryThreshold, hideThreshold), 0f, 1f);
+
+		if(currentWeapon.isBelowHealthThreshold(hideThreshold))
+			weaponRepairing = true;
+		if(weaponRepairing)
+		{
+			if(currentWeapon.isRepairedTo(readyThreshold))
+				weaponRepairing = false;
+			else
+				return EmplacementStateNeeds.MUST_HIDE;
+		}
+
+		if(currentWeapon.needsSupply(this))
+			return EmplacementStateNeeds.MUST_HIDE;
+
+		return EmplacementStateNeeds.WANTS_SURFACE;
+	}
+
+	private void serviceWeaponInBase()
+	{
+		if(currentWeapon==null||world.isRemote)
+			return;
+
+		boolean changed = false;
+		if(currentWeapon.needsRestock(this))
+			changed |= currentWeapon.restockFromBase(this);
+
+		if(currentWeapon.getHealth() < currentWeapon.getMaxHealth())
+		{
+			weaponRepairTicker++;
+			if(weaponRepairTicker >= WEAPON_REPAIR_INTERVAL)
+			{
+				weaponRepairTicker = 0;
+				if(energyStorage.extractEnergy(WEAPON_REPAIR_ENERGY_COST, true)==WEAPON_REPAIR_ENERGY_COST)
+					changed |= currentWeapon.repair(WEAPON_REPAIR_AMOUNT);
+			}
+		}
+		else
+			weaponRepairTicker = 0;
+
+		if(changed)
+			updateTileForEvent(SyncEvents.TILE_CUSTOM2);
 	}
 
 	@Override
@@ -279,18 +360,14 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 					this.taskManager.resumeTask(true);
 					updateTileForEvent(SyncEvents.TILE_CUSTOM1);
 					break;
-				case "targetshells":
-//					this.taskManager.addTask(new EmplacementFireMissionShells());
-					updateTileForEvent(SyncEvents.TILE_CUSTOM1);
-					break;
 				case "fire":
 					Optional<DataTypeEntity> e = IIDataHandlingUtils.optionalEntity('e', packet);
 
-					/*if(e.isPresent())
+					if(e.isPresent())
 					{
 						Entity entityByID = world.getEntityByID(e.get().entityID);
 						if(entityByID!=null)
-							this.taskManager.addTask(new EmplacementFireMissionEntity(entityByID));
+							this.taskManager.addEntityMission(entityByID, IIDataHandlingUtils.optionalInt('a', packet).orElse(1));
 						updateTileForEvent(SyncEvents.TILE_CUSTOM1);
 					}
 					else
@@ -298,7 +375,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 						int amount = IIDataHandlingUtils.optionalInt('a', packet).orElse(1);
 						IIDataHandlingUtils.expectingVectorParam(packet, vec -> {
 									//Block/Vector based
-									this.taskManager.addTask(new EmplacementFireMissionPosition(new BlockPos(vec).add(getPOIPos("weapon")), amount));
+									this.taskManager.addPositionMission(new BlockPos(vec).add(getPOIPos("weapon")), amount);
 								},
 								angle -> {
 									//Yaw+Pitch based
@@ -306,10 +383,10 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 									double true_angle2 = Math.toRadians(angle.y);
 									int distance = IIDataHandlingUtils.optionalInt('d', packet).orElse(40);
 
-									this.taskManager.addTask(new EmplacementFireMissionPosition(new BlockPos(IIMath.offsetPosDirection(distance,
-											true_angle, true_angle2)).add(getPOIPos("weapon")), amount));
+									this.taskManager.addPositionMission(new BlockPos(IIMath.offsetPosDirection(distance,
+											true_angle, true_angle2)).add(getPOIPos("weapon")), amount);
 								});
-					}*/
+					}
 					//Synchronize the task
 					updateTileForEvent(SyncEvents.TILE_CUSTOM1);
 					break;
@@ -423,7 +500,43 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 	@Override
 	public boolean isStackValid(int slot, ItemStack stack)
 	{
-		return false;
+		return currentWeapon!=null;
+	}
+
+	//--- Capabilities ---//
+
+	@Override
+	public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable net.minecraft.util.EnumFacing facing)
+	{
+		TileEntityEmplacement master = master();
+		if(master!=null&&master.currentWeapon!=null)
+		{
+			if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY&&(isPOI("input")||isPOI("output")))
+				return master.currentWeapon.getBaseItemHandler()!=null;
+			if(capability==CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY&&(isPOI("input")||isPOI("output")))
+				return master.currentWeapon.getBaseFluidHandler()!=null;
+		}
+		return super.hasCapability(capability, facing);
+	}
+
+	@Nullable
+	@Override
+	@SuppressWarnings("unchecked")
+	public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable net.minecraft.util.EnumFacing facing)
+	{
+		TileEntityEmplacement master = master();
+		if(master!=null&&master.currentWeapon!=null&&(isPOI("input")||isPOI("output")))
+		{
+			if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY&&master.currentWeapon.getBaseItemHandler()!=null)
+				return (T)master.currentWeapon.getBaseItemHandler();
+			if(capability==CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+			{
+				IFluidHandler handler = master.currentWeapon.getBaseFluidHandler();
+				if(handler!=null)
+					return (T)handler;
+			}
+		}
+		return super.getCapability(capability, facing);
 	}
 
 	//--- IOwnableProperty ---//

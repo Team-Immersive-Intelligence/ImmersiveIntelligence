@@ -1,12 +1,14 @@
 package pl.pabilo8.immersiveintelligence.client.gui.block;
 
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
+import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TextFormatting;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseType;
@@ -18,7 +20,9 @@ import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem.IIAmmoProje
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoBallisticsCache;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoBallisticsCache.CachedBallisticStats;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoUtils;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
+import pl.pabilo8.immersiveintelligence.api.crafting.BulletComponentStack;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTileGui;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoDropdown;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoEntryPanelBuilder;
@@ -27,6 +31,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBa
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoItemStackDisplay;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoScenarioDisplay;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage.ImageAnimationDirection;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
 import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTBullet;
@@ -37,11 +42,13 @@ import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityProjectileWorkshop;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerProjectileWorkshop;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -52,8 +59,10 @@ import java.util.stream.Collectors;
  * @since 10.07.2019
  */
 @DecoTemplate(name = "projectile_workshop", category = DecoGuiCategory.PRODUCTION_TILE)
-public class GuiProjectileWorkshop extends DecoGui<TileEntityProjectileWorkshop, ContainerProjectileWorkshop>
+public class GuiProjectileWorkshop extends DecoTileGui<TileEntityProjectileWorkshop, ContainerProjectileWorkshop>
 {
+	private static final String GUI_KEY = IIReference.GUI_LABEL_KEY+"projectile_workshop.";
+
 	@DecoResource
 	public static ResourceLocation PROGRESS_BAR = IIReference.RES_II.with("gui/projectile_workshop");
 	@DecoResource
@@ -83,7 +92,7 @@ public class GuiProjectileWorkshop extends DecoGui<TileEntityProjectileWorkshop,
 	boolean hasFillerUpgrade;
 
 	//Non-upgraded
-	private DecoPanel ammoInfoPanel;
+	private DecoPanel ammoInfoPanel, fillerInfoPanel;
 	private DecoDropdown<CoreType> coreTypeDropdown;
 	private IAmmoTypeItem<?, ?> ammoType;
 	private AmmoCore ammoCore;
@@ -92,8 +101,6 @@ public class GuiProjectileWorkshop extends DecoGui<TileEntityProjectileWorkshop,
 	private DecoItemStackDisplay exampleStackDisplay;
 	private DecoScenarioDisplay scenario;
 	private DecoLabel costLabel;
-
-	//Upgraded
 
 	public GuiProjectileWorkshop(EntityPlayer player, TileEntityProjectileWorkshop tile)
 	{
@@ -109,14 +116,14 @@ public class GuiProjectileWorkshop extends DecoGui<TileEntityProjectileWorkshop,
 	@Override
 	public void onInit()
 	{
-		syncAnimatedParts(openedPart = (Utils.RAND.nextGaussian() > 0.5f?tile.lid1: tile.lid2), true);
+		syncAnimatedParts(openedPart = Utils.RAND.nextGaussian() > 0.5f?tile.lid1: tile.lid2, true);
 
 		//Add background
 		startBackground()
-				.withBox(DecoTextures.BG_STEEL_ROUGH, DecoTextures.TEMPLATE_SQUARE, 0, 0, 256, 130)
+				.withBox(DecoTextures.BG_STEEL_ROUGH, DecoTextures.TEMPLATE_SQUARE, 0, 0, hasFillerUpgrade?176: 256, 130)
 				.withTitleBar(tile)
 				.withNextLayer()
-				.withBox(DecoTextures.BG_WOODEN, DecoTextures.TEMPLATE_ROUND_WOODEN, 44, 136, 176, 92)
+				.withBox(DecoTextures.BG_WOODEN, DecoTextures.TEMPLATE_ROUND_WOODEN, hasFillerUpgrade?0: 44, 136, 176, 92)
 				.withInventorySlots(SlotStyle.VANILLA, container.playerInventory)
 				.withInventoryTitleBar()
 
@@ -135,6 +142,13 @@ public class GuiProjectileWorkshop extends DecoGui<TileEntityProjectileWorkshop,
 						.withNextLayer()
 						.withBox(DecoTextures.BG_PAPER, DecoTextures.TEMPLATE_TICKET, 44, 18, 96, 72)
 				)
+				.conditionally(hasFillerUpgrade, builder -> builder
+						.withInventorySlots(SlotStyle.IE_INPUT, container.inputSlot)
+						.withInventorySlots(SlotStyle.IE_INPUT, container.componentInputSlot)
+						.withNextLayer()
+						.withBox(DecoTextures.BG_PAPER, DecoTextures.TEMPLATE_PAPER, 4, 128+8-64-4, 176-4-8, 64)
+						.withTitleBar(GUI_KEY+"component_info", DecoAlignment.TOP_LEFT)
+				)
 				.build();
 
 		//Add foreground
@@ -150,7 +164,113 @@ public class GuiProjectileWorkshop extends DecoGui<TileEntityProjectileWorkshop,
 
 	private void addCoreFillerComponents()
 	{
+		//Upgraded
+		addComponents(
+				//Energy bar
+				new DecoBar(176-8, 4)
+						.withSize(12, 64)
+						.withTemplate(DecoTemplates.BAR_ELECTRIC_ENERGY.apply(tile.energyStorage)),
+				//Right-side paper panel
+				this.fillerInfoPanel = new DecoPanel(4, 128+8-64+4)
+						.withSize(176, 64)
+						.withBackground(null),
+				//Stored component display
+				new DecoItemStackDisplay(176/2-9, 12)
+						.withSize(16, 16)
+						.withOnTooltip(gui -> {
+							AmmoComponent current = tile.componentInside.getComponent();
+							if(current==null||tile.componentInside.amount <= 0)
+								return Collections.singleton(I18n.format("gui.immersiveengineering.empty"));
+							return Arrays.asList(
+									tile.componentInside.getColor().getHexCol(tile.componentInside.getTranslatedName()),
+									tile.componentInside.amount+" mB"
+							);
+						})
+						.withBackgroundTexture(DecoSprite.atlasSprite(DecoTextures.SLOT_IE, 32, true))
+						.withProgressBar(partialTicks -> tile.componentInside.getAmountPercentage(),
+								() -> new IIColor[]{tile.componentInside.getColor()}
+						),
+				new DecoItemStackDisplay(176-8-24+2, 45-8)
+						.withSize(16, 16)
+						.withBackgroundTexture(DecoSprite.atlasSprite(DecoTextures.SLOT_IE, 32, true)),
 
+				//Progress bar background
+				new DecoImage(8+64+8+2+1-48-2, 28+4+4+4+1)
+						.withSize(48, 8)
+						.withImageLocation(PROGRESS_BAR, true)
+						.withUV(64, 16, 11, 16+48, 11+8),
+				new DecoImage(8+64+8+2+1, 28+4+4)
+						.withSize(8, 19)
+						.withImageLocation(PROGRESS_BAR, true)
+						.withUV(64, 37, 19, 37+8, 19+19),
+				new DecoImage(8+64+8+2+1+2+8, 28+4+4+4)
+						.withSize(48, 10)
+						.withImageLocation(PROGRESS_BAR, true)
+						.withUV(64, 16, 0, 16+48, 10),
+
+				//Progress bar
+				new DecoImage(8+64+8+2+1-48, 28+4+4+4+1+1)
+						.withSize(44, 6)
+						.withImageLocation(PROGRESS_BAR, true)
+						.withUV(64, 0, 47, 44, 47+6)
+						.withAnimation(ImageAnimationDirection.LEFT_TO_RIGHT, DecoGuiUtils.getMultiblockProductionSingleProgress(tile, 0f, 0.45f)),
+				new DecoImage(8+64+8+2+1, 28+4+4)
+						.withSize(8, 19)
+						.withImageLocation(PROGRESS_BAR, true)
+						.withUV(64, 45, 19, 45+8, 19+19)
+						.withAnimation(ImageAnimationDirection.LEFT_TO_RIGHT, DecoGuiUtils.getMultiblockProductionSingleProgress(tile, 0.45f, 0.55f)),
+				new DecoImage(8+64+8+2+1+2+8+2, 28+4+4+4+2)
+						.withSize(44, 6)
+						.withImageLocation(PROGRESS_BAR, true)
+						.withUV(64, 0, 39, 44, 39+6)
+						.withAnimation(ImageAnimationDirection.LEFT_TO_RIGHT, DecoGuiUtils.getMultiblockProductionSingleProgress(tile, 0.55f, 1f))
+		);
+
+		addValueListener(() -> tile.componentInside.serializeNBT().toString()+"|"+tile.componentFillAmount)
+				.addObserver(hash -> updateFillerInfo());
+		updateFillerInfo();
+	}
+
+	private void updateFillerInfo()
+	{
+		BulletComponentStack stack = tile.componentInside;
+		this.fillerInfoPanel.cleanup();
+		if(stack==null||stack.isEmpty()||stack.component==null)
+			return;
+
+		fillerInfoPanel.addLabel(TextFormatting.ITALIC+stack.component.getTranslatedName(), 4, 0)
+				.withSize(76, 9)
+				.withAlign(DecoAlignment.LEFT);
+		fillerInfoPanel.addLabel(I18n.format(GUI_KEY+"component.role", stack.component.getRole().getLocalizedName()), 4, 12)
+				.withSize(100, 9)
+				.withAlign(DecoAlignment.LEFT);
+		fillerInfoPanel.addLabel(I18n.format(GUI_KEY+"component.density", stack.component.getDensity()), 4, 24)
+				.withSize(100, 9)
+				.withAlign(DecoAlignment.LEFT);
+		fillerInfoPanel.addLabel(I18n.format(GUI_KEY+"component.slots_taken", stack.component.getSlotsTaken()), 4, 36)
+				.withSize(100, 9)
+				.withAlign(DecoAlignment.LEFT);
+		if(stack.component.showInManual())
+			fillerInfoPanel.addComponent(new DecoButton(176-6-16-8-2, -4)
+					.withSize(20, 20)
+
+					.withBackground(DecoTextures.COMPONENT_BUTTON)
+					.withBackgroundColor(IIColor.fromPackedRGB(0x7A7ABC))
+					.withPadding(2, 2, 2, 2)
+					.withIconAlignment(DecoAlignment.CENTER)
+					//Engineer's Manual
+					.withIcon(new ItemStack(IEContent.itemTool, 1, 3))
+					.withTranslatedTooltip(IIReference.GUI_TOOLTIP_KEY+"widget.manual.page")
+
+					.withOnLMBPressed(() -> {
+						int index = AmmoRegistry.getAllComponents().stream()
+								.filter(AmmoPart::showInManual)
+								.filter(c -> !c.getMaterial().getExampleStack().isEmpty())
+								.collect(Collectors.toList())
+								.indexOf(stack.component);
+						openManualWidget("bullet_components", index);
+					})
+			);
 	}
 
 	private void addCoreWorkshopComponents()
@@ -176,12 +296,12 @@ public class GuiProjectileWorkshop extends DecoGui<TileEntityProjectileWorkshop,
 										new DecoLabel(fontRenderer, 20, 2)
 												.withSize(48, 18)
 												.withAlign(DecoAlignment.LEFT)
-												.withText("Core")
+												.withText(GUI_KEY+"entry.core")
 								)
 								.withElementApplyMethod(this::drawCoreTypeEntry)
-								.withElementTooltip(typeMeta -> "a")
+								.withElementTooltip(typeMeta -> GUI_KEY+"tooltip.core_type")
 						)
-						.withTranslatedTooltip("Core Type"),
+						.withTranslatedTooltip(GUI_KEY+"tooltip.core_type"),
 
 				new DecoDropdown<IAmmoTypeItem<?, ?>>(0, 93)
 						.withSize(144, 20)
@@ -203,13 +323,13 @@ public class GuiProjectileWorkshop extends DecoGui<TileEntityProjectileWorkshop,
 										new DecoLabel(fontRenderer, 20, 2)
 												.withSize(48, 18)
 												.withAlign(DecoAlignment.LEFT)
-												.withText("Type")
+												.withText(GUI_KEY+"entry.type")
 
 								)
 								.withElementApplyMethod(this::drawAmmoTypeEntry)
-								.withElementTooltip(typeMeta -> "a")
+								.withElementTooltip(typeMeta -> I18n.format(GUI_KEY+"tooltip.ammunition_type"))
 						)
-						.withTranslatedTooltip("Ammunition Type"),
+						.withTranslatedTooltip(GUI_KEY+"tooltip.ammunition_type"),
 				//3D display and cost label item
 				scenario = new DecoScenarioDisplay(46, 20)
 						.withSize(80, 60)
@@ -229,14 +349,28 @@ public class GuiProjectileWorkshop extends DecoGui<TileEntityProjectileWorkshop,
 						.withSize(12, 69)
 						.withTemplate(DecoTemplates.BAR_ELECTRIC_ENERGY.apply(tile.energyStorage)),
 
-				//Progress bar
+				//Progress bar background
 				new DecoImage(8, 28)
-						.withSize(37, 39)
+						.withSize(16, 29)
 						.withImageLocation(PROGRESS_BAR, true)
-						.withUV(64, 0, 0, 37, 39)
+						.withUV(64, 0, 0, 16, 29),
+				new DecoImage(8, 28+29)
+						.withSize(37, 10)
+						.withImageLocation(PROGRESS_BAR, true)
+						.withUV(64, 0, 29, 37, 29+10),
+				//Progress bar
+				new DecoImage(8+2, 28+2)
+						.withSize(12, 27)
+						.withImageLocation(PROGRESS_BAR, true)
+						.withUV(64, 52, 26, 52+12, 26+27)
+						.withAnimation(ImageAnimationDirection.TOP_TO_BOTTOM, DecoGuiUtils.getMultiblockProductionSingleProgress(tile, 0f, 0.6f)),
+				new DecoImage(8+2+4, 28+2+27+1)
+						.withSize(29, 7)
+						.withImageLocation(PROGRESS_BAR, true)
+						.withUV(64, 35, 57, 35+29, 57+7)
+						.withAnimation(ImageAnimationDirection.LEFT_TO_RIGHT, DecoGuiUtils.getMultiblockProductionSingleProgress(tile, 0.6f, 1f))
 		);
-		addLabel("Cost:", 48, 79)
-				.withSize(78, 9);
+		addLabel(GUI_KEY+"cost", 48, 79);
 		costLabel = addLabel("", 48, 79)
 				.withSize(62, 9)
 				.withAlign(DecoAlignment.RIGHT);
@@ -251,7 +385,7 @@ public class GuiProjectileWorkshop extends DecoGui<TileEntityProjectileWorkshop,
 		{
 			exampleStackDisplay.withStack(ItemStack.EMPTY);
 			scenario.withModel(false, new AMTLocator("missingno", Vec3d.ZERO));
-			costLabel.withText("Cost: 250 Pabulions and one Yevreiski Cent");
+			costLabel.withText(GUI_KEY+"invalid_cost");
 			return;
 		}
 
@@ -264,7 +398,7 @@ public class GuiProjectileWorkshop extends DecoGui<TileEntityProjectileWorkshop,
 				.withSelectedEntry(coreType);
 
 		//List cost, available materials and update 3D model
-		costLabel.withText(ammoType.getCoreMaterialNeeded()+"x");
+		costLabel.withRawText(I18n.format(GUI_KEY+"unit.multiplier", ammoType.getCoreMaterialNeeded()));
 		List<ItemStack> stacks = AmmoRegistry.getAllCores().stream()
 				.map(AmmoCore::getMaterial)
 				.map(IngredientStack::getExampleStack)
@@ -280,7 +414,7 @@ public class GuiProjectileWorkshop extends DecoGui<TileEntityProjectileWorkshop,
 		ammoInfoPanel.cleanup();
 		//Core material dropdown
 		ammoInfoPanel.addLabel(new DecoLabel(fontRenderer, 0, 8)
-				.addText("Material Preview")
+				.withText(GUI_KEY+"material_preview")
 				.withSize(ammoInfoPanel.width, 8)
 				.withAlign(DecoAlignment.CENTER)
 		);
@@ -304,7 +438,7 @@ public class GuiProjectileWorkshop extends DecoGui<TileEntityProjectileWorkshop,
 										new DecoLabel(fontRenderer, 20, 2)
 												.withSize(48, 16)
 												.withAlign(DecoAlignment.LEFT)
-												.withText("Type")
+												.withText(GUI_KEY+"entry.type")
 
 								)
 								.withElementApplyMethod(this::drawAmmoCoreEntry)
@@ -317,19 +451,19 @@ public class GuiProjectileWorkshop extends DecoGui<TileEntityProjectileWorkshop,
 
 		//Core
 		ammoInfoPanel.addLabel(new DecoLabel(fontRenderer, 0, 37)
-				.addText("Core")
+				.withText(GUI_KEY+"section.core")
 				.withSize(ammoInfoPanel.width, 8)
 				.withAlign(DecoAlignment.CENTER)
 		);
 		addImageWithLabel(1, 45, COMPONENT_SLOTS, coreType.getComponentSlots(),
-				"Component Slots");
+				GUI_KEY+"tooltip.component_slots");
 		addImageWithLabel(ammoInfoPanel.width/2, 45, COMPONENT_SHAPE, "desc.immersiveintelligence.effect_shape."+coreType.getEffectShape().getName().toLowerCase(),
-				"Component Effect Shape");
+				GUI_KEY+"tooltip.component_effect_shape");
 
-		addImageWithLabel(1, 45+13, COMPONENT_EFFICIENCY, coreType.getComponentEffectivenessMod()*ammoCore.getExplosionModifier()+"x",
-				"Component Efficiency Modifier", "Determines potency.", "Responsible for explosive power, chemical gas concentration.");
-		addImageWithLabel(ammoInfoPanel.width/2, 45+13, COMPONENT_SIZE, Utils.formatDouble(ammoType.getComponentSize(), "0.##")+"x",
-				"Component Size Multiplier", "Determines component volume, responsible for explosion radius, gas spread range multiplier.");
+		addImageWithLabel(1, 45+13, COMPONENT_EFFICIENCY, I18n.format(GUI_KEY+"unit.multiplier", coreType.getComponentEffectivenessMod()*ammoCore.getExplosionModifier()),
+				GUI_KEY+"tooltip.component_efficiency", GUI_KEY+"tooltip.component_efficiency.line1", GUI_KEY+"tooltip.component_efficiency.line2");
+		addImageWithLabel(ammoInfoPanel.width/2, 45+13, COMPONENT_SIZE, I18n.format(GUI_KEY+"unit.multiplier", Utils.formatDouble(ammoType.getComponentSize(), "0.##")),
+				GUI_KEY+"tooltip.component_size", GUI_KEY+"tooltip.component_size.line1");
 
 		//Ballistics
 		if(ammoType.getClass().isAnnotationPresent(IIAmmoProjectile.class))
@@ -338,30 +472,32 @@ public class GuiProjectileWorkshop extends DecoGui<TileEntityProjectileWorkshop,
 			assert projectileInfo!=null;
 			CachedBallisticStats stats = AmmoBallisticsCache.get(ammoType, ammoType.getAmmoStack(ammoCore, coreType, FuseType.CONTACT));
 			ammoInfoPanel.addLabel(new DecoLabel(fontRenderer, 0, 73)
-					.addText("Ballistics")
+					.withText(GUI_KEY+"section.ballistics")
 					.withSize(ammoInfoPanel.width, 8)
 					.withAlign(DecoAlignment.CENTER)
 			);
 
 			addImageWithLabel(1, 81-2, MASS, Utils.formatDouble(ammoType.getCoreMass(ammoCore, new AmmoComponent[0]), "0.##"),
-					"Core Mass");
+					GUI_KEY+"tooltip.core_mass");
 			addImageWithLabel(ammoInfoPanel.width/2, 81-2, DAMAGE, Utils.formatDouble(ammoType.getDamage()*ammoCore.getDamageModifier()*coreType.getDamageMod(), "0.##"),
-					"Damage Dealt");
-			addImageWithLabel(1, 81+13, VELOCITY, ammoType.getVelocity()+" b/t",
-					"Velocity");
+					GUI_KEY+"tooltip.damage_dealt");
+			addImageWithLabel(1, 81+13, VELOCITY, I18n.format(GUI_KEY+"unit.blocks_per_tick", ammoType.getVelocity()),
+					GUI_KEY+"tooltip.velocity");
 			addImageWithLabel(ammoInfoPanel.width/2, 81+13, AVAILABLE_FUZES, ammoType.getAllowedFuseTypes().length+"/"+FuseType.values().length,
-					"Available Fuzes");
+					GUI_KEY+"tooltip.available_fuzes");
 			addImageWithLabel(1, 81+13+13, PENETRATION_HARDNESS,
-					Utils.formatDouble(IIAmmoUtils.getCombinedDepth(ammoType, coreType), "0.##")+"b "+
-							I18n.format("desc.immersiveintelligence.penetration_hardness."+IIAmmoUtils.getCombinedHardness(ammoCore, coreType).getName().toLowerCase()),
-					"Penetration Hardness");
+					I18n.format(GUI_KEY+"value.penetration_hardness",
+							Utils.formatDouble(IIAmmoUtils.getCombinedDepth(ammoType, coreType), "0.##"),
+							I18n.format("desc.immersiveintelligence.penetration_hardness."+IIAmmoUtils.getCombinedHardness(ammoCore, coreType).getName().toLowerCase())
+					),
+					GUI_KEY+"tooltip.penetration_hardness");
 			/*addImageWithLabel(ammoInfoPanel.width/2, 81+13+13, MAX_PENETRATION_DEPTH, ,
 					"Max. Penetration Depth");*/
-			addImageWithLabel(1, 81+13+13+13, FLAT_TRAJECTORY_RANGE, Utils.formatDouble(stats.getMaxDirectRange(), "0.##")+"b",
-					"Flat-Trajectory Range");
+			addImageWithLabel(1, 81+13+13+13, FLAT_TRAJECTORY_RANGE, I18n.format(GUI_KEY+"unit.blocks", Utils.formatDouble(stats.getMaxDirectRange(), "0.##")),
+					GUI_KEY+"tooltip.flat_trajectory_range");
 			addImageWithLabel(ammoInfoPanel.width/2, 81+13+13+13, ARTILLERY_RANGE, projectileInfo.artillery()?
-							Utils.formatDouble(stats.getGetMaxArtilleryRange(), "0.##")+"b": "-",
-					"Max. Artillery Range");
+							I18n.format(GUI_KEY+"unit.blocks", Utils.formatDouble(stats.getGetMaxArtilleryRange(), "0.##")): "-",
+					GUI_KEY+"tooltip.max_artillery_range");
 		}
 	}
 
@@ -406,7 +542,11 @@ public class GuiProjectileWorkshop extends DecoGui<TileEntityProjectileWorkshop,
 	@Override
 	protected EasyNBT onSaveTileData()
 	{
-		return super.onSaveTileData()
+		EasyNBT nbt = super.onSaveTileData();
+		if(hasFillerUpgrade)
+			return nbt.withInt("component_fill_amount", tile.componentFillAmount);
+
+		return nbt
 				.withEnum("core_type", coreType)
 				.withString("produced_bullet", ammoType.getName());
 	}

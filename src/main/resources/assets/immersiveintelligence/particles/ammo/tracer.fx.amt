@@ -1,8 +1,8 @@
 {
   "type": "ParticleModel",
-  "models": ["ammo/tracer_mid.obj"],
+  "models": ["ammo/tracer_start.obj"],
   "max_lifetime": 2,
-  "draw_stage": "custom_additive",
+  "draw_stage": "custom",
   "chained": [
     {
       "time": 1,

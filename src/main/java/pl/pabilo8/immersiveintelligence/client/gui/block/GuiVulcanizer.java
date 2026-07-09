@@ -5,7 +5,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Optional.Method;
 import pl.pabilo8.immersiveintelligence.api.crafting.VulcanizerRecipe;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTileGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoItemStackDisplay;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage;
@@ -24,7 +24,7 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEn
  * @since 10.07.2019
  */
 @DecoTemplate(name = "vulcanizer", category = DecoGuiCategory.PRODUCTION_TILE)
-public class GuiVulcanizer extends DecoGui<TileEntityVulcanizer, ContainerVulcanizer>
+public class GuiVulcanizer extends DecoTileGui<TileEntityVulcanizer, ContainerVulcanizer>
 {
 	@DecoResource
 	public static final ResourceLocation TEXTURE = IIReference.RES_II.with("gui/vulcanizer");

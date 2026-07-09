@@ -4,6 +4,7 @@ import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
 import blusunrize.immersiveengineering.common.util.inventory.IIEInventory;
 import mezz.jei.api.IModRegistry;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
@@ -17,8 +18,14 @@ import pl.pabilo8.immersiveintelligence.client.gui.block.*;
 import pl.pabilo8.immersiveintelligence.client.gui.block.ammunition_production.GuiAmmunitionAssembler;
 import pl.pabilo8.immersiveintelligence.client.gui.block.arithmetic_logic_machine.GuiArithmeticLogicMachine;
 import pl.pabilo8.immersiveintelligence.client.gui.block.arithmetic_logic_machine.GuiArithmeticLogicMachineEdit;
+import pl.pabilo8.immersiveintelligence.client.gui.block.arithmetic_logic_machine.GuiArithmeticLogicMachineMemory;
+import pl.pabilo8.immersiveintelligence.client.gui.block.arithmetic_logic_machine.GuiArithmeticLogicMachineMemoryEdit;
 import pl.pabilo8.immersiveintelligence.client.gui.block.data_input_machine.GuiDataInputMachine;
 import pl.pabilo8.immersiveintelligence.client.gui.block.data_input_machine.GuiDataInputMachineEdit;
+import pl.pabilo8.immersiveintelligence.client.gui.block.data_merger.GuiDataMerger;
+import pl.pabilo8.immersiveintelligence.client.gui.block.data_merger.GuiDataMergerEdit;
+import pl.pabilo8.immersiveintelligence.client.gui.block.data_router.GuiDataRouter;
+import pl.pabilo8.immersiveintelligence.client.gui.block.data_router.GuiDataRouterEdit;
 import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageConfig;
 import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageFireMissions;
 import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageStorage;
@@ -35,9 +42,11 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui.DecoResourcesLoader;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoResource;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTemplate;
+import pl.pabilo8.immersiveintelligence.client.gui.entity.GuiEntityUpgrade;
 import pl.pabilo8.immersiveintelligence.client.gui.item.GuiCasingPouch;
 import pl.pabilo8.immersiveintelligence.client.gui.item.GuiPrintedPage;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity.TileEntityDataMerger;
+import pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity.TileEntityDataRouter;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.TileEntityMetalCrate;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate.TileEntityAmmunitionCrate;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate.TileEntityMedicalCrate;
@@ -55,7 +64,8 @@ import pl.pabilo8.immersiveintelligence.common.compat.jei.DecoGuiJEIHandler;
 import pl.pabilo8.immersiveintelligence.common.gui.*;
 import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
-import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
+import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIEntityBase;
+import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIITileBase;
 import pl.pabilo8.immersiveintelligence.common.util.lambda.TriFunction;
 
 import javax.annotation.Nonnull;
@@ -100,6 +110,12 @@ public enum IIGUI implements ISerializableEnum
 	ARITHMETIC_LOGIC_MACHINE_EDIT(TileEntityArithmeticLogicMachine.class,
 			(player, te) -> new ContainerArithmeticLogicMachine(player, te, 2)
 	),
+	ARITHMETIC_LOGIC_MACHINE_MEMORY_IN(TileEntityArithmeticLogicMachine.class,
+			(player, te) -> new ContainerArithmeticLogicMachine(player, te, 1)),
+	ARITHMETIC_LOGIC_MACHINE_MEMORY_OUT(TileEntityArithmeticLogicMachine.class,
+			(player, te) -> new ContainerArithmeticLogicMachine(player, te, 1)),
+	ARITHMETIC_LOGIC_MACHINE_MEMORY_EDIT(TileEntityArithmeticLogicMachine.class,
+			(player, te) -> new ContainerArithmeticLogicMachine(player, te, 1)),
 
 	PRINTED_PAGE_BLANK(),
 	PRINTED_PAGE_TEXT(),
@@ -121,6 +137,9 @@ public enum IIGUI implements ISerializableEnum
 	FUEL_STATION(TileEntityFuelStation.class, ContainerFuelStation::new),
 
 	DATA_MERGER(TileEntityDataMerger.class, ContainerDataMerger::new),
+	DATA_MERGER_EDIT(TileEntityDataMerger.class, ContainerDataMerger::new),
+	DATA_ROUTER(TileEntityDataRouter.class, ContainerDataRouter::getMainGui),
+	DATA_ROUTER_EDIT(TileEntityDataRouter.class, ContainerDataRouter::getEditGui),
 	INSERTER(TileEntityInserterBase.class, ContainerInserter::new),
 
 	GEARBOX(TileEntityGearbox.class, ContainerGearbox::new),
@@ -129,8 +148,12 @@ public enum IIGUI implements ISerializableEnum
 	SAWMILL(TileEntitySawmill.class, ContainerSawmill::new),
 
 	@SuppressWarnings({"rawtypes", "unchecked"})
-	UPGRADE(TileEntityIEBase.class,
-			(player, te) -> new ContainerUpgrade(player, te)
+	UPGRADE_TILE(TileEntityIEBase.class,
+			(player, te) -> new ContainerTileUpgrade(player, te)
+	),
+	@SuppressWarnings({"rawtypes", "unchecked"})
+	UPGRADE_ENTITY(Entity.class,
+			(player, entity) -> new ContainerEntityUpgrade(player, entity)
 	),
 	VULCANIZER(TileEntityVulcanizer.class, ContainerVulcanizer::new),
 
@@ -153,13 +176,18 @@ public enum IIGUI implements ISerializableEnum
 	RADAR_TARGETS(TileEntityRadar.class, ContainerRadar::new);
 
 	public final Class<? extends TileEntity> teClass;
+	public final Class<? extends Entity> entityClass;
 	public final BiFunction<EntityPlayer, TileEntity, Container> containerFromTile;
+	public final BiFunction<EntityPlayer, Entity, Container> containerFromEntity;
 	public final TriFunction<EntityPlayer, ItemStack, EnumHand, Container> containerFromStack;
 	public boolean item;
+
 	@SideOnly(Side.CLIENT)
 	public BiFunction<EntityPlayer, TileEntity, GuiScreen> guiFromTile;
 	@SideOnly(Side.CLIENT)
 	public TriFunction<EntityPlayer, ItemStack, EnumHand, GuiScreen> guiFromStack;
+	@SideOnly(Side.CLIENT)
+	private BiFunction<EntityPlayer, Entity, GuiScreen> guiFromEntity;
 	//Required for JEI
 	@SideOnly(Side.CLIENT)
 	public Class<? extends DecoGui<?, ?>> guiClass;
@@ -167,11 +195,27 @@ public enum IIGUI implements ISerializableEnum
 	/**
 	 * TileEntity GUI constructor
 	 */
-	<T extends TileEntity> IIGUI(@Nonnull Class<T> teClass, BiFunction<EntityPlayer, T, Container> containerFromTile)
+	<T> IIGUI(@Nonnull Class<T> teClass, @Nonnull BiFunction<EntityPlayer, T, Container> containerFunction)
 	{
-		this.teClass = teClass;
-		//noinspection unchecked
-		this.containerFromTile = (player, tileEntity) -> containerFromTile.apply(player, (T)tileEntity);
+		if(TileEntity.class.isAssignableFrom(teClass))
+		{
+			//noinspection unchecked
+			this.teClass = (Class<? extends TileEntity>)teClass;
+			this.entityClass = null;
+			//noinspection unchecked
+			this.containerFromTile = (player, tileEntity) -> containerFunction.apply(player, (T)tileEntity);
+			this.containerFromEntity = null;
+		}
+		else if(Entity.class.isAssignableFrom(teClass))
+		{
+			this.teClass = null;
+			//noinspection unchecked
+			this.entityClass = (Class<? extends Entity>)teClass;
+			this.containerFromTile = null;
+			this.containerFromEntity = (player, entity) -> containerFunction.apply(player, (T)entity);
+		}
+		else
+			throw new IllegalArgumentException("Invalid GUI subject class: "+teClass);
 		this.containerFromStack = null;
 		this.item = false;
 	}
@@ -179,10 +223,12 @@ public enum IIGUI implements ISerializableEnum
 	/**
 	 * ItemStack GUI constructor
 	 */
-	IIGUI(TriFunction<EntityPlayer, ItemStack, EnumHand, Container> containerFromStack)
+	IIGUI(@Nonnull TriFunction<EntityPlayer, ItemStack, EnumHand, Container> containerFromStack)
 	{
 		this.teClass = null;
+		this.entityClass = null;
 		this.containerFromTile = null;
+		this.containerFromEntity = null;
 		this.containerFromStack = containerFromStack;
 		this.item = true;
 	}
@@ -193,7 +239,9 @@ public enum IIGUI implements ISerializableEnum
 	IIGUI()
 	{
 		this.teClass = null;
+		this.entityClass = null;
 		this.containerFromTile = null;
+		this.containerFromEntity = null;
 		this.containerFromStack = null;
 		this.item = true;
 	}
@@ -201,41 +249,47 @@ public enum IIGUI implements ISerializableEnum
 	@SideOnly(Side.CLIENT)
 	public static void initClientGUIs()
 	{
-		IIGUI.SAWMILL.setClientDecoGui(GuiSawmill::new);
-		IIGUI.PACKER.setClientDecoGui(GuiPacker::new);
-		IIGUI.PACKER_LABELER.setClientDecoGui(GuiPackerLabeler::new);
-		IIGUI.GEARBOX.setClientDecoGui(GuiGearbox::new);
+		IIGUI.SAWMILL.setClientTileGui(GuiSawmill::new);
+		IIGUI.PACKER.setClientTileGui(GuiPacker::new);
+		IIGUI.PACKER_LABELER.setClientTileGui(GuiPackerLabeler::new);
+		IIGUI.GEARBOX.setClientTileGui(GuiGearbox::new);
 
 		IIGUI.DATA_REDSTONE_INTERFACE_DATA
-				.setClientDecoGui(GuiDataRedstoneInterface::getDataGUI);
+				.setClientTileGui(GuiDataRedstoneInterface::getDataGUI);
 		IIGUI.DATA_REDSTONE_INTERFACE_REDSTONE
-				.setClientDecoGui(GuiDataRedstoneInterface::getRedstoneGUI);
+				.setClientTileGui(GuiDataRedstoneInterface::getRedstoneGUI);
 
-		IIGUI.PRINTING_PRESS.setClientDecoGui(GuiPrintingPress::new);
-		IIGUI.CHEMICAL_BATH.setClientDecoGui(GuiChemicalBath::new);
-		IIGUI.ELECTROLYZER.setClientDecoGui(GuiElectrolyzer::new);
-		IIGUI.PRECISION_ASSEMBLER.setClientDecoGui(GuiPrecisionAssembler::new);
-		IIGUI.FUEL_STATION.setClientDecoGui(GuiFuelStation::new);
-		IIGUI.DATA_MERGER.setClientGui(GuiDataMerger::new);
-		IIGUI.INSERTER.setClientDecoGui(GuiInserter::new);
+		IIGUI.PRINTING_PRESS.setClientTileGui(GuiPrintingPress::new);
+		IIGUI.CHEMICAL_BATH.setClientTileGui(GuiChemicalBath::new);
+		IIGUI.ELECTROLYZER.setClientTileGui(GuiElectrolyzer::new);
+		IIGUI.PRECISION_ASSEMBLER.setClientTileGui(GuiPrecisionAssembler::new);
+		IIGUI.FUEL_STATION.setClientTileGui(GuiFuelStation::new);
+		IIGUI.DATA_MERGER.setClientTileGui(GuiDataMerger::new);
+		IIGUI.DATA_MERGER_EDIT.setClientTileGui(GuiDataMergerEdit::new);
+		IIGUI.DATA_ROUTER.setClientTileGui(GuiDataRouter::new);
+		IIGUI.DATA_ROUTER_EDIT.setClientTileGui(GuiDataRouterEdit::new);
+		IIGUI.INSERTER.setClientTileGui(GuiInserter::new);
 		//Crates
-		IIGUI.METAL_CRATE.setClientDecoGui(GuiMetalCrate::new);
-		IIGUI.SMALL_CRATE.setClientDecoGui(GuiSmallCrate::new);
+		IIGUI.METAL_CRATE.setClientTileGui(GuiMetalCrate::new);
+		IIGUI.SMALL_CRATE.setClientTileGui(GuiSmallCrate::new);
 		//Effect Crates
-		IIGUI.AMMUNITION_CRATE.setClientDecoGui(GuiAmmunitionCrate::new);
-		IIGUI.MEDIC_CRATE.setClientDecoGui(GuiMedicalCrate::new);
-		IIGUI.REPAIR_CRATE.setClientDecoGui(GuiRepairCrate::new);
+		IIGUI.AMMUNITION_CRATE.setClientTileGui(GuiAmmunitionCrate::new);
+		IIGUI.MEDIC_CRATE.setClientTileGui(GuiMedicalCrate::new);
+		IIGUI.REPAIR_CRATE.setClientTileGui(GuiRepairCrate::new);
 		//Skycrate
-		IIGUI.SKYCRATE_STATION.setClientDecoGui(GuiSkycrateStation::new);
-		IIGUI.SKYCART_STATION.setClientDecoGui(GuiSkycartStation::new);
+		IIGUI.SKYCRATE_STATION.setClientTileGui(GuiSkycrateStation::new);
+		IIGUI.SKYCART_STATION.setClientTileGui(GuiSkycartStation::new);
 		//DIM
-		IIGUI.DATA_INPUT_MACHINE_STORAGE.setClientDecoGui(GuiDataInputMachine::getStorageGui);
-		IIGUI.DATA_INPUT_MACHINE_VARIABLES.setClientDecoGui(GuiDataInputMachine::getVariablesGui);
-		IIGUI.DATA_INPUT_MACHINE_EDIT.setClientDecoGui(GuiDataInputMachineEdit::new);
+		IIGUI.DATA_INPUT_MACHINE_STORAGE.setClientTileGui(GuiDataInputMachine::getStorageGui);
+		IIGUI.DATA_INPUT_MACHINE_VARIABLES.setClientTileGui(GuiDataInputMachine::getVariablesGui);
+		IIGUI.DATA_INPUT_MACHINE_EDIT.setClientTileGui(GuiDataInputMachineEdit::new);
 		//ALM
-		IIGUI.ARITHMETIC_LOGIC_MACHINE_STORAGE.setClientDecoGui(GuiArithmeticLogicMachine::getStorageGui);
-		IIGUI.ARITHMETIC_LOGIC_MACHINE_VARIABLES.setClientDecoGui(GuiArithmeticLogicMachine::getVariablesGui);
-		IIGUI.ARITHMETIC_LOGIC_MACHINE_EDIT.setClientDecoGui(GuiArithmeticLogicMachineEdit::new);
+		IIGUI.ARITHMETIC_LOGIC_MACHINE_STORAGE.setClientTileGui(GuiArithmeticLogicMachine::getStorageGui);
+		IIGUI.ARITHMETIC_LOGIC_MACHINE_VARIABLES.setClientTileGui(GuiArithmeticLogicMachine::getVariablesGui);
+		IIGUI.ARITHMETIC_LOGIC_MACHINE_EDIT.setClientTileGui(GuiArithmeticLogicMachineEdit::new);
+		IIGUI.ARITHMETIC_LOGIC_MACHINE_MEMORY_IN.setClientTileGui(GuiArithmeticLogicMachineMemory::getMemoryInputGui);
+		IIGUI.ARITHMETIC_LOGIC_MACHINE_MEMORY_OUT.setClientTileGui(GuiArithmeticLogicMachineMemory::getMemoryOutputGui);
+		IIGUI.ARITHMETIC_LOGIC_MACHINE_MEMORY_EDIT.setClientTileGui(GuiArithmeticLogicMachineMemoryEdit::new);
 
 		//Printed Page
 		IIGUI.PRINTED_PAGE_BLANK.setClientStackGui(GuiPrintedPage::new);
@@ -249,26 +303,28 @@ public enum IIGUI implements ISerializableEnum
 		IIGUI.CASING_POUCH.setClientStackGui(GuiCasingPouch::new);
 
 		//noinspection rawtypes,unchecked
-		IIGUI.UPGRADE.setClientDecoGui((player, tile) -> new GuiUpgrade(player, tile));
+		IIGUI.UPGRADE_TILE.setClientTileGui((player, tile) -> new GuiTileUpgrade(player, tile));
+		//noinspection rawtypes,unchecked
+		IIGUI.UPGRADE_ENTITY.setClientEntityGui((player, tile) -> new GuiEntityUpgrade(player, tile));
 
-		IIGUI.FLAGPOLE.setClientDecoGui(GuiFlagpole::new);
-		IIGUI.FLAGPOLE_FACTION.setClientDecoGui(GuiFlagpoleFaction::new);
-		IIGUI.EMPLACEMENT_STORAGE.setClientDecoGui(GuiEmplacementPageStorage::new);
-		IIGUI.EMPLACEMENT_CONFIG.setClientDecoGui(GuiEmplacementPageConfig::new);
-		IIGUI.EMPLACEMENT_TARGET_FILTERS.setClientDecoGui(GuiEmplacementPageTargetFilters::new);
-		IIGUI.EMPLACEMENT_FIRE_MISSIONS.setClientDecoGui(GuiEmplacementPageFireMissions::new);
+		IIGUI.FLAGPOLE.setClientTileGui(GuiFlagpole::new);
+		IIGUI.FLAGPOLE_FACTION.setClientTileGui(GuiFlagpoleFaction::new);
+		IIGUI.EMPLACEMENT_STORAGE.setClientTileGui(GuiEmplacementPageStorage::new);
+		IIGUI.EMPLACEMENT_CONFIG.setClientTileGui(GuiEmplacementPageConfig::new);
+		IIGUI.EMPLACEMENT_TARGET_FILTERS.setClientTileGui(GuiEmplacementPageTargetFilters::new);
+		IIGUI.EMPLACEMENT_FIRE_MISSIONS.setClientTileGui(GuiEmplacementPageFireMissions::new);
 
-		IIGUI.FILLER.setClientDecoGui(GuiFiller::new);
-		IIGUI.CHEMICAL_PAINTER.setClientDecoGui(GuiChemicalPainter::new);
+		IIGUI.FILLER.setClientTileGui(GuiFiller::new);
+		IIGUI.CHEMICAL_PAINTER.setClientTileGui(GuiChemicalPainter::new);
 
-		IIGUI.AMMUNITION_ASSEMBLER.setClientDecoGui(GuiAmmunitionAssembler::new);
-		IIGUI.PROJECTILE_WORKSHOP.setClientDecoGui(GuiProjectileWorkshop::new);
+		IIGUI.AMMUNITION_ASSEMBLER.setClientTileGui(GuiAmmunitionAssembler::new);
+		IIGUI.PROJECTILE_WORKSHOP.setClientTileGui(GuiProjectileWorkshop::new);
 
-		IIGUI.RADAR.setClientDecoGui(GuiRadar::new);
-		IIGUI.RADAR_CONFIG.setClientDecoGui(GuiRadarConfig::new);
-		IIGUI.RADAR_TARGETS.setClientDecoGui(GuiRadarTargets::new);
-		IIGUI.COAGULATOR.setClientDecoGui(GuiCoagulator::new);
-		IIGUI.VULCANIZER.setClientDecoGui(GuiVulcanizer::new);
+		IIGUI.RADAR.setClientTileGui(GuiRadar::new);
+		IIGUI.RADAR_CONFIG.setClientTileGui(GuiRadarConfig::new);
+		IIGUI.RADAR_TARGETS.setClientTileGui(GuiRadarTargets::new);
+		IIGUI.COAGULATOR.setClientTileGui(GuiCoagulator::new);
+		IIGUI.VULCANIZER.setClientTileGui(GuiVulcanizer::new);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -281,15 +337,8 @@ public enum IIGUI implements ISerializableEnum
 	}
 
 	@SideOnly(Side.CLIENT)
-	@Deprecated
-	public <T extends TileEntity> void setClientGui(BiFunction<EntityPlayer, T, GuiScreen> guiFromTile)
-	{
-		this.guiFromTile = (player, tileEntity) -> guiFromTile.apply(player, (T)tileEntity);
-	}
-
-	@SideOnly(Side.CLIENT)
 	@SuppressWarnings("unchecked")
-	public <T extends TileEntityIEBase & IIEInventory, C extends ContainerIIBase<T>> void setClientDecoGui(BiFunction<EntityPlayer, T, DecoGui<T, C>> guiFromTile)
+	public <T extends TileEntityIEBase & IIEInventory, C extends ContainerIITileBase<T>> void setClientTileGui(BiFunction<EntityPlayer, T, DecoGui<T, C>> guiFromTile)
 	{
 		Class<DecoGui<T, C>> klass = (Class<DecoGui<T, C>>)guiFromTile.apply(null, null).getClass();
 		this.guiFromTile = (player, tileEntity) -> guiFromTile.apply(player, (T)tileEntity);
@@ -303,9 +352,7 @@ public enum IIGUI implements ISerializableEnum
 
 		List<ResLoc> resources = new ArrayList<>();
 		for(Field field : klass.getFields())
-		{
 			if(field.isAnnotationPresent(DecoResource.class)&&Modifier.isStatic(field.getModifiers()))
-			{
 				try
 				{
 					Object value = field.get(null);
@@ -319,8 +366,6 @@ public enum IIGUI implements ISerializableEnum
 				{
 					IILogger.error("Failed to access field "+field.getName()+" in class "+klass.getName(), e);
 				}
-			}
-		}
 		if(!resources.isEmpty())
 			new DecoResourcesLoader(this.getName().replace("gui_", ""), resources);
 
@@ -330,6 +375,13 @@ public enum IIGUI implements ISerializableEnum
 	public void setClientStackGui(TriFunction<EntityPlayer, ItemStack, EnumHand, GuiScreen> guiFromStack)
 	{
 		this.guiFromStack = guiFromStack;
-		item = true;
+		this.item = true;
+	}
+
+	@SideOnly(Side.CLIENT)
+	public <T extends Entity & IIEInventory, C extends ContainerIIEntityBase<T>> void setClientEntityGui(BiFunction<EntityPlayer, T, DecoGui<T, C>> guiFromEntity)
+	{
+		this.guiFromEntity = (player, entity) -> guiFromEntity.apply(player, (T)entity);
+		this.item = false;
 	}
 }

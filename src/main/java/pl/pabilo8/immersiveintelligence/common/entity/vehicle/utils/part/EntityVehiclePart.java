@@ -13,11 +13,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.utils.IEntitySpecialRepairable;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedTextOverlay;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
-import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleDurability;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleSeat.SeatInfo;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.entity.ISyncNBTEntity;
+import pl.pabilo8.immersiveintelligence.common.util.entity.SyncedDurability;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -45,7 +45,7 @@ public class EntityVehiclePart<T extends Entity & IVehicleMultiPart<T>> extends 
 	 * The health storage and damage for this part
 	 */
 	@Nullable
-	public VehicleDurability durability;
+	public SyncedDurability durability;
 	@Nullable
 	public SeatInfo<?> assignedSeat;
 	protected boolean collidable = true;
@@ -68,12 +68,12 @@ public class EntityVehiclePart<T extends Entity & IVehicleMultiPart<T>> extends 
 		this(parent, partName, offset, radius, radius);
 	}
 
-	public EntityVehiclePart<T> withHitbox(@Nonnull VehicleDurability hitbox)
+	public EntityVehiclePart<T> withHitbox(@Nonnull SyncedDurability hitbox)
 	{
 		return withHitbox(hitbox, true);
 	}
 
-	public EntityVehiclePart<T> withHitbox(@Nonnull VehicleDurability hitbox, boolean collidable)
+	public EntityVehiclePart<T> withHitbox(@Nonnull SyncedDurability hitbox, boolean collidable)
 	{
 		this.durability = hitbox;
 		this.collidable = collidable;
@@ -162,7 +162,7 @@ public class EntityVehiclePart<T extends Entity & IVehicleMultiPart<T>> extends 
 
 	@Nullable
 	@Override
-	public VehicleDurability getDurability()
+	public SyncedDurability getDurability()
 	{
 		return durability;
 	}

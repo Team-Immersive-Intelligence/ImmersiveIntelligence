@@ -14,10 +14,10 @@
       {
         "model": "immersiveintelligence:multiblock/coagulator/coagulator_inv.obj",
         "transform": {
-          "scale": 0.135,
+          "scale": 0.125,
           "translation": [
-            -0.5,
-            -0.25,
+            0,
+            -0.125,
             0
           ],
           "rotation": [
@@ -25,7 +25,7 @@
               "x": 20
             },
             {
-              "y": -225
+              "y": -45
             }
           ]
         }

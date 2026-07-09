@@ -529,7 +529,7 @@ public abstract class BlockIITileProvider<E extends Enum<E> & IITileProviderEnum
 			if(u!=null&&u.getUpgradeInstallProgress(false)==0&&!player.isSneaking())
 			{
 				TileEntity master = (TileEntity)u;
-				player.openGui(ImmersiveIntelligence.INSTANCE, IIGUI.UPGRADE.ordinal(), master.getWorld(), master.getPos().getX(),
+				player.openGui(ImmersiveIntelligence.INSTANCE, IIGUI.UPGRADE_TILE.ordinal(), master.getWorld(), master.getPos().getX(),
 						master.getPos().getY(), master.getPos().getZ());
 				return true;
 			}

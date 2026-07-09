@@ -40,7 +40,7 @@ public class GuiOverlayRifle extends GuiOverlayGunBase
 			NonNullList<ItemStack> ammo = NonNullList.create();
 			for(NBTBase nbtBase : IIContent.itemRifle.getAmmoList(stack))
 				ammo.add(new ItemStack(((NBTTagCompound)nbtBase)));
-			drawMagazine(width, height, ammo);
+			drawMagazine(ammo, width, height);
 		}
 
 	}

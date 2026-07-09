@@ -1,11 +1,9 @@
 package pl.pabilo8.immersiveintelligence.api.ammo.enums;
 
-import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.ILocalizedEnum;
 
-import javax.annotation.Nonnull;
-import java.util.Arrays;
-
-public enum FuseType implements ISerializableEnum
+public enum FuseType implements ILocalizedEnum
 {
 	CONTACT('\u29b0'),
 	TIMED('\u29b1'),
@@ -18,11 +16,9 @@ public enum FuseType implements ISerializableEnum
 		this.symbol = symbol;
 	}
 
-	//TODO: 28.05.2024 replace with IIUtils.enumValue
-	@Nonnull
-	public static FuseType v(String s)
+	@Override
+	public String geLocaleKey()
 	{
-		String ss = s.toUpperCase();
-		return Arrays.stream(values()).filter(e -> e.name().equals(ss)).findFirst().orElse(CONTACT);
+		return IIReference.DESCRIPTION_KEY+"bullet_fuse.";
 	}
 }

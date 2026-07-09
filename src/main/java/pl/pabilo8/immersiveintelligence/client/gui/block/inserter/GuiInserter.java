@@ -5,15 +5,15 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTileGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoDropdown;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoElementDisplays;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoEntryPanelBuilder;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoIngredientStackPickerPanel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPanel;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoTaskJobList;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoTaskJobList.ListMode;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoTaskList;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoTaskList.ListMode;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoItemStackDisplay;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.DecoTextField;
@@ -41,14 +41,14 @@ import java.util.function.Supplier;
  * @since 20.01.2026
  */
 @DecoTemplate(name = "inserter", category = DecoGuiCategory.DATA_TILE)
-public class GuiInserter extends DecoGui<TileEntityInserterBase, ContainerInserter>
+public class GuiInserter extends DecoTileGui<TileEntityInserterBase, ContainerInserter>
 {
 	private static final String INSERTER_KEY = IIReference.GUI_LABEL_KEY+"inserter.";
-	private ListMode mode = ListMode.TASKS;
-	private DecoTaskJobList<InserterTask> taskJobList;
+	private ListMode mode = ListMode.JOBS;
+	private DecoTaskList<InserterTask> taskList;
 	private DecoPanel panelDetails;
 	@SyncNBT(events = SyncEvents.TILE_CLIENT_MESSAGE)
-	private EasyMultiTypeCollection<InserterTask> tasks;
+	public EasyMultiTypeCollection<InserterTask> tasks;
 	@Nullable
 	private InserterTask selected;
 
@@ -74,7 +74,7 @@ public class GuiInserter extends DecoGui<TileEntityInserterBase, ContainerInsert
 				.withBox(DecoTextures.BG_STEEL, DecoTextures.TEMPLATE_SQUARE, 108, 8+3, 120+16, 130+16-2)
 				.build();
 
-		addComponent((taskJobList = new DecoTaskJobList<>(0, 2))
+		addComponent((taskList = new DecoTaskList<>(0, 2))
 				.withSize(108, 116)
 				.withEntries(tasks)
 				.withIsJobPredicate(InserterTask::isJob)
@@ -84,7 +84,7 @@ public class GuiInserter extends DecoGui<TileEntityInserterBase, ContainerInsert
 					if(!taskSupplier.isPresent())
 						return null;
 					InserterTask created = taskSupplier.get().get();
-					created.isJob = (taskJobList.getMode()==ListMode.JOBS);
+					created.isJob = (taskList.getMode()==ListMode.JOBS);
 					return created;
 				})
 				.withOnSelectedChanged(task -> {

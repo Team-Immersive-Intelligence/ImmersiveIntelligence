@@ -44,7 +44,7 @@ public class FactoryTracer
 		this.precision = Math.abs(this.aabb.getAverageEdgeLength());
 	}
 
-	public static FactoryTracer create(@Nonnull AxisAlignedBB aabb)
+	public static FactoryTracer create(@Nullable AxisAlignedBB aabb)
 	{
 		return new FactoryTracer(aabb);
 	}
@@ -109,12 +109,14 @@ public class FactoryTracer
 		boolean skipPos = false;
 		//Step
 		Vector3d pDiff = new Vector3d(posEnd.x-posStart.x, posEnd.y-posStart.y, posEnd.z-posStart.z);
-		pDiff.normalize();
-		pDiff.scale(precision);
+		double totalDist = Math.sqrt(pDiff.x*pDiff.x + pDiff.y*pDiff.y + pDiff.z*pDiff.z);
+		if(totalDist > 0)
+			pDiff.normalize();
 
 		//Expand the bounding box
 		AxisAlignedBB aabb;
-		int totalSteps = (int)Math.max(1, posStart.distanceTo(posEnd)/precision);
+		int totalSteps = (int)Math.max(1, totalDist/precision);
+		pDiff.scale(totalDist / totalSteps);
 
 		//Cache entities
 		List<Entity> allEntities = allowEntities?listAllEntities(world, posStart, posEnd): null;
@@ -180,10 +182,9 @@ public class FactoryTracer
 				continue;
 
 			//Perform a precise raytrace on the block
-			RayTraceResult trace = state.collisionRayTrace(world, pos,
-					new Vec3d(aabb.minX, aabb.minY, aabb.minZ),
-					new Vec3d(aabb.maxX, aabb.maxY, aabb.maxZ)
-			);
+			Vec3d stepStart = new Vec3d(pX - pDiff.x, pY - pDiff.y, pZ - pDiff.z);
+			Vec3d stepEnd = new Vec3d(pX, pY, pZ);
+			RayTraceResult trace = state.collisionRayTrace(world, pos, stepStart, stepEnd);
 			//Avoid scanning the same position twice
 			if(trace!=null&&trace.typeOfHit!=Type.MISS)
 				skipPos = true;

@@ -75,22 +75,22 @@ public class MineDetectorRenderer extends TileEntityItemStackRenderer implements
 				v *= 1.125f;
 			}
 
-			//v=distance;
-			//v=distance-(((player.world.getTotalWorldTime()%100)/100f)*distance);
+			//v = distance;
+			//v = distance-(((player.world.getTotalWorldTime()%100)/100f)*distance);
 
-			//GlStateManager.rotate(player.cameraPitch,1,0,0);
+			GlStateManager.rotate(player.cameraPitch, 1, 0, 0);
 			GlStateManager.translate(0, 1, -v);
 			GlStateManager.rotate(90, 0, 1, 0);
 			GlStateManager.scale(-1, -1, 1);
-			//GlStateManager.rotate(player.rotationYawHead,0,1,0);
-			//GlStateManager.rotate(180,0,1,0);
+//			GlStateManager.rotate(player.rotationYawHead, 0, 1, 0);
+			GlStateManager.rotate(180, 0, 1, 0);
 			for(ModelRendererTurbo mod : model.baseModel)
 				mod.render();
 
 			v -= 0.5;
 			distance -= 0.5;
 
-			float angle = -((v/distance));
+			float angle = ((v/distance));
 
 			for(ModelRendererTurbo mod : model.poleModel)
 			{
@@ -103,11 +103,24 @@ public class MineDetectorRenderer extends TileEntityItemStackRenderer implements
 		}
 		else
 		{
-			GlStateManager.translate(0, -11/16f, -1.25+2/16f);
-			GlStateManager.rotate(2f, 1, 0, 0);
-			GlStateManager.rotate(8.5f, 0, 1, 0);
+			GlStateManager.rotate(player.rotationPitch, 1, 0, 0);
+			GlStateManager.translate(0, -1, -distance);
+//			GlStateManager.rotate(90, 0, 1, 0);
+			GlStateManager.scale(1, 1, 1);
+			//	GlStateManager.rotate(-player.rotationYawHead, 0, 1, 0);
+			GlStateManager.rotate(-90f, 0, 1, 0);
+
 			for(ModelRendererTurbo mod : model.baseModel)
 				mod.render();
+
+			float angle = 1.27f;
+
+			for(ModelRendererTurbo mod : model.poleModel)
+			{
+				mod.rotateAngleZ = -angle;
+				mod.render();
+			}
+
 			GlStateManager.bindTexture(i);
 			GlStateManager.popMatrix();
 			return 0;

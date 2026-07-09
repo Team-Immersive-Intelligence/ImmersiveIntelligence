@@ -73,6 +73,12 @@ public class UpgradeTreeNodeRenderer extends AbstractTreeNodeRenderer<Upgrade>
 		List<String> tooltip = new ArrayList<>();
 		tooltip.add(upgrade.getLocalizedName());
 
+		if(upgrade.isWorkInProgress())
+		{
+			tooltip.add(IIColor.MC_YELLOW.getHexCol(I18n.format("ie.manual.entry.wip_warning0")));
+			tooltip.add(IIColor.MC_YELLOW.getHexCol(I18n.format("ie.manual.entry.wip_warning.upgrade")));
+		}
+
 		List<String> description = IIClientUtils.fontRegular.listFormattedStringToWidth(
 				I18n.format(String.format("machineupgrade.%s.%s.desc",
 						upgrade.getId().getResourceDomain(),

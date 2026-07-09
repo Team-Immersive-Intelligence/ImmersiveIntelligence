@@ -3,7 +3,7 @@ package pl.pabilo8.immersiveintelligence.client.gui.block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Optional.Method;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTileGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoDustTank;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage;
@@ -23,7 +23,7 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReference;
  * @since 10.07.2019
  */
 @DecoTemplate(name = "filler", category = DecoGuiCategory.PRODUCTION_TILE)
-public class GuiFiller extends DecoGui<TileEntityFiller, ContainerFiller>
+public class GuiFiller extends DecoTileGui<TileEntityFiller, ContainerFiller>
 {
 	@DecoResource
 	public static final ResourceLocation TEXTURE = IIReference.RES_II.with("gui/filler");

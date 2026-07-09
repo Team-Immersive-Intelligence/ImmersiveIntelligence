@@ -64,8 +64,16 @@ public abstract class CompoundSound extends PositionedSound implements ITickable
 		this.volume = volume;
 	}
 
+	public void setPosition(Vec3d position)
+	{
+		this.xPosF = (float)position.x;
+		this.yPosF = (float)position.y;
+		this.zPosF = (float)position.z;
+	}
+
 	public void start()
 	{
 		Minecraft.getMinecraft().getSoundHandler().playSound(this);
 	}
+
 }

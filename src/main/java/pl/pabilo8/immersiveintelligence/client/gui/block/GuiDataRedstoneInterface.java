@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTileGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent.MouseButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoArrows;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
@@ -38,7 +38,7 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
  * @since 09.02.2020
  */
 @DecoTemplate(name = "data_redstone_interface", category = DecoGuiCategory.DATA_TILE)
-public class GuiDataRedstoneInterface extends DecoGui<TileEntityRedstoneDataInterface, ContainerRedstoneDataInterface>
+public class GuiDataRedstoneInterface extends DecoTileGui<TileEntityRedstoneDataInterface, ContainerRedstoneDataInterface>
 {
 	@DecoResource
 	public static ResourceLocation PROGRESS_IMAGE = ResLoc.of(IIReference.RES_II, "gui/data_input_machine");
@@ -116,7 +116,7 @@ public class GuiDataRedstoneInterface extends DecoGui<TileEntityRedstoneDataInte
 
 				new DecoList<ConversionSetting>(32, 8)
 						.withSize(136+24+8+2, 120)
-						.withEntries(redstoneToData ? dataSettings : redstoneSettings)
+						.withEntries(redstoneToData?dataSettings: redstoneSettings)
 						.withCreateAction(ConversionSetting::new)
 						.withScroll(scroll)
 						.withGuiSaveAction(gui -> this.scroll = gui.getScroll())

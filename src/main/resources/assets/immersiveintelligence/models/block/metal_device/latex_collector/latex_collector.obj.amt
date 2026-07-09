@@ -1,0 +1,21 @@
+{
+  "origins": {
+    "bucket": [8, 4.65, 9.5],
+    "handle": [2.5, 15, 9],
+    "extractor": [14, 17, 17],
+    "latex": [0, 0, 0],
+    "particle": [8, 19.005, 16.5]
+  },
+  "hierarchy": {
+    "handle": "bucket",
+    "latex": "bucket"
+  },
+  "properties": {
+    "latex": {
+      "layers": [
+        [6.0, 4.0, 6.0, 8.0, 8.0],
+        [15.0, 4.0, 6.0, 8.0, 8.0]
+      ]
+    }
+  }
+}

@@ -13,7 +13,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
@@ -41,8 +40,7 @@ import java.util.stream.Collectors;
  * @since 30.01.2024
  */
 @Optional.Interface(iface = "com.elytradev.mirage.lighting.IEntityLightEventConsumer", modid = "mirage")
-public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extends Entity implements IEntityAdditionalSpawnData, IEntityLightEventConsumer,
-		ISyncNBTEntity<EntityAmmoBase<T>>
+public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extends Entity implements IEntityLightEventConsumer, ISyncNBTEntity<EntityAmmoBase<T>>
 {
 	//--- Properties ---//
 	/**
@@ -82,12 +80,12 @@ public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extend
 	 * Axis alligned bounding box of the bullet, because fuck minecraft's bloody AABB (de)sync wankfest.
 	 */
 	protected AxisAlignedBB aabb;
+	protected boolean clientLoaded = false;
 
 	//--- Initialization ---//
 
 	public EntityAmmoBase(World world)
 	{
-
 		super(world);
 		ammoType = null;
 	}
@@ -137,12 +135,35 @@ public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extend
 		this.components = components;
 		this.height = this.width = Math.max(0.25f, (ammoType.getCaliber()/16f));
 		float fraction = height/2f;
-		this.setEntityBoundingBox(this.aabb = new AxisAlignedBB(-fraction, -fraction, -fraction, fraction, fraction, fraction));
+		this.aabb = new AxisAlignedBB(-fraction, -fraction, -fraction, fraction, fraction, fraction);
+		this.setPosition(this.posX, this.posY, this.posZ);
+	}
+
+	@Override
+	public void setPosition(double x, double y, double z)
+	{
+		this.posX = x;
+		this.posY = y;
+		this.posZ = z;
+		float fraction = this.width / 2.0F;
+		this.setEntityBoundingBox(new AxisAlignedBB(x - fraction, y - fraction, z - fraction, x + fraction, y + fraction, z + fraction));
+	}
+
+	@Override
+	public void resetPositionToBB()
+	{
+		AxisAlignedBB box = this.getEntityBoundingBox();
+		this.posX = (box.minX + box.maxX) / 2.0D;
+		this.posY = (box.minY + box.maxY) / 2.0D; // We use center instead of minY
+		this.posZ = (box.minZ + box.maxZ) / 2.0D;
 	}
 
 	@Override
 	public void onUpdate()
 	{
+		if(world.isRemote&&!clientLoaded)
+			return;
+
 		this.prevDistanceWalkedModified = this.distanceWalkedModified;
 		this.prevPosX = this.posX;
 		this.prevPosY = this.posY;
@@ -228,17 +249,20 @@ public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extend
 	@Override
 	public void writeSpawnData(ByteBuf buffer)
 	{
-		NBTTagCompound compound = new NBTTagCompound();
-		writeEntityToNBT(compound);
-		ByteBufUtils.writeTag(buffer, compound);
+		NBTTagCompound tag = new NBTTagCompound();
+		writeEntityToNBT(tag);
+		ByteBufUtils.writeTag(buffer, tag);
 	}
 
 	@Override
 	public void readSpawnData(ByteBuf additionalData)
 	{
-		NBTTagCompound compound = ByteBufUtils.readTag(additionalData);
-		if(compound!=null)
-			readEntityFromNBT(compound);
+		NBTTagCompound tag = ByteBufUtils.readTag(additionalData);
+		if(tag!=null)
+		{
+			readEntityFromNBT(tag);
+			this.clientLoaded = true;
+		}
 	}
 
 	//--- Abstract ---//

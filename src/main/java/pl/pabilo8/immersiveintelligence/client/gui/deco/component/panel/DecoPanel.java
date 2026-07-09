@@ -1,13 +1,12 @@
 package pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
-import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
-import blusunrize.immersiveengineering.common.util.inventory.IIEInventory;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.DestFactor;
 import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.inventory.Container;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
@@ -20,7 +19,6 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
-import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -50,7 +48,7 @@ public class DecoPanel extends DecoComponent<DecoPanel>
 	}
 
 	@Override
-	public <T extends TileEntityIEBase & IIEInventory, C extends ContainerIIBase<T>> void setParentGUI(DecoGui<T, C> parent)
+	public <T, C extends Container> void setParentGUI(DecoGui<T, C> parent)
 	{
 		super.setParentGUI(parent);
 		for(DecoLabel label : labels)

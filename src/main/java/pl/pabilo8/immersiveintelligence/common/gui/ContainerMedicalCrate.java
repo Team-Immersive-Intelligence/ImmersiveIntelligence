@@ -6,7 +6,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate.TileEntityMedicalCrate;
-import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
+import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIITileBase;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -14,7 +14,7 @@ import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
  * @since 17.05.2019
  * @since 08.14.2025
  */
-public class ContainerMedicalCrate extends ContainerIIBase<TileEntityMedicalCrate>
+public class ContainerMedicalCrate extends ContainerIITileBase<TileEntityMedicalCrate>
 {
 
 	public Slot inputSlot, inputFluidSlot, outputSlot, outputSlot2;

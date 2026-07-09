@@ -15,6 +15,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.client.model.obj.OBJModel;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeTechTree;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
 import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIAnimationCompiledMap;
 import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
@@ -35,10 +36,12 @@ public class FenceGateRenderer<T extends TileEntityGateBase<T>> extends IIMultib
 	AMTUpgradeModel redstoneUpgrade, razorUpgrade;
 	private AMTModel model;
 	private IIAnimationCompiledMap open, redstone, razor;
+	private final Class<T> klass;
 
-	public FenceGateRenderer(String name)
+	public FenceGateRenderer(Class<T> klass, String name)
 	{
 		super();
+		this.klass = klass;
 		subscribeToList(name);
 	}
 
@@ -133,6 +136,13 @@ public class FenceGateRenderer<T extends TileEntityGateBase<T>> extends IIMultib
 				new ResourceLocation(ImmersiveIntelligence.MODID, "gate/upgrade_redstone"));
 		razorUpgrade = new AMTUpgradeModel(IIContent.UPGRADE_RAZOR_WIRE, modelUpgrades,
 				new ResourceLocation(ImmersiveIntelligence.MODID, "gate/upgrade_razor"));
+
+		UpgradeTechTree.getTreeFor(klass)
+				.withBaseModelLocation(IIReference.RES_II.with("models/block/multiblock/fence_gate_preview.obj"))
+				.withUpgradeModelLocation(IIContent.UPGRADE_RAZOR_WIRE,
+						IIReference.RES_II.with("models/block/multiblock/fence_gate_upgrade_razor_wire.obj"))
+				.withUpgradeModelLocation(IIContent.UPGRADE_REDSTONE_ACTIVATION,
+						IIReference.RES_II.with("models/block/multiblock/fence_gate_upgrade_redstone.obj"));
 	}
 
 	@Override

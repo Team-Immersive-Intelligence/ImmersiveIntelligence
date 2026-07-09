@@ -5,6 +5,7 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.model.obj.OBJModel;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeTechTree;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
 import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIAnimationCompiledMap;
 import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
@@ -12,6 +13,7 @@ import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMT;
 import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTItem;
 import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIMultiblockRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IITileRenderer.RegisteredTileRenderer;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockPrintingPress;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityPrintingPress;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
@@ -36,8 +38,8 @@ public class PrintingPressRenderer extends IIMultiblockRenderer<TileEntityPrinti
 		model.defaultize();
 		animationDefault.apply(0);
 
-		itemModel.setStack(te.inventory.get(TileEntityPrintingPress.SLOT_PAPER));
-		stackModel.setStack(te.inventory.get(TileEntityPrintingPress.SLOT_OUTPUT));
+		itemModel.setStack(te.inventory.get(MultiblockPrintingPress.SLOT_PAPER));
+		stackModel.setStack(te.inventory.get(MultiblockPrintingPress.SLOT_OUTPUT));
 
 		if(!te.processQueue.isEmpty())
 		{
@@ -82,6 +84,9 @@ public class PrintingPressRenderer extends IIMultiblockRenderer<TileEntityPrinti
 		//animations
 		animationDefault = IIAnimationCompiledMap.create(this.model, ResLoc.of(IIReference.RES_II, "printing_press/default"));
 		animationWork = IIAnimationCompiledMap.create(this.model, ResLoc.of(IIReference.RES_II, "printing_press/work"));
+
+		UpgradeTechTree.getTreeFor(TileEntityPrintingPress.class)
+				.withBaseModelLocation(IIReference.RES_BLOCK_MODEL.with("multiblock/printing_press/printing_press_inv.obj"));
 	}
 
 	@Override

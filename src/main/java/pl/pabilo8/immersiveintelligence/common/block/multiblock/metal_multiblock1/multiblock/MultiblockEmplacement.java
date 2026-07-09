@@ -5,6 +5,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3i;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.style.StyleConstraints;
+import pl.pabilo8.immersiveintelligence.api.style.StyleConstraints.PaintStyleConstraint;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeTechTree;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.UpgradePurpose;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.UpgradeTier;
@@ -29,7 +30,7 @@ public class MultiblockEmplacement extends MultiblockStuctureBase<TileEntityEmpl
 		super(new ResourceLocation(ImmersiveIntelligence.MODID, "multiblocks/emplacement"));
 		offset = new Vec3i(1, 4, 0);
 		INSTANCE = this;
-		STYLE_CONSTRAINTS = new StyleConstraints("sandbags", false,
+		STYLE_CONSTRAINTS = new StyleConstraints("sandbags", PaintStyleConstraint.NOT_APPLICABLE,
 				Sets.newHashSet("sandbags", "wooden", "steel", "bricks", "concrete"),
 				Collections.emptySet()
 		);

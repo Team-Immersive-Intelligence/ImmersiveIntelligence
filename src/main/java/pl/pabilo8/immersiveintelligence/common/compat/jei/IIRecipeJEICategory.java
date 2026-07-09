@@ -32,6 +32,7 @@ import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -77,12 +78,13 @@ public class IIRecipeJEICategory<T extends IIMultiblockRecipe> implements IRecip
 
 	public IIRecipeJEICategory(Class<T> recipeClass, ItemStack machineStack)
 	{
-		this(recipeClass, machineStack, IIMultiblockRecipe.getRecipeClassName(recipeClass));
+		this(recipeClass, IIMultiblockRecipe.getRecipeClassName(recipeClass), machineStack.getUnlocalizedName()+".name");
+		this.displayStacks = new ItemStack[]{machineStack};
 	}
 
 	public IIRecipeJEICategory(Class<T> recipeClass, ItemStack machineStack, String recipeName)
 	{
-		this(recipeClass, recipeName, machineStack.getUnlocalizedName()+".name");
+		this(recipeClass, recipeName, "desc.immersiveintelligence.jei."+recipeName+"_recipe");
 		this.displayStacks = new ItemStack[]{machineStack};
 	}
 
@@ -181,8 +183,8 @@ public class IIRecipeJEICategory<T extends IIMultiblockRecipe> implements IRecip
 	//--- Layout setup methods ---//
 
 	private void setupSlot(LayoutComponent component, IGuiItemStackGroup itemStacks,
-						   IIngredients ingredients, int x, int y,
-						   int itemInputIndex, int itemOutputIndex)
+	                       IIngredients ingredients, int x, int y,
+	                       int itemInputIndex, int itemOutputIndex)
 	{
 
 		IOType ioType = component.getIoType();
@@ -209,8 +211,8 @@ public class IIRecipeJEICategory<T extends IIMultiblockRecipe> implements IRecip
 	}
 
 	private void setupFluidTank(LayoutComponent component, IGuiFluidStackGroup fluidStacks,
-								IIngredients ingredients, int x, int y,
-								int fluidInputIndex, int fluidOutputIndex)
+	                            IIngredients ingredients, int x, int y,
+	                            int fluidInputIndex, int fluidOutputIndex)
 	{
 
 		IOType ioType = component.getIoType();
@@ -226,7 +228,7 @@ public class IIRecipeJEICategory<T extends IIMultiblockRecipe> implements IRecip
 			{
 				int tankIndex = getFluidTankIndex(true, fluidInputIndex, ingredients);
 				fluidStacks.init(tankIndex, true, x+1, y+1,
-						width-2, height-1, 1000, true, null);
+						width-2, height-1, 1000, false, null);
 				fluidStacks.set(tankIndex, ingredients.getInputs(VanillaTypes.FLUID).get(fluidInputIndex));
 			}
 		}
@@ -236,14 +238,14 @@ public class IIRecipeJEICategory<T extends IIMultiblockRecipe> implements IRecip
 				{
 					int tankIndex = getFluidTankIndex(false, fluidOutputIndex, ingredients);
 					fluidStacks.init(tankIndex, false, x+1, y+1,
-							width-2, height-1, 1000, true, null);
+							width-2, height-1, 1000, false, null);
 					fluidStacks.set(tankIndex, ingredients.getOutputs(VanillaTypes.FLUID).get(fluidOutputIndex));
 				}
 	}
 
 	private void setupDustTank(LayoutComponent component, IRecipeLayout recipeLayout,
-							   IIngredients ingredients, int x, int y,
-							   int dustInputIndex, int dustOutputIndex)
+	                           IIngredients ingredients, int x, int y,
+	                           int dustInputIndex, int dustOutputIndex)
 	{
 		IOType ioType = component.getIoType();
 		boolean isInput = ioType==IOType.INPUT;
@@ -306,7 +308,10 @@ public class IIRecipeJEICategory<T extends IIMultiblockRecipe> implements IRecip
 	{
 		addCatalysts(modRegistry);
 		modRegistry.handleRecipes(recipeClass, this, getRecipeCategoryUid());
-		modRegistry.addRecipes(IIMultiblockRecipe.getRecipes(recipeClass), getUid());
+		modRegistry.addRecipes(IIMultiblockRecipe.streamRecipes(recipeClass)
+				.filter(t -> t.matchesSubCategory(getUid()))
+				.collect(Collectors.toList()), getUid()
+		);
 		IILogger.info("Registered JEI compat for "+recipeClass.getSimpleName());
 	}
 

@@ -17,6 +17,7 @@ import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
+import pl.pabilo8.immersiveintelligence.common.util.gun.GunAimCoordinate;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -115,7 +116,21 @@ public class AmmoFactory<E extends EntityAmmoBase<? super E>>
 	public AmmoFactory<E> setStack(ItemStack stack)
 	{
 		this.stack = stack;
-		this.ammo = ((IAmmoType<?, E>)stack.getItem());
+		this.ammo = this.ammo==null?((IAmmoType<?, E>)stack.getItem()): this.ammo;
+		return this;
+	}
+
+	/**
+	 * Sets the ammo to create, used when the ammo type can't be determined directly from the stack, f.e. in turrets
+	 *
+	 * @param ammo The ammo to create
+	 * @return The factory
+	 */
+	@SuppressWarnings("rawtypes")
+	public AmmoFactory<E> setAmmo(@Nonnull IAmmoType ammo)
+	{
+		//noinspection unchecked
+		this.ammo = (IAmmoType<?, E>)ammo;
 		return this;
 	}
 
@@ -195,6 +210,12 @@ public class AmmoFactory<E extends EntityAmmoBase<? super E>>
 		return this;
 	}
 
+	public AmmoFactory<E> setPositionAndVelocity(Vec3d positionVector, GunAimCoordinate aim, float offset, float velocity)
+	{
+		Vec3d target = aim.getTarget(0);
+		return setPositionAndVelocity(positionVector.add(target.scale(offset)), target, offset);
+	}
+
 	/**
 	 * Sets the owner of the ammo
 	 *
@@ -252,6 +273,8 @@ public class AmmoFactory<E extends EntityAmmoBase<? super E>>
 		return this;
 	}
 
+	//--- Ammo Entity Creation ---//
+
 	/**
 	 * Builds the ammo based on passed data and spawns it in the world.
 	 *
@@ -272,7 +295,7 @@ public class AmmoFactory<E extends EntityAmmoBase<? super E>>
 	public E create(@Nullable Consumer<E> action)
 	{
 		//Invalid ammo type
-		if(ammo==null)
+		if(ammo==null||stack==null||stack.isEmpty())
 			return null;
 
 		//No position or direction passed
@@ -355,5 +378,22 @@ public class AmmoFactory<E extends EntityAmmoBase<? super E>>
 		if(!(ammo instanceof IAmmoTypeItem))
 			return false;
 		return stack.getItem()==ammo&&!((IAmmoTypeItem<?, ?>)ammo).isBulletCore(stack);
+	}
+
+	//--- Getters ---//
+
+	public World getWorld()
+	{
+		return world.get();
+	}
+
+	public Vec3d getPos()
+	{
+		return pos;
+	}
+
+	public Vec3d getDirection()
+	{
+		return dir;
 	}
 }

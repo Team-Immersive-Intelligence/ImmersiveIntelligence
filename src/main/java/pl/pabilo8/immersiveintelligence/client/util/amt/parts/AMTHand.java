@@ -27,22 +27,21 @@ public class AMTHand extends AMT
 {
 	private final EntityPlayerSP player = ClientUtils.mc().player;
 	private ModelRenderer handModel;
-	private EnumHand hand;
+	private EnumHand hand = EnumHand.MAIN_HAND;
 
 	public AMTHand(String name, Vec3d originPos)
 	{
 		super(name, originPos);
 	}
 
-	public AMTHand(String name, AMTModelHeader header, EnumHand hand)
+	public AMTHand(String name, AMTModelHeader header)
 	{
 		super(name, header);
-		withHand(hand);
 	}
 
-	public AMTHand(String name, Vec3d originPos, EnumHand hand)
+	public AMTHand(String name, AMTModelHeader header, EnumHand hand)
 	{
-		this(name, originPos);
+		this(name, header);
 		withHand(hand);
 	}
 

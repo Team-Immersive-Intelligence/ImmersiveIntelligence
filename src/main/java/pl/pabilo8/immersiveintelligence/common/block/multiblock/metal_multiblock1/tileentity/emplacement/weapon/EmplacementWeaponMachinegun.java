@@ -1,11 +1,9 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.Machinegun;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.FilteredItemHandler;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
 
 /**
@@ -17,8 +15,6 @@ public class EmplacementWeaponMachinegun extends EmplacementWeaponGunBase<Entity
 	public EmplacementWeaponMachinegun()
 	{
 		super();
-		this.inventoryBase = NonNullList.withSize(36, ItemStack.EMPTY);
-		this.inventoryPlatform = NonNullList.withSize(12, ItemStack.EMPTY);
 		this.setup = new MultiblockInteractablePart(Machinegun.setupTime);
 	}
 
@@ -26,11 +22,11 @@ public class EmplacementWeaponMachinegun extends EmplacementWeaponGunBase<Entity
 	protected void onInit(TileEntityEmplacement te)
 	{
 		super.onInit(te);
+		this.ammoFactory.setAmmo(IIContent.itemAmmoMachinegun);
 		this.visionAABB = this.visionAABB.grow(Machinegun.detectionRadius);
 		this.attackAABB = this.attackAABB.grow(Machinegun.attackRadius);
 
-		this.inventoryPlatformHandler = new FilteredItemHandler(inventoryPlatform)
-				.withFilter(this.ammoFactory::isValidAmmo);
+		setupItemHandlers(te, 20, 12, this.ammoFactory::isValidAmmo, this.ammoFactory::isValidAmmo);
 		this.aim.withAimSpeed(Machinegun.yawRotateSpeed, Machinegun.pitchRotateSpeed)
 				.withPitchLimit(-35, 65);
 	}

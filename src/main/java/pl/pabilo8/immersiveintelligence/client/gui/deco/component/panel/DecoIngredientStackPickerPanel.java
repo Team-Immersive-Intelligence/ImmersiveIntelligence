@@ -10,6 +10,9 @@ import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.oredict.OreDictionary;
 import org.lwjgl.input.Keyboard;
 import pl.pabilo8.immersiveintelligence.api.LogisticTag;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeFluidStack;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeItemStack;
+import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoSlider;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoSwitch;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoFluidTank;
@@ -24,7 +27,6 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
-import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -47,7 +49,7 @@ public class DecoIngredientStackPickerPanel extends DecoPanel
 
 	protected DecoItemStackDisplay stackDisplay;
 	protected DecoFluidTank fluidDisplay;
-	protected DecoTextField countField, damageField;
+	protected DecoTextField countField, metadataField;
 	protected DecoSwitch toggleNBT, toggleOre;
 	protected DecoSlider energySlider;
 	protected DecoTextField energyField, fluidNameField;
@@ -69,70 +71,133 @@ public class DecoIngredientStackPickerPanel extends DecoPanel
 	public DecoIngredientStackPickerPanel withIngredientStack(@Nonnull IngredientStack stack)
 	{
 		this.stack = stack;
+		this.stack.inputSize = clampInteger(this.stack.inputSize, getMinimumCount(), Integer.MAX_VALUE);
+		if(!isFluidMode()&&this.stack.stack==null)
+			this.stack.stack = ItemStack.EMPTY;
+		if(isItemDataTypeMode())
+			this.stack.oreName = null;
+
 		applyToUI();
 		if(!initialized)
 			return this;
 
-		countField.withText(String.valueOf(Math.max(1, stack.inputSize)));
+		if(countField!=null)
+			countField.withText(String.valueOf(Math.max(getMinimumCount(), this.stack.inputSize)));
 		switch(mode)
 		{
 			case ITEM:
 			case ITEM_LOGISTIC_TAG:
+			case ITEM_DATA_TYPE:
 			{
-				damageField.withText(stack.stack.getMetadata()==OreDictionary.WILDCARD_VALUE?"": String.valueOf(Math.max(0, stack.stack.getMetadata())));
-				toggleNBT.withCurrentState(this.stack.useNBT);
-				toggleOre.withCurrentState(this.stack.oreName!=null);
+				if(metadataField!=null&&this.stack.stack!=null)
+					metadataField.withText(this.stack.stack.getMetadata()==OreDictionary.WILDCARD_VALUE?"": String.valueOf(Math.max(0, this.stack.stack.getMetadata())));
+				if(toggleNBT!=null)
+					toggleNBT.withCurrentState(isItemDataTypeMode()?hasNonEmptyTag(this.stack.stack): this.stack.useNBT);
+				if(toggleOre!=null)
+					toggleOre.withCurrentState(this.stack.oreName!=null);
 
 			}
 			break;
 			case FLUID:
 			{
-				toggleNBT.withCurrentState(this.stack.useNBT);
+				if(toggleNBT!=null)
+					toggleNBT.withCurrentState(this.stack.useNBT);
 			}
 			break;
 			case ENERGY:
 			{
-				energyField.withText(String.valueOf(stack.inputSize));
-				energySlider.withValue(stack.inputSize);
+				if(energyField!=null)
+					energyField.withText(String.valueOf(this.stack.inputSize));
+				if(energySlider!=null)
+					energySlider.withValue(Math.min(this.stack.inputSize, maxEnergyCount));
 			}
 		}
 		return this;
 	}
 
+	public DecoIngredientStackPickerPanel withDataType(@Nonnull DataType dataType)
+	{
+		if(dataType instanceof DataTypeItemStack)
+			return withItemStackDataType((DataTypeItemStack)dataType);
+		if(dataType instanceof DataTypeFluidStack)
+			return withFluidStackDataType((DataTypeFluidStack)dataType);
+		return this;
+	}
+
+	public DecoIngredientStackPickerPanel withItemStackDataType(@Nonnull DataTypeItemStack dataType)
+	{
+		ItemStack itemStack = dataType.value==null?ItemStack.EMPTY: dataType.value.copy();
+		IngredientStack ingredientStack = new IngredientStack(itemStack);
+		ingredientStack.inputSize = itemStack.isEmpty()?1: Math.max(1, itemStack.getCount());
+		ingredientStack.oreName = null;
+		ingredientStack.useNBT = false;
+		return withIngredientStack(ingredientStack);
+	}
+
+	public DecoIngredientStackPickerPanel withFluidStackDataType(@Nonnull DataTypeFluidStack dataType)
+	{
+		IngredientStack ingredientStack;
+		if(dataType.value==null)
+			ingredientStack = new IngredientStack(ItemStack.EMPTY);
+		else
+		{
+			ingredientStack = new IngredientStack(dataType.value.copy());
+			ingredientStack.inputSize = Math.max(1, dataType.value.amount);
+		}
+		return withIngredientStack(ingredientStack);
+	}
+
 	public DecoIngredientStackPickerPanel withMaxEnergy(int maxEnergy)
 	{
-		this.maxEnergyCount = maxEnergy;
+		this.maxEnergyCount = Math.max(0, maxEnergy);
 		return this;
 	}
 
 	public DecoIngredientStackPickerPanel withCount(int count)
 	{
-		this.stack.inputSize = Math.max(1, count);
+		this.stack.inputSize = clampInteger(count, getMinimumCount(), Integer.MAX_VALUE);
 		applyToUI();
 		return this;
 	}
 
-	public DecoIngredientStackPickerPanel withDamage(int damage)
+	public DecoIngredientStackPickerPanel withMetadata(int metadata)
 	{
 		if(this.stack.stack!=null)
 		{
 			this.stack.stack = this.stack.stack.copy();
-			this.stack.stack.setItemDamage(Math.max(0, damage));
+			this.stack.stack.setItemDamage(clampInteger(metadata, 0, Integer.MAX_VALUE));
 			applyToUI();
 		}
 		return this;
 	}
 
+	@Deprecated
+	public DecoIngredientStackPickerPanel withDamage(int damage)
+	{
+		return withMetadata(damage);
+	}
+
 	public DecoIngredientStackPickerPanel withMatchNBT(boolean match)
 	{
-		this.stack.useNBT = match;
+		if(isItemDataTypeMode())
+		{
+			if(!match&&this.stack.stack!=null&&!this.stack.stack.isEmpty())
+			{
+				this.stack.stack = this.stack.stack.copy();
+				this.stack.stack.setTagCompound(null);
+			}
+		}
+		else
+			this.stack.useNBT = match;
 		applyToUI();
 		return this;
 	}
 
 	public DecoIngredientStackPickerPanel withOreDictBased(boolean oreDict)
 	{
-		if(oreDict)
+		if(isItemDataTypeMode())
+			this.stack.oreName = null;
+		else if(oreDict&&this.stack.stack!=null&&!this.stack.stack.isEmpty())
 			this.stack.oreName = findFirstOreName(this.stack.stack);
 		else
 			this.stack.oreName = null;
@@ -161,6 +226,11 @@ public class DecoIngredientStackPickerPanel extends DecoPanel
 		return mode==PickerPanelMode.ITEM_LOGISTIC_TAG;
 	}
 
+	private boolean isItemDataTypeMode()
+	{
+		return mode==PickerPanelMode.ITEM_DATA_TYPE;
+	}
+
 	public DecoIngredientStackPickerPanel withMode(@Nonnull PickerPanelMode mode)
 	{
 		this.mode = mode;
@@ -181,6 +251,11 @@ public class DecoIngredientStackPickerPanel extends DecoPanel
 	public DecoIngredientStackPickerPanel withLogisticTagMode(boolean logisticTagMode)
 	{
 		return withMode(logisticTagMode?PickerPanelMode.ITEM_LOGISTIC_TAG: PickerPanelMode.ITEM);
+	}
+
+	public DecoIngredientStackPickerPanel withItemDataTypeMode(boolean itemDataTypeMode)
+	{
+		return withMode(itemDataTypeMode?PickerPanelMode.ITEM_DATA_TYPE: PickerPanelMode.ITEM);
 	}
 
 	@Override
@@ -206,16 +281,12 @@ public class DecoIngredientStackPickerPanel extends DecoPanel
 								.withSize(width-4-4, 16)
 								.withFilter(TextFilter.DECIMAL)
 								.withText(String.valueOf(Math.max(0, stack.inputSize)))
-								.withOnTextChanged(string -> {
-									withCount(Math.max(0, IIStringUtil.parseInt(string)));
-									if(energySlider!=null)
-										energySlider.withValue(Math.max(0, stack.inputSize));
-								})
+								.withOnTextChanged(this::handleEnergyTextChanged)
 								.withTranslatedTooltip(TRANSLATION_KEY+"energy.tooltip"),
 						energySlider = new DecoSlider(4, 2+16+18)
 								.withSize(width-4-4, 16)
 								.withRange(0, maxEnergyCount)
-								.withValue(Math.max(0, stack.inputSize))
+								.withValue(Math.min(Math.max(0, stack.inputSize), maxEnergyCount))
 								.withBarColors(IIColor.fromPackedRGB(0x663f26), IIColor.fromPackedRGB(0xb37e28))
 								.withOnValueChanged(value -> {
 									withCount(value.intValue());
@@ -258,7 +329,7 @@ public class DecoIngredientStackPickerPanel extends DecoPanel
 								})
 				);
 
-				//shared "count" only (no damage in fluid mode)
+				//shared "count" only (no metadata in fluid mode)
 				addLabel(TRANSLATION_KEY+"count", 32+2+4, 2)
 						.withSize(48-4, 18)
 						.withAlign(DecoAlignment.LEFT);
@@ -271,8 +342,8 @@ public class DecoIngredientStackPickerPanel extends DecoPanel
 						countField = new DecoTextField(32+2+48, 2)
 								.withSize(width-(32+2+48+4), 16)
 								.withFilter(TextFilter.DECIMAL)
-								.withText(String.valueOf(stack.inputSize))
-								.withOnTextChanged(string -> withCount(IIStringUtil.parseInt(string)))
+								.withText(String.valueOf(Math.max(1, stack.inputSize)))
+								.withOnTextChanged(this::handleCountTextChanged)
 								.withTranslatedTooltip(TRANSLATION_KEY+"count.tooltip")
 				);
 
@@ -288,6 +359,7 @@ public class DecoIngredientStackPickerPanel extends DecoPanel
 			break;
 			case ITEM:
 			case ITEM_LOGISTIC_TAG:
+			case ITEM_DATA_TYPE:
 			default:
 			{
 				addComponents(
@@ -322,7 +394,7 @@ public class DecoIngredientStackPickerPanel extends DecoPanel
 				addLabel(TRANSLATION_KEY+"count", 32+2+4, 2)
 						.withSize(48-4, 18)
 						.withAlign(DecoAlignment.LEFT);
-				addLabel(TRANSLATION_KEY+"damage", 32+2+4, 4+16)
+				addLabel(TRANSLATION_KEY+"metadata", 32+2+4, 4+16)
 						.withSize(48-4, 18)
 						.withAlign(DecoAlignment.LEFT);
 
@@ -330,29 +402,33 @@ public class DecoIngredientStackPickerPanel extends DecoPanel
 						countField = new DecoTextField(32+2+48, 2)
 								.withSize(width-(32+2+48+4), 16)
 								.withFilter(TextFilter.DECIMAL)
-								.withText(String.valueOf(stack.inputSize))
-								.withOnTextChanged(string -> withCount(IIStringUtil.parseInt(string)))
+								.withText(String.valueOf(Math.max(1, stack.inputSize)))
+								.withOnTextChanged(this::handleCountTextChanged)
 								.withTranslatedTooltip(TRANSLATION_KEY+"count.tooltip"),
-						damageField = new DecoTextField(32+2+48, 4+16)
+						metadataField = new DecoTextField(32+2+48, 4+16)
 								.withSize(width-(32+2+48+4), 16)
 								.withFilter(TextFilter.DECIMAL)
-								.withText(stack.stack.getMetadata())
-								.withOnTextChanged(string -> withDamage(IIStringUtil.parseInt(string)))
-								.withTranslatedTooltip(TRANSLATION_KEY+"damage.tooltip")
+								.withText(stack.stack!=null&&stack.stack.getMetadata()!=OreDictionary.WILDCARD_VALUE?String.valueOf(stack.stack.getMetadata()): "")
+								.withOnTextChanged(this::handleMetadataTextChanged)
+								.withTranslatedTooltip(TRANSLATION_KEY+"metadata.tooltip")
 				);
 
 				addComponents(
 						toggleNBT = new DecoSwitch(4, height-16-2)
-								.withSize(width/2-8, 16)
+								.withSize(isItemDataTypeMode()?width-8: width/2-8, 16)
 								.withText(TRANSLATION_KEY+"nbt")
 								.withOnToggle(this::withMatchNBT)
-								.withTranslatedTooltip(TRANSLATION_KEY+"nbt.item.tooltip"),
-						toggleOre = new DecoSwitch(4+width/2, height-16-2)
-								.withSize(width/2-8, 16)
-								.withText(TRANSLATION_KEY+"oredict")
-								.withOnToggle(this::withOreDictBased)
-								.withTranslatedTooltip(TRANSLATION_KEY+"oredict.tooltip")
+								.withTranslatedTooltip(TRANSLATION_KEY+(isItemDataTypeMode()?"nbt.data_type.tooltip": "nbt.item.tooltip"))
 				);
+
+				if(!isItemDataTypeMode())
+					addComponents(
+							toggleOre = new DecoSwitch(4+width/2, height-16-2)
+									.withSize(width/2-8, 16)
+									.withText(TRANSLATION_KEY+"oredict")
+									.withOnToggle(this::withOreDictBased)
+									.withTranslatedTooltip(TRANSLATION_KEY+"oredict.tooltip")
+					);
 			}
 			break;
 		}
@@ -371,13 +447,26 @@ public class DecoIngredientStackPickerPanel extends DecoPanel
 		{
 			case ITEM:
 			case ITEM_LOGISTIC_TAG:
+			case ITEM_DATA_TYPE:
 			{
 				boolean fieldsHidden = isLogisticTagMode()&&getLogisticTag()!=null;
-				damageField.visible = !fieldsHidden;
-				toggleOre.visible = !fieldsHidden;
-				toggleNBT.visible = !fieldsHidden;
+				if(metadataField!=null)
+					metadataField.visible = !fieldsHidden;
+				if(toggleOre!=null)
+					toggleOre.visible = !fieldsHidden&&!isItemDataTypeMode();
+				if(toggleNBT!=null)
+				{
+					toggleNBT.visible = !fieldsHidden;
+					toggleNBT.withCurrentState(isItemDataTypeMode()?hasNonEmptyTag(this.stack.stack): this.stack.useNBT);
+				}
 
-				this.stack.stack.setCount(this.stack.inputSize);
+				if(this.stack.stack!=null&&!this.stack.stack.isEmpty())
+					this.stack.stack.setCount(this.stack.inputSize);
+				if(isItemDataTypeMode())
+				{
+					this.stack.oreName = null;
+					this.stack.useNBT = false;
+				}
 				if(stackDisplay!=null)
 					stackDisplay.withStack(stack);
 			}
@@ -387,7 +476,7 @@ public class DecoIngredientStackPickerPanel extends DecoPanel
 				if(stack.fluid!=null)
 					this.stack.fluid.amount = this.stack.inputSize;
 				if(fluidDisplay!=null)
-					fluidDisplay.withFluidTank(new FluidTank(stack.fluid, stack.fluid!=null?stack.fluid.amount*2: 1));
+					fluidDisplay.withFluidTank(new FluidTank(stack.fluid, stack.fluid!=null?getDisplayTankCapacity(stack.fluid.amount): 1));
 				if(fluidNameField!=null)
 					fluidNameField.withText(stack.fluid!=null?FluidRegistry.getFluidName(stack.fluid): "*");
 			}
@@ -399,7 +488,7 @@ public class DecoIngredientStackPickerPanel extends DecoPanel
 				if(energyField!=null)
 					energyField.withText(String.valueOf(stack.inputSize)).visible = true;
 				if(energySlider!=null)
-					energySlider.withValue(stack.inputSize).visible = true;
+					energySlider.withValue(Math.min(stack.inputSize, maxEnergyCount)).visible = true;
 			}
 			break;
 		}
@@ -411,7 +500,11 @@ public class DecoIngredientStackPickerPanel extends DecoPanel
 	@Nonnull
 	public ItemStack getItemStack()
 	{
-		return isFluidMode()?ItemStack.EMPTY: stack.getExampleStack();
+		if(isFluidMode()||isEnergyMode())
+			return ItemStack.EMPTY;
+		if(isItemDataTypeMode()&&stack.stack!=null)
+			return stack.stack.copy();
+		return stack.getExampleStack();
 	}
 
 	@Nonnull
@@ -420,11 +513,66 @@ public class DecoIngredientStackPickerPanel extends DecoPanel
 		return stack;
 	}
 
+	@Nonnull
+	public DataType getDataType()
+	{
+		switch(mode)
+		{
+			case FLUID:
+				return getFluidStackDataType();
+			case ITEM:
+			case ITEM_LOGISTIC_TAG:
+			case ITEM_DATA_TYPE:
+			default:
+				return getItemStackDataType();
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	@Nonnull
+	public <T extends DataType> T getDataType(@Nonnull T dataType)
+	{
+		if(dataType instanceof DataTypeItemStack)
+			return (T)getItemStackDataType((DataTypeItemStack)dataType);
+		if(dataType instanceof DataTypeFluidStack)
+			return (T)getFluidStackDataType((DataTypeFluidStack)dataType);
+		return dataType;
+	}
+
+	@Nonnull
+	public DataTypeItemStack getItemStackDataType()
+	{
+		return getItemStackDataType(new DataTypeItemStack());
+	}
+
+	@Nonnull
+	public DataTypeItemStack getItemStackDataType(@Nonnull DataTypeItemStack dataType)
+	{
+		dataType.value = getItemStack();
+		return dataType;
+	}
+
+	@Nonnull
+	public DataTypeFluidStack getFluidStackDataType()
+	{
+		return getFluidStackDataType(new DataTypeFluidStack());
+	}
+
+	@Nonnull
+	public DataTypeFluidStack getFluidStackDataType(@Nonnull DataTypeFluidStack dataType)
+	{
+		dataType.value = stack.fluid==null?null: stack.fluid.copy();
+		if(dataType.value!=null)
+			dataType.value.amount = Math.max(1, stack.inputSize);
+		return dataType;
+	}
+
 	public LogisticTag getLogisticTag()
 	{
-		if(isLogisticTagMode()&&stack.getExampleStack().getItem()==IIContent.itemLogisticTag)
+		ItemStack itemStack = getItemStack();
+		if(isLogisticTagMode()&&!itemStack.isEmpty()&&itemStack.getItem()==IIContent.itemLogisticTag)
 		{
-			LogisticTag tag = LogisticTag.getLogisticsTagFromStack(getItemStack());
+			LogisticTag tag = LogisticTag.getLogisticsTagFromStack(itemStack);
 			return tag==null?new LogisticTag(): tag;
 		}
 		return null;
@@ -435,6 +583,8 @@ public class DecoIngredientStackPickerPanel extends DecoPanel
 	{
 		try
 		{
+			if(stack.isEmpty())
+				return null;
 			int[] ids = OreDictionary.getOreIDs(stack);
 			if(ids.length==0)
 				return null;
@@ -443,6 +593,86 @@ public class DecoIngredientStackPickerPanel extends DecoPanel
 		{
 			return null;
 		}
+	}
+
+	private void handleCountTextChanged(String string)
+	{
+		int count = parseClampedInteger(string, getMinimumCount());
+		withCount(count);
+		syncIntegerField(countField, count, string);
+	}
+
+	private void handleMetadataTextChanged(String string)
+	{
+		if(string.isEmpty())
+		{
+			withMetadata(OreDictionary.WILDCARD_VALUE);
+			return;
+		}
+
+		int metadata = parseClampedInteger(string, 0);
+		withMetadata(metadata);
+		syncIntegerField(metadataField, metadata, string);
+	}
+
+	private void handleEnergyTextChanged(String string)
+	{
+		int energy = parseClampedInteger(string, 0);
+		withCount(energy);
+		if(energySlider!=null)
+			energySlider.withValue(Math.min(stack.inputSize, maxEnergyCount));
+		syncIntegerField(energyField, energy, string);
+	}
+
+	private int getMinimumCount()
+	{
+		return isEnergyMode()?0: 1;
+	}
+
+	private static int parseClampedInteger(@Nullable String string, int minValue)
+	{
+		if(string==null||string.isEmpty())
+			return minValue;
+
+		long value = 0;
+		boolean hasDigit = false;
+		for(int i = 0; i < string.length(); i++)
+		{
+			char c = string.charAt(i);
+			if(c < '0'||c > '9')
+				continue;
+			hasDigit = true;
+			value = value*10+(c-'0');
+			if(value >= Integer.MAX_VALUE)
+				return Integer.MAX_VALUE;
+		}
+		return hasDigit?clampInteger((int)value, minValue, Integer.MAX_VALUE): minValue;
+	}
+
+	private static int clampInteger(int value, int minValue, int maxValue)
+	{
+		return Math.max(minValue, Math.min(maxValue, value));
+	}
+
+	private static int getDisplayTankCapacity(int amount)
+	{
+		if(amount >= Integer.MAX_VALUE/2)
+			return Integer.MAX_VALUE;
+		return Math.max(1, amount*2);
+	}
+
+	private static boolean hasNonEmptyTag(@Nullable ItemStack itemStack)
+	{
+		return itemStack!=null&&!itemStack.isEmpty()&&itemStack.hasTagCompound()&&!itemStack.getTagCompound().hasNoTags();
+	}
+
+	private static void syncIntegerField(@Nullable DecoTextField field, int value, @Nullable String originalText)
+	{
+		if(field==null)
+			return;
+		String clampedText = String.valueOf(value);
+		if(!clampedText.equals(originalText))
+			field.withText(clampedText);
 	}
 
 	@Override
@@ -460,7 +690,11 @@ public class DecoIngredientStackPickerPanel extends DecoPanel
 			case PASTE:
 				NBTTagCompound nbt = DecoGuiUtils.getClipboardNBT();
 				if(!nbt.hasNoTags())
-					withIngredientStack(IngredientStack.readFromNBT(nbt));
+				{
+					IngredientStack ingredientStack = IngredientStack.readFromNBT(nbt);
+					if(ingredientStack!=null)
+						withIngredientStack(ingredientStack);
+				}
 				break;
 			default:
 				super.onGuiEvent(event);
@@ -475,6 +709,7 @@ public class DecoIngredientStackPickerPanel extends DecoPanel
 	{
 		ITEM,
 		ITEM_LOGISTIC_TAG,
+		ITEM_DATA_TYPE,
 		FLUID,
 		ENERGY
 	}

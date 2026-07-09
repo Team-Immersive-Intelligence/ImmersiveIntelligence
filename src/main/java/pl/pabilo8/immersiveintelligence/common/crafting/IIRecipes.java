@@ -95,9 +95,9 @@ import java.util.stream.Collectors;
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @author Avalon (avalon@iiteam.net)
+ * @updated 29.4.2026
  * @since 22.03.2020
  * @since 28.11.2024
- * @updated 29.4.2026
  */
 public class IIRecipes
 {
@@ -112,11 +112,11 @@ public class IIRecipes
 		//Tools - include both IE and II variants for workbench recipes
 		TOOL_HAMMER = new IngredientStack(Arrays.asList(
 				new ItemStack(IEContent.itemTool, 1, 0),
-				new ItemStack(IIContent.itemHammer)
+				IIContent.itemHammer.getValidCraftingStack()
 		));
 		TOOL_CUTTERS = new IngredientStack(Arrays.asList(
 				new ItemStack(IEContent.itemTool, 1, 1),
-				new ItemStack(IIContent.itemWirecutter)
+				IIContent.itemWirecutter.getValidCraftingStack()
 		));
 
 		//Used by ammo pouch
@@ -293,7 +293,7 @@ public class IIRecipes
 			@Override
 			public ItemStack apply(ItemStack input, DataPacket data)
 			{
-				return IIContent.itemPrintedPage.getStack(PageType.TEXT,
+				return IIContent.itemPrintedPage.getStack(PageType.CODE,
 						nbt -> nbt.withString("text", data.get('t').toString())
 				);
 			}
@@ -492,7 +492,7 @@ public class IIRecipes
 				new IngredientStack[]{new IngredientStack("plateSteel"), new IngredientStack("wireTungsten", 2), new IngredientStack("electronTube", 2)},
 
 				new String[]{"inserter", "solderer", "drill"},
-				new String[]{ "inserter pick first", "inserter drop main", "drill work main", "inserter pick second", "inserter drop main", "solderer work main", "inserter pick third", "inserter drop main", "solderer work main"},
+				new String[]{"inserter pick first", "inserter drop main", "drill work main", "inserter pick second", "inserter drop main", "solderer work main", "inserter pick third", "inserter drop main", "solderer work main"},
 
 				24000,
 				1.25f
@@ -609,7 +609,7 @@ public class IIRecipes
 				PressMolds.HOWITZER, 2800);
 		addMetalPressBullet(Casing.MEDIUM_ARTILLERY_6BCAL,
 				new IngredientStack("plateBrass", 3),
-				PressMolds.HOWITZER, 2500);
+				PressMolds.MEDIUM_HOWITZER, 2500);
 		addMetalPressBullet(Casing.MORTAR_6BCAL,
 				new IngredientStack("plateAluminum", 3),
 				PressMolds.MORTAR, 2500);
@@ -618,7 +618,7 @@ public class IIRecipes
 				PressMolds.LIGHT_HOWITZER, 2200);
 		addMetalPressBullet(Casing.LIGHT_GUN_4BCAL,
 				new IngredientStack("ingotBrass", 2),
-				PressMolds.AUTOCANNON, 1600);
+				PressMolds.LIGHT_GUN, 1600);
 
 		addMetalPressBullet(Casing.AUTOCANNON_3BCAL,
 				new IngredientStack("ingotBrass", 2),
@@ -638,10 +638,10 @@ public class IIRecipes
 				new IngredientStack("plateSteel", 4),
 				PressMolds.NAVAL_MINE, 4800);
 		addMetalPressBullet(Casing.TRIPMINE,
-				new IngredientStack("plateBrass", 2),
+				new IngredientStack("plateSteel", 2),
 				PressMolds.TRIPMINE, 3600);
 		addMetalPressBullet(Casing.TELLERMINE,
-				new IngredientStack("plateBrass", 2),
+				new IngredientStack("plateSteel", 2),
 				PressMolds.TELLERMINE, 3600);
 
 		MetalPressRecipe.removeRecipes(new ItemStack(IEContent.itemBullet, 2, 0));
@@ -1177,7 +1177,7 @@ public class IIRecipes
 				.withCost(
 						new IngredientStack(IIContent.itemMotorGear.getStack(MotorGear.STEEL)),
 						new IngredientStack(new ItemStack(IEContent.itemMaterial, 1, 8)),
-						new IngredientStack("stickSteel", 2)
+						new IngredientStack("stickSteel", 1)
 				)
 				.withRequiredProgress(32000);
 

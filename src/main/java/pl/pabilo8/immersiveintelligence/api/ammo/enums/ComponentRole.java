@@ -1,9 +1,10 @@
 package pl.pabilo8.immersiveintelligence.api.ammo.enums;
 
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
-import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.ILocalizedEnum;
 
-public enum ComponentRole implements ISerializableEnum
+public enum ComponentRole implements ILocalizedEnum
 {
 	GENERAL_PURPOSE(0xaaaaaa),
 	SHRAPNEL(0x3f4f57),
@@ -31,5 +32,11 @@ public enum ComponentRole implements ISerializableEnum
 	public IIColor getColor()
 	{
 		return color;
+	}
+
+	@Override
+	public String geLocaleKey()
+	{
+		return IIReference.DESCRIPTION_KEY+"bullet_type.";
 	}
 }

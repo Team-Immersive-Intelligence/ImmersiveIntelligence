@@ -9,8 +9,6 @@ import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityMortar;
 import pl.pabilo8.immersiveintelligence.common.network.IIMessage;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.entity.ISyncNBTEntity;
@@ -48,14 +46,8 @@ public class MessageEntityNBTSync extends IIMessage implements IEntityBoundMessa
 	protected void onServerReceive(WorldServer world, NetHandlerPlayServer handler)
 	{
 		Entity entity = world.getEntityByID(entityID);
-
 		if(entity instanceof ISyncNBTEntity)
 			((ISyncNBTEntity<?>)entity).receiveNBTMessageServer(nbt);
-			//TODO: 09.07.2024 get rid of ones below
-		else if(entity instanceof EntityMachinegun)
-			((EntityMachinegun)entity).readEntityFromNBT(nbt);
-		else if(entity instanceof EntityMortar)
-			((EntityMortar)entity).syncKeyPress(nbt);
 	}
 
 	@SideOnly(Side.CLIENT)

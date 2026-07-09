@@ -211,7 +211,7 @@ public class LogisticTag implements INBTSerializable<NBTTagCompound>, Cloneable
 				.withString("origin", origin)
 				.withString("destination", destination)
 				.withColor("color", IIColor.fromDye(color))
-				.withUUID("owner", owner)
+				.conditionally(owner!=null, tis -> tis.withUUID("owner", owner))
 				.withInt("batch_number", batchNumber)
 				.unwrap();
 	}

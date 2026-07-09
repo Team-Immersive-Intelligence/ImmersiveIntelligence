@@ -43,7 +43,12 @@ public abstract class IIUpgradableItemRendererAMT<I extends ItemIIUpgradableTool
 
 	public IIUpgradableItemRendererAMT(@Nonnull I item, ResLoc modelRes)
 	{
-		super(item, modelRes);
+		this(item, modelRes, false);
+	}
+
+	public IIUpgradableItemRendererAMT(@Nonnull I item, ResLoc modelRes, boolean dualPerspective)
+	{
+		super(item, modelRes, dualPerspective);
 		animationRes = ResLoc.of(IIReference.RES_II, item.itemName, "/");
 		directoryRes = modelRes.asDirectory();
 	}

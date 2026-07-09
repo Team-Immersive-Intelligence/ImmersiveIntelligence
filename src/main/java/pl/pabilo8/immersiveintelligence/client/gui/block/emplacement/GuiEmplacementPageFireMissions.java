@@ -1,7 +1,7 @@
 package pl.pabilo8.immersiveintelligence.client.gui.block.emplacement;
 
 import net.minecraft.entity.player.EntityPlayer;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoTaskJobList;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoTaskList;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiCategory;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTemplate;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
@@ -24,7 +24,7 @@ public class GuiEmplacementPageFireMissions extends GuiEmplacement
 	{
 		super.onInit();
 		addComponents(
-				new DecoTaskJobList<>(0, 0)
+				new DecoTaskList<>(0, 0)
 						.withSize(96, 152-32)
 						.withShowJobsTab(false)
 		);

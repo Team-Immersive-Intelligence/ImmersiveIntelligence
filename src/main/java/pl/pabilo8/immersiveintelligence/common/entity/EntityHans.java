@@ -51,6 +51,8 @@ import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.hand_weapon.AIH
 import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.idle.AIHansKazachok;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.idle.AIHansSalute;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.idle.AIHansTimedLookAtEntity;
+import pl.pabilo8.immersiveintelligence.common.entity.mounted_weapon.EntityMachinegun;
+import pl.pabilo8.immersiveintelligence.common.entity.mounted_weapon.EntityMortar;
 import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIILightEngineerHelmet;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 

@@ -1,0 +1,85 @@
+# Made by Pabilo8 with Blockbench
+
+newmtl fluid_drip_00
+map_Kd immersiveintelligence:blocks/empty
+
+newmtl fluid_drip_01
+map_Kd immersiveintelligence:particle/fluid/fluid_drip01
+
+newmtl fluid_drip_02
+map_Kd immersiveintelligence:particle/fluid/fluid_drip02
+
+newmtl fluid_drip_03
+map_Kd immersiveintelligence:particle/fluid/fluid_drip03
+
+newmtl fluid_drip_04
+map_Kd immersiveintelligence:particle/fluid/fluid_drip04
+
+newmtl fluid_drip_05
+map_Kd immersiveintelligence:particle/fluid/fluid_drip05
+
+newmtl fluid_drip_06
+map_Kd immersiveintelligence:particle/fluid/fluid_drip06
+
+newmtl fluid_drip_07
+map_Kd immersiveintelligence:particle/fluid/fluid_drip07
+
+newmtl fluid_drip_08
+map_Kd immersiveintelligence:particle/fluid/fluid_drip08
+
+newmtl fluid_drip_09
+map_Kd immersiveintelligence:particle/fluid/fluid_drip09
+
+newmtl fluid_drip_10
+map_Kd immersiveintelligence:particle/fluid/fluid_drip10
+
+newmtl fluid_drip_11
+map_Kd immersiveintelligence:particle/fluid/fluid_drip11
+
+newmtl fluid_drip_12
+map_Kd immersiveintelligence:particle/fluid/fluid_drip12
+
+newmtl fluid_drip_13
+map_Kd immersiveintelligence:particle/fluid/fluid_drip13
+
+newmtl fluid_drip_14
+map_Kd immersiveintelligence:particle/fluid/fluid_drip14
+
+newmtl fluid_drip_15
+map_Kd immersiveintelligence:particle/fluid/fluid_drip15
+
+newmtl fluid_drip_16
+map_Kd immersiveintelligence:particle/fluid/fluid_drip16
+
+newmtl fluid_drip_17
+map_Kd immersiveintelligence:particle/fluid/fluid_drip17
+
+newmtl fluid_drip_18
+map_Kd immersiveintelligence:particle/fluid/fluid_drip18
+
+newmtl fluid_drip_19
+map_Kd immersiveintelligence:particle/fluid/fluid_drip19
+
+newmtl fluid_drip_20
+map_Kd immersiveintelligence:particle/fluid/fluid_drip20
+
+newmtl fluid_drip_21
+map_Kd immersiveintelligence:particle/fluid/fluid_drip21
+
+newmtl fluid_drip_22
+map_Kd immersiveintelligence:particle/fluid/fluid_drip22
+
+newmtl fluid_drip_23
+map_Kd immersiveintelligence:particle/fluid/fluid_drip23
+
+newmtl fluid_drip_24
+map_Kd immersiveintelligence:particle/fluid/fluid_drip24
+
+newmtl fluid_drip_25
+map_Kd immersiveintelligence:particle/fluid/fluid_drip25
+
+newmtl fluid_drip_26
+map_Kd immersiveintelligence:particle/fluid/fluid_drip26
+
+newmtl fluid_drip_27
+map_Kd immersiveintelligence:blocks/empty

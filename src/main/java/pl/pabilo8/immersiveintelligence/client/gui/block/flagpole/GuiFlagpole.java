@@ -2,7 +2,7 @@ package pl.pabilo8.immersiveintelligence.client.gui.block.flagpole;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTileGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoCheckbox;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoSwitch;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoDropdown;
@@ -32,7 +32,7 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
  * @since 27.12.2025
  */
 @DecoTemplate(name = "flagpole", category = DecoGuiCategory.TERRITORY_CONTROL_TILE)
-public class GuiFlagpole extends DecoGui<TileEntityFlagpole, ContainerFlagpole>
+public class GuiFlagpole extends DecoTileGui<TileEntityFlagpole, ContainerFlagpole>
 {
 	@SyncNBT
 	public boolean filterFlagpoles = true, filterWeapons = true, filterLogistics = true, filterIntelligence = true, filterWireNetworks = true;

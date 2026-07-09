@@ -47,6 +47,8 @@ public class EntityAmmoArtilleryProjectile extends EntityAmmoProjectile
 	public void onUpdate()
 	{
 		super.onUpdate();
+		if(world.isRemote&&!clientLoaded)
+			return;
 
 		//Play artillery shell impact sound
 		if(Weapons.artilleryImpactSound&&!flybySound&&ticksExisted > 5)

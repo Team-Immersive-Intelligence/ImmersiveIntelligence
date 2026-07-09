@@ -98,11 +98,11 @@ public class IIAnimation
 		 * For manual usage only
 		 */
 		public IIAnimationGroup(String groupName,
-								@Nullable IIVectorLine position, @Nullable IIVectorLine scale,
-								@Nullable IIVectorLine rotation,
-								@Nullable IIBooleanLine visibility,
-								@Nullable IIShaderLine shader,
-								@Nullable IIFloatLine property)
+		                        @Nullable IIVectorLine position, @Nullable IIVectorLine scale,
+		                        @Nullable IIVectorLine rotation,
+		                        @Nullable IIBooleanLine visibility,
+		                        @Nullable IIShaderLine shader,
+		                        @Nullable IIFloatLine property)
 		{
 			this.groupName = groupName;
 			this.position = position;
@@ -364,7 +364,7 @@ public class IIAnimation
 		@Override
 		public Float interpolate(Float t1, Float t2, float value)
 		{
-			return (t1+t2)*0.5f;
+			return t1*(1f-value)+(t2*value);
 		}
 	}
 

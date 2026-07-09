@@ -22,11 +22,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.client.model.armor.ModelLightEngineerArmor;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
+import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradeableArmor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -35,6 +37,9 @@ import java.util.Map;
 @IIItemProperties(category = IICategory.WARFARE)
 public class ItemIILightEngineerBoots extends ItemIILightEngineerArmorBase implements IElectricEquipment
 {
+	// Unique UUIDs for attribute modifiers to avoid access conflicts
+	private static final UUID RACKETS_MODIFIER_UUID = UUID.fromString("C8E5F2A1-7D9C-4F6A-8E3B-A4C7D2E8F9B1");
+
 	public ItemIILightEngineerBoots()
 	{
 		super(EntityEquipmentSlot.FEET, "LIGHT_ENGINEER_BOOTS");
@@ -69,10 +74,9 @@ public class ItemIILightEngineerBoots extends ItemIILightEngineerArmorBase imple
 
 		if(equipmentSlot==this.armorType)
 		{
-			if(ItemNBTHelper.hasKey(stack, "flippers"))
-				multimap.put(EntityLivingBase.SWIM_SPEED.getName(), new AttributeModifier(ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Flippers", 4, 2));
+			multimap.put(EntityLivingBase.SWIM_SPEED.getName(), new AttributeModifier(ItemIIUpgradeableArmor.ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Flippers", 4, 2));
 			if(ItemNBTHelper.hasKey(stack, "rackets"))
-				multimap.put(SharedMonsterAttributes.MOVEMENT_SPEED.getName(), new AttributeModifier(ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Rackets", 0.5, 1));
+				multimap.put(SharedMonsterAttributes.MOVEMENT_SPEED.getName(), new AttributeModifier(RACKETS_MODIFIER_UUID, "Rackets", 0.5, 1));
 			//if(getUpgrades(stack).hasKey(""))
 			//multimap.put(SharedMonsterAttributes.MOVEMENT_SPEED.getName(), new AttributeModifier(ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Power Armor Movement Speed Debuff", -.03, 1));
 			//multimap.put(SharedMonsterAttributes.MOVEMENT_SPEED.getName(), new AttributeModifier(ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Power Armor Movement Speed Debuff", -.03, 1));
@@ -125,7 +129,7 @@ public class ItemIILightEngineerBoots extends ItemIILightEngineerArmorBase imple
 
 	@Override
 	public void onStrike(ItemStack s, EntityEquipmentSlot eqSlot, EntityLivingBase p, Map<String, Object> cache,
-						 @Nullable DamageSource dSource, ElectricSource eSource)
+	                     @Nullable DamageSource dSource, ElectricSource eSource)
 	{
 		if(!(dSource instanceof ElectricDamageSource))
 		{

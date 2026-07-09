@@ -60,6 +60,7 @@ public class RadarRenderer extends IIMultiblockRenderer<TileEntityRadar>
 	{
 		//Reset model to default state and render
 		model.defaultize();
+		animationDish.apply(0.5f);
 		model.render(tes, buf);
 	}
 

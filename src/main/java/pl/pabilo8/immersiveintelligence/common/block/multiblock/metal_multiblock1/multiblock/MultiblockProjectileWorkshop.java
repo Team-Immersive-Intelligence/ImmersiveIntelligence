@@ -13,6 +13,9 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctur
 
 public class MultiblockProjectileWorkshop extends MultiblockStuctureBase<TileEntityProjectileWorkshop>
 {
+	public static final int SLOT_INPUT = 0;
+	public static final int SLOT_COMPONENT_INPUT = 1;
+	public static final int SLOT_OUTPUT = 2;
 	public static MultiblockProjectileWorkshop INSTANCE;
 
 	public MultiblockProjectileWorkshop()

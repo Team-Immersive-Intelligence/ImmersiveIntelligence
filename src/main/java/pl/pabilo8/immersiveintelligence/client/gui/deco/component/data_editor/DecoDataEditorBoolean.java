@@ -1,7 +1,7 @@
 package pl.pabilo8.immersiveintelligence.client.gui.deco.component.data_editor;
 
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeBoolean;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoCheckbox;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoSwitch;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 /**
@@ -10,7 +10,7 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReference;
  */
 public class DecoDataEditorBoolean extends DecoDataEditor<DataTypeBoolean>
 {
-	private DecoCheckbox checkbox;
+	private DecoSwitch component;
 
 	public DecoDataEditorBoolean(int x, int y, DataTypeBoolean data)
 	{
@@ -21,11 +21,9 @@ public class DecoDataEditorBoolean extends DecoDataEditor<DataTypeBoolean>
 	protected boolean initialize()
 	{
 		//Add editor components
-		addLabel(IIReference.DESCRIPTION_KEY+"variable_value", 2, 2);
-		addComponents(
-				checkbox = new DecoCheckbox(16, 48+16)
-						.withText(IIReference.DESCRIPTION_KEY+"variable_value")
-						.withChecked(dataType.value)
+		component = addComponent(new DecoSwitch(2, 6)
+				.withText(IIReference.DESCRIPTION_KEY+"variable_value.boolean")
+				.withCurrentState(dataType.value)
 		);
 		return super.initialize();
 	}
@@ -33,7 +31,7 @@ public class DecoDataEditorBoolean extends DecoDataEditor<DataTypeBoolean>
 	@Override
 	public DataTypeBoolean outputType()
 	{
-		dataType.value = checkbox.isChecked();
+		dataType.value = component.getState();
 		return dataType;
 	}
 }

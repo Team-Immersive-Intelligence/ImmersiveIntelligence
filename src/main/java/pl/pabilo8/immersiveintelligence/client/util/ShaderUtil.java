@@ -61,6 +61,7 @@ public class ShaderUtil
 		if(shader==null||!shader.use())
 			return false;
 
+		shader.setInt("lightmap", 1);
 		switch(shader)
 		{
 			case BLUEPRINT:
@@ -244,6 +245,11 @@ public class ShaderUtil
 		int getRef(String name)
 		{
 			return ARBShaderObjects.glGetUniformLocationARB(programID, name);
+		}
+
+		void setInt(String name, int value)
+		{
+			ARBShaderObjects.glUniform1iARB(getRef(name), value);
 		}
 
 		void setFloat(String name, float value)

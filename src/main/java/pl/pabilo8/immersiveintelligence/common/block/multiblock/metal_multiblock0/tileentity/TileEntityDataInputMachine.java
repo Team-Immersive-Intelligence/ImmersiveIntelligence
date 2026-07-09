@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multibloc
 import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
 import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
 import pl.pabilo8.immersiveintelligence.api.crafting.DataProgrammingRecipe;
@@ -57,7 +58,9 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockProductionSi
 	 */
 	@SyncNBT(name = "variables", events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_RECIPE_CHANGED, SyncEvents.TILE_CLIENT_MESSAGE})
 	public DataPacket storedData = new DataPacket();
-	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CLIENT_MESSAGE})
+	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_RECIPE_CHANGED})
+	public DataPacket packet1 = new DataPacket(), packet2 = new DataPacket(), packet3 = new DataPacket(), packet4 = new DataPacket();
+	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED})
 	public int selectedDataSlot = 0;
 
 	@SyncNBT(name = "upgrades", events = SyncEvents.TILE_UPGRADES_MODIFIED)
@@ -93,6 +96,83 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockProductionSi
 	}
 
 	@Override
+	public void receiveMessageFromClient(@Nonnull NBTTagCompound message)
+	{
+		super.receiveMessageFromClient(message);
+
+		if(message.hasKey("selectedDataSlot"))
+		{
+			selectedDataSlot = clampDataSlot(message.getInteger("selectedDataSlot"));
+			setStoredDataPacket(getDataPacket(selectedDataSlot).clone());
+			updateTileForEvent(SyncEvents.TILE_GUI_OPENED);
+		}
+		if(message.hasKey("variables"))
+		{
+			setStoredDataPacket(storedData);
+			updateTileForEvent(SyncEvents.TILE_GUI_OPENED);
+		}
+	}
+
+	public void switchDataSlot(int slot)
+	{
+		slot = clampDataSlot(slot);
+		if(slot==selectedDataSlot)
+			return;
+		setDataPacket(selectedDataSlot, storedData);
+		selectedDataSlot = slot;
+		storedData = getDataPacket(selectedDataSlot).clone();
+	}
+
+	public void setStoredDataPacket(@Nonnull DataPacket packet)
+	{
+		storedData = packet.clone();
+		setDataPacket(selectedDataSlot, storedData);
+	}
+
+	@Nonnull
+	private DataPacket getDataPacket(int slot)
+	{
+		switch(clampDataSlot(slot))
+		{
+			case 1:
+				return packet2;
+			case 2:
+				return packet3;
+			case 3:
+				return packet4;
+			case 0:
+			default:
+				return packet1;
+		}
+	}
+
+	private void setDataPacket(int slot, @Nonnull DataPacket packet)
+	{
+		DataPacket copy = packet.clone();
+		switch(clampDataSlot(slot))
+		{
+			case 1:
+				packet2 = copy;
+				break;
+			case 2:
+				packet3 = copy;
+				break;
+			case 3:
+				packet4 = copy;
+				break;
+			case 0:
+			default:
+				packet1 = copy;
+				break;
+		}
+	}
+
+	private int clampDataSlot(int slot)
+	{
+		return Math.max(0, Math.min(3, slot));
+	}
+
+	@Override
 	protected void onUpdate()
 	{
 		super.onUpdate();
@@ -105,7 +185,7 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockProductionSi
 
 		//Send packet on rising edge redstone signal or ui button press
 		boolean currentSignal = getRedstoneAtPos(0);
-		if(sendPacket || ((prevSignal ^ currentSignal) & currentSignal))
+		if(sendPacket||((prevSignal^currentSignal)&currentSignal))
 		{
 			this.sendData(storedData, getDirection("data"), getPOI(MultiblockPOI.DATA_OUTPUT)[0]);
 			sendPacket = false;
@@ -206,6 +286,7 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockProductionSi
 			//Take a copy of the original item and apply recipe
 			ItemStack output = recipe.operationFrom.apply(inputHandler.extractItem(MultiblockDataInputMachine.SLOT_INPUT, 1, true),
 					storedData, dataTypes -> storedData = dataTypes);
+			setStoredDataPacket(storedData);
 			//Try to output
 			return outputHandler.insertItem(0, output, false).isEmpty()&&
 					!inputHandler.extractItem(0, 1, false).isEmpty();

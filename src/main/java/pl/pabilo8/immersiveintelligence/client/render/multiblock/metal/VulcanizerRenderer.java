@@ -41,11 +41,8 @@ public class VulcanizerRenderer extends TileEntitySpecialRenderer<TileEntityVulc
 			float lowered1 = 0, lowered2 = 0, open1 = 0, open2 = 0, heating1 = 0, heating2 = 0;
 			ResourceLocation resIn = null, resOut = null;
 
-			if(te.hasWorld())
-			{
-				GlStateManager.translate(0f, 0, 1f);
-				GlStateManager.rotate(90F, 0F, 1F, 0F);
-			}
+			GlStateManager.translate(0f, 0, 1f);
+			GlStateManager.rotate(90F, 0F, 1F, 0F);
 
 			if(!te.processQueue.isEmpty())
 			{

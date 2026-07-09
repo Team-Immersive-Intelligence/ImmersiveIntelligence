@@ -17,7 +17,7 @@ import pl.pabilo8.immersiveintelligence.client.render.IPassengerAnimationsRender
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools.TripodPeriscope;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityTripodPeriscope;
+import pl.pabilo8.immersiveintelligence.common.entity.mounted_weapon.EntityTripodPeriscope;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -49,9 +49,9 @@ public class TripodPeriscopeRenderer extends Render<EntityTripodPeriscope> imple
 		ClientUtils.bindTexture(texture);
 
 		if(progress==1)
-			renderNormal(entity, entityYaw, partialTicks, progress);
+			renderNormal(entity, 0, partialTicks, progress);
 		else
-			renderProgress(entity, entityYaw, partialTicks, progress);
+			renderProgress(entity, 0, partialTicks, progress);
 
 		GlStateManager.disableBlend();
 		GlStateManager.disableRescaleNormal();
@@ -61,7 +61,6 @@ public class TripodPeriscopeRenderer extends Render<EntityTripodPeriscope> imple
 	private void renderNormal(EntityTripodPeriscope entity, float entityYaw, float partialTicks, float progress)
 	{
 		GlStateManager.pushMatrix();
-		GlStateManager.rotate(entityYaw, 0, 1, 0);
 
 		for(ModelRendererTurbo mod : model.baseModel)
 			mod.render();
@@ -72,11 +71,11 @@ public class TripodPeriscopeRenderer extends Render<EntityTripodPeriscope> imple
 		for(ModelRendererTurbo mod : model.leg3Model)
 			mod.render();
 
-		float yy = MathHelper.wrapDegrees(360+entity.periscopeNextYaw-entity.periscopeYaw);
-		float yaw = MathHelper.wrapDegrees(entity.periscopeYaw+(Math.signum(yy)*MathHelper.clamp(Math.abs(yy), 0, TripodPeriscope.turnSpeed*partialTicks)));
+		float yy = MathHelper.wrapDegrees(360+entity.aim.getTargetYaw()-entity.aim.getYaw(partialTicks));
+		float yaw = MathHelper.wrapDegrees(entity.aim.getYaw(partialTicks)+(Math.signum(yy)*MathHelper.clamp(Math.abs(yy), 0, TripodPeriscope.turnSpeed*partialTicks)));
 
 		GlStateManager.popMatrix();
-		GlStateManager.rotate(-yaw+90, 0, 1, 0);
+		GlStateManager.rotate(-entity.aim.getYaw(partialTicks)+90, 0, 1, 0);
 
 		for(ModelRendererTurbo mod : model.periscopeModel)
 			mod.render();
@@ -120,7 +119,7 @@ public class TripodPeriscopeRenderer extends Render<EntityTripodPeriscope> imple
 		GlStateManager.color(1f, 1f, 1f, Math.min(periscopePlacementProgress, 1));
 		GlStateManager.translate(0.0625f/2f, (1f-periscopePlacementProgress)*1.5f, -0.0625f/2f);
 		GlStateManager.rotate(periscopeRotationProgress*720, 0, 1, 0);
-		GlStateManager.rotate(-entity.periscopeYaw+90, 0, 1, 0);
+		GlStateManager.rotate(-entity.aim.getYaw(partialTicks)+90, 0, 1, 0);
 		if(tripodProgress > 0)
 		{
 			for(ModelRendererTurbo mod : model.periscopeModel)
@@ -164,13 +163,13 @@ public class TripodPeriscopeRenderer extends Render<EntityTripodPeriscope> imple
 		model.bipedHeadwear.rotateAngleY = 0;
 
 
-		if(Math.abs(mg.periscopeYaw-true_head_angle) > 5)
-			if(mg.periscopeYaw < true_head_angle)
+		if(Math.abs(mg.aim.getYaw(partialTicks)-true_head_angle) > 5)
+			if(mg.aim.getYaw(partialTicks) < true_head_angle)
 			{
 				model.bipedRightLeg.rotateAngleZ = -(1f-wtime)*0.25f;
 				model.bipedLeftLeg.rotateAngleZ = -wtime*0.25f-0.25f;
 			}
-			else if(mg.periscopeYaw > true_head_angle)
+			else if(mg.aim.getYaw(partialTicks) > true_head_angle)
 			{
 				model.bipedRightLeg.rotateAngleZ = (1f-wtime)*0.25f+0.25f;
 				model.bipedLeftLeg.rotateAngleZ = wtime*0.25f;

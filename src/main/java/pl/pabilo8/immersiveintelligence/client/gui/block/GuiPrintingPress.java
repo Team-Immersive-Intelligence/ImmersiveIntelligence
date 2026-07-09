@@ -2,7 +2,7 @@ package pl.pabilo8.immersiveintelligence.client.gui.block;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTileGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoFluidTank;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage;
@@ -23,7 +23,7 @@ import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
  * @since 10.07.2019
  */
 @DecoTemplate(name = "printing_press", category = DecoGuiCategory.PRODUCTION_TILE)
-public class GuiPrintingPress extends DecoGui<TileEntityPrintingPress, ContainerPrintingPress>
+public class GuiPrintingPress extends DecoTileGui<TileEntityPrintingPress, ContainerPrintingPress>
 {
 	@DecoResource
 	public static ResourceLocation TEXTURE = ResLoc.of(IIReference.RES_II, "gui/printing_press");

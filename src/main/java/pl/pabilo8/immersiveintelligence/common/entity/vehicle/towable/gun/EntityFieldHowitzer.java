@@ -1,43 +1,45 @@
 package pl.pabilo8.immersiveintelligence.common.entity.vehicle.towable.gun;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoFactory;
-import pl.pabilo8.immersiveintelligence.api.utils.camera.IEntityZoomProvider;
-import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedZoomTool;
+import pl.pabilo8.immersiveintelligence.api.utils.camera.ICameraEntity;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Vehicles.FieldHowitzer;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoArtilleryProjectile;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.towable.EntityVehicleTowable;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleBlueprint;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleControls;
-import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleDurability;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleControls.MouseBinding;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleType;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehiclePart;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleSeat;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleSeat.SeatInfo;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleWheel;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.WheelType;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
+import pl.pabilo8.immersiveintelligence.common.util.entity.SyncedDurability;
+import pl.pabilo8.immersiveintelligence.common.util.gun.GunAimCoordinate;
+import pl.pabilo8.immersiveintelligence.common.util.gun.GunAmmoProvider;
+import pl.pabilo8.immersiveintelligence.common.util.gun.GunShootingHandler;
+import pl.pabilo8.immersiveintelligence.common.util.gun.ammoprovider.GunAmmoProviderSingle;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 18.07.2020
  */
 @VehicleBlueprint(id = "immersiveintelligence:towed/field_howitzer", mass = 4, type = VehicleType.TOWED_WEAPON)
-public class EntityFieldHowitzer extends EntityVehicleTowable<EntityFieldHowitzer> implements IEntityZoomProvider
+public class EntityFieldHowitzer extends EntityVehicleTowable<EntityFieldHowitzer> implements ICameraEntity
 {
 	//--- AABBs ---//
 	static final AxisAlignedBB AABB_WHEEL = new AxisAlignedBB(-0.25, 0d, 0.25, 0.25, 1d, -0.25);
@@ -48,26 +50,21 @@ public class EntityFieldHowitzer extends EntityVehicleTowable<EntityFieldHowitze
 	//--- Entity Variables ---//
 	private AmmoFactory<EntityAmmoArtilleryProjectile> ammoFactory;
 	public SeatInfo<EntityFieldHowitzer> seatCommander, seatGunner;
+	public EntityVehicleWheel<EntityFieldHowitzer> partWheelRight;
+	public EntityVehicleWheel<EntityFieldHowitzer> partWheelLeft;
 
 	@SyncNBT(events = SyncEvents.ENTITY_DAMAGED)
-	public VehicleDurability durabilityRightWheel, durabilityLeftWheel, durabilityGun, durabilityShield;
+	public SyncedDurability durabilityRightWheel, durabilityLeftWheel, durabilityGun, durabilityShield;
 	@SyncNBT(events = SyncEvents.ENTITY_VEHICLE_CONTROLS)
 	public VehicleControls commanderControls, gunnerControls;
 
-	@SyncNBT
-	public boolean alreadyShot = false;
-	@SyncNBT
-	public ItemStack shell = ItemStack.EMPTY;
-	@SyncNBT
-	public float shootingProgress = 0f, reloadProgress = 0f, gunPitch = 0f;
-
-	public EntityVehicleWheel<EntityFieldHowitzer> partWheelRight;
-	public EntityVehicleWheel<EntityFieldHowitzer> partWheelLeft;
-	public EntityVehiclePart<EntityFieldHowitzer> partMain;
-	public EntityVehiclePart<EntityFieldHowitzer> partMain2;
-	public EntityVehiclePart<EntityFieldHowitzer> partGun;
-	public EntityVehiclePart<EntityFieldHowitzer> partShieldRight;
-	public EntityVehiclePart<EntityFieldHowitzer> partShieldLeft;
+	@SyncNBT(events = SyncEvents.ENTITY_CUSTOM1)
+	public GunAimCoordinate aim;
+	@SyncNBT(events = SyncEvents.ENTITY_CUSTOM1)
+	public GunShootingHandler shootingHandler;
+	@SyncNBT(events = SyncEvents.ENTITY_CUSTOM1)
+	public GunAmmoProvider ammoProvider;
+	private EntityVehiclePart<EntityFieldHowitzer> partGun;
 
 	public EntityFieldHowitzer(World worldIn)
 	{
@@ -78,15 +75,25 @@ public class EntityFieldHowitzer extends EntityVehicleTowable<EntityFieldHowitze
 	@Override
 	protected EntityVehiclePart<EntityFieldHowitzer>[] vehicleInit()
 	{
-		//Projectile entity spawner
+		//Gun internals
 		this.ammoFactory = new AmmoFactory<>(this);
+		this.aim = new GunAimCoordinate()
+				.withPitchLimit(-75, 15);
+		this.ammoProvider = new GunAmmoProviderSingle<>(this,
+				() -> EntityVehicleSeat.getPassengerOnSeat(seatGunner),
+				IIContent.itemAmmoLightArtillery, FieldHowitzer.reloadTime
+		);
+		this.shootingHandler = new GunShootingHandler()
+				.withAmmoFactory(this.ammoFactory)
+				.withAmmoProvider(this.ammoProvider)
+				.withShootSound(IISounds.howitzerShot, 50);
 
 		//Hitboxes
-		this.durabilityRightWheel = new VehicleDurability(FieldHowitzer.wheelDurability, 4);
-		this.durabilityLeftWheel = new VehicleDurability(FieldHowitzer.wheelDurability, 4);
-		this.durabilityGun = new VehicleDurability(FieldHowitzer.gunDurability, 14)
+		this.durabilityRightWheel = new SyncedDurability(FieldHowitzer.wheelDurability, 4);
+		this.durabilityLeftWheel = new SyncedDurability(FieldHowitzer.wheelDurability, 4);
+		this.durabilityGun = new SyncedDurability(FieldHowitzer.gunDurability, 14)
 				.withParent(this.durabilityMain);
-		this.durabilityShield = new VehicleDurability(FieldHowitzer.shieldDurability, 32)
+		this.durabilityShield = new SyncedDurability(FieldHowitzer.shieldDurability, 32)
 				.withParent(this.durabilityMain);
 
 		//Controls
@@ -103,7 +110,7 @@ public class EntityFieldHowitzer extends EntityVehicleTowable<EntityFieldHowitze
 			this.gunnerControls
 					.withKeyBinding(settings.keyBindForward, "up")
 					.withKeyBinding(settings.keyBindBack, "down")
-					.withKeyBinding(settings.keyBindJump, "fire")
+					.withMouseBinding(MouseBinding.MOUSE_RIGHT, "fire")
 					.withKeyBinding(ClientProxy.keybindZoom, "scope")
 					.withKeyBinding(ClientProxy.keybindManualReload, "reload");
 		}
@@ -124,19 +131,19 @@ public class EntityFieldHowitzer extends EntityVehicleTowable<EntityFieldHowitze
 				partWheelLeft = new EntityVehicleWheel<>(this, "wheel_left", new Vec3d(0, 0, -0.75), AABB_WHEEL)
 						.withHitbox(durabilityLeftWheel)
 						.withType(WheelType.STEERABLE_DRIVE),
-				partMain = new EntityVehiclePart<>(this, "main", new Vec3d(0, 0.5, 0),
+				new EntityVehiclePart<>(this, "main", new Vec3d(0, 0.5, 0),
 						new AxisAlignedBB(-0.5, -0.25, -0.5, 0.5, 0.25, 0.5))
 						.withHitbox(durabilityMain)
 						.withSeat(seatCommander),
-				partMain2 = new EntityVehiclePart<>(this, "main2", new Vec3d(-0.75, 0.5, 0),
+				new EntityVehiclePart<>(this, "main2", new Vec3d(-0.75, 0.5, 0),
 						new AxisAlignedBB(-0.5, -0.125, -0.5, 0.5, 0.125, 0.5))
 						.withHitbox(durabilityMain)
 						.withSeat(seatGunner),
-				partGun = new EntityVehiclePart<>(this, "gun", new Vec3d(0.5, 0.65, 0), AABB_GUN)
+				this.partGun = new EntityVehiclePart<>(this, "gun", new Vec3d(0.5, 0.65, 0), AABB_GUN)
 						.withHitbox(durabilityGun),
-				partShieldRight = new EntityVehiclePart<>(this, "shield_right", new Vec3d(0.5, 0.385+0.125, 0.75), AABB_SHIELD)
+				new EntityVehiclePart<>(this, "shield_right", new Vec3d(0.5, 0.385+0.125, 0.75), AABB_SHIELD)
 						.withHitbox(durabilityShield),
-				partShieldLeft = new EntityVehiclePart<>(this, "shield_left", new Vec3d(0.5, 0.385+0.125, -0.75), AABB_SHIELD)
+				new EntityVehiclePart<>(this, "shield_left", new Vec3d(0.5, 0.385+0.125, -0.75), AABB_SHIELD)
 						.withHitbox(durabilityShield),
 		};
 	}
@@ -146,34 +153,40 @@ public class EntityFieldHowitzer extends EntityVehicleTowable<EntityFieldHowitze
 	@Override
 	protected void onVehicleUpdate()
 	{
-		boolean backwards = this.commanderControls.getKey("backwards");
-		float right = 0, left = 0;
+		this.aim.update();
+		this.shootingHandler.update();
+		this.ammoFactory.setShooterAndGun(EntityVehicleSeat.getPassengerOnSeat(seatGunner), this)
+				.setPositionAndVelocity(partGun.getPositionVector(), this.aim, 1f, 1f);
 
-		//
-		if(this.commanderControls.getKey("turnLeft"))
-			right += 0.25f;
-		else if(this.commanderControls.getKey("turnRight"))
-			left += 0.25f;
-		if(this.commanderControls.getKey("forward")||backwards)
+		float left = 0, right = 0;
+		if(EntityVehicleSeat.getPassengerOnSeat(seatCommander)!=null)
 		{
-			left = 0.25f;
-			right = 0.25f;
-			if(backwards)
+			//Intentionally swapped, because it's a push-gun, and that's how pushing works
+			right = this.commanderControls.getKey("turnLeft")?0.5f: 0;
+			left = this.commanderControls.getKey("turnRight")?0.5f: 0;
+			boolean backwards = this.commanderControls.getKey("backwards");
+			if(backwards||this.commanderControls.getKey("forward"))
 			{
-				left *= -1;
-				right *= -1;
+				left = Math.max(0.5f, left+0.25f)*(backwards?-1: 1);
+				right = Math.max(0.5f, right+0.25f)*(backwards?-1: 1);
 			}
 		}
+		partWheelLeft.setRotationSpeed(360f*left);
+		partWheelLeft.setTorque(5f*left);
+		partWheelRight.setRotationSpeed(360f*right);
+		partWheelRight.setTorque(5f*right);
 
 		//Gun elevation
+		this.aim.withCenterYaw(this.rotationYaw);
 		if(this.gunnerControls.getKey("up"))
-			gunPitch = Math.min(gunPitch+1f, 76.5f);
+			this.aim.setTarget(0, this.aim.getTargetPitch()-0.5f);
 		else if(this.gunnerControls.getKey("down"))
-			gunPitch = Math.max(gunPitch-1f, -12.5f-12.5f);
+			this.aim.setTarget(0, this.aim.getTargetPitch()+0.5f);
 
-		//TODO: 03.12.2025 moving
-		/*partWheelLeft.setMovementFactors(left, 0);
-		partWheelRight.setMovementFactors(right, 0);*/
+		if(this.gunnerControls.getKey("reload"))
+			this.shootingHandler.startReloading();
+		else if(this.gunnerControls.getKey("fire"))
+			this.shootingHandler.fire();
 	}
 
 
@@ -190,27 +203,38 @@ public class EntityFieldHowitzer extends EntityVehicleTowable<EntityFieldHowitze
 	{
 		if(!world.isRemote&&!towingOperation)
 		{
-			if(part==partShieldRight||part==partWheelRight)
-				player.startRiding(EntityVehicleSeat.getOrCreateSeat(seatCommander));
-			else if(part==partShieldLeft||part==partWheelLeft)
-				player.startRiding(EntityVehicleSeat.getOrCreateSeat(seatGunner));
+			if(part.partName.contains("right"))
+				EntityVehicleSeat.enterSeat(player, seatCommander);
+			else if(part.partName.contains("left"))
+				EntityVehicleSeat.enterSeat(player, seatGunner);
 			return true;
 		}
 		return false;
 	}
 
-	//--- Binoculars Zoom Feature ---//
+	//--- ICameraEntity ---//
 
 	@Override
-	public IAdvancedZoomTool getZoom()
+	public float getCameraPitch(EntityPlayer cameraPlayer, float partialTicks)
 	{
-		return Minecraft.getMinecraft().player.getHeldItem(EnumHand.MAIN_HAND).getItem()==IIContent.itemBinoculars?IIContent.itemBinoculars: null;
+		return (float)IIMath.clampedLerp(cameraPlayer.prevCameraYaw, cameraPlayer.cameraYaw, partialTicks);
 	}
 
-	@SideOnly(Side.CLIENT)
 	@Override
-	public ItemStack getZoomStack()
+	public float getCameraYaw(EntityPlayer cameraPlayer, float partialTicks)
 	{
-		return Minecraft.getMinecraft().player.getHeldItem(EnumHand.MAIN_HAND);
+		return (float)IIMath.clampedLerp(cameraPlayer.prevCameraYaw, cameraPlayer.cameraYaw, partialTicks);
+	}
+
+	@Override
+	public Vec3d getCameraPos(EntityPlayer cameraPlayer, float partialTicks)
+	{
+		return cameraPlayer.getLook(partialTicks);
+	}
+
+	@Override
+	public boolean isCameraEnabled(EntityPlayer player)
+	{
+		return false;//seatGunner!=null&&seatGunner.isClientPlayerOnSeat();
 	}
 }

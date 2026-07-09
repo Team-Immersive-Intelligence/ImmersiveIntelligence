@@ -6,8 +6,9 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.util.INBTSerializable;
 import pl.pabilo8.immersiveintelligence.api.rotary.IRotaryEnergy;
 import pl.pabilo8.immersiveintelligence.api.rotary.RotaryStorage;
-import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleDurability;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehicleBase;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.IVehicleComponent;
+import pl.pabilo8.immersiveintelligence.common.util.entity.SyncedDurability;
 
 import javax.annotation.Nullable;
 
@@ -18,14 +19,21 @@ import javax.annotation.Nullable;
  * @ii-approved 0.3.1
  * @since 01.10.2025
  */
-public abstract class VehicleEngineBase<T extends VehicleEngineBase<T>> implements IVehicleComponent, INBTSerializable<NBTTagCompound>, IRotaryEnergy
+public abstract class VehicleEngineBase<T extends VehicleEngineBase<T, V>, V extends EntityVehicleBase<V>>
+		implements IVehicleComponent, INBTSerializable<NBTTagCompound>, IRotaryEnergy
 {
 	@Nullable
-	protected VehicleDurability durability;
+	protected SyncedDurability durability;
 	protected boolean nextState, active;
 	protected int activeTicks, activationTicks = 40, animationTicks = 8;
 	protected float acceleration = 0f;
 	protected RotaryStorage rotaryStorage = new RotaryStorage(0, 0);
+	protected V vehicle;
+
+	public VehicleEngineBase(V vehicle)
+	{
+		this.vehicle = vehicle;
+	}
 
 	public boolean start()
 	{
@@ -69,7 +77,7 @@ public abstract class VehicleEngineBase<T extends VehicleEngineBase<T>> implemen
 	//--- Setters ---//
 
 	@SuppressWarnings("unchecked")
-	public T withDurability(@Nullable VehicleDurability durability)
+	public T withDurability(@Nullable SyncedDurability durability)
 	{
 		this.durability = durability;
 		return (T)this;
@@ -136,7 +144,7 @@ public abstract class VehicleEngineBase<T extends VehicleEngineBase<T>> implemen
 
 	@Nullable
 	@Override
-	public VehicleDurability getDurability()
+	public SyncedDurability getDurability()
 	{
 		return durability;
 	}

@@ -7,6 +7,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPanel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoFluidTank;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.HeavyChemthrower;
@@ -147,6 +148,12 @@ public class EmplacementWeaponHeavyChemthrower extends EmplacementWeaponTurretBa
 			return (tank.getFluid().getFluid().isGaseous()?0.025F: 0.05F)*(float)(tank.getFluid().getFluid().getDensity(tank.getFluid()) < 0?-1: 1);
 		else
 			return 0;
+	}
+
+	@Override
+	public boolean handleDataCommand(DataPacket packet)
+	{
+		return super.handleDataCommand(packet);
 	}
 
 	static class SidedFluidHandler implements IFluidHandler

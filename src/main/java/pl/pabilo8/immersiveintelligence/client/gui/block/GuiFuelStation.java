@@ -2,7 +2,7 @@ package pl.pabilo8.immersiveintelligence.client.gui.block;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTileGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoFluidTank;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage;
@@ -18,7 +18,7 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReference;
  * @since 10.07.2019
  */
 @DecoTemplate(name = "fuel_station", category = DecoGuiCategory.PRODUCTION_TILE)
-public class GuiFuelStation extends DecoGui<TileEntityFuelStation, ContainerFuelStation>
+public class GuiFuelStation extends DecoTileGui<TileEntityFuelStation, ContainerFuelStation>
 {
 	@DecoResource
 	public static final ResourceLocation TEXTURE = IIReference.RES_II.with("gui/fuel_station");

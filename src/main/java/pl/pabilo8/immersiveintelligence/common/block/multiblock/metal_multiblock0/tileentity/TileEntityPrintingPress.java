@@ -29,6 +29,9 @@ import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIMultiblockRecipe;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataHandlingUtils;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
+import pl.pabilo8.immersiveintelligence.api.upgrade.IManagedUpgradableDevice;
+import pl.pabilo8.immersiveintelligence.api.upgrade.Upgrade;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeManager;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedTextOverlay;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.PrintingPress;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
@@ -46,6 +49,7 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionMulti;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -53,18 +57,16 @@ import javax.annotation.Nullable;
  * @updated 13.12.2023
  * @since 28.06.2019
  */
-public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti<TileEntityPrintingPress, PrintingRecipe> implements ITactileListener, IPlayerInteraction, IAdvancedTextOverlay
+public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti<TileEntityPrintingPress, PrintingRecipe>
+		implements ITactileListener, IPlayerInteraction, IAdvancedTextOverlay, IManagedUpgradableDevice<TileEntityPrintingPress>
 {
-	/**
-	 * Inventory slots IDs
-	 */
-	public static final int SLOT_PAPER = 0, SLOT_OUTPUT = 1, SLOT_BUCKET_IN = 2, SLOT_BUCKET_OUT = 3;
-
 	@SyncNBT(time = 40, events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_RECIPE_CHANGED})
 	public MultiFluidTank tank;
+	@SyncNBT(name = "upgrades", events = SyncEvents.TILE_UPGRADES_MODIFIED)
+	public UpgradeManager<TileEntityPrintingPress> upgradeManager;
 
-	private IItemHandler inputHandler = getSingleInventoryHandler(SLOT_PAPER, true, true);
-	private IItemHandler outputHandler = getSingleInventoryHandler(SLOT_OUTPUT, true, true);
+	private IItemHandler inputHandler = getSingleInventoryHandler(MultiblockPrintingPress.SLOT_PAPER, true, true);
+	private IItemHandler outputHandler = getSingleInventoryHandler(MultiblockPrintingPress.SLOT_OUTPUT, true, true);
 	private TactileManager tactileManager = null;
 
 	private EasyCollection<PrintingRequest, NBTTagCompound> printRequestsQueue;
@@ -76,6 +78,7 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 		this.energyStorage = new FluxStorageAdvanced(PrintingPress.energyCapacity);
 		this.inventory = NonNullList.withSize(4, ItemStack.EMPTY);
 		this.printRequestsQueue = new EasyCollection<>(PrintingRequest::new);
+		this.upgradeManager = new UpgradeManager<>(this);
 	}
 
 	@Override
@@ -94,6 +97,7 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 		this.inputHandler = null;
 		this.outputHandler = null;
 		this.tactileManager = null;
+		this.upgradeManager = null;
 	}
 
 	@Override
@@ -104,7 +108,7 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 		if(!world.isRemote)
 			tactileManager.defaultize();
 
-		if(IIUtils.handleBucketTankInteraction(tank, inventory, SLOT_BUCKET_IN, SLOT_BUCKET_OUT, true,
+		if(IIUtils.handleBucketTankInteraction(tank, inventory, MultiblockPrintingPress.SLOT_BUCKET_IN, MultiblockPrintingPress.SLOT_BUCKET_OUT, true,
 				fs -> IIContent.fluidInkBlack.equals(fs.getFluid())||
 						IIContent.fluidInkCyan.equals(fs.getFluid())||
 						IIContent.fluidInkMagenta.equals(fs.getFluid())||
@@ -171,7 +175,7 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 
 			String printingMode = IIDataHandlingUtils.asString('m', packet);
 			PrintingRecipe.streamRecipes(PrintingRecipe.class)
-					.filter(recipe -> recipe.getInput().matchesItemStack(inventory.get(SLOT_PAPER)))
+					.filter(recipe -> recipe.getInput().matchesItemStack(inventory.get(MultiblockPrintingPress.SLOT_PAPER)))
 					.filter(recipe -> recipe.getCategoryName().equals(printingMode))
 					.findFirst()
 					.ifPresent(printingRecipe -> {
@@ -193,12 +197,12 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 	{
 		switch(slot)
 		{
-			case SLOT_PAPER:
+			case MultiblockPrintingPress.SLOT_PAPER:
 				return Utils.compareToOreName(stack, "pageEmpty");
-			case SLOT_OUTPUT:
+			case MultiblockPrintingPress.SLOT_OUTPUT:
 				return Utils.compareToOreName(stack, "pageWritten")||Utils.compareToOreName(stack, "pageEmpty");
-			case SLOT_BUCKET_IN:
-			case SLOT_BUCKET_OUT:
+			case MultiblockPrintingPress.SLOT_BUCKET_IN:
+			case MultiblockPrintingPress.SLOT_BUCKET_OUT:
 				return stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
 			default:
 				return false;
@@ -221,12 +225,12 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 	@Override
 	protected IIMultiblockProcess<PrintingRecipe> findNewProductionProcess()
 	{
-		// Check for queued orders
+		//Check for queued orders
 		if(printRequestsQueue.isEmpty())
 			return null;
 		PrintingRequest found = printRequestsQueue.get(0);
 
-		ItemStack input = inputHandler.extractItem(SLOT_PAPER, 1, true);
+		ItemStack input = inputHandler.extractItem(MultiblockPrintingPress.SLOT_PAPER, 1, true);
 		if(!found.recipe.getInput().matchesItemStack(input))
 			return null;
 
@@ -234,6 +238,11 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 		PrintFunction function = found.recipe.getFunction();
 		ItemStack result = function.apply(input, found.data);
 		int[] inkCost = function.getInkTypesRequired(found.data);
+
+		//Check if the required upgrade is installed
+		Upgrade requiredUpgrade = function.getUpgradeRequired();
+		if(requiredUpgrade!=null&&!isUpgradeInstalled(requiredUpgrade))
+			return null;
 
 		//Check if there's enough ink
 		FluidStack[] fs = {
@@ -247,7 +256,7 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 				return null;
 
 		//Use resources
-		inputHandler.extractItem(SLOT_PAPER, 1, false);
+		inputHandler.extractItem(MultiblockPrintingPress.SLOT_PAPER, 1, false);
 		for(FluidStack f : fs)
 			tank.drain(f, true);
 
@@ -336,7 +345,7 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 	@Override
 	public int getSlotLimit(int slot)
 	{
-		return slot==SLOT_OUTPUT?12: super.getSlotLimit(slot);
+		return slot==MultiblockPrintingPress.SLOT_OUTPUT?12: super.getSlotLimit(slot);
 	}
 
 	@Override
@@ -390,6 +399,15 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 		if(master!=null&&isPOI("fluid_tank"))
 			return new String[]{IIUtils.getFluidNameOverlayText(master.tank.getFluid())};
 		return new String[0];
+	}
+
+	//--- IManagedUpgradableDevice ---//
+
+	@Nonnull
+	@Override
+	public UpgradeManager<TileEntityPrintingPress> getUpgradeManager()
+	{
+		return upgradeManager;
 	}
 
 	//--- Utilities ---//

@@ -6,7 +6,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate.TileEntityRepairCrate;
-import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
+import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIITileBase;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -14,7 +14,7 @@ import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
  * @since 17.05.2019
  * @since 08.15.2025
  */
-public class ContainerRepairCrate extends ContainerIIBase<TileEntityRepairCrate>
+public class ContainerRepairCrate extends ContainerIITileBase<TileEntityRepairCrate>
 {
 
 	public Slot inputSlot;

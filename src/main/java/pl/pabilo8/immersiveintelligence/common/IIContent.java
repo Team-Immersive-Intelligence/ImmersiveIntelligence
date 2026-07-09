@@ -134,10 +134,12 @@ public class IIContent
 			.withType(UpgradePurpose.SPECIAL);
 	//allows printing bound pages, books and newspapers
 	public static final Upgrade UPGRADE_PRESS_BATCHING = new Upgrade("printing_press/batching")
-			.withType(UpgradePurpose.SPECIAL);
+			.withType(UpgradePurpose.SPECIAL)
+			.withWIPStatus();
 	//allows printing envelopes
 	public static final Upgrade UPGRADE_PRESS_ENVELOPER = new Upgrade("printing_press/enveloper")
-			.withType(UpgradePurpose.SPECIAL);
+			.withType(UpgradePurpose.SPECIAL)
+			.withWIPStatus();
 
 	//allows the radar to detect radio signal emitters and send their positions
 	public static final Upgrade UPGRADE_RADIO_LOCATORS = new Upgrade("radio_locators");
@@ -190,7 +192,8 @@ public class IIContent
 			new UpgradeEmplacementWeapon<>("guided_missile_launcher", EmplacementWeaponGuidedMissileLauncher::new);
 
 	public static final Upgrade UPGRADE_SOVEREIGNTY = new Upgrade("sovereignty")
-			.withType(UpgradePurpose.DEFENSE_SYSTEM);
+			.withType(UpgradePurpose.DEFENSE_SYSTEM)
+			.withWIPStatus();
 
 	public static final Upgrade UPGRADE_EMPLACEMENT_FALLBACK_GRENADES = new Upgrade("emplacement/emergency_smoke")
 			.withType(UpgradePurpose.DEFENSE_SYSTEM);
@@ -202,16 +205,20 @@ public class IIContent
 	public static final Upgrade UPGRADE_EMPLACEMENT_MACHINEGUN_WATERCOOLED = new Upgrade("emplacement/machinegun/watercooled")
 			.withType(UpgradePurpose.EFFICIENCY);
 	public static final Upgrade UPGRADE_EMPLACEMENT_MACHINEGUN_BUNKER = new Upgrade("emplacement/machinegun/additional_fortifications")
-			.withType(UpgradePurpose.ARMOR);
+			.withType(UpgradePurpose.ARMOR)
+			.withWIPStatus();
 
 	public static final Upgrade UPGRADE_FLAGPOLE_CAPTURE_DEFIANCE = new Upgrade("flagpole/capture_defiance")
 			.withType(UpgradePurpose.DEFENSE_SYSTEM);
 	public static final Upgrade UPGRADE_FLAGPOLE_TASER_LOCKS = new Upgrade("flagpole/taser_locks")
-			.withType(UpgradePurpose.DEFENSE_SYSTEM);
+			.withType(UpgradePurpose.DEFENSE_SYSTEM)
+			.withWIPStatus();
 	public static final Upgrade UPGRADE_FLAGPOLE_DISTRESS_SIGNAL = new Upgrade("flagpole/distress_signal")
-			.withType(UpgradePurpose.DEFENSE_SYSTEM);
+			.withType(UpgradePurpose.DEFENSE_SYSTEM)
+			.withWIPStatus();
 	public static final Upgrade UPGRADE_FLAGPOLE_UNIT_POST = new Upgrade("flagpole/unit_post")
-			.withType(UpgradePurpose.FULL_CONVERSION);
+			.withType(UpgradePurpose.FULL_CONVERSION)
+			.withWIPStatus();
 
 	public static final Upgrade UPGRADE_VEHICLE_SMALL_STORAGE = new Upgrade("vehicle/small/storage")
 			.withType(UpgradePurpose.CAPACITY);

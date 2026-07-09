@@ -341,7 +341,7 @@ public class IIRecipeJEIWrapper<T extends IIMultiblockRecipe> implements IRecipe
 				.finish();
 
 		//Draw time text
-		String timeStr = GuiScreen.isShiftKeyDown()?"1 t": recipe.getTotalProcessTime()+" t";
+		String timeStr = GuiScreen.isShiftKeyDown()?String.format("%.2f d", recipe.getTotalProcessTime()/24000f): recipe.getTotalProcessTime()+" t";
 		ClientUtils.mc().fontRenderer.drawString(timeStr, x+14, y+3, DecoColors.H1.getPackedRGB());
 	}
 

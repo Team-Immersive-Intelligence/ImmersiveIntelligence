@@ -110,19 +110,17 @@ public class DiplomacyHandler
 		UUID ieFakePlayerID = UUID.fromString("99562b85-bd1a-4ded-bb1a-c307bf0c0133");
 
 		//Create the neutral faction
-		if(NEUTRAL==null)
-			NEUTRAL = new OwnerIdentity(NEUTRAL_UUID, "Neutral")
-					.withMember(ieFakePlayerID, LawForm.DEFAULT.getOwnerRole())
-					.withBanner(ItemBanner.makeBanner(EnumDyeColor.WHITE, null))
-					.withLawForm(LawForm.COMMUNE)
-					.withColor(IIColor.MC_GRAY);
+		NEUTRAL = new OwnerIdentity(NEUTRAL_UUID, "Neutral")
+				.withMember(ieFakePlayerID, LawForm.DEFAULT.getOwnerRole())
+				.withBanner(ItemBanner.makeBanner(EnumDyeColor.WHITE, null))
+				.withLawForm(LawForm.COMMUNE)
+				.withColor(IIColor.MC_GRAY);
 		//Create the global enemy faction
-		if(GLOBAL_ENEMY==null)
-			GLOBAL_ENEMY = new OwnerIdentity(GLOBAL_ENEMY_UUID, "GlobalEnemy")
-					.withMember(ieFakePlayerID, LawForm.DEFAULT.getOwnerRole())
-					.withBanner(ItemBanner.makeBanner(EnumDyeColor.BLACK, null))
-					.withColor(IIColor.MC_BLACK)
-					.withLawForm(LawForm.COMMISARIAT);
+		GLOBAL_ENEMY = new OwnerIdentity(GLOBAL_ENEMY_UUID, "GlobalEnemy")
+				.withMember(ieFakePlayerID, LawForm.DEFAULT.getOwnerRole())
+				.withBanner(ItemBanner.makeBanner(EnumDyeColor.BLACK, null))
+				.withColor(IIColor.MC_BLACK)
+				.withLawForm(LawForm.COMMISARIAT);
 
 		//Add the default factions to the map
 		ownerIdentities.put(NEUTRAL.getUUID(), NEUTRAL);
@@ -189,7 +187,7 @@ public class DiplomacyHandler
 		propertyTickets.clear();
 		pendingTickets.clear();
 		pendingTicketCheckTimer = 0;
-		NEUTRAL = GLOBAL_ENEMY = null;
+		//NEUTRAL = GLOBAL_ENEMY = null;
 	}
 
 	//--- Update Loop ---//

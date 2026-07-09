@@ -44,8 +44,8 @@ newmtl v4_diesel2
 map_Kd immersiveintelligence:entity/vehicle/engine/v4_diesel2
 newmtl engine_4
 map_Kd immersiveintelligence:entity/vehicle/engine/engine_4
-newmtl pipe34
-map_Kd immersiveintelligence:blocks/common/structural/pipe34
+newmtl common_cable_and_pipe
+map_Kd immersiveintelligence:blocks/common/common_cable_and_pipe
 newmtl wheel_12_terrain
 map_Kd immersiveintelligence:entity/vehicle/suspension/wheel_12_terrain
 newmtl snow

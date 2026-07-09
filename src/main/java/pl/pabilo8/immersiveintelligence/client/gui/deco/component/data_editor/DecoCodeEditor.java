@@ -42,6 +42,7 @@ public class DecoCodeEditor extends DecoDataEditor<DataType>
 	@Override
 	public DataType outputType()
 	{
-		return null;
+		// The code view is currently a read-only preview; never return null, or applying the editor would erase the variable.
+		return dataType;
 	}
 }

@@ -4,6 +4,11 @@ import blusunrize.immersiveengineering.common.items.ItemUpgradeableTool;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
+import java.util.Arrays;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 27.01.2023
@@ -51,6 +56,20 @@ public abstract class ItemIIUpgradableTool extends ItemUpgradeableTool
 			if(!upgrades.hasKey(e.getName()))
 				return false;
 		return true;
+	}
+
+	/**
+	 * @param stack   stack to check
+	 * @param upgrade upgrade type
+	 * @return list of all installed upgrades of the given type
+	 */
+	public <E extends Enum<E> & IIItemEnum> EnumSet<E> listUpgrades(ItemStack stack, Class<E> upgrade)
+	{
+		NBTTagCompound upgrades = getUpgrades(stack);
+		List<E> collect = Arrays.stream(upgrade.getEnumConstants())
+				.filter(enumConstant -> upgrades.hasKey(enumConstant.getName()))
+				.collect(Collectors.toList());
+		return collect.isEmpty()?EnumSet.noneOf(upgrade): EnumSet.copyOf(collect);
 	}
 
 

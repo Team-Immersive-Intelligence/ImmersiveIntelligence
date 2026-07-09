@@ -5,11 +5,13 @@
   },
   "poi": {
     "energy": 16,
-    "data": [2, 3],
-    "data_left": 2,
-    "data_right": 3,
+    "data_in": 2,
+    "data_out": 3,
     "front_panel": [],
     "crates": [],
     "door": []
+  },
+  "rotations": {
+    "data_out": "clockwise_90"
   }
 }

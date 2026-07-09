@@ -212,7 +212,7 @@ public abstract class DecoTankBase<TYPE extends DecoTankBase<TYPE, RESOURCE>, RE
 	@Override
 	public void cleanup()
 	{
-
+		displayedAmounts.clear();
 	}
 
 	/**

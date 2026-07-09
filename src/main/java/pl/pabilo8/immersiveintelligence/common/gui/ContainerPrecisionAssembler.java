@@ -5,7 +5,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockPrecisionAssembler;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityPrecisionAssembler;
-import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
+import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIITileBase;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -13,7 +13,7 @@ import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
  * @updated 30.08.2025
  * @since 17.05.2019
  */
-public class ContainerPrecisionAssembler extends ContainerIIBase<TileEntityPrecisionAssembler>
+public class ContainerPrecisionAssembler extends ContainerIITileBase<TileEntityPrecisionAssembler>
 {
 	public Slot[] ingredientSlots, outputSlots, toolSlots;
 	public Slot schemeSlot;

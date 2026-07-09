@@ -5,6 +5,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3i;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.style.StyleConstraints;
+import pl.pabilo8.immersiveintelligence.api.style.StyleConstraints.PaintStyleConstraint;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.BlockIIMetalMultiblock1.MetalMultiblocks1;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityFuelStation;
@@ -27,7 +28,7 @@ public class MultiblockFuelStation extends MultiblockStuctureBase<TileEntityFuel
 		super(new ResourceLocation(ImmersiveIntelligence.MODID, "multiblocks/fuel_station"));
 		offset = new Vec3i(0, 1, 0);
 		INSTANCE = this;
-		STYLE_CONSTRAINTS = new StyleConstraints("wooden", false,
+		STYLE_CONSTRAINTS = new StyleConstraints("wooden", PaintStyleConstraint.NOT_APPLICABLE,
 				Sets.newHashSet("wooden", "naval", "steel"),
 				Collections.emptySet()
 		);

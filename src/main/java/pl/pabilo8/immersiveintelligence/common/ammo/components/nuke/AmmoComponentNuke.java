@@ -5,23 +5,24 @@ import blusunrize.immersiveengineering.common.util.IEPotions;
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.SPacketChunkData;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.server.management.PlayerChunkMapEntry;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.world.ChunkWatchEvent.Watch;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentEffectShape;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentRole;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
@@ -34,13 +35,9 @@ import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.EntityAtomi
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIDamageSources;
-import pl.pabilo8.immersiveintelligence.common.util.IIExplosion;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -50,6 +47,9 @@ import java.util.stream.Collectors;
  */
 public class AmmoComponentNuke extends AmmoComponent
 {
+	private static final int BIOME_ARRAY_SIZE = 16*16;
+	private static final int FULL_CHUNK_PACKET_MASK = 65535;
+
 	public AmmoComponentNuke()
 	{
 		super("nuke", 10f, ComponentRole.TERRAIN_DENIAL, IIColor.fromPackedRGB(0x6b778a));
@@ -64,23 +64,21 @@ public class AmmoComponentNuke extends AmmoComponent
 	@Override
 	public void onEffect(World world, Vec3d pos, Vec3d dir, ComponentEffectShape shape, NBTTagCompound tag, float size, float multiplier, Entity owner)
 	{
-		//TODO: 28.05.2024 shaped charge
-		BlockPos ppos = new BlockPos(pos);
-		new IIExplosion(world, owner, pos, null, 56*multiplier, 60, ComponentEffectShape.ORB, false, true, false)
-				.doExplosion();
+		//Server-side only. Spawning the visual entity and playing the ranged sound from the server already reaches clients.
+		if(world.isRemote)
+			return;
 
-		EntityLivingBase[] entities = world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(ppos).grow(75*multiplier)).toArray(new EntityLivingBase[0]);
-		for(EntityLivingBase e : entities)
+		BlockPos centre = new BlockPos(pos);
+		for(int i = 0; i < 5; i++)
 		{
-			e.addPotionEffect(new PotionEffect(IEPotions.flashed, 40, 1));
-			e.addPotionEffect(new PotionEffect(IIPotions.nuclearHeat, 40, 0));
-			e.hurtResistantTime = 0;
-			e.getArmorInventoryList().forEach(stack -> stack.damageItem(stack.getMaxDamage(), e));
-			e.attackEntityFrom(IIDamageSources.NUCLEAR_HEAT_DAMAGE, 2000);
+			BlockPos localCentre = i==0?centre: (centre.offset(EnumFacing.getHorizontal(i), 25));
+			Explosion explosion = new Explosion(world, owner, localCentre.getX(), localCentre.getY(), localCentre.getZ(), 56*multiplier, false, true);
+			explosion.doExplosionA();
+			explosion.doExplosionB(false);
 		}
-		entities = world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(ppos).grow(50*multiplier)).toArray(new EntityLivingBase[0]);
-		for(EntityLivingBase e : entities)
-			e.addPotionEffect(new PotionEffect(IIPotions.radiation, 4000, 0));
+
+
+		applyEntityEffects(world, centre, multiplier);
 
 		IIPacketHandler.playRangedSound(world, pos, IISounds.explosionNuke, SoundCategory.NEUTRAL, 72, 1f, 0f);
 
@@ -88,60 +86,142 @@ public class AmmoComponentNuke extends AmmoComponent
 		entityAtomicBoom.setPosition(pos.x, pos.y, pos.z);
 		world.spawnEntity(entityAtomicBoom);
 
+		if(world instanceof WorldServer)
+			radiateWastelandBiomes((WorldServer)world, centre, multiplier);
+	}
 
-		final int endRad = (int)(24*multiplier);
-		final int biomeWasteland = Biome.getIdForBiome(IIContent.biomeWasteland);
+	private void applyEntityEffects(World world, BlockPos centre, float multiplier)
+	{
+		AxisAlignedBB heatBox = new AxisAlignedBB(centre).grow(75*multiplier);
+		AxisAlignedBB radiationBox = new AxisAlignedBB(centre).grow(50*multiplier);
 
-		int wastelandRadius = (int)(5*multiplier)*16; //16 blocks in chunk
+		for(EntityLivingBase entity : world.getEntitiesWithinAABB(EntityLivingBase.class, heatBox))
+		{
+			entity.addPotionEffect(new PotionEffect(IEPotions.flashed, 40, 1));
+			entity.addPotionEffect(new PotionEffect(IIPotions.nuclearHeat, 40, 0));
+			if(radiationBox.intersects(entity.getEntityBoundingBox()))
+				entity.addPotionEffect(new PotionEffect(IIPotions.radiation, 4000, 0));
 
-		List<Byte> forbiddenBiomes = Arrays.stream(IIConfig.wastelandBiomeBlacklist)
-				.map(ResourceLocation::new)
-				.map(Biome.REGISTRY::getObject)
-				.filter(Objects::nonNull)
-				.map(Biome::getIdForBiome)
-				.map(Integer::byteValue)
-				.collect(Collectors.toList());
+			entity.hurtResistantTime = 0;
+			for(ItemStack stack : entity.getArmorInventoryList())
+				if(!stack.isEmpty())
+					stack.damageItem(stack.getMaxDamage(), entity);
+			entity.attackEntityFrom(IIDamageSources.NUCLEAR_HEAT_DAMAGE, 2000);
+		}
+	}
 
-		ArrayList<Chunk> radiatedChunks = new ArrayList<>();
+	private void radiateWastelandBiomes(WorldServer world, BlockPos centre, float multiplier)
+	{
+		final int wastelandBiome = Biome.getIdForBiome(IIContent.biomeWasteland);
+		if(wastelandBiome < 0||wastelandBiome >= 256)
+			return;
 
-		for(int i = -wastelandRadius; i <= wastelandRadius; i++)
-			for(int j = -wastelandRadius; j <= wastelandRadius; j++)
+		final int radius = (int)(5*multiplier)*16;
+		if(radius <= 0)
+			return;
+
+		final int endRadius = (int)(24*multiplier);
+		final int fadeStart = Math.max(radius-endRadius, 0);
+		final int radiusSq = radius*radius;
+		final int fadeStartSq = fadeStart*fadeStart;
+		final byte wastelandBiomeByte = (byte)wastelandBiome;
+		final boolean[] forbiddenBiomes = getForbiddenBiomeMap();
+
+		final int minChunkX = (centre.getX()-radius)>>4;
+		final int maxChunkX = (centre.getX()+radius)>>4;
+		final int minChunkZ = (centre.getZ()-radius)>>4;
+		final int maxChunkZ = (centre.getZ()+radius)>>4;
+
+		List<Chunk> changedChunks = new ArrayList<>((maxChunkX-minChunkX+1)*(maxChunkZ-minChunkZ+1));
+
+		for(int chunkX = minChunkX; chunkX <= maxChunkX; chunkX++)
+			for(int chunkZ = minChunkZ; chunkZ <= maxChunkZ; chunkZ++)
 			{
-				float dist = MathHelper.sqrt(i*i+j*j);
-				if(dist > wastelandRadius)
+				//Do not generate/load far chunks just to repaint their biome array.
+				Chunk chunk = world.getChunkProvider().getLoadedChunk(chunkX, chunkZ);
+				if(chunk==null)
 					continue;
 
-				Chunk chunk = world.getChunkFromChunkCoords((ppos.getX()+i)>>4, (ppos.getZ()+j)>>4);
-				if(!radiatedChunks.contains(chunk))
-					radiatedChunks.add(chunk);
+				byte[] biomes = chunk.getBiomeArray();
+				if(biomes==null||biomes.length < BIOME_ARRAY_SIZE)
+					continue;
 
-				byte[] ground = chunk.getBiomeArray();
-
-				int posID = ((ppos.getZ()+j)&15)<<4|(ppos.getX()+i)&15;
-				int val = (int)Math.max(dist-(wastelandRadius-endRad), 0);
-				boolean result = !forbiddenBiomes.contains(ground[posID])&&MathHelper.getInt(Utils.RAND, 0, val/2)==0;
-
-				//bloks[i+wastelandRadius][j+wastelandRadius] = result?' ': 'o';
-				ground[posID] = result?(byte)biomeWasteland: ground[posID];
-
-				chunk.setBiomeArray(ground);
-				chunk.setModified(true);
-			}
-
-		for(Chunk radiatedChunk : radiatedChunks)
-		{
-			radiatedChunk.onTick(false);
-			Packet<?> packet = new SPacketChunkData(radiatedChunk, 65535);
-			for(EntityPlayer player : world.playerEntities)
-			{
-				if(player instanceof EntityPlayerMP)
+				boolean changed = false;
+				for(int localX = 0; localX < 16; localX++)
 				{
-					((EntityPlayerMP)player).connection.sendPacket(packet);
-					//this.playerChunkMap.getWorldServer().getEntityTracker().sendLeashedEntitiesInChunk(entityplayermp, this.chunk);
-					// chunk watch event - delayed to here as the chunk wasn't ready in addPlayer
-					MinecraftForge.EVENT_BUS.post(new Watch(radiatedChunk, ((EntityPlayerMP)player)));
+					int x = (chunkX<<4)+localX;
+					int dx = x-centre.getX();
+					int dxSq = dx*dx;
+					if(dxSq > radiusSq)
+						continue;
+
+					for(int localZ = 0; localZ < 16; localZ++)
+					{
+						int z = (chunkZ<<4)+localZ;
+						int dz = z-centre.getZ();
+						int distSq = dxSq+dz*dz;
+						if(distSq > radiusSq)
+							continue;
+
+						int index = (localZ<<4)|localX;
+						int currentBiome = biomes[index]&255;
+						if(currentBiome==wastelandBiome||forbiddenBiomes[currentBiome])
+							continue;
+
+						if(!shouldConvertBiome(distSq, fadeStart, fadeStartSq))
+							continue;
+
+						biomes[index] = wastelandBiomeByte;
+						changed = true;
+					}
+				}
+
+				if(changed)
+				{
+					chunk.setBiomeArray(biomes);
+					chunk.setModified(true);
+					changedChunks.add(chunk);
 				}
 			}
+
+		sendChangedChunkBiomes(world, changedChunks);
+	}
+
+	private boolean shouldConvertBiome(int distSq, int fadeStart, int fadeStartSq)
+	{
+		if(distSq <= fadeStartSq)
+			return true;
+
+		int fade = (int)Math.max(MathHelper.sqrt(distSq)-fadeStart, 0);
+		return Utils.RAND.nextInt((fade>>1)+1)==0;
+	}
+
+	private boolean[] getForbiddenBiomeMap()
+	{
+		boolean[] forbidden = new boolean[256];
+		for(String biomeName : IIConfig.wastelandBiomeBlacklist)
+		{
+			Biome biome = Biome.REGISTRY.getObject(new ResourceLocation(biomeName));
+			if(biome==null)
+				continue;
+
+			int id = Biome.getIdForBiome(biome);
+			if(id >= 0&&id < forbidden.length)
+				forbidden[id] = true;
+		}
+		return forbidden;
+	}
+
+	private void sendChangedChunkBiomes(WorldServer world, List<Chunk> chunks)
+	{
+		for(Chunk chunk : chunks)
+		{
+			PlayerChunkMapEntry entry = world.getPlayerChunkMap().getEntry(chunk.x, chunk.z);
+			if(entry==null)
+				continue;
+
+			Packet<?> packet = new SPacketChunkData(chunk, FULL_CHUNK_PACKET_MASK);
+			entry.sendPacket(packet);
 		}
 	}
 

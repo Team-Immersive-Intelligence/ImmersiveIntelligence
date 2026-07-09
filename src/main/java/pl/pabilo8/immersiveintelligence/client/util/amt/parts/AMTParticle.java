@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.client.util.amt.parts;
 
-import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -91,6 +90,11 @@ public class AMTParticle extends AMT
 		GlStateManager.enableBlend();
 		GlStateManager.alphaFunc(GL11.GL_GREATER, 0.003921569F);
 		GlStateManager.disableCull();
+		GlStateManager.color(1, 1, 1, 1);
+		GlStateManager.disableLighting();
+		GlStateManager.depthMask(false);
+		GlStateManager.enableDepth();
+		GlStateManager.enableTexture2D();
 
 		//Set up BufferBuilder with the particle stage
 		ParticleDrawStages drawStage = particle.getDrawStage();
@@ -99,7 +103,7 @@ public class AMTParticle extends AMT
 		//Render
 		AbstractParticle.interPos = Vec3d.ZERO;
 		particle.preRender(
-				ClientUtils.mc().getRenderPartialTicks(),
+				0,
 				ActiveRenderInfo.getRotationX(),
 				ActiveRenderInfo.getRotationXZ(),
 				ActiveRenderInfo.getRotationZ(),
@@ -107,7 +111,7 @@ public class AMTParticle extends AMT
 				ActiveRenderInfo.getRotationXY()
 		);
 		particle.render(buf,
-				ClientUtils.mc().getRenderPartialTicks(),
+				0,
 				ActiveRenderInfo.getRotationX(),
 				ActiveRenderInfo.getRotationXZ(),
 				ActiveRenderInfo.getRotationZ(),
@@ -116,6 +120,8 @@ public class AMTParticle extends AMT
 		);
 		tes.draw();
 		drawStage.clear();
+
+		GlStateManager.depthMask(true);
 	}
 
 	@Override

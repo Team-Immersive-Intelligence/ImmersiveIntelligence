@@ -3,7 +3,7 @@ package pl.pabilo8.immersiveintelligence.client.gui.block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.TextFormatting;
 import pl.pabilo8.immersiveintelligence.api.rotary.IIRotaryUtils;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTileGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBarGroup;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
@@ -20,7 +20,7 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReference;
  * @since 10.07.2019
  */
 @DecoTemplate(name = "skycart_station", category = DecoGuiCategory.PRODUCTION_TILE)
-public class GuiSkycartStation extends DecoGui<TileEntitySkyCartStation, ContainerSkycartStation>
+public class GuiSkycartStation extends DecoTileGui<TileEntitySkyCartStation, ContainerSkycartStation>
 {
 	public GuiSkycartStation(EntityPlayer player, TileEntitySkyCartStation tile)
 	{

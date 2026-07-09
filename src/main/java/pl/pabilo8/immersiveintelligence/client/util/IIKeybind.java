@@ -2,9 +2,11 @@ package pl.pabilo8.immersiveintelligence.client.util;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.entity.Entity;
 import net.minecraftforge.client.settings.IKeyConflictContext;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.common.entity.mounted_weapon.EntityMountedWeapon;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleSeat;
 
 /**
@@ -21,7 +23,8 @@ public class IIKeybind extends KeyBinding
 		@Override
 		public boolean isActive()
 		{
-			return ClientUtils.mc().player.getRidingEntity() instanceof EntityVehicleSeat;
+			Entity seat = ClientUtils.mc().player.getRidingEntity();
+			return seat instanceof EntityVehicleSeat||seat instanceof EntityMountedWeapon;
 		}
 
 		@Override

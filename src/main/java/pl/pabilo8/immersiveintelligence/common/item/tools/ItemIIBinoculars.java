@@ -17,11 +17,9 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -35,8 +33,10 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedZoomTool;
+import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedZoom;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
+import pl.pabilo8.immersiveintelligence.common.IIPotions;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.towable.gun.EntityFieldHowitzer;
 import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIIBinoculars.Binoculars;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -59,7 +59,7 @@ import java.util.UUID;
  * @since 15.09.2019
  */
 @IIItemProperties(category = IICategory.TOOLS)
-public class ItemIIBinoculars extends ItemIISubItemsBase<Binoculars> implements IAdvancedZoomTool, IIEEnergyItem, IIIItemTextureOverride
+public class ItemIIBinoculars extends ItemIISubItemsBase<Binoculars> implements IAdvancedZoom, IIEEnergyItem, IIIItemTextureOverride
 {
 	private static final ResourceLocation OVERLAY_TEXTURE = new ResourceLocation(ImmersiveIntelligence.MODID, "textures/gui/item/binoculars.png");
 	public static UUID visionUUID = Utils.generateNewUUID();
@@ -88,18 +88,18 @@ public class ItemIIBinoculars extends ItemIISubItemsBase<Binoculars> implements 
 	}
 
 	@Override
-	public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected)
+	public void onUpdate(ItemStack stack, World worldIn, Entity entity, int itemSlot, boolean isSelected)
 	{
-		super.onUpdate(stack, worldIn, entityIn, itemSlot, isSelected);
+		super.onUpdate(stack, worldIn, entity, itemSlot, isSelected);
 
 		boolean do_tick = worldIn.getTotalWorldTime()%20==0;
 
 		if(worldIn.isRemote)
-			ItemNBTHelper.setBoolean(stack, "sneaking", entityIn.isSneaking()&&isSelected);
+			ItemNBTHelper.setBoolean(stack, "sneaking", entity.isSneaking()&&isSelected);
 
-		if(!worldIn.isRemote&&entityIn instanceof EntityLivingBase)
+		if(!worldIn.isRemote&&entity instanceof EntityLivingBase)
 		{
-			if(!isSelected||!(entityIn.isSneaking()||entityIn.getLowestRidingEntity() instanceof EntityFieldHowitzer)&&do_tick)
+			if(!isSelected||!(entity.isSneaking()||entity.getLowestRidingEntity() instanceof EntityFieldHowitzer)&&do_tick)
 			{
 				if(isAdvanced(stack))
 				{
@@ -107,24 +107,21 @@ public class ItemIIBinoculars extends ItemIISubItemsBase<Binoculars> implements 
 					if(ItemNBTHelper.getBoolean(stack, "wasUsed"))
 					{
 						ItemNBTHelper.setBoolean(stack, "wasUsed", false);
-						((EntityLivingBase)entityIn).removePotionEffect(MobEffects.NIGHT_VISION);
+						((EntityLivingBase)entity).removePotionEffect(IIPotions.infraredVision);
 					}
 				}
 			}
 			else
 			{
-				if(entityIn instanceof EntityPlayerMP&&worldIn.getTotalWorldTime()%5==0&&(entityIn.isSneaking()||entityIn.getLowestRidingEntity() instanceof EntityFieldHowitzer))
+				if(entity instanceof EntityPlayerMP&&worldIn.getTotalWorldTime()%5==0&&(entity.isSneaking()||entity.getLowestRidingEntity() instanceof EntityFieldHowitzer))
 				{
-					float yaw = (360+((EntityLivingBase)entityIn).rotationYawHead)%360;
-					IIPacketHandler.sendChatTranslation(((EntityPlayerMP)entityIn), IIReference.INFO_KEY+"yaw", yaw);
+					float yaw = (360+((EntityLivingBase)entity).rotationYawHead)%360;
+					IIPacketHandler.sendChatTranslation(((EntityPlayerMP)entity), IIReference.INFO_KEY+"yaw", yaw);
 				}
 
 				if(do_tick&&isEnabled(stack)&&isAdvanced(stack))
 				{
-					if(worldIn.getLightBrightness(entityIn.getPosition()) <= 0.5f)
-						((EntityLivingBase)entityIn).addPotionEffect(new PotionEffect(MobEffects.NIGHT_VISION, 240, 1, true, false));
-					else
-						((EntityLivingBase)entityIn).addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 240, 1, false, false));
+					IIUtils.applyInfraredVision(entity, 25);
 					ItemNBTHelper.setBoolean(stack, "wasUsed", true);
 
 					extractEnergy(stack, Tools.advancedBinocularsEnergyUsage, false);
