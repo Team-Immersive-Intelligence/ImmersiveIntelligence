@@ -38,7 +38,7 @@ public class ItemIIAmmoArtilleryHeavy extends ItemIIAmmoBase<EntityAmmoArtillery
 	@Override
 	public float getComponentSize()
 	{
-		return 1f;
+		return 1.385f;
 	}
 
 	@Override

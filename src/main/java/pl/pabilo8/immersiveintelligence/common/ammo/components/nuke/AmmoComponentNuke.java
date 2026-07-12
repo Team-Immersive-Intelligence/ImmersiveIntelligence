@@ -11,14 +11,12 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.SPacketChunkData;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.management.PlayerChunkMapEntry;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.Biome;
@@ -35,6 +33,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.EntityAtomi
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIDamageSources;
+import pl.pabilo8.immersiveintelligence.common.util.IIExplosion;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,14 +68,8 @@ public class AmmoComponentNuke extends AmmoComponent
 			return;
 
 		BlockPos centre = new BlockPos(pos);
-		for(int i = 0; i < 5; i++)
-		{
-			BlockPos localCentre = i==0?centre: (centre.offset(EnumFacing.getHorizontal(i), 25));
-			Explosion explosion = new Explosion(world, owner, localCentre.getX(), localCentre.getY(), localCentre.getZ(), 56*multiplier, false, true);
-			explosion.doExplosionA();
-			explosion.doExplosionB(false);
-		}
-
+		new IIExplosion(world, owner, pos, null, 56*multiplier, 64, ComponentEffectShape.ORB, false, true, false)
+				.doExplosion(false);
 
 		applyEntityEffects(world, centre, multiplier);
 

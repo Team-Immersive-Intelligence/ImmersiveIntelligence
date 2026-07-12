@@ -99,9 +99,9 @@ public class TileEntityDataDebugger extends TileEntityImmersiveConnectable imple
 				if(world.isBlockIndirectlyGettingPowered(getPos()) > 0&&!toggle)
 				{
 					toggle = true;
-					DataPacket pack = new DataPacket();
-					pack.set('a', new DataTypeString("Hello World!"));
-					this.getDataNetwork().sendPacket(pack, this);
+					DataPacket packet = new DataPacket();
+					packet.set('a', new DataTypeString("Hello World!"));
+					this.getDataNetwork().sendPacket(packet, this);
 					this.world.playSound(null, pos, IISounds.debuggerBeep, SoundCategory.BLOCKS, 1.0f, 0.0f);
 				}
 				else if(world.isBlockIndirectlyGettingPowered(getPos())==0&&toggle)
@@ -146,7 +146,6 @@ public class TileEntityDataDebugger extends TileEntityImmersiveConnectable imple
 
 	private String[] compilePacketString()
 	{
-		//gets variables in format l:{Value:0}
 		return minimizeArrays(
 				lastPacket.stream()
 						.map(entry -> String.format("%s %s = %s",

@@ -2,6 +2,8 @@ package pl.pabilo8.immersiveintelligence.client.fx.utils;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
 import com.google.gson.JsonObject;
+import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -13,10 +15,12 @@ import net.minecraftforge.fml.common.toposort.TopologicalSort;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.ammo.PenetrationRegistry;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentEffectShape;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.fx.factories.ParticleFactory;
 import pl.pabilo8.immersiveintelligence.client.fx.particles.AbstractParticle;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Graphics;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.util.*;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
@@ -46,6 +50,7 @@ public class ParticleRegistry
 	//--- Static ---//
 
 	private static final Pattern PROGRAM_PATTERN = Pattern.compile("([a-zA-Z_][a-zA-Z0-9_]*)(\\(([^)]*)\\))?");
+
 
 	/**
 	 * Stores particle factories
@@ -305,14 +310,40 @@ public class ParticleRegistry
 		return new ArrayList<>(FACTORIES_REGISTRY.keySet());
 	}
 
-	//--- Old Methods ---//
+	//--- Pre-made Particle Creation Methods ---//
 
-	public static void spawnExplosionBoomFX(World world, Vec3d pos, Vec3d dir, IIExplosion explosion)
+	/**
+	 * Spawns the client-side explosion effect.
+	 */
+	public static void spawnExplosionBoomFX(World world, Vec3d pos, Vec3d dir,
+	                                        float radius, float power, ComponentEffectShape shape,
+	                                        List<BlockPos> affectedSurface)
 	{
 		float playerDistance = (float)ClientUtils.mc().player.getDistance(pos.x, pos.y, pos.z);
-		float size = (float)Math.min(explosion.getSize(), explosion.getPower()+1);
-		float logSize = 1f+MathHelper.log2((int)(size));
-		boolean detailed = playerDistance < 64;
+		float effectExtent = Math.max(1f, Math.min(radius, power+1f));
+		float logSize = 1f+MathHelper.log2(Math.max(1, (int)effectExtent));
+		boolean nearby = playerDistance < 64f;
+
+		ParticleDetail particleDetail = IIParticleUtils.getParticleDetailLevel(Graphics.explosionParticlesDetail);
+		ParticleDetail debrisDetail = IIParticleUtils.getParticleDetailLevel(Graphics.explosionDebrisDetail);
+		if(!particleDetail.isEnabled()&&!debrisDetail.isEnabled())
+			return;
+
+		boolean spawnCore = particleDetail.isEnabled();
+		boolean spawnDust = nearby&&particleDetail.isMedium();
+		boolean spawnGlows = particleDetail.isEnabled();
+		boolean spawnDebris = debrisDetail.isEnabled();
+		boolean spawnDebrisTrails = debrisDetail.isMedium();
+		boolean spawnRichDebris = nearby&&debrisDetail.isHigh();
+		boolean adaptiveSurface = radius > 8f;
+		boolean adaptiveDebris = radius > 12f&&power > 12f;
+
+		float particleBudgetScale = IIParticleUtils.getParticleBudgetScale(
+				particleDetail, playerDistance, 64f, 128f);
+		float debrisBudgetScale = IIParticleUtils.getParticleBudgetScale(
+				debrisDetail, playerDistance, 64f, 128f);
+
+		Vec3d explosionDirection = dir;
 
 		//If the direction is zero, set it to up (usual direction for explosions)
 		if(dir.equals(Vec3d.ZERO))
@@ -323,78 +354,174 @@ public class ParticleRegistry
 		dir = IIParticleUtils.normalizeExplosionDirection(dir);
 		Vector2f facing = IIParticleUtils.toVector2f(dir);
 
-		//Spawn a shockwave
-		spawnParticle("explosion/shockwave", pos.add(dir), Vec3d.ZERO, facing)
-				.withProperty(ParticleProperties.SIZE, size*0.6f)
-				.withProperty(ParticleProperties.MAX_LIFETIME, (int)(4*logSize)+1);
-		scheduleSpawnParticle("explosion/glow", pos.add(dir), Vec3d.ZERO, new Vector2f(0, 0), 1)
-				.withProperty(ParticleProperties.SIZE, size);
-
-		spawnParticle("explosion/main", pos.add(dir.scale(size/2f)), Vec3d.ZERO, facing)
-				.withProperty(ParticleProperties.SIZE, size*0.75f)
-				.withProperty(ParticleProperties.MAX_LIFETIME, (int)(4*logSize)+3);
-
-		Set<BlockPos> topBlocks = IIExplosion.getTopBlocks(explosion.generateAffectedBlockPositions(), EnumFacing.getFacingFromVector((float)dir.x, (float)dir.y, (float)dir.z));
-
-		for(BlockPos destroyed : topBlocks)
+		if(spawnCore)
 		{
-			//Calculate distance factor
-			double distance = pos.distanceTo(new Vec3d(destroyed).addVector(0.5, 0, 0.5));
+			spawnParticle("explosion/shockwave", pos.add(dir), Vec3d.ZERO, facing)
+					.withProperty(ParticleProperties.SIZE, effectExtent*0.6f)
+					.withProperty(ParticleProperties.MAX_LIFETIME, (int)(4*logSize)+1);
+			scheduleSpawnParticle("explosion/glow", pos.add(dir), Vec3d.ZERO, new Vector2f(0, 0), 1)
+					.withProperty(ParticleProperties.SIZE, effectExtent);
 
-			if(detailed)
-				scheduleSpawnParticle("smoke/dust_cloud", new Vec3d(destroyed).addVector(0.5, 0, 0.5),
-						Vec3d.ZERO, new Vector2f(0, 0), 10)
-						.withProperty(ParticleProperties.SIZE, 1.25f);
-			spawnParticle("explosion/glow_individual", new Vec3d(destroyed).addVector(0.5, 0, 0.5),
-					Vec3d.ZERO, new Vector2f(0, 0));
+			spawnParticle("explosion/main", pos.add(dir.scale(effectExtent/2f)), Vec3d.ZERO, facing)
+					.withProperty(ParticleProperties.SIZE, effectExtent*0.75f)
+					.withProperty(ParticleProperties.MAX_LIFETIME, (int)(4*logSize)+3);
+		}
 
-			String debrisParticle = PenetrationRegistry.getPenetrationHandler(world.getBlockState(destroyed))
-					.getDebrisParticle();
-			if(debrisParticle!=null)
+		List<BlockPos> effectBlocks;
+		if(adaptiveSurface)
+		{
+			if(affectedSurface==null||affectedSurface.isEmpty())
+				return;
+			effectBlocks = new ArrayList<>(affectedSurface);
+		}
+		else
+			effectBlocks = getExactExplosionSurface(world, pos, explosionDirection, radius, power, shape, dir);
+
+		if(effectBlocks.isEmpty())
+			return;
+
+		float affectedExtent = getAffectedSurfaceExtent(pos, effectBlocks);
+		float dustSize = adaptiveSurface?
+				MathHelper.clamp(1.15f+0.35f*(float)Math.sqrt(Math.max(1f, affectedExtent/8f)), 1.25f, 2.75f):
+				1.25f;
+		float debrisSize = adaptiveDebris?
+				MathHelper.clamp(1f+MathHelper.log2(Math.max(1, (int)(affectedExtent/12f)))*0.15f, 1f, 1.8f):
+				1f;
+
+		int dustBudget = spawnDust?
+				(adaptiveSurface?
+						IIParticleUtils.calculateAdaptiveParticleBudget(
+								affectedExtent, 1f, 48f, 5.5f, 1f,
+								particleBudgetScale, 16, 256):
+						effectBlocks.size()):
+				0;
+		int glowBudget = spawnGlows?
+				(adaptiveSurface?
+						MathHelper.clamp(Math.round(72f*particleBudgetScale), 1, 72):
+						effectBlocks.size()):
+				0;
+		int debrisBudget = spawnDebris?
+				(adaptiveDebris?
+						IIParticleUtils.calculateAdaptiveParticleBudget(
+								affectedExtent, 12f, 14f, 16f, 0.5f,
+								debrisBudgetScale, 8, 128):
+						effectBlocks.size()):
+				0;
+
+		List<BlockPos> dustBlocks = IIParticleUtils.selectEvenlyDistributed(effectBlocks, dustBudget);
+		List<BlockPos> glowBlocks = IIParticleUtils.selectEvenlyDistributed(effectBlocks, glowBudget);
+		List<BlockPos> debrisBlocks = IIParticleUtils.selectEvenlyDistributed(effectBlocks, debrisBudget);
+
+		for(BlockPos destroyed : dustBlocks)
+		{
+			IBlockState state = world.getBlockState(destroyed);
+			if(state.getMaterial()==Material.AIR)
+				continue;
+
+			Vec3d destroyedCenter = new Vec3d(destroyed).addVector(0.5, 0.5, 0.5);
+			scheduleSpawnParticle("smoke/dust_cloud", destroyedCenter,
+					Vec3d.ZERO, new Vector2f(0, 0), 10)
+					.withProperty(ParticleProperties.SIZE, dustSize)
+					.withProperty(ParticleProperties.MAX_LIFETIME, (int)(4*logSize)+8);
+		}
+
+		for(BlockPos destroyed : glowBlocks)
+		{
+			IBlockState state = world.getBlockState(destroyed);
+			if(state.getMaterial()!=Material.AIR)
+				spawnParticle("explosion/glow_individual",
+						new Vec3d(destroyed).addVector(0.5, 0.5, 0.5),
+						Vec3d.ZERO, new Vector2f(0, 0));
+		}
+
+		int debrisIndex = 0;
+		for(BlockPos destroyed : debrisBlocks)
+		{
+			IBlockState state = world.getBlockState(destroyed);
+			if(state.getMaterial()==Material.AIR)
+				continue;
+
+			String debrisParticle = PenetrationRegistry.getPenetrationHandler(state).getDebrisParticle();
+			if(debrisParticle==null)
+				continue;
+
+			Vec3d destroyedCenter = new Vec3d(destroyed).addVector(0.5, 0.5, 0.5);
+			double distance = pos.distanceTo(destroyedCenter);
+			double factor = MathHelper.clamp(
+					distance/Math.max(1f, affectedExtent)+(IIParticleUtils.randFloat.get()*0.01), 0, 1);
+			Vec3d offCenterDirection = destroyedCenter.subtract(pos).normalize();
+			Vec3d debrisMotion = dir.scale(1-factor).add(offCenterDirection.scale(factor))
+					.scale(1.05f*Math.max(1f, power/6f));
+			Vector2f debrisFacing = IIParticleUtils.toVector2f(debrisMotion);
+			ResourceLocation sideTexture = ClientUtils.getSideTexture(state, EnumFacing.WEST);
+
+			scheduleSpawnParticle(debrisParticle, new Vec3d(destroyed),
+					debrisMotion, new Vector2f(IIParticleUtils.randFloat.get()*4, IIParticleUtils.randFloat.get()*4), 3)
+					.withProperty(ParticleProperties.SIZE, debrisSize)
+					.withProperty(ParticleProperties.TEXTURES, new ResourceLocation[]{sideTexture});
+
+			if(spawnDebrisTrails&&(!adaptiveDebris||debrisIndex%2==0))
+				scheduleSpawnParticle("smoke/smoke_trace", destroyedCenter,
+						Vec3d.ZERO, debrisFacing, 1)
+						.withProperty(ParticleProperties.SIZE, logSize*(adaptiveDebris?0.5f: 0.4f))
+						.withProperty(ParticleProperties.MAX_LIFETIME, (int)(4*logSize)+(adaptiveDebris?8: 1));
+
+			if(!adaptiveDebris&&spawnRichDebris)
 			{
-				double factor = MathHelper.clamp(distance/size+(IIParticleUtils.randFloat.get()*0.01), 0, 1);
-				//Calculate direction vector
-				Vec3d offCenterDirection = new Vec3d(destroyed).addVector(0.5, 0, 0.5)
-						.subtract(pos).normalize();
-				Vec3d debrisMotion = dir.scale(1-factor).add(offCenterDirection.scale(factor))
-						.scale(1.05f*Math.max(1f, explosion.getPower()/6f));
-
-				//Spawn the debris particle
-				scheduleSpawnParticle(debrisParticle, new Vec3d(destroyed).addVector(0, 0f, 0),
-						debrisMotion, new Vector2f(IIParticleUtils.randFloat.get()*4, IIParticleUtils.randFloat.get()*4), 3)
-						.withProperty(ParticleProperties.TEXTURES, new ResourceLocation[]{
-								ClientUtils.getSideTexture(world.getBlockState(destroyed), EnumFacing.WEST)
-						});
-
-				//Spawn a smoke trace in the same direction
-				scheduleSpawnParticle("smoke/smoke_trace", new Vec3d(destroyed).addVector(0.5, 0, 0.5),
-						Vec3d.ZERO, IIParticleUtils.toVector2f(debrisMotion), 1)
-						.withProperty(ParticleProperties.SIZE, logSize*0.4f)
-						.withProperty(ParticleProperties.MAX_LIFETIME, (int)(4*(logSize))+1);
-
-				//Spawn a smoke trace
-				scheduleSpawnParticle("smoke/smoke_trace", new Vec3d(destroyed).addVector(0.5, 0, 0.5),
-						Vec3d.ZERO, IIParticleUtils.toVector2f(debrisMotion), 1)
+				scheduleSpawnParticle("smoke/smoke_trace", destroyedCenter,
+						Vec3d.ZERO, debrisFacing, 1)
 						.withProperty(ParticleProperties.COLOR, IIColor.fromPackedRGB(0x3f3f3f))
 						.withProperty(ParticleProperties.SIZE, logSize*0.4f)
-						.withProperty(ParticleProperties.MAX_LIFETIME, (int)(4*(logSize))+20);
+						.withProperty(ParticleProperties.MAX_LIFETIME, (int)(4*logSize)+20);
 
-				//Spawn additional debris particles for large explosions
-				if(detailed)
-					for(int i = 0; i < 2; i++)
-					{
-						factor *= IIParticleUtils.randFloat.get()*2f;
-						debrisMotion = dir.scale(1-factor).add(offCenterDirection.scale(factor))
-								.scale(1.05f*Math.max(1f, explosion.getPower()/6f));
-						scheduleSpawnParticle(debrisParticle, new Vec3d(destroyed).addVector(0, 0f, 0),
-								debrisMotion, new Vector2f(IIParticleUtils.randFloat.get()*4, IIParticleUtils.randFloat.get()*4), 3*i)
-								.withProperty(ParticleProperties.TEXTURES, new ResourceLocation[]{
-										ClientUtils.getSideTexture(world.getBlockState(destroyed), EnumFacing.DOWN)
-								});
-					}
-
+				for(int i = 0; i < 2; i++)
+				{
+					double extraFactor = MathHelper.clamp(
+							factor*IIParticleUtils.randFloat.get()*2f, 0, 1);
+					Vec3d extraMotion = dir.scale(1-extraFactor)
+							.add(offCenterDirection.scale(extraFactor))
+							.scale(1.05f*Math.max(1f, power/6f));
+					scheduleSpawnParticle(debrisParticle, new Vec3d(destroyed),
+							extraMotion,
+							new Vector2f(IIParticleUtils.randFloat.get()*4, IIParticleUtils.randFloat.get()*4),
+							3*i)
+							.withProperty(ParticleProperties.TEXTURES, new ResourceLocation[]{
+									ClientUtils.getSideTexture(state, EnumFacing.DOWN)
+							});
+				}
 			}
+			debrisIndex++;
 		}
+	}
+
+	private static List<BlockPos> getExactExplosionSurface(World world, Vec3d pos, Vec3d explosionDirection,
+	                                                       float radius, float power, ComponentEffectShape shape,
+	                                                       Vec3d visualDirection)
+	{
+		IIExplosion explosion = new IIExplosion(world, null, pos, explosionDirection,
+				radius, power, shape, false, true, false);
+		Set<BlockPos> topBlocks = IIExplosion.getTopBlocks(
+				explosion.generateAffectedBlockPositions(),
+				EnumFacing.getFacingFromVector(
+						(float)visualDirection.x,
+						(float)visualDirection.y,
+						(float)visualDirection.z
+				)
+		);
+		return new ArrayList<>(topBlocks);
+	}
+
+	private static float getAffectedSurfaceExtent(Vec3d center, List<BlockPos> blocks)
+	{
+		double maxDistanceSq = 1.0;
+		for(BlockPos block : blocks)
+		{
+			double x = block.getX()+0.5-center.x;
+			double y = block.getY()+0.5-center.y;
+			double z = block.getZ()+0.5-center.z;
+			maxDistanceSq = Math.max(maxDistanceSq, x*x+y*y+z*z);
+		}
+		return (float)Math.sqrt(maxDistanceSq);
 	}
 
 	public static void spawnGasCloud(Vec3d pos, float size, Fluid fluid)

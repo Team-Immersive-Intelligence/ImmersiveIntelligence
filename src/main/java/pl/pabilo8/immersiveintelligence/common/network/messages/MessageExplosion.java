@@ -4,6 +4,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.network.NetHandlerPlayServer;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -15,7 +16,10 @@ import pl.pabilo8.immersiveintelligence.client.ClientEventHandler;
 import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleRegistry;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Graphics;
 import pl.pabilo8.immersiveintelligence.common.network.IIMessage;
-import pl.pabilo8.immersiveintelligence.common.util.IIExplosion;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class MessageExplosion extends IIMessage implements IPositionBoundMessage
 {
@@ -24,8 +28,15 @@ public class MessageExplosion extends IIMessage implements IPositionBoundMessage
 	private float radius, strength;
 	private Vec3d pos, direction;
 	private ComponentEffectShape shape;
+	private List<BlockPos> particleBlocks = Collections.emptyList();
 
 	public MessageExplosion(World world, boolean flaming, boolean damagesTerrain, float radius, float strength, Vec3d pos, Vec3d direction, ComponentEffectShape shape)
+	{
+		this(world, flaming, damagesTerrain, radius, strength, pos, direction, shape, Collections.emptyList());
+	}
+
+	public MessageExplosion(World world, boolean flaming, boolean damagesTerrain, float radius, float strength,
+	                        Vec3d pos, Vec3d direction, ComponentEffectShape shape, List<BlockPos> particleBlocks)
 	{
 		this.world = world;
 		this.flaming = flaming;
@@ -35,6 +46,7 @@ public class MessageExplosion extends IIMessage implements IPositionBoundMessage
 		this.pos = pos;
 		this.direction = direction;
 		this.shape = shape;
+		this.particleBlocks = particleBlocks==null?Collections.emptyList(): particleBlocks;
 	}
 
 	public MessageExplosion()
@@ -52,8 +64,7 @@ public class MessageExplosion extends IIMessage implements IPositionBoundMessage
 	protected void onClientReceive(WorldClient world, NetHandlerPlayClient handler)
 	{
 		ClientEventHandler.addScreenshakeSource(pos, MathHelper.clamp(strength/4f, 0.25f, 3f), 4, 2);
-		ParticleRegistry.spawnExplosionBoomFX(world, pos, direction,
-				new IIExplosion(world, null, pos, direction, radius, strength, shape, flaming, damagesTerrain, false));
+		ParticleRegistry.spawnExplosionBoomFX(world, pos, direction, radius, strength, shape, particleBlocks);
 	}
 
 	@Override
@@ -69,6 +80,14 @@ public class MessageExplosion extends IIMessage implements IPositionBoundMessage
 		this.direction = readVec3(buf);
 
 		this.shape = readEnum(buf, ComponentEffectShape.class);
+
+		if(buf.readableBytes() >= 2)
+		{
+			int particleBlockCount = buf.readUnsignedShort();
+			this.particleBlocks = new ArrayList<>(particleBlockCount);
+			for(int i = 0; i < particleBlockCount&&buf.readableBytes() >= 8; i++)
+				this.particleBlocks.add(BlockPos.fromLong(buf.readLong()));
+		}
 	}
 
 	@Override
@@ -84,6 +103,11 @@ public class MessageExplosion extends IIMessage implements IPositionBoundMessage
 		writeVec3(buf, direction);
 
 		writeEnum(buf, shape);
+
+		int particleBlockCount = Math.min(0xFFFF, particleBlocks.size());
+		buf.writeShort(particleBlockCount);
+		for(int i = 0; i < particleBlockCount; i++)
+			buf.writeLong(particleBlocks.get(i).toLong());
 	}
 
 	@Override

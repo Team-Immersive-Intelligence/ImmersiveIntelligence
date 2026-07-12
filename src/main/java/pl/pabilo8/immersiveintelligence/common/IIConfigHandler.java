@@ -12,6 +12,8 @@ import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleDetail;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIItemRendererAMT.HandDisplayMode;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.RadioStation;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Sawmill;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
@@ -191,38 +193,43 @@ public class IIConfigHandler
 					"0 - disabled",
 					"1 - first person only",
 					"2 - 1st and 3rd person (may be incompatible with mods modifying the player model)"})
-			@RangeInt(min = 0, max = 2)
-			public static int AMTHandDisplayMode = 1;
+			public static HandDisplayMode modelHandDisplay = HandDisplayMode.FIRST_PERSON_ONLY;
 
 			@RequiresMcRestart
 			@Comment({"Max amount of block penetrations that will be rendered. 0 will disable rendering."})
+			@RangeInt(min = 0, max = 65345)
 			public static int maxPenetratedBlocks = 64;
 
 			@Comment({"Furthest distance II explosion effects should be visible at."})
+			@RangeInt(min = 1, max = 65345)
 			public static int explosionMessageDistance = 256;
 
-			@RangeInt(min = 0)
+			@RangeInt(min = 0, max = 65345)
 			@Comment({"Max amount of particles that can exist within the particle system."})
 			public static int maxAllowedParticles = 20000;
 
-			@RangeInt(min = 0)
+			@RangeInt(min = 0, max = 65345)
 			@Comment({"Max amount of particles that will be simulated."})
 			public static int maxSimulatedParticles = 6000;
 
-			@RangeInt(min = 0)
+			@RangeInt(min = 0, max = 65345)
 			@Comment({"Max amount of particles that will be drawn. Should be less or equal to maxSimulatedParticles."})
 			public static int maxDrawnParticles = 1000;
 
-			@Comment({"Determines how look of II explosion particles",
-					"0 - vanilla",
-					"1 - vanilla enhanced with block particles",
-					"2 - overhauled",
-					"3 - overhauled + debris"
-			})
-			@RangeInt(min = 0, max = 3)
-			public static int explosionParticlesStyle = 3;
+			@Comment({"Determines the look of II explosion particles",
+					"The final value will be this or the Particles option from Video Settings, whichever is lower."})
+			public static ParticleDetail explosionParticlesDetail = ParticleDetail.DETAILED;
+
+			@Comment({"Determines the look of II explosion particles",
+					"The final value will be this or the Particles option from Video Settings, whichever is lower."})
+			public static ParticleDetail explosionDebrisDetail = ParticleDetail.DETAILED;
+
+			@Comment({"Determines the look of II nuclear explosion particles",
+					"The final value will be this or the Particles option from Video Settings, whichever is lower."})
+			public static ParticleDetail nukeParticlesDetail = ParticleDetail.DETAILED;
 
 			@RangeInt(min = 8, max = 256)
+			@SlidingOption
 			public static int dynamiclyColoredTextureVariants = 64;
 		}
 

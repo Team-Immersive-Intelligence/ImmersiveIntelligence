@@ -1,13 +1,18 @@
 package pl.pabilo8.immersiveintelligence.client.fx.utils;
 
+import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
 
 import javax.vecmath.Vector2f;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.function.Supplier;
 
 /**
@@ -178,5 +183,118 @@ public class IIParticleUtils
 		{
 			return new Vector2f(0, 0);
 		}
+	}
+
+	/**
+	 * @param settingValue setting value specific to a particle effect
+	 * @return the lower detail level selected by either the effect setting or the global Video Settings option
+	 */
+	public static ParticleDetail getParticleDetailLevel(ParticleDetail settingValue)
+	{
+		int globalSetting = MathHelper.clamp(
+				ClientUtils.mc().gameSettings.particleSetting,
+				0, ParticleDetail.values().length-1
+		);
+		return ParticleDetail.values()[Math.max(settingValue.ordinal(), globalSetting)];
+	}
+
+	/**
+	 * @return particle detail level from the global Video Settings option
+	 */
+	public static ParticleDetail getParticleDetailLevel()
+	{
+		int globalSetting = MathHelper.clamp(
+				ClientUtils.mc().gameSettings.particleSetting,
+				0, ParticleDetail.values().length-1
+		);
+		return ParticleDetail.values()[globalSetting];
+	}
+
+	/**
+	 * Calculates a reusable particle budget multiplier from effect detail and viewer distance.
+	 * The returned value is 1.0 at full detail and close range, then falls to 0.65 and 0.35.
+	 *
+	 * @param detail       resolved detail level for the effect
+	 * @param distance     distance between the viewer and the effect
+	 * @param nearDistance distance up to which the full budget is retained
+	 * @param farDistance  distance at which the lowest distance multiplier begins
+	 */
+	public static float getParticleBudgetScale(ParticleDetail detail, float distance,
+	                                           float nearDistance, float farDistance)
+	{
+		if(!detail.isEnabled())
+			return 0f;
+
+		float safeNear = Math.max(0f, nearDistance);
+		float safeFar = Math.max(safeNear, farDistance);
+		float distanceScale = distance < safeNear?1f: (distance < safeFar?0.65f: 0.35f);
+
+		float detailScale;
+		switch(detail)
+		{
+			case REDUCED:
+				detailScale = 0.65f;
+				break;
+			case MINIMAL:
+				detailScale = 0.35f;
+				break;
+			case DISABLED:
+				return 0f;
+			default:
+			case DETAILED:
+				detailScale = 1f;
+		}
+
+		return distanceScale*detailScale;
+	}
+
+	/**
+	 * Calculates a bounded adaptive particle budget. The magnitude is normalised against a reference
+	 * value, raised to the requested growth exponent, and then scaled by the resolved detail budget.
+	 *
+	 * @param magnitude          measured size or extent of the effect
+	 * @param referenceMagnitude magnitude corresponding to a normalised value of 1
+	 * @param baseBudget         fixed part of the budget
+	 * @param growthBudget       amount added by the normalised growth term
+	 * @param growthExponent     1 for linear growth, 0.5 for square-root growth, etc.
+	 * @param budgetScale        multiplier returned by {@link #getParticleBudgetScale}
+	 * @param minimum            minimum returned budget
+	 * @param maximum            maximum returned budget
+	 */
+	public static int calculateAdaptiveParticleBudget(float magnitude, float referenceMagnitude,
+	                                                  float baseBudget, float growthBudget,
+	                                                  float growthExponent, float budgetScale,
+	                                                  int minimum, int maximum)
+	{
+		if(maximum <= 0||budgetScale <= 0f)
+			return 0;
+
+		int safeMinimum = MathHelper.clamp(minimum, 0, maximum);
+		float reference = Math.max(0.0001f, referenceMagnitude);
+		float normalisedMagnitude = Math.max(1f, magnitude/reference);
+		float growth = (float)Math.pow(normalisedMagnitude, growthExponent);
+		int budget = Math.round((baseBudget+growthBudget*growth)*budgetScale);
+		return MathHelper.clamp(budget, safeMinimum, maximum);
+	}
+
+	/**
+	 * Selects a fixed number of elements at regular intervals while preserving source order.
+	 * This is useful for representative particle, sound, decal, or animation samples.
+	 */
+	public static <T> List<T> selectEvenlyDistributed(List<T> elements, int amount)
+	{
+		if(elements==null||elements.isEmpty()||amount <= 0)
+			return Collections.emptyList();
+		if(elements.size() <= amount)
+			return new ArrayList<>(elements);
+
+		List<T> selected = new ArrayList<>(amount);
+		float stride = elements.size()/(float)amount;
+		for(int i = 0; i < amount; i++)
+			selected.add(elements.get(Math.min(
+					elements.size()-1,
+					MathHelper.floor((i+0.5f)*stride)
+			)));
+		return selected;
 	}
 }

@@ -17,6 +17,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.obj.OBJModel;
+import net.minecraftforge.common.config.Config.Comment;
 import pl.pabilo8.immersiveintelligence.client.model.IIModelRegistry;
 import pl.pabilo8.immersiveintelligence.client.model.item.ModelDualPerspective;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
@@ -180,7 +181,7 @@ public abstract class IIItemRendererAMT<I extends Item> extends TileEntityItemSt
 				return true;
 			case THIRD_PERSON_RIGHT_HAND:
 			case THIRD_PERSON_LEFT_HAND:
-				return Graphics.AMTHandDisplayMode==2;
+				return Graphics.modelHandDisplay==HandDisplayMode.FIRST_AND_THIRD_PERSON;
 			default:
 				return false;
 		}
@@ -206,5 +207,15 @@ public abstract class IIItemRendererAMT<I extends Item> extends TileEntityItemSt
 	public @interface RegisteredItemRenderer
 	{
 		String name();
+	}
+
+	public enum HandDisplayMode
+	{
+		@Comment(value = "Hands will not be rendered with the item")
+		DISABLED,
+		@Comment(value = "Hands will be rendered only in first person")
+		FIRST_PERSON_ONLY,
+		@Comment(value = "Hands will be rendered in first and third person")
+		FIRST_AND_THIRD_PERSON
 	}
 }
