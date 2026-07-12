@@ -620,6 +620,8 @@ item.immersiveintelligence.naval_mine.bullet.name=Naval Mine
 item.immersiveintelligence.naval_mine.core.name=Naval Mine Core
 item.immersiveintelligence.ammo_casing.naval_mine.name=Naval Mine Casing
 
+item.immersiveintelligence.placeholder_icon.name=Placeholder
+
 tile.immersiveintelligence.stone_decoration.sandbags.name=Sandbags
 
 tile.immersiveintelligence.metal_device.metal_crate.name=Metal Crate
@@ -2741,6 +2743,17 @@ advancement.immersiveintelligence.root.desc=RTFM?
 advancement.immersiveintelligence.connect_belt=Powerful Conveying
 advancement.immersiveintelligence.connect_belt.desc=Link two mechanical wheels with a belt coil
 
+#Reference to Wallace Hammering meme
+advancement.immersiveintelligence.craft_electric_hammer=Wallace, NO-
+advancement.immersiveintelligence.craft_electric_hammer.desc=Craft an Engineer's Electric Hammer.
+
+advancement.immersiveintelligence.craft_wrench=Turning things around
+advancement.immersiveintelligence.craft_wrench.desc=Craft an Engineer's Wrench.
+
+#Reference to ROTATO FASTER BANANA
+advancement.immersiveintelligence.craft_electric_wrench=We have reached maximum velocity
+advancement.immersiveintelligence.craft_electric_wrench.desc=Craft an Engineer's Electric Wrench.
+
 advancement.immersiveintelligence.craft_gun_barrel_iron=A Gunsmith?
 advancement.immersiveintelligence.craft_gun_barrel_iron.desc=Craft the Iron Gun Barrel, that allows you to construct basic firearms.
 
@@ -2779,9 +2792,6 @@ advancement.immersiveintelligence.infinite_power.desc=Upgrade the Submachinegun 
 
 advancement.immersiveintelligence.the_silent_unseen=The Silent Unseen
 advancement.immersiveintelligence.the_silent_unseen.desc=Upgrade the Submachinegun with a Folding Stock and Suppressor
-
-advancement.immersiveintelligence.craft_cpds=The cost of firing for 12 seconds
-advancement.immersiveintelligence.craft_cpds.desc=Craft the CPDS magazine
 
 #Reference to Tiger 1 tank memes
 advancement.immersiveintelligence.craft_steel_belt=Hans, ze Transmission Works!
@@ -2914,9 +2924,61 @@ advancement.immersiveintelligence.secret_sorry_for_ceiling.desc=Experience a how
 advancement.immersiveintelligence.emplacement=The Little Turret is also good...
 advancement.immersiveintelligence.emplacement.desc=Construct the Emplacement, a defensive structure that can be equipped with heavy weaponry.
 
+advancement.immersiveintelligence.emplacement_machinegun=Death, Fully Automated
+advancement.immersiveintelligence.emplacement_machinegun.desc=Install the Machinegun on an Emplacement.
+
+#Reference to Advance Wars: Black Hole Rising
+advancement.immersiveintelligence.emplacement_autocannon=Flak Attack
+advancement.immersiveintelligence.emplacement_autocannon.desc=Install the Autocannon on an Emplacement.
+
+#Reference to Team Fortress 2
+advancement.immersiveintelligence.emplacement_cpds=The cost of firing for 12 seconds
+advancement.immersiveintelligence.emplacement_cpds.desc=Install the CPDS on an Emplacement.
+
+#How come you don't know this mod, hm?
+advancement.immersiveintelligence.emplacement_heavy_railgun=Immersive Rail...gunning, yes
+advancement.immersiveintelligence.emplacement_heavy_railgun.desc=Install the Heavy Railgun on an Emplacement.
+
+#Reference to a song by Sabaton
+advancement.immersiveintelligence.emplacement_heavy_chemthrower=Toxic Gas and Chemical Warfare
+advancement.immersiveintelligence.emplacement_heavy_chemthrower.desc=Install the Heavy Chemthrower on an Emplacement.
+
+#Reference to an old movie "Evil Brain from Outer Space"
+advancement.immersiveintelligence.emplacement_infrared_observer=I know what lies ahead...
+advancement.immersiveintelligence.emplacement_infrared_observer.desc=Install the Infrared Observer on an Emplacement.
+
+advancement.immersiveintelligence.emplacement_light_howitzer=Bertha Jr.
+advancement.immersiveintelligence.emplacement_light_howitzer.desc=Install the Light Howitzer on an Emplacement.
+
+advancement.immersiveintelligence.emplacement_mortar=Without a Pestle
+advancement.immersiveintelligence.emplacement_mortar.desc=Install the Mortar on an Emplacement.
+
+#Reference to the folk song "Katyusha"
+advancement.immersiveintelligence.emplacement_rocket_launcher=Apple and Pear Trees Blooming
+advancement.immersiveintelligence.emplacement_rocket_launcher.desc=Install the Rocket Launcher on an Emplacement.
+
+#Reference to the game Witch's House
+advancement.immersiveintelligence.emplacement_guided_missile_launcher=A Spool of Thread
+advancement.immersiveintelligence.emplacement_guided_missile_launcher.desc=Install the Wire-Guided Missile Launcher on an Emplacement.
+
+#Reference to Company of Heroes 1
+advancement.immersiveintelligence.emplacement_searchlight=Wakes better than Coffee
+advancement.immersiveintelligence.emplacement_searchlight.desc=Install the Searchlight on an Emplacement.
+
+#Reference to Lord of The Rings
+advancement.immersiveintelligence.emplacement_spotlight_tower=Remnant of Barad-Dur
+advancement.immersiveintelligence.emplacement_spotlight_tower.desc=Install the Spotlight Tower on an Emplacement.
+
+#Reference to Command and Conquer: Red Alert 2
+advancement.immersiveintelligence.emplacement_tesla=Electrodes Primed
+advancement.immersiveintelligence.emplacement_tesla.desc=Install the Tesla Coil on an Emplacement.
+
 advancement.immersiveintelligence.flagpole=Stand for Anthem!
 advancement.immersiveintelligence.flagpole.desc=Construct the Flagpole, a decorative landmark and chunkloader.
 
+#Reference to one worker song, that almost sounded like a march
+advancement.immersiveintelligence.flagpole_unit_post=Now, Left, Two, Three!
+advancement.immersiveintelligence.flagpole_unit_post.desc=Upgrade the Flagpole to a Unit Post.
 
 #Manual Categories
 

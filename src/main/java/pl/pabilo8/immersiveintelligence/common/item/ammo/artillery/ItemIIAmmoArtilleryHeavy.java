@@ -9,6 +9,7 @@ import pl.pabilo8.immersiveintelligence.api.ammo.enums.PropellantType;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem.IIAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.client.model.builtin.IAmmoModel;
 import pl.pabilo8.immersiveintelligence.client.model.builtin.ModelAmmoProjectile;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Ammunition;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoArtilleryProjectile;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase.AmmoParts;
@@ -74,8 +75,7 @@ public class ItemIIAmmoArtilleryHeavy extends ItemIIAmmoBase<EntityAmmoArtillery
 	@Override
 	public float getVelocity()
 	{
-		return 6;
-//		return Ammunition.artilleryHowiVelocity;
+		return Ammunition.artilleryHowiVelocity;
 	}
 
 	@Override

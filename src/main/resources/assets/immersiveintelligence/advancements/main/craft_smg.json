@@ -3,6 +3,7 @@
     "icon": {
       "item": "immersiveintelligence:submachinegun"
     },
+    "frame": "goal",
     "title": {
       "translate": "advancement.immersiveintelligence.craft_smg"
     },

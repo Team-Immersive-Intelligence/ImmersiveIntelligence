@@ -142,6 +142,8 @@ public class JEIHelper implements IModPlugin
 		jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(IIContent.itemAmmoRevolver,
 				1, RevolverAmmoPart.UNUSED.ordinal()));
 
+		jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(IIContent.itemPlaceholderIcon, 1, OreDictionary.WILDCARD_VALUE));
+
 		for(IAmmoTypeItem<?, ?> bullet : AmmoRegistry.getAllAmmoItems())
 		{
 			ItemStack stack = bullet.getAmmoStack(AmmoRegistry.MISSING_CORE, CoreType.SOFTPOINT, FuseType.CONTACT);

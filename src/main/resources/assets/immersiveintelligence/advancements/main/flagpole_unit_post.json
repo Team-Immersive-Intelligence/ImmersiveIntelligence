@@ -1,0 +1,29 @@
+{
+  "display": {
+    "icon": {
+      "item": "immersiveintelligence:placeholder_icon",
+      "data": 13
+    },
+    "frame": "goal",
+    "title": {
+      "translate": "advancement.immersiveintelligence.flagpole_unit_post"
+    },
+    "description": {
+      "translate": "advancement.immersiveintelligence.flagpole_unit_post.desc"
+    }
+  },
+  "parent": "immersiveintelligence:main/flagpole",
+  "criteria": {
+    "install_upgrade": {
+      "trigger": "immersiveintelligence:upgrade_installed",
+      "conditions": {
+        "upgrade": "immersiveintelligence:flagpole/unit_post"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "install_upgrade"
+    ]
+  ]
+}

@@ -3,6 +3,7 @@
     "icon": {
       "item": "immersiveintelligence:machinegun"
     },
+    "frame": "goal",
     "title": {
       "translate": "advancement.immersiveintelligence.craft_mg"
     },
