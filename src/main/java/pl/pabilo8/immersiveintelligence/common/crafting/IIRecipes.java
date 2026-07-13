@@ -52,6 +52,8 @@ import pl.pabilo8.immersiveintelligence.api.upgrade.Upgrade;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.PrintingPress;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Sawmill;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Overrides;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Overrides.Railgun;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDevice.IIBlockTypes_MetalDevice;
 import pl.pabilo8.immersiveintelligence.common.block.mines.BlockIIMine.IIBlockTypes_Mine;
@@ -127,12 +129,12 @@ public class IIRecipes
 		);
 
 		//--- Replace Recipes ---//
-		replaceRecipe(recipeRegistry, IIConfig.changeRevolverProduction, "material/gunpart_drum");
-		replaceRecipe(recipeRegistry, IIConfig.changeRevolverProduction, "material/gunpart_hammer");
-		replaceRecipe(recipeRegistry, IIConfig.changeRevolverProduction, "toolupgrades/railgun_scope", "materials/gunparts/precision_scope");
-		replaceRecipe(recipeRegistry, IIConfig.changeRevolverProduction, "tool/revolver");
-		replaceRecipe(recipeRegistry, IIConfig.changeRailgunProduction, "tool/railgun");
-		replaceRecipe(recipeRegistry, IIConfig.changeChemthrowerProduction, "tool/chemthrower");
+		replaceRecipe(recipeRegistry, Overrides.changeRevolverProduction, "material/gunpart_drum");
+		replaceRecipe(recipeRegistry, Overrides.changeRevolverProduction, "material/gunpart_hammer");
+		replaceRecipe(recipeRegistry, Overrides.changeRevolverProduction, "toolupgrades/railgun_scope", "materials/gunparts/precision_scope");
+		replaceRecipe(recipeRegistry, Overrides.changeRevolverProduction, "tool/revolver");
+		replaceRecipe(recipeRegistry, Railgun.changeRailgunProduction, "tool/railgun");
+		replaceRecipe(recipeRegistry, Overrides.changeChemthrowerProduction, "tool/chemthrower");
 
 		//--- Add Recipes ---//
 		addMinecartRecipes(recipeRegistry);
@@ -398,7 +400,7 @@ public class IIRecipes
 	{
 		//Allow me to introduce you to Immersive Gregineering™
 
-		if(IIConfig.changeCircuitProduction)
+		if(Overrides.changeCircuitProduction)
 		{
 			BlueprintCraftingRecipe.recipeList.get("components").removeIf(blueprintCraftingRecipe -> blueprintCraftingRecipe.output.isItemEqual(BASIC_CIRCUIT));
 
@@ -725,7 +727,7 @@ public class IIRecipes
 	public static void addHandWeaponRecipes(IForgeRegistry<IRecipe> recipeRegistry)
 	{
 		//IE Revolver Tweaks
-		if(IIConfig.changeRevolverProduction)
+		if(Overrides.changeRevolverProduction)
 		{
 			//TODO: 15.10.2023 change revolver to use iron instead of steel
 		}

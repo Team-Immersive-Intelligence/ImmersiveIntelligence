@@ -22,7 +22,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import org.apache.commons.lang3.tuple.Triple;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoFactory;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.Railgun;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Overrides;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoRailgunGrenade;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
@@ -80,7 +80,7 @@ public class ItemIIRailgunOverride extends ItemRailgun
 	{
 		ItemStack stack = player.getHeldItem(hand);
 
-		if(Railgun.disableRailgunOffhand&&hand==EnumHand.OFF_HAND)
+		if(Overrides.Railgun.disableRailgunOffhand&&hand==EnumHand.OFF_HAND)
 			return new ActionResult<>(EnumActionResult.PASS, stack);
 
 		int energy = IEConfig.Tools.railgun_consumption;
@@ -141,7 +141,7 @@ public class ItemIIRailgunOverride extends ItemRailgun
 
 				ammo.shrink(1);
 
-				if(Railgun.railgunRecoil)
+				if(Overrides.Railgun.railgunRecoil)
 					user.move(MoverType.PISTON, -vec.x*mass*0.25f, 0, -vec.z*mass*0.25f);
 
 				Triple<ItemStack, ShaderRegistryEntry, ShaderCase> shader = ShaderRegistry.getStoredShaderAndCase(stack);

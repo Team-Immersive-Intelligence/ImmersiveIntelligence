@@ -80,6 +80,10 @@ public class IIConfigHandler
 	public static class IIConfig
 	{
 		@SubConfig
+		@LangKey("ii.config.Overrides")
+		@Comment("Toggle II's overwrites of Immersive Engineering's recipes, multiblocks and content.")
+		public static Overrides overrides;
+		@SubConfig
 		@LangKey("ii.config.Graphics")
 		@Comment("Customize II 3d model display, AMT, particle effects and camera options.")
 		public static Graphics graphics;
@@ -126,19 +130,6 @@ public class IIConfigHandler
 		@LangKey("Wires")
 		public static int radioAdvancedMaxFrequency = 256;
 
-		@Comment({"Whether basic circuits should be produced in II or IE way"})
-		@RequiresMcRestart
-		public static boolean changeCircuitProduction = true;
-
-		@Comment({"Whether the IE revolver should be a Early Engineering-tier weapon"})
-		public static boolean changeRevolverProduction = true;
-
-		@Comment({"Whether the the railgun should require a gun stock instead of a grip to be constructed"})
-		public static boolean changeRailgunProduction = true;
-
-		@Comment({"Whether the the chemthrower should require a gun stock instead of a grip to be constructed"})
-		public static boolean changeChemthrowerProduction = true;
-
 		@Comment({"Whether Tungsten should be smeltable in the vanilla furnace"})
 		@RequiresMcRestart
 		public static boolean smeltableTungsten = false;
@@ -146,13 +137,6 @@ public class IIConfigHandler
 		@Comment({"Whether Advanced Electronic Alloy should be smeltable in the vanilla furnace"})
 		@RequiresMcRestart
 		public static boolean smeltableAEA = false;
-
-		@Comment({"Whether Immersive Engineering liquid concrete behavior should be replaced by II."})
-		@RequiresMcRestart
-		public static boolean concreteOverride = true;
-
-		@Comment({"If disabled, II will not make any changes to IE villager trades."})
-		public static boolean enableTradeOverride = true;
 
 		@Comment({"A list of all entities for which a fakeplayer should be used when shooter is not a player"})
 		public static String[] bulletFakeplayerWhitelist = new String[]{
@@ -168,6 +152,56 @@ public class IIConfigHandler
 		@Comment({"Whether the II Creative Tab should be divided into sub-tabs (Australian Tabs(tm))."})
 		@RequiresMcRestart
 		public static boolean australianCreativeTabs = true;
+
+		public static class Overrides
+		{
+			@Comment({"Whether basic circuits should be produced in II or IE way"})
+			@RequiresMcRestart
+			public static boolean changeCircuitProduction = true;
+
+			@Comment({"Whether the IE revolver should be a Early Engineering-tier weapon"})
+			@RequiresMcRestart
+			public static boolean changeRevolverProduction = true;
+
+			@Comment({"Whether the the chemthrower should require a gun stock instead of a grip to be constructed"})
+			@RequiresMcRestart
+			public static boolean changeChemthrowerProduction = true;
+
+			@Comment({"Whether Immersive Engineering liquid concrete behavior should be replaced by II."})
+			@RequiresMcRestart
+			public static boolean concreteOverride = true;
+
+			@Comment({"If disabled, II will not make any changes to IE villager trades."})
+			@RequiresMcRestart
+			public static boolean enableTradeOverride = true;
+
+			@Comment({"If enabled, II will replace compatible Immersive Engineering's GUIs with Deco-based ones."})
+			@RequiresMcRestart
+			public static boolean enableDecoOverride = false;
+
+			@SubConfig
+			@LangKey("desc.immersiveintelligence.toolupgrade.item.railgun")
+			@Comment("Config for the Railgun, allows for the toggling of II related features, such as recoil and penetration")
+			public static Railgun railgun;
+
+			public static class Railgun
+			{
+				@Comment({"If disabled, II will not make any changes to IE railgun. This also disables using railgun grenades (as they use a custom entity)."})
+				public static boolean enableRailgunOverride = true;
+
+				@Comment({"Make standard railgun rods to be able to penetrate mobs (depending on metal)."})
+				public static boolean enablePenetration = true;
+
+				@Comment({"Whether the railgun has recoil (pushes the shooter to back, depending on projectile mass)."})
+				public static boolean railgunRecoil = true;
+
+				@Comment({"Whether the railgun can only be used when in mainhand."})
+				public static boolean disableRailgunOffhand = true;
+
+				@Comment({"Whether the the railgun should require a gun stock instead of a grip to be constructed"})
+				public static boolean changeRailgunProduction = true;
+			}
+		}
 
 		public static class Graphics
 		{
@@ -1295,10 +1329,6 @@ public class IIConfigHandler
 			@Comment("Config for Emplacement weapons, allows for the adjustment of fire rate, detection radius, movement speed and health")
 			public static EmplacementWeapons emplacementWeapons;
 			@SubConfig
-			@LangKey("desc.immersiveintelligence.toolupgrade.item.railgun")
-			@Comment("Config for the Railgun, allows for the toggling of II related features, such as recoil and penetration")
-			public static Railgun railgun;
-			@SubConfig
 			@LangKey("ii.config.Grenade")
 			@Comment("Config for Grenades, such as throwing speed")
 			public static Grenade grenade;
@@ -1581,21 +1611,6 @@ public class IIConfigHandler
 					@Comment({"Base energy usage per tick (in IF)."})
 					public static int energyUpkeepCost = 2048;
 				}
-			}
-
-			public static class Railgun
-			{
-				@Comment({"If disabled, II will not make any changes to IE railgun. This also disables using railgun grenades (as they use a custom entity)."})
-				public static boolean enableRailgunOverride = true;
-
-				@Comment({"Make standard railgun rods to be able to penetrate mobs (depending on metal)."})
-				public static boolean enablePenetration = true;
-
-				@Comment({"Whether the railgun has recoil (pushes the shooter to back, depending on projectile mass)."})
-				public static boolean railgunRecoil = true;
-
-				@Comment({"Whether the railgun can only be used when in mainhand."})
-				public static boolean disableRailgunOffhand = true;
 			}
 
 			public static class Grenade

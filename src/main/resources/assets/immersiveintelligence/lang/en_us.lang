@@ -3257,6 +3257,7 @@ death.attack.iiVehiclenoRider=%1$s was driven over
 death.attack.iiVehicleSuicide=%1$s decided to jump off a moving vehicle
 
 #Additional stuff for the Config Panel
+ii.config.Overrides=Overrides
 ii.config.Graphics=Graphics
 ii.config.Ores=Ores
 ii.config.Machines=Machines
@@ -3265,6 +3266,7 @@ ii.config.Weapons=Weapons
 ii.config.Wires=Wires
 ii.config.Tools=Tools
 ii.config.Vehicles=Vehicles
+ii.config.Factions=Factions
 ii.config.EffectCrates=Effect Crates
 
 #Weapon Configs
