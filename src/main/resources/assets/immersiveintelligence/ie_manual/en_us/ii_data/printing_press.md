@@ -24,9 +24,10 @@ The printing press can also be [upgraded](#punchtapes_upgrade) to extend its fun
 |[data_variable]{type:"string", direction:"in", letter:"m", name:"Output mode", description:"The type of document that will be printed", values:[["text","A page containing text"],["code","A page containing code written in the POL programming language"],["blueprint","A page containing a construction blueprint to be used manually or by a Logistics Drone"],["logi_tag","A logistics tag used to mark containers and items"]]}|
 |[data_variable]{type:"integer", direction:"in", letter:"a", name:"Amount of copies", description:"How many pages will be printed"}|
 |[data_variable]{type:"string", direction:"in", letter:"t", name:"Text to print", description:"Text content that will be printed", requirements:{m:"text/code"}}|
+Printing [Logistic Manifests](../ii_logistics/task_system.md#logitags) requires a different set of variables and is described in [a dedicated page](../ii_logistics/task_system.md#logitag_printing).
 # punchtapes_upgrade
 |[upgrade_display]{upgrade:"immersiveintelligence:printing_press/punchtape_processor"}|
-The [Punchtape Processor] upgrade allows printing [Punchtapes](punchtapes.md) with all the variables of the received packets, except "a" and "m".  
+The [Punchtape Processor] upgrade allows printing [Punchtapes](punchtapes.md) with all the variables of the received packets, except 'a', 'm' and 't'.  
 **Instead of empty page, supply an [Empty Punchtape].**
 |[data_variable]{type:"string", direction:"in", letter:"m", name:"Output mode", description:"The type of document that will be printed", values:[["punchtape","A punchtape with variables of the received packet, except this one printed. Doesn't use any ink."]]}|
 

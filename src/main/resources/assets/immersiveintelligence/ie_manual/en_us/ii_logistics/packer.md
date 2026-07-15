@@ -35,6 +35,7 @@ The [Energy Loader] converts the Packer's item storage into [16 million] IF of e
 # upgrades_railway
 |[upgrade_display]{upgrade:"immersiveintelligence:packer_railway"}|
 The [Railway Upgrade] transforms the Packer's loading conveyor into a set of rails. This allows the Packer to fill [storage Minecarts](skycrate_system.md#minecarts). This upgrade can be combined with other upgrades.
+|[wip_notice]|
 # upgrades_labeler
 |[upgrade_display]{upgrade:"immersiveintelligence:packer_naming"}|
 The [Naming Stamp] adds a label maker to the Packer and allows it to set the name of the packed item. This upgrade can be combined with other upgrades.

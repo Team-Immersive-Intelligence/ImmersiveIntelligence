@@ -313,16 +313,17 @@ public class IIRecipes
 			@Override
 			public ItemStack apply(ItemStack input, DataPacket data)
 			{
-				return IIContent.itemPrintedPage.getStack(PageType.TEXT,
-						nbt -> nbt.withString("text", data.get('t').toString())
-				);
+				ItemStack stack = IIContent.itemPunchtape.getStack(1);
+				DataPacket cloned = data.clone();
+				cloned.remove('a', 'm', 't');
+				IIContent.itemPunchtape.writeDataToItem(stack, cloned);
+				return stack;
 			}
 
 			@Override
 			public int[] getInkTypesRequired(DataPacket data)
 			{
-				String text = data.get('t').toString();
-				return new int[]{0, 0, 0, text.length()*PrintingPress.printInkUsage};
+				return new int[]{0, 0, 0, 0};
 			}
 
 			@Nullable

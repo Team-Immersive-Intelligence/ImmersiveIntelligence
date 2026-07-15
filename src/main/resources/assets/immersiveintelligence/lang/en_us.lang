@@ -2996,6 +2996,7 @@ ie.manual.folder.computers=Computers
 ie.manual.folder.weaponry=Weaponry
 ie.manual.folder.armortools=Armor and Tools
 ie.manual.folder.staticdefense=Defensive Structures
+ie.manual.folder.terrain_control=Terrain Control
 
 ie.manual.entry.traits.level_beginner=Complexity: Pre-Industrial
 ie.manual.entry.traits.level_early_industrial=Complexity: Early Industrial

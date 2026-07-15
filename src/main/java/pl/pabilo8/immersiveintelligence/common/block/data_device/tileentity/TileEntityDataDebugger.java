@@ -85,7 +85,7 @@ public class TileEntityDataDebugger extends TileEntityImmersiveConnectable imple
 		{
 			if(mode.canReceive)
 			{
-				if(outputTime-1==0)
+				if(outputTime==1)
 				{
 					outputTime = 0;
 					markDirty();
@@ -94,8 +94,9 @@ public class TileEntityDataDebugger extends TileEntityImmersiveConnectable imple
 				else
 					outputTime = Math.max(outputTime-1, 0);
 			}
-			if(mode.canTransmit)
+			if(mode.canTransmit&&outputTime==0)
 			{
+				//Do not interpret the debugger's own redstone signal as a trigger to send a packet
 				if(world.isBlockIndirectlyGettingPowered(getPos()) > 0&&!toggle)
 				{
 					toggle = true;

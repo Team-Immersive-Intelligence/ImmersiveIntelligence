@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
@@ -99,9 +100,13 @@ public class LogisticTag implements INBTSerializable<NBTTagCompound>, Cloneable
 			//Owner
 			try
 			{
-				IIDataHandlingUtils.optionalString('o', packet)
-						.map(UUID::fromString)
-						.ifPresent(uuid -> this.owner = uuid);
+				if(packet.has('o'))
+				{
+					DiplomacyHandler instance = DiplomacyHandler.getInstance(FMLCommonHandler.instance().getEffectiveSide()==Side.CLIENT);
+					IIDataHandlingUtils.optionalString('o', packet)
+							.map(instance::getIdentityByName)
+							.ifPresent(uuid -> this.owner = uuid.getUUID());
+				}
 			} catch(IllegalArgumentException ignored) {}
 			//Color (Paint)
 			IIDataHandlingUtils.optionalColor('p', packet)
