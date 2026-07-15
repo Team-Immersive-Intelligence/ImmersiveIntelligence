@@ -908,7 +908,7 @@ public class IIConfigHandler
 				public static int energyCapacity = 16000;
 
 				@Comment({"Energy usage when sending a signal."})
-				public static int energyUsage = 2048;
+				public static int energyUsage = 1024;
 
 				@Comment({"Energy per step of punching a tape (1/60 of the full energy needed)."})
 				public static int energyUsagePunchtape = 128;
