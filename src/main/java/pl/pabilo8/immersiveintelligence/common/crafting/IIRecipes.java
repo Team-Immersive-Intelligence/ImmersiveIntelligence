@@ -781,7 +781,8 @@ public class IIRecipes
 				3200, 120, false
 		);
 
-		MetalPressRecipe.addRecipe(new ItemStack(IIContent.itemPrintedPage, 1, 0), new IngredientStack("paper"), new ItemStack(IEContent.itemMold, 1, 0), 600);
+		MetalPressRecipe.addRecipe(new ItemStack(IIContent.itemPrintedPage, 1, 0),
+				new IngredientStack("paper"), new ItemStack(IEContent.itemMold, 1, 0), 600);
 
 		ArcFurnaceRecipe.addRecipe(
 				IIContent.itemMaterial.getStack(Materials.WHITE_PHOSPHORUS, 4),

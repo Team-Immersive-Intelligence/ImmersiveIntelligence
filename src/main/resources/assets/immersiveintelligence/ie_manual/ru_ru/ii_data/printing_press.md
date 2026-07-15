@@ -26,7 +26,7 @@
 |[data_variable]{type:"string", direction:"in", letter:"t", name:"Text to print", description:"Text content that will be printed", requirements:{m:"text/code"}}|
 
 # punchtapes_upgrade
-|[upgrade_display]{upgrade:"immersiveintelligence:printing_press/punchtape_processor"}|
+|[upgrade_display]{upgrade:"immersiveintelligence:printing_press/punchtapes"}|
 Улучшение [обработчик перфоленты] позволяет печатать [перфоленты](punchtapes.md) со всеми переменными полученных пакетов, кроме «a», «m» и «t».
 **Вместо пустой страницы предоставьте [пустую перфоленту].**
 |[data_variable]{type:"string", direction:"in", letter:"m", name:"Output mode", description:"The type of document that will be printed", values:[["punchtape","A punchtape with variables of the received packet, except 'a', 'm' and 't' printed. Doesn't use any ink."]]}|

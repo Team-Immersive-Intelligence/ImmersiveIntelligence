@@ -1,6 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.compat;
 
-import blusunrize.immersiveengineering.api.crafting.IngredientStack;
+import blusunrize.immersiveengineering.api.crafting.*;
 import blusunrize.immersiveengineering.api.tool.RailgunHandler;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.client.ImmersiveModelRegistry;
@@ -25,7 +25,6 @@ import net.minecraft.entity.passive.EntityVillager.PriceInfo;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.village.MerchantRecipe;
@@ -47,6 +46,7 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIEFluidConcreteOverride;
+import pl.pabilo8.immersiveintelligence.common.compat.ie.*;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerIICrate;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing.Casing;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIMaterial.Materials;
@@ -55,6 +55,8 @@ import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIRailgunOverrid
 import java.util.List;
 import java.util.Random;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -141,6 +143,53 @@ public class ImmersiveEngineeringHelper extends IICompatModule
 				);
 			}
 		}
+
+		//Import IE's recipe lists into II's registry, so that they can be used inside manual pages
+		importIERecipes();
+	}
+
+	private void importIERecipes()
+	{
+		int imported = 0;
+		imported += adaptRecipes(ArcFurnaceRecipe.recipeList,
+				ArcFurnaceRecipeAdapter::new);
+		imported += adaptRecipes(MetalPressRecipe.recipeList.values(), MetalPressRecipe::listInJEI,
+				MetalPressRecipeAdapter::new);
+		imported += adaptRecipes(SqueezerRecipe.recipeList,
+				SqueezerRecipeAdapter::new);
+		imported += adaptRecipes(FermenterRecipe.recipeList,
+				FermenterRecipeAdapter::new);
+		imported += adaptRecipes(RefineryRecipe.recipeList,
+				RefineryRecipeAdapter::new);
+		imported += adaptRecipes(MixerRecipe.recipeList,
+				MixerRecipeAdapter::new);
+		imported += adaptRecipes(CrusherRecipe.recipeList,
+				CrusherRecipeAdapter::new);
+		imported += adaptRecipes(CokeOvenRecipe.recipeList,
+				CokeOvenRecipeAdapter::new);
+		imported += adaptRecipes(BlastFurnaceRecipe.recipeList,
+				BlastFurnaceRecipeAdapter::new);
+		imported += adaptRecipes(AlloyRecipe.recipeList,
+				AlloyingFurnaceRecipeAdapter::new);
+
+		IILogger.info("Imported "+imported+" Immersive Engineering recipes for II manual layouts");
+	}
+
+	private <T> int adaptRecipes(Iterable<T> recipes, Consumer<T> adapterFactory)
+	{
+		return adaptRecipes(recipes, recipe -> true, adapterFactory);
+	}
+
+	private <T> int adaptRecipes(Iterable<T> recipes, Predicate<T> filter, Consumer<T> adapterFactory)
+	{
+		int count = 0;
+		for(T recipe : recipes)
+			if(recipe!=null&&filter.test(recipe))
+			{
+				adapterFactory.accept(recipe);
+				count++;
+			}
+		return count;
 	}
 
 	@SubscribeEvent
@@ -217,12 +266,6 @@ public class ImmersiveEngineeringHelper extends IICompatModule
 	{
 		public ItemStack sellingItem;
 		public PriceInfo priceInfo;
-
-		public ItemstackForEmerald(Item par1Item, PriceInfo priceInfo)
-		{
-			this.sellingItem = new ItemStack(par1Item);
-			this.priceInfo = priceInfo;
-		}
 
 		public ItemstackForEmerald(ItemStack stack, PriceInfo priceInfo)
 		{

@@ -9,8 +9,8 @@ The **Printing Press** is a machine which can print out text on demand, received
 |[text]{mb:"II:PrintingPress"}|
 
 # press1
-|[machine_recipe]{machine:"metal_press", source:"paper_page"}|
-The [Printing Paper] is a special thinned version of a standard one used in books. It is created by [pressing a piece of Paper in a Metal Press].
+|[machine_recipe]{source:"paper_page"}|
+The [Printing Paper] is a special thinned version of a standard one used in books. It is created by pressing a piece of Paper in a [Metal Press](metalPress).
 Printed pages should be removed as soon as possible from the printing press, as the press can only store [12 pages] in its output basket.
 
 # press_usage
@@ -25,15 +25,22 @@ The printing press can also be [upgraded](#punchtapes_upgrade) to extend its fun
 |[data_variable]{type:"integer", direction:"in", letter:"a", name:"Amount of copies", description:"How many pages will be printed"}|
 |[data_variable]{type:"string", direction:"in", letter:"t", name:"Text to print", description:"Text content that will be printed", requirements:{m:"text/code"}}|
 Printing [Logistic Manifests](../ii_logistics/task_system.md#logitags) requires a different set of variables and is described in [a dedicated page](../ii_logistics/task_system.md#logitag_printing).
+
 # punchtapes_upgrade
-|[upgrade_display]{upgrade:"immersiveintelligence:printing_press/punchtape_processor"}|
+|[upgrade_display]{upgrade:"immersiveintelligence:printing_press/punchtapes"}|
 The [Punchtape Processor] upgrade allows printing [Punchtapes](punchtapes.md) with all the variables of the received packets, except 'a', 'm' and 't'.  
-**Instead of empty page, supply an [Empty Punchtape].**
+**Instead of empty page, supply an [Empty Punchtape].**<br>
 |[data_variable]{type:"string", direction:"in", letter:"m", name:"Output mode", description:"The type of document that will be printed", values:[["punchtape","A punchtape with variables of the received packet, except this one printed. Doesn't use any ink."]]}|
-
+# enveloper
+|[upgrade_display]{upgrade:"immersiveintelligence:printing_press/enveloper"}|
+The [Enveloper] upgrade allows printing [Letters in Envelopes](envelopes.md), to be addressed and sent to other players.
+|[wip_notice]|
+# batching
+|[upgrade_display]{upgrade:"immersiveintelligence:printing_press/batching"}|
+The [Batching Mechanism] upgrade allows printing multiple pages of text at once, allowing the **Printing Press** to create newspapers and books.  
+|[wip_notice]|
 # data_callback
-|[text]{text:"Data Callback",bold:1b}|
-
+**Data Callback:**
 |[data_callback]{type:"integer", name:"get_ink", label:"Ink Level", returns:"Black ink amount (mB)"}|
 |[data_callback]{type:"integer", name:"get_ink_cyan", label:"Cyan Ink Level", returns:"Cyan ink amount (mB)"}|
 |[data_callback]{type:"integer", name:"get_ink_yellow", label:"Yellow Ink Level", returns:"Yellow ink amount (mB)"}|
