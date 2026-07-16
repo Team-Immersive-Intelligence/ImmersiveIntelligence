@@ -141,7 +141,7 @@ public class EntityGasCloud extends Entity implements ISyncNBTEntity<EntityGasCl
 			else
 				attemptSpawnChildren();
 			if(oldRadius!=currentRadius)
-				sendServerUpdateForEvent(SyncEvents.ENTITY_CUSTOM1);
+				updateEntityForEvent(SyncEvents.ENTITY_CUSTOM1);
 		}
 
 		//Lifetime end
