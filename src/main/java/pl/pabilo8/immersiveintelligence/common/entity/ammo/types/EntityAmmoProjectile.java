@@ -308,6 +308,7 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 			for(Tuple<AmmoComponent, NBTTagCompound> component : components)
 				component.getFirst().onEffect(world, pos, dir,
 						coreType.getEffectShape(), component.getSecond(), ammoType.getComponentSize(), multiplier, owner);
+			markedForDetonation = false;
 			setDead();
 		}
 	}

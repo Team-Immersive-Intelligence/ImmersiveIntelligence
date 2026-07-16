@@ -72,7 +72,7 @@ public class PenetrationRegistry
 		//Bedrock
 		registerState(state -> state.getBlock().blockHardness==-1, new PenetrationHandlerInvulnerable(PenetrationHardness.BEDROCK, Integer.MAX_VALUE));
 		//Fluids
-		registerState(state -> state.getBlock().blockHardness==-1, new PenetrationHandlerInvulnerable(PenetrationHardness.FOLIAGE, 0f));
+		registerState(state -> state.getMaterial().isLiquid(), new PenetrationHandlerInvulnerable(PenetrationHardness.FOLIAGE, 0f));
 
 		//Fragile metals
 		registerMetalMaterial(PenetrationHandlerMetal.create("aluminum", PenetrationHardness.FRAGILE, 1.0f, 150f));

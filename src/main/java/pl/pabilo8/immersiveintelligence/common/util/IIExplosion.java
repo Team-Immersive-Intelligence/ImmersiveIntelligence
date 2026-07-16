@@ -147,7 +147,7 @@ public class IIExplosion extends Explosion
 					double blockDensity = this.world.getBlockDensity(vec3d, entity.getEntityBoundingBox());
 					double reversed = (1.0D-fragment)*blockDensity;
 					entity.attackEntityFrom(explosionDamage,
-							(float)((int)((reversed*reversed+reversed)/2.0D*7.0D*power/2f*(double)diameter+1.0D)));
+							(float)((int)((reversed*reversed+reversed)/2.0D*15.0D*power/2f*(double)diameter+1.0D)));
 					double reversedTmp = reversed;
 
 					if(entity instanceof EntityLivingBase)
