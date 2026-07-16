@@ -26,11 +26,13 @@ public enum ParticleDrawStages implements ISerializableEnum
 	/**
 	 * Normal particles render just like minecraft's default particles
 	 */
-	VANILLA(GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP, false, false, ParticleSystem.PARTICLE_TEXTURES),
+	VANILLA(GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP,
+			false, false, ParticleSystem.PARTICLE_TEXTURES),
 	/**
 	 * Normal particles, but uses additive blending
 	 */
-	VANILLA_ADDITIVE(GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP, false, false, ParticleSystem.PARTICLE_TEXTURES),
+	VANILLA_ADDITIVE(GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP,
+			false, false, ParticleSystem.PARTICLE_TEXTURES),
 
 	/**
 	 * Tracer particles are rendered on their background using additive blending and no texture
@@ -40,20 +42,26 @@ public enum ParticleDrawStages implements ISerializableEnum
 	/**
 	 * Uses the default texture map, use sprites with it
 	 */
-	CUSTOM(GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP, false, false, TextureMap.LOCATION_BLOCKS_TEXTURE),
+	CUSTOM(GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP,
+			false, false, TextureMap.LOCATION_BLOCKS_TEXTURE),
 	/**
 	 * Same as CUSTOM, but uses additive blending
 	 */
-	CUSTOM_ADDITIVE(DestFactor.ONE_MINUS_CONSTANT_ALPHA, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP, false, false, TextureMap.LOCATION_BLOCKS_TEXTURE),
+	CUSTOM_ADDITIVE(DestFactor.ONE_MINUS_CONSTANT_ALPHA, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP,
+			false, false, TextureMap.LOCATION_BLOCKS_TEXTURE),
 	/**
 	 * Same as CUSTOM, but applies a noise shader during rendering
 	 */
-	CUSTOM_SMOKE_NOISE_SHADER(CUSTOM, Shaders.NOISE, partialTicks -> new float[]{partialTicks}),
+	CUSTOM_SMOKE_NOISE_SHADER(GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP,
+			false, false, TextureMap.LOCATION_BLOCKS_TEXTURE,
+			Shaders.NOISE_NO_LIGHTMAP, partialTicks -> new float[]{partialTicks}
+	),
 //	CUSTOM_SMOKE_NOISE_SHADER(CUSTOM, null, partialTicks -> new float[0]),
 	/**
 	 * Same as CUSTOM, but with normal maps, use with solid 3D models
 	 */
-	CUSTOM_SOLID(GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, IIParticleUtils.PARTICLE_SOLID, false, true, TextureMap.LOCATION_BLOCKS_TEXTURE);
+	CUSTOM_SOLID(GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, IIParticleUtils.PARTICLE_SOLID,
+			false, true, TextureMap.LOCATION_BLOCKS_TEXTURE);
 
 	public final boolean renderThroughBlocks, applyLighting;
 	public final boolean requiresNormals;
@@ -76,21 +84,16 @@ public enum ParticleDrawStages implements ISerializableEnum
 				.anyMatch(element -> element.getUsage()==EnumUsage.NORMAL);
 	}
 
-	/**
-	 * Copy constructor adding a shader
-	 *
-	 * @param other            DrawStages to copy
-	 * @param shader           shader to use
-	 * @param shaderParameters parameters for the shader
-	 */
-	ParticleDrawStages(ParticleDrawStages other, Shaders shader, Function<Float, float[]> shaderParameters)
+	ParticleDrawStages(DestFactor destFactor, VertexFormat vertexFormat, boolean renderThroughBlocks, boolean applyLighting, @Nullable ResourceLocation textureRes,
+	                   Shaders shader, Function<Float, float[]> shaderParameters)
 	{
-		this.destFactor = other.destFactor;
-		this.vertexFormat = other.vertexFormat;
-		this.renderThroughBlocks = other.renderThroughBlocks;
-		this.applyLighting = other.applyLighting;
-		this.textureRes = other.textureRes;
-		this.requiresNormals = other.requiresNormals;
+		this.destFactor = destFactor;
+		this.vertexFormat = vertexFormat;
+		this.renderThroughBlocks = renderThroughBlocks;
+		this.applyLighting = applyLighting;
+		this.textureRes = textureRes;
+		this.requiresNormals = vertexFormat.getElements().stream()
+				.anyMatch(element -> element.getUsage()==EnumUsage.NORMAL);
 		this.shader = shader;
 		this.shaderParameters = shaderParameters;
 	}

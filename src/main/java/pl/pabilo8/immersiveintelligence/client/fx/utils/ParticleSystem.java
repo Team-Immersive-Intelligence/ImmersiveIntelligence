@@ -151,6 +151,7 @@ public class ParticleSystem
 	{
 		if(particleAmount > Graphics.maxAllowedParticles)
 			return;
+		//Add to an existing stage or create a new one if it doesn't exist
 		particles.computeIfAbsent(particle.getDrawStage(), i -> new ArrayDeque<>()).add(particle);
 		particleAmount++;
 	}
@@ -163,6 +164,7 @@ public class ParticleSystem
 	 */
 	public void renderParticles(float partialTicks)
 	{
+		//Update static fields for rendering
 		float x = ActiveRenderInfo.getRotationX();
 		float z = ActiveRenderInfo.getRotationZ();
 		float yz = ActiveRenderInfo.getRotationYZ();
@@ -172,6 +174,7 @@ public class ParticleSystem
 
 		if(player!=null)
 		{
+			//Simulate the particle system for the current frame, so that particles are in the correct position when rendered
 			updateParticleFields(partialTicks, player);
 
 			GlStateManager.pushMatrix();
@@ -190,12 +193,24 @@ public class ParticleSystem
 			drawParticles:
 			synchronized(particles)
 			{
-				for(Map.Entry<ParticleDrawStages, Queue<AbstractParticle>> particleStage : particles.entrySet())
+				//Iterate through all layers (draw stages)
+				Iterator<Map.Entry<ParticleDrawStages, Queue<AbstractParticle>>> iterator = particles.entrySet().iterator();
+				while(iterator.hasNext())
 				{
+					Map.Entry<ParticleDrawStages, Queue<AbstractParticle>> particleStage = iterator.next();
+					//If the particle stage has no particles, remove it from the map and continue
+					if(particleStage.getValue().isEmpty())
+					{
+						iterator.remove();
+						continue;
+					}
+
+					//Prepare settings for the draw stage
 					int particleCount = 0;
 					particleStage.getKey().prepareRender(buffer, partialTicks);
 					for(AbstractParticle particle : particleStage.getValue())
 					{
+						//Draw the particles for this stage until the count reaches maximum or all are drawn
 						if(++particleCount > Graphics.maxDrawnParticles)
 						{
 							tess.draw();
@@ -205,11 +220,13 @@ public class ParticleSystem
 						particle.preRender(partialTicks, x, xz, z, yz, xy);
 						particle.render(buffer, partialTicks, x, xz, z, yz, xy);
 					}
+					//Call the Tesselator to draw, then finalize the stage
 					tess.draw();
 					particleStage.getKey().clear();
 				}
 			}
 
+			//Cleanup
 			GlStateManager.enableCull();
 			GlStateManager.depthMask(true);
 			GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
@@ -217,7 +234,6 @@ public class ParticleSystem
 			GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1F);
 			GlStateManager.popMatrix();
 		}
-
 	}
 
 	//--- External ---//

@@ -36,6 +36,7 @@ public class ShaderUtil
 		createShader(BLUEPRINT, null, "blueprint");
 		createShader(COLOR, null, "color");
 		createShader(NOISE, null, "noise");
+		createShader(NOISE_NO_LIGHTMAP, null, "noise_no_lightmap");
 		createShader(GRAYSCALE, null, "grayscale");
 	}
 
@@ -113,16 +114,34 @@ public class ShaderUtil
 	{
 		//Attempt loading the shader
 		if(frag!=null)
+		{
 			shader.fragID = createShader(frag, FRAG);
+			if(shader.fragID <= 0)
+			{
+				IILogger.error("Shader Error: Unable to load fragment shader %s (%s.frag)", shader.getName(), frag);
+				return;
+			}
+		}
 		if(vert!=null)
+		{
 			shader.vertID = createShader(vert, VERT);
+			if(shader.vertID <= 0)
+			{
+				IILogger.error("Shader Error: Unable to load vertex shader %s (%s.vert)", shader.getName(), frag);
+				return;
+			}
+		}
 
 		//Create the program, its ID will be referenced when calling the shader
 		shader.programID = ARBShaderObjects.glCreateProgramObjectARB();
 
 		//Unable to get a program ID
 		if(shader.programID==0)
+		{
+			IILogger.error("Shader Error: Unable to create shader program for %s", shader.getName());
+			shader.vertID = shader.fragID = 0;
 			return;
+		}
 
 		//Attach shader(s) to the program
 		if(frag!=null)
@@ -135,6 +154,7 @@ public class ShaderUtil
 		if(ARBShaderObjects.glGetObjectParameteriARB(shader.programID, ARBShaderObjects.GL_OBJECT_LINK_STATUS_ARB)==GL11.GL_FALSE)
 		{
 			IILogger.error("Shader Error: "+getLogInfo(shader.programID));
+			shader.vertID = shader.fragID = 0;
 			return;
 		}
 
@@ -142,6 +162,8 @@ public class ShaderUtil
 		if(ARBShaderObjects.glGetObjectParameteriARB(shader.programID, ARBShaderObjects.GL_OBJECT_VALIDATE_STATUS_ARB)==GL11.GL_FALSE)
 		{
 			IILogger.error("Shader Error: "+getLogInfo(shader.programID));
+			shader.vertID = shader.fragID = 0;
+			return;
 		}
 
 		IILogger.info(String.format("Succesfully loaded shader '%s'", shader.getName()));
@@ -166,7 +188,8 @@ public class ShaderUtil
 			if(shader==0)
 				return 0;
 
-			ARBShaderObjects.glShaderSourceARB(shader, readFileAsString(String.format("/assets/immersiveintelligence/shaders/%s.frag", filename)));
+			boolean vertex = shaderType==VERT;
+			ARBShaderObjects.glShaderSourceARB(shader, readFileAsString(String.format("/assets/immersiveintelligence/shaders/%s."+(vertex?"vert": "frag"), filename)));
 			ARBShaderObjects.glCompileShaderARB(shader);
 
 			if(ARBShaderObjects.glGetObjectParameteriARB(shader, ARBShaderObjects.GL_OBJECT_COMPILE_STATUS_ARB)==GL11.GL_FALSE)
@@ -221,6 +244,7 @@ public class ShaderUtil
 		BLUEPRINT,
 		COLOR,
 		NOISE,
+		NOISE_NO_LIGHTMAP,
 		GRAYSCALE;
 
 		private int programID, fragID, vertID;
