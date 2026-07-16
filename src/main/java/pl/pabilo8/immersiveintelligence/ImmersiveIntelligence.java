@@ -20,8 +20,6 @@ import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.IISaveData;
 import pl.pabilo8.immersiveintelligence.common.commands.CommandII;
 import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
-import pl.pabilo8.immersiveintelligence.common.event.IEOverrideEventHandler;
-import pl.pabilo8.immersiveintelligence.common.event.LightEngineerEventHandler;
 import pl.pabilo8.immersiveintelligence.common.util.IIReflectionUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyHandler;
@@ -83,7 +81,6 @@ public class ImmersiveIntelligence
 	public void init(FMLInitializationEvent event)
 	{
 		NetworkRegistry.INSTANCE.registerGuiHandler(INSTANCE, proxy);
-		new LightEngineerEventHandler().registerEventHandler();
 		proxy.init(event);
 	}
 
@@ -91,10 +88,8 @@ public class ImmersiveIntelligence
 	public void postInit(FMLPostInitializationEvent event)
 	{
 		proxy.postInit(event);
-
-		//Redirecting IE event to our own
+		//Redirecting IE event handler to our own
 		IIReflectionUtils.getForgeEventListeners();
-		IIReflectionUtils.overrideEventHandler(blusunrize.immersiveengineering.common.EventHandler.class, new IEOverrideEventHandler());
 	}
 
 	@Mod.EventHandler

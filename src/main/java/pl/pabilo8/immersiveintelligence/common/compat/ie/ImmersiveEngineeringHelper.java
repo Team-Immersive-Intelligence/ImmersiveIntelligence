@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.common.compat;
+package pl.pabilo8.immersiveintelligence.common.compat.ie;
 
 import blusunrize.immersiveengineering.api.crafting.*;
 import blusunrize.immersiveengineering.api.tool.RailgunHandler;
@@ -46,11 +46,13 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIEFluidConcreteOverride;
-import pl.pabilo8.immersiveintelligence.common.compat.ie.*;
+import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
+import pl.pabilo8.immersiveintelligence.common.compat.ie.recipe.*;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerIICrate;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing.Casing;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIMaterial.Materials;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIRailgunOverride;
+import pl.pabilo8.immersiveintelligence.common.util.IIReflectionUtils;
 
 import java.util.List;
 import java.util.Random;
@@ -146,6 +148,14 @@ public class ImmersiveEngineeringHelper extends IICompatModule
 
 		//Import IE's recipe lists into II's registry, so that they can be used inside manual pages
 		importIERecipes();
+	}
+
+	@Override
+	public void loadComplete()
+	{
+		super.loadComplete();
+		//Override IE's Event Handler
+		IIReflectionUtils.overrideEventHandler(blusunrize.immersiveengineering.common.EventHandler.class, new IEOverrideEventHandler());
 	}
 
 	private void importIERecipes()

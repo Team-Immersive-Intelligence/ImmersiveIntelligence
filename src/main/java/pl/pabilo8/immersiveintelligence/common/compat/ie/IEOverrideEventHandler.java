@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.common.event;
+package pl.pabilo8.immersiveintelligence.common.compat.ie;
 
 import blusunrize.immersiveengineering.common.EventHandler;
 import blusunrize.immersiveengineering.common.IEContent;
@@ -31,6 +31,7 @@ public class IEOverrideEventHandler extends EventHandler
 				event.setNewSpeed(event.getOriginalSpeed()*5);
 			else
 				event.setCanceled(true);
+		//Patch wire cutters behavior on razor wire
 		if(event.getState().getBlock()==IEContent.blockMetalDecoration2&&IEContent.blockMetalDecoration2.getMetaFromState(event.getState())==BlockTypes_MetalDecoration2.RAZOR_WIRE.getMeta())
 			if(!Utils.isWirecutter(current))
 			{

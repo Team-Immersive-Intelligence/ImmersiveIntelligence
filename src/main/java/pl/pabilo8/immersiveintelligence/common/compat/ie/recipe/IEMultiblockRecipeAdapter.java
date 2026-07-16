@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.common.compat.ie;
+package pl.pabilo8.immersiveintelligence.common.compat.ie.recipe;
 
 import blusunrize.immersiveengineering.api.crafting.MultiblockRecipe;
 

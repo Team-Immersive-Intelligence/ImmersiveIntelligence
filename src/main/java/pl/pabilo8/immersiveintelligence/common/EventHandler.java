@@ -442,18 +442,17 @@ public class EventHandler
 	@SubscribeEvent
 	public void onLivingFallEvent(LivingFallEvent event)
 	{
-		if(event.getEntityLiving() instanceof EntityPlayer)
-		{
-			EntityPlayer player = (EntityPlayer)event.getEntityLiving();
-			Iterable<ItemStack> armor = player.getArmorInventoryList();
+		if(!(event.getEntityLiving() instanceof EntityPlayer))
+			return;
 
-			for(ItemStack piece : armor)
-			{
-				if(!(piece.getItem() instanceof ItemIILightEngineerBoots)) continue;
-				ItemIILightEngineerBoots boots = (ItemIILightEngineerBoots)piece.getItem();
-				if(boots.hasUpgrade(piece, "internal_springs"))
-					event.setDistance(0);
-			}
+		EntityPlayer player = (EntityPlayer)event.getEntityLiving();
+		Iterable<ItemStack> armor = player.getArmorInventoryList();
+		for(ItemStack piece : armor)
+		{
+			if(!(piece.getItem() instanceof ItemIILightEngineerBoots)) continue;
+			ItemIILightEngineerBoots boots = (ItemIILightEngineerBoots)piece.getItem();
+			if(boots.hasUpgrade(piece, "internal_springs"))
+				event.setDistance(0);
 		}
 	}
 
