@@ -91,6 +91,7 @@ public class IISkinHandler
 		return ItemNBTHelper.getString(item, NBT_ENTRY);
 	}
 
+	@SideOnly(Side.CLIENT)
 	public static void getManualPages()
 	{
 		ManualHelper.getManual().manualContents.removeAll("Contributor Skins");
@@ -100,8 +101,11 @@ public class IISkinHandler
 						"donations through Patreon or simply contributing to II community, can not be overlooked and have to be rewarded.\n"+
 						"For that, a collection of skins has been added to the game, these are applicable to various weapons, ranging from machineguns to howitzers. "+
 						"Huge thanks to all of you, without you this project would take much longer than Soon(TM)."));
+		UUID id = ClientUtils.mc().player.getGameProfile().getId();
+		String uuid = (id==null?ClientUtils.mc().player.getUniqueID(): id).toString();
 		for(IISpecialSkin skin : IISkinHandler.specialSkins.values())
-			skin_pages.add(new IIManualPageContributorSkin(ManualHelper.getManual(), skin));
+			if(skin.appliesToPlayer(uuid))
+				skin_pages.add(new IIManualPageContributorSkin(ManualHelper.getManual(), skin));
 
 		ManualEntry contributor_skins = ManualHelper.getManual().getEntry("Contributor Skins");
 		if(contributor_skins==null)
@@ -123,7 +127,6 @@ public class IISkinHandler
 		public final String[] appliesTo;
 		public final List<String> mods;
 		public int textColor = 0xffffff;
-		public boolean hasCape = false;
 		public EnumRarity rarity = EnumRarity.UNCOMMON;
 
 		public IISpecialSkin(String name, String[] uuid, String[] appliesTo, List<String> mods)
@@ -145,11 +148,18 @@ public class IISkinHandler
 			return !Arrays.asList(appliesTo).isEmpty()&&Arrays.asList(appliesTo).contains(skinnableName);
 		}
 
+		/**
+		 * @param uuid UUID of the player to check
+		 * @return If skin applies to specific user
+		 */
+		public boolean appliesToPlayer(String uuid)
+		{
+			return !Arrays.asList(this.uuid).isEmpty()&&Arrays.asList(this.uuid).contains(uuid);
+		}
+
 		//Couldn't do it in the constructor, because it spitted an error
 		void parseAdditionals()
 		{
-			hasCape = mods.contains("cape");
-
 			//lambdas are love, lambdas are life
 			Optional<String> optional = mods.stream().filter(s -> s.contains("text_color=")).findFirst();
 			optional.ifPresent(s -> this.textColor = Integer.parseInt(s.substring(11), 16));

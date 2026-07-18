@@ -10,6 +10,8 @@ import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.world.WorldServer;
 import pl.pabilo8.immersiveintelligence.common.network.IIMessage;
 
+import java.util.UUID;
+
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 20.07.2021
@@ -42,7 +44,10 @@ public class MessageManualClose extends IIMessage
 			if((skin==null||skin.isEmpty())&&ItemNBTHelper.hasKey(target, "lastSkin"))
 				ItemNBTHelper.remove(target, "lastSkin");
 			else if(skin!=null)
-				ItemNBTHelper.setString(target, "lastSkin", skin);
+			{
+				UUID uniqueID = handler.player.getUniqueID();
+				ItemNBTHelper.setString(target, "lastSkin", uniqueID+":"+skin);
+			}
 	}
 
 	private boolean isManual(ItemStack stack)
