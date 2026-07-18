@@ -227,6 +227,7 @@ public class EntityDrone extends EntityFlying implements ISyncNBTEntity<EntityDr
 			//Create and sustain engine noise
 			if(engineNoise==null)
 				this.engineNoise = new ConditionCompoundSound<>(IISounds.dronePropellerLoop, this.getPositionVector(), this, drone -> !drone.isDead);
+			this.engineNoise.setMaxRange(48);
 			this.engineNoise.setPosition(getPositionVector());
 			this.engineNoise.setVolume(1f);
 			this.engineNoise.setPitch((float)IIEntityUtils.getEntityMotion(this).lengthSquared()*0.1f+0.95f);

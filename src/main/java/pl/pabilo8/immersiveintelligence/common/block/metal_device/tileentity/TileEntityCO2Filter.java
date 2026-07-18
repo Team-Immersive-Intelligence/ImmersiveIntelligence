@@ -2,16 +2,13 @@ package pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity;
 
 import blusunrize.immersiveengineering.api.crafting.FermenterRecipe;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IBlockBounds;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IDirectionalTile;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IHasDummyBlocks;
-import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityFermenter;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal.MultiblockProcess;
 import blusunrize.immersiveengineering.common.blocks.stone.TileEntityBlastFurnaceAdvanced;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
@@ -28,7 +25,10 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.CO2Collector;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
+import pl.pabilo8.immersiveintelligence.common.util.tile.TileEntityIIDirectional;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 
@@ -38,9 +38,10 @@ import java.util.HashMap;
  * @since 19.05.2021
  * @since 15.12.2024
  */
-public class TileEntityCO2Filter extends TileEntityIEBase implements ITickable, IBlockBounds, IDirectionalTile, IHasDummyBlocks
+public class TileEntityCO2Filter extends TileEntityIIDirectional implements ITickable, IBlockBounds, IHasDummyBlocks
 {
 	public static final HashMap<Class<?>, CO2Handler> handlerMap = new HashMap<>();
+	private static final FacingSettings FACING_SETTINGS = new FacingSettings(FacingLimitation.SIDE_CLICKED);
 
 	static
 	{
@@ -60,10 +61,8 @@ public class TileEntityCO2Filter extends TileEntityIEBase implements ITickable, 
 							return 0;
 						int i = 0;
 						for(MultiblockProcess<FermenterRecipe> process : fermenter.processQueue)
-						{
 							if(process.canProcess(fermenter)&&process.processTick%CO2Collector.fermenterCollectTime==0)
 								i += CO2Collector.fermenterCollectAmount;
-						}
 						return i;
 					}
 				}
@@ -90,32 +89,11 @@ public class TileEntityCO2Filter extends TileEntityIEBase implements ITickable, 
 		);
 	}
 
+	@SyncNBT(name = "dummy")
 	public int subBlockID = 0;
-	public EnumFacing facing = EnumFacing.NORTH;
 	public FluidTank tank = new FluidTank(1000);
 	FluidWrapper fluidWrapper = new FluidWrapper(this);
 	IItemHandler insertionHandler = new CO2ItemHandler(this);
-
-	@Override
-	public void readCustomNBT(NBTTagCompound nbt, boolean descPacket)
-	{
-		subBlockID = nbt.getInteger("dummy");
-		facing = EnumFacing.getFront(nbt.getInteger("facing"));
-	}
-
-	@Override
-	public void writeCustomNBT(NBTTagCompound nbt, boolean descPacket)
-	{
-		nbt.setInteger("dummy", subBlockID);
-		nbt.setInteger("facing", facing.ordinal());
-		nbt.setBoolean("noSetup", true);
-	}
-
-	@Override
-	public void receiveMessageFromServer(NBTTagCompound message)
-	{
-		super.receiveMessageFromServer(message);
-	}
 
 	@Override
 	public void update()
@@ -134,64 +112,13 @@ public class TileEntityCO2Filter extends TileEntityIEBase implements ITickable, 
 					{
 						IFluidHandler capability = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, ff.getOpposite());
 						if(capability!=null)
-						{
 							capability.fill(new FluidStack(IIContent.gasCO2, output), true);
-						}
 					}
 				}
 			}
 
 		}
 	}
-
-	@Override
-	public float[] getBlockBounds()
-	{
-		return new float[]{0f, 0, 0f, 1f, 1f, 1f};
-	}
-
-	@Override
-	public EnumFacing getFacing()
-	{
-		return facing;
-	}
-
-	@Override
-	public void setFacing(EnumFacing facing)
-	{
-		this.facing = (facing==EnumFacing.DOWN)?EnumFacing.UP: facing;
-	}
-
-	//All but not down
-	public EnumFacing getFacingForPlacement(EntityLivingBase placer, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ)
-	{
-		return (side==EnumFacing.DOWN)?EnumFacing.UP: side;
-	}
-
-	@Override
-	public int getFacingLimitation()
-	{
-		return 0;
-	}
-
-	@Override
-	public boolean mirrorFacingOnPlacement(EntityLivingBase placer)
-	{
-		return false;
-	}
-
-	@Override
-	public boolean canHammerRotate(EnumFacing side, float hitX, float hitY, float hitZ, EntityLivingBase entity)
-	{
-		return false;
-	}
-
-	@Override
-	public boolean canRotate(EnumFacing axis)
-	{
-		return false;
-	}
-
 
 	@Override
 	public void placeDummies(BlockPos pos, IBlockState state, EnumFacing side, float hitX, float hitY, float hitZ)
@@ -232,13 +159,9 @@ public class TileEntityCO2Filter extends TileEntityIEBase implements ITickable, 
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
 	{
 		if(subBlockID==1&&facing==(this.getFacing()==EnumFacing.UP?EnumFacing.NORTH: this.facing)&&capability==CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
-		{
 			return ((T)fluidWrapper);
-		}
 		if(!isDummy()&&(facing==null||facing.getAxis()!=Axis.Y)&&capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-		{
 			return (T)insertionHandler;
-		}
 		return super.getCapability(capability, facing);
 	}
 
@@ -313,9 +236,7 @@ public class TileEntityCO2Filter extends TileEntityIEBase implements ITickable, 
 		{
 			IItemHandler handlerBelow = getHandlerBelow();
 			if(handlerBelow!=null)
-			{
 				return handlerBelow.insertItem(slot, stack, simulate);
-			}
 			return stack;  // Return full stack if no valid handler
 		}
 
@@ -338,9 +259,7 @@ public class TileEntityCO2Filter extends TileEntityIEBase implements ITickable, 
 		{
 			IItemHandlerModifiable handlerBelow = (IItemHandlerModifiable)getHandlerBelow();
 			if(handlerBelow!=null)
-			{
 				handlerBelow.setStackInSlot(slot, stack);
-			}
 		}
 
 		@Nullable
@@ -348,11 +267,32 @@ public class TileEntityCO2Filter extends TileEntityIEBase implements ITickable, 
 		{
 			TileEntity te = tile.getWorld().getTileEntity(tile.pos.down());
 			if(te!=null&&te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP))
-			{
 				return te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP);
-			}
 			return null;
 		}
+	}
+
+	//--- IBlockBounds ---//
+
+	@Override
+	public float[] getBlockBounds()
+	{
+		return new float[]{0f, 0, 0f, 1f, 1f, 1f};
+	}
+
+	//--- Facing ---//
+
+	@Nonnull
+	@Override
+	protected FacingSettings getFacingSettings()
+	{
+		return FACING_SETTINGS;
+	}
+
+	public EnumFacing getFacingForPlacement(EntityLivingBase placer, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ)
+	{
+		//All but not down
+		return (side==EnumFacing.DOWN)?EnumFacing.UP: side;
 	}
 
 	public static abstract class CO2Handler

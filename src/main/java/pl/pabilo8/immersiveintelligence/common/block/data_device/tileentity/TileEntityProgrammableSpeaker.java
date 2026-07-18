@@ -63,14 +63,8 @@ public class TileEntityProgrammableSpeaker extends TileEntityImmersiveConnectabl
 			if(active)
 				this.updateSound();
 			if(!soundID.isEmpty())
-			{
-
 				if(sound!=null)
-				{
 					ImmersiveEngineering.proxy.handleTileSound(sound, this, this.active, soundVolume*((ProgrammableSpeaker.soundRange+4)/20f), tone);
-				}
-
-			}
 		}
 		else if(hasWorld())
 		{

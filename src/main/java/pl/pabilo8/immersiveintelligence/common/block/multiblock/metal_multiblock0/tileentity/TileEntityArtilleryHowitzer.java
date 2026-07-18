@@ -502,16 +502,16 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 		Vec3d posDoor = new Vec3d(getBlockPosForPos(525));
 
 		soundDoorOpen = new ConditionCompoundSound<>(IISounds.slidingDoorOpenLoop, posDoor, this,
-				te -> hasEnergy.get()&&door.getState()&&!door.isFullyOpened());
+				te -> !te.isInvalid()&&hasEnergy.get()&&door.getState()&&!door.isFullyOpened());
 
 		soundDoorClose = new ConditionCompoundSound<>(IISounds.slidingDoorCloseLoop, posDoor, this,
-				te -> hasEnergy.get()&&!door.getState()&&!door.isFullyClosed());
+				te -> !te.isInvalid()&&hasEnergy.get()&&!door.getState()&&!door.isFullyClosed());
 
 		soundRotationH = new ConditionCompoundSound<>(IISounds.turntableHeavyForwardLoop, posDoor, this,
-				te -> hasActiveEnergy.get()&&platformOK.get()&&!yawOK.get());
+				te -> !te.isInvalid()&&hasActiveEnergy.get()&&platformOK.get()&&!yawOK.get());
 
 		soundRotationV = new ConditionCompoundSound<>(IISounds.electricMotorHeavyForwardLoop, posDoor, this,
-				te -> hasActiveEnergy.get()&&platformOK.get()&&!pitchOK.get());
+				te -> !te.isInvalid()&&hasActiveEnergy.get()&&platformOK.get()&&!pitchOK.get());
 	}
 
 	@Override
@@ -824,9 +824,9 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 		final float executeTime;
 
 		ArtilleryHowitzerAction(boolean requiresPlatform, boolean platformUp, GunPosition gunPosition,
-								Predicate<TileEntityArtilleryHowitzer> requirements,
-								Predicate<TileEntityArtilleryHowitzer> fulfilled,
-								int animationTime, @Nullable String alias, float executeTime)
+		                        Predicate<TileEntityArtilleryHowitzer> requirements,
+		                        Predicate<TileEntityArtilleryHowitzer> fulfilled,
+		                        int animationTime, @Nullable String alias, float executeTime)
 		{
 			this.requiresPlatform = requiresPlatform;
 			this.platformUp = platformUp;

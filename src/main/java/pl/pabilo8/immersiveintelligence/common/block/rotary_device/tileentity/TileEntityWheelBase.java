@@ -87,7 +87,7 @@ public abstract class TileEntityWheelBase extends TileEntityMechanicalConnectabl
 				if(!(connection.cableType instanceof MotorBeltType))
 					continue;
 				loopSound = new ConditionCompoundSound<>(((MotorBeltType)connection.cableType).getLoopSound(),
-						new Vec3d(pos).addVector(0.5, 0.5, 0.5), this, o -> o.getNetwork().getNetworkSpeed() > 1);
+						new Vec3d(pos).addVector(0.5, 0.5, 0.5), this, o -> !o.isInvalid()&&o.getNetwork().getNetworkSpeed() > 1);
 				break;
 			}
 

@@ -1,18 +1,10 @@
 package pl.pabilo8.immersiveintelligence.common.block.fortification.tileentity;
 
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IAdvancedCollisionBounds;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IAdvancedSelectionBounds;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IDirectionalTile;
-import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IAdvancedBounds;
+import pl.pabilo8.immersiveintelligence.common.util.tile.TileEntityIIDirectional;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,89 +12,22 @@ import java.util.List;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 16.08.2019
  */
-public class TileEntitySandbags extends TileEntityIEBase implements IDirectionalTile, IAdvancedCollisionBounds, IAdvancedSelectionBounds
+public class TileEntitySandbags extends TileEntityIIDirectional implements IAdvancedBounds
 {
-	public EnumFacing facing = EnumFacing.NORTH;
+	private static final FacingSettings FACING_SETTINGS = new FacingSettings(FacingLimitation.HORIZONTAL)
+			.withRotation(true);
 
 	@Override
-	public void readCustomNBT(NBTTagCompound nbt, boolean descPacket)
+	@Nonnull
+	protected FacingSettings getFacingSettings()
 	{
-		facing = EnumFacing.getFront(nbt.getInteger("facing"));
-	}
-
-	@Override
-	public void writeCustomNBT(NBTTagCompound nbt, boolean descPacket)
-	{
-		nbt.setInteger("facing", facing.ordinal());
+		return FACING_SETTINGS;
 	}
 
 	@Override
-	public EnumFacing getFacing()
-	{
-		return facing;
-	}
-
-	@Override
-	public void setFacing(EnumFacing facing)
-	{
-		this.facing = facing;
-	}
-
-	@Override
-	public int getFacingLimitation()
-	{
-		return 2;
-	}
-
-	@Override
-	public boolean mirrorFacingOnPlacement(EntityLivingBase placer)
-	{
-		return false;
-	}
-
-	@Override
-	public boolean canHammerRotate(EnumFacing side, float hitX, float hitY, float hitZ, EntityLivingBase entity)
-	{
-		return true;
-	}
-
-	@Override
-	public boolean canRotate(EnumFacing axis)
-	{
-		return true;
-	}
-
-	@Override
-	public float[] getBlockBounds()
-	{
-		return null;
-	}
-
-	@Override
-	public List<AxisAlignedBB> getAdvancedColisionBounds()
-	{
-		return getAdvancedSelectionBounds();
-	}
-
-	public boolean hasNeighbour()
-	{
-		BlockPos pos = getPos().offset(facing.rotateY());
-		return world.getTileEntity(pos) instanceof TileEntitySandbags;
-	}
-
-	public boolean isLower()
-	{
-		BlockPos up = getPos().up();
-		TileEntity te = world.getTileEntity(up);
-		return te instanceof TileEntitySandbags;
-	}
-
-	@Override
-	public List<AxisAlignedBB> getAdvancedSelectionBounds()
+	public List<AxisAlignedBB> getBounds(boolean collision)
 	{
 		List<AxisAlignedBB> aabb = new ArrayList<>();
-		// TODO: 28.12.2021 new aabb
-
 		switch(facing)
 		{
 			case NORTH:
@@ -128,11 +53,5 @@ public class TileEntitySandbags extends TileEntityIEBase implements IDirectional
 		}
 
 		return aabb;
-	}
-
-	@Override
-	public boolean isOverrideBox(AxisAlignedBB box, EntityPlayer player, RayTraceResult mop, ArrayList<AxisAlignedBB> list)
-	{
-		return false;
 	}
 }

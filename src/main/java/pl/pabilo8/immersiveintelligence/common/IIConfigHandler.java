@@ -715,13 +715,13 @@ public class IIConfigHandler
 			public static class AlarmSiren
 			{
 				@Comment({"The distance the siren can be heard from."})
-				public static int soundRange = 16;
+				public static int soundRange = 36;
 			}
 
 			public static class ProgrammableSpeaker
 			{
 				@Comment({"The distance the speaker can be heard from."})
-				public static int soundRange = 24;
+				public static int soundRange = 36;
 			}
 
 			public static class Filler
