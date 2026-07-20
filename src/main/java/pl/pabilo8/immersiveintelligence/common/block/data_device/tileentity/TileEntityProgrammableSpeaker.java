@@ -5,7 +5,6 @@ import blusunrize.immersiveengineering.api.Lib;
 import blusunrize.immersiveengineering.api.TargetingInfo;
 import blusunrize.immersiveengineering.api.energy.wires.IImmersiveConnectable;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
-import blusunrize.immersiveengineering.api.energy.wires.TileEntityImmersiveConnectable;
 import blusunrize.immersiveengineering.api.energy.wires.WireType;
 import blusunrize.immersiveengineering.api.energy.wires.redstone.IRedstoneConnector;
 import blusunrize.immersiveengineering.api.energy.wires.redstone.RedstoneWireNetwork;
@@ -15,10 +14,8 @@ import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumDyeColor;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.*;
 import net.minecraft.util.math.*;
-import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
@@ -28,9 +25,9 @@ import pl.pabilo8.immersiveintelligence.api.data.device.DataWireNetwork;
 import pl.pabilo8.immersiveintelligence.api.data.device.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedTextOverlay;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.ProgrammableSpeaker;
-import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
-import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
+import pl.pabilo8.immersiveintelligence.common.util.tile.TileEntityIIConnectable;
 import pl.pabilo8.immersiveintelligence.common.wire.IIDataWireType;
 
 import java.util.Objects;
@@ -39,20 +36,24 @@ import java.util.Objects;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 15.06.2019
  */
-public class TileEntityProgrammableSpeaker extends TileEntityImmersiveConnectable
+public class TileEntityProgrammableSpeaker extends TileEntityIIConnectable
 		implements IRedstoneConnector, IDataConnector, ITickable, IHammerInteraction, IAdvancedTextOverlay, ISoundTile
 {
+	@SyncNBT(name = "redstoneChannel", events = SyncEvents.TILE_CUSTOM1)
 	public int redstoneChannel = 0;
-	public boolean rsDirty = false;
+	@SyncNBT(events = SyncEvents.TILE_CUSTOM2)
 	public boolean active = false;
-	public String soundID = ImmersiveIntelligence.MODID+":siren";
-	public float soundVolume = 1f, tone = 1f;
+	@SyncNBT(events = SyncEvents.TILE_CUSTOM2)
+	public String sound = ImmersiveIntelligence.MODID+":siren";
+	@SyncNBT(events = SyncEvents.TILE_CUSTOM2)
+	public float volume = 1f, tone = 1f;
+
+	public boolean rsDirty = false;
 	protected WireType wireData = null;
 	protected RedstoneWireNetwork redstoneNetwork = new RedstoneWireNetwork().add(this);
 	protected DataWireNetwork dataNetwork = new DataWireNetwork().add(this);
-	EnumFacing facing = EnumFacing.NORTH;
 	@SideOnly(Side.CLIENT)
-	SoundEvent sound;
+	SoundEvent playedSound;
 	private boolean refreshWireNetwork = false;
 
 	@Override
@@ -62,16 +63,16 @@ public class TileEntityProgrammableSpeaker extends TileEntityImmersiveConnectabl
 		{
 			if(active)
 				this.updateSound();
-			if(!soundID.isEmpty())
-				if(sound!=null)
-					ImmersiveEngineering.proxy.handleTileSound(sound, this, this.active, soundVolume*((ProgrammableSpeaker.soundRange+4)/20f), tone);
+			if(!sound.isEmpty())
+				if(playedSound!=null)
+					ImmersiveEngineering.proxy.handleTileSound(playedSound, this, this.active, volume*((ProgrammableSpeaker.soundRange+4)/20f), tone);
 		}
 		else if(hasWorld())
 		{
 			boolean wasActive = active;
 			active = this.getNetwork().getPowerOutput(redstoneChannel) > 0;
 			if(active^wasActive)
-				sendSoundUpdate();
+				updateTileForEvent(SyncEvents.TILE_CUSTOM2);
 		}
 
 		if(hasWorld()&&!world.isRemote&&!refreshWireNetwork)
@@ -99,7 +100,7 @@ public class TileEntityProgrammableSpeaker extends TileEntityImmersiveConnectabl
 	@Override
 	public void onChange()
 	{
-		soundVolume = getNetwork().channelValues[this.redstoneChannel]/15f;
+		volume = getNetwork().channelValues[this.redstoneChannel]/15f;
 	}
 
 	@Override
@@ -121,18 +122,12 @@ public class TileEntityProgrammableSpeaker extends TileEntityImmersiveConnectabl
 	}
 
 	@Override
-	public World getConnectorWorld()
-	{
-		return getWorld();
-	}
-
-	@Override
 	public void onPacketReceive(DataPacket packet)
 	{
 		IIDataHandlingUtils.optionalInt('t', packet).ifPresent(t ->
 				tone = MathHelper.clamp(t/100f, -2, 2));
 		IIDataHandlingUtils.optionalInt('v', packet).ifPresent(v ->
-				soundVolume = MathHelper.clamp(v/100f, 0, 1));
+				volume = MathHelper.clamp(v/100f, 0, 1));
 
 		//Update played sound
 		IIDataHandlingUtils.expectingStringParam('s', packet, s -> {
@@ -143,38 +138,16 @@ public class TileEntityProgrammableSpeaker extends TileEntityImmersiveConnectabl
 					world.playSound(null, getPos(), soundEvent, SoundCategory.BLOCKS, ((ProgrammableSpeaker.soundRange+4)/20f), tone);
 			}
 			else
-				soundID = packet.get('s').toString();
+				sound = packet.get('s').toString();
 		});
-		sendSoundUpdate();
-	}
-
-	@Override
-	public void receiveMessageFromServer(NBTTagCompound message)
-	{
-		if(message.hasKey("active"))
-			active = message.getBoolean("active");
-		if(message.hasKey("tone"))
-			tone = message.getFloat("tone");
-		if(message.hasKey("volume"))
-			soundVolume = message.getFloat("volume");
-		if(message.hasKey("sound"))
-			soundID = message.getString("sound");
-	}
-
-	private void sendSoundUpdate()
-	{
-		IIPacketHandler.sendToClient(this, new MessageIITileSync(this, EasyNBT.newNBT()
-				.withBoolean("active", active)
-				.withFloat("tone", tone)
-				.withFloat("volume", soundVolume)
-				.withString("sound", soundID)
-		));
+		if(!world.isRemote)
+			updateTileForEvent(SyncEvents.TILE_CUSTOM2);
 	}
 
 	@SideOnly(Side.CLIENT)
 	private void updateSound()
 	{
-		sound = SoundEvent.REGISTRY.getObject(new ResourceLocation(soundID));
+		playedSound = SoundEvent.REGISTRY.getObject(new ResourceLocation(sound));
 	}
 
 	@Override
@@ -187,7 +160,6 @@ public class TileEntityProgrammableSpeaker extends TileEntityImmersiveConnectabl
 	public void updateInput(byte[] signals)
 	{
 		rsDirty = false;
-
 	}
 
 	@Override
@@ -197,11 +169,21 @@ public class TileEntityProgrammableSpeaker extends TileEntityImmersiveConnectabl
 		if(player.isSneaking())
 			redstoneChannel = (redstoneChannel+1)%16;
 
-		markDirty();
 		redstoneNetwork.updateValues();
 		onChange();
-		this.markContainingBlockForUpdate(null);
-		world.addBlockEvent(getPos(), this.getBlockType(), 254, 0);
+		updateTileForEvent(SyncEvents.TILE_CUSTOM1);
+		return true;
+	}
+
+	@Override
+	public boolean acceptsWireType(WireType category)
+	{
+		return false;
+	}
+
+	@Override
+	public boolean isRelay()
+	{
 		return true;
 	}
 
@@ -209,7 +191,8 @@ public class TileEntityProgrammableSpeaker extends TileEntityImmersiveConnectabl
 	public boolean canConnectCable(WireType cableType, TargetingInfo target, Vec3i offset)
 	{
 		String category = cableType.getCategory();
-		return (Objects.equals(category, WireType.REDSTONE.getCategory())&&this.limitType==null)||(Objects.equals(category, IIDataWireType.DATA.getCategory())&&this.wireData==null);
+		return (Objects.equals(category, WireType.REDSTONE.getCategory())&&this.limitType==null)
+				||(Objects.equals(category, IIDataWireType.DATA.getCategory())&&this.wireData==null);
 	}
 
 	@Override
@@ -232,7 +215,6 @@ public class TileEntityProgrammableSpeaker extends TileEntityImmersiveConnectabl
 	@Override
 	public void removeCable(Connection connection)
 	{
-
 		WireType type = connection!=null?connection.cableType: null;
 		if(type==null)
 		{
@@ -267,38 +249,6 @@ public class TileEntityProgrammableSpeaker extends TileEntityImmersiveConnectabl
 	}
 
 	@Override
-	public void writeCustomNBT(NBTTagCompound nbt, boolean descPacket)
-	{
-		super.writeCustomNBT(nbt, descPacket);
-		nbt.setBoolean("active", active);
-
-		nbt.setString("sound", soundID);
-		nbt.setFloat("volume", soundVolume);
-
-		nbt.setInteger("facing", facing.ordinal());
-
-		nbt.setInteger("redstoneChannel", redstoneChannel);
-
-		nbt.setFloat("tone", tone);
-	}
-
-	@Override
-	public void readCustomNBT(NBTTagCompound nbt, boolean descPacket)
-	{
-		super.readCustomNBT(nbt, descPacket);
-		active = nbt.getBoolean("active");
-
-		soundID = nbt.getString("sound");
-		soundVolume = nbt.getFloat("volume");
-
-		facing = EnumFacing.getFront(nbt.getInteger("facing"));
-
-		redstoneChannel = nbt.getInteger("redstoneChannel");
-
-		tone = nbt.getFloat("tone");
-	}
-
-	@Override
 	public Vec3d getConnectionOffset(Connection con)
 	{
 		return new Vec3d(0.5f, 0.2f, 0.5f);
@@ -307,27 +257,8 @@ public class TileEntityProgrammableSpeaker extends TileEntityImmersiveConnectabl
 	@Override
 	public void onConnectivityUpdate(BlockPos pos, int dimension)
 	{
+		super.onConnectivityUpdate(pos, dimension);
 		refreshWireNetwork = false;
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public AxisAlignedBB getRenderBoundingBox()
-	{
-		int inc = getRenderRadiusIncrease();
-		return new AxisAlignedBB(this.pos.getX()-inc, this.pos.getY()-inc, this.pos.getZ()-inc,
-				this.pos.getX()+inc+1, this.pos.getY()+inc+1, this.pos.getZ()+inc+1);
-	}
-
-	int getRenderRadiusIncrease()
-	{
-		return Math.max(WireType.REDSTONE.getMaxLength(), IIDataWireType.DATA.getMaxLength());
-	}
-
-	@Override
-	public boolean moveConnectionTo(Connection c, BlockPos newEnd)
-	{
-		return true;
 	}
 
 	@SideOnly(Side.CLIENT)

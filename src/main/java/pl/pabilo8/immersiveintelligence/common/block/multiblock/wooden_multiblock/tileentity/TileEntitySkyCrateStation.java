@@ -97,7 +97,7 @@ public class TileEntitySkyCrateStation extends TileEntityMultiblockConnectable<T
 			animation = nbt.getInteger("animation");
 			progress = nbt.getFloat("progress");
 			if(nbt.hasKey("rotation"))
-				rotation.fromNBT(nbt.getCompoundTag("rotation"));
+				rotation.deserializeNBT(nbt.getCompoundTag("rotation"));
 		}
 	}
 
@@ -118,7 +118,7 @@ public class TileEntitySkyCrateStation extends TileEntityMultiblockConnectable<T
 
 			nbt.setInteger("animation", animation);
 			nbt.setFloat("progress", progress);
-			nbt.setTag("rotation", rotation.toNBT());
+			nbt.setTag("rotation", rotation.serializeNBT());
 		}
 	}
 
@@ -133,7 +133,7 @@ public class TileEntitySkyCrateStation extends TileEntityMultiblockConnectable<T
 		if(message.hasKey("progress"))
 			progress = message.getFloat("progress");
 		if(message.hasKey("rotation"))
-			rotation.fromNBT(message.getCompoundTag("rotation"));
+			rotation.deserializeNBT(message.getCompoundTag("rotation"));
 
 		super.receiveMessageFromServer(message);
 	}
@@ -463,7 +463,7 @@ public class TileEntitySkyCrateStation extends TileEntityMultiblockConnectable<T
 				tag.withInt("animation", animation).withFloat("progress", progress);
 				break;
 			case 2:
-				tag.withTag("rotation", rotation.toNBT()).withTag("inventory", Utils.writeInventory(inventory));
+				tag.withTag("rotation", rotation.serializeNBT()).withTag("inventory", Utils.writeInventory(inventory));
 				break;
 		}
 

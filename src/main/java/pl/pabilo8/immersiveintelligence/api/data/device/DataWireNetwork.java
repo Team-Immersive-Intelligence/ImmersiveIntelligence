@@ -45,12 +45,10 @@ public class DataWireNetwork
 			}
 			if(connsAtBlock!=null&&iic!=null)
 				for(Connection c : connsAtBlock)
-				{
 					if(Objects.equals(c.cableType.getCategory(), IIDataWireType.DATA_CATEGORY)&&
 							iic.allowEnergyToPass(c)&&
 							!closed.contains(c.end))
 						open.add(c.end);
-				}
 		}
 	}
 
@@ -58,29 +56,6 @@ public class DataWireNetwork
 	{
 		connectors.add(new WeakReference<>(connector));
 		return this;
-	}
-
-	public void mergeNetwork(DataWireNetwork wireNetwork)
-	{
-		List<WeakReference<IDataConnector>> conns = null;
-		if(connectors.size() > 0)
-			conns = connectors;
-		else if(wireNetwork.connectors.size() > 0)
-			conns = wireNetwork.connectors;
-		if(conns==null)//No connectors to merge
-			return;
-		IDataConnector start = null;
-		for(WeakReference<IDataConnector> conn : conns)
-			if(conn.get()!=null)
-			{
-				start = conn.get();
-				break;
-			}
-		if(start!=null)
-		{
-			BlockPos startPos = Utils.toCC(start);
-			updateConnectors(startPos, start.getConnectorWorld(), this);
-		}
 	}
 
 	public void removeFromNetwork(IDataConnector removedConnector)
@@ -108,9 +83,7 @@ public class DataWireNetwork
 		{
 			IDataConnector connector = connectorRef.get();
 			if(connector!=null&&!connector.equals(sender))
-			{
 				connector.onPacketReceive(packet);
-			}
 		}
 	}
 }

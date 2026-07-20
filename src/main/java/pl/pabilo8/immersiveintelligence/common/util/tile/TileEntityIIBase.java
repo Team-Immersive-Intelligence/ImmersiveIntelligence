@@ -43,6 +43,12 @@ public class TileEntityIIBase extends TileEntityIEBase
 	public void receiveMessageFromClient(@Nonnull NBTTagCompound message)
 	{
 		NBTSerialisation.synchroniseFor(this, (tag, entity) -> tag.deserializeAll(this, message, true));
+
+		if(!message.hasNoTags())
+		{
+			NBTSerialisation.synchroniseFor(this, (tag, tile) -> tag.deserializeAll(tile, message, true));
+			IIPacketHandler.sendToClient(new MessageIITileSync(this, message));
+		}
 	}
 
 

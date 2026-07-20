@@ -4,12 +4,8 @@ import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IBlockBounds;
 import blusunrize.immersiveengineering.common.util.Utils;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -17,16 +13,21 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.rotary.MotorBeltType;
 import pl.pabilo8.immersiveintelligence.client.util.carversound.ConditionCompoundSound;
+import pl.pabilo8.immersiveintelligence.common.util.tile.TileEntityIIDirectional.FacingLimitation;
+import pl.pabilo8.immersiveintelligence.common.util.tile.TileEntityIIDirectional.FacingSettings;
 
+import javax.annotation.Nonnull;
 import java.util.Set;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 20.07.2026
+ * @ii-approved 0.3.1
  * @since 29.12.2019
  */
 public abstract class TileEntityWheelBase extends TileEntityMechanicalConnectable implements IBlockBounds
 {
-	public EnumFacing facing = EnumFacing.NORTH;
+	private static final FacingSettings FACING_SETTINGS = new FacingSettings(FacingLimitation.HORIZONTAL_TOWARDS_CLICKED);
 	@SideOnly(Side.CLIENT)
 	private ConditionCompoundSound<TileEntityMechanicalConnectable> loopSound;
 
@@ -96,55 +97,11 @@ public abstract class TileEntityWheelBase extends TileEntityMechanicalConnectabl
 			loopSound.setPitch(((float)MathHelper.clamp(getNetwork().getNetworkSpeed()/80f, 0, 2)));
 	}
 
+	@Nonnull
 	@Override
-	public EnumFacing getFacing()
+	public FacingSettings getFacingSettings()
 	{
-		return this.facing;
-	}
-
-	@Override
-	public void setFacing(EnumFacing facing)
-	{
-		this.facing = facing;
-	}
-
-	@Override
-	public int getFacingLimitation()
-	{
-		return 5;
-	}
-
-	@Override
-	public boolean mirrorFacingOnPlacement(EntityLivingBase placer)
-	{
-		return false;
-	}
-
-	@Override
-	public boolean canHammerRotate(EnumFacing side, float hitX, float hitY, float hitZ, EntityLivingBase entity)
-	{
-		return false;
-	}
-
-	@Override
-	public boolean canRotate(EnumFacing axis)
-	{
-		return false;
-	}
-
-
-	@Override
-	public void writeCustomNBT(NBTTagCompound nbt, boolean descPacket)
-	{
-		super.writeCustomNBT(nbt, descPacket);
-		nbt.setInteger("facing", facing.ordinal());
-	}
-
-	@Override
-	public void readCustomNBT(NBTTagCompound nbt, boolean descPacket)
-	{
-		super.readCustomNBT(nbt, descPacket);
-		facing = EnumFacing.getFront(nbt.getInteger("facing"));
+		return FACING_SETTINGS;
 	}
 
 	@Override
@@ -156,18 +113,9 @@ public abstract class TileEntityWheelBase extends TileEntityMechanicalConnectabl
 	@Override
 	public void onConnectivityUpdate(BlockPos pos, int dimension)
 	{
+		super.onConnectivityUpdate(pos, dimension);
 		refreshBeltNetwork = false;
 	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public AxisAlignedBB getRenderBoundingBox()
-	{
-		int inc = getRenderRadiusIncrease();
-		return new AxisAlignedBB(this.pos.getX()-inc, this.pos.getY()-inc, this.pos.getZ()-inc, this.pos.getX()+inc+1, this.pos.getY()+inc+1, this.pos.getZ()+inc+1);
-	}
-
-	protected abstract int getRenderRadiusIncrease();
 
 	@Override
 	public float[] getBlockBounds()
@@ -201,22 +149,8 @@ public abstract class TileEntityWheelBase extends TileEntityMechanicalConnectabl
 	@Override
 	public Axis getConnectionAxis()
 	{
-		switch(facing)
-		{
-			case NORTH:
-			case SOUTH:
-				return Axis.X;
-			case EAST:
-			case WEST:
-				return Axis.Z;
-		}
-		return Axis.Y;
-	}
-
-
-	@Override
-	public BlockPos getConnectionPos()
-	{
-		return getPos().offset(facing);
+		if(facing.getAxis()==Axis.Y)
+			return Axis.Y;
+		return facing.rotateY().getAxis();
 	}
 }

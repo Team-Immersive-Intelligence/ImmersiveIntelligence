@@ -15,7 +15,10 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.api.crafting.SawmillRecipe;
 import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIMultiblockRecipe;
-import pl.pabilo8.immersiveintelligence.api.rotary.*;
+import pl.pabilo8.immersiveintelligence.api.rotary.CapabilityRotaryEnergy;
+import pl.pabilo8.immersiveintelligence.api.rotary.IIRotaryUtils;
+import pl.pabilo8.immersiveintelligence.api.rotary.IRotaryEnergy;
+import pl.pabilo8.immersiveintelligence.api.rotary.RotaryStorage;
 import pl.pabilo8.immersiveintelligence.api.upgrade.IManagedUpgradableDevice;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeManager;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
@@ -27,7 +30,6 @@ import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.multiblock.MultiblockSawmill;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
-import pl.pabilo8.immersiveintelligence.common.network.messages.MessageRotaryPowerSync;
 import pl.pabilo8.immersiveintelligence.common.util.IIDamageSources;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
@@ -47,11 +49,11 @@ import static pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_mu
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 13.04.2020
  */
-public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<TileEntitySawmill, SawmillRecipe> implements IRotationalEnergyBlock, IBooleanAnimatedPartsBlock, IManagedUpgradableDevice<TileEntitySawmill>
+public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<TileEntitySawmill, SawmillRecipe> implements IBooleanAnimatedPartsBlock, IManagedUpgradableDevice<TileEntitySawmill>
 {
 	@SyncNBT
 	public MultiblockInteractablePart vise;
-	@SyncNBT
+	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_RECIPE_CHANGED, SyncEvents.TILE_ENERGY_CHANGED})
 	public RotaryStorage rotation = new RotaryStorage(0, 0)
 	{
 		@Override
@@ -156,7 +158,8 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 			assert cap!=null;
 			if(rotation.handleRotation(cap, rotaryFacing))
 			{
-				IIPacketHandler.sendToClient(new MessageRotaryPowerSync(world, getPos(), 0, rotation));
+				if(!world.isRemote)
+					updateTileForEvent(SyncEvents.TILE_ENERGY_CHANGED);
 				receivesPower = true;
 			}
 		}
@@ -168,7 +171,7 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 			{
 				rotation.grow(0, 0, 0.98f);
 				if(!world.isRemote)
-					IIPacketHandler.sendToClient(new MessageRotaryPowerSync(world, getPos(), 0, rotation));
+					updateTileForEvent(SyncEvents.TILE_ENERGY_CHANGED);
 			}
 
 			//Hurt entities stepping on sawblade
@@ -305,17 +308,7 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 			((ISawblade)sawblade.getItem()).damageTool(sawblade, process.recipe.getHardness());
 	}
 
-	//--- IRotationalEnergyBlock ---//
-
-	@Override
-	public void updateRotationStorage(float speed, float torque, int partID)
-	{
-		if(world.isRemote)
-		{
-			rotation.setRotationSpeed(speed);
-			rotation.setTorque(torque);
-		}
-	}
+	//--- IBooleanAnimatedPartsBlock ---//
 
 	@Override
 	public void onAnimationChangeClient(boolean state, int part)

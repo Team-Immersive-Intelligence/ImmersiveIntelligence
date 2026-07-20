@@ -15,6 +15,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -38,6 +39,8 @@ import java.util.ArrayList;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 20.07.2026
+ * @ii-approved 0.3.1
  * @since 17.05.2019
  */
 public class BlockIIMechanicalConnector extends BlockIITileProvider<IIBlockTypes_MechanicalConnector>
@@ -139,7 +142,7 @@ public class BlockIIMechanicalConnector extends BlockIITileProvider<IIBlockTypes
 							}
 						}
 					}
-					if(applicableWires.size() > 0)
+					if(!applicableWires.isEmpty())
 					{
 						ItemStack heldItem = pInventory.get(player.inventory.currentItem);
 						if(heldItem.getItem() instanceof IWireCoil)
@@ -153,6 +156,12 @@ public class BlockIIMechanicalConnector extends BlockIITileProvider<IIBlockTypes
 			}
 		}
 		return super.getPickBlock(state, target, world, pos, player);
+	}
+
+	@Override
+	public boolean canIEBlockBePlaced(World world, BlockPos pos, IBlockState newState, EnumFacing side, float hitX, float hitY, float hitZ, EntityPlayer player, ItemStack stack)
+	{
+		return side.getAxis().isHorizontal();
 	}
 
 	public enum IIBlockTypes_MechanicalConnector implements IITileProviderEnum

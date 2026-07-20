@@ -1,25 +1,25 @@
 package pl.pabilo8.immersiveintelligence.common.block.rotary_device.tileentity;
 
+import blusunrize.immersiveengineering.api.energy.wires.WireType;
 import pl.pabilo8.immersiveintelligence.api.rotary.IIRotaryUtils;
-import pl.pabilo8.immersiveintelligence.api.rotary.MotorBeltType;
 
+/**
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 20.07.2026
+ * @ii-approved 0.3.1
+ * @since 08.08.2024
+ */
 public class TileEntityWheelIron extends TileEntityWheelBase
 {
 	@Override
-	protected int getRenderRadiusIncrease()
+	public boolean acceptsWireType(WireType category)
 	{
-		return limitType!=null?limitType.getMaxLength(): 2;
+		return IIRotaryUtils.BELT_CATEGORY.equals(category.getCategory());
 	}
 
 	@Override
 	public float getRadius()
 	{
 		return 6;
-	}
-
-	@Override
-	protected boolean canConnectBelt(MotorBeltType cableType)
-	{
-		return cableType.getBeltCategory().equals(IIRotaryUtils.BELT_CATEGORY);
 	}
 }

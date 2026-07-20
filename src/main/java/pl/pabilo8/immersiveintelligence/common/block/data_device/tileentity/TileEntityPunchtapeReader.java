@@ -1,15 +1,11 @@
 package pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity;
 
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IDirectionalTile;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IHammerInteraction;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IPlayerInteraction;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IRedstoneOutput;
-import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
@@ -23,20 +19,30 @@ import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
+import pl.pabilo8.immersiveintelligence.common.util.tile.TileEntityIIDirectional;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @author Avalon (avalon@iiteam.net)
+ * @updated 20.07.2026
+ * @ii-approved 0.3.1
  * @since 11.06.2019
- * @updated 03.15.2026
  */
-public class TileEntityPunchtapeReader extends TileEntityIEBase implements ITickable, IRedstoneOutput, IDataDevice, IPlayerInteraction, IHammerInteraction, IDirectionalTile
+public class TileEntityPunchtapeReader extends TileEntityIIDirectional implements ITickable, IRedstoneOutput, IDataDevice, IPlayerInteraction, IHammerInteraction
 {
+	private static final FacingSettings FACING_SETTINGS = new FacingSettings(FacingLimitation.HORIZONTAL)
+			.withMirroringOnPlacement(true);
 	public boolean hadRedstone = false;
 	public int rsTime = 0;
-	EnumFacing facing = EnumFacing.NORTH;
-	DataPacket received = null;
-	private PunchtapeReaderMode mode = PunchtapeReaderMode.REDSTONE_INDIFFERENT;
+
+	@SyncNBT
+	public DataPacket received = null;
+	@SyncNBT
+	public PunchtapeReaderMode mode = PunchtapeReaderMode.REDSTONE_INDIFFERENT;
 
 	@Override
 	public void update()
@@ -77,24 +83,6 @@ public class TileEntityPunchtapeReader extends TileEntityIEBase implements ITick
 	}
 
 	@Override
-	public void readCustomNBT(NBTTagCompound nbt, boolean descPacket)
-	{
-		mode = PunchtapeReaderMode.values()[nbt.getInteger("mode")];
-		setFacing(EnumFacing.getFront(nbt.getInteger("facing")));
-		if(nbt.hasKey("received"))
-			received = new DataPacket(nbt.getCompoundTag("received"));
-	}
-
-	@Override
-	public void writeCustomNBT(NBTTagCompound nbt, boolean descPacket)
-	{
-		nbt.setInteger("mode", mode.ordinal());
-		nbt.setInteger("facing", facing.ordinal());
-		if(received!=null)
-			nbt.setTag("received", received.serializeNBT());
-	}
-
-	@Override
 	public void onReceive(DataPacket packet, EnumFacing side)
 	{
 
@@ -114,43 +102,11 @@ public class TileEntityPunchtapeReader extends TileEntityIEBase implements ITick
 		return true;
 	}
 
+	@Nonnull
 	@Override
-	public EnumFacing getFacing()
+	protected FacingSettings getFacingSettings()
 	{
-		return facing;
-	}
-
-	@Override
-	public void setFacing(EnumFacing facing)
-	{
-		if(facing.getAxis().isHorizontal())
-			this.facing = facing;
-		else
-			this.facing = EnumFacing.NORTH;
-	}
-
-	@Override
-	public int getFacingLimitation()
-	{
-		return 2;
-	}
-
-	@Override
-	public boolean mirrorFacingOnPlacement(EntityLivingBase placer)
-	{
-		return true;
-	}
-
-	@Override
-	public boolean canHammerRotate(EnumFacing side, float hitX, float hitY, float hitZ, EntityLivingBase entity)
-	{
-		return !entity.isSneaking();
-	}
-
-	@Override
-	public boolean canRotate(EnumFacing axis)
-	{
-		return true;
+		return FACING_SETTINGS;
 	}
 
 	@Override
@@ -168,7 +124,7 @@ public class TileEntityPunchtapeReader extends TileEntityIEBase implements ITick
 		return true;
 	}
 
-	private enum PunchtapeReaderMode
+	public enum PunchtapeReaderMode implements ISerializableEnum
 	{
 		REDSTONE_INDIFFERENT,
 		PACKET_ON_REDSTONE,

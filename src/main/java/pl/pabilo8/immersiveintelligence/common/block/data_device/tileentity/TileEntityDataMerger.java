@@ -1,17 +1,13 @@
 package pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity;
 
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IBlockBounds;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IDirectionalTile;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IPlayerInteraction;
-import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.ITickable;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -21,8 +17,11 @@ import pl.pabilo8.immersiveintelligence.api.data.device.IDataDevice;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyCollection;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IIIGuiMultiblockTile;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IIIInventory;
+import pl.pabilo8.immersiveintelligence.common.util.tile.TileEntityIIDirectional;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -31,37 +30,26 @@ import java.util.List;
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @updated 02.06.2026
+ * @ii-approved 0.3.1
  * @since 17.05.2019
  */
-public class TileEntityDataMerger extends TileEntityIEBase implements IPlayerInteraction, ITickable, IBlockBounds, IDirectionalTile, IDataDevice, IIIGuiMultiblockTile, IIIInventory
+public class TileEntityDataMerger extends TileEntityIIDirectional implements IPlayerInteraction, IBlockBounds, IDataDevice, IIIGuiMultiblockTile, IIIInventory
 {
-	public EnumFacing facing = EnumFacing.NORTH;
+	private static final FacingSettings FACING_SETTINGS = new FacingSettings(FacingLimitation.HORIZONTAL);
 
+	@SyncNBT(name = "rules", events = {SyncEvents.TILE_CLIENT_MESSAGE, SyncEvents.TILE_GUI_OPENED})
 	public EasyCollection<DataMergeRule, NBTTagCompound> mergeRules = new EasyCollection<>(DataMergeRule::new);
+	@SyncNBT
 	public DataPacket packetLeft = new DataPacket();
+	@SyncNBT
 	public DataPacket packetRight = new DataPacket();
 
 	@Override
 	public void readCustomNBT(NBTTagCompound nbt, boolean descPacket)
 	{
-		facing = EnumFacing.getFront(nbt.getInteger("facing"));
-
-		if(nbt.hasKey("rules", Constants.NBT.TAG_LIST))
-			mergeRules.deserializeNBT(nbt.getTagList("rules", Constants.NBT.TAG_COMPOUND));
-		else if(nbt.hasKey("packet", Constants.NBT.TAG_COMPOUND))
+		if(nbt.hasKey("packet", Constants.NBT.TAG_COMPOUND))
 			migrateLegacySettings(new DataPacket(nbt.getCompoundTag("packet")));
-
-		packetLeft = new DataPacket(nbt.getCompoundTag("packetLeft"));
-		packetRight = new DataPacket(nbt.getCompoundTag("packetRight"));
-	}
-
-	@Override
-	public void writeCustomNBT(NBTTagCompound nbt, boolean descPacket)
-	{
-		nbt.setInteger("facing", facing.ordinal());
-		nbt.setTag("rules", mergeRules.serializeNBT());
-		nbt.setTag("packetLeft", packetLeft.serializeNBT());
-		nbt.setTag("packetRight", packetRight.serializeNBT());
+		super.readCustomNBT(nbt, descPacket);
 	}
 
 	private void migrateLegacySettings(DataPacket settingsPacket)
@@ -121,70 +109,16 @@ public class TileEntityDataMerger extends TileEntityIEBase implements IPlayerInt
 	}
 
 	@Override
-	public void receiveMessageFromServer(NBTTagCompound message)
-	{
-		super.receiveMessageFromServer(message);
-	}
-
-	@Override
-	public void receiveMessageFromClient(NBTTagCompound message)
-	{
-		super.receiveMessageFromClient(message);
-		if(message.hasKey("rules", Constants.NBT.TAG_LIST))
-		{
-			mergeRules.deserializeNBT(message.getTagList("rules", Constants.NBT.TAG_COMPOUND));
-			markDirty();
-			if(world!=null)
-				world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
-		}
-	}
-
-	@Override
-	public void update()
-	{
-
-	}
-
-	@Override
 	public float[] getBlockBounds()
 	{
 		return new float[]{0f, 0, 0f, 1f, .875f, 1f};
 	}
 
+	@Nonnull
 	@Override
-	public EnumFacing getFacing()
+	protected FacingSettings getFacingSettings()
 	{
-		return facing;
-	}
-
-	@Override
-	public void setFacing(EnumFacing facing)
-	{
-		this.facing = facing;
-	}
-
-	@Override
-	public int getFacingLimitation()
-	{
-		return 2;
-	}
-
-	@Override
-	public boolean mirrorFacingOnPlacement(EntityLivingBase placer)
-	{
-		return false;
-	}
-
-	@Override
-	public boolean canHammerRotate(EnumFacing side, float hitX, float hitY, float hitZ, EntityLivingBase entity)
-	{
-		return !entity.isSneaking();
-	}
-
-	@Override
-	public boolean canRotate(EnumFacing axis)
-	{
-		return !axis.getAxis().isVertical();
+		return FACING_SETTINGS;
 	}
 
 	@Override
@@ -266,18 +200,6 @@ public class TileEntityDataMerger extends TileEntityIEBase implements IPlayerInt
 	public boolean isStackValid(int slot, ItemStack stack)
 	{
 		return false;
-	}
-
-	@Override
-	public int getSlotLimit(int slot)
-	{
-		return 0;
-	}
-
-	@Override
-	public void doGraphicalUpdates(int slot)
-	{
-
 	}
 
 	public static class DataMergeRule implements INBTSerializable<NBTTagCompound>

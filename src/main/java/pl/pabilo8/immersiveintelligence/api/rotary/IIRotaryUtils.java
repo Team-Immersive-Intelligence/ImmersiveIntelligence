@@ -112,7 +112,7 @@ public class IIRotaryUtils
 	 * @return {@link EnumActionResult#SUCCESS} if the connection was successful, {@link EnumActionResult#FAIL} if the connection failed, {@link EnumActionResult#PASS} if the connection was not attempted
 	 */
 	public static EnumActionResult useCoil(IWireCoil coil, EntityPlayer player, World world, BlockPos pos,
-										   EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
+	                                       EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		TileEntity tileEntity = world.getTileEntity(pos);
 		//Tile entity is not a rotary device
@@ -377,8 +377,8 @@ public class IIRotaryUtils
 
 	public static float getDisplayRotation(TileEntity te, RotaryStorage rotaryStorage, float partialTicks)
 	{
-		double worldRPT = (te.getWorld().getTotalWorldTime()%getRPMMax()+partialTicks)/getRPMMax();
-		return (float)(worldRPT*rotaryStorage.getRotationSpeed())%1;
+		double worldTime = (te.getWorld().getTotalWorldTime()%getRPMMax()+partialTicks)/getRPMMax();
+		return (float)((worldTime*rotaryStorage.getRotationSpeed())%1f);
 	}
 
 	/**
