@@ -137,6 +137,32 @@ public abstract class TileEntityWheelBase extends TileEntityMechanicalConnectabl
 		return new float[]{0, 0, 0, 1, 1, 1};
 	}
 
+	@Override
+	public float getDisplayedRotationProgress(boolean belt, float partialTicks)
+	{
+		double rotation = prevRotations+(rotations-prevRotations)*partialTicks;
+		double maximum = belt?getBeltRotationMaximum(): 1d;
+		double progress = rotation%maximum;
+		return (float)((progress < 0?progress+maximum: progress)/maximum);
+	}
+
+	private double getBeltRotationMaximum()
+	{
+		Set<Connection> connections = ImmersiveNetHandler.INSTANCE.getConnections(world, pos);
+		if(connections!=null)
+			for(Connection connection : connections)
+				if(connection.cableType instanceof MotorBeltType)
+				{
+					double x = connection.end.getX()-connection.start.getX();
+					double y = connection.end.getY()-connection.start.getY();
+					double z = connection.end.getZ()-connection.start.getZ();
+					double circumference = 2*Math.PI*(getRadius()+1)/16d;
+					double beltLength = 2*Math.sqrt(x*x+y*y+z*z)+circumference;
+					return beltLength/circumference;
+				}
+		return 1d;
+	}
+
 	/**
 	 * Only for visuals
 	 */

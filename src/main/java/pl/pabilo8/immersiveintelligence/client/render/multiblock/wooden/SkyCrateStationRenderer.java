@@ -77,7 +77,7 @@ public class SkyCrateStationRenderer extends TileEntitySpecialRenderer<TileEntit
 
 			if(te.hasWorld())
 			{
-				motorTick = (te.getWorld().getTotalWorldTime()%IIRotaryUtils.getRPMMax()+partialTicks)/IIRotaryUtils.getRPMMax();
+				motorTick = (te.getWorld().getTotalWorldTime()%IIRotaryUtils.getMaxWorldRotationTicks()+partialTicks)/IIRotaryUtils.getMaxWorldRotationTicks();
 				progress = te.progress+(partialTicks*IIRotaryUtils.getEffectiveEnergy(te.rotation,
 						SkyCrateStation.speedMin, SkyCrateStation.speedEfficient, SkyCrateStation.torqueMin, SkyCrateStation.torqueEfficient)
 						*IIRotaryUtils.getGearEfficiency(IIItemUtils.trimInventory(te.getInventory(), 0, 3)));
@@ -140,20 +140,20 @@ public class SkyCrateStationRenderer extends TileEntitySpecialRenderer<TileEntit
 
 					rpm_grab = animProgress <= 0.3f?60f:
 							animProgress <= 0.5f?60f-(60f*((float)animProgress-0.3f)/0.2f):
-									animProgress <= 0.8d?0:
-											-60f;
+							animProgress <= 0.8d?0:
+							-60f;
 
 					rpm_pitch = animProgress <= 0.3f?45f:
 							animProgress <= 0.8f?-45f:
-									45f;
+							45f;
 
 					inserterAngle = animProgress <= 0.3d?Math.min(0.5, animProgress/0.3*0.65d):
 							animProgress <= 0.8d?0.65d-((animProgress-0.3d)/0.5d*1.65d):
-									-1.25d+((animProgress-0.8d)/0.2d*1.25d);
+							-1.25d+((animProgress-0.8d)/0.2d*1.25d);
 					inserterLength = animProgress <= 0.3d?animProgress/0.3d:
 							animProgress <= 0.5d?1d-(((animProgress-0.3d)/0.2d)*0.75):
-									animProgress <= 0.8d?0.25d:
-											(1d-((animProgress-0.8f)/0.3d))*0.25;
+							animProgress <= 0.8d?0.25d:
+							(1d-((animProgress-0.8f)/0.3d))*0.25;
 
 					break;
 				}
@@ -163,28 +163,28 @@ public class SkyCrateStationRenderer extends TileEntitySpecialRenderer<TileEntit
 
 					inserterAngle = animProgress <= 0.15d?animProgress/0.15*-1:
 							animProgress <= 0.65d?-1+((animProgress-0.15)/0.5*1.75):
-									animProgress <= 0.6d?1.75-((animProgress-0.65)/0.1*0.75):
-											0.65*(1f-((animProgress-0.75)/0.25));
+							animProgress <= 0.6d?1.75-((animProgress-0.65)/0.1*0.75):
+							0.65*(1f-((animProgress-0.75)/0.25));
 
 					inserterLength = animProgress <= 0.15?animProgress/0.15d*0.25:
 							animProgress <= 0.65?0.25+((animProgress-0.15)/0.5):
-									animProgress <= 0.75?1: 1-((animProgress-0.75)/0.25);
+							animProgress <= 0.75?1: 1-((animProgress-0.75)/0.25);
 
 					rpm_pitch = animProgress <= 0.15?-60f:
 							animProgress <= 0.65?60f:
-									animProgress <= 0.75?-60f: -80f;
+							animProgress <= 0.75?-60f: -80f;
 
 					rpm_grab = animProgress <= 0.15?35f:
 							animProgress <= 0.65?70f:
-									animProgress <= 0.75?0f: -80f;
+							animProgress <= 0.75?0f: -80f;
 
 					cratePusher = animProgress <= 0.75?0:
 							animProgress <= 0.95?(animProgress-0.75)/0.2:
-									1-((animProgress-0.95)/0.05);
+							1-((animProgress-0.95)/0.05);
 
 					rpm_crate = animProgress <= 0.75?0:
 							animProgress <= 0.95?35:
-									250;
+							250;
 					break;
 				}
 			}

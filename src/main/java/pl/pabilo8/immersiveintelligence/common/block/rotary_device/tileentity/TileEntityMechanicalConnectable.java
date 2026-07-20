@@ -76,11 +76,20 @@ public abstract class TileEntityMechanicalConnectable extends TileEntityIIDirect
 	@Nonnull
 	protected MotorBeltNetwork beltNetwork = new MotorBeltNetwork().add(this);
 	protected boolean refreshBeltNetwork = false;
+	protected double prevRotations, rotations;
 
 	@Override
 	public void update()
 	{
-		if(hasWorld()&&!world.isRemote)
+		if(!hasWorld())
+			return;
+
+		if(world.isRemote)
+		{
+			prevRotations = rotations;
+			rotations += getOutputSpeed()/IIRotaryUtils.getMaxWorldRotationTicks();
+		}
+		else
 		{
 			if(world.getTotalWorldTime()%20==0)
 				getNetwork().updateValues();
@@ -102,6 +111,8 @@ public abstract class TileEntityMechanicalConnectable extends TileEntityIIDirect
 				beltNetwork.removeFromNetwork(null);
 			}
 		}
+
+
 	}
 
 	@Nonnull
