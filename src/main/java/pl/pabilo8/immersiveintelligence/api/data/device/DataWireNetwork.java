@@ -7,6 +7,8 @@ import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
+import pl.pabilo8.immersiveintelligence.api.data.IIDataHandlingUtils;
+import pl.pabilo8.immersiveintelligence.api.data.IIDataHandlingUtils.PacketOperation;
 import pl.pabilo8.immersiveintelligence.common.wire.IIDataWireType;
 
 import java.lang.ref.WeakReference;
@@ -16,6 +18,7 @@ import static blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandl
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 19.07.2026
  * @since 31.05.2019
  */
 public class DataWireNetwork
@@ -83,7 +86,8 @@ public class DataWireNetwork
 		{
 			IDataConnector connector = connectorRef.get();
 			if(connector!=null&&!connector.equals(sender))
-				connector.onPacketReceive(packet);
+				IIDataHandlingUtils.dispatchPacket(connector, PacketOperation.CONNECTOR_RECEIVE,
+						() -> connector.onPacketReceive(packet));
 		}
 	}
 }

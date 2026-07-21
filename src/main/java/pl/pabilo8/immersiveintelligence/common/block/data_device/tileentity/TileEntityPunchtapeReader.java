@@ -39,7 +39,7 @@ public class TileEntityPunchtapeReader extends TileEntityIIDirectional implement
 	public boolean hadRedstone = false;
 	public int rsTime = 0;
 
-	@SyncNBT
+	@SyncNBT(nullable = true)
 	public DataPacket received = null;
 	@SyncNBT
 	public PunchtapeReaderMode mode = PunchtapeReaderMode.REDSTONE_INDIFFERENT;

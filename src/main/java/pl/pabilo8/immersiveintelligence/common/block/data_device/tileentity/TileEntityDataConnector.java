@@ -26,6 +26,8 @@ import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
+import pl.pabilo8.immersiveintelligence.api.data.IIDataHandlingUtils;
+import pl.pabilo8.immersiveintelligence.api.data.IIDataHandlingUtils.PacketOperation;
 import pl.pabilo8.immersiveintelligence.api.data.device.DataWireNetwork;
 import pl.pabilo8.immersiveintelligence.api.data.device.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.device.IDataDevice;
@@ -130,7 +132,8 @@ public class TileEntityDataConnector extends TileEntityIIDirectionalConnectable 
 			if(world.isBlockLoaded(devicePos)&&device instanceof IDataDevice)
 			{
 				IDataDevice d = (IDataDevice)device;
-				d.onReceive(packet, facing.getOpposite());
+				IIDataHandlingUtils.dispatchPacket(device, PacketOperation.DEVICE_RECEIVE,
+						() -> d.onReceive(packet, facing.getOpposite()));
 			}
 		}
 
