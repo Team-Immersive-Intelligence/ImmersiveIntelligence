@@ -163,9 +163,17 @@ public class TileEntityChemicalBath extends TileEntityMultiblockProductionSingle
 	}
 
 	@Override
+	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
+	{
+		if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY&&isPOI("item_in"))
+			return true;
+		return super.hasCapability(capability, facing);
+	}
+
+	@Override
 	public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing)
 	{
-		if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+		if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY&&isPOI("item_in"))
 			//noinspection unchecked,DataFlowIssue
 			return (T)master().inputHandler;
 		return super.getCapability(capability, facing);
@@ -204,7 +212,7 @@ public class TileEntityChemicalBath extends TileEntityMultiblockProductionSingle
 
 	@Override
 	public boolean interact(@Nonnull EnumFacing side, @Nonnull EntityPlayer player, @Nonnull EnumHand hand,
-							@Nonnull ItemStack heldItem, float hitX, float hitY, float hitZ)
+	                        @Nonnull ItemStack heldItem, float hitX, float hitY, float hitZ)
 	{
 		if(!world.isRemote&&this.isPOI("tank_bucket"))
 		{

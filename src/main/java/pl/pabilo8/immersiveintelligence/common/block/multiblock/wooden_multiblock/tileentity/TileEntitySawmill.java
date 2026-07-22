@@ -118,6 +118,19 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 	}
 
 	//--- Capabilities ---//
+
+
+	@Override
+	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
+	{
+		if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+		{
+			return isPOI("item_input")||(isPOI("item_output")&&getDirection("output")==facing)
+					||(isPOI("sawdust")&&facing==EnumFacing.DOWN);
+		}
+		return super.hasCapability(capability, facing);
+	}
+
 	@Override
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
 	{

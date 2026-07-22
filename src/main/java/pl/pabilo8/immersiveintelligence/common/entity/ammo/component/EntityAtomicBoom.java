@@ -45,7 +45,6 @@ public class EntityAtomicBoom extends Entity implements IEntityAdditionalSpawnDa
 		this(worldIn);
 		this.size = size;
 		this.ignoreFrustumCheck = true;
-		setRenderDistanceWeight(32.0);
 	}
 
 	@Override
