@@ -1,0 +1,86 @@
+{
+  "format_version": "1.9.0",
+  "credit": "Made by Pabilo8 with Blockbench",
+  "texture_size": [64, 64],
+  "textures": {
+    "0": "immersiveintelligence:blocks/common/common_wooden_pier",
+    "particle": "immersiveintelligence:blocks/common/common_wooden_pier"
+  },
+  "elements": [
+    {
+      "name": "support",
+      "from": [0, 8, 6],
+      "to": [16, 12, 10],
+      "rotation": {
+        "angle": 0,
+        "axis": "y",
+        "origin": [8, 10, 4]
+      },
+      "faces": {
+        "north": {
+          "uv": [0, 15, 4, 16],
+          "texture": "#0"
+        },
+        "east": {
+          "uv": [12, 16, 13, 15],
+          "texture": "#0"
+        },
+        "south": {
+          "uv": [0, 16, 4, 15],
+          "texture": "#0"
+        },
+        "west": {
+          "uv": [12, 15, 13, 16],
+          "texture": "#0"
+        },
+        "down": {
+          "uv": [0, 16, 4, 15],
+          "rotation": 180,
+          "texture": "#0"
+        }
+      }
+    },
+    {
+      "name": "support",
+      "from": [6, 8, 0],
+      "to": [10, 12, 16],
+      "rotation": {
+        "angle": 0,
+        "axis": "y",
+        "origin": [0, 8, 0]
+      },
+      "faces": {
+        "north": {
+          "uv": [12, 13, 13, 14],
+          "texture": "#0"
+        },
+        "east": {
+          "uv": [0, 13, 4, 14],
+          "texture": "#0"
+        },
+        "south": {
+          "uv": [12, 14, 13, 13],
+          "texture": "#0"
+        },
+        "west": {
+          "uv": [0, 14, 4, 13],
+          "texture": "#0"
+        },
+        "down": {
+          "uv": [0, 14, 4, 13],
+          "rotation": 90,
+          "texture": "#0"
+        }
+      }
+    }
+  ],
+  "groups": [
+    {
+      "name": "support",
+      "origin": [0, 8, 4],
+      "scope": 0,
+      "color": 0,
+      "children": [0, 1]
+    }
+  ]
+}

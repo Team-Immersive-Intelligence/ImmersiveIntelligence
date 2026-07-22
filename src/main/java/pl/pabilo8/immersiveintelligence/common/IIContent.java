@@ -337,6 +337,9 @@ public class IIContent
 	public static final BlockIISandbags blockSandbags = new BlockIISandbags();
 	public static final BlockIIClothDecoration blockClothDecoration = new BlockIIClothDecoration();
 	public static final BlockIIMetalDecoration blockMetalDecoration = new BlockIIMetalDecoration();
+	//harbor decorations
+	public static final BlockIIHarbor blockHarbor = new BlockIIHarbor();
+	public static final BlockIIHarborSupport blockHarborSupport = new BlockIIHarborSupport();
 	//b e t o n
 	public static final BlockIIConcreteDecoration blockConcreteDecoration = new BlockIIConcreteDecoration();
 	public static final BlockIISlab<ConcreteDecorations> blockConcreteSlabs = new BlockIISlab<>(blockConcreteDecoration);

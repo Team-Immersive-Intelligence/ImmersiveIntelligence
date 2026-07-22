@@ -27,6 +27,8 @@ public class BlockIIWoodenChainFence extends BlockIIFenceBase<WoodenFortificatio
 		@IIBlockProperties(needsCustomState = true)
 		WOODEN_STEEL_CHAIN_FENCE,
 		@IIBlockProperties(needsCustomState = true)
-		WOODEN_BRASS_CHAIN_FENCE
+		WOODEN_BRASS_CHAIN_FENCE,
+		@IIBlockProperties(needsCustomState = true)
+		WOODEN_ALUMINUM_CHAIN_FENCE
 	}
 }

@@ -1,0 +1,17 @@
+{
+  "ctm": {
+    "ctm_version": 1,
+    "type": "ctm",
+    "layer": "CUTOUT_MIPPED",
+    "textures": [
+      "immersiveintelligence:blocks/harbor/flooring_ctm"
+    ],
+    "extra": {
+      "connect_to": [
+        {
+          "block": "immersiveintelligence:harbor"
+        }
+      ]
+    }
+  }
+}

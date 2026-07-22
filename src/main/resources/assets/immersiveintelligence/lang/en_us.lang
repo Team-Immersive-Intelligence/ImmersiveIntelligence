@@ -665,6 +665,12 @@ tile.immersiveintelligence.metal_fortification.aluminium_chain_fence.name=Alumin
 
 tile.immersiveintelligence.wooden_fortification.wooden_steel_chain_fence.name=Wooden Steel Chain Fence
 tile.immersiveintelligence.wooden_fortification.wooden_brass_chain_fence.name=Wooden Brass Chain Fence
+tile.immersiveintelligence.wooden_fortification.wooden_aluminum_chain_fence.name=Wooden Aluminium Chain Fence
+
+#Harbor Decorations
+tile.immersiveintelligence.harbor.wooden_pier.name=Wooden Pier
+tile.immersiveintelligence.harbor.wooden_quay.name=Wooden Quay
+tile.immersiveintelligence.harbor_support.wooden_pier_support.name=Wooden Pier Support
 
 tile.immersiveintelligence.metal_fortification1.tank_trap.name=Czech Hedgehog
 

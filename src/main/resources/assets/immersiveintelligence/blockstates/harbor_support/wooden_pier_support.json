@@ -1,0 +1,28 @@
+{
+  "multipart": [
+    {
+      "when": {
+        "bottom": "false"
+      },
+      "apply": {
+        "model": "immersiveintelligence:harbor/wooden/pier_support"
+      }
+    },
+    {
+      "when": {
+        "bottom": "true"
+      },
+      "apply": {
+        "model": "immersiveintelligence:harbor/wooden/pier_support_bottom"
+      }
+    },
+    {
+      "when": {
+        "top": "true"
+      },
+      "apply": {
+        "model": "immersiveintelligence:harbor/wooden/pier_support_top"
+      }
+    }
+  ]
+}

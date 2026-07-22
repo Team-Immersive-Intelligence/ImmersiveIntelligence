@@ -1,0 +1,54 @@
+{
+  "format_version": "1.9.0",
+  "credit": "Made by Pabilo8 with Blockbench",
+  "texture_size": [64, 64],
+  "textures": {
+    "0": "immersiveintelligence:blocks/common/common_wooden_pier",
+    "1": "immersiveintelligence:blocks/harbor/flooring",
+    "particle": "immersiveintelligence:blocks/common/common_wooden_pier"
+  },
+  "elements": [
+    {
+      "name": "floor",
+      "from": [0, 12, 0],
+      "to": [16, 16, 16],
+      "rotation": {
+        "angle": 0,
+        "axis": "y",
+        "origin": [0, 12, 0]
+      },
+      "faces": {
+        "north": {
+          "uv": [4, 12, 8, 13],
+          "texture": "#0",
+          "tintindex": 0
+        },
+        "east": {
+          "uv": [8, 12, 12, 13],
+          "texture": "#0",
+          "tintindex": 0
+        },
+        "south": {
+          "uv": [12, 12, 16, 13],
+          "texture": "#0",
+          "tintindex": 0
+        },
+        "west": {
+          "uv": [4, 12, 8, 13],
+          "texture": "#0",
+          "tintindex": 0
+        },
+        "up": {
+          "uv": [0, 0, 16, 16],
+          "texture": "#1",
+          "tintindex": 1
+        },
+        "down": {
+          "uv": [0, 0, 16, 16],
+          "texture": "#1",
+          "tintindex": 0
+        }
+      }
+    }
+  ]
+}
