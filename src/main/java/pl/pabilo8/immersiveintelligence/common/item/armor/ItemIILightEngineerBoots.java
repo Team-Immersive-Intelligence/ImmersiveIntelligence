@@ -74,15 +74,23 @@ public class ItemIILightEngineerBoots extends ItemIILightEngineerArmorBase imple
 
 		if(equipmentSlot==this.armorType)
 		{
-			multimap.put(EntityLivingBase.SWIM_SPEED.getName(), new AttributeModifier(ItemIIUpgradeableArmor.ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Flippers", 4, 2));
-			if(ItemNBTHelper.hasKey(stack, "rackets"))
-				multimap.put(SharedMonsterAttributes.MOVEMENT_SPEED.getName(), new AttributeModifier(RACKETS_MODIFIER_UUID, "Rackets", 0.5, 1));
-			//if(getUpgrades(stack).hasKey(""))
-			//multimap.put(SharedMonsterAttributes.MOVEMENT_SPEED.getName(), new AttributeModifier(ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Power Armor Movement Speed Debuff", -.03, 1));
-			//multimap.put(SharedMonsterAttributes.MOVEMENT_SPEED.getName(), new AttributeModifier(ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Power Armor Movement Speed Debuff", -.03, 1));
+			if(getUpgrades(stack).hasKey("flippers"))
+			{
+				multimap.put(EntityLivingBase.SWIM_SPEED.getName(),
+						new AttributeModifier(ItemIIUpgradeableArmor.ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Flippers", 4, 2));
+				if(ItemNBTHelper.hasKey(stack, "rackets"))
+				{
+					multimap.put(SharedMonsterAttributes.MOVEMENT_SPEED.getName(), new AttributeModifier(RACKETS_MODIFIER_UUID, "Rackets", 0.5, 1));
+					//if(getUpgrades(stack).hasKey(""))
+					//multimap.put(SharedMonsterAttributes.MOVEMENT_SPEED.getName(), new AttributeModifier(ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Power Armor Movement Speed Debuff", -.03, 1));
+					//multimap.put(SharedMonsterAttributes.MOVEMENT_SPEED.getName(), new AttributeModifier(ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Power Armor Movement Speed Debuff", -.03, 1));
+				}
+
+			}
 		}
 		return multimap;
 	}
+
 
 	@Override
 	public void onArmorTick(World world, EntityPlayer player, ItemStack stack)
