@@ -1253,24 +1253,41 @@ desc.immersiveintelligence.weapon.magazine2=%s - Magazine #2
 
 
 desc.immersiveintelligence.storage_module=Storage
+desc.immersiveintelligence.storage_module.tooltip=Access the machine's inventory
 desc.immersiveintelligence.variables_module=Variables
+desc.immersiveintelligence.variables_module.tooltip=Manage and edit data variables
 desc.immersiveintelligence.memory_in_module=Input Memory
+desc.immersiveintelligence.memory_in_module.tooltip=Manage rules for memory loading pre machine's operation
 desc.immersiveintelligence.memory_out_module=Output Memory
+desc.immersiveintelligence.memory_out_module.tooltip=Manage rules for memory saving post machine's operation
 desc.immersiveintelligence.data_module=Data
+desc.immersiveintelligence.data_module.tooltip=Configure how input data is converted to redstone
 desc.immersiveintelligence.redstone_module=Redstone
+desc.immersiveintelligence.redstone_module.tooltip=Configure how input redstone is converted to data
 desc.immersiveintelligence.data_to_redstone_module=Data to Redstone
+desc.immersiveintelligence.data_to_redstone_module.tooltip=Configure how input data is converted to redstone
 desc.immersiveintelligence.redstone_to_data_module=Redstone to Data
+desc.immersiveintelligence.redstone_to_data_module.tooltip=Configure how input redstone is converted to data
 desc.immersiveintelligence.tasks_module=Tasks
+desc.immersiveintelligence.tasks_module.tooltip=Add and modify tasks of the machine
 desc.immersiveintelligence.status_module=Status
+desc.immersiveintelligence.status_module.tooltip=Check status of the machine
 desc.immersiveintelligence.labeler_module=Labels
+desc.immersiveintelligence.labeler_module.tooltip=Configure how labels are applied to containers
 
 desc.immersiveintelligence.map_module=Map
+desc.immersiveintelligence.map_module.tooltip=View map of the surrounding area
 desc.immersiveintelligence.radar_module=Radar
+desc.immersiveintelligence.radar_module.tooltip=Access the radar screen
 desc.immersiveintelligence.faction_module=Faction Management
+desc.immersiveintelligence.faction_module.tooltip=Manage your faction
 
 desc.immersiveintelligence.configuration_module=Configuration
+desc.immersiveintelligence.configuration_module.tooltip=Change settings of the machine
 desc.immersiveintelligence.targets_module=Targets
+desc.immersiveintelligence.targets_module.tooltip=Manage target classification
 desc.immersiveintelligence.fire_missions_module=Fire Missions
+desc.immersiveintelligence.fire_missions_module.tooltip=Add and modify fire missions
 
 desc.immersiveintelligence.tooltip.armor=Armor %f%%
 
@@ -1425,18 +1442,31 @@ desc.immersiveintelligence.diplomacy.action.declare_war=Declare War
 desc.immersiveintelligence.diplomacy.action.declare_alliance=Declare Alliance
 
 desc.immersiveintelligence.diplomacy.permission.disband=Disband
+desc.immersiveintelligence.diplomacy.permission.disband.tooltip=Allows to disband and change the faction's law form.
 desc.immersiveintelligence.diplomacy.permission.merge=Merge
+desc.immersiveintelligence.diplomacy.permission.merge.tooltip=Allows to send or accept diplomatic requests that involve merging this faction with another one.
 desc.immersiveintelligence.diplomacy.permission.foreign_affairs=Foreign Affairs
+desc.immersiveintelligence.diplomacy.permission.foreign_affairs.tooltip=Allows to send and accept diplomatic requests from other factions.
 desc.immersiveintelligence.diplomacy.permission.modify_insignia=Modify Insignia
+desc.immersiveintelligence.diplomacy.permission.modify_insignia.tooltip=Allows to change the faction's name, color and banner.
 desc.immersiveintelligence.diplomacy.permission.invite_members=Add Members
+desc.immersiveintelligence.diplomacy.permission.invite_members.tooltip=Allows to invite new members to the faction.
 desc.immersiveintelligence.diplomacy.permission.remove_members=Remove Members
+desc.immersiveintelligence.diplomacy.permission.remove_members.tooltip=Allows to remove members from the faction.
 desc.immersiveintelligence.diplomacy.permission.military_aid=Military Aid
+desc.immersiveintelligence.diplomacy.permission.military_aid.tooltip=Troops and defensive installations of this faction will guard and aid anyone with this permission in combat.
 desc.immersiveintelligence.diplomacy.permission.transit=Transit
+desc.immersiveintelligence.diplomacy.permission.transit.tooltip=Allows to freely move through this faction's territory.
 desc.immersiveintelligence.diplomacy.permission.trade=Trade
+desc.immersiveintelligence.diplomacy.permission.trade.tooltip=Allows to trade with this faction's facilities.
 desc.immersiveintelligence.diplomacy.permission.research=Research
+desc.immersiveintelligence.diplomacy.permission.research.tooltip=Grants access to this faction's research progress.
 desc.immersiveintelligence.diplomacy.permission.logistics=Logistics
+desc.immersiveintelligence.diplomacy.permission.logistics.tooltip=Allows to use this faction's logistic network.
 desc.immersiveintelligence.diplomacy.permission.container_access=Container Access
+desc.immersiveintelligence.diplomacy.permission.container_access.tooltip=Allows to open and use this faction's containers.
 desc.immersiveintelligence.diplomacy.permission.breaking_structures=Breaking Structures
+desc.immersiveintelligence.diplomacy.permission.breaking_structures.tooltip=Allows to break this faction's structures.
 
 desc.immersiveintelligence.diplomacy.permission_level.owner_allow=Owners
 desc.immersiveintelligence.diplomacy.permission_level.member_allow=Members
@@ -3468,6 +3498,33 @@ ii.gui.map_display.marker.missiles=Missiles
 ii.gui.map_display.marker.artillery=Artillery
 ii.gui.map_display.marker.bullets=Bullets
 
+ii.gui.faction_invitation=Faction
+ii.gui.faction_invitation.invalid=Could not get faction data. Please close and open this screen again.
+ii.gui.faction_invitation.current=Current Status
+ii.gui.faction_invitation.current.alone=%s is owner of their own domain.
+#[Name] is [Rank] of [Faction], e.g. Pabilo8 is Owner of Pabulograd
+ii.gui.faction_invitation.current.faction=%s is %s of %s
+ii.gui.faction_invitation.invitations=Faction Invitations
+ii.gui.faction_invitation.invitations.none=No pending invitations
+
+ii.gui.faction_management.insignia=Insignia
+ii.gui.faction_management.insignia.tooltip=Modify the faction's name and color
+ii.gui.faction_management.insignia.name=Faction Name
+ii.gui.faction_management.insignia.name.tooltip=Name of the faction
+ii.gui.faction_management.insignia.banner=Banner
+ii.gui.faction_management.insignia.banner.tooltip=Click with a banner to change the faction's banner.
+ii.gui.faction_management.members=Members
+ii.gui.faction_management.members.tooltip=Manage the faction's members
+ii.gui.faction_management.invitations=Invitations
+ii.gui.faction_management.invitations.tooltip=Invite new members and nanage existing invitations
+ii.gui.faction_management.invitations.username=Username
+ii.gui.faction_management.invitations.username.tooltip=Player username to invite
+ii.gui.faction_management.permissions=Permissions
+ii.gui.faction_management.permissions.tooltip=Manage permissions for faction members
+ii.gui.faction_management.permissions.role=Edited role:
+ii.gui.faction_management.permissions.role.tooltip=Select role to view or edit permissions for
+ii.gui.faction_management.permissions.empty=No roles available
+
 ii.gui.redstone_data_interface.from.redstone=From
 ii.gui.redstone_data_interface.from.redstone.tooltip=Specifies what redstone signal color will get converted into a data variable
 ii.gui.redstone_data_interface.from.data=From variable
@@ -3590,12 +3647,23 @@ ii.gui_tooltip.button.remove=Remove
 ii.gui_tooltip.button.edit=Edit
 ii.gui_tooltip.button.duplicate=Duplicate
 ii.gui_tooltip.button.clear=Clear
+ii.gui_tooltip.button.accept=Accept
+ii.gui_tooltip.button.reject=Reject
+ii.gui_tooltip.button.help=Show Help
+ii.gui_tooltip.button.factions=Factions
 
 #GUI Widgets
 ii.gui_tooltip.widget.style.show=Show Style Customization
 ii.gui_tooltip.widget.style.hide=Hide Style Customization
 ii.gui_tooltip.widget.style=Customization
-ii.gui_tooltip.widget.style.desc=This multiblock allows customization of style and color.
+ii.gui_tooltip.widget.style.main=This %s does not allow customization.
+ii.gui_tooltip.widget.style.main.variants=This %s allows customization of style.
+ii.gui_tooltip.widget.style.main.color=This %s allows customization of color.
+ii.gui_tooltip.widget.style.main.variants.color=This %s allows customization of style and color.
+ii.gui_tooltip.widget.style.main.tile=nachine
+ii.gui_tooltip.widget.style.main.multiblock=multiblock
+ii.gui_tooltip.widget.style.main.vehicle=vehicle
+ii.gui_tooltip.widget.style.main.entity=entity
 ii.gui_tooltip.widget.style.style=Style
 ii.gui_tooltip.widget.style.color=Color
 ii.gui_tooltip.widget.ownership.show=Show Ownership Data

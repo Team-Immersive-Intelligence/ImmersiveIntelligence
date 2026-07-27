@@ -66,6 +66,18 @@ public class DecoTemplates
 					.withIcon(DecoTextures.ICON_ACTION_EDIT)
 					.withTranslatedTooltip(IIReference.GUI_TOOLTIP_KEY+"button.edit")
 	);
+	public static final DecoComponentTemplate<DecoButton> ACTION_BUTTON_ACCEPT = ACTION_BUTTON.and(
+			component -> component
+					.withBackgroundColor(DecoColors.ACTION_ACCEPT)
+					.withIcon(DecoTextures.ICON_ACTION_ACCEPT)
+					.withTranslatedTooltip(IIReference.GUI_TOOLTIP_KEY+"button.accept")
+	);
+	public static final DecoComponentTemplate<DecoButton> ACTION_BUTTON_REJECT = ACTION_BUTTON.and(
+			component -> component
+					.withBackgroundColor(DecoColors.ACTION_REJECT)
+					.withIcon(DecoTextures.ICON_ACTION_REJECT)
+					.withTranslatedTooltip(IIReference.GUI_TOOLTIP_KEY+"button.reject")
+	);
 
 	//--- Mechanical Torque Bar ---//
 	public static final Function<IRotaryEnergy, DecoComponentTemplate<DecoBar>> BAR_MECH_TORQUE =

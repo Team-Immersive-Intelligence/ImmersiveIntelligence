@@ -3,10 +3,10 @@ package pl.pabilo8.immersiveintelligence.client.gui.block.overrides;
 import blusunrize.immersiveengineering.common.blocks.wooden.TileEntityWoodenCrate;
 import net.minecraft.entity.player.EntityPlayer;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTileGui;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiCategory;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTemplate;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.SlotStyle;
 import pl.pabilo8.immersiveintelligence.common.compat.ie.ImmersiveEngineeringHelper;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerIICrate;
 

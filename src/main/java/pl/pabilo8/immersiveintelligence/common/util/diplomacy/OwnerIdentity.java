@@ -471,9 +471,6 @@ public class OwnerIdentity implements INBTSerializable<NBTTagCompound>
 		EasyNBT outTag = saveAgreementMap(pendingOutgoingProposals);
 		EasyNBT inTag = saveAgreementMap(pendingIncomingProposals);
 
-		List<String> invitedList = new ArrayList<>();
-		invitedPlayers.forEach(uuid -> invitedList.add(uuid.toString()));
-
 		return EasyNBT.newNBT()
 				.withUUID("uuid", uuid)
 				.withString("displayName", displayName)
@@ -488,7 +485,7 @@ public class OwnerIdentity implements INBTSerializable<NBTTagCompound>
 				.withTag("activeTargetAgreements", targetTag)
 				.withTag("pendingOutgoing", outTag)
 				.withTag("pendingIncoming", inTag)
-				.withList("invitedPlayers", invitedList)
+				.withList("invitedPlayers", invitedPlayers.toArray())
 				.unwrap();
 	}
 

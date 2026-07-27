@@ -358,10 +358,16 @@ public class ClientProxy extends CommonProxy
 		if(IIGUI.values().length > ID)
 		{
 			IIGUI guiBuilder = IIGUI.values()[ID];
+			if(guiBuilder.player)
+				return guiBuilder.guiFromPlayer==null?null: guiBuilder.guiFromPlayer.apply(player);
 			if(guiBuilder.item)
 				return guiBuilder.guiFromStack.apply(player, stack, hand);
-
-			if(te instanceof IGuiTile&&guiBuilder.teClass.isInstance(te))
+			if(guiBuilder.entityClass!=null&&guiBuilder.containerFromEntity!=null)
+			{
+				if(guiBuilder.entityClass.isInstance(entity))
+					return guiBuilder.guiFromEntity.apply(player, entity);
+			}
+			else if(te instanceof IGuiTile&&guiBuilder.teClass.isInstance(te))
 				if((gui = guiBuilder.guiFromTile.apply(player, te))!=null)
 					((IGuiTile)te).onGuiOpened(player, true);
 		}

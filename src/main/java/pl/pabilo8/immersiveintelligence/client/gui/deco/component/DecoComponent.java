@@ -5,6 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.inventory.Container;
+import net.minecraft.util.text.TextFormatting;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 
@@ -27,7 +28,7 @@ public abstract class DecoComponent<TYPE extends DecoComponent<? super TYPE>> ex
 	@Nullable
 	protected DecoGui<?, ?> parentGui;
 	protected List<DecoComponent<?>> children = new ArrayList<>();
-	protected boolean pressed;
+	protected int pressTime = 0;
 	protected boolean initialized;
 	@SuppressWarnings("unused")
 	private String displayString;
@@ -137,6 +138,9 @@ public abstract class DecoComponent<TYPE extends DecoComponent<? super TYPE>> ex
 
 			for(DecoComponent<?> child : children)
 				child.drawButton(mc, mouseX, mouseY, partialTicks);
+
+			if(pressTime > 0)
+				this.pressTime--;
 		}
 	}
 
@@ -193,9 +197,10 @@ public abstract class DecoComponent<TYPE extends DecoComponent<? super TYPE>> ex
 		if(this.enabled&&canBeClicked(mouseX, mouseY))
 		{
 			Optional<DecoComponent<?>> childrenPressed = children.stream().filter(child -> child.decoMousePressed(mc, mouseX, mouseY, button)).findFirst();
-			pressed = childrenPressed.isPresent()||(onPressed!=null&&onPressed.onMouse((TYPE)this, button, mouseX, mouseY));
+			boolean pressed = childrenPressed.isPresent()||(onPressed!=null&&onPressed.onMouse((TYPE)this, button, mouseX, mouseY));
 			if(pressed)
 			{
+				this.pressTime = 10;
 				playPressSound(mc.getSoundHandler());
 				if(parentGui!=null)
 				{
@@ -212,7 +217,7 @@ public abstract class DecoComponent<TYPE extends DecoComponent<? super TYPE>> ex
 	{
 		if(this.enabled)
 		{
-			pressed = !(onReleased==null||onReleased.onMouse((TYPE)this, mouseButton, mouseX, mouseY));
+			this.pressTime = (onReleased==null||onReleased.onMouse((TYPE)this, mouseButton, mouseX, mouseY))?0: this.pressTime;
 			children.forEach(child -> child.mouseReleased(mouseX, mouseY));
 		}
 	}
@@ -397,7 +402,13 @@ public abstract class DecoComponent<TYPE extends DecoComponent<? super TYPE>> ex
 	public final TYPE withTranslatedTooltip(String... tooltip)
 	{
 		final List<String> collect = Arrays.stream(tooltip)
-				.map(I18n::format)
+				.filter(Objects::nonNull)
+				.map(s -> {
+					String text = TextFormatting.getTextWithoutFormattingCodes(s);
+					assert text!=null;
+					String translated = I18n.format(text);
+					return s.replace(text, translated);
+				})
 				.filter(s -> !s.isEmpty())
 				.collect(Collectors.toList());
 

@@ -31,6 +31,8 @@ public class DecoColors
 	public static final IIColor ACTION_ADD = IIColor.fromPackedRGB(0x778a78);
 	public static final IIColor ACTION_REMOVE = IIColor.fromPackedRGB(0x8a6865);
 	public static final IIColor ACTION_EDIT = IIColor.fromPackedRGB(0x8a7d67);
+	public static final IIColor ACTION_ACCEPT = IIColor.fromPackedRGB(0x5e705f);
+	public static final IIColor ACTION_REJECT = IIColor.fromPackedRGB(0x775957);
 
 	public static final IIColor ARMOR_INTEGRITY_1 = IIColor.fromPackedRGB(0x6b6b6b);
 	public static final IIColor ARMOR_INTEGRITY_2 = IIColor.fromPackedRGB(0x3c3c3c);

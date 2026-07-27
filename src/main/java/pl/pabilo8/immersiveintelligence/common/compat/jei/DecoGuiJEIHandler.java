@@ -1,12 +1,11 @@
 package pl.pabilo8.immersiveintelligence.common.compat.jei;
 
-import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
-import blusunrize.immersiveengineering.common.util.inventory.IIEInventory;
 import mezz.jei.api.gui.IAdvancedGuiHandler;
+import net.minecraft.inventory.Container;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
-import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIITileBase;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.List;
@@ -15,12 +14,13 @@ import java.util.List;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 24.03.2021
  */
-public class DecoGuiJEIHandler<GUI extends DecoGui<T, C>, T extends TileEntityIEBase & IIEInventory, C extends ContainerIITileBase<T>> implements IAdvancedGuiHandler<GUI>
+public class DecoGuiJEIHandler<GUI extends DecoGui<T, C>, T, C extends Container> implements IAdvancedGuiHandler<GUI>
 {
-	Class<GUI> wrappedClass;
+	private final Class<GUI> wrappedClass;
 
 	public DecoGuiJEIHandler(IIGUI gui)
 	{
+		//noinspection unchecked
 		this.wrappedClass = (Class<GUI>)gui.guiClass;
 	}
 
@@ -38,6 +38,7 @@ public class DecoGuiJEIHandler<GUI extends DecoGui<T, C>, T extends TileEntityIE
 		return guiContainer.getIngredientUnderMouse();
 	}
 
+	@Nonnull
 	@Override
 	public Class<GUI> getGuiContainerClass()
 	{

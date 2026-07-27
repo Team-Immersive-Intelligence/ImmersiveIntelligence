@@ -66,7 +66,7 @@ public class DecoDropdown<T> extends DecoScrolledCollection<DecoDropdown<T>, T>
 					}
 				}
 				dropped = !dropped;
-				pressed = false;
+				pressTime = 0;
 				return true;
 			}
 			return false;

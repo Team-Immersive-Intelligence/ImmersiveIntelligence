@@ -25,7 +25,6 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.tree.IDecoTreeNode;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.tree.upgrade.UpgradeTechTreeWrapper;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.tree.upgrade.UpgradeTreeNodeRenderer;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
 import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerTileUpgrade;

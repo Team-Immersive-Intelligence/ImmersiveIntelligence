@@ -8,7 +8,10 @@ import net.minecraftforge.server.command.CommandTreeBase;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -49,4 +52,19 @@ public abstract class CommandIIBase extends CommandBase
 
 	@Override
 	public abstract void execute(@Nonnull MinecraftServer server, @Nullable ICommandSender sender, @Nonnull String[] args) throws CommandException;
+
+	//--- Utils ---//
+
+	protected static <E extends Enum<E> & ISerializableEnum> List<String> getTabCompletionsEnum(String[] args, Class<E> enumType)
+	{
+		return getTabCompletionsEnum(args, enumType, e -> true);
+	}
+
+	protected static <E extends Enum<E> & ISerializableEnum> List<String> getTabCompletionsEnum(String[] args, Class<E> enumType, Predicate<E> filter)
+	{
+		return getListOfStringsMatchingLastWord(args, Arrays.stream(enumType.getEnumConstants())
+				.filter(filter)
+				.map(E::getName)
+				.toArray(String[]::new));
+	}
 }

@@ -19,6 +19,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.ClickEvent.Action;
 import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent.Post;
@@ -43,6 +44,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.widget.DecoMan
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -277,20 +279,32 @@ public abstract class DecoGui<T, C extends Container> extends GuiContainer
 
 	protected final DecoTab addLinkTab(IIGUI gui, ResourceLocation tabIcon, String moduleName)
 	{
-		return (DecoTab)addComponent(new DecoTab()
+		DecoTab tab = (DecoTab)addComponent(new DecoTab()
 				.withLink(gui)
+				.withSelected(gui==this.gui)
 				.withIcon(tabIcon)
 				.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+moduleName)
 		);
+
+		if(IIConfig.Graphics.decoLongTabTooltips)
+			tab.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+moduleName,
+					TextFormatting.GRAY+IIReference.DESCRIPTION_KEY+moduleName+".tooltip"+TextFormatting.RESET);
+		return tab;
 	}
 
 	protected final DecoTab addLinkTab(IIGUI gui, ItemStack tabIcon, String moduleName)
 	{
-		return (DecoTab)addComponent(new DecoTab()
+		DecoTab tab = (DecoTab)addComponent(new DecoTab()
 				.withLink(gui)
+				.withSelected(gui==this.gui)
 				.withIcon(tabIcon)
 				.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+moduleName)
 		);
+
+		if(IIConfig.Graphics.decoLongTabTooltips)
+			tab.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+moduleName,
+					TextFormatting.GRAY+IIReference.DESCRIPTION_KEY+moduleName+".tooltip"+TextFormatting.RESET);
+		return tab;
 	}
 
 	/**

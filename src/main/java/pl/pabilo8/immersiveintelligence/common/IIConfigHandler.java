@@ -13,6 +13,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleDetail;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoVanillaGUIStyle;
 import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIItemRendererAMT.HandDisplayMode;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.RadioStation;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Sawmill;
@@ -265,6 +266,12 @@ public class IIConfigHandler
 			@RangeInt(min = 8, max = 256)
 			@SlidingOption
 			public static int dynamiclyColoredTextureVariants = 64;
+
+			@Comment({"Enables longer tooltip descriptions for link tabs in Deco based GUIs"})
+			public static boolean decoLongTabTooltips = true;
+
+			@Comment({"Determines what style should vanilla-styled GUIs, like faction invitation look like"})
+			public static DecoVanillaGUIStyle decoVanillaGUIStyle = DecoVanillaGUIStyle.VANILLA;
 		}
 
 		public static class Ores
@@ -2076,6 +2083,12 @@ public class IIConfigHandler
 			@RequiresMcRestart
 			@Comment({"Determines how often properties try to claim surrounding chunks. (in ticks)"})
 			public static int claimTickDelay = 200;
+
+			@Comment({"The position of the faction invites button in player's inventory screen (x,y)", "Set to -1,-1 to disable the button."})
+			public static int[] inventoryButtonPosition = new int[]{61, 64};
+
+			@Comment({"The position of the faction invites button in player's creative inventory screen (x,y)", "Set to -1,-1 to disable the button."})
+			public static int[] inventoryButtonPositionCreative = new int[]{92, 34};
 		}
 
 		public static class MechanicalDevices

@@ -8,11 +8,12 @@ import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTileGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoSwitch;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoTab;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoTabGroup;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoDropdown;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoElementDisplays;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoList;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoTitleLabel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoColorPickerPanel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoEntryPanelBuilder;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPanel;
@@ -20,26 +21,27 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBa
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.DecoTextField;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityFlagpole;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerFlagpole;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageDiplomacyAction;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyHandler;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyHandler.PlayerInfo;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.OwnerIdentity;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.permission.PermissionCategory;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.permission.PermissionRole;
 
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @author Avalon (avalon@iiteam.net)
- * @updates 03.11.2026
  * @ii-approved 0.3.1
+ * @updated 27.07.2026
  * @since 27.12.2025
  */
 @DecoTemplate(name = "flagpole_faction", category = DecoGuiCategory.TERRITORY_CONTROL_TILE)
@@ -63,10 +65,9 @@ public class GuiFlagpoleFaction extends DecoTileGui<TileEntityFlagpole, Containe
 		assert connection!=null;
 
 		startBackground()
-				.withBox(DecoTextures.BG_STEEL, 0, 0, 248+32, 152+32)
+				.withBox(DecoTextures.BG_STEEL, 0, 0, 152+96, 152)
 				.withTitleBar(tile)
-				.withNextLayer()
-				.withBox(DecoTextures.BG_WOODEN, DecoTextures.TEMPLATE_ROUND_WOODEN, 32+16, 152+32, 176, 92)
+				.withBox(DecoTextures.BG_WOODEN, DecoTextures.TEMPLATE_ROUND_WOODEN, 32, 152, 176, 92)
 				.withInventorySlots(SlotStyle.VANILLA, container.inventorySlots)
 				.withInventoryTitleBar()
 				.withFrame(DecoTextures.FRAME_WOODEN_THIN, 4, false, new boolean[]{true, false, false, false})
@@ -76,58 +77,86 @@ public class GuiFlagpoleFaction extends DecoTileGui<TileEntityFlagpole, Containe
 		addLinkTab(IIGUI.FLAGPOLE, DecoTextures.ICON_MAP, "map_module");
 		addLinkTab(IIGUI.FLAGPOLE_FACTION, DecoTextures.ICON_FACTION_CONFIG, "faction_module");
 
-		//Faction Name
-		addLabel(new DecoTitleLabel(fontRenderer, 6, 4)
-				.withBackgroundLocation(DecoTextures.LABEL_STEEL)
-				.withSize(60, 8)
-				.withRawText("Name")
+		//Content tabs
+		addComponent(new DecoTabGroup(4, 4+4+1)
+				.withSize(152+96-8, 14)
+				.withHorizontalAlignment(true)
+				.withSpacing(1)
+				.withTab((DecoTab)new DecoTab().withText(IIReference.GUI_LABEL_KEY+"faction_management.insignia")
+								.withTranslatedTooltip(IIReference.GUI_LABEL_KEY+"faction_management.insignia.tooltip"),
+						buildInsigniaPage(identity))
+				.withTab((DecoTab)new DecoTab().withText(IIReference.GUI_LABEL_KEY+"faction_management.members")
+								.withTranslatedTooltip(IIReference.GUI_LABEL_KEY+"faction_management.members.tooltip"),
+						buildMembersPage(identity))
+				.withTab((DecoTab)new DecoTab().withText(IIReference.GUI_LABEL_KEY+"faction_management.invitations")
+								.withTranslatedTooltip(IIReference.GUI_LABEL_KEY+"faction_management.invitations.tooltip"),
+						buildInvitationsPage(identity, connection))
+				.withTab((DecoTab)new DecoTab().withText(IIReference.GUI_LABEL_KEY+"faction_management.permissions")
+								.withTranslatedTooltip(IIReference.GUI_LABEL_KEY+"faction_management.permissions.tooltip"),
+						buildRolesPage(identity))
+		);
+	}
+
+	private DecoPanel createContentPanel()
+	{
+		return addComponent(new DecoPanel(4, 20+2)
+				.withSize(152+96-8, 160-16-16+2)
+				.withBackground(DecoTextures.BG_STEEL)
+				.withBackgroundMask(DecoTextures.TEMPLATE_SQUARE)
+		);
+	}
+
+	private DecoPanel buildInsigniaPage(OwnerIdentity identity)
+	{
+		DecoPanel panel = createContentPanel();
+		boolean disabled = !identity.isPermitted(mc.player, PermissionCategory.MODIFY_INSIGNIA);
+
+		DecoPanel topPanel = panel.addComponent(new DecoPanel(2, 2)
+				.withSize(panel.width-4, 36-2)
+				.withBackground(DecoTextures.BG_PAPER)
+				.withBackgroundMask(DecoTextures.TEMPLATE_PAPER)
 		);
 
-		//Banner box
-		addComponent(new DecoBannerDisplay(5+1, 15+1)
-				.withSize(40+2, 20+2)
+		topPanel.addComponent(new DecoBannerDisplay(4, 4)
+				.withSize((int)(44*1.25f), (int)(24*1.25f))
 				.withBackgroundTexture(DecoSprite.atlasSprite(DecoTextures.SLOT_IE, 32, true))
 				.withBanner(identity.getBanner())
 				.withOnPressed((gui, button, mouseX, mouseY) -> {
 					ItemStack stack = getMouseHeldItemStack();
-					if(stack.getItem() instanceof ItemBanner)
-					{
-						ItemStack copy = stack.copy();
-						copy.setCount(1);
-						gui.withBanner(copy);
-						this.factionBanner = copy;
-						return true;
-					}
-					return false;
+					if(!(stack.getItem() instanceof ItemBanner))
+						return false;
+					ItemStack copy = stack.copy();
+					copy.setCount(1);
+					gui.withBanner(copy);
+					factionBanner = copy;
+					return true;
 				})
-				.withDisabled(!identity.isPermitted(mc.player, PermissionCategory.MODIFY_INSIGNIA))
+				.withTranslatedTooltip(IIReference.GUI_LABEL_KEY+"faction_management.insignia.banner.tooltip")
+				.withDisabled(disabled)
 		);
-		addComponent(new DecoTextField(26+20, 14+2)
-				.withSize(120-20+4, 16)
+
+		topPanel.addLabel(new DecoLabel(fontRenderer, 64-4, 3)
+				.withSize(panel.width-76+8, 12)
+				.withAlign(DecoAlignment.LEFT)
+				.withText(IIReference.GUI_LABEL_KEY+"faction_management.insignia.name")
+				.withTranslatedTooltip(IIReference.GUI_LABEL_KEY+"faction_management.insignia.name.tooltip")
+		);
+		topPanel.addComponent(new DecoTextField(64-4, 2+12)
+				.withSize(panel.width-76+8, 16)
 				.withText(identity.getDisplayName())
 				.withMaxStringLength(32)
-				.withDisabled(!identity.isPermitted(mc.player, PermissionCategory.MODIFY_INSIGNIA))
-				.withOnTextChanged(s -> {
-					this.factionName = s.isEmpty()?null: s;
-				})
+				.withDisabled(disabled)
+				.withOnTextChanged(s -> factionName = s.isEmpty()?null: s)
+				.withTranslatedTooltip(IIReference.GUI_LABEL_KEY+"faction_management.insignia.name.tooltip")
 		);
 
-		//Color header
-		addLabel(new DecoTitleLabel(fontRenderer, 6, 34+4)
-				.withBackgroundLocation(DecoTextures.LABEL_STEEL)
-				.withSize(60, 8)
-				.withRawText("Color")
-		);
-
-		//Color picker
-		addComponent(new DecoColorPickerPanel(4, 44+4+1)
+		panel.addComponent(new DecoColorPickerPanel(4, 38+2)
 				{
 					@Override
 					protected boolean initialize()
 					{
 						if(!super.initialize())
 							return false;
-						//Hide the dye color dropdown
 						dyeColor.visible = false;
 						dyeColor.enabled = false;
 						if(!labels.isEmpty())
@@ -135,105 +164,194 @@ public class GuiFlagpoleFaction extends DecoTileGui<TileEntityFlagpole, Containe
 						return true;
 					}
 				}
-						.withOnColorChanged((oldColor, newColor) -> {
-							factionColor = newColor;
-						})
+						.withOnColorChanged((oldColor, newColor) -> factionColor = newColor)
 						.withColor(identity.getColor())
-						.withSize(144+4, 44)
-						.withDisabled(!identity.isPermitted(mc.player, PermissionCategory.MODIFY_INSIGNIA))
+						.withSize(panel.width-8, 82)
+						.withDisabled(disabled)
 		);
+		return panel;
+	}
 
-		//Members Panel
-		DecoPanel panelMembers = addComponent(new DecoPanel(4, 90+8-1)
-				.withSize(144+4, 58+24+1)
-				.withBackground(DecoTextures.BG_PAPER)
-				.withBackgroundMask(DecoTextures.TEMPLATE_PAPER)
-				.withTitleLabel("Members", DecoAlignment.TOP)
+	private DecoPanel buildMembersPage(OwnerIdentity identity)
+	{
+		DecoPanel panel = createContentPanel();
+		boolean canRemove = identity.isPermitted(mc.player, PermissionCategory.REMOVE_MEMBERS);
+		boolean canChangeRoles = identity.isOwner(mc.player.getUniqueID());
+		DiplomacyHandler handler = DiplomacyHandler.getInstance(true);
+		List<PermissionRole> assignableRoles = identity.getAvailableRoles().values().stream()
+				.filter(role -> !role.isOwner())
+				.collect(Collectors.toList());
+
+		List<UUID> members = identity.getMembers().stream()
+				.sorted(Comparator
+						.comparing((UUID uuid) -> handler.getPlayerInfo(uuid).getName(), String.CASE_INSENSITIVE_ORDER)
+						.thenComparing(UUID::toString))
+				.collect(Collectors.toList());
+
+		panel.addComponent(new DecoList<UUID>(2, 2)
+				.withSize(panel.width-4, 152-26-2)
+				.withEntries(members)
+				.withDisplayFunction(new DecoEntryPanelBuilder<UUID>()
+						.withHeight(22)
+						.withBackground(DecoTextures.BG_PAPER)
+						.withBackgroundMask(DecoTextures.TEMPLATE_PAPER)
+						.withLabel("name", new DecoLabel(fontRenderer, 20, 3)
+								.withSize(78, 16)
+								.withAlign(DecoAlignment.LEFT))
+						.withComponent("head", new DecoImage(3, 3).withSize(16, 16))
+						.withComponent("role", p -> new DecoDropdown<PermissionRole>(p.width-118, 3)
+								.withSize(96, 16)
+								.withEntries(assignableRoles)
+								.withDisplayFunction(DecoElementDisplays.getSimpleTextDisplay(PermissionRole::getDisplayName)))
+						.withComponent("remove", p -> new DecoButton(p.width-19, 3)
+								.withSize(16, 16)
+								.withTemplate(DecoTemplates.ACTION_BUTTON_REMOVE)
+								.withOnLMBPressed(() -> {
+									UUID current = p.getCurrentElement();
+									IIPacketHandler.sendToServer(MessageDiplomacyAction.removeMember(current));
+									p.getCurrentList().removeEntry(current);
+								}))
+						.withElementApplyMethod((uuid, entry) -> {
+							PlayerInfo info = handler.getPlayerInfo(uuid);
+							PermissionRole role = identity.getRoleOf(uuid);
+							entry.label("name").withRawText(info.getName());
+							entry.component("head", DecoImage.class)
+									.withImageLocation(info.getSkin())
+									.withUV(64, 8, 8, 16, 16);
+
+							DecoDropdown<PermissionRole> dropdown = entry.component("role", DecoDropdown.class);
+							dropdown.withEntries(role!=null&&role.isOwner()?Collections.singletonList(role): assignableRoles)
+									.withSelectedEntry(role)
+									.withDisabled(!canChangeRoles||role==null||role.isOwner())
+									.withOnSelectedEntry((oldRole, newRole) -> {
+										if(newRole!=null&&!newRole.equals(oldRole))
+											IIPacketHandler.sendToServer(MessageDiplomacyAction.changeMemberRole(uuid, newRole));
+									});
+
+							entry.component("remove", DecoButton.class)
+									.withDisabled(!canRemove||role==null||role.isOwner()||uuid.equals(mc.player.getUniqueID()));
+						})
+				)
 		);
+		return panel;
+	}
 
-		//Invite row
-		DecoTextField usernameField = panelMembers.addComponent(new DecoTextField(4, 6+2)
-				.withSize(118+4+2, 16)
+	private DecoPanel buildInvitationsPage(OwnerIdentity identity, NetHandlerPlayClient connection)
+	{
+		DecoPanel panel = createContentPanel();
+		boolean canInvite = identity.isPermitted(mc.player, PermissionCategory.INVITE_MEMBERS);
+		DiplomacyHandler handler = DiplomacyHandler.getInstance(true);
+
+		DecoTextField username = panel.addComponent(new DecoTextField(2, 2)
+				.withSize(panel.width-20, 16)
 				.withMaxStringLength(16)
+				.withDisabled(!canInvite)
+				.withTranslatedTooltip(IIReference.GUI_LABEL_KEY+"faction_management.invitations.username.tooltip")
 		);
-		panelMembers.addComponent(new DecoButton(124+2+2, 6+2)
+		panel.addComponent(new DecoButton(panel.width-18, 2)
 				.withTemplate(DecoTemplates.ACTION_BUTTON_ADD)
 				.withSize(16, 16)
+				.withDisabled(!canInvite)
 				.withOnLMBPressed(() -> {
-					NetworkPlayerInfo playerInfo = connection.getPlayerInfo(usernameField.getText());
-					if(playerInfo!=null)
+					NetworkPlayerInfo playerInfo = connection.getPlayerInfo(username.getText());
+					if(playerInfo!=null&&!identity.isMember(playerInfo.getGameProfile().getId()))
+					{
 						IIPacketHandler.sendToServer(MessageDiplomacyAction.invitePlayer(playerInfo.getGameProfile().getId()));
+						username.withText("");
+					}
 				})
 		);
 
-		//Member list
-		panelMembers.addComponent(new DecoList<UUID>(4, 22+2)
-				.withSize(132+4+2+2, 32+24+2-2)
-				.withEntries(identity.getMembers())
+		List<UUID> invited = new ArrayList<>(identity.getInvitedPlayers());
+		invited.sort(Comparator
+				.comparing((UUID uuid) -> handler.getPlayerInfo(uuid).getName(), String.CASE_INSENSITIVE_ORDER)
+				.thenComparing(UUID::toString));
+
+		panel.addComponent(new DecoList<UUID>(2, 24-4)
+				.withSize(panel.width-4, 132-24-2)
+				.withEntries(invited)
 				.withDisplayFunction(new DecoEntryPanelBuilder<UUID>()
-						.withHeight(18)
+						.withHeight(22)
 						.withBackground(DecoTextures.BG_PAPER)
 						.withBackgroundMask(DecoTextures.TEMPLATE_PAPER)
-						.withLabel("name", new DecoLabel(fontRenderer, 16+1+1, 2)
-								.withSize(100, 16)
-								.withAlign(DecoAlignment.LEFT)
-						)
-						.withComponent("head", new DecoImage(2, 2)
-								.withSize(14, 14)
-						)
-						.withComponent(p -> new DecoButton(p.width-16, 2)
+						.withLabel("name", new DecoLabel(fontRenderer, 20, 3)
+								.withSize(panel.width-62, 16)
+								.withAlign(DecoAlignment.LEFT))
+						.withComponent("head", new DecoImage(3, 3).withSize(16, 16))
+						.withComponent("cancel", p -> new DecoButton(p.width-19, 3)
+								.withSize(16, 16)
 								.withTemplate(DecoTemplates.ACTION_BUTTON_REMOVE)
-								.withOnLMBPressed(() -> IIPacketHandler.sendToServer(MessageDiplomacyAction.removeMember(p.getCurrentElement())))
-						)
-						.withElementApplyMethod((uuid, panel) -> {
-							PlayerInfo playerInfo = DiplomacyHandler.getInstance(true).getPlayerInfo(uuid);
-							panel.label("name").withRawText(playerInfo.getName());
-							panel.component("head", DecoImage.class).withImageLocation(playerInfo.getSkin())
+								.withDisabled(!canInvite)
+								.withOnLMBPressed(() -> IIPacketHandler.sendToServer(
+										MessageDiplomacyAction.cancelInvitation(p.getCurrentElement()))))
+						.withElementApplyMethod((uuid, entry) -> {
+							PlayerInfo info = handler.getPlayerInfo(uuid);
+							entry.label("name").withRawText(info.getName());
+							entry.component("head", DecoImage.class)
+									.withImageLocation(info.getSkin())
 									.withUV(64, 8, 8, 16, 16);
 						})
 				)
 		);
+		return panel;
+	}
 
-		//Permissions Panel
-		DecoPanel panelPerms = addComponent(new DecoPanel(152+2, 4)
-				.withSize(92-2+32, 144+32)
-				.withBackground(DecoTextures.BG_STEEL)
-				.withBackgroundMask(DecoTextures.TEMPLATE_SQUARE)
-				.withTitleLabel("Permissions", DecoAlignment.TOP)
+	private DecoPanel buildRolesPage(OwnerIdentity identity)
+	{
+		DecoPanel panel = createContentPanel();
+		List<PermissionRole> roles = new ArrayList<>(identity.getAvailableRoles().values());
+		boolean canEditRoles = identity.isOwner(mc.player.getUniqueID());
+
+		if(selectedRole==null||!roles.contains(selectedRole))
+			selectedRole = roles.stream()
+					.filter(role -> !role.isOwner())
+					.findFirst()
+					.orElse(identity.getRoleOf(mc.player.getUniqueID()));
+
+		panel.addLabel(IIReference.GUI_LABEL_KEY+"faction_management.permissions.role", 4, 3)
+				.withSize(64, 16)
+				.withTranslatedTooltip(IIReference.GUI_LABEL_KEY+"faction_management.permissions.role.tooltip");
+		DecoDropdown<PermissionRole> roleDropdown = panel.addComponent(new DecoDropdown<PermissionRole>(panel.width-150-2, 2)
+				.withSize(150, 16)
+				.withEntries(roles)
+				.withDisplayFunction(DecoElementDisplays.getSimpleTextDisplay(PermissionRole::getDisplayName))
+				.withSelectedEntry(selectedRole)
+				.withTranslatedTooltip(IIReference.GUI_LABEL_KEY+"faction_management.permissions.role.tooltip")
 		);
+		roleDropdown.withOnSelectedEntry((oldRole, newRole) -> {
+			if(newRole!=null&&!newRole.equals(oldRole))
+				selectedRole = newRole;
+		});
 
-		selectedRole = identity.getRoleOf(playerContainer.player.getUniqueID());
-		if(selectedRole!=null)
+		if(selectedRole==null)
 		{
-			panelPerms.addLabel("Role:", 4, 8+2-1)
-					.withSize(panelPerms.width-72-2, 14)
-					.withAlign(DecoAlignment.LEFT);
-			panelPerms.addComponents(
-					new DecoDropdown<PermissionRole>(panelPerms.width-72, 8+2-2)
-							.withSize(72-4, 14)
-							.withEntries(identity.getAvailableRoles().values())
-							.withDisplayFunction(DecoElementDisplays.getSimpleTextDisplay(PermissionRole::getDisplayName))
-							.withSelectedEntry(selectedRole)
-							.withOnSelectedEntry((oldRole, newRole) -> selectedRole = newRole),
-					new DecoList<PermissionCategory>(2, 12+8+2+1)
-							.withSize(panelPerms.width-4-2, panelPerms.height-32+8-2)
-							.withEntries(PermissionCategory.values())
-							.withDisplayFunction(new DecoEntryPanelBuilder<PermissionCategory>()
-									.withHeight(18)
-									.withComponent("toggle", p -> new DecoSwitch(2, 2)
-											.withOnToggle(change -> IIPacketHandler.sendToServer(MessageDiplomacyAction.changePermission(selectedRole,
-													p.getCurrentElement(), change)))
-									)
-									.withElementApplyMethod((permission, panel) -> {
-										panel.component("toggle", DecoSwitch.class)
-												.withCurrentState(selectedRole.isAllowed(permission))
-												.withText(permission.getFullLocaleKey());
-									})
-							)
+			panel.addLabel(new DecoLabel(fontRenderer, 4, 30)
+					.withSize(panel.width-14, 16)
+					.withAlign(DecoAlignment.CENTER)
+					.withText(IIReference.GUI_LABEL_KEY+"faction_management.permissions.empty")
+			);
+		}
+		else
+		{
+			panel.addComponent(new DecoList<PermissionCategory>(2, 24-4)
+					.withSize(panel.width-4, 132-26)
+					.withEntries(PermissionCategory.values())
+					.withDisplayFunction(new DecoEntryPanelBuilder<PermissionCategory>()
+							.withHeight(20)
+							.withBackground(DecoTextures.BG_PAPER)
+							.withBackgroundMask(DecoTextures.TEMPLATE_PAPER)
+							.withComponent("toggle", p -> new DecoSwitch(3, 2)
+									.withDisabled(!canEditRoles||selectedRole.isOwner())
+									.withOnToggle(change -> IIPacketHandler.sendToServer(
+											MessageDiplomacyAction.changePermission(selectedRole, p.getCurrentElement(), change))))
+							.withElementApplyMethod((permission, entry) -> entry.component("toggle", DecoSwitch.class)
+									.withCurrentState(selectedRole.isAllowed(permission))
+									.withText(permission.getFullLocaleKey()))
+					)
 			);
 		}
 
-
+		return panel;
 	}
 
 	@Override
@@ -245,7 +363,6 @@ public class GuiFlagpoleFaction extends DecoTileGui<TileEntityFlagpole, Containe
 			IIPacketHandler.sendToServer(MessageDiplomacyAction.changeColor(factionColor));
 		if(factionBanner!=null)
 			IIPacketHandler.sendToServer(MessageDiplomacyAction.changeBanner(factionBanner));
-
 		super.onGuiClosed();
 	}
 }

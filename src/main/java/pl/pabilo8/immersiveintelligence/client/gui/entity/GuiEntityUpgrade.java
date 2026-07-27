@@ -25,7 +25,6 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.tree.IDecoTreeNode;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.tree.upgrade.UpgradeTechTreeWrapper;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.tree.upgrade.UpgradeTreeNodeRenderer;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
 import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerEntityUpgrade;
@@ -56,10 +55,10 @@ public class GuiEntityUpgrade<T extends Entity & IIEInventory & IUpgradableDevic
 	public String lastUpgrade;
 	private DecoScenarioDisplay scenario;
 
-	public GuiEntityUpgrade(EntityPlayer player, T tile)
+	public GuiEntityUpgrade(EntityPlayer player, T entity)
 	{
-		super(player, tile, IIGUI.UPGRADE_ENTITY);
-		this.techTree = tile!=null?UpgradeTechTree.getTreeFor(tile): null;
+		super(player, entity, IIGUI.UPGRADE_ENTITY);
+		this.techTree = entity!=null?UpgradeTechTree.getTreeFor(entity): null;
 	}
 
 	@Override

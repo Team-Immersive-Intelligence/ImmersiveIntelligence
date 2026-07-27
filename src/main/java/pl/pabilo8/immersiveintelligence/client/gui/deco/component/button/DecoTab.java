@@ -21,6 +21,10 @@ import javax.annotation.Nonnull;
  */
 public class DecoTab extends DecoButton
 {
+	private boolean isSelected = false;
+	protected IIColor textSelectedColor = IIColor.fromHex("afafaf");
+	protected IIColor backgroundSelectedColor = IIColor.fromHex("9f9f9f");
+
 	public DecoTab()
 	{
 		super(0, 0);
@@ -46,8 +50,25 @@ public class DecoTab extends DecoButton
 		return this;
 	}
 
-	//--- Overrides ---//
+	public DecoTab withSelected(boolean selected)
+	{
+		isSelected = selected;
+		return this;
+	}
 
+	public DecoTab withBackgroundSelectedColor(IIColor backgroundSelectedColor)
+	{
+		this.backgroundSelectedColor = backgroundSelectedColor;
+		return this;
+	}
+
+	public DecoTab withTextSelectedColor(IIColor textSelectedColor)
+	{
+		this.textSelectedColor = textSelectedColor;
+		return this;
+	}
+
+	//--- Overrides ---//
 
 	@Override
 	public DecoTab withIcon(@Nonnull ResourceLocation icon)
@@ -137,5 +158,19 @@ public class DecoTab extends DecoButton
 	public DecoTab withTextDisabledColor(IIColor textDisabledColor)
 	{
 		return (DecoTab)super.withTextDisabledColor(textDisabledColor);
+	}
+
+	protected final IIColor getBackgroundColor()
+	{
+		if(isSelected)
+			return backgroundSelectedColor;
+		return super.getBackgroundColor();
+	}
+
+	protected final IIColor getTextColor(boolean label)
+	{
+		if(isSelected)
+			return textSelectedColor;
+		return super.getTextColor(label);
 	}
 }

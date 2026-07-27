@@ -73,7 +73,7 @@ public class DiplomacyHandler
 	public static OwnerIdentity NEUTRAL, GLOBAL_ENEMY;
 	public static PlayerInfo DEFAULT_PLAYER_INFO = new PlayerInfo(UUID.fromString("00000000-0000-0000-0000-000000000000"), "Unknown");
 
-	private static final String KEY_IDENTITIES = "identities", KEY_CHUNKLOADERS = "chunkloaders", KEY_PLAYERS = "players";
+	private static final String KEY_IDENTITIES = "identities", KEY_PLAYERS = "players";
 
 	private static final DiplomacyHandler INSTANCE_SERVER = new DiplomacyHandler(false);
 	private static final DiplomacyHandler INSTANCE_CLIENT = new DiplomacyHandler(true);
@@ -88,7 +88,6 @@ public class DiplomacyHandler
 	private final Map<UUID, Ticket> pendingTickets = new HashMap<>();
 
 	private int pendingTicketCheckTimer = 0;
-	private boolean pendingIntegritySave = false;
 	public boolean diplomacyInitialized = false;
 	public final boolean isRemote;
 
@@ -180,12 +179,14 @@ public class DiplomacyHandler
 				});
 
 		diplomacyInitialized = true;
-		if(repaired&&!isRemote)
-			pendingIntegritySave = true;
 
 		if(!isRemote)
+		{
 			for(MessageDiplomacySync message : MessageDiplomacySync.updateAllMessage())
 				IIPacketHandler.sendToAllClients(message);
+			if(repaired)
+				IISaveData.setDirty();
+		}
 	}
 
 	private boolean validateIdentityIntegrity()
@@ -241,7 +242,6 @@ public class DiplomacyHandler
 		propertyTickets.clear();
 		pendingTickets.clear();
 		pendingTicketCheckTimer = 0;
-		pendingIntegritySave = false;
 	}
 
 	//--- Update Loop ---//
@@ -262,14 +262,6 @@ public class DiplomacyHandler
 		}
 		if(!diplomacyInitialized)
 			return;
-
-		//WorldSavedData is fully installed by the first server tick, so persist any
-		//migration repairs here rather than during readFromNBT.
-		if(pendingIntegritySave)
-		{
-			IISaveData.setDirty();
-			pendingIntegritySave = false;
-		}
 
 		//Load chunks
 		pendingTicketCheckTimer++;
@@ -481,11 +473,6 @@ public class DiplomacyHandler
 		return getInstance(true).getOwnerIdentityForEntity(ClientUtils.mc().player);
 	}
 
-	/*public static OwnerIdentity getIdentityByUUID(String uuid)
-	{
-
-	}*/
-
 	public OwnerIdentity getIdentityByUUID(String uuid)
 	{
 		try
@@ -536,7 +523,7 @@ public class DiplomacyHandler
 		if(existing.isPresent())
 			return existing.get();
 
-		//Only players should be able to create a new indentity
+		//Only players should be able to create a new ideentity
 		if(!player.world.isRemote&&player instanceof EntityPlayer)
 		{
 			//Create new identity
@@ -566,7 +553,16 @@ public class DiplomacyHandler
 
 	public void setChunkOwnership(Chunk chunk, IChunkOwnership ownership)
 	{
-
+		if(chunk.hasCapability(CapabilityChunkOwnership.CHUNK_OWNERSHIP_CAP, null))
+		{
+			IChunkOwnership cap = chunk.getCapability(CapabilityChunkOwnership.CHUNK_OWNERSHIP_CAP, null);
+			if(cap!=null)
+			{
+				cap.setOwner(ownership.getOwner());
+				return;
+			}
+		}
+		IILogger.error("Could not set chunk ownership for chunk at "+chunk.getPos().x+", "+chunk.getPos().z+"; missing or invalid IChunkOwnership capability!");
 	}
 
 	public IChunkOwnership getPositionOwnership(World world, BlockPos pos)
@@ -649,15 +645,18 @@ public class DiplomacyHandler
 
 	//--- Player Invitation ---//
 
-	public Set<String> getPendingInvitationsForPlayer(UUID playerUUID)
+	public List<OwnerIdentity> getPendingInvitationIdentitiesForPlayer(UUID playerUUID)
 	{
 		return ownerIdentities.values().stream()
 				.filter(oi -> !oi.isInvalid())
 				.filter(oi -> oi.getUUID()!=NEUTRAL_UUID)
 				.filter(oi -> oi.getUUID()!=GLOBAL_ENEMY_UUID)
-				.filter(oi -> oi.isInvited(playerUUID))
-				.map(OwnerIdentity::getDisplayName)
-				.collect(Collectors.toSet());
+				.filter(identity -> !identity.isInvalid())
+				.filter(identity -> identity.isInvited(playerUUID))
+				.sorted(Comparator
+						.comparing(OwnerIdentity::getDisplayName, String.CASE_INSENSITIVE_ORDER)
+						.thenComparing(identity -> identity.getUUID().toString()))
+				.collect(Collectors.toList());
 	}
 
 	public Set<UUID> getPendingInvitationsForFaction(UUID factionUUID)
@@ -670,64 +669,71 @@ public class DiplomacyHandler
 	{
 		if(identity.getUUID()!=NEUTRAL_UUID&&identity.getUUID()!=GLOBAL_ENEMY_UUID&&identity.isInvalid())
 			return false;
-		if(identity.isInvited(playerUUID))
-		{
-			//Add to new identity
-			identity.removeInvitation(playerUUID);
-			identity.withMember(playerUUID, identity.getStartingMemberRole());
+		if(!identity.isInvited(playerUUID))
+			return false;
 
-			//Remove from old identity
-			Optional<OwnerIdentity> first = ownerIdentities.values().stream()
-					.filter(oi -> oi!=identity)
-					.filter(oi -> oi.isMember(playerUUID))
-					.findFirst();
-			if(first.isPresent())
-			{
-				//Check if the player is the last remaining player in the faction
-				OwnerIdentity previousIdentity = first.get();
-				boolean isLastOwner = previousIdentity.isOwner(playerUUID)&&previousIdentity.getMembers().size()==1;
-				previousIdentity.removeMember(playerUUID);
-
-				//Pass all the properties owned by the previous identity to the new identity
-				if(isLastOwner)
-				{
-					IILogger.info("Passed all properties of faction %s to new owner %s after player %s accepted invitation.",
-							previousIdentity.getDisplayName(), identity.getDisplayName(), playerUUID);
-					for(IOwnableProperty value : properties.values())
-					{
-						IOwnableProperty master = value.master();
-						try
-						{
-							assert master!=null;
-							master.setOwnerIdentity(identity);
-						} catch(Exception e)
-						{
-							IILogger.error("Failed to transfer property %s from %s to %s after player %s accepted invitation.",
-									value.getUUID(), previousIdentity.getUUID(), identity.getUUID(), playerUUID);
-						}
-					}
-
-					//Reclaim chunks
-					for(IOwnableProperty value : properties.values())
-						claimChunks(value.master());
-				}
-			}
-
-
-			return true;
-		}
-		return false;
-	}
-
-	public boolean denyInvitation(OwnerIdentity identity, UUID playerUUID)
-	{
-		if(identity.isInvited(playerUUID))
+		//A stale invitation for an existing member must never overwrite their current role.
+		if(identity.isMember(playerUUID))
 		{
 			identity.removeInvitation(playerUUID);
 			saveAndSyncIdentity(identity);
 			return true;
 		}
-		return false;
+
+		//Remove from old identity
+		Optional<OwnerIdentity> first = ownerIdentities.values().stream()
+				.filter(oi -> oi!=identity)
+				.filter(oi -> oi.isMember(playerUUID))
+				.findFirst();
+		if(first.isPresent())
+		{
+			//Check if the player is the last remaining player in the faction
+			OwnerIdentity previousIdentity = first.get();
+			boolean isLastOwner = previousIdentity.isOwner(playerUUID)&&previousIdentity.getMembers().size()==1;
+			previousIdentity.removeMember(playerUUID);
+
+			//Pass all the properties owned by the previous identity to the new identity
+			if(isLastOwner)
+			{
+				IILogger.info("Passed all properties of faction %s to new owner %s after player %s accepted invitation.",
+						previousIdentity.getDisplayName(), identity.getDisplayName(), playerUUID);
+				for(IOwnableProperty value : properties.values())
+				{
+					IOwnableProperty master = value.master();
+					try
+					{
+						assert master!=null;
+						master.setOwnerIdentity(identity);
+					} catch(Exception e)
+					{
+						IILogger.error("Failed to transfer property %s from %s to %s after player %s accepted invitation.",
+								value.getUUID(), previousIdentity.getUUID(), identity.getUUID(), playerUUID);
+					}
+				}
+
+				//Reclaim chunks
+				for(IOwnableProperty value : properties.values())
+					claimChunks(value.master());
+			}
+		}
+
+		//Add first so a damaged role table cannot strand the player between identities.
+		identity.withMember(playerUUID, identity.getStartingMemberRole());
+		if(!identity.isMember(playerUUID))
+			return false;
+		identity.removeInvitation(playerUUID);
+		saveAndSyncIdentity(identity);
+		return true;
+	}
+
+	public boolean denyInvitation(OwnerIdentity identity, UUID playerUUID)
+	{
+		if(identity.getUUID()==NEUTRAL_UUID||identity.getUUID()==GLOBAL_ENEMY_UUID
+				||identity.isInvalid()||!identity.isInvited(playerUUID))
+			return false;
+		identity.removeInvitation(playerUUID);
+		saveAndSyncIdentity(identity);
+		return true;
 	}
 
 	//--- Server Sync Methods ---//
@@ -903,6 +909,9 @@ public class DiplomacyHandler
 		PlayerInfo playerInfo = new PlayerInfo(event.player);
 		updatePlayerInfo(new PlayerInfo(event.player));
 		IIPacketHandler.sendToAllClients(MessageDiplomacySync.syncPlayerInfo(playerInfo));
+
+		//If player has no identity created yet, generate and sync it
+		getOwnerIdentityForEntity(event.player);
 	}
 
 	@SubscribeEvent

@@ -15,7 +15,6 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.map.Dec
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.map.scanners.EntityScanner;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.map.scanners.RadarDirectionScanner;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Radar;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityRadar;

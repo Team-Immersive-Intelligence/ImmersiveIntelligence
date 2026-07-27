@@ -28,6 +28,7 @@ import java.util.function.Supplier;
 public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? super E, T>, T> extends DecoTextBasedComponent<E>
 {
 	protected static final int ON_CREATE_OPTION = -10;
+	protected IIColor listBackgroundColor = IIColor.WHITE;
 	protected ResLoc listBackgroundLocation = DecoTextures.BG_DARK;
 	protected ResLoc scrollBarLocation = DecoTextures.COMPONENT_SLIDER;
 
@@ -64,6 +65,19 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 	public E withListBackground(ResLoc listBackgroundLocation)
 	{
 		this.listBackgroundLocation = listBackgroundLocation;
+		//noinspection unchecked
+		return (E)this;
+	}
+
+	/**
+	 * Sets the background color of the list
+	 *
+	 * @param listBackgroundColor The background color
+	 * @return this
+	 */
+	public E withListBackgroundColor(IIColor listBackgroundColor)
+	{
+		this.listBackgroundColor = listBackgroundColor;
 		//noinspection unchecked
 		return (E)this;
 	}
@@ -286,7 +300,7 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 
 		//Background
 		int listHeight = getListHeight();
-		draw.drawConnectedTexColorRect(x, y, listWidth, listHeight, IIColor.WHITE, listBackgroundLocation, 64, 64, 8, 8);
+		draw.drawConnectedTexColorRect(x, y, listWidth, listHeight, listBackgroundColor, listBackgroundLocation, 64, 64, 8, 8);
 		//Scrollbar
 		if(shouldAlwaysHaveScrollbar()||maxScroll > 0)
 		{

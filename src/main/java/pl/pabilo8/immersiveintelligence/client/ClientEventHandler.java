@@ -16,6 +16,7 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
+import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelBiped.ArmPose;
@@ -48,6 +49,7 @@ import net.minecraftforge.client.event.EntityViewRenderEvent.CameraSetup;
 import net.minecraftforge.client.event.EntityViewRenderEvent.FOVModifier;
 import net.minecraftforge.client.event.EntityViewRenderEvent.FogColors;
 import net.minecraftforge.client.event.EntityViewRenderEvent.RenderFogEvent;
+import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent.Post;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.Pre;
@@ -77,6 +79,7 @@ import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IItemScroll
 import pl.pabilo8.immersiveintelligence.api.utils.camera.ICameraEntity;
 import pl.pabilo8.immersiveintelligence.client.fx.ScreenShake;
 import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleSystem;
+import pl.pabilo8.immersiveintelligence.client.gui.GuiButtonFactionInvitations;
 import pl.pabilo8.immersiveintelligence.client.gui.GuiWidgetAustralianTabs;
 import pl.pabilo8.immersiveintelligence.client.gui.inworld_overlay.InWorldOverlayBase;
 import pl.pabilo8.immersiveintelligence.client.gui.inworld_overlay.OwnershipOverlay;
@@ -100,6 +103,7 @@ import pl.pabilo8.immersiveintelligence.client.util.CameraHandler;
 import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTBipedAdapter;
 import pl.pabilo8.immersiveintelligence.common.*;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Factions;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Graphics;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityCamera;
@@ -110,6 +114,7 @@ import pl.pabilo8.immersiveintelligence.common.item.ItemIIPrintedPage.PageType;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIGunBase;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIRailgunOverride;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageDiplomacySync;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageItemScrollableSwitch;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageManualClose;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
@@ -969,17 +974,58 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	@SubscribeEvent
 	public void onInitGuiPost(Post event)
 	{
-		//Add creative menu subtabs
-		if(event.getGui() instanceof GuiContainerCreative&&IIConfig.australianCreativeTabs)
+		GuiScreen gui = event.getGui();
+		if(Factions.enableFactions&&gui instanceof GuiInventory&&Factions.inventoryButtonPosition[0]!=-1&&Factions.inventoryButtonPosition[1]!=-1)
 		{
-			GuiContainerCreative gui = (GuiContainerCreative)event.getGui();
 			try
 			{
-				event.getButtonList().add(new GuiWidgetAustralianTabs(gui.guiLeft-27, gui.guiTop+2, gui));
+				event.getButtonList().add(new GuiButtonFactionInvitations(
+						((GuiInventory)gui).guiLeft+Factions.inventoryButtonPosition[0],
+						((GuiInventory)gui).guiTop+Factions.inventoryButtonPosition[1],
+						null));
 			} catch(Exception ignored)
 			{
-				IILogger.warn("Failed to add subtabs to creative inventory");
+				IILogger.warn("Failed to add faction invitation button to inventory");
 			}
+		}
+		//Add creative menu subtabs
+		if(gui instanceof GuiContainerCreative&&IIConfig.australianCreativeTabs)
+		{
+			GuiContainerCreative creative = (GuiContainerCreative)gui;
+			if(Factions.enableFactions&&Factions.inventoryButtonPositionCreative[0]!=-1&&Factions.inventoryButtonPositionCreative[1]!=-1)
+				try
+				{
+					event.getButtonList().add(new GuiButtonFactionInvitations(
+							creative.guiLeft+Factions.inventoryButtonPositionCreative[0],
+							creative.guiTop+Factions.inventoryButtonPositionCreative[1],
+							creative
+					));
+				} catch(Exception ignored)
+				{
+					IILogger.warn("Failed to add faction invitation button to creative inventory");
+				}
+
+			if(IIConfig.australianCreativeTabs)
+				try
+				{
+					event.getButtonList().add(new GuiWidgetAustralianTabs(creative.guiLeft-27, creative.guiTop+2, creative));
+				} catch(Exception ignored)
+				{
+					IILogger.warn("Failed to add subtabs to creative inventory");
+				}
+		}
+	}
+
+	@SubscribeEvent
+	public void onFactionInvitationButton(ActionPerformedEvent.Post event)
+	{
+		if(!(event.getButton() instanceof GuiButtonFactionInvitations))
+			return;
+		Minecraft mc = Minecraft.getMinecraft();
+		if(mc.player!=null&&mc.world!=null)
+		{
+			IIPacketHandler.sendToAllClients(MessageDiplomacySync.requestUpdateMessage());
+			mc.player.openGui(ImmersiveIntelligence.INSTANCE, IIGUI.FACTION_INVITATIONS.ordinal(), mc.world, 0, 0, 0);
 		}
 	}
 

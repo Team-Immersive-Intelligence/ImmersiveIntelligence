@@ -823,10 +823,16 @@ public class CommonProxy implements IGuiHandler
 		{
 			IIGUI gui = IIGUI.values()[ID];
 
+			if(gui.player)
+				return gui.containerFromPlayer==null?null: gui.containerFromPlayer.apply(player);
 			if(gui.item)
 				return gui.containerFromStack==null?null: gui.containerFromStack.apply(player, stack, hand);
-
-			if(gui.teClass==null||gui.containerFromTile==null)
+			if(gui.entityClass!=null&&gui.containerFromEntity!=null)
+			{
+				if(gui.entityClass.isInstance(entity))
+					return gui.containerFromEntity.apply(player, entity);
+			}
+			else if(gui.teClass==null||gui.containerFromTile==null)
 				return null;
 			else if(te instanceof IGuiTile&&gui.teClass.isInstance(te))
 			{

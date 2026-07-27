@@ -91,9 +91,7 @@ public class CommandIIGivePunchtape extends CommandBase
 	public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos)
 	{
 		if(args.length==1)
-		{
 			return getListOfStringsMatchingLastWord(args, server.getOnlinePlayerNames());
-		}
 		else
 			return Collections.emptyList();
 	}

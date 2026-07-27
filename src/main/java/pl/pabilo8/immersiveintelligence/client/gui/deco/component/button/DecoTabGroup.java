@@ -4,23 +4,28 @@ import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPanel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A group of DecoTabs displayed in a row or column, depending on alignment.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 27.07.2026
  * @since 24.09.2025
  */
 public class DecoTabGroup extends DecoComponent<DecoTabGroup>
 {
 	private final List<DecoTab> tabs = new ArrayList<>();
+	private final Map<DecoTab, DecoPanel> tabPanels = new LinkedHashMap<>();
 	private ResourceLocation background = DecoTextures.COMPONENT_TAB;
 	private boolean horizontal;
 	private int spacing = 0;
@@ -52,7 +57,9 @@ public class DecoTabGroup extends DecoComponent<DecoTabGroup>
 
 	public DecoTabGroup withTab(DecoTab tab)
 	{
-		tab.withSize(24, 24).pack();
+		tab.withSize(24, 24)
+				.withPadding(5, 3, 5, 2)
+				.pack();
 		if(horizontal)
 			tab.withSize(tab.width, this.height);
 		else
@@ -61,6 +68,40 @@ public class DecoTabGroup extends DecoComponent<DecoTabGroup>
 		tabs.add(tab);
 		children.add(tab);
 		return this;
+	}
+
+	/**
+	 * Adds a tab associated with a panel. The first pair is selected by default;
+	 * pressing another tab hides the previous panel and displays the selected one.
+	 *
+	 * @param tab   tab used to select the panel
+	 * @param panel panel controlled by the tab
+	 * @return this
+	 */
+	public DecoTabGroup withTab(DecoTab tab, DecoPanel panel)
+	{
+		withTab(tab);
+		tabPanels.put(tab, panel);
+
+		boolean selected = tabPanels.size()==1;
+		tab.withSelected(selected)
+				.withOnPressed((gui, button, mouseX, mouseY) -> {
+					if(button!=MouseButton.LEFT)
+						return false;
+					selectTab(tab);
+					return true;
+				});
+		panel.enabled = panel.visible = selected;
+		return this;
+	}
+
+	private void selectTab(DecoTab selectedTab)
+	{
+		this.tabPanels.forEach((tab, panel) -> {
+			boolean selected = tab==selectedTab;
+			tab.withSelected(selected);
+			panel.enabled = panel.visible = selected;
+		});
 	}
 
 	@Override
@@ -84,13 +125,13 @@ public class DecoTabGroup extends DecoComponent<DecoTabGroup>
 		}
 		if(horizontal)
 		{
-			this.width = offsetX-x-spacing+(tabs.isEmpty()?0: tabs.get(tabs.size()-1).width);
+			this.width = tabs.isEmpty()?0: offsetX-x-spacing;
 			this.height = maxH;
 		}
 		else
 		{
 			this.width = maxW;
-			this.height = offsetY-y-spacing+(tabs.isEmpty()?0: tabs.get(tabs.size()-1).height);
+			this.height = tabs.isEmpty()?0: offsetY-y-spacing;
 		}
 		return true;
 	}
