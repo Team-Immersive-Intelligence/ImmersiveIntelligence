@@ -156,9 +156,17 @@ public class ItemIILightEngineerChestplate extends ItemIILightEngineerArmorBase 
 							materialWest==Material.GRASS||materialWest==Material.LEAVES||materialWest==Material.VINE
 			))
 			{
+				//Apply invis
 				player.addPotionEffect(new PotionEffect(IIPotions.concealed, 15, 0, true, false));
 				player.addPotionEffect(new PotionEffect(MobEffects.INVISIBILITY, 15, 0, true, false));
 			}
+			else
+			{
+				//Remove invis if ANY of the conditons are not met
+				player.removePotionEffect(IIPotions.concealed);
+				player.removePotionEffect(MobEffects.INVISIBILITY);
+			}
+
 		}
 		if(getUpgrades(stack).hasKey("heatcoat"))
 		{
