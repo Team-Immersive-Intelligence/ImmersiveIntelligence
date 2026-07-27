@@ -168,7 +168,7 @@ public class ItemIILightEngineerChestplate extends ItemIILightEngineerArmorBase 
 			}
 
 		}
-		if(getUpgrades(stack).hasKey("heatcoat"))
+		if(getUpgrades(stack).hasKey("camo_mesh"))
 		{
 			if(player.isBurning())
 			{
@@ -176,7 +176,12 @@ public class ItemIILightEngineerChestplate extends ItemIILightEngineerArmorBase 
 				player.attackEntityFrom(DamageSource.ON_FIRE, 0.5F);
 			}
 		}
+
+
+
 	}
+
+
 
 	@Nullable
 	@Override
