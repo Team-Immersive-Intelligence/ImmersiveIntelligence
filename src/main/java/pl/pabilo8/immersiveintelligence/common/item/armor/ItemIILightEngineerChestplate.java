@@ -226,13 +226,22 @@ public class ItemIILightEngineerChestplate extends ItemIILightEngineerArmorBase 
 	public void onStrike(ItemStack s, EntityEquipmentSlot eqSlot, EntityLivingBase p, Map<String, Object> cache,
 						 @Nullable DamageSource dSource, ElectricSource eSource)
 	{
-		if(!(dSource instanceof ElectricDamageSource))
-			return;
-		if(!hasUpgrade(s, "anti_static_mesh"))
+		if (!(dSource instanceof ElectricDamageSource))
 			return;
 
-		ElectricDamageSource dmg = (ElectricDamageSource)dSource;
-		dmg.dmg = (hasUpgrade(s, "anti_static_mesh")&&p.isInWater())?(float)(dmg.dmg*LightEngineerArmor.antiStaticMeshWaterDamageMod): 0;
+		ElectricDamageSource dmg = (ElectricDamageSource) dSource;
+
+		//anti static mesh
+		if (hasUpgrade(s, "anti_static_mesh")) {
+			dmg.dmg = (p.isInWater())
+					? (float) (dmg.dmg * LightEngineerArmor.antiStaticMeshWaterDamageMod)
+					: 0;
+		}
+		//IR Mesh. Doubles incoming shock damage (a la EMP mine)
+		else if (hasUpgrade(s, "ir_mesh")) {
+			dmg.dmg *= 1.5f;
+			p.attackEntityFrom(DamageSource.LIGHTNING_BOLT, 2.0F);
+		}
 	}
 
 	@Override
