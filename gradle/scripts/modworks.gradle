@@ -1,0 +1,58 @@
+def generatedRoot = file('src/main/generated')
+def generatedJava = file('src/main/generated/java')
+def generatedResources = file('src/main/generated/resources')
+
+sourceSets.main.java.srcDirs += [generatedJava]
+sourceSets.main.resources.srcDirs += [generatedResources]
+
+idea {
+	module {
+		sourceDirs += generatedJava
+		generatedSourceDirs += generatedJava
+		resourceDirs += generatedResources
+		generatedSourceDirs += generatedResources
+	}
+}
+
+dependencies {
+	annotationProcessor "pl.pabilo8:ModworksProcessor:${mkxString('modworks_version')}"
+	compileOnly "pl.pabilo8:ModworksProcessor:${mkxString('modworks_version')}"
+}
+
+def compileJavaTask = tasks.named('compileJava', JavaCompile)
+
+compileJavaTask.configure {
+	//Modworks writes both the java/ and resources/ trees below SOURCE_OUTPUT.
+	//Therefore this must point to their common root, not to java/ directly.
+	options.generatedSourceOutputDirectory.set(generatedRoot)
+	options.compilerArgs.addAll([
+			'-Amodworks.modid=' + mkxString('mod_id'),
+			'-Amodworks.resourcedir=resources',
+			'-Amodworks.javadir=java'
+	])
+}
+
+//Both consumers read files produced by compileJava's annotation processors.
+//Gradle 9 requires the producer-consumer relationship to be explicit because
+//the generated directories are also registered as source-set directories.
+tasks.named('processResources').configure {
+	dependsOn compileJavaTask
+}
+
+if (mkxBool('generate_sources_jar', true)) {
+	tasks.named('sourcesJar').configure {
+		dependsOn compileJavaTask
+	}
+}
+
+if (mkxBool('generate_javadocs_jar', false)) {
+	tasks.named('javadoc').configure {
+		dependsOn compileJavaTask
+	}
+}
+
+tasks.register('cleanGeneratedModworks', Delete) {
+	group = 'build'
+	description = 'Deletes Modworks generated source/resource directories.'
+	delete generatedRoot
+}

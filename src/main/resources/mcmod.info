@@ -1,15 +1,16 @@
 [
   {
-    "modid": "immersiveintelligence",
-    "name": "Immersive Intelligence",
-    "description": "Adds new machines related to data, logistics, warfare and intelligence.",
-    "version": "${version}",
-    "mcversion": "${mcversion}",
-    "url": "https://www.curseforge.com/minecraft/mc-mods/immersive-intelligence",
-    "updateUrl": "",
-    "authorList": ["Pabilo8", "Carver", "Schaeferd-CZ", "Bastian", "VDeltaGabriel"],
-    "credits": "The II and IG community ^^",
-    "logoFile": "assets/immersiveintelligence/logo.png",
-    "screenshots": []
+    "modid": ${mod_id_json},
+    "name": ${mod_name_json},
+    "description": ${mod_description_json},
+    "version": ${mod_version_json},
+    "mcversion": ${minecraft_version_json},
+    "url": ${mod_url_json},
+    "updateUrl": ${mod_update_json_json},
+    "authorList": ${mod_authors_json},
+    "credits": ${mod_credits_json},
+    "logoFile": ${mod_logo_path_json},
+    "screenshots": [],
+    "dependencies": ["immersiveengineering"]
   }
 ]

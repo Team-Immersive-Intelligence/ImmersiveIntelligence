@@ -1,36 +1,80 @@
-//--- Boilerplate
-buildscript {
-	repositories {
-		mavenCentral()
-		maven {
-			name = "forge"
-			url = "https://maven.minecraftforge.net/"
-		}
-		maven {
-			name = "iiMavenReleases"
-			url = uri("https://maven.iiteam.net/releases")
-		}
-		maven {
-			name = "sonatype"
-			url = "https://oss.sonatype.org/content/repositories/snapshots/"
-		}
+/**
+ * Team Immersive Intelligence Mk. X Build System template.
+ */
+plugins {
+	id 'java'
+	id 'java-library'
+	id 'maven-publish'
+	id 'idea'
+	id 'org.jetbrains.gradle.plugin.idea-ext' version '1.4.1'
+	id 'com.gtnewhorizons.retrofuturagradle' version '2.0.2'
+	id 'com.diffplug.spotless' version '8.6.0' apply false
+}
+import org.jetbrains.gradle.ext.Gradle
 
-	}
-	dependencies {
-		classpath("com.anatawa12.forge:ForgeGradle:2.3-1.0.+") {
-			changing = true
-		}
+// The ancient pact must be honoured as soon as the root build script is evaluated.
+def mkxGradlephant = rootProject.file('gradle/docs/gradlephant.txt')
+if (mkxGradlephant.isFile())
+	logger.lifecycle('\n' + mkxGradlephant.getText('UTF-8'))
+else
+	logger.warn('[Mk.X] Gradlephant banner missing: {}', mkxGradlephant)
 
-		classpath('xyz.vdeltagabriel:GradleUtils:2.1.0')
+apply from: rootProject.file('gradle/scripts/helpers.gradle')
+
+mkxAssertProperties('mod_version', 'mod_group', 'mod_package', 'mod_id', 'mod_name')
+
+version = mkxString('mod_version')
+group = mkxString('mod_group')
+
+base {
+	archivesName.set(mkxString('archives_base_name', mkxString('mod_id')))
+}
+
+apply from: rootProject.file('gradle/scripts/cleanroom.gradle')
+
+def customGradle = rootProject.file('custom.gradle')
+if (customGradle.exists()) {
+	logger.lifecycle('[Mk.X] applying local custom.gradle')
+	apply from: customGradle
+}
+
+gradle.ext.mkxScriptSwitches.each { propertyName, scriptPath ->
+	mkxApplyScript(propertyName as String, scriptPath as String)
+}
+
+if (mkxBool('ii_script_ide', false)) {
+	idea.project.settings.runConfigurations {
+		'Setup Mod Workspace'(Gradle) {
+			taskNames = ['setupDecompWorkspace','mkxAfterSync']
+		}
+		'Run Client'(Gradle) {
+			taskNames = ['runClient -Dforge.logging.markers=REGISTRIES -Dforge.logging.console.level=debug']
+		}
+		'Run Client 2'(Gradle) {
+			taskNames = ['runClient -Dforge.logging.markers=REGISTRIES -Dforge.logging.console.level=debug --username=TestSubject']
+		}
+		'Run Server'(Gradle) {
+			taskNames = ['runServer']
+		}
+		'Build Mod Jar'(Gradle) {
+			taskNames = ['build']
+		}
 	}
 }
 
-// Apply boilerplate code
-apply from: rootProject.file('gradle/boilerplate.gradle')
-
-//--- Dependencies
-
-repositories {
+tasks.register('mkxSetupDocs') {
+	group = 'help'
+	description = 'Prints gradle/docs/setup.txt.'
+	doLast {
+		def setupDocument = rootProject.file('gradle/docs/setup.txt')
+		if (!setupDocument.isFile())
+			throw new GradleException("Mk. X setup document is missing: ${setupDocument}")
+		println setupDocument.getText('UTF-8')
+	}
 }
 
-
+tasks.named('build').configure {
+	doLast {
+		logger.lifecycle('[Mk.X] artifacts written to {}', layout.buildDirectory.dir('libs').get().asFile)
+	}
+}
