@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common.util.multiblock.production;
 
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
@@ -44,6 +45,7 @@ public abstract class TileEntityMultiblockProductionMulti<T extends TileEntityMu
 	protected void onUpdate()
 	{
 		//Iterate existing processes and try to progress them
+		boolean updateQueue = false;
 		if(!processQueue.isEmpty())
 		{
 			Iterator<IIMultiblockProcess<R>> iterator = processQueue.iterator();
@@ -59,6 +61,7 @@ public abstract class TileEntityMultiblockProductionMulti<T extends TileEntityMu
 						//Remove the process from the queue
 						onProductionFinish(process);
 						iterator.remove();
+						updateQueue = true;
 					}
 					break;
 				}
@@ -66,6 +69,7 @@ public abstract class TileEntityMultiblockProductionMulti<T extends TileEntityMu
 				//Else, try to progress this process
 				float progress = getProductionStep(process, false);
 				if(progress > 0)
+				{
 					process.ticks += progress;
 					//Sync the client each 100 ticks
 					if(Machines.recipeUpdateInterval > 0&&process.ticks%Machines.recipeUpdateInterval==0)
@@ -93,10 +97,13 @@ public abstract class TileEntityMultiblockProductionMulti<T extends TileEntityMu
 				if(process!=null)
 				{
 					processQueue.add(process);
-					updateTileForEvent(SyncEvents.TILE_RECIPE_CHANGED);
+					updateQueue = true;
 				}
 			}
 		}
+
+		if(!world.isRemote&&updateQueue)
+			updateTileForEvent(SyncEvents.TILE_RECIPE_CHANGED);
 	}
 
 	@Override

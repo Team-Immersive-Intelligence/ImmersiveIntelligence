@@ -24,7 +24,7 @@ public class GuiChemicalBath extends DecoTileGui<TileEntityChemicalBath, Contain
 {
 	@DecoResource
 	public static ResLoc TEXTURE = IIReference.RES_II.with("gui/chemical_bath");
-	private DecoImage imageProgress1, imageProgress2;
+	private DecoImage[] progressArrows = new DecoImage[4];
 
 	public GuiChemicalBath(EntityPlayer player, TileEntityChemicalBath tile)
 	{
@@ -49,17 +49,6 @@ public class GuiChemicalBath extends DecoTileGui<TileEntityChemicalBath, Contain
 				new DecoBar(176-8-8-2, -2)
 						.withTemplate(DecoTemplates.BAR_ELECTRIC_ENERGY.apply(tile.energyStorage)),
 
-				new DecoImage(20-4, 5+18-4+24+2+2)
-						.withSize(19, 12)
-						.withImageLocation(TEXTURE, true)
-						.withUV(128, 0, 80-12, 19, 80-12+12)
-						.withAnimation(ImageAnimationDirection.LEFT_TO_RIGHT, DecoGuiUtils.getMultiblockProductionSingleProgress(tile, 0f, 0.5f)),
-				new DecoImage(120-4+18-2-1, 5+18-4+24+2+2)
-						.withSize(21, 12)
-						.withImageLocation(TEXTURE, true)
-						.withUV(128, 19, 80-12, 19+21, 80-12+12)
-						.withAnimation(ImageAnimationDirection.LEFT_TO_RIGHT, DecoGuiUtils.getMultiblockProductionSingleProgress(tile, 0.5f, 1f)),
-
 				new DecoFluidTank(32, 39-10)
 						.withFluidTank(tile.tank)
 						.withTankMask(TEXTURE, 102, 32, 128, new int[]{0, 102, 0, 32}),
@@ -69,14 +58,25 @@ public class GuiChemicalBath extends DecoTileGui<TileEntityChemicalBath, Contain
 						.withUV(128, 0, 32, 106, 32+36)
 						.withDisabled(true),
 
-				imageProgress1 = new DecoImage(20-4, 5+18-4+24+2+2)
+				progressArrows[0] = new DecoImage(20-4, 5+18-4+24+2+2)
 						.withSize(19, 12)
 						.withImageLocation(TEXTURE, true)
 						.withUV(128, 0, 80, 19, 80+12),
-				imageProgress2 = new DecoImage(120-4+18-2-1, 5+18-4+24+2+2)
+				progressArrows[1] = new DecoImage(120-4+18-2-1, 5+18-4+24+2+2)
 						.withSize(21, 12)
 						.withImageLocation(TEXTURE, true)
-						.withUV(128, 19, 80, 19+21, 80+12)
+						.withUV(128, 19, 80, 19+21, 80+12),
+
+				progressArrows[2] = new DecoImage(20-4, 5+18-4+24+2+2)
+						.withSize(19, 12)
+						.withImageLocation(TEXTURE, true)
+						.withUV(128, 0, 80-12, 19, 80-12+12)
+						.withAnimation(ImageAnimationDirection.LEFT_TO_RIGHT, DecoGuiUtils.getMultiblockProductionSingleProgress(tile, 0f, 0.5f)),
+				progressArrows[3] = new DecoImage(120-4+18-2-1, 5+18-4+24+2+2)
+						.withSize(21, 12)
+						.withImageLocation(TEXTURE, true)
+						.withUV(128, 19, 80-12, 19+21, 80-12+12)
+						.withAnimation(ImageAnimationDirection.LEFT_TO_RIGHT, DecoGuiUtils.getMultiblockProductionSingleProgress(tile, 0.5f, 1f))
 
 		);
 	}
@@ -85,7 +85,7 @@ public class GuiChemicalBath extends DecoTileGui<TileEntityChemicalBath, Contain
 	@Method(modid = "jei")
 	public void onInitJEICompat()
 	{
-		JEIHelper.addRecipesDecoGuiLink(this.imageProgress1, "ii.bathing");
-		JEIHelper.addRecipesDecoGuiLink(this.imageProgress2, "ii.bathing");
+		for(DecoImage progressArrow : this.progressArrows)
+			JEIHelper.addRecipesDecoGuiLink(progressArrow, "ii.bathing");
 	}
 }
