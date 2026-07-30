@@ -2,14 +2,17 @@ package pl.pabilo8.immersiveintelligence.client.gui.deco.component.button;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoTextBasedComponent;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -24,7 +27,7 @@ public class DecoButton extends DecoTextBasedComponent<DecoButton>
 {
 	protected int[] padding = new int[]{2, 2, 2, 2};
 	private DecoAlignment iconAlignment = DecoAlignment.CENTER;
-	// Cached positions
+	//Cached positions
 	private int cachedIconX, cachedIconY, cachedTextX, cachedTextY;
 
 	@Nullable
@@ -125,7 +128,16 @@ public class DecoButton extends DecoTextBasedComponent<DecoButton>
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(cachedIconX, cachedIconY, 0);
 			GlStateManager.scale(16/(float)iconSize, 16/(float)iconSize, 1);
+			IIColor iconColor = getTextColor(false);
+			RenderHelper.enableGUIStandardItemLighting();
 			ClientUtils.mc().getRenderItem().renderItemAndEffectIntoGUI(stack, 0, 0);
+			GlStateManager.color(iconColor.red/255f, iconColor.green/255f, iconColor.blue/255f, iconColor.alpha/255f);
+			ClientUtils.mc().getRenderItem().renderItemOverlayIntoGUI(IIClientUtils.fontRegular, stack, 0, 0, null);
+			RenderHelper.disableStandardItemLighting();
+			GlStateManager.disableRescaleNormal();
+			GlStateManager.disableDepth();
+			GlStateManager.color(1f, 1f, 1f, 1f);
+
 			GlStateManager.popMatrix();
 		}
 

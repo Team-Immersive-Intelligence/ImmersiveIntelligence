@@ -21,6 +21,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerAmmunitionAssembler;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
@@ -106,16 +107,16 @@ public class GuiAmmunitionAssembler extends DecoTileGui<TileEntityAmmunitionAsse
 							//Contact fuse has no config value
 							if(this.fuseType==FuseType.CONTACT)
 								textField.withText(newValue = "0");
-							this.fuseConfig = newValue.isEmpty()?0: Integer.parseInt(newValue);
+							this.fuseConfig = IIStringUtil.parseInt(newValue);
 						}),
 				new DecoDropdown<FuseType>(4, 2)
 						.withEntries(FuseType.values())
 						.withDisplayFunction(new DecoEntryPanelBuilder<FuseType>()
 								//Type Icon, Label, and Letter
-								.withComponent("icon", new DecoImage(2, 2)
+								.withComponent("icon", p -> new DecoImage(2, 2)
 										.withSize(16, 16)
 								)
-								.withLabel("label",
+								.withLabel("label", p ->
 										new DecoLabel(fontRenderer, 20, 2)
 												.withSize(48, 18)
 												.withAlign(DecoAlignment.LEFT)
@@ -125,7 +126,6 @@ public class GuiAmmunitionAssembler extends DecoTileGui<TileEntityAmmunitionAsse
 						)
 						.withScrollBarBackground(DecoTextures.COMPONENT_SLIDER_PAPER)
 						.withBackground(DecoTextures.COMPONENT_BUTTON_PAPER)
-						.withListBackground(DecoTextures.COMPONENT_TEXT_FIELD)
 						.withOnSelectedEntry((oldFuse, newFuse) -> {
 							textField.withDisabled(newFuse==FuseType.CONTACT);
 							textField.visible = newFuse!=FuseType.CONTACT;

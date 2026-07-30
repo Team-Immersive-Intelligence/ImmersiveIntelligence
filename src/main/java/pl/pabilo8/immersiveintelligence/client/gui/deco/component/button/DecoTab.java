@@ -22,8 +22,8 @@ import javax.annotation.Nonnull;
 public class DecoTab extends DecoButton
 {
 	private boolean isSelected = false;
-	protected IIColor textSelectedColor = IIColor.fromHex("afafaf");
-	protected IIColor backgroundSelectedColor = IIColor.fromHex("9f9f9f");
+	protected IIColor textSelectedColor = IIColor.fromHex("737373");
+	protected IIColor backgroundSelectedColor = IIColor.fromHex("b4b4b4");
 
 	public DecoTab()
 	{
@@ -133,12 +133,14 @@ public class DecoTab extends DecoButton
 	@Override
 	public DecoTab withBackgroundColor(IIColor color)
 	{
+		withBackgroundSelectedColor(color);
 		return (DecoTab)super.withBackgroundColor(color);
 	}
 
 	@Override
 	public DecoTab withTextColor(IIColor textLabelColor, IIColor textBoxColor)
 	{
+		withTextSelectedColor(textBoxColor);
 		return (DecoTab)super.withTextColor(textLabelColor, textBoxColor);
 	}
 
@@ -162,14 +164,14 @@ public class DecoTab extends DecoButton
 
 	protected final IIColor getBackgroundColor()
 	{
-		if(isSelected)
+		if(!isSelected)
 			return backgroundSelectedColor;
 		return super.getBackgroundColor();
 	}
 
 	protected final IIColor getTextColor(boolean label)
 	{
-		if(isSelected)
+		if(!isSelected)
 			return textSelectedColor;
 		return super.getTextColor(label);
 	}

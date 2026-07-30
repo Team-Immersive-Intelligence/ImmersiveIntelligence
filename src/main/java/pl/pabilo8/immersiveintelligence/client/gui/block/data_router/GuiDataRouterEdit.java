@@ -237,6 +237,7 @@ public class GuiDataRouterEdit extends DecoTileGui<TileEntityDataRouter, Contain
 					.withEntries(DecoDataEditor.getEditorTypes(false))
 					.withSelectedEntry(edited.expectedValue.getTypeMeta())
 					.withDisplayFunction(DecoTemplates.getDataTypeEntryDisplay())
+					.withSortFunction(DecoTemplates.getDataTypeEntrySorter())
 					.withOnSelectedEntry((oldType, newType) -> {
 						storeEditorValue();
 						edited.expectedValue = newType==null?new DataTypeNull(): newType.supplier.get();

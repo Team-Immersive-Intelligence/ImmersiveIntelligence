@@ -1,7 +1,7 @@
 package pl.pabilo8.immersiveintelligence.client.gui.deco.component.data_editor;
 
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.DecoTextField;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.DecoTextArea;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.highlight.POLHighlighter;
 
 /**
@@ -22,10 +22,10 @@ public class DecoCodeEditor extends DecoDataEditor<DataType>
 		if(!super.initialize())
 			return false;
 
-		addComponent(new DecoTextField(0, 0)
+		addComponent(new DecoTextArea(0, 0)
 				.withSize(width, height)
-				.withMultiLine(true)
 				.withHighlighter(new POLHighlighter())
+				.withEditable(false)
 				.withText(new String[]{
 						";This is an editor for data variables",
 						";POL keywords will be highlighted, but",
@@ -42,7 +42,7 @@ public class DecoCodeEditor extends DecoDataEditor<DataType>
 	@Override
 	public DataType outputType()
 	{
-		// The code view is currently a read-only preview; never return null, or applying the editor would erase the variable.
+		//The code view is currently a read-only preview; never return null, or applying the editor would erase the variable.
 		return dataType;
 	}
 }

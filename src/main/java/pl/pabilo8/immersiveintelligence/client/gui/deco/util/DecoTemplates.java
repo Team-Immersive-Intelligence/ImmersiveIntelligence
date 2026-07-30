@@ -11,6 +11,7 @@ import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent.DecoComponentTemplate;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoDropdown;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoElementDisplays.DecoElementSorter;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoEntryPanelBuilder;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar;
@@ -20,7 +21,10 @@ import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IDamageResistantMultiblock;
 
+import javax.annotation.Nonnull;
+import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Templates to be applied to {@link pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent Deco Components}
@@ -161,16 +165,15 @@ public class DecoTemplates
 			.withDisplayFunction(new DecoEntryPanelBuilder<EnumDyeColor>()
 					.withBackground(DecoTextures.BG_STEEL)
 					.withHeight(12)
-					.withComponent("icon", new DecoImage(2, 1)
+					.withComponent("icon", p -> new DecoImage(2, 1)
 							.withSize(8, 8)
 							.withImageLocation(DecoTextures.COMPONENT_COLOR, true)
 							.withUV(16, 4, 4, 12, 12)
 					)
-					.withLabel("label",
-							new DecoLabel(IIClientUtils.fontRegular, 12, 1)
-									.withSize(48, 12)
-									.withAlign(DecoAlignment.LEFT)
-									.withText("Core")
+					.withLabel("label", p -> new DecoLabel(IIClientUtils.fontRegular, 12, 1)
+							.withSize(48, 12)
+							.withAlign(DecoAlignment.LEFT)
+							.withText("Core")
 					)
 					.withElementApplyMethod((dye, builder) -> {
 						builder.component("icon", DecoImage.class).withColor(IIColor.fromDye(dye));
@@ -185,13 +188,12 @@ public class DecoTemplates
 				.withBackground(DecoTextures.BG_PAPER)
 				.withBackgroundMask(DecoTextures.TEMPLATE_PAPER)
 				//Type Icon, Label, and Letter
-				.withComponent("image", new DecoImage(3, 1)
+				.withComponent("image", p -> new DecoImage(3, 1)
 						.withSize(16, 16))
-				.withLabel("typeLabel",
-						new DecoLabel(IIClientUtils.fontRegular, 20, 1)
-								.withSize(48, 18)
-								.withAlign(DecoAlignment.LEFT)
-								.withText("Integer")
+				.withLabel("typeLabel", p -> new DecoLabel(IIClientUtils.fontRegular, 20, 1)
+						.withSize(48, 18)
+						.withAlign(DecoAlignment.LEFT)
+						.withText("Integer")
 				)
 				.withElementApplyMethod((typeMeta, panel) -> {
 					//type label (f.e. integer)
@@ -202,6 +204,27 @@ public class DecoTemplates
 					panel.component("image", DecoImage.class)
 							.withImageLocation(typeMeta.getTextureLocation(), true);
 				})
-				.withElementTooltip(typeMeta -> "a");
+				.withElementTooltip(TypeMetaInfo::getTranslatedName);
+	}
+
+	public static DecoElementSorter<TypeMetaInfo<?>> getDataTypeEntrySorter()
+	{
+		return new DecoElementSorter<TypeMetaInfo<?>>()
+		{
+			@Override
+			public List<TypeMetaInfo<?>> sort(List<TypeMetaInfo<?>> elements)
+			{
+				return elements;
+			}
+
+			@Nonnull
+			@Override
+			public List<TypeMetaInfo<?>> autocomplete(List<TypeMetaInfo<?>> elements, String input)
+			{
+				return elements.stream()
+						.filter(e -> e.getTranslatedName().toLowerCase().contains(input.toLowerCase()))
+						.collect(Collectors.toList());
+			}
+		};
 	}
 }

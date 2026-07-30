@@ -71,7 +71,9 @@ public abstract class TileEntityMultiblockProductionSingle<T extends TileEntityM
 				float progress = getProductionStep(currentProcess, false);
 				if(progress > 0)
 					currentProcess.ticks += progress;
-				return;
+					if(Machines.recipeUpdateInterval > 0&&currentProcess.ticks%Machines.recipeUpdateInterval==0)
+						updateProcess = true;
+				}
 			}
 		}
 

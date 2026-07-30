@@ -8,7 +8,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.ITextComponent.Serializer;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeArray;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeItemStack;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
@@ -22,7 +21,7 @@ import javax.annotation.Nonnull;
  */
 @DataOperation.DataOperationMeta(name = "document_read_all_pages_string",
 		allowedTypes = {DataTypeItemStack.class}, params = {"document"},
-		expectedResult = DataTypeArray.class)
+		expectedResult = DataTypeString.class)
 public class DataOperationDocumentReadAllPagesString extends DataOperation
 {
 	@Nonnull

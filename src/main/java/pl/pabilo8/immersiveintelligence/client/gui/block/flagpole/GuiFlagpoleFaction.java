@@ -5,6 +5,7 @@ import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBanner;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.TextFormatting;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTileGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoSwitch;
@@ -151,23 +152,10 @@ public class GuiFlagpoleFaction extends DecoTileGui<TileEntityFlagpole, Containe
 		);
 
 		panel.addComponent(new DecoColorPickerPanel(4, 38+2)
-				{
-					@Override
-					protected boolean initialize()
-					{
-						if(!super.initialize())
-							return false;
-						dyeColor.visible = false;
-						dyeColor.enabled = false;
-						if(!labels.isEmpty())
-							labels.remove(labels.size()-1);
-						return true;
-					}
-				}
-						.withOnColorChanged((oldColor, newColor) -> factionColor = newColor)
-						.withColor(identity.getColor())
-						.withSize(panel.width-8, 82)
-						.withDisabled(disabled)
+				.withOnColorChanged((oldColor, newColor) -> factionColor = newColor)
+				.withColor(identity.getColor())
+				.withSize(panel.width-8, 82)
+				.withDisabled(disabled)
 		);
 		return panel;
 	}
@@ -195,10 +183,10 @@ public class GuiFlagpoleFaction extends DecoTileGui<TileEntityFlagpole, Containe
 						.withHeight(22)
 						.withBackground(DecoTextures.BG_PAPER)
 						.withBackgroundMask(DecoTextures.TEMPLATE_PAPER)
-						.withLabel("name", new DecoLabel(fontRenderer, 20, 3)
+						.withLabel("name", () -> new DecoLabel(fontRenderer, 20, 3)
 								.withSize(78, 16)
 								.withAlign(DecoAlignment.LEFT))
-						.withComponent("head", new DecoImage(3, 3).withSize(16, 16))
+						.withComponent("head", () -> new DecoImage(3, 3).withSize(16, 16))
 						.withComponent("role", p -> new DecoDropdown<PermissionRole>(p.width-118, 3)
 								.withSize(96, 16)
 								.withEntries(assignableRoles)
@@ -274,10 +262,10 @@ public class GuiFlagpoleFaction extends DecoTileGui<TileEntityFlagpole, Containe
 						.withHeight(22)
 						.withBackground(DecoTextures.BG_PAPER)
 						.withBackgroundMask(DecoTextures.TEMPLATE_PAPER)
-						.withLabel("name", new DecoLabel(fontRenderer, 20, 3)
+						.withLabel("name", () -> new DecoLabel(fontRenderer, 20, 3)
 								.withSize(panel.width-62, 16)
 								.withAlign(DecoAlignment.LEFT))
-						.withComponent("head", new DecoImage(3, 3).withSize(16, 16))
+						.withComponent("head", () -> new DecoImage(3, 3).withSize(16, 16))
 						.withComponent("cancel", p -> new DecoButton(p.width-19, 3)
 								.withSize(16, 16)
 								.withTemplate(DecoTemplates.ACTION_BUTTON_REMOVE)
@@ -308,6 +296,22 @@ public class GuiFlagpoleFaction extends DecoTileGui<TileEntityFlagpole, Containe
 					.findFirst()
 					.orElse(identity.getRoleOf(mc.player.getUniqueID()));
 
+		DecoEntryPanelBuilder<PermissionCategory> permissionDisplay = selectedRole==null?null:
+				new DecoEntryPanelBuilder<PermissionCategory>()
+						.withHeight(20)
+						.withBackground(DecoTextures.BG_PAPER)
+						.withBackgroundMask(DecoTextures.TEMPLATE_PAPER)
+						.withComponent("toggle", p -> new DecoSwitch(3, 2)
+								.withDisabled(!canEditRoles||selectedRole.isOwner())
+								.withOnToggle(change -> IIPacketHandler.sendToServer(
+										MessageDiplomacyAction.changePermission(selectedRole, p.getCurrentElement(), change)))
+								.withTranslatedTooltip(p.getCurrentElement().getFullLocaleKey(),
+										TextFormatting.GRAY+p.getCurrentElement().getFullLocaleKey()+".tooltip")
+						)
+						.withElementApplyMethod((permission, entry) -> entry.component("toggle", DecoSwitch.class)
+								.withCurrentState(selectedRole.isAllowed(permission))
+								.withText(permission.getFullLocaleKey()));
+
 		panel.addLabel(IIReference.GUI_LABEL_KEY+"faction_management.permissions.role", 4, 3)
 				.withSize(64, 16)
 				.withTranslatedTooltip(IIReference.GUI_LABEL_KEY+"faction_management.permissions.role.tooltip");
@@ -320,7 +324,11 @@ public class GuiFlagpoleFaction extends DecoTileGui<TileEntityFlagpole, Containe
 		);
 		roleDropdown.withOnSelectedEntry((oldRole, newRole) -> {
 			if(newRole!=null&&!newRole.equals(oldRole))
+			{
 				selectedRole = newRole;
+				if(permissionDisplay!=null)
+					permissionDisplay.refreshCache();
+			}
 		});
 
 		if(selectedRole==null)
@@ -336,18 +344,7 @@ public class GuiFlagpoleFaction extends DecoTileGui<TileEntityFlagpole, Containe
 			panel.addComponent(new DecoList<PermissionCategory>(2, 24-4)
 					.withSize(panel.width-4, 132-26)
 					.withEntries(PermissionCategory.values())
-					.withDisplayFunction(new DecoEntryPanelBuilder<PermissionCategory>()
-							.withHeight(20)
-							.withBackground(DecoTextures.BG_PAPER)
-							.withBackgroundMask(DecoTextures.TEMPLATE_PAPER)
-							.withComponent("toggle", p -> new DecoSwitch(3, 2)
-									.withDisabled(!canEditRoles||selectedRole.isOwner())
-									.withOnToggle(change -> IIPacketHandler.sendToServer(
-											MessageDiplomacyAction.changePermission(selectedRole, p.getCurrentElement(), change))))
-							.withElementApplyMethod((permission, entry) -> entry.component("toggle", DecoSwitch.class)
-									.withCurrentState(selectedRole.isAllowed(permission))
-									.withText(permission.getFullLocaleKey()))
-					)
+					.withDisplayFunction(permissionDisplay)
 			);
 		}
 

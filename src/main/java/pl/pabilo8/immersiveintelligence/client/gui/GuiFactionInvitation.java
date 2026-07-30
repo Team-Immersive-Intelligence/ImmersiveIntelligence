@@ -145,13 +145,13 @@ public class GuiFactionInvitation extends DecoPlayerGui<ContainerPlayerGui>
 					.withEntries(invitations)
 					.withDisplayFunction(new DecoEntryPanelBuilder<OwnerIdentity>()
 							.withHeight(22)
-							.withBackground(DecoTextures.BG_VANILLA)
+							.withBackground(Graphics.decoVanillaGUIStyle==DecoVanillaGUIStyle.VANILLA?DecoTextures.BG_VANILLA: DecoTextures.BG_PAPER)
 							.withBackgroundMask(DecoTextures.TEMPLATE_PAPER)
 							//Faction banner and name
-							.withComponent("banner", new DecoBannerDisplay(3, 3)
+							.withComponent("banner", p -> new DecoBannerDisplay(3, 3)
 									.withSize(32, 20)
 							)
-							.withLabel("name", new DecoLabel(fontRenderer, 34, 4)
+							.withLabel("name", p -> new DecoLabel(fontRenderer, 34, 4)
 									.withSize(128, 16)
 									.withAlign(DecoAlignment.LEFT))
 							//Accept and Reject buttons

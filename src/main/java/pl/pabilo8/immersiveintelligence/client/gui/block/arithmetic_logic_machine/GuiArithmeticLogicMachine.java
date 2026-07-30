@@ -178,15 +178,15 @@ public class GuiArithmeticLogicMachine extends DecoTileGui<TileEntityArithmeticL
 											})
 									)
 									//Type Icon, Label, and Letter
-									.withComponent("image", new DecoImage(2+12, 1)
+									.withComponent("image", p -> new DecoImage(2+12, 1)
 											.withSize(16, 16))
-									.withLabel("typeLabel",
+									.withLabel("typeLabel", p ->
 											new DecoLabel(fontRenderer, 2+12+16+2-1, -1)
 													.withSize(48, 16)
 													.withAlign(DecoAlignment.LEFT)
 													.withText("Integer")
 									)
-									.withLabel("letterLabel",
+									.withLabel("letterLabel", p ->
 											new DecoLabel(fontRenderer, 2, 2)
 													.withSize(12, 16)
 													.withAlign(DecoAlignment.CENTER)
@@ -225,6 +225,7 @@ public class GuiArithmeticLogicMachine extends DecoTileGui<TileEntityArithmeticL
 			{
 				int circuitIndex = i;
 				addComponent(new DecoTab()
+						.withSelected(!isStorage&&circuitIndex==editedCircuit)
 						.withOnPressed((gui, button, mouseX, mouseY) -> {
 							this.editedCircuit = circuitIndex;
 							return changeGUI(IIGUI.ARITHMETIC_LOGIC_MACHINE_VARIABLES);

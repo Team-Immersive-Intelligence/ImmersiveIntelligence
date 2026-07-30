@@ -1,11 +1,15 @@
 package pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection;
 
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.util.IStringSerializable;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent;
 import pl.pabilo8.immersiveintelligence.client.util.font.IIFontRenderer;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.ILocalizedEnum;
 
 import javax.annotation.Nullable;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -90,6 +94,33 @@ public class DecoElementDisplays
 			return displayElement(t, width, font, 0, 0, 0, heightProbe);
 		}
 
+		/**
+		 * Draws overlays owned by an element after the collection has finished drawing
+		 * and released its scissor. Stateful panel displays use this for dropdown lists
+		 * and other content that must appear above neighbouring entries.
+		 */
+		default void drawElementUpperLayer(T t, int width, IIFontRenderer font, int mouseX, int mouseY, float partialTicks)
+		{
+
+		}
+
+		/**
+		 * Returns the tooltip of the currently hovered virtual element, if any.
+		 */
+		default List<String> getTooltip()
+		{
+			return Collections.emptyList();
+		}
+
+		/**
+		 * Returns whether a dynamically generated component is currently owned by this display.
+		 * Used to validate focus captures after caches or component trees are rebuilt.
+		 */
+		default boolean ownsComponent(DecoComponent<?> component)
+		{
+			return false;
+		}
+
 		default boolean isSelectable(T t)
 		{
 			return true;
@@ -106,6 +137,32 @@ public class DecoElementDisplays
 		}
 
 		default void bindCollection(DecoScrolledCollection<?, T> collection)
+		{
+
+		}
+
+		/**
+		 * Called once for each collection display pass.
+		 *
+		 * @return true when the display changed in a way that requires list layout recalculation
+		 */
+		default boolean onDisplayTick()
+		{
+			return false;
+		}
+
+		/**
+		 * Called when the collection's entry set changes.
+		 */
+		default void onEntriesChanged(Collection<T> entries)
+		{
+
+		}
+
+		/**
+		 * Releases resources owned by this display.
+		 */
+		default void cleanupDisplay()
 		{
 
 		}
@@ -132,6 +189,15 @@ public class DecoElementDisplays
 		@Nullable
 		default List<T> autocomplete(List<T> elements, String input)
 		{
+			if(elements instanceof IStringSerializable)
+			{
+				//noinspection unchecked
+				return elements.stream()
+						.map(e -> (IStringSerializable)e)
+						.filter(e -> e.getName().toLowerCase().startsWith(input.toLowerCase()))
+						.map(e -> (T)e)
+						.collect(Collectors.toList());
+			}
 			return elements.stream()
 					.filter(e -> e.toString().toLowerCase().startsWith(input.toLowerCase()))
 					.collect(Collectors.toList());

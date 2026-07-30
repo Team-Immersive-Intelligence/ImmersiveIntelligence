@@ -61,7 +61,7 @@ public class ManualSystemWrapper extends GuiManual
 		int x = parent.x-20;
 		int y = parent.y;
 
-		// Init
+		//Init
 		manualInstance = ReflectionHelper.getPrivateValue(GuiManual.class, this, "manual");
 		manualInstance.openManual();
 		activeManual = this;

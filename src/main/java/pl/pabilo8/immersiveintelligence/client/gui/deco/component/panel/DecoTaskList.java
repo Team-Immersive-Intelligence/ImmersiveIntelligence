@@ -3,6 +3,8 @@ package pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.INBTSerializable;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoTab;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoTabGroup;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoList;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTemplates;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
@@ -50,6 +52,8 @@ public class DecoTaskList<T extends INBTSerializable<NBTTagCompound>> extends De
 	private EasyCollection<T, NBTTagCompound> allEntries;
 	private Predicate<T> isJobPredicate = t -> false;
 	private DecoList<T> list;
+	private DecoTabGroup modeTabs;
+	private DecoTab jobsTab, requestsTab;
 
 	@Nullable
 	private T selected;
@@ -108,8 +112,9 @@ public class DecoTaskList<T extends INBTSerializable<NBTTagCompound>> extends De
 
 	public DecoTaskList<T> withModeHandling(@Nullable ListMode initialMode, Consumer<ListMode> onModeChanged)
 	{
-		this.mode = normalizeMode(initialMode);
+		this.mode = normalizeAvailableMode(initialMode);
 		this.onModeChanged = onModeChanged;
+		syncModeTabSelection();
 		return this;
 	}
 
@@ -137,6 +142,8 @@ public class DecoTaskList<T extends INBTSerializable<NBTTagCompound>> extends De
 	public DecoTaskList<T> withShowJobsTab(boolean showJobsTab)
 	{
 		this.showJobsTab = showJobsTab;
+		this.mode = normalizeAvailableMode(this.mode);
+		syncModeTabSelection();
 		return this;
 	}
 
@@ -147,15 +154,31 @@ public class DecoTaskList<T extends INBTSerializable<NBTTagCompound>> extends De
 
 	public void setMode(ListMode mode)
 	{
-		this.mode = normalizeMode(mode);
+		this.mode = normalizeAvailableMode(mode);
+		syncModeTabSelection();
 		if(onModeChanged!=null)
 			onModeChanged.accept(this.mode);
 		refreshListEntries();
 	}
 
+	private ListMode normalizeAvailableMode(@Nullable ListMode mode)
+	{
+		ListMode normalized = normalizeMode(mode);
+		return !showJobsTab&&normalized==ListMode.JOBS?ListMode.REQUESTS: normalized;
+	}
+
 	private static ListMode normalizeMode(@Nullable ListMode mode)
 	{
 		return mode==null||mode==ListMode.TASKS?ListMode.REQUESTS: mode;
+	}
+
+	private void syncModeTabSelection()
+	{
+		if(modeTabs==null)
+			return;
+		DecoTab selectedTab = mode==ListMode.JOBS?jobsTab: requestsTab;
+		if(selectedTab!=null)
+			modeTabs.selectTab(selectedTab, false);
 	}
 
 	@Nullable
@@ -196,31 +219,27 @@ public class DecoTaskList<T extends INBTSerializable<NBTTagCompound>> extends De
 			return false;
 
 		//Mode tabs
-		DecoButton tabJobs = new DecoButton(0, 4)
-				.withSize(listWidth/2, TAB_H)
-				.withBackground(DecoTextures.COMPONENT_TAB_VERTICAL)
+		modeTabs = addComponent(new DecoTabGroup(0, 4)
+				.withSize(listWidth, TAB_H)
+				.withHorizontalAlignment(true)
+				.withTabWidth(showJobsTab?listWidth/2: listWidth));
+
+		jobsTab = (DecoTab)new DecoTab()
 				.withText(GUI_LABEL_KEY+"task_editor.jobs")
-				.withTranslatedTooltip(GUI_LABEL_KEY+"task_editor.jobs.tooltip")
-				.withOnLMBPressed(() -> setMode(ListMode.JOBS));
-
-		DecoButton tabRequests = new DecoButton(listWidth/2, 4)
-				.withSize(listWidth/2, TAB_H)
-				.withBackground(DecoTextures.COMPONENT_TAB_VERTICAL)
+				.withTranslatedTooltip(GUI_LABEL_KEY+"task_editor.jobs.tooltip");
+		requestsTab = (DecoTab)new DecoTab()
 				.withText(GUI_LABEL_KEY+"task_editor.requests")
-				.withTranslatedTooltip(GUI_LABEL_KEY+"task_editor.requests.tooltip")
-				.withOnLMBPressed(() -> setMode(ListMode.REQUESTS));
+				.withTranslatedTooltip(GUI_LABEL_KEY+"task_editor.requests.tooltip");
 
-		addComponent(tabJobs);
-		addComponent(tabRequests);
-
-		if(!showJobsTab)
+		if(showJobsTab)
+			modeTabs.withTab(jobsTab, () -> setMode(ListMode.JOBS));
+		else
 		{
-			//stretch requests tab; hide jobs tab
-			tabRequests.withSize(listWidth, TAB_H);
-			tabRequests.x = tabJobs.x;
-			tabJobs.visible = tabJobs.enabled = false;
+			jobsTab = null;
 			this.mode = ListMode.REQUESTS;
 		}
+		modeTabs.withTab(requestsTab, () -> setMode(ListMode.REQUESTS));
+		syncModeTabSelection();
 
 		//List
 		list = addComponent(new DecoList<T>(0, LIST_Y_OFF)

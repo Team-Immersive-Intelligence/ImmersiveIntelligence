@@ -142,13 +142,15 @@ public abstract class DecoComponent<TYPE extends DecoComponent<? super TYPE>> ex
 			if(pressTime > 0)
 				this.pressTime--;
 		}
+		else
+			updateInvisibleTree();
 	}
 
 	public final void drawButtonUpperLayer(Minecraft mc, int mouseX, int mouseY, float partialTicks)
 	{
 		if(!initialized||!visible)
 		{
-			updateInvisibleComponent();
+			updateInvisibleTree();
 			return;
 		}
 
@@ -161,6 +163,18 @@ public abstract class DecoComponent<TYPE extends DecoComponent<? super TYPE>> ex
 	protected void updateInvisibleComponent()
 	{
 
+	}
+
+	/**
+	 * Notifies this component and all descendants that their containing tree is hidden.
+	 * This is separate from cleanup: components may retain their state while releasing or
+	 * moving external resources that would otherwise remain interactive on screen.
+	 */
+	private void updateInvisibleTree()
+	{
+		updateInvisibleComponent();
+		for(DecoComponent<?> child : children)
+			child.updateInvisibleTree();
 	}
 
 	public void drawUpperLayer(int mouseX, int mouseY, float partialTicks)
@@ -192,44 +206,59 @@ public abstract class DecoComponent<TYPE extends DecoComponent<? super TYPE>> ex
 
 	}
 
-	public final boolean decoMousePressed(Minecraft mc, int mouseX, int mouseY, MouseButton button)
+	@Nullable
+	public final DecoMouseCapture decoMousePressed(Minecraft mc, int mouseX, int mouseY, MouseButton button)
 	{
-		if(this.enabled&&canBeClicked(mouseX, mouseY))
+		if(!visible||!enabled||!canBeClicked(mouseX, mouseY))
+			return null;
+
+		for(int i = children.size()-1; i >= 0; i--)
 		{
-			Optional<DecoComponent<?>> childrenPressed = children.stream().filter(child -> child.decoMousePressed(mc, mouseX, mouseY, button)).findFirst();
-			boolean pressed = childrenPressed.isPresent()||(onPressed!=null&&onPressed.onMouse((TYPE)this, button, mouseX, mouseY));
-			if(pressed)
-			{
-				this.pressTime = 10;
-				playPressSound(mc.getSoundHandler());
-				if(parentGui!=null)
-				{
-					DecoComponent<?> component = childrenPressed.orElse(this);
-					parentGui.requestFocus(component);
-				}
-			}
-			return pressed;
+			DecoMouseCapture capture = children.get(i).decoMousePressed(mc, mouseX, mouseY, button);
+			if(capture!=null)
+				return capture.withAncestor(this);
 		}
+
+		DecoMouseCapture capture = decoMousePressedVirtualChild(mc, mouseX, mouseY, button);
+		if(capture!=null)
+			return capture.withAncestor(this);
+
+		if(onPressed!=null&&onPressed.onMouse((TYPE)this, button, mouseX, mouseY))
+		{
+			this.pressTime = 10;
+			playPressSound(mc.getSoundHandler());
+			return DecoMouseCapture.of(this);
+		}
+		return null;
+	}
+
+	@Nullable
+	protected DecoMouseCapture decoMousePressedVirtualChild(Minecraft mc, int mouseX, int mouseY, MouseButton button)
+	{
+		return null;
+	}
+
+	protected boolean ownsVirtualChild(DecoComponent<?> component)
+	{
 		return false;
 	}
 
-	public final void decoMouseReleased(int mouseX, int mouseY, MouseButton mouseButton)
+	private boolean ownsInputChild(DecoComponent<?> component)
 	{
-		if(this.enabled)
-		{
-			this.pressTime = (onReleased==null||onReleased.onMouse((TYPE)this, mouseButton, mouseX, mouseY))?0: this.pressTime;
-			children.forEach(child -> child.mouseReleased(mouseX, mouseY));
-		}
+		return children.contains(component)||ownsVirtualChild(component);
 	}
 
-	public final void decoMouseDragged(Minecraft mc, int mouseX, int mouseY, MouseButton button)
+	private void decoMouseReleased(int mouseX, int mouseY, MouseButton mouseButton)
 	{
-		if(this.enabled&&canBeClicked(mouseX, mouseY))
-		{
-			if(onDragged!=null)
-				onDragged.onMouse((TYPE)this, button, mouseX, mouseY);
-			children.forEach(child -> child.mouseDragged(mc, mouseX, mouseY));
-		}
+		if(enabled&&onReleased!=null)
+			onReleased.onMouse((TYPE)this, mouseButton, mouseX, mouseY);
+		this.pressTime = 0;
+	}
+
+	private void decoMouseDragged(Minecraft mc, int mouseX, int mouseY, MouseButton button)
+	{
+		if(visible&&enabled&&onDragged!=null)
+			onDragged.onMouse((TYPE)this, button, mouseX, mouseY);
 	}
 
 	/**
@@ -435,6 +464,19 @@ public abstract class DecoComponent<TYPE extends DecoComponent<? super TYPE>> ex
 	}
 
 	/**
+	 * Changes both visibility and interaction state. Hiding a component immediately
+	 * propagates to descendants so external resources, such as real container slots,
+	 * cannot remain active until the next render pass.
+	 */
+	public final void setActive(boolean active)
+	{
+		this.visible = active;
+		this.enabled = active;
+		if(!active)
+			updateInvisibleTree();
+	}
+
+	/**
 	 * Provides an ingredient that can be used by JEI compat.
 	 *
 	 * @return an ingredient, like an {@link net.minecraft.item.ItemStack},
@@ -466,7 +508,123 @@ public abstract class DecoComponent<TYPE extends DecoComponent<? super TYPE>> ex
 	 */
 	public final boolean onComponentScroll(int mouseX, int mouseY, float scrolled)
 	{
-		return onScroll==null||(canBeClicked(mouseX, mouseY)&&onScroll.onMouse((TYPE)this, (int)scrolled, mouseX, mouseY));
+		return visible&&enabled&&onScroll!=null&&canBeClicked(mouseX, mouseY)
+				&&onScroll.onMouse((TYPE)this, (int)scrolled, mouseX, mouseY);
+	}
+
+	/**
+	 * Checks whether a component belongs to this ordinary child tree.
+	 */
+	public final boolean containsComponent(DecoComponent<?> component)
+	{
+		if(this==component)
+			return true;
+		for(DecoComponent<?> child : children)
+			if(child.containsComponent(component))
+				return true;
+		return false;
+	}
+
+	/**
+	 * Immutable pointer context produced by mouse hit-testing.
+	 * Besides the final target, it stores the coordinate transform used by virtual
+	 * children such as cached list entry panels and the ancestor path used to
+	 * invalidate focus when a containing panel disappears.
+	 */
+	public static final class DecoMouseCapture
+	{
+		private final DecoComponent<?> component;
+		private final List<DecoComponent<?>> path;
+		private final int offsetX, offsetY;
+
+		private DecoMouseCapture(DecoComponent<?> component, List<DecoComponent<?>> path, int offsetX, int offsetY)
+		{
+			this.component = component;
+			this.path = path;
+			this.offsetX = offsetX;
+			this.offsetY = offsetY;
+		}
+
+		public static DecoMouseCapture of(DecoComponent<?> component)
+		{
+			return new DecoMouseCapture(component, Collections.singletonList(component), 0, 0);
+		}
+
+		private DecoMouseCapture withAncestor(DecoComponent<?> ancestor)
+		{
+			if(path.contains(ancestor))
+				return this;
+			List<DecoComponent<?>> expanded = new ArrayList<>(path);
+			expanded.add(ancestor);
+			return new DecoMouseCapture(component, expanded, offsetX, offsetY);
+		}
+
+		public DecoMouseCapture translated(int offsetX, int offsetY)
+		{
+			return new DecoMouseCapture(component, path, this.offsetX+offsetX, this.offsetY+offsetY);
+		}
+
+		public DecoComponent<?> getComponent()
+		{
+			return component;
+		}
+
+		public boolean isValid()
+		{
+			for(int i = 0; i < path.size(); i++)
+			{
+				DecoComponent<?> element = path.get(i);
+				if(!element.visible||!element.enabled)
+					return false;
+
+				//A capture is stale when a rebuilt panel no longer owns the child that
+				//originally produced it, even if the detached objects remain enabled.
+				if(i+1 < path.size()&&!path.get(i+1).ownsInputChild(element))
+					return false;
+			}
+			return true;
+		}
+
+		public boolean belongsTo(DecoComponent<?> root)
+		{
+			return path.contains(root)||root.containsComponent(component);
+		}
+
+		@Nullable
+		public DecoMouseCapture press(Minecraft mc, int mouseX, int mouseY, MouseButton button)
+		{
+			if(!isValid())
+				return null;
+
+			DecoMouseCapture result = component.decoMousePressed(mc, mouseX+offsetX, mouseY+offsetY, button);
+			if(result==null)
+				return null;
+
+			result = result.translated(offsetX, offsetY);
+			for(int i = 1; i < path.size(); i++)
+				result = result.withAncestor(path.get(i));
+			return result;
+		}
+
+		public void release(int mouseX, int mouseY, MouseButton button)
+		{
+			component.decoMouseReleased(mouseX+offsetX, mouseY+offsetY, button);
+		}
+
+		public void drag(Minecraft mc, int mouseX, int mouseY, MouseButton button)
+		{
+			component.decoMouseDragged(mc, mouseX+offsetX, mouseY+offsetY, button);
+		}
+
+		public boolean scroll(int mouseX, int mouseY, float amount)
+		{
+			return isValid()&&component.onComponentScroll(mouseX+offsetX, mouseY+offsetY, amount);
+		}
+
+		public List<String> getTooltip()
+		{
+			return isValid()&&component.isMouseOver()?component.getTooltip(): Collections.emptyList();
+		}
 	}
 
 	/**

@@ -44,7 +44,7 @@ public class UpgradeTreeNodeRenderer extends AbstractTreeNodeRenderer<Upgrade>
 		else
 			bg = unavailableColor;
 
-		// background
+		//background
 		IIDrawUtils draw = IIDrawUtils.startColored();
 		draw.drawColorRect(x, y, NODE_WIDTH, NODE_HEIGHT, bg);
 		draw.finish();

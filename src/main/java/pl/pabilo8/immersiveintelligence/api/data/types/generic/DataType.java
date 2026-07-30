@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.api.data.types.generic;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -92,7 +93,7 @@ public abstract class DataType implements Cloneable
 		Class<? extends DataType> defaultType();
 	}
 
-	public static class TypeMetaInfo<T extends DataType>
+	public static class TypeMetaInfo<T extends DataType> implements IStringSerializable
 	{
 		public final String name;
 		public final Class<T> type;
@@ -125,6 +126,12 @@ public abstract class DataType implements Cloneable
 		public boolean isAdvancedType()
 		{
 			return advancedType;
+		}
+
+		@Override
+		public String getName()
+		{
+			return getTranslatedName();
 		}
 	}
 }

@@ -1312,6 +1312,15 @@ desc.immersiveintelligence.variable_value.integer_vector=Integer Vector
 desc.immersiveintelligence.variable_value.integer_vector.tooltip=An Integer Vector does not allow numbers with decimal points.
 desc.immersiveintelligence.operation=Operation:
 
+desc.immersiveintelligence.text_filter.none=None
+desc.immersiveintelligence.text_filter.alphanumeric=Alphanumeric
+desc.immersiveintelligence.text_filter.lowercase=Lowercase
+desc.immersiveintelligence.text_filter.uppercase=Uppercase
+desc.immersiveintelligence.text_filter.decimal=Decimal
+desc.immersiveintelligence.text_filter.hexadecimal=Hexadecimal
+desc.immersiveintelligence.text_filter.binary=Binary
+desc.immersiveintelligence.text_filter.float=Float
+
 desc.immersiveintelligence.conditional_variable=Conditional Variable:
 desc.immersiveintelligence.conditional_variable.enabled=Use condition
 desc.immersiveintelligence.conditional_variable.enabled.tooltip=When enabled, the expression will not run, unless the selected variable is present in the packet operated on

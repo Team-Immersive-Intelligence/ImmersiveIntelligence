@@ -470,7 +470,7 @@ public class DecoMapDisplay extends DecoComponent<DecoMapDisplay>
 		float s = zoom*baseZoom;
 		float half = radiusBlocks/2f;
 
-		// Horizontal
+		//Horizontal
 		float mapScreenW = radiusBlocks*s;
 		if(mapScreenW <= width)
 			panX = 0f;
@@ -481,7 +481,7 @@ public class DecoMapDisplay extends DecoComponent<DecoMapDisplay>
 			panX = MathHelper.clamp(panX, minPanX, maxPanX);
 		}
 
-		// Vertical
+		//Vertical
 		float mapScreenH = radiusBlocks*s;
 		if(mapScreenH <= height)
 			panY = 0f;
@@ -500,7 +500,7 @@ public class DecoMapDisplay extends DecoComponent<DecoMapDisplay>
 		if(!zoomScrollEnabled) return false;
 
 		float step = 0.05f;
-		zoom = MathHelper.clamp(zoom+Math.signum(mouseScroll)*step, zoomMin, zoomMax);
+		zoom = MathHelper.clamp(zoom+mouseScroll*step, zoomMin, zoomMax);
 		normalizeView();
 		return true;
 	}

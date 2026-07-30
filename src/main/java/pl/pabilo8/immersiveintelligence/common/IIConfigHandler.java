@@ -714,6 +714,13 @@ public class IIConfigHandler
 			@Comment("Config for the Vehicle Workshop, allows for changes to energy and fuel capacity")
 			public static VehicleWorkshop vehicleWorkshop;
 
+			@Comment({"The interval (in ticks) at which the multiblock machines will synchronize recipes with the client.",
+					"Setting to 0 will disable this feature.",
+					"Regardless of this setting, machines always synchronize them upon recipe change and when opening their GUI."
+			})
+			@RangeInt(min = 0)
+			public static int recipeUpdateInterval = 200;
+
 			public static class RedstoneInterface
 			{
 

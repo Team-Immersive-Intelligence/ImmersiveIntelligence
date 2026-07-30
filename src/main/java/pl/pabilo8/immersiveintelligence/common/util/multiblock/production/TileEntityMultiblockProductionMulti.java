@@ -67,6 +67,11 @@ public abstract class TileEntityMultiblockProductionMulti<T extends TileEntityMu
 				float progress = getProductionStep(process, false);
 				if(progress > 0)
 					process.ticks += progress;
+					//Sync the client each 100 ticks
+					if(Machines.recipeUpdateInterval > 0&&process.ticks%Machines.recipeUpdateInterval==0)
+						updateQueue = true;
+
+				}
 			}
 		}
 

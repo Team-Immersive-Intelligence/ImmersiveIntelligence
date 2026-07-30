@@ -7,8 +7,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import pl.pabilo8.immersiveintelligence.api.LogisticTag;
 import pl.pabilo8.immersiveintelligence.api.PackerHandler.LabelingTask;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTileGui;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoCheckbox;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoTab;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoTabGroup;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoEntryPanelBuilder;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoIngredientStackPickerPanel;
@@ -115,12 +116,12 @@ public class GuiPackerLabeler extends DecoTileGui<TileEntityPacker, ContainerPac
 				.withDisplayFunction(new DecoEntryPanelBuilder<LabelingTask>()
 						.withBackground(DecoTextures.BG_PAPER)
 						.withBackgroundMask(DecoTextures.TEMPLATE_TICKET)
-						.withComponent("icon", new DecoItemStackDisplay(3, 2).withSize(16, 16))
-						.withLabel("type", new DecoLabel(fontRenderer, 23, 2)
+						.withComponent("icon", p -> new DecoItemStackDisplay(3, 2).withSize(16, 16))
+						.withLabel("type", p -> new DecoLabel(fontRenderer, 23, 2)
 								.withSize(59, 16)
 								.withAlign(DecoAlignment.LEFT)
 						)
-						.withLabel("expires", new DecoLabel(fontRenderer, 23, 12)
+						.withLabel("expires", p -> new DecoLabel(fontRenderer, 23, 12)
 								.withSize(82, 8)
 								.withAlign(DecoAlignment.LEFT)
 								.withTextColor(IIReference.COLOR_IMMERSIVE_ORANGE)
@@ -255,29 +256,18 @@ public class GuiPackerLabeler extends DecoTileGui<TileEntityPacker, ContainerPac
 				.withSize(panelDetails.width-8, 56)
 		);
 
-		panelDetails.addComponents(
-				new DecoButton(4, panelDetails.height-56-4-14)
-						.withSize((panelDetails.width-8)/2, 16)
-						.withBackground(DecoTextures.COMPONENT_TAB_VERTICAL)
+		DecoTab logiTagTab = (DecoTab)new DecoTab()
+				.withText(GUI_LABEL_KEY+"packer.picker.logitag")
+				.withTranslatedTooltip(GUI_LABEL_KEY+"packer.picker.logitag.tooltip");
+		DecoTabGroup pickerTabs = panelDetails.addComponent(new DecoTabGroup(4, panelDetails.height-56-4-14)
+				.withSize(panelDetails.width-8, 16)
+				.withHorizontalAlignment(true)
+				.withTabWidth((panelDetails.width-8)/2)
+				.withTab((DecoTab)new DecoTab()
 						.withText(GUI_LABEL_KEY+"packer.picker.container")
-						.withTranslatedTooltip(GUI_LABEL_KEY+"packer.picker.container.tooltip")
-						.withOnLMBPressed(() -> {
-							panelFilterPicker.visible = panelFilterPicker.enabled = true;
-							panelOutputPicker.visible = panelOutputPicker.enabled = false;
-						}),
-				new DecoButton(4+(panelDetails.width-8)/2, panelDetails.height-56-4-14)
-						.withSize((panelDetails.width-8)/2, 16)
-						.withBackground(DecoTextures.COMPONENT_TAB_VERTICAL)
-						.withText(GUI_LABEL_KEY+"packer.picker.logitag")
-						.withTranslatedTooltip(GUI_LABEL_KEY+"packer.picker.logitag.tooltip")
-						.withOnLMBPressed(() -> {
-							panelFilterPicker.visible = panelFilterPicker.enabled = false;
-							panelOutputPicker.visible = panelOutputPicker.enabled = true;
-						})
-		);
-
-		panelFilterPicker.visible = panelFilterPicker.enabled = false;
-		panelOutputPicker.visible = panelOutputPicker.enabled = true;
+						.withTranslatedTooltip(GUI_LABEL_KEY+"packer.picker.container.tooltip"), panelFilterPicker)
+				.withTab(logiTagTab, panelOutputPicker));
+		pickerTabs.selectTab(logiTagTab, false);
 	}
 
 	private void updateSerialBatching()
