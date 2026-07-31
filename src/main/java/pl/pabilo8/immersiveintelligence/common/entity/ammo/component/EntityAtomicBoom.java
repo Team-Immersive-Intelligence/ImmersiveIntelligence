@@ -9,7 +9,6 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumFacing;
@@ -22,6 +21,8 @@ import net.minecraftforge.fml.common.Optional.Interface;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.api.api.protection.RadiationHandler;
+import pl.pabilo8.immersiveintelligence.api.api.protection.capability.IRadiationEmitter;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
 
@@ -30,10 +31,11 @@ import pl.pabilo8.immersiveintelligence.common.IIPotions;
  * @since 19.12.2020
  */
 @Interface(iface = "com.elytradev.mirage.lighting.IEntityLightEventConsumer", modid = "mirage")
-public class EntityAtomicBoom extends Entity implements IEntityAdditionalSpawnData, IEntityLightEventConsumer
+public class EntityAtomicBoom extends Entity implements IEntityAdditionalSpawnData, IEntityLightEventConsumer, IRadiationEmitter
 {
-	public float size;
+	public float size = 0;
 	public int progress = 0;
+	private boolean falloutRegistered = false;
 
 	public EntityAtomicBoom(World worldIn)
 	{
@@ -52,6 +54,11 @@ public class EntityAtomicBoom extends Entity implements IEntityAdditionalSpawnDa
 	{
 		super.onUpdate();
 		progress++;
+		if(!world.isRemote&&!falloutRegistered)
+		{
+			RadiationHandler.INSTANCE.addOrIncreaseRadiationCenter(world, getPosition(), 60*size, Math.max(1f, size));
+			falloutRegistered = true;
+		}
 		if(world.isRemote&&world.getTotalWorldTime()%4==0)
 		{
 			Vec3d pos = getPositionVector();
@@ -136,24 +143,12 @@ public class EntityAtomicBoom extends Entity implements IEntityAdditionalSpawnDa
 			return;
 		}
 
-		//apply half a second
-		if(world.getTotalWorldTime()%10==0)
+		//Apply nuclear heat server-side; radiation exposure is handled centrally.
+		if(!world.isRemote&&world.getTotalWorldTime()%10==0)
 		{
 			AxisAlignedBB aabb = new AxisAlignedBB(getPosition()).grow(40*size);
-			EntityLivingBase[] entities = world.getEntitiesWithinAABB(EntityLivingBase.class, aabb).toArray(new EntityLivingBase[0]);
-			for(EntityLivingBase e : entities)
-			{
-				//if(e instanceof EntityPlayer&&((EntityPlayer)e).isCreative())
-				//	continue;
-				e.addPotionEffect(new PotionEffect(IIPotions.nuclearHeat, 400, 0, false, false));
-			}
-			entities = world.getEntitiesWithinAABB(EntityLivingBase.class, aabb.grow(20*size)).toArray(new EntityLivingBase[0]);
-			for(EntityLivingBase e : entities)
-			{
-				if(e instanceof EntityPlayer&&((EntityPlayer)e).isCreative())
-					continue;
-				e.addPotionEffect(new PotionEffect(IIPotions.radiation, 2000, 0, false, false));
-			}
+			for(EntityLivingBase entity : world.getEntitiesWithinAABB(EntityLivingBase.class, aabb))
+				entity.addPotionEffect(new PotionEffect(IIPotions.nuclearHeat, 400, 0, false, false));
 		}
 	}
 
@@ -224,12 +219,16 @@ public class EntityAtomicBoom extends Entity implements IEntityAdditionalSpawnDa
 	protected void readEntityFromNBT(NBTTagCompound compound)
 	{
 		size = compound.getFloat("size");
+		progress = compound.getInteger("progress");
+		falloutRegistered = compound.getBoolean("falloutRegistered");
 	}
 
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound compound)
 	{
 		compound.setFloat("size", size);
+		compound.setInteger("progress", progress);
+		compound.setBoolean("falloutRegistered", falloutRegistered);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -237,6 +236,26 @@ public class EntityAtomicBoom extends Entity implements IEntityAdditionalSpawnDa
 	public boolean isInRangeToRenderDist(double distance)
 	{
 		return true;
+	}
+
+	//--- IRadiationEmitter ---//
+
+	@Override
+	public float getRadiationRadius()
+	{
+		return 60*size;
+	}
+
+	@Override
+	public float getRadiationStrength()
+	{
+		return Math.max(1f, size*4f);
+	}
+
+	@Override
+	public boolean isRadiationActive()
+	{
+		return !isDead&&progress <= 400;
 	}
 
 	@Override

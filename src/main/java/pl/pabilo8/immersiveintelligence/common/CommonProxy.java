@@ -62,10 +62,15 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.registries.IForgeRegistryModifiable;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.*;
+import pl.pabilo8.immersiveintelligence.api.LighterFuelHandler;
+import pl.pabilo8.immersiveintelligence.api.MachinegunCoolantHandler;
+import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler;
+import pl.pabilo8.immersiveintelligence.api.VehicleFuelHandler;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.PenetrationRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
+import pl.pabilo8.immersiveintelligence.api.api.protection.CorrosionHandler;
+import pl.pabilo8.immersiveintelligence.api.api.protection.capability.ProtectionCapabilities;
 import pl.pabilo8.immersiveintelligence.api.crafting.DustUtils;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataOperationUtils;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataTypeUtils;
@@ -483,6 +488,7 @@ public class CommonProxy implements IGuiHandler
 		NBTSerialisation.preInit();
 
 		CapabilityRotaryEnergy.register();
+		ProtectionCapabilities.register();
 		CapabilityChunkOwnership.register();
 		IEApi.prefixToIngotMap.put("spring", new Integer[]{2, 1});
 

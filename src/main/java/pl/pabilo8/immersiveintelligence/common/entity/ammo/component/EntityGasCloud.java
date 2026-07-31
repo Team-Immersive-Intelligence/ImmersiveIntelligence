@@ -6,7 +6,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
-import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -15,7 +14,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
-import pl.pabilo8.immersiveintelligence.api.utils.armor.IGasmask;
+import pl.pabilo8.immersiveintelligence.api.api.protection.ProtectionHandler;
 import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleRegistry;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
@@ -115,18 +114,8 @@ public class EntityGasCloud extends Entity implements ISyncNBTEntity<EntityGasCl
 		ChemthrowerEffect effect = ChemthrowerHandler.getEffect(fluidStack.getFluid());
 		if(effect!=null)
 			for(EntityLivingBase entity : entities)
-			{
-				boolean isProtected = false;
-				for(EntityEquipmentSlot slot : EntityEquipmentSlot.values())
-				{
-					ItemStack stack = entity.getItemStackFromSlot(slot);
-					if(!stack.isEmpty()&&stack.getItem() instanceof IGasmask)
-						if(((IGasmask)stack.getItem()).protectsFromGasses(stack))
-							isProtected = true;
-				}
-				if(!isProtected)
+				if(!ProtectionHandler.isProtectedFromGas(entity))
 					effect.applyToEntity(entity, null, ItemStack.EMPTY, fluidStack);
-			}
 
 		//Expansion logic
 		if(currentRadius < maxRadius)

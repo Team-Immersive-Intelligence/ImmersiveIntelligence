@@ -1,13 +1,14 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.Vec3i;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.api.api.protection.ProtectionHandler;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
-import pl.pabilo8.immersiveintelligence.api.utils.armor.IInfraredProtectionEquipment;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPanel;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.InfraredObserver;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
@@ -17,7 +18,6 @@ import pl.pabilo8.immersiveintelligence.common.util.gun.GunAimCoordinate;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
 
 import javax.annotation.Nonnull;
-import java.util.stream.StreamSupport;
 
 public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 {
@@ -132,9 +132,8 @@ public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 	@Override
 	public boolean canSeeEntity(Entity entity)
 	{
-		return StreamSupport.stream(entity.getArmorInventoryList().spliterator(), false)
-				.noneMatch(stack -> stack.getItem() instanceof IInfraredProtectionEquipment
-						&&((IInfraredProtectionEquipment)stack.getItem()).invisibleToInfrared(stack));
+		return !(entity instanceof EntityLivingBase)
+				||!ProtectionHandler.isInvisibleToInfrared((EntityLivingBase)entity);
 	}
 
 	@Override

@@ -419,7 +419,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 				GlStateManager.setFogEnd(0.5f);
 				GlStateManager.setFogDensity(.015f);
 			}
-			else if(world.getBiome(living.getPosition())==IIContent.biomeWasteland)
+			else if(living.isPotionActive(IIPotions.radiation))
 			{
 				GlStateManager.setFog(FogMode.EXP2);
 				GlStateManager.setFogStart(0); //(
@@ -470,7 +470,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 				event.setGreen(v);
 				event.setBlue(v);
 			}
-			else if(world.getBiome(living.getPosition())==IIContent.biomeWasteland)
+			else if(living.isPotionActive(IIPotions.radiation))
 			{
 				float[] rgb = IIColor.fromPackedRGB(0x64604e)
 						.withBrightness(0.2f*event.getEntity().getEntityWorld().provider.getSunBrightnessFactor(0.25f))

@@ -96,21 +96,21 @@ public class IIAmmoUtils
 		}
 	}
 
-	public static void breakArmour(Entity entity, int damageToArmour)
+	public static void breakArmor(Entity entity, int damageToArmor)
 	{
 		if(entity instanceof EntityLivingBase)
 		{
 			EntityLivingBase ent = (EntityLivingBase)entity;
 			PotionEffect effect = ent.getActivePotionEffect(IIPotions.brokenArmor);
 			if(effect==null)
-				effect = new PotionEffect(IIPotions.brokenArmor, 60, damageToArmour, false, false);
+				effect = new PotionEffect(IIPotions.brokenArmor, 60, damageToArmor, false, false);
 			else
 			{
 				effect.duration = 10;
-				effect.combine(new PotionEffect(IIPotions.brokenArmor, 60, Math.min(255, effect.getAmplifier()+damageToArmour)));
+				effect.combine(new PotionEffect(IIPotions.brokenArmor, 60, Math.min(255, effect.getAmplifier()+damageToArmor)));
 			}
 			for(ItemStack stack : ent.getArmorInventoryList())
-				stack.damageItem(damageToArmour, ent);
+				stack.damageItem(damageToArmor, ent);
 
 			ent.addPotionEffect(effect);
 		}
@@ -493,7 +493,7 @@ public class IIAmmoUtils
 	 * @return amount of blocks penetrated by the ammo
 	 */
 	public static int getPenetratedAmount(IAmmoType<?, ?> ammoType, AmmoCore coreMaterial, CoreType coreType,
-										  IPenetrationHandler penHandler, PenetrationHardness blockHardness)
+	                                      IPenetrationHandler penHandler, PenetrationHardness blockHardness)
 	{
 		float penetrationDepth = getCombinedDepth(ammoType, coreType);
 		PenetrationHardness ammoHardness = getCombinedHardness(coreMaterial, coreType);
