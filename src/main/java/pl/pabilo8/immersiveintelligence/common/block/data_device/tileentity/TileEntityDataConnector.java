@@ -12,8 +12,6 @@ import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IDirectio
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IHammerInteraction;
 import blusunrize.immersiveengineering.common.util.Utils;
 import com.google.common.annotations.VisibleForTesting;
-import dan200.computercraft.api.peripheral.IPeripheral;
-import dan200.computercraft.api.peripheral.IPeripheralTile;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
@@ -45,10 +43,8 @@ import javax.annotation.Nullable;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 31.05.2019
  */
-@Optional.Interface(iface = "dan200.computercraft.api.peripheral.IPeripheralTile", modid = "computercraft")
 public class TileEntityDataConnector extends TileEntityImmersiveConnectable implements
-		ITickable, IDirectionalTile, IHammerInteraction, IBlockBounds, IDataConnector, IOBJModelCallback<IBlockState>, IAdvancedTextOverlay,
-		IPeripheralTile
+		ITickable, IDirectionalTile, IHammerInteraction, IBlockBounds, IDataConnector, IOBJModelCallback<IBlockState>, IAdvancedTextOverlay
 {
 	//--- OpenComputers / ComputerCraft compat ---//
 	public DataPacket lastReceived = null;
@@ -294,14 +290,6 @@ public class TileEntityDataConnector extends TileEntityImmersiveConnectable impl
 			return new String[]{I18n.format("item.fireworksCharge."+EnumDyeColor.byMetadata(color).getUnlocalizedName())};
 		else
 			return null;
-	}
-
-	@Nullable
-	@Override
-	@Optional.Method(modid = "computercraft")
-	public IPeripheral getPeripheral(@Nonnull EnumFacing facing)
-	{
-		return facing==this.facing?ComputerCraftHelper.createConnectorPeripheral(this): null;
 	}
 
 	@VisibleForTesting

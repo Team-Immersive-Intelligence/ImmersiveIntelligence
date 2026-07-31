@@ -46,6 +46,13 @@ if (mkxBool('generate_sources_jar', true)) {
 }
 
 if (mkxBool('generate_javadocs_jar', false)) {
+	javadoc {
+		failOnError = false
+		options.source = '8'
+		options.addStringOption("tag", "updated:a:Updated:")
+		options.addStringOption("tag", "ii-approved:a:IIApproved:")
+	}
+
 	tasks.named('javadoc').configure {
 		dependsOn compileJavaTask
 	}
