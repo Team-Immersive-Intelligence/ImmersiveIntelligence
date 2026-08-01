@@ -1,0 +1,32 @@
+tasks.register('mkxAfterSync') {
+	group = 'IDE'
+	description = 'Generates sources required immediately after an IntelliJ Gradle sync.'
+	dependsOn tasks.named('injectTags')
+}
+
+idea {
+	module {
+		inheritOutputDirs = true
+		downloadJavadoc = true
+		downloadSources = true
+	}
+	project {
+		settings {
+			compiler.javac {
+				afterEvaluate {
+					javacAdditionalOptions = '-encoding UTF-8'
+					moduleJavacAdditionalOptions = [
+							(project.name + '.main'): tasks.compileJava.options.compilerArgs.collect { '"' + it + '"' }.join(' ')
+					]
+				}
+			}
+			taskTriggers {
+				afterSync 'mkxAfterSync'
+			}
+		}
+	}
+}
+
+tasks.named('processIdeaSettings').configure {
+	dependsOn tasks.named('mkxAfterSync')
+}

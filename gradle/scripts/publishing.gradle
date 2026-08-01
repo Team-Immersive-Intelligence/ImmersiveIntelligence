@@ -1,0 +1,45 @@
+publishing {
+	publications {
+		create("mavenJava", MavenPublication) {
+			artifactId = project.archives_base_name
+			from components.java
+
+			pom {
+				name = mkxString('mod_name', 'IEAddon')
+				description = mkxString('mod_description', '')
+				url = mkxString('mod_url', 'https://github.com/Team-Immersive-Intelligence/ImmersiveIntelligence')
+				licenses {
+					license {
+						name = 'Team Immersive Intelligence License'
+						url = 'https://github.com/Team-Immersive-Intelligence/ImmersiveIntelligence/blob/dev/main/license.md'
+					}
+				}
+				developers {
+					developer {
+						id = 'teamii'
+						name = 'Team Immersive Intelligence'
+					}
+				}
+				scm {
+					connection = 'scm:git:git://github.com/Team-Immersive-Intelligence/ImmersiveIntelligence.git'
+					developerConnection = 'scm:git:ssh://github.com/Team-Immersive-Intelligence/ImmersiveIntelligence.git'
+					url = 'https://github.com/Team-Immersive-Intelligence/ImmersiveIntelligence'
+				}
+			}
+		}
+	}
+
+	repositories {
+		maven {
+			name "TeamII_Maven"
+			url "https://maven.iiteam.net/${mkxString('ii_maven_channel', 'releases')}"
+			credentials {
+				username = mkxEnvOrProperty('II_MAVEN_USER', 'ii_maven_username')
+				password = mkxEnvOrProperty('II_MAVEN_PASSWORD', 'ii_maven_password')
+			}
+			authentication {
+				basic(BasicAuthentication)
+			}
+		}
+	}
+}

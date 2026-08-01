@@ -1,0 +1,24 @@
+dependencies {
+	testImplementation platform("org.junit:junit-bom:${mkxString('junit_version')}")
+	testImplementation 'org.junit.jupiter:junit-jupiter'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	testImplementation "builtbroken.minecraftjunit:MinecraftJUnit:${mkxString('minecraft_junit_version')}"
+	testImplementation "net.iiteam:jmeasure:${mkxString('jmeasure_version')}"
+	testImplementation "org.mockito:mockito-core:${mkxString('mockito_version')}"
+	testImplementation 'org.reflections:reflections:0.10.2'
+}
+
+test {
+	useJUnitPlatform()
+	javaLauncher.set(javaToolchains.launcherFor {
+		languageVersion.set(JavaLanguageVersion.of(8))
+		vendor.set(JvmVendorSpec.AZUL)
+	})
+	maxHeapSize = '1G'
+	failFast = false
+	workingDir = './run_tests'
+	doFirst { mkdir './run_tests' }
+	if (mkxBool('show_testing_output', false)) {
+		testLogging { showStandardStreams = true }
+	}
+}

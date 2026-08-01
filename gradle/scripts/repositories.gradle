@@ -1,0 +1,32 @@
+repositories {
+	maven {
+		name = 'Team II Maven'
+		url = uri(mkxString('ii_maven_url', 'https://maven.iiteam.net/releases'))
+		if (mkxBool('ii_auth_to_maven', false)) {
+			credentials {
+				username = mkxEnvOrProperty('II_MAVEN_USER', 'ii_maven_username')
+				password = mkxEnvOrProperty('II_MAVEN_PASSWORD', 'ii_maven_password')
+			}
+		}
+	}
+	maven { name = 'GTNH Maven'; url = 'https://nexus.gtnewhorizons.com/repository/public/' }
+	maven { name = 'CleanroomMC Maven'; url = 'https://maven.cleanroommc.com' }
+	maven { name = 'BlameJared Maven'; url = 'https://maven.blamejared.com/' }
+	maven { name = 'DVS1 Maven'; url = 'https://dvs1.progwml6.com/files/maven/' }
+	maven { name = 'ModMaven'; url = 'https://modmaven.dev/' }
+	maven { name = 'tterrag Maven'; url = 'https://maven.tterrag.com/' }
+	maven { name = 'SpongePowered Maven'; url = 'https://repo.spongepowered.org/maven/' }
+	exclusiveContent {
+		forRepository { maven { name = 'CurseMaven'; url = 'https://www.cursemaven.com' } }
+		filter { includeGroup 'curse.maven' }
+	}
+	exclusiveContent {
+		forRepository { maven { name = 'Modrinth'; url = 'https://api.modrinth.com/maven' } }
+		filter { includeGroup 'maven.modrinth' }
+	}
+	maven { name = "ElytraDev Maven"; url = "https://repo.elytradev.com/" }
+	maven {name = "ComputerCraft Maven"; url = "https://maven.cil.li/" }
+	maven {name = "OpenComputers"; url = "https://squiddev.cc/maven/" }
+	mavenCentral()
+	mavenLocal()
+}

@@ -1,10 +1,15 @@
 package pl.pabilo8.immersiveintelligence.common.compat;
 
-import dan200.computercraft.api.lua.ArgumentHelper;
+import dan200.computercraft.api.ComputerCraftAPI;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
+import dan200.computercraft.api.peripheral.IPeripheralProvider;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.DataVariable;
@@ -28,10 +33,19 @@ public class ComputerCraftHelper extends IICompatModule
 		return new DataConnectorPeripheral(te);
 	}
 
+	public static boolean isCCTweaked() {
+		try {
+			Class.forName("dan200.computercraft.api.peripheral.IPeripheralTile");
+			return true;
+		} catch(ClassNotFoundException e)
+		{
+			return false;
+		}
+	}
+
 	@Override
 	public void preInit()
 	{
-
 	}
 
 	@Override
@@ -49,13 +63,30 @@ public class ComputerCraftHelper extends IICompatModule
 	@Override
 	public void init()
 	{
-
+		ComputerCraftAPI.registerPeripheralProvider(new DataConnectorPeripheralProvider());
 	}
 
 	@Override
 	public void postInit()
 	{
 
+	}
+
+	@Optional.Interface(iface = "dan200.computercraft.api.peripheral.IPeripheralProvider", modid = "computercraft")
+	public static class DataConnectorPeripheralProvider implements IPeripheralProvider
+	{
+		@Nullable
+		@Override
+		@Optional.Method(modid = "computercraft")
+		public IPeripheral getPeripheral(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull EnumFacing facing) {
+			TileEntity tile = world.getTileEntity(pos);
+			if (tile != null && tile instanceof TileEntityDataConnector)
+			{
+				TileEntityDataConnector te = (TileEntityDataConnector)tile;
+				return facing==te.getFacing()?ComputerCraftHelper.createConnectorPeripheral(te): null;
+			}
+			return null;
+		}
 	}
 
 	@Optional.Interface(iface = "dan200.computercraft.api.peripheral.IPeripheral", modid = "computercraft")
@@ -99,13 +130,26 @@ public class ComputerCraftHelper extends IICompatModule
 					DataPacket packet = new DataPacket();
 					if(args.length > 0)
 					{
-						Map<?, ?> map = ArgumentHelper.optTable(args, 0, new HashMap<>());
+						Map<?,?> map;
+						if (ComputerCraftHelper.isCCTweaked())
+							map = dan200.computercraft.api.lua.ArgumentHelper.optTable(args, 0, new HashMap<>());
+						else
+							map = dan200.computercraft.core.apis.ArgumentHelper.optTable(args, 0, new HashMap<>());
+
 						for(char c : DataPacket.VARIABLE_NAMES)
 							if(map.containsKey(String.valueOf(c))) //parse into IDataType
 							{
 								Object o = map.get(String.valueOf(c));
 								DataType type;
-								switch(ArgumentHelper.getType(o))
+
+								String strType = "";
+								if (ComputerCraftHelper.isCCTweaked())
+									strType = dan200.computercraft.api.lua.ArgumentHelper.getType(o);
+								else
+									strType = dan200.computercraft.core.apis.ArgumentHelper.getType(o);
+
+
+								switch(strType)
 								{
 									default:
 									case "string":

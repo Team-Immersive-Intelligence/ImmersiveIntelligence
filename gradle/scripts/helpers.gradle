@@ -1,0 +1,59 @@
+ext.mkxString = { String name, String defaultValue = '' ->
+	def value = project.findProperty(name)
+	return value == null ? defaultValue : value.toString()
+}
+
+ext.mkxBool = { String name, boolean defaultValue = false ->
+	def value = project.findProperty(name)
+	if (value == null)
+		return defaultValue
+	return value.toString().trim().equalsIgnoreCase('true')
+}
+
+ext.mkxInt = { String name, int defaultValue = 0 ->
+	def value = project.findProperty(name)
+	return value == null || value.toString().trim().isEmpty() ? defaultValue : value.toString().trim().toInteger()
+}
+
+ext.mkxList = { String name, String separatorRegex = '[, ]+' ->
+	def value = mkxString(name, '')
+	if (value.trim().isEmpty())
+		return []
+	return value.split(separatorRegex).collect { it.trim() }.findAll { !it.isEmpty() }
+}
+
+ext.mkxCommaList = { String name ->
+	def value = mkxString(name, '')
+	if (value.trim().isEmpty())
+		return []
+	return value.split(',').collect { it.trim() }.findAll { !it.isEmpty() }
+}
+
+ext.mkxJsonString = { Object value ->
+	return groovy.json.JsonOutput.toJson(value == null ? '' : value.toString())
+}
+
+ext.mkxJsonStringList = { String name ->
+	return groovy.json.JsonOutput.toJson(mkxCommaList(name))
+}
+
+ext.mkxEnvOrProperty = { String envName, String propertyName ->
+	def envValue = System.getenv(envName)
+	return envValue == null || envValue.trim().isEmpty() ? mkxString(propertyName, '') : envValue
+}
+
+ext.mkxAssertProperties = { String... names ->
+	names.each { name ->
+		if (mkxString(name, '').trim().isEmpty())
+			throw new GradleException("Missing required Gradle property: ${name}")
+	}
+}
+
+ext.mkxApplyScript = { String propertyName, String scriptPath ->
+	if (mkxBool(propertyName, false)) {
+		logger.lifecycle('[Mk.X] applying {}', scriptPath)
+		apply from: rootProject.file(scriptPath)
+	} else {
+		logger.lifecycle('[Mk.X] skipping {} ({})', scriptPath, propertyName)
+	}
+}

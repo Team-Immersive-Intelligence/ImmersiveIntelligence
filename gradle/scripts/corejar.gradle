@@ -1,0 +1,59 @@
+def corePatterns = mkxList('corejar_include_patterns')
+def libPath = mkxString('corejar_library_path', 'META-INF/libraries')
+
+def corePluginClass = mkxString('corejar_plugin_class').trim()
+if (corePatterns.isEmpty())
+	throw new GradleException('ii_script_corejar is enabled, but corejar_include_patterns is empty.')
+if (corePluginClass.isEmpty())
+	throw new GradleException('ii_script_corejar is enabled, but corejar_plugin_class is empty.')
+
+/*
+ * Gradle 9 has two Jar types:
+ * - org.gradle.jvm.tasks.Jar is the new base task type;
+ * - org.gradle.api.tasks.bundling.Jar is a compatibility subclass.
+ *
+ * RFG 2.x uses the new JVM Jar type for both its automatic task lookup and
+ * ReobfuscatedJar. Use that type explicitly here to avoid narrowing the
+ * generated reobfCoreJar task to the incompatible compatibility subclass.
+ */
+def coreJar = tasks.register('coreJar', org.gradle.jvm.tasks.Jar) {
+	group = 'build'
+	description = 'Builds the development coremod jar before RFG reobfuscation.'
+	archiveBaseName.set(base.archivesName.map { it + '-core' })
+	archiveClassifier.set('dev')
+
+	from(sourceSets.main.output) {
+		include corePatterns
+	}
+
+	manifest {
+		attributes(
+				'FMLCorePlugin': corePluginClass,
+				'Maven-Artifact': "${project.group}:${mkxString('mod_id')}-core:${project.version}"
+		)
+	}
+}
+
+/*
+ * RFG installs the reobf<JarTaskName> task rule. Requesting this provider after
+ * coreJar exists materialises a ReobfuscatedJar, which extends
+ * org.gradle.jvm.tasks.Jar.
+ */
+def reobfCoreJar = tasks.named('reobfCoreJar', org.gradle.jvm.tasks.Jar)
+def reobfCoreArchive = reobfCoreJar.flatMap { it.archiveFile }
+
+tasks.named('jar', org.gradle.jvm.tasks.Jar).configure {
+	dependsOn reobfCoreJar
+	exclude corePatterns
+
+	// Forge reads this manifest attribute from the outer mod jar.
+	doFirst {
+		manifest.attributes(
+				'ContainedDeps': libPath + '/' + reobfCoreArchive.get().asFile.name
+		)
+	}
+
+	from(reobfCoreArchive) {
+		into libPath
+	}
+}
