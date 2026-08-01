@@ -657,7 +657,11 @@ public abstract class DecoGui<T, C extends Container> extends GuiContainer
 	protected final void mouseReleased(int mouseX, int mouseY, int state)
 	{
 		if(focusedElement!=null)
-			focusedElement.decoMouseReleased(mouseX, mouseY, MouseButton.values()[state]);
+		{
+			MouseButton[] mouseButtons = MouseButton.values();
+			if(state >= 0&&state < mouseButtons.length)
+				focusedElement.decoMouseReleased(mouseX, mouseY, mouseButtons[state]);
+		}
 		super.mouseReleased(mouseX, mouseY, state);
 	}
 
@@ -665,7 +669,11 @@ public abstract class DecoGui<T, C extends Container> extends GuiContainer
 	protected final void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick)
 	{
 		if(focusedElement!=null)
-			focusedElement.decoMouseDragged(mc, mouseX, mouseY, MouseButton.values()[clickedMouseButton]);
+		{
+			MouseButton[] mouseButtons = MouseButton.values();
+			if(clickedMouseButton >= 0&&clickedMouseButton < mouseButtons.length)
+				focusedElement.decoMouseDragged(mc, mouseX, mouseY, mouseButtons[clickedMouseButton]);
+		}
 		super.mouseClickMove(mouseX, mouseY, clickedMouseButton, timeSinceLastClick);
 	}
 

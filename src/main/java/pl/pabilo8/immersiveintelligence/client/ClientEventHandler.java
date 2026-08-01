@@ -522,16 +522,18 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 
 	/**
 	 * Handling zoom for camera (in vehicles/mounted weapons)
+	 * we do a little bypassing of the default IE zoom cap (0.1f) by using the forge one instead, since theres no cap to it
 	 */
 	@SubscribeEvent
 	public void onFOVCamera(FOVModifier event)
 	{
 		CameraHandler.handleZoom();
-		if(CameraHandler.isEnabled())
-			if(CameraHandler.zoom==null)
-				CameraHandler.fovZoom = event.getFOV();
-			else
-				event.setFOV(event.getFOV()*CameraHandler.fovZoom);
+
+		if (CameraHandler.zoom != null)
+		{
+			float newFOV = event.getFOV() * CameraHandler.fovZoom;
+			event.setFOV(newFOV);
+		}
 	}
 
 	@SubscribeEvent
