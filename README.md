@@ -1,14 +1,12 @@
 <p align="center"><img src="art/logos/logofullhq.png" alt="II Logo"></p>   
 
-![CurseForge Downloads](https://img.shields.io/curseforge/dt/344344?logo=curseforge&label=Curseforge&color=orange)
-![Modrinth Downloads](https://img.shields.io/modrinth/dt/immersive-intelligence?logo=modrinth&label=Modrinth&link=https%3A%2F%2Fmodrinth.com%2Fmod%2Fimmersive-intelligence)
-[![Join Here!](https://img.shields.io/discord/610912351142674434?logo=discord&logoColor=237289da&color=%237289da&label=Discord)](https://discord.gg/teMfm3R)
+[![CurseForge Downloads](https://img.shields.io/curseforge/dt/344344?logo=curseforge&label=Curseforge&color=orange)](https://www.curseforge.com/minecraft/mc-mods/immersive-intelligence)
+[![Modrinth Downloads](https://img.shields.io/modrinth/dt/immersive-intelligence?logo=modrinth&label=Modrinth&link=https%3A%2F%2Fmodrinth.com%2Fmod%2Fimmersive-intelligence)](https://modrinth.com/mod/immersive-intelligence)
+[![Maven metadata URL](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Fmaven.iiteam.net%2Freleases%2Fpl%2Fpabilo8%2FImmersiveIntelligence%2Fmaven-metadata.xml&strategy=latestProperty&label=Team%20II%20Maven&color=%23666996&link=https%3A%2F%2Fmaven.iiteam.net%2F%23%2Freleases%2Fpl%2Fpabilo8%2FImmersiveIntelligence)](https://maven.iiteam.net/#/)
+[![Discord](https://img.shields.io/discord/610912351142674434?logo=discord&logoColor=237289da&color=%237289da&label=Discord)](https://discord.gg/teMfm3R)
+[![Become a Patron!](https://img.shields.io/badge/Become%20a%20Patron-Pabilo8-red?&logo=patreon)](https://www.patreon.com/bePatron?u=34304036)
 [![Commit Activity!](https://img.shields.io/github/commit-activity/m/Team-Immersive-Intelligence/ImmersiveIntelligence)](https://github.com/Team-Immersive-Intelligence/ImmersiveIntelligence/pulse)
-
-[![Jitpack](https://jitpack.io/v/Pabilo8/ImmersiveIntelligence.svg)](https://jitpack.io/#Pabilo8/ImmersiveIntelligence)
-![Test Status](https://github.com/Team-Immersive-Intelligence/ImmersiveIntelligence/actions/workflows/push.yml/badge.svg)
-[![Become a Patron!](https://img.shields.io/badge/Become%20a%20Patron-Pabilo8-red?style=flat-square&logo=patreon)](https://www.patreon.com/bePatron?u=34304036)
-[![Translation status](https://translations.iiteam.net/widget/immersive-intelligence/status-badge.png)](http://translations.iiteam.net/engage/immersive-intelligence/)
+[![Test Status](https://img.shields.io/github/check-suites/Team-Immersive-Intelligence/ImmersiveIntelligence/dev%2Fpabilo%2Ffixes?label=Test%20Status)](https://github.com/Team-Immersive-Intelligence/ImmersiveIntelligence/actions/workflows/push.yml)
 
 ### Description
 

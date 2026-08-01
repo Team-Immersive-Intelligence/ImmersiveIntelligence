@@ -2,7 +2,6 @@ dependencies {
 	//Immersive Engineering addon baseline.
 	api rfg.deobf("blusunrize:ImmersiveEngineering:${mkxString('immersive_engineering_version')}")
 
-
 	//Common optional integrations for an IE addon template.
 	compileOnly rfg.deobf("mezz.jei:jei_1.12.2:${mkxString('jei_version')}:api")
 	runtimeOnlyNonPublishable rfg.deobf("mezz.jei:jei_1.12.2:${mkxString('jei_version')}")
@@ -18,13 +17,16 @@ dependencies {
 
 	compileOnly rfg.deobf("curse.maven:tough-as-nails-246391:${mkxString('tough_as_nails_version')}")
 	compileOnly rfg.deobf("curse.maven:terrafirmacraft-302973:${mkxString('terrafirmacraft_version')}")
-	compileOnly rfg.deobf("curse.maven:immersive-petroleum-268250:${mkxString('immersive_petroleum_version')}")
-	compileOnly rfg.deobf("curse.maven:immersive-posts-314645:${mkxString('immersive_posts_version')}")
-	compileOnly rfg.deobf("curse.maven:immersive-technology-359407:${mkxString('immersive_technology_version')}")
 	compileOnly rfg.deobf("curse.maven:mysticalmechanics-300742:${mkxString('mysticalmechanics_version')}")
 	compileOnly rfg.deobf("curse.maven:bwm-suite-246760:${mkxString('bwm_suite_version')}")
 
+	//IE addons
+	implementation rfg.deobf("curse.maven:immersive-petroleum-268250:${mkxString('immersive_petroleum_version')}")
+	implementation rfg.deobf("curse.maven:immersive-posts-314645:${mkxString('immersive_posts_version')}")
+	implementation rfg.deobf("curse.maven:immersive-technology-359407:${mkxString('immersive_technology_version')}")
+
 	runtimeOnly "curse.maven:reauth-237701:${mkxString('reauth_version')}"
+	runtimeOnly "curse.maven:ctm-267602:${mkxString('ctm_version')}"
 
 	if (mkxBool('ii_script_junit', true)) {
 		testImplementation rfg.deobf("blusunrize:ImmersiveEngineering:${mkxString('immersive_engineering_version')}")
