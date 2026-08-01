@@ -12,19 +12,26 @@ processAudio () {
     touch $1.tmp
     $LOC_FFMPEG -y -i $1 -f ogg -c:a libvorbis -b:a 120k $1.tmp &
     wait
-    rm $1
-    mv $1.tmp $1
+    if [ -s $1.tmp ]
+    then
+      rm $1
+      mv $1.tmp $1
+    else
+      echo "Cannot convert file, output is empty."
+      rm $1.tmp
+      return;
+    fi
 }
 
 while getopts "ia" arg; do
     case $arg in
         i)
             echo "Processing images..."
-            for f in $(find ./src/main/resources/assets/immersiveintelligence/textures -name '*.png'); do ./gradle/tools/oxipng $f --zc 9 -f 0-5 --nc --strip all; done
+            for f in $(find ./src/main/resources/assets/*/textures -name '*.png'); do chmod 644 "$f"; ./gradle/tools/oxipng "$f" --zc 9 -f 0-5 --nc --strip all; done
             ;;
         a)
             echo "Processing audio..."
-            for f in $(find ./src/main/resources/assets/immersiveintelligence/sounds -name '*.ogg'); do processAudio $f; done
+            for f in $(find ./src/main/resources/assets/*/sounds -name '*.ogg'); do processAudio $f; done
             ;;
     esac
 done
