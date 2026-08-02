@@ -187,7 +187,11 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockProductionSi
 		boolean currentSignal = getRedstoneAtPos(0);
 		if(sendPacket||((prevSignal^currentSignal)&currentSignal))
 		{
-			this.sendData(storedData, getDirection("data"), getPOI(MultiblockPOI.DATA_OUTPUT)[0]);
+			if(energyStorage.extractEnergy(DataInputMachine.energyUsage, true)==DataInputMachine.energyUsage)
+			{
+				this.sendData(storedData, getDirection("data"), getPOI(MultiblockPOI.DATA_OUTPUT)[0]);
+				this.energyStorage.extractEnergy(DataInputMachine.energyUsage, false);
+			}
 			sendPacket = false;
 		}
 

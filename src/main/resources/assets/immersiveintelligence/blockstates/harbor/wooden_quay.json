@@ -1,0 +1,105 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "immersiveintelligence:harbor/wooden/floor"
+      }
+    },
+    {
+      "when": {
+        "connected": "false"
+      },
+      "apply": {
+        "model": "immersiveintelligence:harbor/wooden/support_single"
+      }
+    },
+    {
+      "when": {
+        "connected": "true"
+      },
+      "apply": {
+        "model": "immersiveintelligence:harbor/wooden/support_connected"
+      }
+    },
+    {
+      "when": {
+        "support": "center"
+      },
+      "apply": {
+        "model": "immersiveintelligence:harbor/concrete/support_center"
+      }
+    },
+    {
+      "when": {
+        "support": "s"
+      },
+      "apply": {
+        "model": "immersiveintelligence:harbor/concrete/support_n"
+      }
+    },
+    {
+      "when": {
+        "support": "sw"
+      },
+      "apply": {
+        "model": "immersiveintelligence:harbor/concrete/support_ne"
+      }
+    },
+    {
+      "when": {
+        "support": "w"
+      },
+      "apply": {
+        "model": "immersiveintelligence:harbor/concrete/support_e"
+      }
+    },
+    {
+      "when": {
+        "support": "nw"
+      },
+      "apply": {
+        "model": "immersiveintelligence:harbor/concrete/support_se"
+      }
+    },
+    {
+      "when": {
+        "support": "n"
+      },
+      "apply": {
+        "model": "immersiveintelligence:harbor/concrete/support_s"
+      }
+    },
+    {
+      "when": {
+        "support": "ne"
+      },
+      "apply": {
+        "model": "immersiveintelligence:harbor/concrete/support_sw"
+      }
+    },
+    {
+      "when": {
+        "support": "e"
+      },
+      "apply": {
+        "model": "immersiveintelligence:harbor/concrete/support_w"
+      }
+    },
+    {
+      "when": {
+        "support": "se"
+      },
+      "apply": {
+        "model": "immersiveintelligence:harbor/concrete/support_nw"
+      }
+    },
+    {
+      "when": {
+        "solid_neighbor": "true"
+      },
+      "apply": {
+        "model": "immersiveintelligence:harbor/concrete/support_center"
+      }
+    }
+  ]
+}

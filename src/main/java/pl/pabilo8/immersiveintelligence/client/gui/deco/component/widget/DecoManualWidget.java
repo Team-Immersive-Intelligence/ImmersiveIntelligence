@@ -39,7 +39,10 @@ public class DecoManualWidget extends DecoComponentWidgetBase<DecoManualWidget>
 		//Initialize the default manual, if it wasn't already
 		GuiManual trueManual = ManualHelper.getManual().getGui();
 		if(trueManual==null)
+		{
 			trueManual = new GuiManual(ManualHelper.getManual(), ManualHelper.getManual().texture);
+			trueManual.initGui();
+		}
 		this.ieManualGUI = trueManual;
 
 		//Initialize the wrapper

@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.client.gui.deco.component.data_editor;
 
+import net.minecraft.util.text.TextFormatting;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataTypeUtils;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation.DataOperationMeta;
@@ -74,10 +75,10 @@ public class DecoDataEditorExpression extends DecoDataEditor<DataTypeExpression>
 				.withSize(width, 12)
 				.withHorizontalAlignment(true)
 				.withTab((DecoTab)new DecoTab()
-						.withText(IIReference.DESCRIPTION_KEY+"variable_properties")
-						.withPadding(4, 2, 4, 2)
-						.withOnPressed((gui, button, mouseX, mouseY) -> setPage(0))
-						.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+"variable_properties.tooltip")
+								.withText(IIReference.DESCRIPTION_KEY+"variable_properties")
+								.withPadding(4, 2, 4, 2)
+								.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+"variable_properties.tooltip"),
+						() -> setPage(0)
 				);
 
 		String[] params = meta.params();
@@ -85,11 +86,16 @@ public class DecoDataEditorExpression extends DecoDataEditor<DataTypeExpression>
 		{
 			int finalParamID = paramID+1;
 			group.withTab((DecoTab)new DecoTab()
-					.withText("datasystem.immersiveintelligence.function."+meta.name()+".param."+params[paramID])
-					.withPadding(4, 2, 4, 2)
-					.withOnPressed((gui, button, mouseX, mouseY) -> setPage(finalParamID))
+							.withText("datasystem.immersiveintelligence.function."+meta.name()+".param."+params[paramID])
+							.withPadding(4, 2, 4, 2)
+							.withTranslatedTooltip(
+									"datasystem.immersiveintelligence.function."+meta.name()+".param."+params[paramID],
+									TextFormatting.GRAY+IIReference.DATA_KEY+"function."+meta.name()+".param."+params[paramID]+".desc"
+							),
+					() -> setPage(finalParamID)
 			);
 		}
+		group.selectTab(page, false);
 		return group;
 	}
 
@@ -165,11 +171,11 @@ public class DecoDataEditorExpression extends DecoDataEditor<DataTypeExpression>
 						.withMaxDisplayedEntries(4)
 						.withScrollBarBackground(DecoTextures.COMPONENT_SLIDER_PAPER)
 						.withBackground(DecoTextures.COMPONENT_BUTTON_PAPER)
-						.withListBackground(DecoTextures.COMPONENT_TEXT_FIELD)
 						.withDropdownSymbol(DecoTextures.COMPONENT_DROPDOWN_SYMBOL_PAPER)
 						.withEntries(typeEntries)
 						.withSelectedEntry(selectedMeta)
 						.withDisplayFunction(DecoTemplates.getDataTypeEntryDisplay())
+						.withSortFunction(DecoTemplates.getDataTypeEntrySorter())
 						.withOnSelectedEntry((oldType, newType) -> {
 							storeCurrentPageOutput();
 							DataType current = getArgument(argumentID, expectedType);

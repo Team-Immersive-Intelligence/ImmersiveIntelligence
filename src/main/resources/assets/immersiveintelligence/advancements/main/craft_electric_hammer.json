@@ -1,0 +1,27 @@
+{
+  "display": {
+    "icon": {
+      "item": "immersiveintelligence:electric_hammer"
+    },
+    "frame": "goal",
+    "title": {
+      "translate": "advancement.immersiveintelligence.craft_electric_hammer"
+    },
+    "description": {
+      "translate": "advancement.immersiveintelligence.craft_electric_hammer.desc"
+    }
+  },
+  "parent": "immersiveengineering:main/craft_hammer",
+  "criteria": {
+    "craft_hammer": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "immersiveintelligence:electric_hammer"
+          }
+        ]
+      }
+    }
+  }
+}

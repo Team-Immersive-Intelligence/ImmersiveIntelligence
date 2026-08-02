@@ -109,7 +109,7 @@ public abstract class AMTProgressModel<DEVICE, STAGE> implements AMTRenderable
 
 	public AMT getPart(String name)
 	{
-		return model.getPart(name);
+		return model.getPartRecursive(name);
 	}
 }
 

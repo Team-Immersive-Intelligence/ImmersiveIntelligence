@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common.util.easynbt;
 
 import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorage;
+import blusunrize.immersiveengineering.api.energy.wires.WireType;
 import blusunrize.immersiveengineering.common.util.inventory.MultiFluidTank;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.*;
@@ -222,6 +223,14 @@ public class NBTSerialisation
 					char name = nbtTagCompound.getString("name").isEmpty()?'a': nbtTagCompound.getString("name").charAt(0);
 					NBTTagCompound valueTag = nbtTagCompound.getCompoundTag("value");
 					return new DataVariable(name, IIDataTypeUtils.getVarFromNBT(valueTag));
+				}
+		);
+
+		registerSerializer(WireType.class, NBTTagString.class,
+				wireType -> new NBTTagString(wireType==null?"": wireType.getUniqueName()),
+				nbt -> {
+					String string = nbt.getString();
+					return string.isEmpty()?null: WireType.getValue(string);
 				}
 		);
 

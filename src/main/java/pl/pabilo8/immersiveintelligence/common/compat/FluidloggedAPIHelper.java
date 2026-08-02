@@ -33,7 +33,9 @@ public class FluidloggedAPIHelper extends IICompatModule
 				{
 					IILogger.info("Adding Fluidlogged-API config file.");
 					FileWriter writer = new FileWriter(output);
-					writer.write(stream.read());
+					int read;
+					while((read = stream.read())!=-1)
+						writer.write(read);
 					writer.close();
 				}
 			} catch(Exception e)

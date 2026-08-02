@@ -205,11 +205,6 @@ public class ItemIIFunctionalCircuit extends ItemIISubItemsBase<Circuits> implem
 		return Collections.emptyList();
 	}
 
-	public String getTESRRenderTexture(ItemStack stack)
-	{
-		return stackToSub(stack).tier.texture;
-	}
-
 
 	@GeneratedItemModels(itemName = "circuit_functional")
 	public enum Circuits implements IIItemEnum
@@ -352,16 +347,15 @@ public class ItemIIFunctionalCircuit extends ItemIISubItemsBase<Circuits> implem
 
 	public enum CircuitTypes implements ISerializableEnum
 	{
-		BASIC("basic_circuits", "circuitBasic"),
-		ADVANCED("advanced_circuits", "circuitAdvanced"),
-		CRYPTOGRAPHIC("cryptography_circuits", "circuitCryptographic"),
-		PROCESSOR("processor_circuits", "circuitProcessor");
+		BASIC("circuitBasic"),
+		ADVANCED("circuitAdvanced"),
+		CRYPTOGRAPHIC("circuitCryptographic"),
+		PROCESSOR("circuitProcessor");
 
-		public final String texture, material;
+		public final String material;
 
-		CircuitTypes(String texture, String material)
+		CircuitTypes(String material)
 		{
-			this.texture = texture;
 			this.material = material;
 		}
 	}

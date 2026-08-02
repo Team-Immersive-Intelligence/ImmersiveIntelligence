@@ -1,9 +1,10 @@
 package pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection;
 
-import blusunrize.immersiveengineering.client.ClientUtils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.Tuple;
 import net.minecraft.util.math.MathHelper;
 import org.apache.commons.lang3.tuple.Pair;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoEntryPanel;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 
@@ -27,30 +28,30 @@ public class DecoList<T> extends DecoScrolledCollection<DecoList<T>, T>
 	{
 		super(x, y);
 
-		//Mouse
-		withOnPressed((gui, mouseButton, mouseX, mouseY) ->
-				getHoveredPanel(mouseX, mouseY).map(pair ->
-						{
-							if(pair.getKey().decoMousePressed(ClientUtils.mc(), mouseX-gui.x, mouseY-pair.getValue(), mouseButton))
-								return true;
-							if(this.onEntryClicked!=null)
-							{
-								this.onEntryClicked.accept(lastHoveredEntry);
-								return true;
-							}
-							return false;
-						}
-				).orElseGet(() -> {
-					//Click on scrollbar
-					if(maxScroll > 0&&IIMath.isPointInRectangle(gui.x+gui.width-8, gui.y, gui.x+gui.width, gui.y+gui.height, mouseX, mouseY))
-						return true;
+		withOnPressed((gui, mouseButton, mouseX, mouseY) -> {
+			Tuple<Integer, Integer> clicked = getClickedEntryIndex(gui.x+2, gui.y-scroll+2, mouseX, mouseY);
+			if(clicked!=null)
+			{
+				if(clicked.getFirst()==ON_CREATE_OPTION)
+					return runCreateAction();
 
-					if(this.onEntryClicked!=null)
-						this.onEntryClicked.accept(lastHoveredEntry = null);
-					return false;
-				}));
+				lastHoveredEntry = entries.get(clicked.getFirst());
+				if(onEntryClicked!=null)
+				{
+					onEntryClicked.accept(lastHoveredEntry);
+					return true;
+				}
+				return false;
+			}
+
+			if(maxScroll > 0&&IIMath.isPointInRectangle(gui.x+gui.width-8, gui.y, gui.x+gui.width, gui.y+gui.height, mouseX, mouseY))
+				return true;
+
+			if(onEntryClicked!=null)
+				onEntryClicked.accept(lastHoveredEntry = null);
+			return false;
+		});
 		withOnDragged((gui, button, mouseX, mouseY) -> {
-			//Click on scrollbar
 			if(maxScroll > 0&&IIMath.isPointInRectangle(gui.x+gui.width-8, gui.y, gui.x+gui.width, gui.y+gui.height, mouseX, mouseY))
 			{
 				this.scroll = (int)MathHelper.clamp((float)(mouseY-gui.y-7)/(float)(gui.height-14)*(float)maxScroll, 0, maxScroll);
@@ -58,13 +59,6 @@ public class DecoList<T> extends DecoScrolledCollection<DecoList<T>, T>
 			}
 			return false;
 		});
-		withOnReleased((gui, mouseButton, mouseX, mouseY) ->
-				getHoveredPanel(mouseX, mouseY).map(pair ->
-						{
-							pair.getKey().mouseReleased(mouseX-gui.x, mouseY-pair.getValue());
-							return true;
-						}
-				).orElse(false));
 	}
 
 
@@ -95,7 +89,25 @@ public class DecoList<T> extends DecoScrolledCollection<DecoList<T>, T>
 	@Override
 	public void cleanup()
 	{
+		display.cleanupDisplay();
+	}
 
+	@Override
+	protected boolean ownsVirtualChild(DecoComponent<?> component)
+	{
+		return display.ownsComponent(component);
+	}
+
+	@Override
+	protected DecoMouseCapture decoMousePressedVirtualChild(Minecraft mc, int mouseX, int mouseY, MouseButton button)
+	{
+		Optional<Pair<DecoEntryPanel<T>, Integer>> hovered = getHoveredPanel(mouseX, mouseY);
+		if(!hovered.isPresent())
+			return null;
+
+		Pair<DecoEntryPanel<T>, Integer> pair = hovered.get();
+		DecoMouseCapture capture = pair.getKey().decoMousePressed(mc, mouseX-x, mouseY-pair.getValue(), button);
+		return capture==null?null: capture.translated(-x, -pair.getValue());
 	}
 
 	//--- Public Methods ---//
@@ -156,23 +168,19 @@ public class DecoList<T> extends DecoScrolledCollection<DecoList<T>, T>
 	private Optional<Pair<DecoEntryPanel<T>, Integer>> getHoveredPanel(int mouseX, int mouseY)
 	{
 		Tuple<Integer, Integer> clicked = getClickedEntryIndex(x+2, y-scroll+2, mouseX, mouseY);
-		if(clicked!=null)
+		if(clicked!=null&&clicked.getFirst()!=ON_CREATE_OPTION)
 		{
-			//Run the "create" action if the special option was clicked
-			if(clicked.getFirst()==ON_CREATE_OPTION)
-			{
-				runCreateAction();
-				return Optional.empty();
-			}
-
 			//Only panels allow more complex interactions
 			if(!(display instanceof DecoEntryPanel))
 				return Optional.empty();
-			DecoEntryPanel<T> panel = (DecoEntryPanel<T>)display;
 			Integer index = clicked.getFirst();
 			Integer heightOffset = clicked.getSecond();
-			//Apply the list element representation to the panel, so actions can affect it
-			panel.applyElement(this.lastHoveredEntry = entries.get(index));
+			T entry = entries.get(index);
+			DecoEntryPanel<T> panel = ((DecoEntryPanel<T>)display).getElementPanel(entry);
+			if(panel==null)
+				return Optional.empty();
+
+			this.lastHoveredEntry = entry;
 			return Optional.of(Pair.of(panel, heightOffset));
 		}
 		return Optional.empty();

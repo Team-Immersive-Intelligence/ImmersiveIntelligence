@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.api.ammo.utils;
 
+import blusunrize.immersiveengineering.common.blocks.TileEntityMultiblockPart;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -8,6 +9,10 @@ import pl.pabilo8.immersiveintelligence.api.ammo.penetration.IPenetrationHandler
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Graphics;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBlockDamageSync;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IDamageResistantMultiblock;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIBase;
+import pl.pabilo8.immersiveintelligence.common.util.tile.TileEntityIIBase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,26 +66,53 @@ public class PenetrationCache
 			return;
 
 		DamageBlockPos dimensionBlockPos = new DamageBlockPos(pos, world, pen.getIntegrity());
-		float newHp = getBlockHitpoints(pen, pos, world)-(bulletDamage*pen.getThickness());
-		if(newHp > 0)
+		if(world.getTileEntity(pos) instanceof IDamageResistantMultiblock)
 		{
-			List<DamageBlockPos> list = blockDamage.stream().filter(damageBlockPos -> damageBlockPos.equals(dimensionBlockPos)).collect(Collectors.toList());
-			if(!list.isEmpty())
-				list.forEach(damageBlockPos -> damageBlockPos.damage = newHp);
-			else
-				blockDamage.add(new DamageBlockPos(dimensionBlockPos, newHp));
-
-			IIPacketHandler.sendToClient(dimensionBlockPos, world,
-					new MessageBlockDamageSync(new DamageBlockPos(dimensionBlockPos, newHp/(pen.getIntegrity()/pen.getThickness())), direction));
+			//Damage a multiblock
+			IDamageResistantMultiblock mb = (IDamageResistantMultiblock)world.getTileEntity(pos);
+			if(mb instanceof TileEntityMultiblockPart)
+				mb = (IDamageResistantMultiblock)((TileEntityMultiblockPart<?>)mb).master();
+			if(mb!=null)
+			{
+				if(mb.damageHealth(bulletDamage*pen.getThickness()))
+				{
+					world.getBlockState(pos).getBlock().breakBlock(world, pos, world.getBlockState(pos));
+					world.destroyBlock(dimensionBlockPos, false);
+				}
+				else
+				{
+					if(mb instanceof TileEntityMultiblockIIBase)
+						((TileEntityMultiblockIIBase<?>)mb).updateTileForEvent(SyncEvents.TILE_DAMAGED);
+					else if(mb instanceof TileEntityIIBase)
+						((TileEntityIIBase)mb).updateTileForEvent(SyncEvents.TILE_DAMAGED);
+				}
+			}
 		}
-		else if(newHp <= 0)
+		else
 		{
-			blockDamage.removeIf(damageBlockPos -> damageBlockPos.equals(dimensionBlockPos));
-			world.getBlockState(pos).getBlock().breakBlock(world, pos, world.getBlockState(pos));
-			world.destroyBlock(dimensionBlockPos, false);
+			//Proceed with block breaking
+			float newHp = getBlockHitpoints(pen, pos, world)-(bulletDamage*pen.getThickness());
+			if(newHp > 0)
+			{
+				List<DamageBlockPos> list = blockDamage.stream().filter(damageBlockPos -> damageBlockPos.equals(dimensionBlockPos)).collect(Collectors.toList());
+				if(!list.isEmpty())
+					list.forEach(damageBlockPos -> damageBlockPos.damage = newHp);
+				else
+					blockDamage.add(new DamageBlockPos(dimensionBlockPos, newHp));
 
-			IIPacketHandler.sendToClient(dimensionBlockPos, world,
-					new MessageBlockDamageSync(new DamageBlockPos(dimensionBlockPos, newHp/(pen.getIntegrity()/pen.getThickness())), direction));
+				IIPacketHandler.sendToClient(dimensionBlockPos, world,
+						new MessageBlockDamageSync(new DamageBlockPos(dimensionBlockPos, newHp/(pen.getIntegrity()/pen.getThickness())), direction));
+			}
+			else if(newHp <= 0)
+			{
+				blockDamage.removeIf(damageBlockPos -> damageBlockPos.equals(dimensionBlockPos));
+				world.getBlockState(pos).getBlock().breakBlock(world, pos, world.getBlockState(pos));
+				world.destroyBlock(dimensionBlockPos, false);
+
+				IIPacketHandler.sendToClient(dimensionBlockPos, world,
+						new MessageBlockDamageSync(new DamageBlockPos(dimensionBlockPos, newHp/(pen.getIntegrity()/pen.getThickness())), direction));
+			}
 		}
+
 	}
 }

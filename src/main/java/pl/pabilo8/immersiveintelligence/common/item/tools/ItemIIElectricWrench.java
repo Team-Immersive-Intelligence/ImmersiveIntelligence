@@ -14,11 +14,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.upgrade.IUpgradableDevice;
+import pl.pabilo8.immersiveintelligence.api.upgrade.Upgrade;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.IWrench;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.advancements.UpgradeTrigger;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemUtils;
@@ -49,6 +51,7 @@ public class ItemIIElectricWrench extends ItemIIElectricTool implements IWrench
 		if(te==null||te.getCurrentUpgrade()==null)
 			return EnumActionResult.PASS;
 
+		Upgrade installed = te.getCurrentUpgrade();
 		ItemStack heldItem = player.getHeldItem(hand);
 		//check if the powered wrench has charge
 		if(!IIItemUtils.canUpgradeFreeOfCharge(player)&&!hasEnoughEnergy(heldItem))
@@ -57,6 +60,8 @@ public class ItemIIElectricWrench extends ItemIIElectricTool implements IWrench
 		if(te.addUpgradeInstallProgress(IIItemUtils.canUpgradeFreeOfCharge(player)?999999: Tools.electricWrenchUpgradeProgress))
 		{
 			world.playSound(null, pos, IISounds.constructionElectricWrench, SoundCategory.PLAYERS, 0.5f, 1);
+			if(te.getCurrentUpgrade()==null)
+				UpgradeTrigger.trigger(installed, player, heldItem);
 			damageWrench(heldItem, player);
 		}
 		return EnumActionResult.SUCCESS;

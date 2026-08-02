@@ -15,11 +15,14 @@ For example, if in a packet:
 # default_value2
 The same would happen in a packet with numbers stored as a string:  
 |[data_packet]{data:{a:{Type:"string",Value:"123"}}}|
-Despite that for a human the *text* "123" seems identical to the *number* 123, a data machine sees it very different. A text type [can't be converted] to a number type, thus it too returns a [defaultized Integer], or simply put: 0.
+Despite that for a human the *text* "123" seems identical to the *number* 123, a data machine sees it very different. A text type [can't be evaluated] as a number type, thus it too returns a [defaultized Integer], or simply put: 0.
 # default_value3
-The only case where such conversion would occur properly, is between two **Compatible Types** - two types storing a similar kind of information, such as when converting a [Float](#float) to an [Integer](#integer)  
+The only case where such evaluation would occur properly, is between two **Compatible Types** - two types storing a similar kind of information, such as when evaluating a [Float](#float) to an [Integer](#integer)  
 |[data_packet]{data:{a:{Type:"float",Value:123}}}|  
 This mechanism is also one of the core concepts of **Strong Typing**.
+# default_value4
+It is possible to convert between types using [Casting Operations](functions/type_conversion.md) in an [Arithmetic-Logic Machine](arithmetic_logic_machine.md) or a [Mainframe Computer], using the [Type Conversion Circuit](functions/_functional_circuits.md).
+|[data_operation]{id:"to_string"}|
 # data_overflow
 Each **Type** is limited by a size or length number.  
 This feature is necessary to ensure that there is no [Data Overflow] - a situation when a type would take too much space and corrupt the entire packet.  
@@ -31,7 +34,7 @@ Types are separated into two groups:
 These are: [Null](#null), [Integer](#integer), [Float](#float), [Boolean](#boolean) and [String](#string).
 
 **Compound Types** - consisting of [multiple] **Basic Types** and [joining them into one object], for representing a more sophisticated information.
-These include [ItemStack](#itemstack), [Array](#array), [FluidStack](#fluidstack), [Vector](#vector), [Entity](#entity), and [Map](#map).
+These include [ItemStack](#itemstack), [Array](#array), [FluidStack](#fluidstack), [Vector](#vector), [Entity](#entity), [LogiTag](#logitag), and [Map](#map).
 # null
 |[datatype]{type:"%SECTION%",x:52}|
 [Null] is a [special] data type, which has [no value].
@@ -62,8 +65,12 @@ It is mainly used to set an item filter or mark a specific item for a machine ta
 It is mainly used to set an fluid filter or mark a specific fluid for a machine task.
 # vector
 |[datatype]{type:"%SECTION%",x:52}|
-[Vector] is a [compound] data type storing 3 number values. It can store [integers](#integer), [floats](#float) or [a mix of them].
+[Vector] is a [compound] data type storing 3 number values. It can store [integers](#integer) or [floats](#float).
 It is used to represent values in 3-dimensional space, such as position or motion of objects.
+# logitag
+|[datatype]{type:"%SECTION%",x:52}|
+[LogiTag] is a [compound] data type storing information of a [Logistic Manifest](../ii_logistics/task_system.md#logitags): its [name], [description], [owner identity], [origin], [destination], [color marker] and [batch number].
+It is used to identify cargo containers, such as crates.
 # entity
 |[datatype]{type:"%SECTION%",x:52}|
 [Entity] is a [compound] data type which holds information about a specific in-world [entity]: its [name], [ID], [position], [motion] and [NBT data].

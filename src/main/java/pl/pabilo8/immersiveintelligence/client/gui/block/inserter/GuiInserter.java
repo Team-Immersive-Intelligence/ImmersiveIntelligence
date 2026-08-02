@@ -19,7 +19,6 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoIt
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.DecoTextField;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.util.TextFilter;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.inserter.TileEntityInserterBase;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.inserter.TileEntityInserterBase.InserterTask;
@@ -94,14 +93,14 @@ public class GuiInserter extends DecoTileGui<TileEntityInserterBase, ContainerIn
 				.withDisplayFunction(new DecoEntryPanelBuilder<InserterTask>()
 						.withBackground(DecoTextures.BG_PAPER)
 						.withBackgroundMask(DecoTextures.TEMPLATE_TICKET)
-						.withComponent("icon", new DecoItemStackDisplay(3, 2).withSize(16, 16))
-						.withLabel("wild", new DecoLabel(fontRenderer, 3, 2)
+						.withComponent("icon", p -> new DecoItemStackDisplay(3, 2).withSize(16, 16))
+						.withLabel("wild", p -> new DecoLabel(fontRenderer, 3, 2)
 								.withSize(16, 16)
 								.withAlign(DecoAlignment.CENTER)
 								.withRawText("*")
 								.withTextColor(IIReference.COLOR_IMMERSIVE_ORANGE)
 						)
-						.withLabel("type", new DecoLabel(fontRenderer, 3+16+4, 2)
+						.withLabel("type", p -> new DecoLabel(fontRenderer, 3+16+4, 2)
 								.withSize(96-3-16-6, 16)
 								.withAlign(DecoAlignment.LEFT)
 								.withRawText("task")

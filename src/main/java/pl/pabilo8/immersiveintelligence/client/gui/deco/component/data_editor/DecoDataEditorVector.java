@@ -55,7 +55,7 @@ public class DecoDataEditorVector extends DecoDataEditor<DataTypeVector>
 
 	private void refreshFieldFormatting(DecoTextField field)
 	{
-		float currentValue = IIStringUtil.parseFloat(field.getText());
+		float currentValue = TextFilter.FLOAT.parseFloat(field.getText(), IIStringUtil.parseFloat(field.getText()));
 		field.withFilter(dataType.integerVector?TextFilter.DECIMAL: TextFilter.FLOAT)
 				.withText(dataType.integerVector?Integer.toString((int)currentValue): Float.toString(currentValue));
 	}
@@ -63,9 +63,10 @@ public class DecoDataEditorVector extends DecoDataEditor<DataTypeVector>
 	@Override
 	public DataTypeVector outputType()
 	{
-		dataType.x = IIStringUtil.parseFloat(x.getText());
-		dataType.y = IIStringUtil.parseFloat(y.getText());
-		dataType.z = IIStringUtil.parseFloat(z.getText());
+		TextFilter filter = dataType.integerVector?TextFilter.DECIMAL: TextFilter.FLOAT;
+		dataType.x = filter==TextFilter.DECIMAL?filter.parseInt(x.getText(), (int)dataType.x): filter.parseFloat(x.getText(), dataType.x);
+		dataType.y = filter==TextFilter.DECIMAL?filter.parseInt(y.getText(), (int)dataType.y): filter.parseFloat(y.getText(), dataType.y);
+		dataType.z = filter==TextFilter.DECIMAL?filter.parseInt(z.getText(), (int)dataType.z): filter.parseFloat(z.getText(), dataType.z);
 		return dataType;
 	}
 }

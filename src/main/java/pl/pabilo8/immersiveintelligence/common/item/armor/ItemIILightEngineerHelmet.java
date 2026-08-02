@@ -20,7 +20,6 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.api.utils.armor.IGasmask;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
 import pl.pabilo8.immersiveintelligence.client.model.armor.ModelLightEngineerArmor;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.LightEngineerArmor;
@@ -39,7 +38,7 @@ import java.util.Map;
  * @since 13.09.2020
  */
 @IIItemProperties(category = IICategory.WARFARE)
-public class ItemIILightEngineerHelmet extends ItemIILightEngineerArmorBase implements IElectricEquipment, IGasmask
+public class ItemIILightEngineerHelmet extends ItemIILightEngineerArmorBase implements IElectricEquipment
 {
 	public ItemIILightEngineerHelmet()
 	{
@@ -139,7 +138,7 @@ public class ItemIILightEngineerHelmet extends ItemIILightEngineerArmorBase impl
 	}
 
 	@Override
-	public boolean protectsFromGasses(ItemStack stack)
+	protected boolean protectsFromGases(ItemStack stack)
 	{
 		return getUpgrades(stack).hasKey("gasmask");
 	}

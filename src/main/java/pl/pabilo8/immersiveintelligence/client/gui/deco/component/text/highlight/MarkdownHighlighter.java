@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Very lightweight markdown-like highlighter (headings, bold, italic, code, links).
+ * Lightweight markdown-like highlighter for headings, emphasis, inline code and links.
  */
 public class MarkdownHighlighter extends TextHighlighter
 {
@@ -22,104 +22,88 @@ public class MarkdownHighlighter extends TextHighlighter
 	@Override
 	public List<Segment> highlight(String line)
 	{
-		List<Segment> out = new ArrayList<>();
-		if(line.isEmpty()) return out;
-		int i = 0;
-		int n = line.length();
-		// heading
-		if(line.charAt(0)=='#')
+		List<Segment> result = new ArrayList<>();
+		if(line.isEmpty())
+			return result;
+
+		int headingEnd = headingPrefixEnd(line);
+		if(headingEnd > 0)
 		{
-			int hashes = 0;
-			while(i < n&&line.charAt(i)=='#')
-			{
-				hashes++;
-				i++;
-			}
-			if(i < n&&line.charAt(i)==' ')
-			{
-				out.add(new Segment(line.substring(0, i+1), heading, true, false));
-				String rest = line.substring(i+1);
-				if(!rest.isEmpty()) out.add(new Segment(rest, heading, false, false));
-				return out;
-			}
-			else i = 0; // fallback
+			result.add(new Segment(line.substring(0, headingEnd), heading, true, false));
+			if(headingEnd < line.length())
+				result.add(new Segment(line.substring(headingEnd), heading));
+			return result;
 		}
-		StringBuilder buf = new StringBuilder();
-		while(i < n)
+
+		int plainStart = 0;
+		int index = 0;
+		while(index < line.length())
 		{
-			char c = line.charAt(i);
-			// inline code
-			if(c=='`')
+			int end;
+			if(line.charAt(index)=='`'&&(end = findClosing(line, index+1, "`")) >= 0)
 			{
-				// flush
-				if(buf.length() > 0)
-				{
-					out.add(new Segment(buf.toString(), normal));
-					buf.setLength(0);
-				}
-				i++;
-				int start = i;
-				while(i < n&&line.charAt(i)!='`') i++;
-				String codeText = line.substring(start, Math.min(i, n));
-				out.add(new Segment(codeText, code, true, false));
-				if(i < n&&line.charAt(i)=='`') i++;
+				flushPlain(line, plainStart, index, result);
+				result.add(new Segment(line.substring(index, end+1), code, true, false));
+				index = end+1;
+				plainStart = index;
 				continue;
 			}
-			// bold or italic
-			if(c=='*')
+
+			if(line.startsWith("**", index)&&(end = findClosing(line, index+2, "**")) >= 0)
 			{
-				int stars = 1;
-				if(i+1 < n&&line.charAt(i+1)=='*') stars = 2;
-				// flush
-				if(buf.length() > 0)
-				{
-					out.add(new Segment(buf.toString(), normal));
-					buf.setLength(0);
-				}
-				i += stars;
-				int start = i;
-				while(i < n)
-				{
-					if(line.charAt(i)=='*')
-					{
-						int ahead = (i+1 < n&&line.charAt(i+1)=='*')?2: 1;
-						if(ahead==stars) {break;}
-					}
-					i++;
-				}
-				String content = line.substring(start, Math.min(i, n));
-				IIColor col = (stars==2)?strong: italic;
-				out.add(new Segment(content, col, stars==2, stars==1));
-				if(i < n) {i += stars;}
+				flushPlain(line, plainStart, index, result);
+				result.add(new Segment(line.substring(index, end+2), strong, true, false));
+				index = end+2;
+				plainStart = index;
 				continue;
 			}
-			// link [text](url)
-			if(c=='[')
+
+			if(line.charAt(index)=='*'&&(end = findClosing(line, index+1, "*")) >= 0)
 			{
-				int start = i+1;
-				int close = line.indexOf(']', start);
-				int openParen = (close >= 0)?line.indexOf('(', close): -1;
-				int closeParen = (openParen >= 0)?line.indexOf(')', openParen): -1;
-				if(close > 0&&openParen > 0&&closeParen > 0)
+				flushPlain(line, plainStart, index, result);
+				result.add(new Segment(line.substring(index, end+1), italic, false, true));
+				index = end+1;
+				plainStart = index;
+				continue;
+			}
+
+			if(line.charAt(index)=='[')
+			{
+				int closeBracket = line.indexOf(']', index+1);
+				int openParen = closeBracket >= 0&&closeBracket+1 < line.length()&&line.charAt(closeBracket+1)=='('?closeBracket+1: -1;
+				int closeParen = openParen >= 0?line.indexOf(')', openParen+1): -1;
+				if(closeParen >= 0)
 				{
-					if(buf.length() > 0)
-					{
-						out.add(new Segment(buf.toString(), normal));
-						buf.setLength(0);
-					}
-					String text = line.substring(start, close);
-					String url = line.substring(openParen+1, closeParen);
-					out.add(new Segment(text, linkText, false, false));
-					out.add(new Segment("("+url+")", linkUrl, false, false));
-					i = closeParen+1;
+					flushPlain(line, plainStart, index, result);
+					result.add(new Segment(line.substring(index, closeBracket+1), linkText));
+					result.add(new Segment(line.substring(openParen, closeParen+1), linkUrl));
+					index = closeParen+1;
+					plainStart = index;
 					continue;
 				}
 			}
-			buf.append(c);
-			i++;
+			index++;
 		}
-		if(buf.length() > 0) out.add(new Segment(buf.toString(), normal));
-		return out;
+		flushPlain(line, plainStart, line.length(), result);
+		return result;
+	}
+
+	private int headingPrefixEnd(String line)
+	{
+		int index = 0;
+		while(index < line.length()&&line.charAt(index)=='#')
+			index++;
+		return index > 0&&index < line.length()&&line.charAt(index)==' '?index+1: -1;
+	}
+
+	private int findClosing(String line, int from, String marker)
+	{
+		return line.indexOf(marker, from);
+	}
+
+	private void flushPlain(String line, int from, int to, List<Segment> result)
+	{
+		if(to > from)
+			result.add(new Segment(line.substring(from, to), normal));
 	}
 }
-

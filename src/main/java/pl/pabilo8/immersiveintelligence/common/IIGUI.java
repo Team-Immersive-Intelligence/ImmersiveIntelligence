@@ -14,6 +14,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Optional.Method;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.client.gui.GuiFactionInvitation;
 import pl.pabilo8.immersiveintelligence.client.gui.block.*;
 import pl.pabilo8.immersiveintelligence.client.gui.block.ammunition_production.GuiAmmunitionAssembler;
 import pl.pabilo8.immersiveintelligence.client.gui.block.arithmetic_logic_machine.GuiArithmeticLogicMachine;
@@ -40,6 +41,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.block.radar.GuiRadarConfig;
 import pl.pabilo8.immersiveintelligence.client.gui.block.radar.GuiRadarTargets;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui.DecoResourcesLoader;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoPlayerGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoResource;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTemplate;
 import pl.pabilo8.immersiveintelligence.client.gui.entity.GuiEntityUpgrade;
@@ -74,6 +76,7 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -173,21 +176,25 @@ public enum IIGUI implements ISerializableEnum
 
 	RADAR(TileEntityRadar.class, ContainerRadar::new),
 	RADAR_CONFIG(TileEntityRadar.class, ContainerRadar::new),
-	RADAR_TARGETS(TileEntityRadar.class, ContainerRadar::new);
+	RADAR_TARGETS(TileEntityRadar.class, ContainerRadar::new),
+	FACTION_INVITATIONS(ContainerPlayerGui::new);
 
 	public final Class<? extends TileEntity> teClass;
 	public final Class<? extends Entity> entityClass;
 	public final BiFunction<EntityPlayer, TileEntity, Container> containerFromTile;
 	public final BiFunction<EntityPlayer, Entity, Container> containerFromEntity;
 	public final TriFunction<EntityPlayer, ItemStack, EnumHand, Container> containerFromStack;
-	public boolean item;
+	public final Function<EntityPlayer, Container> containerFromPlayer;
+	public boolean item, player;
 
 	@SideOnly(Side.CLIENT)
 	public BiFunction<EntityPlayer, TileEntity, GuiScreen> guiFromTile;
 	@SideOnly(Side.CLIENT)
 	public TriFunction<EntityPlayer, ItemStack, EnumHand, GuiScreen> guiFromStack;
 	@SideOnly(Side.CLIENT)
-	private BiFunction<EntityPlayer, Entity, GuiScreen> guiFromEntity;
+	public Function<EntityPlayer, GuiScreen> guiFromPlayer;
+	@SideOnly(Side.CLIENT)
+	public BiFunction<EntityPlayer, Entity, GuiScreen> guiFromEntity;
 	//Required for JEI
 	@SideOnly(Side.CLIENT)
 	public Class<? extends DecoGui<?, ?>> guiClass;
@@ -212,12 +219,15 @@ public enum IIGUI implements ISerializableEnum
 			//noinspection unchecked
 			this.entityClass = (Class<? extends Entity>)teClass;
 			this.containerFromTile = null;
+			//noinspection unchecked
 			this.containerFromEntity = (player, entity) -> containerFunction.apply(player, (T)entity);
 		}
 		else
 			throw new IllegalArgumentException("Invalid GUI subject class: "+teClass);
 		this.containerFromStack = null;
+		this.containerFromPlayer = null;
 		this.item = false;
+		this.player = false;
 	}
 
 	/**
@@ -230,7 +240,9 @@ public enum IIGUI implements ISerializableEnum
 		this.containerFromTile = null;
 		this.containerFromEntity = null;
 		this.containerFromStack = containerFromStack;
+		this.containerFromPlayer = null;
 		this.item = true;
+		this.player = false;
 	}
 
 	/**
@@ -243,7 +255,24 @@ public enum IIGUI implements ISerializableEnum
 		this.containerFromTile = null;
 		this.containerFromEntity = null;
 		this.containerFromStack = null;
+		this.containerFromPlayer = null;
 		this.item = true;
+		this.player = false;
+	}
+
+	/**
+	 * Player-context GUI constructor.
+	 */
+	IIGUI(@Nonnull Function<EntityPlayer, Container> containerFromPlayer)
+	{
+		this.teClass = null;
+		this.entityClass = null;
+		this.containerFromTile = null;
+		this.containerFromEntity = null;
+		this.containerFromStack = null;
+		this.containerFromPlayer = containerFromPlayer;
+		this.item = false;
+		this.player = true;
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -325,6 +354,7 @@ public enum IIGUI implements ISerializableEnum
 		IIGUI.RADAR_TARGETS.setClientTileGui(GuiRadarTargets::new);
 		IIGUI.COAGULATOR.setClientTileGui(GuiCoagulator::new);
 		IIGUI.VULCANIZER.setClientTileGui(GuiVulcanizer::new);
+		IIGUI.FACTION_INVITATIONS.setClientPlayerGui(GuiFactionInvitation::new);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -372,6 +402,41 @@ public enum IIGUI implements ISerializableEnum
 	}
 
 	@SideOnly(Side.CLIENT)
+	@SuppressWarnings("unchecked")
+	public <C extends Container> void setClientPlayerGui(Function<EntityPlayer, DecoPlayerGui<C>> guiFromPlayer)
+	{
+		Class<? extends DecoGui<?, ?>> klass = (Class<? extends DecoGui<?, ?>>)guiFromPlayer.apply(null).getClass();
+		this.guiFromPlayer = guiFromPlayer::apply;
+		this.guiClass = klass;
+
+		DecoTemplate annotation = klass.getAnnotation(DecoTemplate.class);
+		if(annotation==null)
+		{
+			IILogger.error("GUI class "+klass.getName()+" is missing @DecoTemplate annotation!");
+			return;
+		}
+
+		List<ResLoc> resources = new ArrayList<>();
+		for(Field field : klass.getFields())
+			if(field.isAnnotationPresent(DecoResource.class)&&Modifier.isStatic(field.getModifiers()))
+				try
+				{
+					Object value = field.get(null);
+					if(value instanceof ResLoc)
+						resources.add((ResLoc)value);
+					else if(value instanceof ResourceLocation)
+						resources.add(ResLoc.of((ResourceLocation)value));
+					else if(value instanceof String)
+						resources.add(ResLoc.of((String)value));
+				} catch(IllegalAccessException e)
+				{
+					IILogger.error("Failed to access field "+field.getName()+" in class "+klass.getName(), e);
+				}
+		if(!resources.isEmpty())
+			new DecoResourcesLoader(this.getName().replace("gui_", ""), resources);
+	}
+
+	@SideOnly(Side.CLIENT)
 	public void setClientStackGui(TriFunction<EntityPlayer, ItemStack, EnumHand, GuiScreen> guiFromStack)
 	{
 		this.guiFromStack = guiFromStack;
@@ -379,9 +444,11 @@ public enum IIGUI implements ISerializableEnum
 	}
 
 	@SideOnly(Side.CLIENT)
+	@SuppressWarnings("unchecked")
 	public <T extends Entity & IIEInventory, C extends ContainerIIEntityBase<T>> void setClientEntityGui(BiFunction<EntityPlayer, T, DecoGui<T, C>> guiFromEntity)
 	{
 		this.guiFromEntity = (player, entity) -> guiFromEntity.apply(player, (T)entity);
+		this.guiClass = (Class<DecoGui<T, C>>)guiFromEntity.apply(null, null).getClass();
 		this.item = false;
 	}
 }

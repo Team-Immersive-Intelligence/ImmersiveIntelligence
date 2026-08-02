@@ -12,6 +12,9 @@ import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleDetail;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoVanillaGUIStyle;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIItemRendererAMT.HandDisplayMode;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.RadioStation;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Sawmill;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
@@ -78,6 +81,10 @@ public class IIConfigHandler
 	public static class IIConfig
 	{
 		@SubConfig
+		@LangKey("ii.config.Overrides")
+		@Comment("Toggle II's overwrites of Immersive Engineering's recipes, multiblocks and content.")
+		public static Overrides overrides;
+		@SubConfig
 		@LangKey("ii.config.Graphics")
 		@Comment("Customize II 3d model display, AMT, particle effects and camera options.")
 		public static Graphics graphics;
@@ -124,19 +131,6 @@ public class IIConfigHandler
 		@LangKey("Wires")
 		public static int radioAdvancedMaxFrequency = 256;
 
-		@Comment({"Whether basic circuits should be produced in II or IE way"})
-		@RequiresMcRestart
-		public static boolean changeCircuitProduction = true;
-
-		@Comment({"Whether the IE revolver should be a Early Engineering-tier weapon"})
-		public static boolean changeRevolverProduction = true;
-
-		@Comment({"Whether the the railgun should require a gun stock instead of a grip to be constructed"})
-		public static boolean changeRailgunProduction = true;
-
-		@Comment({"Whether the the chemthrower should require a gun stock instead of a grip to be constructed"})
-		public static boolean changeChemthrowerProduction = true;
-
 		@Comment({"Whether Tungsten should be smeltable in the vanilla furnace"})
 		@RequiresMcRestart
 		public static boolean smeltableTungsten = false;
@@ -144,13 +138,6 @@ public class IIConfigHandler
 		@Comment({"Whether Advanced Electronic Alloy should be smeltable in the vanilla furnace"})
 		@RequiresMcRestart
 		public static boolean smeltableAEA = false;
-
-		@Comment({"Whether Immersive Engineering liquid concrete behavior should be replaced by II."})
-		@RequiresMcRestart
-		public static boolean concreteOverride = true;
-
-		@Comment({"If disabled, II will not make any changes to IE villager trades."})
-		public static boolean enableTradeOverride = true;
 
 		@Comment({"A list of all entities for which a fakeplayer should be used when shooter is not a player"})
 		public static String[] bulletFakeplayerWhitelist = new String[]{
@@ -166,6 +153,56 @@ public class IIConfigHandler
 		@Comment({"Whether the II Creative Tab should be divided into sub-tabs (Australian Tabs(tm))."})
 		@RequiresMcRestart
 		public static boolean australianCreativeTabs = true;
+
+		public static class Overrides
+		{
+			@Comment({"Whether basic circuits should be produced in II or IE way"})
+			@RequiresMcRestart
+			public static boolean changeCircuitProduction = true;
+
+			@Comment({"Whether the IE revolver should be a Early Engineering-tier weapon"})
+			@RequiresMcRestart
+			public static boolean changeRevolverProduction = true;
+
+			@Comment({"Whether the the chemthrower should require a gun stock instead of a grip to be constructed"})
+			@RequiresMcRestart
+			public static boolean changeChemthrowerProduction = true;
+
+			@Comment({"Whether Immersive Engineering liquid concrete behavior should be replaced by II."})
+			@RequiresMcRestart
+			public static boolean concreteOverride = true;
+
+			@Comment({"If disabled, II will not make any changes to IE villager trades."})
+			@RequiresMcRestart
+			public static boolean enableTradeOverride = true;
+
+			@Comment({"If enabled, II will replace compatible Immersive Engineering's GUIs with Deco-based ones."})
+			@RequiresMcRestart
+			public static boolean enableDecoOverride = false;
+
+			@SubConfig
+			@LangKey("desc.immersiveintelligence.toolupgrade.item.railgun")
+			@Comment("Config for the Railgun, allows for the toggling of II related features, such as recoil and penetration")
+			public static Railgun railgun;
+
+			public static class Railgun
+			{
+				@Comment({"If disabled, II will not make any changes to IE railgun. This also disables using railgun grenades (as they use a custom entity)."})
+				public static boolean enableRailgunOverride = true;
+
+				@Comment({"Make standard railgun rods to be able to penetrate mobs (depending on metal)."})
+				public static boolean enablePenetration = true;
+
+				@Comment({"Whether the railgun has recoil (pushes the shooter to back, depending on projectile mass)."})
+				public static boolean railgunRecoil = true;
+
+				@Comment({"Whether the railgun can only be used when in mainhand."})
+				public static boolean disableRailgunOffhand = true;
+
+				@Comment({"Whether the the railgun should require a gun stock instead of a grip to be constructed"})
+				public static boolean changeRailgunProduction = true;
+			}
+		}
 
 		public static class Graphics
 		{
@@ -191,39 +228,50 @@ public class IIConfigHandler
 					"0 - disabled",
 					"1 - first person only",
 					"2 - 1st and 3rd person (may be incompatible with mods modifying the player model)"})
-			@RangeInt(min = 0, max = 2)
-			public static int AMTHandDisplayMode = 1;
+			public static HandDisplayMode modelHandDisplay = HandDisplayMode.FIRST_PERSON_ONLY;
 
 			@RequiresMcRestart
 			@Comment({"Max amount of block penetrations that will be rendered. 0 will disable rendering."})
+			@RangeInt(min = 0, max = 65345)
 			public static int maxPenetratedBlocks = 64;
 
 			@Comment({"Furthest distance II explosion effects should be visible at."})
+			@RangeInt(min = 1, max = 65345)
 			public static int explosionMessageDistance = 256;
 
-			@RangeInt(min = 0)
+			@RangeInt(min = 0, max = 65345)
 			@Comment({"Max amount of particles that can exist within the particle system."})
 			public static int maxAllowedParticles = 20000;
 
-			@RangeInt(min = 0)
+			@RangeInt(min = 0, max = 65345)
 			@Comment({"Max amount of particles that will be simulated."})
 			public static int maxSimulatedParticles = 6000;
 
-			@RangeInt(min = 0)
+			@RangeInt(min = 0, max = 65345)
 			@Comment({"Max amount of particles that will be drawn. Should be less or equal to maxSimulatedParticles."})
 			public static int maxDrawnParticles = 1000;
 
-			@Comment({"Determines how look of II explosion particles",
-					"0 - vanilla",
-					"1 - vanilla enhanced with block particles",
-					"2 - overhauled",
-					"3 - overhauled + debris"
-			})
-			@RangeInt(min = 0, max = 3)
-			public static int explosionParticlesStyle = 3;
+			@Comment({"Determines the look of II explosion particles",
+					"The final value will be this or the Particles option from Video Settings, whichever is lower."})
+			public static ParticleDetail explosionParticlesDetail = ParticleDetail.DETAILED;
+
+			@Comment({"Determines the look of II explosion particles",
+					"The final value will be this or the Particles option from Video Settings, whichever is lower."})
+			public static ParticleDetail explosionDebrisDetail = ParticleDetail.DETAILED;
+
+			@Comment({"Determines the look of II nuclear explosion particles",
+					"The final value will be this or the Particles option from Video Settings, whichever is lower."})
+			public static ParticleDetail nukeParticlesDetail = ParticleDetail.DETAILED;
 
 			@RangeInt(min = 8, max = 256)
+			@SlidingOption
 			public static int dynamiclyColoredTextureVariants = 64;
+
+			@Comment({"Enables longer tooltip descriptions for link tabs in Deco based GUIs"})
+			public static boolean decoLongTabTooltips = true;
+
+			@Comment({"Determines what style should vanilla-styled GUIs, like faction invitation look like"})
+			public static DecoVanillaGUIStyle decoVanillaGUIStyle = DecoVanillaGUIStyle.VANILLA;
 		}
 
 		public static class Ores
@@ -666,6 +714,13 @@ public class IIConfigHandler
 			@Comment("Config for the Vehicle Workshop, allows for changes to energy and fuel capacity")
 			public static VehicleWorkshop vehicleWorkshop;
 
+			@Comment({"The interval (in ticks) at which the multiblock machines will synchronize recipes with the client.",
+					"Setting to 0 will disable this feature.",
+					"Regardless of this setting, machines always synchronize them upon recipe change and when opening their GUI."
+			})
+			@RangeInt(min = 0)
+			public static int recipeUpdateInterval = 200;
+
 			public static class RedstoneInterface
 			{
 
@@ -674,13 +729,13 @@ public class IIConfigHandler
 			public static class AlarmSiren
 			{
 				@Comment({"The distance the siren can be heard from."})
-				public static int soundRange = 16;
+				public static int soundRange = 36;
 			}
 
 			public static class ProgrammableSpeaker
 			{
 				@Comment({"The distance the speaker can be heard from."})
-				public static int soundRange = 24;
+				public static int soundRange = 36;
 			}
 
 			public static class Filler
@@ -867,7 +922,7 @@ public class IIConfigHandler
 				public static int energyCapacity = 16000;
 
 				@Comment({"Energy usage when sending a signal."})
-				public static int energyUsage = 2048;
+				public static int energyUsage = 1024;
 
 				@Comment({"Energy per step of punching a tape (1/60 of the full energy needed)."})
 				public static int energyUsagePunchtape = 128;
@@ -1288,10 +1343,6 @@ public class IIConfigHandler
 			@Comment("Config for Emplacement weapons, allows for the adjustment of fire rate, detection radius, movement speed and health")
 			public static EmplacementWeapons emplacementWeapons;
 			@SubConfig
-			@LangKey("desc.immersiveintelligence.toolupgrade.item.railgun")
-			@Comment("Config for the Railgun, allows for the toggling of II related features, such as recoil and penetration")
-			public static Railgun railgun;
-			@SubConfig
 			@LangKey("ii.config.Grenade")
 			@Comment("Config for Grenades, such as throwing speed")
 			public static Grenade grenade;
@@ -1574,21 +1625,6 @@ public class IIConfigHandler
 					@Comment({"Base energy usage per tick (in IF)."})
 					public static int energyUpkeepCost = 2048;
 				}
-			}
-
-			public static class Railgun
-			{
-				@Comment({"If disabled, II will not make any changes to IE railgun. This also disables using railgun grenades (as they use a custom entity)."})
-				public static boolean enableRailgunOverride = true;
-
-				@Comment({"Make standard railgun rods to be able to penetrate mobs (depending on metal)."})
-				public static boolean enablePenetration = true;
-
-				@Comment({"Whether the railgun has recoil (pushes the shooter to back, depending on projectile mass)."})
-				public static boolean railgunRecoil = true;
-
-				@Comment({"Whether the railgun can only be used when in mainhand."})
-				public static boolean disableRailgunOffhand = true;
 			}
 
 			public static class Grenade
@@ -2054,6 +2090,12 @@ public class IIConfigHandler
 			@RequiresMcRestart
 			@Comment({"Determines how often properties try to claim surrounding chunks. (in ticks)"})
 			public static int claimTickDelay = 200;
+
+			@Comment({"The position of the faction invites button in player's inventory screen (x,y)", "Set to -1,-1 to disable the button."})
+			public static int[] inventoryButtonPosition = new int[]{61, 64};
+
+			@Comment({"The position of the faction invites button in player's creative inventory screen (x,y)", "Set to -1,-1 to disable the button."})
+			public static int[] inventoryButtonPositionCreative = new int[]{92, 34};
 		}
 
 		public static class MechanicalDevices

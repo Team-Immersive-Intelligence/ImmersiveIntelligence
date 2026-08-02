@@ -75,6 +75,7 @@ import pl.pabilo8.immersiveintelligence.common.item.tools.*;
 import pl.pabilo8.immersiveintelligence.common.item.tools.backpack.ItemIIAdvancedPowerPack;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.*;
 import pl.pabilo8.immersiveintelligence.common.util.IBatchOredictRegister;
+import pl.pabilo8.immersiveintelligence.common.util.advancements.UpgradeTrigger;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIFluid;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIISlab;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIStairs;
@@ -100,6 +101,7 @@ public class IIContent
 	public static final List<IMultiblock> MULTIBLOCKS = new ArrayList<>();
 
 	public static final IICreativeTab II_CREATIVE_TAB = new IICreativeTab(MODID);
+	public static final UpgradeTrigger UPGRADE_TRIGGER = UpgradeTrigger.INSTANCE;
 
 	//--- Upgrades ---//
 	//allows filling items with fluids
@@ -311,6 +313,8 @@ public class IIContent
 	public static final ItemIIPrintedPage itemPrintedPage = new ItemIIPrintedPage();
 	public static final ItemIILogisticTag itemLogisticTag = new ItemIILogisticTag();
 	public static final ItemIITracerPowder itemTracerPowder = new ItemIITracerPowder();
+	//Icon Placeholder Item
+	public static final ItemIIPlaceholderIcon itemPlaceholderIcon = new ItemIIPlaceholderIcon();
 	//rubber
 	public static final BlockIIRubberLog blockRubberLog = new BlockIIRubberLog();
 
@@ -333,6 +337,9 @@ public class IIContent
 	public static final BlockIISandbags blockSandbags = new BlockIISandbags();
 	public static final BlockIIClothDecoration blockClothDecoration = new BlockIIClothDecoration();
 	public static final BlockIIMetalDecoration blockMetalDecoration = new BlockIIMetalDecoration();
+	//harbor decorations
+	public static final BlockIIHarbor blockHarbor = new BlockIIHarbor();
+	public static final BlockIIHarborSupport blockHarborSupport = new BlockIIHarborSupport();
 	//b e t o n
 	public static final BlockIIConcreteDecoration blockConcreteDecoration = new BlockIIConcreteDecoration();
 	public static final BlockIISlab<ConcreteDecorations> blockConcreteSlabs = new BlockIISlab<>(blockConcreteDecoration);

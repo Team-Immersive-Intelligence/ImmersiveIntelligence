@@ -24,6 +24,7 @@ import pl.pabilo8.immersiveintelligence.api.crafting.BulletComponentStack;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTileGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoDropdown;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoElementDisplays.DecoElementSorter;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoEntryPanelBuilder;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPanel;
@@ -33,7 +34,6 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoSc
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage.ImageAnimationDirection;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
 import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTBullet;
 import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTBullet.BulletState;
 import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTLocator;
@@ -47,6 +47,7 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
 
+import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -281,7 +282,6 @@ public class GuiProjectileWorkshop extends DecoTileGui<TileEntityProjectileWorks
 						.withDropdownWidth(144)
 						.withScrollBarBackground(DecoTextures.COMPONENT_SLIDER_PAPER)
 						.withBackground(DecoTextures.COMPONENT_BUTTON_PAPER)
-						.withListBackground(DecoTextures.COMPONENT_TEXT_FIELD)
 						.withEntries(CoreType.values())
 						.withSelectedEntry(coreType)
 						.withOnSelectedEntry((oldType, newType) -> this.coreType = newType)
@@ -289,10 +289,10 @@ public class GuiProjectileWorkshop extends DecoTileGui<TileEntityProjectileWorks
 								.withBackground(DecoTextures.BG_PAPER)
 								.withBackgroundMask(DecoTextures.TEMPLATE_PAPER)
 								//Type Icon, Label, and Letter
-								.withComponent("icon", new DecoItemStackDisplay(2, 2)
+								.withComponent("icon", p -> new DecoItemStackDisplay(2, 2)
 										.withSize(16, 18)
 								)
-								.withLabel("label",
+								.withLabel("label", p ->
 										new DecoLabel(fontRenderer, 20, 2)
 												.withSize(48, 18)
 												.withAlign(DecoAlignment.LEFT)
@@ -308,18 +308,34 @@ public class GuiProjectileWorkshop extends DecoTileGui<TileEntityProjectileWorks
 						.withDropdownWidth(144)
 						.withScrollBarBackground(DecoTextures.COMPONENT_SLIDER_PAPER)
 						.withBackground(DecoTextures.COMPONENT_BUTTON_PAPER)
-						.withListBackground(DecoTextures.COMPONENT_TEXT_FIELD)
 						.withEntries(AmmoRegistry.getAllAmmoItems())
+						.withSortFunction(new DecoElementSorter<IAmmoTypeItem<?, ?>>()
+						{
+							@Override
+							public List<IAmmoTypeItem<?, ?>> sort(List<IAmmoTypeItem<?, ?>> elements)
+							{
+								return elements;
+							}
+
+							@Nullable
+							@Override
+							public List<IAmmoTypeItem<?, ?>> autocomplete(List<IAmmoTypeItem<?, ?>> elements, String input)
+							{
+								return elements.stream()
+										.filter(e -> e.getName().toLowerCase().startsWith(input.toLowerCase()))
+										.collect(Collectors.toList());
+							}
+						})
 						.withSelectedEntry(ammoType)
 						.withOnSelectedEntry((oldType, newType) -> this.ammoType = newType)
 						.withDisplayFunction(new DecoEntryPanelBuilder<IAmmoTypeItem<?, ?>>()
 								.withBackground(DecoTextures.BG_PAPER)
 								.withBackgroundMask(DecoTextures.TEMPLATE_PAPER)
 								//Type Icon, Label, and Letter
-								.withComponent("icon", new DecoItemStackDisplay(2, 2)
+								.withComponent("icon", p -> new DecoItemStackDisplay(2, 2)
 										.withSize(16, 18)
 								)
-								.withLabel("label",
+								.withLabel("label", p ->
 										new DecoLabel(fontRenderer, 20, 2)
 												.withSize(48, 18)
 												.withAlign(DecoAlignment.LEFT)
@@ -426,15 +442,14 @@ public class GuiProjectileWorkshop extends DecoTileGui<TileEntityProjectileWorks
 						.withSelectedEntry(ammoCore)
 						.withScrollBarBackground(DecoTextures.COMPONENT_SLIDER_PAPER)
 						.withBackground(DecoTextures.COMPONENT_BUTTON_PAPER)
-						.withListBackground(DecoTextures.COMPONENT_TEXT_FIELD)
 						.withDisplayFunction(new DecoEntryPanelBuilder<AmmoCore>()
 								.withBackground(DecoTextures.BG_PAPER)
 								.withBackgroundMask(DecoTextures.TEMPLATE_PAPER)
 								//Type Icon, Label, and Letter
-								.withComponent("icon", new DecoItemStackDisplay(2, 1)
+								.withComponent("icon", p -> new DecoItemStackDisplay(2, 1)
 										.withSize(16, 16)
 								)
-								.withLabel("label",
+								.withLabel("label", p ->
 										new DecoLabel(fontRenderer, 20, 2)
 												.withSize(48, 16)
 												.withAlign(DecoAlignment.LEFT)
@@ -443,6 +458,23 @@ public class GuiProjectileWorkshop extends DecoTileGui<TileEntityProjectileWorks
 								)
 								.withElementApplyMethod(this::drawAmmoCoreEntry)
 						)
+						.withSortFunction(new DecoElementSorter<AmmoCore>()
+						{
+							@Override
+							public List<AmmoCore> sort(List<AmmoCore> elements)
+							{
+								return elements;
+							}
+
+							@Nullable
+							@Override
+							public List<AmmoCore> autocomplete(List<AmmoCore> elements, String input)
+							{
+								return elements.stream()
+										.filter(e -> e.getName().toLowerCase().startsWith(input.toLowerCase()))
+										.collect(Collectors.toList());
+							}
+						})
 						.withOnSelectedEntry((ammoCoreOld, ammoCoreNew) -> {
 							this.ammoCore = ammoCoreNew;
 							updateCoreInfo();

@@ -1,45 +1,36 @@
 package pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity;
 
-import blusunrize.immersiveengineering.api.TargetingInfo;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
-import blusunrize.immersiveengineering.api.energy.wires.TileEntityImmersiveConnectable;
 import blusunrize.immersiveengineering.api.energy.wires.WireType;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IBlockBounds;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IDirectionalTile;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3i;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.common.util.tile.TileEntityIIDirectional.FacingLimitation;
+import pl.pabilo8.immersiveintelligence.common.util.tile.TileEntityIIDirectional.FacingSettings;
+import pl.pabilo8.immersiveintelligence.common.util.tile.TileEntityIIDirectionalConnectable;
 import pl.pabilo8.immersiveintelligence.common.wire.IIDataWireType;
 
+import javax.annotation.Nonnull;
 import java.util.Set;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 20.07.2026
+ * @ii-approved 0.3.1
  * @since 31.05.2019
  */
-public class TileEntityDataRelay extends TileEntityImmersiveConnectable
-		implements ITickable, IDirectionalTile, IBlockBounds
+public class TileEntityDataRelay extends TileEntityIIDirectionalConnectable implements ITickable, IBlockBounds
 {
-	public EnumFacing facing = EnumFacing.DOWN;
+	private static final FacingSettings FACING_SETTINGS = new FacingSettings(FacingLimitation.SIDE_CLICKED)
+			.withMirroringOnPlacement(true);
 	boolean firstTick = true;
-	@SideOnly(Side.CLIENT)
-	private AxisAlignedBB renderAABB;
 
 	@Override
 	public void update()
 	{
-		if(!world.isRemote)
-		{
-
-		}
-		else if(firstTick)
+		if(!world.isRemote&&firstTick)
 		{
 			Set<Connection> conns = ImmersiveNetHandler.INSTANCE.getConnections(world, pos);
 			if(conns!=null)
@@ -50,69 +41,11 @@ public class TileEntityDataRelay extends TileEntityImmersiveConnectable
 		}
 	}
 
+	@Nonnull
 	@Override
-	public EnumFacing getFacing()
+	protected FacingSettings getFacingSettings()
 	{
-		return this.facing;
-	}
-
-	@Override
-	public void setFacing(EnumFacing facing)
-	{
-		this.facing = facing;
-	}
-
-	@Override
-	public int getFacingLimitation()
-	{
-		return 0;
-	}
-
-	@Override
-	public boolean mirrorFacingOnPlacement(EntityLivingBase placer)
-	{
-		return true;
-	}
-
-	@Override
-	public boolean canHammerRotate(EnumFacing side, float hitX, float hitY, float hitZ, EntityLivingBase entity)
-	{
-		return false;
-	}
-
-	@Override
-	public boolean canConnectCable(WireType cableType, TargetingInfo target, Vec3i offset)
-	{
-		if(cableType!=IIDataWireType.DATA)
-			return false;
-		return limitType==null||limitType==cableType;
-	}
-
-	@Override
-	public boolean canRotate(EnumFacing axis)
-	{
-		return false;
-	}
-
-	@Override
-	protected float getBaseDamage(Connection c)
-	{
-		return 8*30F/c.cableType.getTransferRate();
-	}
-
-	@Override
-	public void writeCustomNBT(NBTTagCompound nbt, boolean descPacket)
-	{
-		super.writeCustomNBT(nbt, descPacket);
-		nbt.setInteger("facing", facing.ordinal());
-	}
-
-	@Override
-	public void readCustomNBT(NBTTagCompound nbt, boolean descPacket)
-	{
-		super.readCustomNBT(nbt, descPacket);
-		if(nbt.hasKey("facing"))
-			facing = EnumFacing.getFront(nbt.getInteger("facing"));
+		return FACING_SETTINGS;
 	}
 
 	@Override
@@ -121,20 +54,6 @@ public class TileEntityDataRelay extends TileEntityImmersiveConnectable
 		EnumFacing side = facing.getOpposite();
 		double conRadius = con.cableType.getRenderDiameter()/2;
 		return new Vec3d(.5+side.getFrontOffsetX()*(.5-conRadius), 0.5+side.getFrontOffsetY()*(.5-conRadius), .5+side.getFrontOffsetZ()*(.5-conRadius));
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public AxisAlignedBB getRenderBoundingBox()
-	{
-		int inc = getRenderRadiusIncrease();
-		return new AxisAlignedBB(this.pos.getX()-inc, this.pos.getY()-inc, this.pos.getZ()-inc,
-				this.pos.getX()+inc+1, this.pos.getY()+inc+1, this.pos.getZ()+inc+1);
-	}
-
-	int getRenderRadiusIncrease()
-	{
-		return IIDataWireType.DATA.getMaxLength();
 	}
 
 	@Override
@@ -159,5 +78,17 @@ public class TileEntityDataRelay extends TileEntityImmersiveConnectable
 				return new float[]{1-length, wMin, wMin, 1, wMax, wMax};
 		}
 		return new float[]{0, 0, 0, 1, 1, 1};
+	}
+
+	@Override
+	public boolean acceptsWireType(WireType category)
+	{
+		return IIDataWireType.DATA_CATEGORY.equals(category.getCategory());
+	}
+
+	@Override
+	public boolean isRelay()
+	{
+		return true;
 	}
 }

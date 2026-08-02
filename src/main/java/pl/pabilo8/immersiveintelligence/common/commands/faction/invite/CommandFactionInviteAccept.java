@@ -4,11 +4,17 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.server.command.CommandTreeBase;
 import pl.pabilo8.immersiveintelligence.common.util.CommandIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyHandler;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.OwnerIdentity;
+
+import javax.annotation.Nullable;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class CommandFactionInviteAccept extends CommandIIBase
 {
@@ -27,6 +33,18 @@ public class CommandFactionInviteAccept extends CommandIIBase
 	public String getDescription(ICommandSender sender)
 	{
 		return "Accept a pending invitation from a faction";
+	}
+
+	@Override
+	public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos)
+	{
+		if(args.length==1)
+			return DiplomacyHandler.getInstance(false)
+					.getPendingInvitationIdentitiesForPlayer(((EntityPlayer)sender).getUniqueID())
+					.stream()
+					.map(OwnerIdentity::getDisplayName)
+					.collect(Collectors.toList());
+		return Collections.emptyList();
 	}
 
 	@Override

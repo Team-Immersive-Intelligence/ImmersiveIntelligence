@@ -32,7 +32,7 @@ public abstract class DecoItemGui<C extends ContainerIIItemBase> extends DecoGui
 	@Override
 	protected void onNoBackgroundBuilder()
 	{
-		// Item GUIs often use a hand-drawn texture and set xSize/ySize in onInit().
+		//Item GUIs often use a hand-drawn texture and set xSize/ySize in onInit().
 	}
 
 	@Override

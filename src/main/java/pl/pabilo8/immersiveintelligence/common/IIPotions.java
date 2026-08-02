@@ -16,15 +16,18 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.CorrosionHandler;
-import pl.pabilo8.immersiveintelligence.api.utils.armor.IRadiationProtectionEquipment;
+import pl.pabilo8.immersiveintelligence.api.api.protection.CorrosionHandler;
+import pl.pabilo8.immersiveintelligence.api.api.protection.ProtectionHandler;
 import pl.pabilo8.immersiveintelligence.common.util.IIDamageSources;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Registers and stores II potion information.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @ii-approved 0.3.1
  * @since 03.03.2020
  */
 public class IIPotions
@@ -150,18 +153,10 @@ public class IIPotions
 			{
 				if(living.ticksExisted%20!=0)
 					return;
-				boolean apply = false;
-				for(ItemStack s : living.getArmorInventoryList())
-				{
-					if(!(s.getItem() instanceof IRadiationProtectionEquipment))
-						apply = true;
-					else if(!((IRadiationProtectionEquipment)s.getItem()).protectsFromRadiation(s))
-						apply = true;
-				}
-				if(apply)
+				if(!ProtectionHandler.isProtectedFromRadiation(living))
 				{
 					living.hurtResistantTime = 0;
-					living.attackEntityFrom(IIDamageSources.RADIATION_DAMAGE, 2);
+					living.attackEntityFrom(IIDamageSources.RADIATION_DAMAGE, 2f*(amplifier+1));
 				}
 			}
 

@@ -35,7 +35,7 @@ public class DefaultTreeNodeRenderer implements IDecoTreeNodeRenderer<Object>
 	@Override
 	public void renderNode(@Nonnull IDecoTreeNode<Object> node, int x, int y, boolean isHovered, boolean isActive, boolean isAvailable)
 	{
-		// Determine color based on state
+		//Determine color based on state
 		IIColor color;
 		if(isActive)
 			color = activeColor;
@@ -46,13 +46,13 @@ public class DefaultTreeNodeRenderer implements IDecoTreeNodeRenderer<Object>
 		else
 			color = unavailableColor;
 
-		// Draw node background
+		//Draw node background
 		ClientUtils.bindAtlas();
 		IIDrawUtils draw = IIDrawUtils.startTexturedColored();
 		draw.drawConnectedTexColorRect(x, y, NODE_WIDTH, NODE_HEIGHT, color, DecoTextures.SLOT_IE, 32, 32, 4, 4);
 		draw.finish();
 
-		// Draw node text (centered)
+		//Draw node text (centered)
 		String text = getDisplayName(node);
 		if(!text.isEmpty())
 		{
@@ -87,7 +87,7 @@ public class DefaultTreeNodeRenderer implements IDecoTreeNodeRenderer<Object>
 		GlStateManager.translate(x, y, 0);
 
 		IIDrawUtils draw = IIDrawUtils.startColored();
-		// Draw a circle for the virtual root
+		//Draw a circle for the virtual root
 		draw.drawColorRect(-3, -3, 6, 6, IIColor.fromHex("888888"));
 		draw.finish();
 
@@ -98,7 +98,7 @@ public class DefaultTreeNodeRenderer implements IDecoTreeNodeRenderer<Object>
 	 * Renders a connection between parent and child nodes.
 	 */
 	public void renderConnection(TreeLayout.NodeLayoutInfo parentInfo, TreeLayout.NodeLayoutInfo childInfo,
-								 TreeLayout.Orientation orientation, boolean isActive)
+	                             TreeLayout.Orientation orientation, boolean isActive)
 	{
 		IIColor color = isActive?connectionActiveColor: connectionColor;
 
@@ -130,94 +130,94 @@ public class DefaultTreeNodeRenderer implements IDecoTreeNodeRenderer<Object>
 
 	private void renderHorizontalConnection(IIDrawUtils draw, int fromX, int fromY, int toX, int toY, IIColor color, boolean reverse)
 	{
-		// Calculate mid point
+		//Calculate mid point
 		int midX = (fromX+toX)/2;
 
 		if(!reverse)
 		{
-			// Left to right connection
-			// Horizontal segment from parent to mid
+			//Left to right connection
+			//Horizontal segment from parent to mid
 			draw.drawColorRect(fromX, fromY-CONNECTION_WIDTH/2,
 					midX-fromX, CONNECTION_WIDTH, color);
 
-			// Vertical segment at mid
+			//Vertical segment at mid
 			int verticalStartY = Math.min(fromY, toY);
 			int verticalEndY = Math.max(fromY, toY);
 			draw.drawColorRect(midX-CONNECTION_WIDTH/2, verticalStartY,
 					CONNECTION_WIDTH, verticalEndY-verticalStartY, color);
 
-			// Horizontal segment from mid to child
+			//Horizontal segment from mid to child
 			draw.drawColorRect(midX, toY-CONNECTION_WIDTH/2,
 					toX-midX, CONNECTION_WIDTH, color);
 
-			// Draw arrow at target
+			//Draw arrow at target
 			drawArrowRight(draw, toX, toY, color);
 		}
 		else
 		{
-			// Right to left connection
-			// Horizontal segment from parent to mid
+			//Right to left connection
+			//Horizontal segment from parent to mid
 			draw.drawColorRect(fromX, fromY-CONNECTION_WIDTH/2,
 					midX-fromX, CONNECTION_WIDTH, color);
 
-			// Vertical segment at mid
+			//Vertical segment at mid
 			int verticalStartY = Math.min(fromY, toY);
 			int verticalEndY = Math.max(fromY, toY);
 			draw.drawColorRect(midX-CONNECTION_WIDTH/2, verticalStartY,
 					CONNECTION_WIDTH, verticalEndY-verticalStartY, color);
 
-			// Horizontal segment from mid to child
+			//Horizontal segment from mid to child
 			draw.drawColorRect(midX, toY-CONNECTION_WIDTH/2,
 					toX-midX, CONNECTION_WIDTH, color);
 
-			// Draw arrow at target
+			//Draw arrow at target
 			drawArrowLeft(draw, toX, toY, color);
 		}
 	}
 
 	private void renderVerticalConnection(IIDrawUtils draw, int fromX, int fromY, int toX, int toY, IIColor color, boolean reverse)
 	{
-		// Calculate mid point
+		//Calculate mid point
 		int midY = (fromY+toY)/2;
 
 		if(!reverse)
 		{
-			// Top to bottom connection
-			// Vertical segment from parent to mid
+			//Top to bottom connection
+			//Vertical segment from parent to mid
 			draw.drawColorRect(fromX-CONNECTION_WIDTH/2, fromY,
 					CONNECTION_WIDTH, midY-fromY, color);
 
-			// Horizontal segment at mid
+			//Horizontal segment at mid
 			int horizontalStartX = Math.min(fromX, toX);
 			int horizontalEndX = Math.max(fromX, toX);
 			draw.drawColorRect(horizontalStartX, midY-CONNECTION_WIDTH/2,
 					horizontalEndX-horizontalStartX, CONNECTION_WIDTH, color);
 
-			// Vertical segment from mid to child
+			//Vertical segment from mid to child
 			draw.drawColorRect(toX-CONNECTION_WIDTH/2, midY,
 					CONNECTION_WIDTH, toY-midY, color);
 
-			// Draw arrow at target
+			//Draw arrow at target
 			drawArrowDown(draw, toX, toY, color);
 		}
 		else
 		{
-			// Bottom to top connection
-			// Vertical segment from parent to mid
+			//Bottom to top connection
+			//Vertical segment from parent to mid
 			draw.drawColorRect(fromX-CONNECTION_WIDTH/2, fromY,
 					CONNECTION_WIDTH, midY-fromY, color);
 
-			// Horizontal segment at mid
+			//Horizontal segment at mid
 			int horizontalStartX = Math.min(fromX, toX);
 			int horizontalEndX = Math.max(fromX, toX);
 			draw.drawColorRect(horizontalStartX, midY-CONNECTION_WIDTH/2,
 					horizontalEndX-horizontalStartX, CONNECTION_WIDTH, color);
 
-			// Vertical segment from mid to child
+			//Vertical segment from mid to child
 			draw.drawColorRect(toX-CONNECTION_WIDTH/2, midY,
 					CONNECTION_WIDTH, toY-midY, color);
 
-			// Draw arrow at target
+			//Draw arrow at target
 			drawArrowUp(draw, toX, toY, color);
 		}
 	}

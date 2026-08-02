@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.client.gui.block.arithmetic_logic_machine;
 
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -20,6 +21,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoDro
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoSwitch;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoDropdown;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoElementDisplays.DecoElementDisplay;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoElementDisplays.DecoElementSorter;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.data_editor.DecoCodeEditor;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.data_editor.DecoDataEditor;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.data_editor.DecoDataEditorExpression;
@@ -27,7 +29,6 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabe
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoEntryPanelBuilder;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
@@ -40,6 +41,7 @@ import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
@@ -150,7 +152,6 @@ public class GuiArithmeticLogicMachineEdit extends DecoTileGui<TileEntityArithme
 				new DecoDropdown<DataOperationMeta>(16+4+10+32-12+6+1-24+8, 4+8+2+1)
 						.withScrollBarBackground(DecoTextures.COMPONENT_SLIDER_PAPER)
 						.withBackground(DecoTextures.COMPONENT_BUTTON_PAPER)
-						.withListBackground(DecoTextures.COMPONENT_TEXT_FIELD)
 						.withDropdownSymbol(DecoTextures.COMPONENT_DROPDOWN_SYMBOL_PAPER)
 						.withSize(116+24-8, 18)
 						.withDropdownWidth(116+24-8)
@@ -158,6 +159,7 @@ public class GuiArithmeticLogicMachineEdit extends DecoTileGui<TileEntityArithme
 						.withEntries(circuitOperations)
 						.withSelectedEntry(edited.getOperation().getMeta())
 						.withDisplayFunction(getOperationDropdownDisplayFunction())
+						.withSortFunction(getOperationDropdownSortFunction())
 						.withOnSelectedEntry((oldMeta, newMeta) -> {
 							cancel = true;
 							storeEditorOutput();
@@ -345,9 +347,9 @@ public class GuiArithmeticLogicMachineEdit extends DecoTileGui<TileEntityArithme
 				.withBackground(DecoTextures.BG_PAPER)
 				.withBackgroundMask(DecoTextures.TEMPLATE_PAPER)
 				//Type Icon, Label, and Letter
-				.withComponent("image", new DecoImage(3, 1)
+				.withComponent("image", p -> new DecoImage(3, 1)
 						.withSize(16, 16))
-				.withLabel("typeLabel",
+				.withLabel("typeLabel", p ->
 						new DecoLabel(fontRenderer, 2+16+2, 1)
 								.withSize(48, 18)
 								.withAlign(DecoAlignment.LEFT)
@@ -365,6 +367,28 @@ public class GuiArithmeticLogicMachineEdit extends DecoTileGui<TileEntityArithme
 							.withImageLocation(metaInfo.getTextureLocation(), true);
 				})
 				.withElementTooltip(operation -> "datasystem.immersiveintelligence.function."+operation.name()+".desc");
+	}
+
+	private DecoElementSorter<DataOperationMeta> getOperationDropdownSortFunction()
+	{
+		return new DecoElementSorter<DataOperationMeta>()
+		{
+			@Override
+			public List<DataOperationMeta> sort(List<DataOperationMeta> elements)
+			{
+				return elements;
+			}
+
+			@Nonnull
+			@Override
+			public List<DataOperationMeta> autocomplete(List<DataOperationMeta> elements, String input)
+			{
+				return elements.stream()
+						.filter(e -> I18n.format("datasystem.immersiveintelligence.function."+e.name())
+								.toLowerCase().contains(input.toLowerCase()))
+						.collect(Collectors.toList());
+			}
+		};
 	}
 
 	@Override

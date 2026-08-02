@@ -3,8 +3,10 @@ package pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.inventory.Container;
 import net.minecraft.util.Tuple;
 import net.minecraft.util.math.MathHelper;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoTextBasedComponent;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoElementDisplays.DecoElementDisplay;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoElementDisplays.DecoElementSorter;
@@ -28,6 +30,7 @@ import java.util.function.Supplier;
 public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? super E, T>, T> extends DecoTextBasedComponent<E>
 {
 	protected static final int ON_CREATE_OPTION = -10;
+	protected IIColor listBackgroundColor = IIColor.WHITE;
 	protected ResLoc listBackgroundLocation = DecoTextures.BG_DARK;
 	protected ResLoc scrollBarLocation = DecoTextures.COMPONENT_SLIDER;
 
@@ -48,11 +51,28 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 		withOnScroll((gui, scroll, mouseX, mouseY) -> {
 			if(hovered&&maxScroll > 0)
 			{
-				this.scroll = MathHelper.clamp(this.scroll-(scroll/scrollStep), 0, maxScroll);
+				this.scroll = MathHelper.clamp(this.scroll-(scroll*scrollStep), 0, maxScroll);
 				return true;
 			}
 			return false;
 		});
+	}
+
+	@Override
+	public <GUI, C extends Container> void setParentGUI(DecoGui<GUI, C> parent)
+	{
+		super.setParentGUI(parent);
+		//Displays may have created entry panels during an earlier height probe, before
+		//the collection was attached to its GUI. Rebinding discards those contextless
+		//instances so interactive children receive the proper focus owner.
+		display.bindCollection(this);
+	}
+
+	@Override
+	public List<String> getTooltip()
+	{
+		List<String> tooltip = super.getTooltip();
+		return tooltip.isEmpty()?display.getTooltip(): tooltip;
 	}
 
 	/**
@@ -64,6 +84,19 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 	public E withListBackground(ResLoc listBackgroundLocation)
 	{
 		this.listBackgroundLocation = listBackgroundLocation;
+		//noinspection unchecked
+		return (E)this;
+	}
+
+	/**
+	 * Sets the background color of the list
+	 *
+	 * @param listBackgroundColor The background color
+	 * @return this
+	 */
+	public E withListBackgroundColor(IIColor listBackgroundColor)
+	{
+		this.listBackgroundColor = listBackgroundColor;
 		//noinspection unchecked
 		return (E)this;
 	}
@@ -89,8 +122,11 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 	 */
 	public E withDisplayFunction(DecoElementDisplay<T> display)
 	{
+		this.display.cleanupDisplay();
 		this.display = display;
 		display.bindCollection(this);
+		display.onEntriesChanged(entries);
+		calculateSlideLength();
 		//noinspection unchecked
 		return (E)this;
 	}
@@ -104,6 +140,9 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 	public E withSortFunction(DecoElementSorter<T> sorter)
 	{
 		this.sorter = sorter;
+		this.entries = sorter.sort(this.entries);
+		display.onEntriesChanged(entries);
+		calculateSlideLength();
 		//noinspection unchecked
 		return (E)this;
 	}
@@ -121,6 +160,7 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 		else
 			this.entries = new ArrayList<>(entries);
 		this.entries = sorter.sort(this.entries);
+		display.onEntriesChanged(this.entries);
 		calculateSlideLength();
 		//noinspection unchecked
 		return (E)this;
@@ -265,7 +305,8 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 	protected final void drawList(int x, int y, int listWidth, int mouseX, int mouseY, float partialTicks)
 	{
 		//Apply queued changes to the list
-		if(!toBeAdded.isEmpty()||!toBeRemoved.isEmpty())
+		boolean entriesChanged = !toBeAdded.isEmpty()||!toBeRemoved.isEmpty();
+		if(entriesChanged)
 		{
 			while(!toBeAdded.isEmpty())
 			{
@@ -277,8 +318,12 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 				entries.remove(toBeRemoved.poll());
 				entries = sorter.sort(entries);
 			}
-			calculateSlideLength();
+			display.onEntriesChanged(entries);
 		}
+
+		//Allow stateful displays to invalidate their cached layout on a controlled cadence.
+		if(entriesChanged||display.onDisplayTick())
+			calculateSlideLength();
 
 		//Draw list
 		bindAtlas();
@@ -286,7 +331,7 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 
 		//Background
 		int listHeight = getListHeight();
-		draw.drawConnectedTexColorRect(x, y, listWidth, listHeight, IIColor.WHITE, listBackgroundLocation, 64, 64, 8, 8);
+		draw.drawConnectedTexColorRect(x, y, listWidth, listHeight, listBackgroundColor, listBackgroundLocation, 64, 64, 8, 8);
 		//Scrollbar
 		if(shouldAlwaysHaveScrollbar()||maxScroll > 0)
 		{
@@ -321,14 +366,19 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 
 		//Filter entries based on search input
 		List<T> filteredEntries = autocomplete();
+		List<DisplayedElement<T>> displayedElements = new ArrayList<>(filteredEntries.size());
 		int alreadyDrawnHeight = 0;
 		int currentColumn = 0;
 		for(T filteredEntry : filteredEntries)
 		{
+			int elementX = x+(currentColumn*entryMaxWidth);
+			int elementY = y+1+alreadyDrawnHeight;
 			GlStateManager.pushMatrix();
-			GlStateManager.translate(x+(currentColumn*entryMaxWidth), y+1+alreadyDrawnHeight, 0);
-			int offset = display.displayElement(filteredEntry, entryMaxWidth, fontRenderer, mouseX-(x+(currentColumn*entryMaxWidth)), mouseY+scroll-y-alreadyDrawnHeight, partialTicks, false);
+			GlStateManager.translate(elementX, elementY, 0);
+			int offset = display.displayElement(filteredEntry, entryMaxWidth, fontRenderer,
+					mouseX-elementX, mouseY+scroll-elementY, partialTicks, false);
 			GlStateManager.popMatrix();
+			displayedElements.add(new DisplayedElement<>(filteredEntry, elementX, elementY-scroll, offset));
 
 			currentColumn++;
 			if(currentColumn >= entriesInGrid)
@@ -349,6 +399,32 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 		if(parentGui!=null)
 			parentGui.scissorEnd();
 		GlStateManager.popMatrix();
+
+		//Element overlays must be drawn after neighbouring rows and outside the parent
+		//collection scissor. Otherwise nested dropdown lists are clipped or overdrawn.
+		for(DisplayedElement<T> element : displayedElements)
+		{
+			if(element.y+element.height < y||element.y > y+listHeight)
+				continue;
+
+			//The element panel is positioned using the model-view matrix. glScissor does
+			//not observe that translation, so nested collections need the same origin
+			//supplied separately in window-coordinate calculations.
+			if(parentGui!=null)
+				parentGui.pushScissorOffset(element.x, element.y);
+			GlStateManager.pushMatrix();
+			try
+			{
+				GlStateManager.translate(element.x, element.y, 0);
+				display.drawElementUpperLayer(element.entry, entryMaxWidth, fontRenderer,
+						mouseX-element.x, mouseY-element.y, partialTicks);
+			} finally
+			{
+				GlStateManager.popMatrix();
+				if(parentGui!=null)
+					parentGui.popScissorOffset();
+			}
+		}
 	}
 
 	@Override
@@ -434,5 +510,19 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 		if(onCreate!=null)
 			onCreate.run();
 		return onCreate!=null;
+	}
+
+	private static class DisplayedElement<T>
+	{
+		private final T entry;
+		private final int x, y, height;
+
+		private DisplayedElement(T entry, int x, int y, int height)
+		{
+			this.entry = entry;
+			this.x = x;
+			this.y = y;
+			this.height = height;
+		}
 	}
 }

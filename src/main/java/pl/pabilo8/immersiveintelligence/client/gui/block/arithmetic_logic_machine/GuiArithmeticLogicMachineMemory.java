@@ -14,7 +14,6 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoEntr
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoTaskList;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoTaskList.ListMode;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityArithmeticLogicMachine;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityArithmeticLogicMachine.MemoryTransferRule;
@@ -93,22 +92,22 @@ public class GuiArithmeticLogicMachineMemory extends DecoTileGui<TileEntityArith
 				.withDisplayFunction(new DecoEntryPanelBuilder<MemoryTransferRule>()
 						.withBackground(DecoTextures.BG_PAPER)
 						.withBackgroundMask(DecoTextures.TEMPLATE_TICKET)
-						.withComponent("source", new DecoButton(3, 2)
+						.withComponent("source", p -> new DecoButton(3, 2)
 								.withSize(16, 16)
 								.withDisabled(true)
 								.withTextDisabledColor(IIColor.fromPackedRGB(0xafafaf))
 						)
-						.withLabel("route", new DecoLabel(fontRenderer, 3+16, 5)
+						.withLabel("route", p -> new DecoLabel(fontRenderer, 3+16, 5)
 								.withRawText(" into ")
 								.withSize(24, 12)
 								.withAlign(DecoAlignment.CENTER)
 						)
-						.withComponent("destination", new DecoButton(3+16+24, 2)
+						.withComponent("destination", p -> new DecoButton(3+16+24, 2)
 								.withSize(16, 16)
 								.withDisabled(true)
 								.withTextDisabledColor(IIColor.fromPackedRGB(0xafafaf))
 						)
-						.withLabel("behavior", new DecoLabel(fontRenderer, 3+16+24+16+3, 5)
+						.withLabel("behavior", p -> new DecoLabel(fontRenderer, 3+16+24+16+3, 5)
 								.withSize(24, 12)
 								.withAlign(DecoAlignment.LEFT)
 						)

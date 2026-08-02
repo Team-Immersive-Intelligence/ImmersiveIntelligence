@@ -39,25 +39,27 @@ public class MessageIIRequestChunkClaimData extends IIMessage
 	@Override
 	protected void onServerReceive(WorldServer world, NetHandlerPlayServer handler)
 	{
-		Chunk chunk = world.getChunkProvider().getLoadedChunk(chunkX, chunkZ);
-		if(chunk==null)
-		{
-			IILogger.error("MessageIIRequestChunkClaimData: Chunk at "+new ChunkPos(chunkX, chunkZ)+" is not loaded!");
-			return;
-		}
+		world.getChunkProvider().loadChunk(chunkX, chunkZ, () -> {
+			Chunk chunk = world.getChunkProvider().getLoadedChunk(chunkX, chunkZ);
+			if(chunk==null)
+			{
+				IILogger.error("MessageIIRequestChunkClaimData: Chunk at "+new ChunkPos(chunkX, chunkZ)+" is not loaded!");
+				return;
+			}
 
-		if(!chunk.hasCapability(CapabilityChunkOwnership.CHUNK_OWNERSHIP_CAP, null))
-		{
-			IILogger.error("MessageIIRequestChunkClaimData: Chunk at "+new ChunkPos(chunkX, chunkZ)+" has no ChunkOwnership capability!");
-			return;
-		}
+			if(!chunk.hasCapability(CapabilityChunkOwnership.CHUNK_OWNERSHIP_CAP, null))
+			{
+				IILogger.error("MessageIIRequestChunkClaimData: Chunk at "+new ChunkPos(chunkX, chunkZ)+" has no ChunkOwnership capability!");
+				return;
+			}
 
-		IChunkOwnership cap = chunk.getCapability(CapabilityChunkOwnership.CHUNK_OWNERSHIP_CAP, null);
-		assert cap!=null;
+			IChunkOwnership cap = chunk.getCapability(CapabilityChunkOwnership.CHUNK_OWNERSHIP_CAP, null);
+			assert cap!=null;
 
-		//Send a reply
-		IIPacketHandler.sendToClient(handler.player, new MessageIIChunkClaimData(world, chunk.getPos().getBlock(8, 8, 8),
-				cap.getOwner(), cap.getClaimData()));
+			//Send a reply
+			IIPacketHandler.sendToClient(handler.player, new MessageIIChunkClaimData(world, chunk.getPos().getBlock(8, 8, 8),
+					cap.getOwner(), cap.getClaimData()));
+		});
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -71,13 +73,13 @@ public class MessageIIRequestChunkClaimData extends IIMessage
 	public void fromBytes(ByteBuf buf)
 	{
 		this.chunkX = buf.readInt();
-		this.chunkZ = buf.readByte();
+		this.chunkZ = buf.readInt();
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf)
 	{
 		buf.writeInt(this.chunkX);
-		buf.writeByte(this.chunkZ);
+		buf.writeInt(this.chunkZ);
 	}
 }

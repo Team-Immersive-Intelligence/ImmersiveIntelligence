@@ -4,6 +4,7 @@ package pl.pabilo8.immersiveintelligence.api.rotary;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 02.07.2019
  */
+@Deprecated
 public interface IRotationalEnergyBlock
 {
 	void updateRotationStorage(float speed, float torque, int partID);

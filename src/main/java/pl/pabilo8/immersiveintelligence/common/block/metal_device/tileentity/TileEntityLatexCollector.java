@@ -1,11 +1,9 @@
 package pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity;
 
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IBlockBounds;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IDirectionalTile;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IPlayerInteraction;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -28,7 +26,7 @@ import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIRubberLog;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIRubberLog.RubberLogs;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
-import pl.pabilo8.immersiveintelligence.common.util.tile.TileEntityIIBase;
+import pl.pabilo8.immersiveintelligence.common.util.tile.TileEntityIIDirectional;
 
 import javax.annotation.Nonnull;
 
@@ -38,8 +36,9 @@ import javax.annotation.Nonnull;
  * @ii-approved 0.3.1
  * @since 19.05.2021
  */
-public class TileEntityLatexCollector extends TileEntityIIBase implements IPlayerInteraction, ITickable, IBlockBounds, IDirectionalTile, IAdvancedTextOverlay
+public class TileEntityLatexCollector extends TileEntityIIDirectional implements IPlayerInteraction, ITickable, IBlockBounds, IAdvancedTextOverlay
 {
+	private static final FacingSettings FACING_SETTINGS = new FacingSettings(FacingLimitation.HORIZONTAL);
 	@SyncNBT
 	public EnumFacing facing = EnumFacing.NORTH;
 	@SyncNBT(events = SyncEvents.TILE_CUSTOM1)
@@ -84,7 +83,7 @@ public class TileEntityLatexCollector extends TileEntityIIBase implements IPlaye
 				if(!world.isRemote)
 				{
 					bucket = capability.getContainer();
-					updateEntityForEvent(SyncEvents.ENTITY_CUSTOM1);
+					updateTileForEvent(SyncEvents.ENTITY_CUSTOM1);
 				}
 			}
 		}
@@ -100,7 +99,7 @@ public class TileEntityLatexCollector extends TileEntityIIBase implements IPlaye
 			bucket = heldItem.copy();
 			bucket.setCount(1);
 			heldItem.shrink(1);
-			updateEntityForEvent(SyncEvents.ENTITY_CUSTOM1);
+			updateTileForEvent(SyncEvents.ENTITY_CUSTOM1);
 			this.collectedLatex = 0;
 			return true;
 		}
@@ -109,7 +108,7 @@ public class TileEntityLatexCollector extends TileEntityIIBase implements IPlaye
 		{
 			player.inventory.addItemStackToInventory(bucket.copy());
 			bucket = ItemStack.EMPTY;
-			updateEntityForEvent(SyncEvents.ENTITY_CUSTOM1);
+			updateTileForEvent(SyncEvents.ENTITY_CUSTOM1);
 			this.collectedLatex = 0;
 			return true;
 		}
@@ -151,7 +150,7 @@ public class TileEntityLatexCollector extends TileEntityIIBase implements IPlaye
 				this.bucket = capability.getContainer();
 				//Put back the remaining latex into the collector's stored amount; a bucket can only
 				this.collectedLatex = 1000-Math.min(amountMb, 1000);
-				updateEntityForEvent(SyncEvents.TILE_CUSTOM2);
+				updateTileForEvent(SyncEvents.TILE_CUSTOM2);
 			}
 			return Math.min(amountMb, 1000);
 		}
@@ -161,7 +160,7 @@ public class TileEntityLatexCollector extends TileEntityIIBase implements IPlaye
 		if(doDrain)
 		{
 			collectedLatex = collectedLatex-collected;
-			updateEntityForEvent(SyncEvents.TILE_CUSTOM2);
+			updateTileForEvent(SyncEvents.TILE_CUSTOM2);
 		}
 		return collected;
 	}
@@ -205,41 +204,11 @@ public class TileEntityLatexCollector extends TileEntityIIBase implements IPlaye
 
 	//--- Facing ---//
 
+	@Override
 	@Nonnull
-	@Override
-	public EnumFacing getFacing()
+	protected FacingSettings getFacingSettings()
 	{
-		return facing;
-	}
-
-	@Override
-	public void setFacing(@Nonnull EnumFacing facing)
-	{
-		this.facing = facing;
-	}
-
-	@Override
-	public int getFacingLimitation()
-	{
-		return 2;
-	}
-
-	@Override
-	public boolean mirrorFacingOnPlacement(@Nonnull EntityLivingBase placer)
-	{
-		return false;
-	}
-
-	@Override
-	public boolean canHammerRotate(@Nonnull EnumFacing side, float hitX, float hitY, float hitZ, @Nonnull EntityLivingBase entity)
-	{
-		return false;
-	}
-
-	@Override
-	public boolean canRotate(@Nonnull EnumFacing axis)
-	{
-		return false;
+		return FACING_SETTINGS;
 	}
 
 	//--- Block Bounds ---//

@@ -4,6 +4,7 @@
       "item": "immersiveintelligence:metal_multiblock1",
       "data": 9
     },
+    "frame": "goal",
     "title": {
       "translate": "advancement.immersiveintelligence.emplacement"
     },

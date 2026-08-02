@@ -6,11 +6,9 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumDyeColor;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.fml.relauncher.Side;
@@ -18,17 +16,20 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.device.IDataDevice;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 18.07.2026
+ * @ii-approved 0.3.1
  * @since 31.05.2019
  */
 public class TileEntityDataCallbackConnector extends TileEntityDataConnector
 {
+	@SyncNBT(name = "colorIn")
 	public int colorIn = 0;
+	@SyncNBT(name = "colorOut")
 	public int colorOut = 1;
-	@SideOnly(Side.CLIENT)
-	private AxisAlignedBB renderAABB;
 
 	@Override
 	public void onPacketReceive(DataPacket packet)
@@ -74,30 +75,6 @@ public class TileEntityDataCallbackConnector extends TileEntityDataConnector
 		this.markContainingBlockForUpdate(null);
 		world.addBlockEvent(getPos(), this.getBlockType(), 254, 0);
 		return true;
-	}
-
-	@Override
-	public void writeCustomNBT(NBTTagCompound nbt, boolean descPacket)
-	{
-		super.writeCustomNBT(nbt, descPacket);
-		nbt.setInteger("colorIn", colorIn);
-		nbt.setInteger("colorOut", colorOut);
-	}
-
-	@Override
-	public void readCustomNBT(NBTTagCompound nbt, boolean descPacket)
-	{
-		super.readCustomNBT(nbt, descPacket);
-		colorIn = nbt.getInteger("colorIn");
-		colorOut = nbt.getInteger("colorOut");
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public AxisAlignedBB getRenderBoundingBox()
-	{
-		int inc = getRenderRadiusIncrease();
-		return new AxisAlignedBB(this.pos.getX()-inc, this.pos.getY()-inc, this.pos.getZ()-inc, this.pos.getX()+inc+1, this.pos.getY()+inc+1, this.pos.getZ()+inc+1);
 	}
 
 	@SideOnly(Side.CLIENT)

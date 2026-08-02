@@ -17,12 +17,15 @@ public class TextHistoryState
 	{
 		this.lines = new ArrayList<>(l);
 		this.carets = new ArrayList<>();
-		for(TextCaret tc : c)
-		{
-			TextCaret copy = new TextCaret(tc.line, tc.pos);
-			copy.anchorLine = tc.anchorLine;
-			copy.anchorPos = tc.anchorPos;
-			this.carets.add(copy);
-		}
+		for(TextCaret caret : c)
+			this.carets.add(caret.copy());
+	}
+
+	public int characterCount()
+	{
+		int result = Math.max(0, lines.size()-1);
+		for(String line : lines)
+			result += line.length();
+		return result;
 	}
 }

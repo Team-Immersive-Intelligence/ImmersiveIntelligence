@@ -100,9 +100,10 @@ public class TargetCoordinateReference implements INBTSerializable<NBTTagCompoun
 		if(position!=null)
 		{
 			//Unloaded chunks are inconclusive, not a completed mission.
-			if(world==null||!world.isBlockLoaded(position))
+			if(world==null||(!world.isRemote&&!(world.isBlockLoaded(position))))
 				return true;
-			return !world.isAirBlock(position);
+			//Either the mission requires destroying a block or firing an amount of shots
+			return !world.isAirBlock(position)^shotsAreFinite;
 		}
 
 		return false;

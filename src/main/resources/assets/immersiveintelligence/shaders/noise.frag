@@ -8,7 +8,7 @@ uniform sampler2D lightmap;
 
 float noise(in vec2 coordinate, in float seed)
 {
-    vec2 coordActual = floor(textureSize(bgl_RenderedTexture, 0) * coordinate);
+    vec2 coordActual = floor(vec2(textureSize(texture, 0)) * coordinate);
     return fract(sin(dot(coordActual*seed, vec2(12.9898, 78.233)))*43758.5453);
 }
 

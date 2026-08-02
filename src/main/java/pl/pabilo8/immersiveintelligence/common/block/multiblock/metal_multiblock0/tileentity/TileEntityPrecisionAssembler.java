@@ -246,6 +246,17 @@ public class TileEntityPrecisionAssembler extends TileEntityMultiblockProduction
 	}
 
 	@Override
+	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
+	{
+		if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+		{
+			if(isPOI("item_in")||isPOI("tool1")||isPOI("tool2")||isPOI("tool3"))
+				return true;
+		}
+		return super.hasCapability(capability, facing);
+	}
+
+	@Override
 	@SuppressWarnings("unchecked")
 	public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing)
 	{

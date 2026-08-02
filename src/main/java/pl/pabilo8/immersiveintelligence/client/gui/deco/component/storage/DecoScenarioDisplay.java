@@ -245,7 +245,7 @@ public class DecoScenarioDisplay extends DecoComponent<DecoScenarioDisplay>
 	private boolean handleMouseScroll(DecoScenarioDisplay gui, int mouseScroll, int mouseX, int mouseY)
 	{
 		if(zoomAllowed)
-			scale = MathHelper.clamp(scale+Math.signum(mouseScroll)*0.05f, 0.5f, 2f);
+			scale = MathHelper.clamp(scale+mouseScroll*0.05f, 0.5f, 2f);
 		return false;
 	}
 

@@ -73,14 +73,14 @@ public class TileEntityTransmissionBox extends TileEntityIEBase implements ITick
 	public void readCustomNBT(@Nonnull NBTTagCompound nbt, boolean descPacket)
 	{
 		if(nbt.hasKey("energy"))
-			energy.fromNBT(nbt.getCompoundTag("energy"));
+			energy.deserializeNBT(nbt.getCompoundTag("energy"));
 		facing = EnumFacing.getFront(nbt.getInteger("facing"));
 	}
 
 	@Override
 	public void writeCustomNBT(@Nonnull NBTTagCompound nbt, boolean descPacket)
 	{
-		nbt.setTag("energy", energy.toNBT());
+		nbt.setTag("energy", energy.serializeNBT());
 		nbt.setInteger("facing", facing.ordinal());
 	}
 

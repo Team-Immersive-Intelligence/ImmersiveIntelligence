@@ -6,8 +6,6 @@ import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Conn
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
@@ -172,8 +170,13 @@ public class MotorBeltNetwork
 		return torque;
 	}
 
-	@SideOnly(Side.CLIENT)
-	public void setClient(float speed, float torque)
+	/**
+	 * Used for deserializing the values on the client side
+	 *
+	 * @param speed  network speed
+	 * @param torque network torque
+	 */
+	public void setValues(float speed, float torque)
 	{
 		this.speed = speed;
 		this.torque = torque;

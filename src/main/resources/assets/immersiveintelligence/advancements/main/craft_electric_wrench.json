@@ -1,0 +1,27 @@
+{
+  "display": {
+    "icon": {
+      "item": "immersiveintelligence:electric_wrench"
+    },
+    "frame": "goal",
+    "title": {
+      "translate": "advancement.immersiveintelligence.craft_electric_wrench"
+    },
+    "description": {
+      "translate": "advancement.immersiveintelligence.craft_electric_wrench.desc"
+    }
+  },
+  "parent": "immersiveintelligence:main/craft_wrench",
+  "criteria": {
+    "craft_hammer": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "immersiveintelligence:electric_wrench"
+          }
+        ]
+      }
+    }
+  }
+}

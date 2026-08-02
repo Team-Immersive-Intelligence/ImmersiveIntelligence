@@ -4,6 +4,7 @@
       "item": "immersiveintelligence:metal_multiblock",
       "data": 6
     },
+    "frame": "goal",
     "title": {
       "translate": "advancement.immersiveintelligence.prec_assembler"
     },

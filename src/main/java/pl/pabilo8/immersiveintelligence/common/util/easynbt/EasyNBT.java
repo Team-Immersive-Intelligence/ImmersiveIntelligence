@@ -146,6 +146,10 @@ public class EasyNBT extends Constants.NBT
 				Vec3d pos = (Vec3d)element;
 				list.appendTag(listOf(pos.x, pos.y, pos.z));
 			}
+			else if(element instanceof UUID)
+			{
+				list.appendTag(new NBTTagString(element.toString()));
+			}
 
 			else if(element instanceof ItemStack)
 				list.appendTag(((ItemStack)element).serializeNBT());

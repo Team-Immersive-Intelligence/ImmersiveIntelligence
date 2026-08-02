@@ -233,7 +233,7 @@ public class DecoLabel extends GuiLabel
 			return;
 		//Draw a highlight background for the text
 		if(bgColor.alpha > 0)
-			IIDrawUtils.startColored().drawColorRect(x, y, x+width, y+height, bgColor).finish();
+			IIDrawUtils.startColored().drawColorRect(x, y, width, height, bgColor).finish();
 
 		int lineOffset = y;
 		boolean unicode = fontRenderer.getUnicodeFlag();
@@ -271,7 +271,7 @@ public class DecoLabel extends GuiLabel
 					fontRenderer.drawString(subLine, currentX, currentY, textColor.getPackedARGB(), textShadow);
 					stringHeight += fontRenderer.FONT_HEIGHT;
 
-					// Track the widest sub-line for hover detection
+					//Track the widest sub-line for hover detection
 					if(subLineWidth > stringWidth)
 						stringWidth = subLineWidth;
 				}

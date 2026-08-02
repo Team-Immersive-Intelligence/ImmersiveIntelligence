@@ -20,9 +20,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
-import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
@@ -30,12 +28,11 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.api.utils.armor.IInfraredProtectionEquipment;
+import pl.pabilo8.immersiveintelligence.api.api.protection.capability.ProtectionCapabilityProvider;
 import pl.pabilo8.immersiveintelligence.client.model.armor.ModelLightEngineerArmor;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.LightEngineerArmor;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
-import pl.pabilo8.immersiveintelligence.common.util.item.IIArmorItemStackHandler;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 
@@ -49,7 +46,7 @@ import java.util.Map;
  * @since 13.09.2020
  */
 @IIItemProperties(category = IICategory.WARFARE)
-public class ItemIILightEngineerChestplate extends ItemIILightEngineerArmorBase implements IElectricEquipment, IInfraredProtectionEquipment, IAdvancedFluidItem
+public class ItemIILightEngineerChestplate extends ItemIILightEngineerArmorBase implements IElectricEquipment, IAdvancedFluidItem
 {
 	public ItemIILightEngineerChestplate()
 	{
@@ -60,27 +57,12 @@ public class ItemIILightEngineerChestplate extends ItemIILightEngineerArmorBase 
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound nbt)
 	{
-		if(!stack.isEmpty())
-			return new IIArmorItemStackHandler(stack)
-			{
-				final IEItemFluidHandler fluids = new IEItemFluidHandler(stack, 0);
+		ICapabilityProvider parent = super.initCapabilities(stack, nbt);
+		if(stack.isEmpty()||parent==null)
+			return parent;
 
-				@Override
-				public boolean hasCapability(Capability<?> capability, EnumFacing facing)
-				{
-					return capability==CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY||
-							super.hasCapability(capability, facing);
-				}
-
-				@Override
-				public <T> T getCapability(Capability<T> capability, EnumFacing facing)
-				{
-					if(capability==CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY)
-						return (T)fluids;
-					return super.getCapability(capability, facing);
-				}
-			};
-		return null;
+		return new ProtectionCapabilityProvider(parent)
+				.with(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, new IEItemFluidHandler(stack, 0));
 	}
 
 	@Override
@@ -251,7 +233,7 @@ public class ItemIILightEngineerChestplate extends ItemIILightEngineerArmorBase 
 	}
 
 	@Override
-	public boolean invisibleToInfrared(ItemStack stack)
+	protected boolean isInvisibleToInfrared(ItemStack stack)
 	{
 		return hasUpgrade(stack, "ir_mesh");
 	}

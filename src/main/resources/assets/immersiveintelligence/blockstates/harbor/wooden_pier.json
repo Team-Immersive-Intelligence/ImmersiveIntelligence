@@ -1,0 +1,25 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "immersiveintelligence:harbor/wooden/floor"
+      }
+    },
+    {
+      "when": {
+        "connected": "false"
+      },
+      "apply": {
+        "model": "immersiveintelligence:harbor/wooden/support_single"
+      }
+    },
+    {
+      "when": {
+        "connected": "true"
+      },
+      "apply": {
+        "model": "immersiveintelligence:harbor/wooden/support_connected"
+      }
+    }
+  ]
+}

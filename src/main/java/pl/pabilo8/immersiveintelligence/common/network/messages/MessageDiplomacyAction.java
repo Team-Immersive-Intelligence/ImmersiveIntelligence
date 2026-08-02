@@ -92,6 +92,43 @@ public class MessageDiplomacyAction extends IIMessage
 	}
 
 	@SideOnly(Side.CLIENT)
+	public static MessageDiplomacyAction cancelInvitation(@Nonnull UUID playerUUID)
+	{
+		MessageDiplomacyAction msg = new MessageDiplomacyAction();
+		msg.action = DiplomaticAction.CANCEL_INVITATION;
+		msg.targetPlayer = playerUUID;
+		return msg;
+	}
+
+	@SideOnly(Side.CLIENT)
+	public static MessageDiplomacyAction changeMemberRole(@Nonnull UUID playerUUID, @Nonnull PermissionRole role)
+	{
+		MessageDiplomacyAction msg = new MessageDiplomacyAction();
+		msg.action = DiplomaticAction.CHANGE_MEMBER_ROLE;
+		msg.targetPlayer = playerUUID;
+		msg.targetRole = role.getId();
+		return msg;
+	}
+
+	@SideOnly(Side.CLIENT)
+	public static MessageDiplomacyAction acceptInvitation(@Nonnull UUID factionUUID)
+	{
+		MessageDiplomacyAction msg = new MessageDiplomacyAction();
+		msg.action = DiplomaticAction.ACCEPT_INVITATION;
+		msg.targetFaction = factionUUID;
+		return msg;
+	}
+
+	@SideOnly(Side.CLIENT)
+	public static MessageDiplomacyAction denyInvitation(@Nonnull UUID factionUUID)
+	{
+		MessageDiplomacyAction msg = new MessageDiplomacyAction();
+		msg.action = DiplomaticAction.DENY_INVITATION;
+		msg.targetFaction = factionUUID;
+		return msg;
+	}
+
+	@SideOnly(Side.CLIENT)
 	public static MessageDiplomacyAction merge(@Nonnull UUID targetFactionName)
 	{
 		MessageDiplomacyAction msg = new MessageDiplomacyAction();
@@ -181,11 +218,25 @@ public class MessageDiplomacyAction extends IIMessage
 	{
 		EntityPlayerMP sender = handler.player;
 		DiplomacyHandler diplomacy = DiplomacyHandler.getInstance(false);
-		OwnerIdentity identity = diplomacy.getOwnerIdentityForEntity(sender);
-		if(identity.isInvalid())
+
+		//Invitation replies are player-scoped actions, they don't require permission checks
+		if(action==DiplomaticAction.ACCEPT_INVITATION||action==DiplomaticAction.DENY_INVITATION)
+		{
+			OwnerIdentity invitedIdentity = diplomacy.getIdentityByUUID(targetFaction);
+			if(invitedIdentity.getUUID()==DiplomacyHandler.NEUTRAL_UUID||invitedIdentity.getUUID()==DiplomacyHandler.GLOBAL_ENEMY_UUID)
+				return;
+			if(invitedIdentity.isInvalid())
+				return;
+			if(action==DiplomaticAction.ACCEPT_INVITATION)
+				diplomacy.acceptInvitation(invitedIdentity, sender.getUniqueID());
+			else
+				diplomacy.denyInvitation(invitedIdentity, sender.getUniqueID());
 			return;
 
-		if(!identity.isPermitted(sender, action.getRequiredPermission()))
+		}
+
+		OwnerIdentity identity = diplomacy.getOwnerIdentityForEntity(sender);
+		if(identity.isInvalid()||!identity.isPermitted(sender, action.getRequiredPermission()))
 			return;
 
 		switch(action)
@@ -198,33 +249,63 @@ public class MessageDiplomacyAction extends IIMessage
 				break;
 			}
 			case START_SEIZING:
-			{
 				break;
-			}
 			case ADD_MEMBER:
 			{
-				IILogger.info("Invited player "+targetPlayer+" to faction "+identity.getDisplayName());
-				identity.invitePlayer(targetPlayer);
+				if(targetPlayer!=null&&!identity.isMember(targetPlayer)&&!identity.isInvited(targetPlayer))
+				{
+					IILogger.info("Invited player "+targetPlayer+" to faction "+identity.getDisplayName());
+					identity.invitePlayer(targetPlayer);
+					diplomacy.saveAndSyncIdentity(identity);
+				}
+				break;
+			}
+			case CANCEL_INVITATION:
+			{
+				if(targetPlayer!=null&&identity.isInvited(targetPlayer))
+				{
+					identity.removeInvitation(targetPlayer);
+					diplomacy.saveAndSyncIdentity(identity);
+				}
 				break;
 			}
 			case REMOVE_MEMBER:
 			{
 				if(identity.isMember(targetPlayer))
-					identity.removeMember(targetPlayer); //sync = true
+				{
+					PermissionRole target = targetPlayer==null?null: identity.getRoleOf(targetPlayer);
+					if(target!=null&&!target.isOwner()&&!targetPlayer.equals(sender.getUniqueID()))
+					{
+						identity.removeMember(targetPlayer);
+						//sync = true
+						diplomacy.saveAndSyncIdentity(identity);
+					}
+				}
+				break;
+			}
+			case CHANGE_MEMBER_ROLE:
+			{
+				PermissionRole actingRole = identity.getRoleOf(sender.getUniqueID());
+				PermissionRole currentRole = targetPlayer==null?null: identity.getRoleOf(targetPlayer);
+				PermissionRole changedRole = identity.getAvailableRoles().get(targetRole);
+				if(actingRole!=null&&actingRole.isOwner()&&currentRole!=null&&!currentRole.isOwner()
+						&&changedRole!=null&&!changedRole.isOwner())
+				{
+					identity.withMember(targetPlayer, changedRole.getId());
+					diplomacy.saveAndSyncIdentity(identity);
+				}
 				break;
 			}
 			case MERGE:
 			{
 				OwnerIdentity targetIdentity = diplomacy.getIdentityByUUID(targetFaction);
-				if(targetIdentity!=DiplomacyHandler.NEUTRAL&&!targetIdentity.equals(identity))
+				if((targetIdentity.getUUID()==DiplomacyHandler.NEUTRAL_UUID||targetIdentity.getUUID()==DiplomacyHandler.GLOBAL_ENEMY_UUID)
+						&&!targetIdentity.isInvalid()&&!targetIdentity.equals(identity))
 					diplomacy.merge(identity, targetIdentity);
 				break;
 			}
 			case DISBAND:
-			{
-				//DiplomacyUtils.removeIdentity(identity);
 				break;
-			}
 			case RENAME:
 			{
 				identity.withDisplayName(newDisplayName);
@@ -260,7 +341,8 @@ public class MessageDiplomacyAction extends IIMessage
 				}
 
 				OwnerIdentity targetIdentity = diplomacy.getIdentityByUUID(targetFaction);
-				if(targetIdentity!=DiplomacyHandler.NEUTRAL)
+				if(targetIdentity.getUUID()!=DiplomacyHandler.NEUTRAL_UUID&&targetIdentity.getUUID()!=DiplomacyHandler.GLOBAL_ENEMY_UUID
+						&&!targetIdentity.isInvalid())
 					diplomacy.proposeAgreement(identity, targetIdentity, proposal);
 				break;
 			}
@@ -268,8 +350,7 @@ public class MessageDiplomacyAction extends IIMessage
 			{
 				PermissionRole role = identity.getRoleOf(sender.getUniqueID());
 				PermissionRole changed = identity.getAvailableRoles().get(targetRole);
-				//Only the owner can change permissions
-				if(changed!=null&&role!=null&&role.isOwner())
+				if(changed!=null&&!changed.isOwner()&&role!=null&&role.isOwner())
 				{
 					changed.withPermission(permissionCategory, permissionSetting);
 					diplomacy.saveAndSyncIdentity(identity);
@@ -301,9 +382,16 @@ public class MessageDiplomacyAction extends IIMessage
 				break;
 			case ADD_MEMBER:
 			case REMOVE_MEMBER:
+			case CANCEL_INVITATION:
 				this.targetPlayer = UUID.fromString(readString(buf));
 				break;
+			case CHANGE_MEMBER_ROLE:
+				this.targetPlayer = UUID.fromString(readString(buf));
+				this.targetRole = readString(buf);
+				break;
 			case MERGE:
+			case ACCEPT_INVITATION:
+			case DENY_INVITATION:
 				this.targetFaction = readUUID(buf);
 				break;
 			case DISBAND:
@@ -348,9 +436,16 @@ public class MessageDiplomacyAction extends IIMessage
 				break;
 			case ADD_MEMBER:
 			case REMOVE_MEMBER:
+			case CANCEL_INVITATION:
 				writeString(buf, targetPlayer.toString());
 				break;
+			case CHANGE_MEMBER_ROLE:
+				writeString(buf, targetPlayer.toString());
+				writeString(buf, targetRole);
+				break;
 			case MERGE:
+			case ACCEPT_INVITATION:
+			case DENY_INVITATION:
 				writeUUID(buf, targetFaction);
 				break;
 			case DISBAND:

@@ -108,7 +108,7 @@ public class TileEntitySkyCartStation extends TileEntityMultiblockConnectable<Ti
 			crate = new ItemStack(nbt.getCompoundTag("crate"));
 			mount = new ItemStack(nbt.getCompoundTag("mount"));
 			if(nbt.hasKey("rotation"))
-				rotation.fromNBT(nbt.getCompoundTag("rotation"));
+				rotation.deserializeNBT(nbt.getCompoundTag("rotation"));
 		}
 	}
 
@@ -133,7 +133,7 @@ public class TileEntitySkyCartStation extends TileEntityMultiblockConnectable<Ti
 			nbt.setTag("banner", banner.serializeNBT());
 			nbt.setTag("crate", crate.serializeNBT());
 			nbt.setTag("mount", mount.serializeNBT());
-			nbt.setTag("rotation", rotation.toNBT());
+			nbt.setTag("rotation", rotation.serializeNBT());
 
 			if(!world.isRemote)
 				getInternalEntity();
@@ -159,7 +159,7 @@ public class TileEntitySkyCartStation extends TileEntityMultiblockConnectable<Ti
 		if(message.hasKey("occupied"))
 			occupied = message.getBoolean("occupied");
 		if(message.hasKey("rotation"))
-			rotation.fromNBT(message.getCompoundTag("rotation"));
+			rotation.deserializeNBT(message.getCompoundTag("rotation"));
 
 		super.receiveMessageFromServer(message);
 	}
@@ -582,7 +582,7 @@ public class TileEntitySkyCartStation extends TileEntityMultiblockConnectable<Ti
 				tag.withInt("animation", animation).withFloat("progress", progress).withBoolean("occupied", occupied);
 				break;
 			case 2:
-				tag.withTag("rotation", rotation.toNBT()).withItemStack("crate", crate).withItemStack("mount", mount);
+				tag.withTag("rotation", rotation.serializeNBT()).withItemStack("crate", crate).withItemStack("mount", mount);
 				break;
 		}
 

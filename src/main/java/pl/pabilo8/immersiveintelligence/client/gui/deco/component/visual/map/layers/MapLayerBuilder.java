@@ -64,7 +64,7 @@ public class MapLayerBuilder
 	}
 
 	public MapLayerBuilder withSprite(ResLoc location, boolean usesBlockAtlas, int worldX, int worldZ,
-									  float sizePx, float textureSize, IIColor color, float rotationDeg)
+	                                  float sizePx, float textureSize, IIColor color, float rotationDeg)
 	{
 		float[] uv;
 		if(usesBlockAtlas)
@@ -110,7 +110,7 @@ public class MapLayerBuilder
 	 */
 	public MapLayerBuilder addDirectionalLine(int centerX, int centerZ, float angleDeg, float distance, IIColor color, float width)
 	{
-		// Convert polar coordinates (angle, distance) to cartesian
+		//Convert polar coordinates (angle, distance) to cartesian
 		double angleRad = Math.toRadians(angleDeg);
 		int toX = centerX+(int)(distance*Math.cos(angleRad));
 		int toZ = centerZ+(int)(distance*Math.sin(angleRad));

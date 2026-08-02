@@ -12,7 +12,6 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoBut
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoDropdownDataLetters;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoDropdown;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.data_editor.DecoDataEditor;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
@@ -120,13 +119,13 @@ public class GuiDataInputMachineEdit extends DecoTileGui<TileEntityDataInputMach
 				new DecoDropdown<TypeMetaInfo<?>>(73, 15)
 						.withScrollBarBackground(DecoTextures.COMPONENT_SLIDER_PAPER)
 						.withBackground(DecoTextures.COMPONENT_BUTTON_PAPER)
-						.withListBackground(DecoTextures.COMPONENT_TEXT_FIELD)
 						.withSize(116, 18)
 						.withDropdownWidth(116)
 						.withMaxDisplayedEntries(5)
 						.withEntries(DecoDataEditor.getEditorTypes(tile.isUpgradeInstalled(IIContent.UPGRADE_ADVANCED_DATA)))
 						.withSelectedEntry(variableToEdit.getValue().getTypeMeta())
 						.withDisplayFunction(DecoTemplates.getDataTypeEntryDisplay())
+						.withSortFunction(DecoTemplates.getDataTypeEntrySorter())
 						.withOnSelectedEntry((typeMetaInfo, typeMetaInfo2) -> {
 							cancel = true;
 							variableToEdit = new DataVariable(variableToEdit.getName(), typeMetaInfo2.supplier.get());

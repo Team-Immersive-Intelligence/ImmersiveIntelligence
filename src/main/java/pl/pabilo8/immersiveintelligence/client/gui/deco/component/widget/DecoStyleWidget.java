@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.client.gui.deco.component.widget;
 
 import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
+import blusunrize.immersiveengineering.common.blocks.TileEntityMultiblockPart;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.text.TextFormatting;
@@ -13,6 +14,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.Dec
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehicleBase;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageEntityNBTSync;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
@@ -45,8 +47,23 @@ public class DecoStyleWidget extends DecoComponentWidgetBase<DecoStyleWidget>
 	{
 		if(super.initialize())
 		{
+			//Create upper text
+			String text = IIReference.GUI_TOOLTIP_KEY+"widget.style.main";
+			if(!style.getConstraints().getStyles().isEmpty())
+				text = text+".variants";
+			if(style.getConstraints().getColorCustomization()!=PaintStyleConstraint.NOT_APPLICABLE)
+				text = text+".color";
+
+			String key = IIReference.GUI_TOOLTIP_KEY+"widget.style.main.tile";
+			if(customizable instanceof TileEntityMultiblockPart)
+				key = IIReference.GUI_TOOLTIP_KEY+"widget.style.main.multiblock";
+			else if(customizable instanceof EntityVehicleBase)
+				key = IIReference.GUI_TOOLTIP_KEY+"widget.style.main.vehicle";
+			else if(customizable instanceof Entity)
+				key = IIReference.GUI_TOOLTIP_KEY+"widget.style.main.entity";
+
 			withTitleLabel(IIReference.GUI_TOOLTIP_KEY+"widget.style", DecoAlignment.TOP);
-			DecoLabel headInfo = addLabel(TextFormatting.ITALIC+I18n.format(IIReference.GUI_TOOLTIP_KEY+"widget.style.desc"), 4, 2+4)
+			DecoLabel headInfo = addLabel(TextFormatting.ITALIC+I18n.format(text, I18n.format(key)), 4, 2+4)
 					.withSize(width-4-4, 32)
 					.withWrapping(true);
 

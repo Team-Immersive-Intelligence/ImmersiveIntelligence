@@ -77,9 +77,12 @@ public class IIReflectionUtils
 		for(Map.Entry<Object, ArrayList<IEventListener>> o : listeners.entrySet())
 		{
 			Object c1 = o.getKey();
-			if(!c1.getClass().getName().equals(origEvent.getName())) continue;
+			if(!c1.getClass().getName().equals(origEvent.getName()))
+				continue;
 			MinecraftForge.EVENT_BUS.unregister(c1);
 			MinecraftForge.EVENT_BUS.register(overrideEvent);
+			IILogger.info("[Reflector] Replaced event handler for "+origEvent.getName()+" with "+overrideEvent.getClass().getName());
+			return;
 		}
 	}
 

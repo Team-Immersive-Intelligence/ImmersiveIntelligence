@@ -24,7 +24,7 @@ public abstract class DecoEntityGui<E extends Entity, C extends Container> exten
 	public DecoEntityGui(EntityPlayer player, E entity, IIGUI iigui)
 	{
 		//noinspection unchecked
-		super(player, (C)iigui.containerFromEntity.apply(player, entity), entity, iigui);
+		super(player, entity!=null?(C)iigui.containerFromEntity.apply(player, entity): null, entity, iigui);
 		this.entity = entity;
 	}
 

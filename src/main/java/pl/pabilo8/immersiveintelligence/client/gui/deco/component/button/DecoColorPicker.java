@@ -33,7 +33,7 @@ public class DecoColorPicker extends DecoComponent<DecoColorPicker>
 	private float brightness = 0.5f;
 	int backgroundBoxes = 0;
 
-	// Cached color object - only recreated when HSB values change
+	//Cached color object - only recreated when HSB values change
 	private IIColor selectedColor = IIColor.fromHSV(hue, saturation, brightness);
 
 	private boolean draggingColor = false;

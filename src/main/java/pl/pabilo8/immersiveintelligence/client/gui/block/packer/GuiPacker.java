@@ -9,8 +9,9 @@ import pl.pabilo8.immersiveintelligence.api.PackerHandler;
 import pl.pabilo8.immersiveintelligence.api.PackerHandler.PackerActionType;
 import pl.pabilo8.immersiveintelligence.api.PackerHandler.PackerTask;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTileGui;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoCheckbox;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoTab;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoTabGroup;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoDropdown;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoEntryPanelBuilder;
@@ -26,7 +27,6 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoSc
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.DecoTextField;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.util.TextFilter;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Packer;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
@@ -116,7 +116,6 @@ public class GuiPacker extends DecoTileGui<TileEntityPacker, ContainerPacker>
 			addLinkTab(IIGUI.PACKER_LABELER, ICON_LABELER, "labeler_module");
 		}
 
-		// Replace mode tabs + list + action buttons with a single component
 		addComponent((taskList = new DecoTaskList<>(0, 0))
 				.withSize(108, 116+12-8)
 				.withEntries(tasks)
@@ -134,14 +133,14 @@ public class GuiPacker extends DecoTileGui<TileEntityPacker, ContainerPacker>
 				.withDisplayFunction(new DecoEntryPanelBuilder<PackerTask>()
 						.withBackground(DecoTextures.BG_PAPER)
 						.withBackgroundMask(DecoTextures.TEMPLATE_TICKET)
-						.withComponent("icon", new DecoItemStackDisplay(3, 2).withSize(16, 16))
-						.withLabel("wild", new DecoLabel(fontRenderer, 3, 2)
+						.withComponent("icon", () -> new DecoItemStackDisplay(3, 2).withSize(16, 16))
+						.withLabel("wild", () -> new DecoLabel(fontRenderer, 3, 2)
 								.withSize(16, 16)
 								.withAlign(DecoAlignment.CENTER)
 								.withRawText("*")
 								.withTextColor(IIReference.COLOR_IMMERSIVE_ORANGE)
 						)
-						.withLabel("type", new DecoLabel(fontRenderer, 23, 2)
+						.withLabel("type", () -> new DecoLabel(fontRenderer, 23, 2)
 								.withSize(59, 16)
 								.withAlign(DecoAlignment.LEFT)
 						)
@@ -214,36 +213,34 @@ public class GuiPacker extends DecoTileGui<TileEntityPacker, ContainerPacker>
 			break;
 			case ITEM:
 			{
-				//Add scrollable item lists
-				final DecoScrollableItemSlots slotsInput = panelResources.addComponent(new DecoScrollableItemSlots(0, 8+4+2+4))
+				DecoPanel inputPanel = panelResources.addComponent(new DecoPanel(0, 0)
+						.withSize(panelResources.width, panelResources.height)
+						.withBackground(null)
+						.withBackgroundMask(null));
+				DecoPanel outputPanel = panelResources.addComponent(new DecoPanel(0, 0)
+						.withSize(panelResources.width, panelResources.height)
+						.withBackground(null)
+						.withBackgroundMask(null));
+
+				inputPanel.addComponent(new DecoScrollableItemSlots(0, 8+4+2+4))
 						.withSlots(container.slotsInput)
 						.withColumns(6)
 						.withHeight(panelResources.height-8-16-8-8);
-				final DecoScrollableItemSlots slotsOutput = panelResources.addComponent(new DecoScrollableItemSlots(0, 8+4+2+4))
+				outputPanel.addComponent(new DecoScrollableItemSlots(0, 8+4+2+4))
 						.withSlots(container.slotsOutput)
 						.withColumns(6)
 						.withHeight(panelResources.height-8-16-8-8);
-				slotsOutput.visible = false;
 
-				//Add
-				panelResources.addComponent(new DecoButton(0, -2+4))
-						.withSize(panelResources.width/2, 16)
-						.withBackground(DecoTextures.COMPONENT_TAB_VERTICAL)
-						.withText(GUI_LABEL_KEY+"packer.item.input")
-						.withTranslatedTooltip(GUI_LABEL_KEY+"packer.item.input.tooltip")
-						.withOnLMBPressed(() -> {
-							slotsInput.visible = true;
-							slotsOutput.visible = false;
-						});
-				panelResources.addComponent(new DecoButton(panelResources.width/2, -2+4))
-						.withSize(panelResources.width/2, 16)
-						.withBackground(DecoTextures.COMPONENT_TAB_VERTICAL)
-						.withText(GUI_LABEL_KEY+"packer.item.output")
-						.withTranslatedTooltip(GUI_LABEL_KEY+"packer.item.output.tooltip")
-						.withOnLMBPressed(() -> {
-							slotsInput.visible = false;
-							slotsOutput.visible = true;
-						});
+				panelResources.addComponent(new DecoTabGroup(0, -2+4)
+						.withSize(panelResources.width, 16)
+						.withHorizontalAlignment(true)
+						.withTabWidth(panelResources.width/2)
+						.withTab((DecoTab)new DecoTab()
+								.withText(GUI_LABEL_KEY+"packer.item.input")
+								.withTranslatedTooltip(GUI_LABEL_KEY+"packer.item.input.tooltip"), inputPanel)
+						.withTab((DecoTab)new DecoTab()
+								.withText(GUI_LABEL_KEY+"packer.item.output")
+								.withTranslatedTooltip(GUI_LABEL_KEY+"packer.item.output.tooltip"), outputPanel));
 			}
 			break;
 		}
@@ -356,30 +353,19 @@ public class GuiPacker extends DecoTileGui<TileEntityPacker, ContainerPacker>
 				.withSize(panelDetails.width-8, 56)
 		);
 
-		//Itemstack panel picker buttons
-		panelDetails.addComponents(
-				new DecoButton(4, panelDetails.height-56-4-14)
-						.withSize((panelDetails.width-8)/2, 16)
-						.withBackground(DecoTextures.COMPONENT_TAB_VERTICAL)
+		//Itemstack picker tabs
+		DecoTab stackTab = (DecoTab)new DecoTab()
+				.withText(GUI_LABEL_KEY+"packer.picker.stack")
+				.withTranslatedTooltip(GUI_LABEL_KEY+"packer.picker.stack.tooltip");
+		DecoTabGroup pickerTabs = panelDetails.addComponent(new DecoTabGroup(4, panelDetails.height-56-4-14)
+				.withSize(panelDetails.width-8, 16)
+				.withHorizontalAlignment(true)
+				.withTabWidth((panelDetails.width-8)/2)
+				.withTab((DecoTab)new DecoTab()
 						.withText(GUI_LABEL_KEY+"packer.picker.container")
-						.withTranslatedTooltip(GUI_LABEL_KEY+"packer.picker.container.tooltip")
-						.withOnLMBPressed(() -> {
-							panelContainerFilterPicker.visible = panelContainerFilterPicker.enabled = true;
-							panelStackFilterPicker.visible = panelStackFilterPicker.enabled = false;
-						}),
-				new DecoButton(4+(panelDetails.width-8)/2, panelDetails.height-56-4-14)
-						.withSize((panelDetails.width-8)/2, 16)
-						.withBackground(DecoTextures.COMPONENT_TAB_VERTICAL)
-						.withText(GUI_LABEL_KEY+"packer.picker.stack")
-						.withTranslatedTooltip(GUI_LABEL_KEY+"packer.picker.stack.tooltip")
-						.withOnLMBPressed(() -> {
-							panelContainerFilterPicker.visible = panelContainerFilterPicker.enabled = false;
-							panelStackFilterPicker.visible = panelStackFilterPicker.enabled = true;
-						})
-		);
-
-		panelContainerFilterPicker.visible = panelContainerFilterPicker.enabled = false;
-		panelStackFilterPicker.visible = panelStackFilterPicker.enabled = true;
+						.withTranslatedTooltip(GUI_LABEL_KEY+"packer.picker.container.tooltip"), panelContainerFilterPicker)
+				.withTab(stackTab, panelStackFilterPicker));
+		pickerTabs.selectTab(stackTab, false);
 	}
 
 	private void updateExpiresFields()

@@ -103,13 +103,13 @@ public abstract class DecoTextBasedComponent<TYPE extends DecoTextBasedComponent
 
 	//--- Utilities ---//
 
-	protected final IIColor getBackgroundColor()
+	protected IIColor getBackgroundColor()
 	{
-		return enabled?(pressed?backgroundColorPressed: (hovered?backgroundColorHovered: backgroundColor)): backgroundColorDisabled;
+		return enabled?(pressTime > 0?backgroundColorPressed: (hovered?backgroundColorHovered: backgroundColor)): backgroundColorDisabled;
 	}
 
-	protected final IIColor getTextColor(boolean label)
+	protected IIColor getTextColor(boolean label)
 	{
-		return enabled?(pressed?textPressedColor: (hovered?textHoveredColor: (label?textLabelColor: textBoxColor))): textDisabledColor;
+		return enabled?(pressTime > 0?textPressedColor: (hovered?textHoveredColor: (label?textLabelColor: textBoxColor))): textDisabledColor;
 	}
 }

@@ -90,7 +90,8 @@ public abstract class IIMultiblockRecipe extends MultiblockRecipe implements III
 		}
 		else
 			sb.append(IIItemUtils.getUniqueStackString(stack.stack));
-		sb.append("_").append(stack.inputSize);
+		if(stack.inputSize > 1)
+			sb.append("_").append(stack.inputSize);
 
 		return sb.toString();
 	}

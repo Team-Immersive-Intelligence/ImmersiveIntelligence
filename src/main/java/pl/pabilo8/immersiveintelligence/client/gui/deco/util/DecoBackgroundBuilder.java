@@ -2,6 +2,8 @@ package pl.pabilo8.immersiveintelligence.client.gui.deco.util;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.DestFactor;
@@ -13,6 +15,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
@@ -36,6 +39,7 @@ import java.util.stream.Collectors;
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
+ * @updated 23.07.2026
  * @since 07.01.2025
  **/
 public class DecoBackgroundBuilder<T, C extends Container>
@@ -350,18 +354,18 @@ public class DecoBackgroundBuilder<T, C extends Container>
 				GL11.glClear(GL11.GL_STENCIL_BUFFER_BIT);
 				GL11.glStencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_REPLACE);
 				GL11.glStencilFunc(GL11.GL_ALWAYS, 1, 0xFF);
-				DecoGuiUtils.drawBackgroundMask(tiles, minXOffset, minYOffset).finish();
+				drawBackgroundMask(tiles, minXOffset, minYOffset).finish();
 
 				//Background
 				GL11.glStencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_KEEP);
 				GL11.glStencilFunc(GL11.GL_EQUAL, 1, 0xFF);
-				DecoGuiUtils.drawBackgroundBlock(tiles, minXOffset, minYOffset).finish();
+				drawBackgroundBlock(tiles, minXOffset, minYOffset).finish();
 				GL11.glDisable(GL11.GL_STENCIL_TEST);
 
 				//Overlay
 				GlStateManager.enableBlend();
 				GlStateManager.blendFunc(SourceFactor.DST_COLOR, DestFactor.SRC_COLOR);
-				DecoGuiUtils.drawBackgroundMask(tiles, minXOffset, minYOffset).finish();
+				drawBackgroundMask(tiles, minXOffset, minYOffset).finish();
 			}
 
 			//Blending inventory slots (using previous blend func.)
@@ -435,9 +439,9 @@ public class DecoBackgroundBuilder<T, C extends Container>
 		DecoFrame frame = backgroundFrame.frame;
 		assert frame!=null;
 		if(frame.cornersOnly)
-			DecoGuiUtils.drawFrameCorners(draw, backgroundFrame.x, backgroundFrame.y, backgroundFrame.width, backgroundFrame.height, frame.style, frame.sides);
+			drawFrameCorners(draw, backgroundFrame.x, backgroundFrame.y, backgroundFrame.width, backgroundFrame.height, frame.style, frame.sides);
 		else
-			DecoGuiUtils.drawFrame(draw, backgroundFrame.x, backgroundFrame.y, backgroundFrame.width, backgroundFrame.height, frame.style, frame.sides, frame.frameThickness);
+			drawFrame(draw, backgroundFrame.x, backgroundFrame.y, backgroundFrame.width, backgroundFrame.height, frame.style, frame.sides, frame.frameThickness);
 	}
 
 	@Nonnull
@@ -494,60 +498,195 @@ public class DecoBackgroundBuilder<T, C extends Container>
 		return this;
 	}
 
-	public enum SlotStyle
+	//--- Drawing Utils ---//
+
+	private IIDrawUtils drawBackgroundMask(Collection<DecoBackgroundTile> rects, int minXOffset, int minYOffset)
 	{
-		//Vanilla MC bevel mask inventory slot
-		VANILLA(DecoTextures.SLOT_VANILLA, true, 1),
-		//Immersive Engineering style inventory slot
-		IE(DecoTextures.SLOT_IE, DecoTextures.SLOT_IE_MARKER, 2),
-		IE_INPUT(IE, 2),
-		IE_OUTPUT(IE, 3),
-		IE_CUSTOM1(IE, 4),
-		IE_CUSTOM2(IE, 5),
-		IE_CUSTOM3(IE, 6),
-		IE_CUSTOM4(IE, 7),
-		//Brass Frame IE style Inventory slot
-		IE_BRASS(DecoTextures.SLOT_IE_BRASS, DecoTextures.SLOT_IE_BRASS_MARKER, 2),
-		IE_BRASS_INPUT(IE_BRASS, 2),
-		IE_BRASS_OUTPUT(IE_BRASS, 3),
-		IE_BRASS_CUSTOM1(IE_BRASS, 4),
-		IE_BRASS_CUSTOM2(IE_BRASS, 5),
-		IE_BRASS_CUSTOM3(IE_BRASS, 6),
-		IE_BRASS_CUSTOM4(IE_BRASS, 7),
-		;
+		IIDrawUtils draw = IIDrawUtils.startTextured();
 
-		final int borderSize;
-		final boolean blending;
-		final ResLoc backgroundLocation, markerLocation;
-		final int markerOffset;
+		BiMap<Byte, ResLoc> spriteMap = HashBiMap.create();
+		rects.stream()
+				.map(rect -> rect.mask)
+				.distinct()
+				.forEach(resLoc -> spriteMap.put((byte)(spriteMap.size()+1), resLoc));
+		byte[][] outline = getBoxesOutline(rects, spriteMap.inverse(), 8, minXOffset, minYOffset);
 
-		SlotStyle(ResLoc backgroundLocation, boolean blending, int borderSize)
-		{
-			this.blending = blending;
-			this.backgroundLocation = backgroundLocation;
-			this.markerLocation = null;
-			this.borderSize = borderSize;
-			this.markerOffset = -1;
-		}
+		for(int x = 0; x < outline.length; x++)
+			for(int y = 0; y < outline[x].length; y++)
+				if(outline[x][y]!=0)
+				{
+					boolean hasRight = x!=outline.length-1&&outline[x+1][y]!=0;
+					boolean hasLeft = x!=0&&outline[x-1][y]!=0;
+					boolean hasBottom = y!=outline[x].length-1&&outline[x][y+1]!=0;
+					boolean hasTop = y!=0&&outline[x][y-1]!=0;
+					boolean hasAll = hasRight&&hasLeft&&hasTop&&hasBottom;
+					int tOffset = hasAll?8: 0;
 
-		SlotStyle(ResLoc backgroundLocation, ResLoc markerLocation, int borderSize)
-		{
-			this.blending = false;
-			this.backgroundLocation = backgroundLocation;
-			this.markerLocation = markerLocation;
-			this.borderSize = borderSize;
-			this.markerOffset = -1;
-		}
+					int texX = 2, texY = 2;
+					//Check for diagonal corners or draw central piece
+					if(hasAll)
+					{
+						boolean hasTL = outline[x-1][y-1]!=0;
+						boolean hasTR = outline[x+1][y-1]!=0;
+						boolean hasBL = outline[x-1][y+1]!=0;
 
-		SlotStyle(SlotStyle base, int markerOffset)
-		{
-			this.blending = false;
-			this.backgroundLocation = base.backgroundLocation;
-			this.markerLocation = base.markerLocation;
-			this.borderSize = base.borderSize;
-			this.markerOffset = markerOffset;
-		}
+						texX += !hasTL?-2: (!hasTR?4: 0);
+						texY += !hasTL?-2: (!hasBL?4: 0);
+					}
+					//Check for corner piece
+					else
+					{
+						texX += (!hasLeft)?-2: (!hasRight?4: 0);
+						texY += (!hasTop)?-2: (!hasBottom?4: 0);
+					}
+
+					ResLoc res = spriteMap.get(outline[x][y]);
+					assert res!=null;
+					TextureAtlasSprite maskSprite = ClientUtils.getSprite(res);
+					draw.drawTexRect(
+							minXOffset+x*8, minYOffset+y*8, 8, 8,
+							maskSprite.getInterpolatedU(tOffset+texX), maskSprite.getInterpolatedU(tOffset+texX+2),
+							maskSprite.getInterpolatedV(texY), maskSprite.getInterpolatedV(texY+2)
+					);
+				}
+
+		return draw;
 	}
+
+	private byte[][] getBoxesOutline(Collection<DecoBackgroundTile> rects, BiMap<ResLoc, Byte> spriteMap,
+	                                 int unit, int minXOffset, int minYOffset)
+	{
+		if(rects.isEmpty())
+			return new byte[0][0];
+
+		int xx, yy;
+
+		DecoBackgroundTile b = rects.stream().min((o1, o2) -> o2.x+o2.width-(o1.x+o1.width)).orElse(null);
+		xx = b.x+b.width-minXOffset;
+		b = rects.stream().min((o1, o2) -> o2.y+o2.height-(o1.y+o1.height)).orElse(null);
+		yy = b.y+b.height-minYOffset;
+
+		xx /= unit;
+		yy /= unit;
+
+		byte[][] fillmap = new byte[xx+1][yy+1];
+
+		//fill box map with 0
+		for(int i = 0; i <= xx; i++)
+			for(int j = 0; j <= yy; j++)
+				fillmap[i][j] = 0;
+
+
+		//fill box occupied spaces with 1
+		for(DecoBackgroundTile rect : rects)
+			for(int x = rect.x; x < rect.x+rect.width; x += unit)
+				for(int y = rect.y; y < rect.y+rect.height; y += unit)
+					fillmap[(x-minXOffset)/unit][(y-minYOffset)/unit] = spriteMap.get(rect.mask);
+
+		return fillmap;
+
+	}
+
+	private IIDrawUtils drawBackgroundBlock(Collection<DecoBackgroundTile> rects, int minXOffset, int minYOffset)
+	{
+		IIDrawUtils draw = IIDrawUtils.startTexturedColored();
+		for(DecoBackgroundTile rect : rects)
+		{
+			float rectX = (int)Math.floor(rect.x/8f)*8f;
+			float rectY = (int)Math.floor(rect.y/8f)*8f;
+			float rectW = (int)Math.ceil(rect.width/8f)*8f;
+			float rectH = (int)Math.ceil(rect.height/8f)*8f;
+
+			for(int yy = 0; yy < rectH; yy += 32)
+				for(int xx = 0; xx < rectW; xx += 32)
+				{
+					TextureAtlasSprite sprite = ClientUtils.getSprite(rect.style);
+					draw.drawTexColorRect(rectX+xx+minXOffset, rectY+yy+minYOffset,
+							MathHelper.clamp(rectW-xx, 8, 32),
+							MathHelper.clamp(rectH-yy, 8, 32),
+							rect.color,
+							sprite.getMinU(), sprite.getInterpolatedU(Math.min(rectW-xx, 32)/2f),
+							sprite.getMinV(), sprite.getInterpolatedV(Math.min(rectH-yy, 32)/2f)
+					);
+				}
+		}
+
+		return draw;
+	}
+
+	private void drawFrameCorners(IIDrawUtils draw, int x, int y, int width, int height, ResLoc style, boolean[] sides)
+	{
+		TextureAtlasSprite sprite = ClientUtils.getSprite(style);
+		int cornerSize = 16;
+
+		//Top-left corner
+		if(sides[0]&&sides[3])
+			draw.drawTexColorRect(x, y, cornerSize, cornerSize, IIColor.WHITE,
+					sprite.getMinU(), sprite.getInterpolatedU(8), sprite.getMinV(), sprite.getInterpolatedV(8));
+		//Top-right corner
+		if(sides[0]&&sides[1])
+			draw.drawTexColorRect(x+width-cornerSize, y, cornerSize, cornerSize, IIColor.WHITE,
+					sprite.getInterpolatedU(16-8), sprite.getInterpolatedU(16), sprite.getMinV(), sprite.getInterpolatedV(8));
+		//Bottom-left corner
+		if(sides[2]&&sides[3])
+			draw.drawTexColorRect(x, y+height-cornerSize, cornerSize, cornerSize, IIColor.WHITE,
+					sprite.getMinU(), sprite.getInterpolatedU(8), sprite.getInterpolatedV(16-8), sprite.getInterpolatedV(16));
+		//Bottom-right corner
+		if(sides[2]&&sides[1])
+			draw.drawTexColorRect(x+width-cornerSize, y+height-cornerSize, cornerSize, cornerSize, IIColor.WHITE,
+					sprite.getInterpolatedU(16-8), sprite.getInterpolatedU(16), sprite.getInterpolatedV(16-8), sprite.getInterpolatedV(16));
+	}
+
+	private void drawFrame(IIDrawUtils draw, int x, int y, int width, int height, ResLoc style, boolean[] sides, int frameThickness)
+	{
+		TextureAtlasSprite sprite = ClientUtils.getSprite(style);
+
+		//Top-Left mappings
+		float minU = sprite.getMinU();
+		float minUU = sprite.getInterpolatedU(frameThickness/2f);
+		float minV = sprite.getMinV();
+		float minVV = sprite.getInterpolatedV(frameThickness/2f);
+		//Bottom-Right mappings
+		float maxU = sprite.getInterpolatedU(16-frameThickness/2f);
+		float maxUU = sprite.getInterpolatedU(16);
+		float maxV = sprite.getInterpolatedV(16-frameThickness/2f);
+		float maxVV = sprite.getInterpolatedV(16);
+
+		//Draw main frame
+
+		//Top
+		if(sides[0])
+			draw.drawRepeatedTexColorRect(x+frameThickness, y, width-frameThickness*2, frameThickness, IIColor.WHITE,
+					32-2*frameThickness, frameThickness, minUU, maxU, minV, minVV);
+		//Bottom
+		if(sides[1])
+			draw.drawRepeatedTexColorRect(x+frameThickness, y+height-frameThickness, width-frameThickness*2, frameThickness, IIColor.WHITE,
+					32-2*frameThickness, frameThickness, minUU, maxU, maxV, maxVV);
+		//Left
+		if(sides[2])
+			draw.drawRepeatedTexColorRect(x, y+frameThickness, frameThickness, height-frameThickness*2, IIColor.WHITE,
+					frameThickness, 32-2*frameThickness, minU, minUU, minVV, maxV);
+		//Right
+		if(sides[3])
+			draw.drawRepeatedTexColorRect(x+width-frameThickness, y+frameThickness, frameThickness, height-frameThickness*2, IIColor.WHITE,
+					frameThickness, 32-2*frameThickness, maxU, maxUU, minVV, maxV);
+
+		//Draw squares on frame edges
+		if(sides[0]||sides[3])
+			draw.drawTexColorRect(x, y, frameThickness, frameThickness, IIColor.WHITE,
+					minU, minUU, minV, minVV);
+		if(sides[0]||sides[1])
+			draw.drawTexColorRect(x+width-frameThickness, y, frameThickness, frameThickness, IIColor.WHITE,
+					maxU, maxUU, minV, minVV);
+		if(sides[2]||sides[3])
+			draw.drawTexColorRect(x, y+height-frameThickness, frameThickness, frameThickness, IIColor.WHITE,
+					minU, minUU, maxV, maxVV);
+		if(sides[2]||sides[1])
+			draw.drawTexColorRect(x+width-frameThickness, y+height-frameThickness, frameThickness, frameThickness, IIColor.WHITE,
+					maxU, maxUU, maxV, maxVV);
+	}
+
+	//--- Utility Classes ---//
 
 	private static class DecoSlot
 	{

@@ -165,30 +165,36 @@ public class IIManualPage extends ManualPages
 						sub = ";"+entry.getSubPageID(link.substring(1));
 						link = this.entry.getName();
 					}
-					else if(link.contains("#")) //link to a subpage of another page
+					else
 					{
 						String[] split = link.split("#");
-						if(split.length > 1)
-						{
-							List<ManualEntry> manualEntries = manual.manualContents.values().stream()
-									.filter(me -> me.getName().equals(split[0]))
-									.collect(Collectors.toList());
-							if(!manualEntries.isEmpty())
-							{
-								IManualPage[] pages = manualEntries.get(0).getPages();
-								link = split[0];
+						List<ManualEntry> manualEntries = manual.manualContents.values().stream()
+								.filter(me -> {
+									if(me instanceof IIManualEntry&&((IIManualEntry)me).getFullName().equals(split[0]))
+										return true;
+									return me.getName().equals(split[0]);
+								})
+								.collect(Collectors.toList());
 
-								for(int i = 0; i < pages.length; i++)
+						//Get the link again, II's pages in folder may use a full path link
+						link = manualEntries.isEmpty()?split[0]: manualEntries.get(0).getName();
+
+						//Link to a subpage of another page
+						if(split.length > 1&&!manualEntries.isEmpty())
+						{
+							IManualPage[] pages = manualEntries.get(0).getPages();
+							link = split[0];
+
+							for(int i = 0; i < pages.length; i++)
+							{
+								IManualPage page = pages[i];
+								if(page instanceof ManualPages)
 								{
-									IManualPage page = pages[i];
-									if(page instanceof ManualPages)
+									String pageName = ReflectionHelper.getPrivateValue(ManualPages.class, ((ManualPages)page), "text");
+									if(pageName.equals(split[1]))
 									{
-										String pageName = ReflectionHelper.getPrivateValue(ManualPages.class, ((ManualPages)page), "text");
-										if(pageName.equals(split[1]))
-										{
-											sub = ";"+i;
-											break;
-										}
+										sub = ";"+i;
+										break;
 									}
 								}
 							}

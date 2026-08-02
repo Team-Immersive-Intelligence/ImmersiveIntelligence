@@ -308,6 +308,7 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 			for(Tuple<AmmoComponent, NBTTagCompound> component : components)
 				component.getFirst().onEffect(world, pos, dir,
 						coreType.getEffectShape(), component.getSecond(), ammoType.getComponentSize(), multiplier, owner);
+			markedForDetonation = false;
 			setDead();
 		}
 	}
@@ -414,9 +415,9 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 		if(living!=null)
 		{
 			float armor = MathHelper.floor(living.getEntityAttribute(SharedMonsterAttributes.ARMOR).getAttributeValue())*ARMOR_FACTOR;
-			//Damage the other entity armour whether penetrated or not
+			//Damage the other entity armor whether penetrated or not
 			if(armor > 0)
-				IIAmmoUtils.breakArmour(other, (int)getDamage());
+				IIAmmoUtils.breakArmor(other, (int)getDamage());
 		}
 		//Ricochet off the entity
 		if(penHandler.getPenetrationHardness().compareTo(penetrationHardness) > 0)

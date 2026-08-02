@@ -43,7 +43,7 @@ public abstract class BlockIIFenceBase<E extends Enum<E> & IITileProviderEnum> e
 	public static final PropertyBool FORCED_POST = PropertyBool.create("forced_post");
 
 	public BlockIIFenceBase(String name, Material material, PropertyEnum<E> mainProperty, Function<BlockIIBase<E>, ItemBlockIIBase> itemBlock,
-							Object... additionalProperties)
+	                        Object... additionalProperties)
 	{
 		super(name, material, mainProperty, itemBlock,
 				BlockWall.NORTH, BlockWall.SOUTH, BlockWall.WEST, BlockWall.EAST, BlockWall.UP, FORCED_POST,
@@ -60,6 +60,12 @@ public abstract class BlockIIFenceBase<E extends Enum<E> & IITileProviderEnum> e
 	protected IBlockState getInitDefaultState()
 	{
 		return super.getInitDefaultState().withProperty(FORCED_POST, false);
+	}
+
+	@Override
+	public boolean hasTileEntity()
+	{
+		return true;
 	}
 
 	@Nullable

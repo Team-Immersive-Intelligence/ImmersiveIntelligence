@@ -1,6 +1,8 @@
 package pl.pabilo8.immersiveintelligence.client.manual.categories;
 
 import blusunrize.immersiveengineering.api.crafting.BlueprintCraftingRecipe;
+import blusunrize.immersiveengineering.api.crafting.IngredientStack;
+import blusunrize.immersiveengineering.common.IEContent;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualCategory;
@@ -8,8 +10,8 @@ import pl.pabilo8.immersiveintelligence.client.manual.IIManualEntry;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.BlockIIDataDevice.IIBlockTypes_Connector;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDevice.IIBlockTypes_MetalDevice;
+import pl.pabilo8.immersiveintelligence.common.compat.ie.recipe.MetalPressRecipeAdapter;
 import pl.pabilo8.immersiveintelligence.common.crafting.IIRecipes;
-import pl.pabilo8.immersiveintelligence.common.item.ItemIIPrintedPage.PageType;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIMaterial.Materials;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIPrecisionTool.PrecisionTools;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMaterialDust.MaterialsDust;
@@ -88,7 +90,6 @@ public class IIManualCategoryData extends IIManualCategory
 						IIContent.itemMaterial.getStack(Materials.PROCESSOR_ELECTRONIC_ELEMENT)
 				))
 				.addSource("processor_electronic_element", getSourceForItems(
-
 						IIContent.itemMaterial.getStack(Materials.PROCESSOR_ELECTRONIC_ELEMENT)
 				))
 				.addSource("cryptographic_circuit_board", getSourceForItem(IIContent.itemMaterial.getStack(Materials.CRYPTOGRAPHIC_CIRCUIT_BOARD))
@@ -170,7 +171,8 @@ public class IIManualCategoryData extends IIManualCategory
 				));
 		addEntry("radio_backpack");
 		addEntry("printing_press")
-				.addSource("paper_page", getSourceForItem(IIContent.itemPrintedPage.getStack(PageType.BLANK)));
+				.addSource("paper_page", getSourceForRecipe(MetalPressRecipeAdapter.class,
+						new IngredientStack("paper"), new ItemStack(IEContent.itemMold, 1, 0)));
 		addEntry("scanning_conveyor");
 		addEntry("programmable_speaker")
 				.addSource("programmable_spkr", getSourceForItem(IIContent.blockDataConnector.getStack(IIBlockTypes_Connector.PROGRAMMABLE_SPEAKER)

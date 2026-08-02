@@ -35,8 +35,12 @@ public class DecoDataEditorInteger extends DecoDataEditor<DataTypeInteger>
 				//Mode select dropdown
 				valueDropdown = new DecoDropdown<TextFilter>(2, 32+2)
 						.withEntries(TextFilter.BINARY, TextFilter.DECIMAL, TextFilter.HEXADECIMAL)
-						.withOnSelectedEntry((oldValue, newValue) ->
-								valueEdit.withFilter(newValue))
+						.withOnSelectedEntry((oldValue, newValue) -> {
+							TextFilter previous = Optional.ofNullable(oldValue).orElse(TextFilter.DECIMAL);
+							TextFilter selected = Optional.ofNullable(newValue).orElse(TextFilter.DECIMAL);
+							int current = previous.parseInt(valueEdit.getText(), dataType.value);
+							valueEdit.withFilter(selected).withText(selected.formatInt(current));
+						})
 						.withSelectedEntry(TextFilter.DECIMAL)
 		);
 		return super.initialize();
@@ -45,18 +49,8 @@ public class DecoDataEditorInteger extends DecoDataEditor<DataTypeInteger>
 	@Override
 	public DataTypeInteger outputType()
 	{
-		switch(Optional.ofNullable(valueDropdown.getSelectedEntry()).orElse(TextFilter.DECIMAL))
-		{
-			case DECIMAL:
-				dataType.value = Integer.parseInt(valueEdit.getText(), 10);
-				break;
-			case HEXADECIMAL:
-				dataType.value = Integer.parseInt(valueEdit.getText(), 16);
-				break;
-			case BINARY:
-				dataType.value = Integer.parseInt(valueEdit.getText(), 2);
-				break;
-		}
+		TextFilter selected = Optional.ofNullable(valueDropdown.getSelectedEntry()).orElse(TextFilter.DECIMAL);
+		dataType.value = selected.parseInt(valueEdit.getText(), dataType.value);
 		return dataType;
 	}
 }

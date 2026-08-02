@@ -11,6 +11,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.client.util.font.IIFontRenderer;
 
+import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.function.Function;
 
@@ -22,9 +23,10 @@ import java.util.function.Function;
 public abstract class DecoEntryPanel<T> extends DecoPanel implements DecoElementDisplay<T>
 {
 	private int displayedHeight;
-	private DecoButton addButton;
+	private final DecoButton addButton;
 	private DecoScrolledCollection<?, T> list;
 	private T element;
+	private boolean hasElement;
 
 	public DecoEntryPanel()
 	{
@@ -47,6 +49,8 @@ public abstract class DecoEntryPanel<T> extends DecoPanel implements DecoElement
 			cleanup();
 			initializeChildren();
 			this.displayedHeight = height;
+			if(hasElement)
+				applyElementToChildren(element);
 		}
 		return super.initialize();
 	}
@@ -79,22 +83,28 @@ public abstract class DecoEntryPanel<T> extends DecoPanel implements DecoElement
 	@Override
 	public int displayElement(T t, int width, IIFontRenderer font, int mouseX, int mouseY, float partialTicks, boolean heightProbe)
 	{
-		//If the width has changed, reinitialize the panel
-		if(this.width!=width)
+		//Initialize before probing or drawing. Direct initialize() calls must also update
+		//the component lifecycle flag, otherwise drawButton() rebuilds the children again.
+		if(this.width!=width||!initialized)
 		{
-			//Readjust the width
 			this.width = width;
-			if(!initialize())
+			this.initialized = false;
+			if(!(this.initialized = initialize()))
 				return 0;
 
 			//Readjust the height
-			int minY = Integer.MAX_VALUE, maxY = Integer.MIN_VALUE;
-			for(DecoComponent<?> child : children)
+			if(children.isEmpty())
+				this.displayedHeight = height;
+			else
 			{
-				minY = Math.min(minY, child.y);
-				maxY = Math.max(maxY, child.y+child.height);
+				int minY = Integer.MAX_VALUE, maxY = Integer.MIN_VALUE;
+				for(DecoComponent<?> child : children)
+				{
+					minY = Math.min(minY, child.y);
+					maxY = Math.max(maxY, child.y+child.height);
+				}
+				this.displayedHeight = Math.max(2+maxY-minY, height);
 			}
-			this.displayedHeight = Math.max(2+maxY-minY, height);
 		}
 
 		//If the height is being probed, return the height
@@ -105,8 +115,20 @@ public abstract class DecoEntryPanel<T> extends DecoPanel implements DecoElement
 		applyElement(t);
 		Minecraft mc = ClientUtils.mc();
 		drawButton(mc, mouseX, mouseY, partialTicks);
-		drawButtonUpperLayer(mc, mouseX, mouseY, partialTicks);
 		return displayedHeight;
+	}
+
+	@Override
+	public void drawElementUpperLayer(T t, int width, IIFontRenderer font, int mouseX, int mouseY, float partialTicks)
+	{
+		applyElement(t);
+		drawButtonUpperLayer(ClientUtils.mc(), mouseX, mouseY, partialTicks);
+	}
+
+	@Override
+	public boolean ownsComponent(DecoComponent<?> component)
+	{
+		return this==component;
 	}
 
 	@Override
@@ -130,14 +152,39 @@ public abstract class DecoEntryPanel<T> extends DecoPanel implements DecoElement
 	}
 
 	/**
-	 * Applies the element to the panel
+	 * Returns the panel instance associated with an element for input routing.
+	 * Non-caching implementations use themselves.
+	 */
+	@Nullable
+	public DecoEntryPanel<T> getElementPanel(T t)
+	{
+		applyElement(t);
+		return this;
+	}
+
+	/**
+	 * Applies the element to the panel when it differs from the already bound instance.
 	 *
 	 * @param t The element to apply
 	 */
 	public final void applyElement(T t)
 	{
+		if(hasElement&&this.element==t)
+			return;
+		refreshElement(t);
+	}
+
+	/**
+	 * Forces the element representation to be reapplied.
+	 *
+	 * @param t The element to apply
+	 */
+	public final void refreshElement(T t)
+	{
 		this.element = t;
-		applyElementToChildren(t);
+		this.hasElement = true;
+		if(initialized)
+			applyElementToChildren(t);
 	}
 
 	/**
@@ -146,7 +193,6 @@ public abstract class DecoEntryPanel<T> extends DecoPanel implements DecoElement
 	 * @param t The element to apply
 	 */
 	protected abstract void applyElementToChildren(T t);
-
 
 	/**
 	 * Sets the tooltip function for this panel using the current element.

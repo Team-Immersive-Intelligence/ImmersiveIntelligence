@@ -43,12 +43,18 @@ public class TileEntityIIBase extends TileEntityIEBase
 	public void receiveMessageFromClient(@Nonnull NBTTagCompound message)
 	{
 		NBTSerialisation.synchroniseFor(this, (tag, entity) -> tag.deserializeAll(this, message, true));
+
+		if(!message.hasNoTags())
+		{
+			NBTSerialisation.synchroniseFor(this, (tag, tile) -> tag.deserializeAll(tile, message, true));
+			IIPacketHandler.sendToClient(new MessageIITileSync(this, message));
+		}
 	}
 
 
 	//--- Additional SyncNBT methods ---//
 
-	public void updateEntityForTime(int time)
+	public void updateTileForTime(int time)
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
 		NBTSerialisation.synchroniseFor(this, (tag, entity) -> tag.serializeForTime(entity, nbt, time));
@@ -56,18 +62,18 @@ public class TileEntityIIBase extends TileEntityIEBase
 	}
 
 	@SuppressWarnings({"unchecked"})
-	public void updateEntityForEvent(SyncNBT.SyncEvents event)
+	public void updateTileForEvent(SyncNBT.SyncEvents event)
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
 		NBTSerialisation.synchroniseFor(this, (tag, entity) -> tag.serializeForEvent(entity, nbt, event));
 		IIPacketHandler.sendToClient(new MessageIITileSync(this, nbt));
 	}
 
-	public void sendServerUpdateForEvent(SyncNBT.SyncEvents event)
+	public void updateTileForAll()
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
-		NBTSerialisation.synchroniseFor(this, (tag, entity) -> tag.serializeForEvent(entity, nbt, event));
-		IIPacketHandler.sendToServer(new MessageIITileSync(this, nbt));
+		NBTSerialisation.synchroniseFor(this, (tag, entity) -> tag.serializeAll(entity, nbt));
+		IIPacketHandler.sendToClient(new MessageIITileSync(this, nbt));
 	}
 
 	//--- Built-In ---//

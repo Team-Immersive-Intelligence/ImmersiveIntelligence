@@ -14,6 +14,8 @@ import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeTechTree;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.UpgradeOperation;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoEntityGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoTab;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoTabGroup;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoTreeDisplay;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPanel;
@@ -25,7 +27,6 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.tree.IDecoTreeNode;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.tree.upgrade.UpgradeTechTreeWrapper;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.tree.upgrade.UpgradeTreeNodeRenderer;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
 import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerEntityUpgrade;
@@ -51,15 +52,17 @@ public class GuiEntityUpgrade<T extends Entity & IIEInventory & IUpgradableDevic
 	private final UpgradeTechTree techTree;
 	private DecoTreeDisplay<Upgrade> techTreeDisplay;
 	private DecoPanel panelInfo;
+	private DecoTabGroup contentTabs;
+	private DecoTab infoTab;
 
 	@SyncNBT(nullable = true)
 	public String lastUpgrade;
 	private DecoScenarioDisplay scenario;
 
-	public GuiEntityUpgrade(EntityPlayer player, T tile)
+	public GuiEntityUpgrade(EntityPlayer player, T entity)
 	{
-		super(player, tile, IIGUI.UPGRADE_ENTITY);
-		this.techTree = tile!=null?UpgradeTechTree.getTreeFor(tile): null;
+		super(player, entity, IIGUI.UPGRADE_ENTITY);
+		this.techTree = entity!=null?UpgradeTechTree.getTreeFor(entity): null;
 	}
 
 	@Override
@@ -95,7 +98,7 @@ public class GuiEntityUpgrade<T extends Entity & IIEInventory & IUpgradableDevic
 				.withInventoryTitleBar()
 				.build();
 
-		//Upgrade
+		//Upgrade preview
 		addComponents(
 				new DecoPanel(4, 4+8)
 						.withSize(108, 152)
@@ -107,46 +110,51 @@ public class GuiEntityUpgrade<T extends Entity & IIEInventory & IUpgradableDevic
 						.withScale(0.125f)
 						.withRotation(-12.5f, 5)
 						.withRotationAnimation(240, 0)
-						.withInteractionAllowed(true),
-				new DecoButton(118-4, 16-8-4+14-14+8)
-						.withSize(69, 14)
-						.withBackground(DecoTextures.COMPONENT_TAB_VERTICAL)
-						.withText(IIReference.DESCRIPTION_KEY+"upgrade_gui.tech_tree")
-						.withOnLMBPressed(() -> {
-							panelInfo.visible = panelInfo.enabled = false;
-							techTreeDisplay.visible = techTreeDisplay.enabled = true;
-							refreshModelPreview(null);
-						}),
-				new DecoButton(118-4+69, 16-8-4+14-14+8)
-						.withSize(69, 14)
-						.withBackground(DecoTextures.COMPONENT_TAB_VERTICAL)
-						.withText(IIReference.DESCRIPTION_KEY+"upgrade_gui.info")
-						.withOnLMBPressed(() -> {
-							panelInfo.visible = panelInfo.enabled = true;
-							techTreeDisplay.visible = techTreeDisplay.enabled = false;
-							if(lastUpgrade!=null&&!lastUpgrade.isEmpty())
-								refreshModelPreview(Upgrade.getUpgradeByID(ResLoc.of(lastUpgrade)));
-						}),
-				panelInfo = new DecoPanel(118-4, 16-8-4+14+8)
-						.withSize(146-8, 146-8)
-						.withBackground(DecoTextures.BG_STEEL)
-						.withBackgroundMask(DecoTextures.TEMPLATE_SQUARE),
-				techTreeDisplay = new DecoTreeDisplay<Upgrade>(118-4, 16-8-4+14+8)
-						.withTree(new UpgradeTechTreeWrapper(techTree, entity)
-						{
-							@Override
-							public void onNodeClicked(@Nonnull IDecoTreeNode<Upgrade> node)
-							{
-								panelInfo.visible = panelInfo.enabled = true;
-								techTreeDisplay.visible = techTreeDisplay.enabled = false;
-								showUpgrade(node.getUserData());
-								refreshModelPreview(node.getUserData());
-							}
-						})
-						.withNodeRenderer(new UpgradeTreeNodeRenderer())
-						.withSize(146-8, 146-8)
-						.withBackground(DecoSprite.atlasSprite(DecoTextures.BG_DARK, 64))
+						.withInteractionAllowed(true)
 		);
+
+		final int contentX = 118-4;
+		final int contentY = 16-8-4+14+8;
+		final int contentWidth = 146-8;
+		final int contentHeight = 146-8;
+
+		panelInfo = addComponent(new DecoPanel(contentX, contentY)
+				.withSize(contentWidth, contentHeight)
+				.withBackground(DecoTextures.BG_STEEL)
+				.withBackgroundMask(DecoTextures.TEMPLATE_SQUARE));
+
+		DecoPanel techTreePanel = addComponent(new DecoPanel(contentX, contentY)
+				.withSize(contentWidth, contentHeight)
+				.withBackground(null)
+				.withBackgroundMask(null));
+		techTreeDisplay = techTreePanel.addComponent(new DecoTreeDisplay<Upgrade>(0, 0)
+				.withTree(new UpgradeTechTreeWrapper(techTree, entity)
+				{
+					@Override
+					public void onNodeClicked(@Nonnull IDecoTreeNode<Upgrade> node)
+					{
+						contentTabs.selectTab(infoTab, false);
+						showUpgrade(node.getUserData());
+						refreshModelPreview(node.getUserData());
+					}
+				})
+				.withNodeRenderer(new UpgradeTreeNodeRenderer())
+				.withSize(contentWidth, contentHeight)
+				.withBackground(DecoSprite.atlasSprite(DecoTextures.BG_DARK, 64)));
+
+		infoTab = (DecoTab)new DecoTab()
+				.withText(IIReference.DESCRIPTION_KEY+"upgrade_gui.info");
+		contentTabs = addComponent(new DecoTabGroup(contentX, 16-8-4+14-14+8)
+				.withSize(contentWidth, 14)
+				.withHorizontalAlignment(true)
+				.withTabWidth(contentWidth/2)
+				.withTab((DecoTab)new DecoTab()
+								.withText(IIReference.DESCRIPTION_KEY+"upgrade_gui.tech_tree"), techTreePanel,
+						() -> refreshModelPreview(null))
+				.withTab(infoTab, panelInfo, () -> {
+					if(lastUpgrade!=null&&!lastUpgrade.isEmpty())
+						refreshModelPreview(Upgrade.getUpgradeByID(ResLoc.of(lastUpgrade)));
+				}));
 
 		if(lastUpgrade==null)
 		{

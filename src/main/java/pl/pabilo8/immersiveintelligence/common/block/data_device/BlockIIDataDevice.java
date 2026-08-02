@@ -4,10 +4,8 @@ import blusunrize.immersiveengineering.api.IEProperties;
 import blusunrize.immersiveengineering.api.TargetingInfo;
 import blusunrize.immersiveengineering.api.energy.wires.IImmersiveConnectable;
 import blusunrize.immersiveengineering.api.energy.wires.IWireCoil;
-import blusunrize.immersiveengineering.api.energy.wires.TileEntityImmersiveConnectable;
 import blusunrize.immersiveengineering.api.energy.wires.WireType;
 import blusunrize.immersiveengineering.client.models.IOBJModelCallback;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IDirectionalTile;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
@@ -35,6 +33,7 @@ import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBl
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IITileProviderEnum;
 import pl.pabilo8.immersiveintelligence.common.util.block.ItemBlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
+import pl.pabilo8.immersiveintelligence.common.util.tile.TileEntityIIDirectionalConnectable;
 
 import java.util.ArrayList;
 
@@ -83,8 +82,8 @@ public class BlockIIDataDevice extends BlockIITileProvider<IIBlockTypes_Connecto
 				if(te==null)
 					break;
 
-				TileEntityImmersiveConnectable connector = (TileEntityImmersiveConnectable & IDirectionalTile)te;
-				if(world.isAirBlock(pos.offset(((IDirectionalTile)connector).getFacing())))
+				TileEntityIIDirectionalConnectable connector = (TileEntityIIDirectionalConnectable)te;
+				if(world.isAirBlock(pos.offset(connector.getFacing())))
 				{
 					this.dropBlockAsItem(connector.getWorld(), pos, world.getBlockState(pos), 0);
 					connector.getWorld().setBlockToAir(pos);

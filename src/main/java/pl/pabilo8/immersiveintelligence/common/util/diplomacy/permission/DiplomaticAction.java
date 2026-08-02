@@ -66,7 +66,23 @@ public enum DiplomaticAction implements ILocalizedEnum
 	/**
 	 * Send a diplomatic ultimatum to another identity, which may be accepted or rejected. May result in a diplomatic incident if the ultimatum is rejected.
 	 */
-	SEND_ULTIMATUM(PermissionCategory.FOREIGN_AFFAIRS);
+	SEND_ULTIMATUM(PermissionCategory.FOREIGN_AFFAIRS),
+	/**
+	 * Cancel a pending invitation sent by the identity.
+	 */
+	CANCEL_INVITATION(PermissionCategory.INVITE_MEMBERS),
+	/**
+	 * Change a member's non-owner role.
+	 */
+	CHANGE_MEMBER_ROLE,
+	/**
+	 * Accept an invitation addressed to the acting player.
+	 */
+	ACCEPT_INVITATION,
+	/**
+	 * Reject an invitation addressed to the acting player.
+	 */
+	DENY_INVITATION;
 
 	@Nullable
 	private PermissionCategory requiredPermission;

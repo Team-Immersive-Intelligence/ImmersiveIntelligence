@@ -32,6 +32,7 @@ import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedTextOverlay;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageRotaryPowerSync;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 
 import javax.annotation.Nullable;
 
@@ -41,9 +42,10 @@ public class TileEntityGearbox extends TileEntityIEBase implements ITickable, IA
 	public static final int GEAR_SLOTS = 3;
 
 	public SideConfig[] sideConfig = {SideConfig.NONE, SideConfig.INPUT, SideConfig.NONE, SideConfig.NONE, SideConfig.NONE, SideConfig.NONE};
-	public int comparatorOutput = 0;
+	@SyncNBT
 	public GearboxRotaryStorage rotation = new GearboxRotaryStorage();
-	NonNullList<ItemStack> inventory = NonNullList.withSize(GEAR_SLOTS, ItemStack.EMPTY);
+	@SyncNBT
+	public NonNullList<ItemStack> inventory = NonNullList.withSize(GEAR_SLOTS, ItemStack.EMPTY);
 
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
@@ -198,7 +200,7 @@ public class TileEntityGearbox extends TileEntityIEBase implements ITickable, IA
 			nbt.setTag("inventory", Utils.writeInventory(inventory));
 		for(int i = 0; i < 6; i++)
 			nbt.setInteger("sideConfig_"+i, sideConfig[i].ordinal());
-		nbt.setTag("rotation", rotation.toNBT());
+		nbt.setTag("rotation", rotation.serializeNBT());
 
 	}
 
@@ -218,7 +220,7 @@ public class TileEntityGearbox extends TileEntityIEBase implements ITickable, IA
 			for(int i = 0; i < 6; i++)
 				sideConfig[i] = SideConfig.values()[nbt.getInteger("sideConfig_"+i)];
 		if(nbt.hasKey("rotation"))
-			rotation.fromNBT(nbt.getCompoundTag("rotation"));
+			rotation.deserializeNBT(nbt.getCompoundTag("rotation"));
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -242,7 +244,8 @@ public class TileEntityGearbox extends TileEntityIEBase implements ITickable, IA
 	@Override
 	public int getComparatorInputOverride()
 	{
-		return this.comparatorOutput;
+		//TODO: 19.07.2026 comparator output
+		return 0;
 	}
 
 	@Override
@@ -330,21 +333,20 @@ public class TileEntityGearbox extends TileEntityIEBase implements ITickable, IA
 		}
 
 		@Override
-		public void fromNBT(NBTTagCompound nbt)
+		public void deserializeNBT(NBTTagCompound nbt)
 		{
-			super.fromNBT(nbt);
+			super.deserializeNBT(nbt);
 			outputTorque = nbt.getFloat("outputTorque");
 			outputSpeed = nbt.getFloat("outputSpeed");
 		}
 
 		@Override
-		public NBTTagCompound toNBT()
+		public NBTTagCompound serializeNBT()
 		{
-			NBTTagCompound nbt = super.toNBT();
+			NBTTagCompound nbt = super.serializeNBT();
 			nbt.setFloat("outputTorque", outputTorque);
 			nbt.setFloat("outputSpeed", outputSpeed);
 			return nbt;
-
 		}
 
 		@Override

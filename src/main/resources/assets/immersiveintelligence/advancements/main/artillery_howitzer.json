@@ -4,6 +4,7 @@
       "item": "immersiveintelligence:metal_multiblock",
       "data": 8
     },
+    "frame": "goal",
     "title": {
       "translate": "advancement.immersiveintelligence.artillery_howitzer"
     },
