@@ -6,7 +6,7 @@
   "IgnoreDefaults": false,
   "SpacesAfterTabs": false,
   "NoColor": false,
-  "Exclude": ["Model(.*).java", ".lang", "ie_manual/(.*).md", ".sh"],
+  "Exclude": ["Model(.*).java", ".lang", ".md", ".sh"],
   "AllowedContentTypes": [],
   "PassedFiles": [],
   "Disable": {
