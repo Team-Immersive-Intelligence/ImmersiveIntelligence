@@ -4,7 +4,6 @@ import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.Config.IEConfig;
 import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
-import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.lib.manual.IManualPage;
 import blusunrize.lib.manual.ManualInstance;
 import blusunrize.lib.manual.ManualInstance.ManualEntry;
@@ -147,6 +146,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	private static final ArrayList<TextOverlayBase> TEXT_OVERLAYS = new ArrayList<>();
 	private static final ArrayList<InWorldOverlayBase> IN_WORLD_OVERLAYS = new ArrayList<>();
 	private static final ArrayList<ScreenShake> SCREEN_SHAKE_EFFECTS = new ArrayList<>();
+	private static float cameraFov = 70f;
 	public static GuiScreen lastGui = null;
 	//Whether the Light Engineer Armor is worn
 	public static boolean gotTheDrip = false, nightVisionActive = false;
@@ -548,11 +548,13 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	{
 		CameraHandler.handleZoom();
 
+		float newFOV = event.getFOV();
 		if(CameraHandler.zoom!=null)
 		{
-			float newFOV = event.getFOV()*CameraHandler.fovZoom;
+			newFOV *= CameraHandler.fovZoom;
 			event.setFOV(newFOV);
 		}
+		cameraFov = newFOV;
 	}
 
 	@SubscribeEvent
@@ -825,23 +827,15 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 
 		//--- ScreenShake Handling ---//
 		if(Graphics.cameraScreenShake)
-		{
-			//Display the strongest effect
 			SCREEN_SHAKE_EFFECTS.stream()
-					.max(ScreenShake::compareTo)
-					.ifPresent(
-							screenShake -> {
-								double shakex = (Utils.RAND.nextGaussian()-0.5)*screenShake.getStrength();
-								double shakey = (Utils.RAND.nextGaussian()-0.5)*screenShake.getStrength();
-								double shakez = (Utils.RAND.nextGaussian()-0.5)*screenShake.getStrength();
-								event.setRoll((float)shakez);
-								event.setYaw((float)(event.getYaw()+shakex));
-								event.setPitch((float)(event.getPitch()+shakey));
-							}
-					);
-			//Tick and remove past effects
-			SCREEN_SHAKE_EFFECTS.removeIf(screenShake -> screenShake.tick(partialTicks));
-		}
+					.max((first, second) -> Double.compare(
+							first.getStrength(partialTicks), second.getStrength(partialTicks)))
+					.ifPresent(screenShake -> {
+						Vec3d rotation = screenShake.getRotation(partialTicks, cameraFov);
+						event.setYaw((float)(event.getYaw()+rotation.x));
+						event.setPitch((float)(event.getPitch()+rotation.y));
+						event.setRoll((float)(event.getRoll()+rotation.z));
+					});
 
 		//TODO: 15.11.2025 revisit, fix camera bug at -180/180 degrees
 		/*if(player.getRidingEntity() instanceof EntityVehicleSeat)
@@ -1068,6 +1062,8 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		if(event.phase!=Phase.END)
 			return;
 		Minecraft mc = ClientUtils.mc();
+
+		SCREEN_SHAKE_EFFECTS.removeIf(ScreenShake::tick);
 
 		if(ParticleSystem.INSTANCE!=null)
 			ParticleSystem.INSTANCE.updateParticles();
