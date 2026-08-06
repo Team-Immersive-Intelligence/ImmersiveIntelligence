@@ -61,23 +61,56 @@ public enum ParticleDrawStages implements ISerializableEnum
 	 * Same as CUSTOM, but with normal maps, use with solid 3D models
 	 */
 	CUSTOM_SOLID(GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, IIParticleUtils.PARTICLE_SOLID,
-			false, true, TextureMap.LOCATION_BLOCKS_TEXTURE);
+			false, true, TextureMap.LOCATION_BLOCKS_TEXTURE),
+	/**
+	 * Color-only triangles with additive blending.
+	 */
+	COLOR_ONLY_ADDITIVE_TRIANGLES(DestFactor.ONE, DefaultVertexFormats.POSITION_COLOR,
+			false, false, null, GL11.GL_TRIANGLES, true),
+	/**
+	 * Wide color-only line strips with additive blending.
+	 */
+	COLOR_ONLY_LINE_STRIP(DestFactor.ONE, DefaultVertexFormats.POSITION_COLOR,
+			false, false, null, GL11.GL_LINE_STRIP, false, 4f),
+	/**
+	 * Thin color-only line strips with additive blending.
+	 */
+	COLOR_ONLY_LINE_STRIP_THIN(DestFactor.ONE, DefaultVertexFormats.POSITION_COLOR,
+			false, false, null, GL11.GL_LINE_STRIP, false, 1f);
 
 	public final boolean renderThroughBlocks, applyLighting;
 	public final boolean requiresNormals;
 	final DestFactor destFactor;
 	final VertexFormat vertexFormat;
 	final ResourceLocation textureRes;
+	final int drawMode;
+	final boolean smoothShading;
+	final float lineWidth;
 	final Shaders shader;
 	final Function<Float, float[]> shaderParameters;
 
 	ParticleDrawStages(DestFactor destFactor, VertexFormat vertexFormat, boolean renderThroughBlocks, boolean applyLighting, @Nullable ResourceLocation textureRes)
+	{
+		this(destFactor, vertexFormat, renderThroughBlocks, applyLighting, textureRes, GL11.GL_QUADS, false, 1f);
+	}
+
+	ParticleDrawStages(DestFactor destFactor, VertexFormat vertexFormat, boolean renderThroughBlocks, boolean applyLighting,
+	                   @Nullable ResourceLocation textureRes, int drawMode, boolean smoothShading)
+	{
+		this(destFactor, vertexFormat, renderThroughBlocks, applyLighting, textureRes, drawMode, smoothShading, 1f);
+	}
+
+	ParticleDrawStages(DestFactor destFactor, VertexFormat vertexFormat, boolean renderThroughBlocks, boolean applyLighting,
+	                   @Nullable ResourceLocation textureRes, int drawMode, boolean smoothShading, float lineWidth)
 	{
 		this.destFactor = destFactor;
 		this.vertexFormat = vertexFormat;
 		this.renderThroughBlocks = renderThroughBlocks;
 		this.applyLighting = applyLighting;
 		this.textureRes = textureRes;
+		this.drawMode = drawMode;
+		this.smoothShading = smoothShading;
+		this.lineWidth = lineWidth;
 		this.shader = null;
 		this.shaderParameters = partialTicks -> new float[0];
 		this.requiresNormals = vertexFormat.getElements().stream()
@@ -92,6 +125,9 @@ public enum ParticleDrawStages implements ISerializableEnum
 		this.renderThroughBlocks = renderThroughBlocks;
 		this.applyLighting = applyLighting;
 		this.textureRes = textureRes;
+		this.drawMode = GL11.GL_QUADS;
+		this.smoothShading = false;
+		this.lineWidth = 1f;
 		this.requiresNormals = vertexFormat.getElements().stream()
 				.anyMatch(element -> element.getUsage()==EnumUsage.NORMAL);
 		this.shader = shader;
@@ -111,10 +147,17 @@ public enum ParticleDrawStages implements ISerializableEnum
 		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, destFactor);
 		if(this.renderThroughBlocks)
 			GlStateManager.disableDepth();
+		else
+			GlStateManager.enableDepth();
+
 		if(shader!=null)
 			ShaderUtil.useShader(shader, shaderParameters.apply(partialTicks));
 
-		buffer.begin(GL11.GL_QUADS, vertexFormat);
+		if(smoothShading)
+			GlStateManager.shadeModel(GL11.GL_SMOOTH);
+		if(lineWidth!=1f)
+			GL11.glLineWidth(lineWidth);
+		buffer.begin(drawMode, vertexFormat);
 	}
 
 	public void clear()
@@ -125,6 +168,10 @@ public enum ParticleDrawStages implements ISerializableEnum
 			GlStateManager.enableTexture2D();
 		if(shader!=null)
 			ShaderUtil.releaseShader();
+		if(smoothShading)
+			GlStateManager.shadeModel(GL11.GL_FLAT);
+		if(lineWidth!=1f)
+			GL11.glLineWidth(1f);
 		if(applyLighting)
 			GlStateManager.disableLighting();
 

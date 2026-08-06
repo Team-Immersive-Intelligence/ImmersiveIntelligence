@@ -734,7 +734,7 @@ public class CommonProxy implements IGuiHandler
 		registerEntity(i++, EntityShrapnel.class, "shrapnel", 16, 1, true);
 		registerEntity(i++, EntityWhitePhosphorus.class, "white_phosphorus", 16, 1, true);
 
-		registerEntity(i++, EntityMachinegun.class, "machinegun", 64, 1, true);
+		registerEntity(i++, EntityMachinegun.class, "machinegun", 64, 1, false);
 		registerEntity(i++, EntitySkycrateInternal.class, "skycrate_internal", 64, 1, true);
 
 		registerEntity(i++, EntityVehicleSeat.class, "seat", 64, 1, false);
@@ -744,9 +744,9 @@ public class CommonProxy implements IGuiHandler
 		registerEntity(i++, EntityFieldFlak.class, "field_flak", 64, 1, false);
 		registerEntity(i++, EntityFieldGun.class, "field_gun", 64, 1, false);
 
-		registerEntity(i++, EntityTripodPeriscope.class, "tripod_periscope", 64, 1, true);
-		registerEntity(i++, EntityAtomicBoom.class, "atomic_boom", 64, 1, true);
-		registerEntity(i++, EntityGasCloud.class, "gas_cloud", 64, 1, true);
+		registerEntity(i++, EntityTripodPeriscope.class, "tripod_periscope", 64, 1, false);
+		registerEntity(i++, EntityAtomicBoom.class, "atomic_boom", 64, 1, false);
+		registerEntity(i++, EntityGasCloud.class, "gas_cloud", 64, 1, false);
 
 		registerEntity(i++, EntityHans.class, "hans", 64, 4, true);
 

@@ -12,6 +12,9 @@ import javax.vecmath.Vector3f;
 import java.util.function.Supplier;
 
 /**
+ * Defines values that particle factories, programs, and particles can exchange.
+ * Properties use a common NBT representation for resource files and network data.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
  * @since 15.12.2024
@@ -38,6 +41,7 @@ public enum ParticleProperties implements ISerializableEnum
 
 	//--- Color ---//
 	COLOR(IIColor.class, () -> IIColor.WHITE),
+	COLOR_SECONDARY(IIColor.class, () -> IIColor.WHITE),
 	RED(float.class, true, () -> 1f),
 	GREEN(float.class, true, () -> 1f),
 	BLUE(float.class, true, () -> 1f),

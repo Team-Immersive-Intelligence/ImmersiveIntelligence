@@ -43,6 +43,7 @@ public class ParticleSystem
 	//--- Constants ---//
 	public static final ResourceLocation PARTICLE_TEXTURES = new ResourceLocation("textures/particle/particles.png");
 	private final Int2ObjectOpenHashMap<List<AbstractParticle>> scheduledParticles = new Int2ObjectOpenHashMap<>();
+
 	//--- Fields ---//
 	private int particleAmount = 0;
 	private final Map<ParticleDrawStages, Queue<AbstractParticle>> particles = new HashMap<ParticleDrawStages, Queue<AbstractParticle>>()
@@ -113,7 +114,7 @@ public class ParticleSystem
 			//Cycle through the scheduled particles and decrement their timers
 			int[] keys = scheduledParticles.keySet().toIntArray();
 			Arrays.sort(keys);
-			for(int i = keys.length-1; i >= 0; i--)
+			for(int i = 0; i < keys.length; i++)
 			{
 				int key = keys[i];
 				List<AbstractParticle> particles = scheduledParticles.remove(key);
@@ -171,7 +172,6 @@ public class ParticleSystem
 		float xy = ActiveRenderInfo.getRotationXY();
 		float xz = ActiveRenderInfo.getRotationXZ();
 		EntityPlayer player = Minecraft.getMinecraft().player;
-
 		if(player!=null)
 		{
 			//Simulate the particle system for the current frame, so that particles are in the correct position when rendered
@@ -186,10 +186,8 @@ public class ParticleSystem
 
 			GlStateManager.depthMask(false);
 			GlStateManager.enableDepth();
-
 			Tessellator tess = Tessellator.getInstance();
 			BufferBuilder buffer = tess.getBuffer();
-
 			drawParticles:
 			synchronized(particles)
 			{
@@ -204,7 +202,6 @@ public class ParticleSystem
 						iterator.remove();
 						continue;
 					}
-
 					//Prepare settings for the draw stage
 					int particleCount = 0;
 					particleStage.getKey().prepareRender(buffer, partialTicks);
@@ -225,7 +222,6 @@ public class ParticleSystem
 					particleStage.getKey().clear();
 				}
 			}
-
 			//Cleanup
 			GlStateManager.enableCull();
 			GlStateManager.depthMask(true);

@@ -8,10 +8,12 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fml.common.toposort.TopologicalSort;
+import net.minecraftforge.fml.common.toposort.TopologicalSort.DirectedGraph;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.ammo.PenetrationRegistry;
@@ -19,14 +21,18 @@ import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentEffectShape;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.fx.factories.ParticleFactory;
 import pl.pabilo8.immersiveintelligence.client.fx.particles.AbstractParticle;
+import pl.pabilo8.immersiveintelligence.client.fx.utils.IIParticleUtils.PositionGenerator;
+import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleProgram.ParticleArgumentException;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Graphics;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
+import pl.pabilo8.immersiveintelligence.common.ammo.components.nuke.AmmoComponentNuke;
 import pl.pabilo8.immersiveintelligence.common.util.*;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import javax.annotation.Nullable;
 import javax.vecmath.Vector2f;
+import javax.vecmath.Vector3f;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -156,7 +162,7 @@ public class ParticleRegistry
 					try
 					{
 						program.initArguments(params.split(","));
-					} catch(ParticleProgram.ParticleArgumentException e)
+					} catch(ParticleArgumentException e)
 					{
 						IILogger.error("Error initializing program arguments for "+name+": "+e.getMessage());
 					}
@@ -173,7 +179,7 @@ public class ParticleRegistry
 
 	public static void loadAllParticleFiles()
 	{
-		TopologicalSort.DirectedGraph<String> graph = new TopologicalSort.DirectedGraph<>();
+		DirectedGraph<String> graph = new DirectedGraph<>();
 		FILELOADER_ENTRIES.keySet().forEach(graph::addNode);
 
 		for(String name : FILELOADER_ENTRIES.keySet())
@@ -522,6 +528,230 @@ public class ParticleRegistry
 			maxDistanceSq = Math.max(maxDistanceSq, x*x+y*y+z*z);
 		}
 		return (float)Math.sqrt(maxDistanceSq);
+	}
+
+	/**
+	 * Spawns the complete white phosphorus effect without client-side effect entities.
+	 */
+	public static void spawnWhitePhosphorusFX(World world, Vec3d centerPos, Vec3d direction,
+	                                          ComponentEffectShape shape, float size)
+	{
+		Vec3d mainPosition = centerPos.subtract(direction);
+		Vec3d mainMotion = direction.scale(-0.75);
+
+		switch(shape)
+		{
+			case ORB:
+			case STAR:
+			case CONE:
+				spawnParticle("phosphorus/orb", centerPos, Vec3d.ZERO, new Vector2f(0, 0));
+				mainMotion = new Vec3d(0, 0.4, 0);
+
+				float particlesInLayer = 10f*size;
+				int fragmentCount = MathHelper.ceil(2f*particlesInLayer);
+				for(int i = 0; i < fragmentCount; i++)
+				{
+					Vec3d fragmentDirection = direction
+							.scale(i < size*10f?-1: -2)
+							.rotateYaw(i/particlesInLayer*360f);
+					Vec3d fragmentPosition = centerPos.addVector(
+							fragmentDirection.x, -direction.y, fragmentDirection.z
+					);
+					fragmentDirection = fragmentDirection.scale(2);
+					Vec3d fragmentMotion = new Vec3d(
+							fragmentDirection.x*0.125f,
+							(fragmentDirection.y+(i < size*10f?2: 0.5))*0.25f,
+							fragmentDirection.z*0.125f
+					);
+					scheduleWhitePhosphorusTrace(world, fragmentPosition, fragmentMotion);
+				}
+				break;
+			case LINE:
+			default:
+				break;
+		}
+
+		scheduleWhitePhosphorusTrace(world, mainPosition, mainMotion);
+	}
+
+	private static void scheduleWhitePhosphorusTrace(World world, Vec3d initialPosition, Vec3d initialMotion)
+	{
+		Vec3d position = initialPosition;
+		Vec3d motion = initialMotion;
+		for(int tick = 0; tick < 8; tick++)
+		{
+			float progress = (tick+1)/7f;
+			scheduleSpawnParticle("phosphorus/ember", position, motion, new Vector2f(0, 0), tick)
+					.withProperty(ParticleProperties.SIZE, Math.max(0.05f, 0.25f-0.07f*progress));
+			scheduleSpawnParticle("phosphorus/smoke_trace", position, Vec3d.ZERO, new Vector2f(0, 0), tick)
+					.withProperty(ParticleProperties.SIZE, Math.max(0.15f, 0.8f-0.5f*progress));
+
+			if(tick < 6)
+			{
+				int gracefulCount = Math.floorMod(IIParticleUtils.randInt.get(), 3);
+				for(int i = 0; i < gracefulCount; i++)
+					scheduleSpawnParticle("phosphorus/smoke_graceful",
+							position.addVector(0, 0.5, 0).add(IIParticleUtils.getRandXZ().scale(0.5f)),
+							Vec3d.ZERO, new Vector2f(0, 0), tick);
+			}
+
+			Vec3d nextPosition = position.add(motion);
+			RayTraceResult hit = world.rayTraceBlocks(position, nextPosition, false, true, false);
+			if(hit!=null)
+				break;
+
+			position = nextPosition;
+			motion = motion.scale(0.99).addVector(0, -0.004, 0);
+		}
+	}
+
+	public static void spawnAtomicExplosionFX(World world, Vec3d centerPos, float size)
+	{
+		ParticleDetail particleDetail = IIParticleUtils.getParticleDetailLevel(Graphics.nukeParticlesDetail);
+		if(!particleDetail.isEnabled())
+			return;
+
+		spawnParticle("nuke/glow", centerPos, Vec3d.ZERO, new Vector2f(0, 0))
+				.withProperty(ParticleProperties.SIZE, size)
+				.withProperty(ParticleProperties.MAX_LIFETIME, 400);
+
+		//Compute the particle budgets
+		float effectExtent = MathHelper.clamp(size*AmmoComponentNuke.EXPLOSION_SIZE, 1f, AmmoComponentNuke.EXPLOSION_POWER+1f);
+		float logSize = 1f+MathHelper.log2(Math.max(1, (int)effectExtent));
+
+		//Shockwave
+		final int tick = particleDetail.isHigh()?4: particleDetail.isMedium()?6: 8;
+		for(int i = 0; i < 40; i += tick)
+			ParticleRegistry.scheduleSpawnParticle("nuke/shockwave_main",
+					centerPos.addVector(0, 1.5*size, 0), Vec3d.ZERO, new Vector2f(0, 0),
+					i);
+
+		//Dust Cloud
+		float cloudSize = 3.5f;
+		int steps = (int)Math.ceil(AmmoComponentNuke.EXPLOSION_SIZE/cloudSize);
+		for(int i = 0; i < steps; i++)
+		{
+			int delay = 2*i;
+			int perRing = (int)((i+1)*2*Math.PI);
+			for(int p = 0; p < perRing; p++)
+			{
+				Vec3d pos = PositionGenerator.CIRCLE_XZ.generatePosition(centerPos, p, i*cloudSize, perRing);
+				scheduleSpawnParticle("nuke/dust_cloud", pos.addVector(0, (steps-i)*0.25f-2.0f, 0),
+						Vec3d.ZERO, new Vector2f(0, 0), delay)
+						.withProperty(ParticleProperties.SIZE, cloudSize)
+						.withProperty(ParticleProperties.MAX_LIFETIME, (int)(100*logSize)+100);
+			}
+		}
+
+		//Bright core
+		float coreSize = 6f*size;
+		int lifetime = (int)(65*logSize)+75;
+		for(int p = 0; p < 8*size; p++)
+		{
+			Vec3d pos = PositionGenerator.CIRCLE_XZ.generatePosition(centerPos, p, coreSize+1, (int)(8*size));
+
+			scheduleSpawnParticle("nuke/dust_cloud", pos.addVector(0, -1.0f, 0),
+					Vec3d.ZERO, new Vector2f(0, 0), 60)
+					.withProperty(ParticleProperties.SIZE, coreSize+1)
+					.withProperty(ParticleProperties.MAX_LIFETIME, lifetime);
+			scheduleSpawnParticle("nuke/nuke_core", pos.addVector(0, -2.0f, 0),
+					Vec3d.ZERO, new Vector2f(0, 0), 60)
+					.withProperty(ParticleProperties.SIZE, coreSize)
+					.withProperty(ParticleProperties.MAX_LIFETIME, lifetime);
+
+			scheduleSpawnParticle("nuke/post_cloud", pos.addVector(0, -1.0f, 0),
+					Vec3d.ZERO, new Vector2f(0, 0), 60+lifetime-20)
+					.withProperty(ParticleProperties.SIZE, coreSize)
+					.withProperty(ParticleProperties.MAX_LIFETIME, lifetime+20);
+		}
+
+		//Nuclear mushroom pillar, rising from the explosion centre.
+		float mushroomHeight = effectExtent*0.95f;
+		for(float i = 0; i <= mushroomHeight; i += coreSize)
+		{
+			int pillarLifetime = lifetime-MathHelper.clamp((int)((i/mushroomHeight)*lifetime/2), 0, lifetime/2);
+			scheduleSpawnParticle("nuke/nuke_core", centerPos.addVector(0, i-coreSize, 0),
+					new Vec3d(0, 0.01f*size, 0), new Vector2f(0, 0),
+					(int)(60+i))
+					.withProperty(ParticleProperties.SIZE, coreSize)
+					.withProperty(ParticleProperties.MAX_LIFETIME, pillarLifetime);
+
+			scheduleSpawnParticle("nuke/post_cloud", centerPos.addVector(0, i-coreSize, 0),
+					Vec3d.ZERO, new Vector2f(0, 0), (int)(60+i+pillarLifetime-20))
+					.withProperty(ParticleProperties.SIZE, coreSize)
+					.withProperty(ParticleProperties.MAX_LIFETIME, lifetime+20);
+		}
+
+		//Nuclear mushroom top
+		int initialMushroomTime = 60+MathHelper.ceil(mushroomHeight);
+		int mushroomLifetime = Math.max(20, lifetime/2);
+		steps = (int)Math.ceil(AmmoComponentNuke.EXPLOSION_SIZE*2/coreSize);
+		for(int i = 0; i < steps; i++)
+		{
+			int delay = initialMushroomTime+2*i;
+			int ringLifetime = mushroomLifetime+4*(steps-1-i);
+			int perRing = (int)((i+1)*2*Math.PI);
+			for(int p = 0; p < perRing; p++)
+			{
+				Vec3d pos = PositionGenerator.CIRCLE_XZ.generatePosition(centerPos, p, i*coreSize*0.5f, perRing);
+				Vec3d mushroomPos = pos.addVector(0, mushroomHeight+(steps-i)*0.25f-2.0f, 0);
+
+				scheduleSpawnParticle("nuke/nuke_core", mushroomPos,
+						Vec3d.ZERO, new Vector2f(0, 0), delay)
+						.withProperty(ParticleProperties.SIZE, coreSize*0.5f)
+						.withProperty(ParticleProperties.MAX_LIFETIME, ringLifetime);
+
+				scheduleSpawnParticle("nuke/post_cloud", mushroomPos,
+						Vec3d.ZERO, new Vector2f(0, 0), delay+ringLifetime-20)
+						.withProperty(ParticleProperties.SIZE, coreSize*0.5f)
+						.withProperty(ParticleProperties.MAX_LIFETIME, lifetime+20);
+			}
+		}
+	}
+
+	/**
+	 * Spawns an EMP flash, shockwave, and one lightning arc for each affected target.
+	 */
+	public static void spawnEMPExplosionFX(World world, Vec3d centerPos, float radius, List<Vec3d> affectedTargets)
+	{
+		ParticleDetail particleDetail = IIParticleUtils.getParticleDetailLevel(Graphics.explosionParticlesDetail);
+		if(!particleDetail.isEnabled())
+			return;
+
+		float effectRadius = Math.max(1f, radius);
+		IIColor coreColor = IIColor.fromPackedRGB(0xDDF7FF);
+		IIColor edgeColor = IIColor.fromPackedRGB(0x2F7FFF);
+
+		AbstractParticle glow = spawnParticle("emp/glow", centerPos, Vec3d.ZERO, new Vector2f(0, 0));
+		if(glow!=null)
+			glow.withProperty(ParticleProperties.SIZE, MathHelper.clamp(effectRadius*0.015f, 0.125f, 0.75f))
+					.withProperty(ParticleProperties.COLOR, coreColor)
+					.withProperty(ParticleProperties.COLOR_SECONDARY, edgeColor);
+
+		AbstractParticle shockwave = spawnParticle("explosion/shockwave", centerPos.addVector(0, 0.1, 0),
+				Vec3d.ZERO, new Vector2f(0, 0));
+		if(shockwave!=null)
+			shockwave.withProperty(ParticleProperties.SIZE, effectRadius*0.75f)
+					.withProperty(ParticleProperties.COLOR, edgeColor)
+					.withProperty(ParticleProperties.MAX_LIFETIME, 12);
+
+		if(affectedTargets==null)
+			return;
+		for(Vec3d target : affectedTargets)
+		{
+			if(target==null)
+				continue;
+			spawnLightning("emp/lightning", centerPos, target);
+			spawnLightning("emp/lightning_core", centerPos, target);
+		}
+	}
+
+	private static void spawnLightning(String particleName, Vec3d start, Vec3d end)
+	{
+		AbstractParticle lightning = spawnParticle(particleName, start, Vec3d.ZERO, new Vector2f(0, 0));
+		if(lightning!=null)
+			lightning.withProperty(ParticleProperties.STRETCH,
+					new Vector3f((float)end.x, (float)end.y, (float)end.z));
 	}
 
 	public static void spawnGasCloud(Vec3d pos, float size, Fluid fluid)

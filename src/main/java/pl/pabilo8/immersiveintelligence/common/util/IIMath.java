@@ -15,6 +15,7 @@ import javax.annotation.Nonnull;
 public class IIMath extends MathHelper
 {
 	public static final Vec3d ONE = new Vec3d(1, 1, 1);
+	public static final double GOLDEN_ANGLE = Math.PI*(3-Math.sqrt(5));
 
 	/**
 	 * @param value to be squared

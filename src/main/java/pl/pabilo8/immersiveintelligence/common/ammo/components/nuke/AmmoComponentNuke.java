@@ -31,6 +31,7 @@ import pl.pabilo8.immersiveintelligence.common.IIPotions;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.EntityAtomicBoom;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageExplosion;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIDamageSources;
 import pl.pabilo8.immersiveintelligence.common.util.IIExplosion;
@@ -46,6 +47,7 @@ import java.util.List;
  */
 public class AmmoComponentNuke extends AmmoComponent
 {
+	public static final int EXPLOSION_SIZE = 56, EXPLOSION_POWER = 64;
 	private static final int BIOME_ARRAY_SIZE = 16*16;
 	private static final int FULL_CHUNK_PACKET_MASK = 65535;
 
@@ -63,17 +65,19 @@ public class AmmoComponentNuke extends AmmoComponent
 	@Override
 	public void onEffect(World world, Vec3d pos, Vec3d dir, ComponentEffectShape shape, NBTTagCompound tag, float size, float multiplier, Entity owner)
 	{
-		//Server-side only. Spawning the visual entity and playing the ranged sound from the server already reaches clients.
+		//The server sends visuals before it starts the expensive terrain work.
 		if(world.isRemote)
 			return;
 
+		IIPacketHandler.playRangedSound(world, pos, IISounds.explosionNuke, SoundCategory.NEUTRAL, 72, 1f, 0f);
+		IIPacketHandler.sendToClient(MessageExplosion.createNukeMessage(world, pos, multiplier));
+
 		BlockPos centre = new BlockPos(pos);
-		new IIExplosion(world, owner, pos, null, 56*multiplier, 64, ComponentEffectShape.ORB, false, true, false)
+		new IIExplosion(world, owner, pos, null, EXPLOSION_SIZE*multiplier, EXPLOSION_POWER,
+				ComponentEffectShape.ORB, false, true, false)
 				.doExplosion(false);
 
 		applyEntityEffects(world, centre, multiplier);
-
-		IIPacketHandler.playRangedSound(world, pos, IISounds.explosionNuke, SoundCategory.NEUTRAL, 72, 1f, 0f);
 
 		EntityAtomicBoom entityAtomicBoom = new EntityAtomicBoom(world, multiplier);
 		entityAtomicBoom.setPosition(pos.x, pos.y, pos.z);

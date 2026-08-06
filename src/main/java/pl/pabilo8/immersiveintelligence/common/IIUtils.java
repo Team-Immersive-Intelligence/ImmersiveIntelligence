@@ -27,7 +27,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -66,8 +65,6 @@ import java.util.function.Predicate;
 @SuppressWarnings("unused")
 public class IIUtils
 {
-	public static final Vec3d ONE = new Vec3d(1, 1, 1);
-
 	public static <T extends TileEntity & IImmersiveConnectable> Set<Connection> genConnectableBlockstate(T te)
 	{
 		Set<Connection> conns = ImmersiveNetHandler.INSTANCE.getConnections(te.getWorld(), te.getPos());
@@ -520,9 +517,13 @@ public class IIUtils
 	}
 
 	/**
+	 * @param world     the world
+	 * @param centerPos the center position of the orb
+	 * @param radius    the radius of the orb
+	 * @param allowAir  if false non-air blocks will be included in the result
 	 * @return blocks in an orb of a given radius
 	 */
-	public static Set<BlockPos> getBlocksInOrb(World world, BlockPos centerPos, float radius)
+	public static Set<BlockPos> getBlocksInOrb(World world, BlockPos centerPos, float radius, boolean allowAir)
 	{
 		ArrayList<BlockPos> set = new ArrayList<>();
 		float diameter = radius*radius;
@@ -535,10 +536,24 @@ public class IIUtils
 					BlockPos pos = centerPos.add(x, y, z);
 					//Check if distance is in radius
 					if(pos.distanceSq(centerPos) <= diameter)
-						set.add(pos);
+					{
+						if(allowAir||!world.isAirBlock(pos))
+							set.add(pos);
+					}
 				}
 
 		return Sets.newHashSet(set);
+	}
+
+	/**
+	 * @param world     the world
+	 * @param centerPos the center position of the orb
+	 * @param radius    the radius of the orb
+	 * @return blocks in an orb of a given radius
+	 */
+	public static Set<BlockPos> getBlocksInOrb(World world, BlockPos centerPos, float radius)
+	{
+		return getBlocksInOrb(world, centerPos, radius, true);
 	}
 
 	public static Set<BlockPos> getBlocksInCube(World world, BlockPos centerPos, float radius)

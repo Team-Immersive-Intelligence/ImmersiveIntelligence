@@ -15,10 +15,11 @@ import java.util.IdentityHashMap;
 import java.util.Map;
 
 /**
- * Small composable capability provider which can decorate an existing provider.
- * Parent data is preserved, while serialisable capabilities registered on this provider are appended.
+ * Provides protection capabilities and delegates missing capability queries to a parent provider.
+ * Forge serialises attached providers separately, so parent NBT is not copied.
  *
- * @since 0.3.1
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 05.08.2026
  */
 public class ProtectionCapabilityProvider implements ICapabilitySerializable<NBTTagCompound>
 {
@@ -63,9 +64,8 @@ public class ProtectionCapabilityProvider implements ICapabilitySerializable<NBT
 	@Override
 	public NBTTagCompound serializeNBT()
 	{
-		NBTTagCompound nbt = serializeParent();
-		NBTTagCompound serializedCapabilities = nbt.hasKey(SERIALIZED_CAPABILITIES, Constants.NBT.TAG_COMPOUND)?
-				nbt.getCompoundTag(SERIALIZED_CAPABILITIES): new NBTTagCompound();
+		NBTTagCompound nbt = new NBTTagCompound();
+		NBTTagCompound serializedCapabilities = new NBTTagCompound();
 		for(Map.Entry<Capability<?>, Object> entry : capabilities.entrySet())
 		{
 			Object instance = entry.getValue();
@@ -85,9 +85,6 @@ public class ProtectionCapabilityProvider implements ICapabilitySerializable<NBT
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	public void deserializeNBT(NBTTagCompound nbt)
 	{
-		if(parent instanceof INBTSerializable)
-			((INBTSerializable)parent).deserializeNBT(nbt);
-
 		if(!nbt.hasKey(SERIALIZED_CAPABILITIES, Constants.NBT.TAG_COMPOUND))
 			return;
 		NBTTagCompound serializedCapabilities = nbt.getCompoundTag(SERIALIZED_CAPABILITIES);
@@ -100,14 +97,4 @@ public class ProtectionCapabilityProvider implements ICapabilitySerializable<NBT
 		}
 	}
 
-	private NBTTagCompound serializeParent()
-	{
-		if(parent instanceof INBTSerializable)
-		{
-			Object serialized = ((INBTSerializable<?>)parent).serializeNBT();
-			if(serialized instanceof NBTTagCompound)
-				return (NBTTagCompound)serialized;
-		}
-		return new NBTTagCompound();
-	}
 }

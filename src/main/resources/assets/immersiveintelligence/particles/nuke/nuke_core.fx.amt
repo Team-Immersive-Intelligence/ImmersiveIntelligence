@@ -1,0 +1,28 @@
+{
+  "type": "ParticleVanilla",
+  "textures": [
+    "immersiveintelligence:particle/smoke/smoke"
+  ],
+  "color": "ccfcfcfc",
+  "max_lifetime": 200,
+  "draw_stage": "custom_additive",
+  "programs": [
+    "color_transition(4A3026,5c3333,deb283)",
+    "smoke_transition"
+  ],
+  "scheduled": [
+    {
+      "time": 4,
+      "generator": "circle_xz",
+      "distance": 4.0,
+      "amount": 5,
+      "type": "nuke/nuke_core_bright",
+      "inherited_properties": [
+        "motion",
+        "lifetime",
+        "max_lifetime",
+        "size"
+      ]
+    }
+  ]
+}

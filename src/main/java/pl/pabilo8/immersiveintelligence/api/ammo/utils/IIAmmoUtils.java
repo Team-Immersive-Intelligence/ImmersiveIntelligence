@@ -61,9 +61,7 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 
 import javax.annotation.Nullable;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Stream;
 
 /**
@@ -504,8 +502,18 @@ public class IIAmmoUtils
 	}
 
 
-	public static void applyEMPEffect(World world, BlockPos pos, float radius, int extractedEnergy)
+	/**
+	 * Applies an EMP effect and returns the positions of affected targets.
+	 *
+	 * @param world           effect world
+	 * @param pos             effect centre
+	 * @param radius          effect radius
+	 * @param extractedEnergy energy removed from each target
+	 * @return affected tile and entity positions
+	 */
+	public static List<Vec3d> applyEMPEffect(World world, BlockPos pos, float radius, int extractedEnergy)
 	{
+		Set<Vec3d> affectedTargets = new LinkedHashSet<>();
 		Set<BlockPos> blocks = IIUtils.getBlocksInOrb(world, new BlockPos(pos), radius);
 		for(BlockPos pp : blocks)
 		{
@@ -514,24 +522,35 @@ public class IIAmmoUtils
 				te = ((TileEntityMultiblockPart<?>)te).master();
 
 			if(te!=null)
+			{
+				boolean affected = false;
 				if(te instanceof TileEntityMultiblockMetal)
+				{
 					((TileEntityMultiblockMetal<?, ?>)te).energyStorage.extractEnergy(extractedEnergy, false);
+					affected = true;
+				}
 				else
 					for(EnumFacing facing : EnumFacing.values())
-						if((te.hasCapability(CapabilityEnergy.ENERGY, facing)))
+						if(te.hasCapability(CapabilityEnergy.ENERGY, facing))
 						{
 							IEnergyStorage cap = te.getCapability(CapabilityEnergy.ENERGY, facing);
 							if(cap!=null)
 							{
 								cap.extractEnergy(extractedEnergy, false);
+								affected = true;
 								break;
 							}
 						}
+
+				if(affected)
+					affectedTargets.add(new Vec3d(te.getPos()).addVector(0.5, 0.5, 0.5));
+			}
 		}
 
 		for(EntityLivingBase e : world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX(), pos.getY(), pos.getZ()).grow(radius)))
 			if(!(e instanceof ITeslaEntity))
 			{
+				affectedTargets.add(e.getPositionVector().addVector(0, e.height*0.5, 0));
 				ElectricDamageSource dmgsrc = IEDamageSources.causeTeslaDamage(IEConfig.Machines.teslacoil_damage, false);
 
 				if(!world.isRemote)
@@ -558,5 +577,7 @@ public class IIAmmoUtils
 									ItemNBTHelper.setInt(stack, "power", Math.max(0, ItemNBTHelper.getInt(stack, "power")-extractedEnergy));
 					}
 			}
+
+		return new ArrayList<>(affectedTargets);
 	}
 }
