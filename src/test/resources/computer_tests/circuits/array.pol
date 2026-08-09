@@ -1,0 +1,15 @@
+use ARRAY
+
+array a = array_create 10
+type array_length @a
+null n = array_push @a 20
+type array_length @a
+type array_get @a 0
+type array_set @a 0 15
+type array_get @a 0
+type array_swap @a 0 1
+type array_get @a 0
+type array_pop @a
+type array_length @a
+
+end

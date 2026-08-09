@@ -2,7 +2,10 @@ package pl.pabilo8.immersiveintelligence.api.data.operations.fluidstack;
 
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation;
-import pl.pabilo8.immersiveintelligence.api.data.types.*;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeFluidStack;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 
 import javax.annotation.Nonnull;
@@ -14,7 +17,7 @@ import javax.annotation.Nonnull;
  **/
 @DataOperation.DataOperationMeta(name = "fluidstack_create", expression = "<fluidstack>",
 		allowedTypes = {DataTypeString.class, DataTypeInteger.class, DataTypeString.class}, params = {"fluid_id", "amount", "nbt"},
-		expectedResult = DataTypeItemStack.class)
+		expectedResult = DataTypeFluidStack.class)
 public class DataOperationFluidCreate extends DataOperation
 {
 	@Nonnull

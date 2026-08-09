@@ -14,7 +14,7 @@ import javax.annotation.Nonnull;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 05.07.2019
  */
-@DataOperationMeta(name = "sin", allowedTypes = {NumericDataType.class}, params = {"angle"}, expectedResult = NumericDataType.class)
+@DataOperationMeta(name = "sin", allowedTypes = {NumericDataType.class}, params = {"angle"}, expectedResult = DataTypeFloat.class)
 public class DataOperationSin extends DataOperation
 {
 	@Nonnull

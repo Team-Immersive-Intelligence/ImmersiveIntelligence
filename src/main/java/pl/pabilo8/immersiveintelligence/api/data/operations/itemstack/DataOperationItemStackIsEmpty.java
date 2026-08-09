@@ -20,6 +20,7 @@ public class DataOperationItemStackIsEmpty extends DataOperation
 	@Override
 	public DataType execute(DataPacket packet, DataTypeExpression data)
 	{
-		return new DataTypeBoolean(packet.getVarInType(DataTypeItemStack.class, data.getArgument(0)).value.isEmpty());
+		DataTypeItemStack stack = packet.getVarInType(DataTypeItemStack.class, data.getArgument(0));
+		return new DataTypeBoolean(stack.value.isEmpty());
 	}
 }

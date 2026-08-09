@@ -260,7 +260,8 @@ public class ItemIIFunctionalCircuit extends ItemIISubItemsBase<Circuits> implem
 				"item_set_nbt",
 				"item_get_id",
 				"item_is_empty",
-				"item_stacks_with"
+				"item_stacks_with",
+				"item_matches_oredict"
 		),
 		ARRAY(CircuitTypes.BASIC,
 				"array_create",
@@ -288,6 +289,7 @@ public class ItemIIFunctionalCircuit extends ItemIISubItemsBase<Circuits> implem
 		),
 		TYPE_CONVERSION(CircuitTypes.BASIC,
 				"is_null",
+				"is_same_type",
 				"to_integer",
 				"to_float",
 				"to_string",

@@ -23,6 +23,6 @@ public class DataOperationMapGet extends DataOperation
 	public DataType execute(DataPacket packet, DataTypeExpression data)
 	{
 		DataTypeMap map = packet.getVarInType(DataTypeMap.class, data.getArgument(0));
-		return map.get(data.getArgument(1));
+		return map.get(packet.evaluateVariable(data.getArgument(1), false));
 	}
 }

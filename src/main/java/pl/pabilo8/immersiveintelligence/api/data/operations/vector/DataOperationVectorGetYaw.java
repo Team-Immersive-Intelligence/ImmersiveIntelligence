@@ -6,7 +6,6 @@ import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeFloat;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeVector;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
-import pl.pabilo8.immersiveintelligence.api.data.types.generic.NumericDataType;
 
 import javax.annotation.Nonnull;
 
@@ -17,7 +16,7 @@ import javax.annotation.Nonnull;
  **/
 @DataOperation.DataOperationMeta(name = "vector_get_yaw",
 		allowedTypes = {DataTypeVector.class}, params = {"vector"},
-		expectedResult = NumericDataType.class)
+		expectedResult = DataTypeFloat.class)
 public class DataOperationVectorGetYaw extends DataOperation
 {
 	@Nonnull

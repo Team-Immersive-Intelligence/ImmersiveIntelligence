@@ -8,7 +8,10 @@ import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import java.util.HashMap;
 
 /**
- * @author Pabilo8 (pabilo@iiteam.net)
+ * Stores POL data pages and compiled scripts.
+ *
+ * @author Pabilo8(pabilo@iiteam.net)
+ * @updated 09.08.2026
  * @since 16.04.2022
  */
 public class POLComputerMemory
@@ -33,10 +36,14 @@ public class POLComputerMemory
 	public POLComputerMemory(NBTTagCompound nbt)
 	{
 		NBTTagList list = nbt.getTagList("pages", NBT.TAG_COMPOUND);
-		pages = new DataPacket[list.tagCount()];
+		pages = new DataPacket[Math.max(list.tagCount(), 1)];
 
-		for(int i = 1; i < pages.length; i++)
+		for(int i = 0; i < list.tagCount(); i++)
 			pages[i] = new DataPacket((NBTTagCompound)list.get(i));
+		if(list.tagCount()==0)
+			pages[0] = new DataPacket();
+
+		packet = pages[0];
 	}
 
 	/**

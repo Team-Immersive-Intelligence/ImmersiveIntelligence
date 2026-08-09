@@ -14,7 +14,7 @@ import javax.annotation.Nonnull;
  * @since 09.10.2024
  */
 @DataOperation.DataOperationMeta(name = "array_create", expression = "<array>",
-		allowedTypes = {DataTypeArray.class, DataType.class},
+		allowedTypes = {DataType.class},
 		params = {"first"}, expectedResult = DataTypeArray.class)
 public class DataOperationArrayCreate extends DataOperation
 {
