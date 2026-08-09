@@ -24,7 +24,7 @@ public class GuiChemicalBath extends DecoTileGui<TileEntityChemicalBath, Contain
 {
 	@DecoResource
 	public static ResLoc TEXTURE = IIReference.RES_II.with("gui/chemical_bath");
-	private DecoImage[] progressArrows = new DecoImage[4];
+	private DecoImage[] progressArrows = new DecoImage[2];
 
 	public GuiChemicalBath(EntityPlayer player, TileEntityChemicalBath tile)
 	{
@@ -58,21 +58,21 @@ public class GuiChemicalBath extends DecoTileGui<TileEntityChemicalBath, Contain
 						.withUV(128, 0, 32, 106, 32+36)
 						.withDisabled(true),
 
-				progressArrows[0] = new DecoImage(20-4, 5+18-4+24+2+2)
+				new DecoImage(20-4, 5+18-4+24+2+2)
 						.withSize(19, 12)
 						.withImageLocation(TEXTURE, true)
 						.withUV(128, 0, 80, 19, 80+12),
-				progressArrows[1] = new DecoImage(120-4+18-2-1, 5+18-4+24+2+2)
+				new DecoImage(120-4+18-2-1, 5+18-4+24+2+2)
 						.withSize(21, 12)
 						.withImageLocation(TEXTURE, true)
 						.withUV(128, 19, 80, 19+21, 80+12),
 
-				progressArrows[2] = new DecoImage(20-4, 5+18-4+24+2+2)
+				progressArrows[0] = new DecoImage(20-4, 5+18-4+24+2+2)
 						.withSize(19, 12)
 						.withImageLocation(TEXTURE, true)
 						.withUV(128, 0, 80-12, 19, 80-12+12)
 						.withAnimation(ImageAnimationDirection.LEFT_TO_RIGHT, DecoGuiUtils.getMultiblockProductionSingleProgress(tile, 0f, 0.5f)),
-				progressArrows[3] = new DecoImage(120-4+18-2-1, 5+18-4+24+2+2)
+				progressArrows[1] = new DecoImage(120-4+18-2-1, 5+18-4+24+2+2)
 						.withSize(21, 12)
 						.withImageLocation(TEXTURE, true)
 						.withUV(128, 19, 80-12, 19+21, 80-12+12)

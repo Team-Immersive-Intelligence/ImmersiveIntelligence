@@ -20,7 +20,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoEntr
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPanel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBannerDisplay;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.DecoTextField;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoPlayerDisplay;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityFlagpole;
@@ -186,7 +186,7 @@ public class GuiFlagpoleFaction extends DecoTileGui<TileEntityFlagpole, Containe
 						.withLabel("name", () -> new DecoLabel(fontRenderer, 20, 3)
 								.withSize(78, 16)
 								.withAlign(DecoAlignment.LEFT))
-						.withComponent("head", () -> new DecoImage(3, 3).withSize(16, 16))
+						.withComponent("head", () -> new DecoPlayerDisplay(3, 3).withSize(16, 16))
 						.withComponent("role", p -> new DecoDropdown<PermissionRole>(p.width-118, 3)
 								.withSize(96, 16)
 								.withEntries(assignableRoles)
@@ -203,9 +203,8 @@ public class GuiFlagpoleFaction extends DecoTileGui<TileEntityFlagpole, Containe
 							PlayerInfo info = handler.getPlayerInfo(uuid);
 							PermissionRole role = identity.getRoleOf(uuid);
 							entry.label("name").withRawText(info.getName());
-							entry.component("head", DecoImage.class)
-									.withImageLocation(info.getSkin())
-									.withUV(64, 8, 8, 16, 16);
+							entry.component("head", DecoPlayerDisplay.class)
+									.withPlayerInfo(info);
 
 							DecoDropdown<PermissionRole> dropdown = entry.component("role", DecoDropdown.class);
 							dropdown.withEntries(role!=null&&role.isOwner()?Collections.singletonList(role): assignableRoles)
@@ -265,7 +264,7 @@ public class GuiFlagpoleFaction extends DecoTileGui<TileEntityFlagpole, Containe
 						.withLabel("name", () -> new DecoLabel(fontRenderer, 20, 3)
 								.withSize(panel.width-62, 16)
 								.withAlign(DecoAlignment.LEFT))
-						.withComponent("head", () -> new DecoImage(3, 3).withSize(16, 16))
+						.withComponent("head", () -> new DecoPlayerDisplay(3, 3).withSize(16, 16))
 						.withComponent("cancel", p -> new DecoButton(p.width-19, 3)
 								.withSize(16, 16)
 								.withTemplate(DecoTemplates.ACTION_BUTTON_REMOVE)
@@ -275,9 +274,8 @@ public class GuiFlagpoleFaction extends DecoTileGui<TileEntityFlagpole, Containe
 						.withElementApplyMethod((uuid, entry) -> {
 							PlayerInfo info = handler.getPlayerInfo(uuid);
 							entry.label("name").withRawText(info.getName());
-							entry.component("head", DecoImage.class)
-									.withImageLocation(info.getSkin())
-									.withUV(64, 8, 8, 16, 16);
+							entry.component("head", DecoPlayerDisplay.class)
+									.withPlayerInfo(info);
 						})
 				)
 		);

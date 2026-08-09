@@ -61,11 +61,11 @@ public class GuiElectrolyzer extends DecoTileGui<TileEntityElectrolyzer, Contain
 				new DecoBar(168, 0)
 						.withTemplate(DecoTemplates.BAR_ELECTRIC_ENERGY.apply(tile.energyStorage)),
 				//Production progress
-				this.imageProgress = new DecoImage(66-10-1, 42-8)
+				new DecoImage(66-10-1, 42-8)
 						.withSize(60, 12)
 						.withImageLocation(TEXTURE, true)
 						.withUV(64, 0, 0, 60, 12),
-				new DecoImage(66-10-1, 42-8)
+				this.imageProgress = new DecoImage(66-10-1, 42-8)
 						.withSize(60, 12)
 						.withImageLocation(TEXTURE, true)
 						.withUV(64, 0, 12, 60, 24)
