@@ -6,21 +6,33 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
+import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.EntityShrapnel;
 
+/**
+ * Renders a shrapnel particle
+ *
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 06.08.2026
+ * @ii-approved 0.3.1
+ * @since 26.10.2019
+ */
 public class ShrapnelRenderer extends Render<EntityShrapnel>
 {
+	private static final ResourceLocation SHRAPNEL_TEXTURE = new ResourceLocation(
+			ImmersiveIntelligence.MODID, "textures/entity/shrapnel.png"
+	);
+
 	public ShrapnelRenderer(RenderManager renderManager)
 	{
 		super(renderManager);
 	}
 
-	/**
-	 * Renders the desired {@code T} type Entity.
-	 */
 	@Override
-	public void doRender(EntityShrapnel entity, double x, double y, double z, float f0, float f1)
+	public void doRender(EntityShrapnel entity, double x, double y, double z, float entityYaw, float partialTicks)
 	{
+		if(entity.shrapnel==null)
+			return;
 
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(x, y, z);
@@ -31,27 +43,22 @@ public class ShrapnelRenderer extends Render<EntityShrapnel>
 
 		GlStateManager.rotate(180-this.renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
 		GlStateManager.rotate(180-this.renderManager.playerViewX, 1.0F, 0.0F, 0.0F);
+		entity.shrapnel.color.glColor();
 
-		if(entity.shrapnel!=null)
-		{
-			ClientUtils.bindTexture(entity.shrapnel.texture+".png");
-			GlStateManager.translate(-0.125f, -0.25f, 0f);
-			ClientUtils.drawTexturedRect(0f, 0f, 0.25f, 0.25f, 0.25, 0.5, 0.25, 0.5);
-		}
+		ClientUtils.mc().getTextureManager().bindTexture(SHRAPNEL_TEXTURE);
+		GlStateManager.translate(-0.125f, -0.25f, 0f);
+		ClientUtils.drawTexturedRect(-0.5f, -0.5f, 1f, 1f, 0, 1, 0, 1);
+
+		GlStateManager.color(1f, 1f, 1f, 1f);
 		RenderHelper.enableStandardItemLighting();
 		GlStateManager.disableBlend();
 		GlStateManager.disableRescaleNormal();
 		GlStateManager.popMatrix();
 	}
 
-	/**
-	 * Returns the location of an entity's texture. Doesn't seem to be called unless you call Render.bindEntityTexture.
-	 */
 	@Override
 	protected ResourceLocation getEntityTexture(EntityShrapnel entity)
 	{
-		return new ResourceLocation("immersiveengineering:textures/models/bullet.png");
+		return SHRAPNEL_TEXTURE;
 	}
-
-
 }

@@ -10,14 +10,13 @@
     "immersiveintelligence:particle/shrapnel/shrapnel2",
     "immersiveintelligence:particle/shrapnel/shrapnel3"
   ],
-  "max_lifetime": 45,
-  "draw_stage": "custom_additive",
-  "aabb": 0.4,
-  "color": "9c6724",
+  "max_lifetime": 20,
+  "draw_stage": "custom",
+  "color": "FFFFFFFF",
+  "size": 1.0,
   "programs": [
-    "smoke_transition",
     "lifetime_retexture",
-    "gravity(0.3,0.03)"
-  ],
-  "size": 0.4
+    "dust_transition",
+    "gravity(0.96,0.025)"
+  ]
 }

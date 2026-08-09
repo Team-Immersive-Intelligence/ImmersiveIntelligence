@@ -12,6 +12,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.config.Configurator;
+import pl.pabilo8.immersiveintelligence.api.api.protection.RadiationHandler;
 import pl.pabilo8.immersiveintelligence.api.data.radio.RadioNetwork;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler;
@@ -104,6 +105,7 @@ public class ImmersiveIntelligence
 		IILogger.debug("Pre-World Load cleanup");
 		CommonProxy.refreshFluidReferences();
 		RadioNetwork.INSTANCE.clearDevices();
+		RadiationHandler.INSTANCE.cleanup();
 		if(Factions.enableFactions)
 			DiplomacyHandler.getInstance(false).init();
 	}
@@ -137,6 +139,7 @@ public class ImmersiveIntelligence
 	{
 		IILogger.info("Post-World Unload cleanup");
 		RadioNetwork.INSTANCE.clearDevices();
+		RadiationHandler.INSTANCE.cleanup();
 		if(Factions.enableFactions)
 			DiplomacyHandler.getInstance(false).cleanup();
 	}

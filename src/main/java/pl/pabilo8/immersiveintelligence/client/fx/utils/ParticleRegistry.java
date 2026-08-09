@@ -754,6 +754,51 @@ public class ParticleRegistry
 					new Vector3f((float)end.x, (float)end.y, (float)end.z));
 	}
 
+	/**
+	 * Spawns a coloured shrapnel burst or a slow-falling glitter cloud.
+	 */
+	public static void spawnShrapnelFX(Vec3d centerPos, IIColor color, float size, boolean fallsSlowly)
+	{
+		ParticleDetail detail = IIParticleUtils.getParticleDetailLevel(Graphics.explosionParticlesDetail);
+		if(!detail.isEnabled())
+			return;
+
+		float playerDistance = (float)ClientUtils.mc().player.getDistance(centerPos.x, centerPos.y, centerPos.z);
+		float budgetScale = IIParticleUtils.getParticleBudgetScale(detail, playerDistance, 64f, 128f);
+		int count = MathHelper.clamp(MathHelper.ceil(20f*Math.max(0.25f, size)*budgetScale), 4, 128);
+		String particleName = fallsSlowly?"shrapnel/glitter": "shrapnel/burst";
+
+		for(int i = 0; i < count; i++)
+		{
+			Vec3d position = centerPos;
+			Vec3d motion;
+			AbstractParticle particle;
+			if(fallsSlowly)
+			{
+				position = position.add(IIParticleUtils.getRandXZ().scale(Math.max(0.5f, size)));
+				motion = new Vec3d(
+						ClientUtils.mc().world.rand.nextGaussian()*0.06,
+						0.2+IIParticleUtils.randFloat.get()*0.2,
+						ClientUtils.mc().world.rand.nextGaussian()*0.06
+				);
+				particle = scheduleSpawnParticle(particleName, position, motion, new Vector2f(0, 0), i%5);
+			}
+			else
+			{
+				motion = new Vec3d(
+						ClientUtils.mc().world.rand.nextGaussian(),
+						ClientUtils.mc().world.rand.nextGaussian(),
+						ClientUtils.mc().world.rand.nextGaussian()
+				).normalize().scale(0.15+IIParticleUtils.randFloat.get()*0.35);
+				particle = spawnParticle(particleName, position, motion, new Vector2f(0, 0));
+			}
+
+			if(particle!=null)
+				particle.withProperty(ParticleProperties.COLOR, color)
+						.withProperty(ParticleProperties.SIZE, fallsSlowly?0.12f: 0.18f);
+		}
+	}
+
 	public static void spawnGasCloud(Vec3d pos, float size, Fluid fluid)
 	{
 		//Check if fluid is not null

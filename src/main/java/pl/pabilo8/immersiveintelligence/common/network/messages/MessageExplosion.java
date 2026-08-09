@@ -16,6 +16,7 @@ import pl.pabilo8.immersiveintelligence.client.ClientEventHandler;
 import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleRegistry;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Graphics;
 import pl.pabilo8.immersiveintelligence.common.network.IIMessage;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,21 +26,25 @@ import java.util.List;
  * Sends an explosion visual effect to nearby clients.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @since 06.08.2026
+ * @updated 06.08.2026
+ * @ii-approved 0.3.1
+ * @since 01.09.2022
  */
 public class MessageExplosion extends IIMessage implements IPositionBoundMessage
 {
 	private static final int NUKE_MESSAGE_DISTANCE = 512;
 	private static final int WHITE_PHOSPHORUS_MESSAGE_DISTANCE = 128;
 	private static final int EMP_MESSAGE_DISTANCE = 192;
+	private static final int SHRAPNEL_MESSAGE_DISTANCE = 128;
 	private static final int MAX_EMP_TARGETS = 4096;
 
 	private EffectType effectType = EffectType.EXPLOSION;
 	private World world;
-	private boolean flaming, damagesTerrain;
+	private boolean flaming, damagesTerrain, fallsSlowly;
 	private float radius, strength, size;
 	private Vec3d pos = Vec3d.ZERO, direction = Vec3d.ZERO;
 	private ComponentEffectShape shape = ComponentEffectShape.ORB;
+	private IIColor color = IIColor.WHITE;
 	private List<BlockPos> particleBlocks = Collections.emptyList();
 	private List<Vec3d> effectTargets = Collections.emptyList();
 
@@ -124,6 +129,19 @@ public class MessageExplosion extends IIMessage implements IPositionBoundMessage
 		return message;
 	}
 
+	/**
+	 * Creates a shrapnel activation effect message.
+	 */
+	public static MessageExplosion createShrapnelMessage(World world, Vec3d pos, IIColor color, float size,
+	                                                     boolean fallsSlowly)
+	{
+		MessageExplosion message = new MessageExplosion(EffectType.SHRAPNEL, world, pos);
+		message.color = color;
+		message.size = size;
+		message.fallsSlowly = fallsSlowly;
+		return message;
+	}
+
 	@Override
 	protected void onServerReceive(WorldServer world, NetHandlerPlayServer handler)
 	{
@@ -145,6 +163,9 @@ public class MessageExplosion extends IIMessage implements IPositionBoundMessage
 			case EMP:
 				ClientEventHandler.addScreenshakeSource(pos, MathHelper.clamp(radius/10f, 0.5f, 2f), 8, 0);
 				ParticleRegistry.spawnEMPExplosionFX(world, pos, radius, effectTargets);
+				break;
+			case SHRAPNEL:
+				ParticleRegistry.spawnShrapnelFX(pos, color, size, fallsSlowly);
 				break;
 			case EXPLOSION:
 			default:
@@ -177,6 +198,11 @@ public class MessageExplosion extends IIMessage implements IPositionBoundMessage
 				this.effectTargets = new ArrayList<>(effectTargetCount);
 				for(int i = 0; i < effectTargetCount; i++)
 					this.effectTargets.add(readVec3(buf));
+				break;
+			case SHRAPNEL:
+				this.color = readColor(buf);
+				this.size = buf.readFloat();
+				this.fallsSlowly = buf.readBoolean();
 				break;
 			case EXPLOSION:
 			default:
@@ -218,6 +244,11 @@ public class MessageExplosion extends IIMessage implements IPositionBoundMessage
 				for(int i = 0; i < effectTargetCount; i++)
 					writeVec3(buf, effectTargets.get(i));
 				break;
+			case SHRAPNEL:
+				writeColor(buf, color);
+				buf.writeFloat(size);
+				buf.writeBoolean(fallsSlowly);
+				break;
 			case EXPLOSION:
 			default:
 				buf.writeBoolean(flaming);
@@ -258,6 +289,8 @@ public class MessageExplosion extends IIMessage implements IPositionBoundMessage
 				return Math.max(Graphics.explosionMessageDistance, WHITE_PHOSPHORUS_MESSAGE_DISTANCE);
 			case EMP:
 				return Math.max(Graphics.explosionMessageDistance, EMP_MESSAGE_DISTANCE);
+			case SHRAPNEL:
+				return Math.max(Graphics.explosionMessageDistance, SHRAPNEL_MESSAGE_DISTANCE);
 			case EXPLOSION:
 			default:
 				return Graphics.explosionMessageDistance;
@@ -275,6 +308,7 @@ public class MessageExplosion extends IIMessage implements IPositionBoundMessage
 		EXPLOSION,
 		WHITE_PHOSPHORUS,
 		NUKE,
-		EMP
+		EMP,
+		SHRAPNEL
 	}
 }

@@ -404,13 +404,7 @@ public final class RadiationHandler implements INBTSerializable<NBTTagCompound>
 	@Override
 	public void deserializeNBT(NBTTagCompound nbt)
 	{
-		centers.clear();
-		centerIndex.clear();
-		emitterIndex.clear();
-		clientEmitterIndex.clear();
-		clientEmitterWorld = null;
-		clientEmitterUpdate = Long.MIN_VALUE;
-
+		cleanup();
 		NBTTagList list = nbt.getTagList("centers", Constants.NBT.TAG_COMPOUND);
 		for(int i = 0; i < list.tagCount(); i++)
 		{
@@ -418,6 +412,16 @@ public final class RadiationHandler implements INBTSerializable<NBTTagCompound>
 			center.deserializeNBT(list.getCompoundTagAt(i));
 			putRadiationCenter(center.getDimension(), center.getPosition(), center.getRadius(), center.getStrength(), false);
 		}
+	}
+
+	public void cleanup()
+	{
+		centers.clear();
+		centerIndex.clear();
+		emitterIndex.clear();
+		clientEmitterIndex.clear();
+		clientEmitterWorld = null;
+		clientEmitterUpdate = Long.MIN_VALUE;
 	}
 
 	private static final class RadiationKey

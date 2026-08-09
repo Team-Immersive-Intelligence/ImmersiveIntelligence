@@ -40,15 +40,12 @@ public class ThaumcraftHelper extends IICompatModule
 	@Override
 	public void preInit()
 	{
-		addShrapnel("crystal", IIColor.fromPackedRGB(0x372645),
-				RES_TC.with("crystal_ordo"), 3, 0.05f, 0.5f);
+		addShrapnel("crystal", IIColor.fromPackedRGB(0x372645), 3, 0.05f, 0.5f);
 		//crystal_essence
 
-		addShrapnel("thaumium", IIColor.fromPackedRGB(0x372645),
-				RES_TC.with("metal_thaumium"), 5, 0.30f, 0.0f);
+		addShrapnel("thaumium", IIColor.fromPackedRGB(0x372645), 5, 0.30f, 0.0f);
 
-		addShrapnel("voidmetal", IIColor.fromPackedRGB(0x10081a),
-				RES_TC.with("metal_void"), 7, 0.30f, 0.0f);
+		addShrapnel("voidmetal", IIColor.fromPackedRGB(0x10081a), 7, 0.30f, 0.0f);
 
 		AmmoRegistry.registerCore(ammoCoreThaumium = new AmmoCoreThaumium());
 		AmmoRegistry.registerCore(ammoCoreVoidmetal = new AmmoCoreVoidmetal());
