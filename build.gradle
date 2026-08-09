@@ -41,7 +41,6 @@ if (customGradle.exists()) {
 gradle.ext.mkxScriptSwitches.each { propertyName, scriptPath ->
 	mkxApplyScript(propertyName as String, scriptPath as String)
 }
-
 if (mkxBool('ii_script_ide', false)) {
 	idea.project.settings.runConfigurations {
 		'Setup Mod Workspace'(Gradle) {
@@ -58,6 +57,9 @@ if (mkxBool('ii_script_ide', false)) {
 		}
 		'Build Mod Jar'(Gradle) {
 			taskNames = ['build']
+		}
+		'Run All Tests'(Gradle) {
+			taskNames = ['test']
 		}
 	}
 }
