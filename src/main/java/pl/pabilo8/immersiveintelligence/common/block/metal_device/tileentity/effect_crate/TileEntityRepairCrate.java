@@ -1,32 +1,37 @@
 package pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate;
 
-import blusunrize.immersiveengineering.ImmersiveEngineering;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.ISoundTile;
 import blusunrize.immersiveengineering.common.items.IEItemInterfaces.IItemDamageableIE;
 import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeTechTree;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.UpgradeTier;
 import pl.pabilo8.immersiveintelligence.api.utils.IEntitySpecialRepairable;
+import pl.pabilo8.immersiveintelligence.client.util.carversound.ConditionCompoundSound;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 
 import static pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.EffectCrates.repairCrateEnergyPerAction;
 
 /**
- * @author Pabilo8 (pabilo@iiteam.net)
+ * Stores repair materials and repairs supported entities or worn equipment.
+ *
+ * @author Pabilo8(pabilo@iiteam.net)
+ * @updated 10.08.2026
  * @since 06.07.2020
  */
-public class TileEntityRepairCrate extends TileEntityEffectCrate implements ISoundTile
+public class TileEntityRepairCrate extends TileEntityEffectCrate
 {
 	static
 	{
@@ -34,83 +39,96 @@ public class TileEntityRepairCrate extends TileEntityEffectCrate implements ISou
 				.withUpgrade(IIContent.UPGRADE_INSERTER, UpgradeTier.TIER_1);
 	}
 
-	public boolean repaired = false;
+	@SyncNBT(name = "shouldHeal", events = SyncEvents.TILE_CUSTOM1)
 	public boolean shouldRepairArmor = true;
+	@SyncNBT(name = "shouldBoost", events = SyncEvents.TILE_CUSTOM1)
 	public boolean shouldRepairVehicles = true;
+	public boolean repaired = false;
+
+	@SideOnly(Side.CLIENT)
+	private ConditionCompoundSound<TileEntityRepairCrate> weldingSound;
 
 	public TileEntityRepairCrate()
 	{
-		inventory = NonNullList.withSize(16, ItemStack.EMPTY);
-		insertionHandler = new IEInventoryHandler(16, this);
+		super(NonNullList.withSize(16, ItemStack.EMPTY), IEInventoryHandler::new);
+	}
+
+	@Override
+	public IIGUI getGUI()
+	{
+		return IIGUI.REPAIR_CRATE;
 	}
 
 	@Override
 	boolean isSupplied()
 	{
-		return ((shouldRepairArmor)||(shouldRepairVehicles))&&inventory.stream().anyMatch(stack -> !stack.isEmpty());
+		return (shouldRepairArmor||shouldRepairVehicles)&&inventory.stream().anyMatch(stack -> !stack.isEmpty());
 	}
 
 	@Override
 	void useSupplies()
 	{
-		for(ItemStack itemStack : inventory)
-			if(!itemStack.isEmpty())
+		for(ItemStack stack : inventory)
+			if(!stack.isEmpty())
 			{
-				itemStack.shrink(1);
+				stack.shrink(1);
+				markDirty();
 				break;
 			}
-	}
-
-	@Override
-	public void readCustomNBT(NBTTagCompound nbt, boolean descPacket)
-	{
-		super.readCustomNBT(nbt, descPacket);
-		shouldRepairArmor = nbt.getBoolean("shouldHeal");
-		shouldRepairVehicles = nbt.getBoolean("shouldBoost");
-	}
-
-	@Override
-	public void writeCustomNBT(NBTTagCompound nbt, boolean descPacket)
-	{
-		super.writeCustomNBT(nbt, descPacket);
-		nbt.setBoolean("shouldHeal", shouldRepairArmor);
-		nbt.setBoolean("shouldBoost", shouldRepairVehicles);
 	}
 
 	@Override
 	public void update()
 	{
 		super.update();
-		ImmersiveEngineering.proxy.handleTileSound(IISounds.weldingMid, this, isUpgradeInstalled(IIContent.UPGRADE_INSERTER)&&focusedEntity!=null, .5f, 1);
+		if(world.isRemote)
+			updateSound();
+	}
+
+	@SideOnly(Side.CLIENT)
+	private void updateSound()
+	{
+		if(!isWelding())
+			return;
+		if(weldingSound==null||weldingSound.isDonePlaying())
+		{
+			weldingSound = new ConditionCompoundSound<>(IISounds.weldingLoop,
+					new Vec3d(pos).addVector(0.5, 0.5, 0.5), this, TileEntityRepairCrate::isWelding);
+			weldingSound.setVolume(0.5f);
+		}
+	}
+
+	private boolean isWelding()
+	{
+		return !tileEntityInvalid&&isUpgradeInstalled(IIContent.UPGRADE_INSERTER)&&focusedEntity.get()!=null;
 	}
 
 	@Override
 	boolean affectEntity(Entity entity, boolean upgraded)
 	{
-		if(!upgraded||(repairCrateEnergyPerAction <= energyStorage))
+		if(upgraded&&energyStorage < repairCrateEnergyPerAction)
+			return false;
+
+		repaired = false;
+		if(entity instanceof IEntitySpecialRepairable)
 		{
-			repaired = false;
-			if(entity instanceof IEntitySpecialRepairable)
-			{
-				IEntitySpecialRepairable repairable = (IEntitySpecialRepairable)entity;
-				if(repairable.canRepair())
-					repaired = repairable.repair(2);
-			}
-			else if(entity instanceof EntityLivingBase)
-			{
-				if(!((EntityLivingBase)entity).isPotionActive(IIPotions.undergoingRepairs))
-				{
-					((EntityLivingBase)entity).addPotionEffect(new PotionEffect(IIPotions.undergoingRepairs, upgraded?200: 400, upgraded?1: 0, true, true));
-					repaired = true;
-				}
-			}
-			if(!upgraded&&repaired)
-			{
-				energyStorage -= repairCrateEnergyPerAction;
-			}
-			return repaired;
+			IEntitySpecialRepairable repairable = (IEntitySpecialRepairable)entity;
+			if(repairable.canRepair())
+				repaired = repairable.repair(2);
 		}
-		return false;
+		else if(entity instanceof EntityLivingBase)
+		{
+			EntityLivingBase living = (EntityLivingBase)entity;
+			if(!living.isPotionActive(IIPotions.undergoingRepairs))
+			{
+				living.addPotionEffect(new PotionEffect(IIPotions.undergoingRepairs, upgraded?200: 400, upgraded?1: 0, true, true));
+				repaired = true;
+			}
+		}
+
+		if(upgraded&&repaired)
+			consumeEnergy(repairCrateEnergyPerAction);
+		return repaired;
 	}
 
 	@Override
@@ -121,36 +139,24 @@ public class TileEntityRepairCrate extends TileEntityEffectCrate implements ISou
 		if(!(entity instanceof EntityLivingBase))
 			return false;
 
-		EntityLivingBase entityLivingBase = (EntityLivingBase)entity;
-		for(ItemStack stack : entityLivingBase.getEquipmentAndArmor())
+		EntityLivingBase living = (EntityLivingBase)entity;
+		for(ItemStack stack : living.getEquipmentAndArmor())
 		{
 			if(stack.getItem() instanceof IItemDamageableIE)
 			{
 				IItemDamageableIE item = (IItemDamageableIE)stack.getItem();
 				return item.getItemDamageIE(stack) < item.getMaxDamageIE(stack);
 			}
-			else if(stack.isItemDamaged()&&stack.getItem().isRepairable())
+			if(stack.isItemDamaged()&&stack.getItem().isRepairable())
 				return true;
 		}
 		return false;
 	}
 
 	@Override
-	public int getGuiID()
-	{
-		return IIGUI.REPAIR_CRATE.ordinal();
-	}
-
-	@Override
 	public boolean isStackValid(int slot, ItemStack stack)
 	{
 		return Utils.compareToOreName(stack, "plateSteel");
-	}
-
-	@Override
-	public boolean shoudlPlaySound(String sound)
-	{
-		return focusedEntity!=null;
 	}
 
 	@Override
@@ -167,21 +173,23 @@ public class TileEntityRepairCrate extends TileEntityEffectCrate implements ISou
 	@Override
 	public void onAnimationChangeServer(boolean state, int part)
 	{
+		boolean changed;
 		if(part==1)
-			shouldRepairArmor = state;
-		else if(part==2)
-			shouldRepairVehicles = state;
-		else
-			super.onAnimationChangeServer(state, part);
-	}
-
-	@Override
-	protected NBTTagCompound makeSyncEntity()
-	{
-		if(isUpgradeInstalled(IIContent.UPGRADE_INSERTER))
 		{
-			world.playSound(null, getPos(), focusedEntity!=null?IISounds.weldingStart: IISounds.weldingEnd, SoundCategory.BLOCKS, 1f, 1f);
+			changed = shouldRepairArmor!=state;
+			shouldRepairArmor = state;
 		}
-		return super.makeSyncEntity();
+		else if(part==2)
+		{
+			changed = shouldRepairVehicles!=state;
+			shouldRepairVehicles = state;
+		}
+		else
+		{
+			super.onAnimationChangeServer(state, part);
+			return;
+		}
+		if(changed)
+			updateTileForEvent(SyncEvents.TILE_CUSTOM1);
 	}
 }

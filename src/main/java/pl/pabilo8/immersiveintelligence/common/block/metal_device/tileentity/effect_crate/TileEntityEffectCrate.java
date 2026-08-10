@@ -2,9 +2,11 @@ package pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.ef
 
 import blusunrize.immersiveengineering.api.TargetingInfo;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
-import blusunrize.immersiveengineering.api.energy.wires.TileEntityImmersiveConnectable;
 import blusunrize.immersiveengineering.api.energy.wires.WireType;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.*;
+import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IBlockBounds;
+import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IPlayerInteraction;
+import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.ITileDrop;
+import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.IIEInventory;
 import com.google.common.collect.Lists;
@@ -14,12 +16,13 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
-import net.minecraft.util.math.*;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3i;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.storage.loot.ILootContainer;
 import net.minecraft.world.storage.loot.LootContext;
@@ -28,101 +31,84 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.api.upgrade.IManagedUpgradableDevice;
-import pl.pabilo8.immersiveintelligence.api.upgrade.IUpgradableDevice;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeManager;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
-import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EntityReference;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.NBTSerialisation;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.entity.IIEntityUtils;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IIIGuiMultiblockTile;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IIIInventory;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
+import pl.pabilo8.immersiveintelligence.common.util.tile.TileEntityIIDirectional.FacingLimitation;
+import pl.pabilo8.immersiveintelligence.common.util.tile.TileEntityIIDirectional.FacingSettings;
+import pl.pabilo8.immersiveintelligence.common.util.tile.TileEntityIIDirectionalConnectable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.function.BiFunction;
 
+import static blusunrize.immersiveengineering.api.energy.wires.WireType.LV_CATEGORY;
+import static blusunrize.immersiveengineering.api.energy.wires.WireType.MV_CATEGORY;
 import static pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.EffectCrates.energyDrain;
 import static pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.EffectCrates.maxEnergyStored;
 
 /**
- * @author Pabilo8 (pabilo@iiteam.net)
+ * Provides shared inventory, upgrade, wire, GUI, and entity-effect logic for effect crates.
+ *
+ * @author Pabilo8(pabilo@iiteam.net)
+ * @updated 10.08.2026
  * @since 06.07.2020
  */
-public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectable implements
-		IDirectionalTile, IBooleanAnimatedPartsBlock, ITickable, IManagedUpgradableDevice<TileEntityEffectCrate>, IPlayerInteraction,
-		IBlockBounds, IIEInventory, IGuiTile, ITileDrop, IComparatorOverride, ILootContainer
+public abstract class TileEntityEffectCrate extends TileEntityIIDirectionalConnectable implements
+		IBooleanAnimatedPartsBlock, ITickable, IManagedUpgradableDevice<TileEntityEffectCrate>, IPlayerInteraction,
+		IBlockBounds, IIIInventory, IIIGuiMultiblockTile, ITileDrop, ILootContainer
 {
-	public ResourceLocation lootTable;
-	public EnumFacing facing = EnumFacing.NORTH;
+	private static final FacingSettings FACING_SETTINGS = new FacingSettings(FacingLimitation.HORIZONTAL).withRotation(true);
+
+	@SyncNBT(name = "lootTable")
+	public String lootTable = "";
+	@SyncNBT(nullable = true)
 	public String name;
-	public boolean open = false;
-	public float lidAngle = 0;
+	@SyncNBT(events = SyncEvents.TILE_CUSTOM1)
+	public MultiblockInteractablePart lid;
+	@SyncNBT(events = {SyncEvents.TILE_ENERGY_CHANGED, SyncEvents.TILE_GUI_OPENED})
 	public int energyStorage = 0;
+	@SyncNBT(events = {SyncEvents.TILE_CUSTOM1, SyncEvents.TILE_GUI_OPENED})
+	public UpgradeManager<TileEntityEffectCrate> upgradeManager = new UpgradeManager<>(this);
+	@SyncNBT(events = SyncEvents.TILE_CUSTOM2)
+	public EntityReference<Entity> focusedEntity;
+	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_DROP_AS_ITEM})
+	public NonNullList<ItemStack> inventory;
 	@Nonnull
 	public IItemHandler insertionHandler;
-	public UpgradeManager<TileEntityEffectCrate> upgradeManager = new UpgradeManager<>(this);
 
-	//Client only
-	float inserterAnimation = 0f;
-	float inserterHeight = 0f;
-	float inserterAngle = 0f;
-	Entity focusedEntity = null;
+	//Client animation
+	float inserterAnimation = 0f, inserterHeight = 0f, inserterAngle = 0f;
+
+	protected TileEntityEffectCrate(NonNullList<ItemStack> inventory, BiFunction<Integer, IIEInventory, IItemHandler> insertionHandler)
+	{
+		this.inventory = inventory;
+		this.insertionHandler = insertionHandler.apply(inventory.size(), this);
+		this.lid = new MultiblockInteractablePart(0, 7.5f, 1.5f);
+		this.focusedEntity = new EntityReference<>(this::getWorld);
+	}
+
+	//--- Facing ---//
 
 	@Nonnull
-	NonNullList<ItemStack> inventory;
-
 	@Override
-	public EnumFacing getFacing()
+	protected FacingSettings getFacingSettings()
 	{
-		return facing;
+		return FACING_SETTINGS;
 	}
 
-	@Override
-	public void setFacing(EnumFacing facing)
-	{
-		this.facing = facing;
-		if(facing.getAxis().isVertical())
-			this.facing = EnumFacing.NORTH;
-	}
-
-	@Override
-	public int getFacingLimitation()
-	{
-		return 2;
-	}
-
-	@Override
-	public boolean mirrorFacingOnPlacement(EntityLivingBase placer)
-	{
-		return false;
-	}
-
-	@Override
-	public boolean canHammerRotate(EnumFacing side, float hitX, float hitY, float hitZ, EntityLivingBase entity)
-	{
-		return !entity.isSneaking();
-	}
-
-	@Override
-	public boolean canRotate(EnumFacing axis)
-	{
-		return !axis.getAxis().isVertical();
-	}
-
-	@Override
-	@Nullable
-	public ITextComponent getDisplayName()
-	{
-		return name!=null?new TextComponentString(name): null;
-	}
-
-	@Override
-	public int getSlotLimit(int slot)
-	{
-		return 64;
-	}
+	//--- Inventory and drops ---//
 
 	@Override
 	public NonNullList<ItemStack> getInventory()
@@ -131,33 +117,31 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 	}
 
 	@Override
-	public void doGraphicalUpdates(int slot)
-	{
-		this.markDirty();
-	}
-
-	@Override
 	public ItemStack getTileDrop(EntityPlayer player, IBlockState state)
 	{
 		ItemStack stack = new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state));
-		NBTTagCompound tag = new NBTTagCompound();
-		tag.setTag("inventory", Utils.writeInventory(inventory));
-		if(!tag.hasNoTags())
-			stack.setTagCompound(tag);
-		if(this.name!=null)
-			stack.setStackDisplayName(this.name);
+		NBTTagCompound nbt = new NBTTagCompound();
+		//noinspection unchecked
+		NBTSerialisation.synchroniseFor(this, (tag, tile) ->
+				tag.serializeForEvent(tile, nbt, SyncEvents.TILE_DROP_AS_ITEM));
+		if(!nbt.hasNoTags())
+			stack.setTagCompound(nbt);
+		if(name!=null)
+			stack.setStackDisplayName(name);
 		return stack;
 	}
 
 	@Override
 	public void readOnPlacement(EntityLivingBase placer, ItemStack stack)
 	{
-		if(stack.hasTagCompound())
-		{
-			readCustomNBT(stack.getTagCompound(), false);
-			if(stack.hasDisplayName())
-				this.name = stack.getDisplayName();
-		}
+		//Read NBT
+		NBTTagCompound nbt = ItemNBTHelper.getTag(stack);
+		//noinspection unchecked
+		NBTSerialisation.synchroniseFor(this, (tag, entity) -> tag.deserializeAll(this, nbt, true));
+
+		//Set display name
+		if(stack.hasDisplayName())
+			name = stack.getDisplayName();
 	}
 
 	@Override
@@ -166,81 +150,22 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 		return true;
 	}
 
+	//--- Display ---//
+
+	@Nullable
 	@Override
-	public void readCustomNBT(NBTTagCompound nbt, boolean descPacket)
+	public ITextComponent getDisplayName()
 	{
-		if(nbt.hasKey("name"))
-			this.name = nbt.getString("name");
-		if(nbt.hasKey("open"))
-			open = nbt.getBoolean("open");
-		if(nbt.hasKey("facing"))
-			setFacing(EnumFacing.getFront(nbt.getInteger("facing")));
-		if(nbt.hasKey("upgrades"))
-			upgradeManager.deserializeNBT(nbt.getCompoundTag("upgrades"));
-
-		energyStorage = nbt.getInteger("energyStorage");
-		if(!descPacket)
-		{
-			if(nbt.hasKey("lootTable", 8))
-				this.lootTable = new ResourceLocation(nbt.getString("lootTable"));
-			else
-				inventory = Utils.readInventory(nbt.getTagList("inventory", 10), inventory.size());
-		}
-
+		return name!=null?new TextComponentString(name): null;
 	}
 
-	@Override
-	public void writeCustomNBT(NBTTagCompound nbt, boolean descPacket)
-	{
-		if(name!=null)
-			nbt.setString("name", name);
-		nbt.setBoolean("open", open);
-		nbt.setInteger("facing", facing.getIndex());
-		nbt.setInteger("energyStorage", energyStorage);
-		nbt.setTag("upgrades", upgradeManager.serializeNBT());
-		if(!descPacket)
-		{
-			if(lootTable!=null)
-				nbt.setString("lootTable", lootTable.toString());
-			else
-				nbt.setTag("inventory", Utils.writeInventory(inventory));
-		}
-	}
-
-	@Override
-	public void onAnimationChangeClient(boolean state, int part)
-	{
-		open = state;
-	}
-
-	@Override
-	public void onAnimationChangeServer(boolean state, int part)
-	{
-		open = state;
-	}
-
-	@Override
-	public void receiveMessageFromServer(NBTTagCompound message)
-	{
-		if(message.hasKey("upgrades"))
-			upgradeManager.deserializeNBT(message.getCompoundTag("upgrades"));
-		if(message.hasKey("focused"))
-			focusedEntity = world.getEntityByID(message.getInteger("focused"));
-		else
-			focusedEntity = null;
-	}
+	//--- Tick logic ---//
 
 	@Override
 	public void update()
 	{
-		updateLid();
-		if(focusedEntity!=null)
-		{
-			focusedEntity = null;
-			IIPacketHandler.sendToClient(this, new MessageIITileSync(this, makeSyncEntity()));
-		}
+		lid.update();
 
-		//TODO: 23.05.2023 animation
 		if(world.isRemote)
 		{
 			if(energyStorage > 0&&isUpgradeInstalled(IIContent.UPGRADE_INSERTER))
@@ -249,60 +174,57 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 				inserterHeight = calculateInserterHeight(0);
 				inserterAngle = calculateInserterAngle(0);
 			}
+			return;
 		}
-		else if(energyStorage > energyDrain&&isUpgradeInstalled(IIContent.UPGRADE_INSERTER)&&isSupplied()&&world.getTotalWorldTime()%getEffectTime()==0)
-		{
-			//get all in range
-			//effect
-			List<Entity> entitiesWithinAABB = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(getPos()).offset(0.5, 0.5, 0.5).grow(getRange()));
-			entitiesWithinAABB.removeIf(entity -> !checkEntity(entity));
-			if(entitiesWithinAABB.size() > 0)
-			{
 
-				if(affectEntityUpgraded(entitiesWithinAABB.get(0)))
-					useSupplies();
-				if(!entitiesWithinAABB.contains(focusedEntity))
-				{
-					focusedEntity = entitiesWithinAABB.get(0);
-					inserterAnimation = 0f;
-					inserterHeight = 0f;
-					IIPacketHandler.sendToClient(this, new MessageIITileSync(this, makeSyncEntity()));
-				}
-			}
-			else if(focusedEntity!=null)
-			{
-				focusedEntity = null;
-				inserterAnimation = 0f;
-				inserterHeight = 0f;
-				IIPacketHandler.sendToClient(this, new MessageIITileSync(this, makeSyncEntity()));
-			}
+		if(energyStorage <= energyDrain||!isUpgradeInstalled(IIContent.UPGRADE_INSERTER)||!isSupplied())
+		{
+			setFocusedEntity(null);
+			return;
 		}
+		if(world.getTotalWorldTime()%getEffectTime()!=0)
+			return;
+
+		List<Entity> entities = world.getEntitiesWithinAABB(Entity.class,
+				new AxisAlignedBB(getPos()).offset(0.5, 0.5, 0.5).grow(getRange()));
+		entities.removeIf(entity -> !checkEntity(entity));
+
+		if(entities.isEmpty())
+		{
+			setFocusedEntity(null);
+			return;
+		}
+
+		Entity target = entities.get(0);
+		setFocusedEntity(target);
+		if(affectEntityUpgraded(target))
+			useSupplies();
 	}
 
 	public float calculateInserterAnimation(float partialTicks)
 	{
-		if(focusedEntity!=null)
+		Entity focused = focusedEntity.get();
+		if(focused!=null)
 			return Math.min(inserterAnimation+(0.05f*(1+partialTicks)), 1f);
-		else
-			return Math.max(inserterAnimation-(0.025f*(1+partialTicks)), 0f);
+		return Math.max(inserterAnimation-(0.025f*(1+partialTicks)), 0f);
 	}
 
 	public float calculateInserterHeight(float partialTicks)
 	{
-		if(focusedEntity!=null)
-			return MathHelper.clamp((float)(pos.getY()+1.35f-focusedEntity.posY-(partialTicks*focusedEntity.motionY)), -1f, 1f);
-		else
-			return Math.signum(inserterHeight)*Math.abs(inserterHeight-(0.1f*(1+partialTicks)));
+		Entity focused = focusedEntity.get();
+		if(focused!=null)
+			return MathHelper.clamp((float)(pos.getY()+1.35f-focused.posY-(partialTicks*focused.motionY)), -1f, 1f);
+		return Math.signum(inserterHeight)*Math.abs(inserterHeight-(0.1f*(1+partialTicks)));
 	}
 
 	public float calculateInserterAngle(float partialTicks)
 	{
-		if(focusedEntity!=null)
+		Entity focused = focusedEntity.get();
+		if(focused!=null)
 		{
-			//Subtracts two vector and calculates angle (in degrees) using atan
-			Vec3d vec3d = IIEntityUtils.getEntityCenter(focusedEntity)
-					.add(new Vec3d(focusedEntity.motionX, 0, focusedEntity.motionZ).scale(partialTicks))
-					.subtract(new Vec3d(this.pos));
+			Vec3d vec3d = IIEntityUtils.getEntityCenter(focused)
+					.add(new Vec3d(focused.motionX, 0, focused.motionZ).scale(partialTicks))
+					.subtract(new Vec3d(pos));
 			float yaw;
 			if(vec3d.x < 0&&vec3d.z >= 0)
 				yaw = (float)(Math.atan(Math.abs(vec3d.x/vec3d.z))/Math.PI*180D);
@@ -312,53 +234,71 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 				yaw = (float)(Math.atan(Math.abs(vec3d.x/vec3d.z))/Math.PI*180D)+180;
 			else
 				yaw = (float)(Math.atan(Math.abs(vec3d.z/vec3d.x))/Math.PI*180D)+270;
-			// TODO: 04.10.2020 calculates nearest path (+/-) to angle, and goes toward
-			//float angle = inserterAngle;
-
 			return yaw;
 		}
 		return inserterAngle;
 	}
 
-	protected NBTTagCompound makeSyncEntity()
+	protected void setFocusedEntity(@Nullable Entity entity)
 	{
-		NBTTagCompound tag = new NBTTagCompound();
-		if(focusedEntity!=null)
-			tag.setInteger("focused", focusedEntity.getEntityId());
-		else
-			tag.setBoolean("hasNoFocus", true);
-		return tag;
+		if(focusedEntity.get()==entity)
+			return;
+		focusedEntity.set(entity);
+		if(world!=null&&!world.isRemote)
+			updateTileForEvent(SyncEvents.TILE_CUSTOM2);
 	}
+
+	//--- Interaction and animation state ---//
 
 	@Override
 	public boolean interact(EnumFacing side, EntityPlayer player, EnumHand hand, ItemStack heldItem, float hitX, float hitY, float hitZ)
 	{
 		if(isUpgradeInstalled(IIContent.UPGRADE_INSERTER))
 		{
-			if(open)
-				IIPacketHandler.sendToClient(new MessageBooleanAnimatedPartsSync(0, open = false, this));
-
+			if(lid.getState())
+				setLidState(false);
 			return false;
 		}
 
 		if(player.isSneaking())
 		{
-			open = !open;
-			IIPacketHandler.sendToClient(new MessageBooleanAnimatedPartsSync(0, open, this));
+			setLidState(!lid.getState());
 			return true;
 		}
-		else if(open&&isSupplied())
+		if(lid.getState()&&isSupplied())
 		{
-			affectEntityBasic(player);
-			useSupplies();
+			if(!world.isRemote&&affectEntityBasic(player))
+				useSupplies();
 			return true;
 		}
-
 		return false;
 	}
 
+	protected void setLidState(boolean state)
+	{
+		if(!lid.setState(state))
+			return;
+		if(world!=null&&!world.isRemote)
+			updateTileForEvent(SyncEvents.TILE_CUSTOM1);
+	}
+
 	@Override
-	public IUpgradableDevice master()
+	public void onAnimationChangeClient(boolean state, int part)
+	{
+		MultiblockInteractablePart.setStates(state, part, lid);
+	}
+
+	@Override
+	public void onAnimationChangeServer(boolean state, int part)
+	{
+		if(MultiblockInteractablePart.setStates(state, part, lid)!=null)
+			updateTileForEvent(SyncEvents.TILE_CUSTOM1);
+	}
+
+	//--- Upgrades ---//
+
+	@Override
+	public TileEntityEffectCrate master()
 	{
 		return this;
 	}
@@ -370,16 +310,19 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 		return upgradeManager;
 	}
 
+	//--- Wire system ---//
+
 	@Override
-	protected boolean canTakeLV()
+	public boolean acceptsWireType(WireType wireType)
 	{
-		return true;
+		String category = wireType.getCategory();
+		return MV_CATEGORY.equals(category)||LV_CATEGORY.equals(category);
 	}
 
 	@Override
-	protected boolean canTakeMV()
+	public boolean isRelay()
 	{
-		return true;
+		return false;
 	}
 
 	@Override
@@ -397,17 +340,18 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 	@Override
 	public int outputEnergy(int amount, boolean simulate, int energyType)
 	{
-		if(amount > 0&&energyStorage < maxEnergyStored)
+		if(amount <= 0||energyStorage >= maxEnergyStored)
+			return 0;
+
+		int received = Math.min(maxEnergyStored-energyStorage, energyDrain);
+		if(!simulate)
 		{
-			if(!simulate)
-			{
-				int rec = Math.min(maxEnergyStored-energyStorage, energyDrain);
-				energyStorage += rec;
-				return rec;
-			}
-			return Math.min(maxEnergyStored-energyStorage, energyDrain);
+			boolean wasEmpty = energyStorage==0;
+			energyStorage += received;
+			if(wasEmpty)
+				updateTileForEvent(SyncEvents.TILE_ENERGY_CHANGED);
 		}
-		return 0;
+		return received;
 	}
 
 	@Override
@@ -416,13 +360,7 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 		return new Vec3d(0.5, 0.9375, 0.5);
 	}
 
-	private void updateLid()
-	{
-		if(open&&lidAngle < 1.5f)
-			lidAngle = Math.min(lidAngle+0.2f, 1.5f);
-		else if(!open&&lidAngle > 0f)
-			lidAngle = Math.max(lidAngle-0.3f, 0f);
-	}
+	//--- Effect hooks ---//
 
 	abstract boolean isSupplied();
 
@@ -452,6 +390,15 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 
 	abstract boolean checkEntity(Entity entity);
 
+	protected void consumeEnergy(int amount)
+	{
+		energyStorage = Math.max(0, energyStorage-amount);
+		if(world!=null&&!world.isRemote)
+			updateTileForEvent(SyncEvents.TILE_ENERGY_CHANGED);
+	}
+
+	//--- Block and GUI ---//
+
 	@Nonnull
 	@Override
 	public float[] getBlockBounds()
@@ -460,90 +407,70 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 			return new float[]{0f, 0f, 0f, 1f, 0.8125f, 1f};
 		if(facing==EnumFacing.NORTH||facing==EnumFacing.SOUTH)
 			return new float[]{0f, 0f, .25f, 1f, .58f, .75f};
-
 		return new float[]{.25f, 0f, 0f, .75f, .58f, 1f};
-	}
-
-	@Override
-	public int getComparatorInputOverride()
-	{
-		return Utils.calcRedstoneFromInventory(this);
 	}
 
 	@Override
 	public boolean canOpenGui()
 	{
-		return !open;
-	}
-
-	@Override
-	public TileEntity getGuiMaster()
-	{
-		return this;
+		return !lid.getState();
 	}
 
 	@Override
 	public void onGuiOpened(@Nullable EntityPlayer player, boolean clientside)
 	{
-		if(this.lootTable!=null&&!clientside)
+		ResourceLocation lootTableLocation = getLootTable();
+		if(lootTableLocation!=null&&!clientside)
 		{
-			LootTable loottable = this.world.getLootTableManager().getLootTableFromLocation(this.lootTable);
-			this.lootTable = null;
-			LootContext.Builder contextBuilder = new LootContext.Builder((WorldServer)this.world);
+			LootTable table = world.getLootTableManager().getLootTableFromLocation(lootTableLocation);
+			lootTable = "";
+			LootContext.Builder contextBuilder = new LootContext.Builder((WorldServer)world);
 			if(player!=null)
 				contextBuilder.withLuck(player.getLuck());
 			LootContext context = contextBuilder.build();
-			Random rand = new Random();
+			Random random = new Random();
 
-			List<ItemStack> list = loottable.generateLootForPools(rand, context);
-			List<Integer> listSlots = Lists.newArrayList();
+			List<ItemStack> loot = table.generateLootForPools(random, context);
+			List<Integer> freeSlots = Lists.newArrayList();
 			for(int i = 0; i < inventory.size(); i++)
 				if(inventory.get(i).isEmpty())
-					listSlots.add(i);
-			Collections.shuffle(listSlots, rand);
-			if(listSlots.isEmpty())
-				return;
-			Utils.shuffleLootItems(list, listSlots.size(), rand);
-			for(ItemStack itemstack : list)
+					freeSlots.add(i);
+			Collections.shuffle(freeSlots, random);
+			if(!freeSlots.isEmpty())
 			{
-				int slot = listSlots.remove(listSlots.size()-1);
-				inventory.set(slot, itemstack);
+				Utils.shuffleLootItems(loot, freeSlots.size(), random);
+				for(ItemStack stack : loot)
+					inventory.set(freeSlots.remove(freeSlots.size()-1), stack);
 			}
-			this.markDirty();
 		}
+
+		if(!clientside)
+			updateTileForEvent(SyncEvents.TILE_GUI_OPENED);
 	}
 
+	//--- Capabilities ---//
+
 	@Override
-	public boolean hasCapability(Capability<?> capability, EnumFacing facing)
+	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
 	{
-		if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-			return true;
-		return super.hasCapability(capability, facing);
+		return capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY||super.hasCapability(capability, facing);
 	}
 
 	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing)
+	@SuppressWarnings("unchecked")
+	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
 	{
 		if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
 			return (T)insertionHandler;
 		return super.getCapability(capability, facing);
 	}
 
+	//--- Loot container and upgrade context ---//
+
 	@Override
+	@Nullable
 	public ResourceLocation getLootTable()
 	{
-		return this.lootTable;
-	}
-
-	@Override
-	public BlockPos getIIPos()
-	{
-		return getPos();
-	}
-
-	@Override
-	public World getIIWorld()
-	{
-		return getWorld();
+		return lootTable.isEmpty()?null: new ResourceLocation(lootTable);
 	}
 }

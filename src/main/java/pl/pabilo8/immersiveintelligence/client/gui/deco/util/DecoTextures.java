@@ -43,7 +43,7 @@ public class DecoTextures
 	public static final ResLoc FRAME_STEEL_THIN = ResLoc.of(RES_TEXTURES_DECO_FRAME, "steel_thin");
 	public static final ResLoc FRAME_STEEL = ResLoc.of(RES_TEXTURES_DECO_FRAME, "steel");
 	public static final ResLoc FRAME_WOODEN_THIN = ResLoc.of(RES_TEXTURES_DECO_FRAME, "wooden_thin");
-	public static final ResLoc FRAME_PAPER = ResLoc.of(RES_TEXTURES_DECO_FRAME, "manual");
+	public static final ResLoc FRAME_PAPER = ResLoc.of(RES_TEXTURES_DECO_FRAME, "corners_manual");
 
 	//--- Templates ---//
 	public static final ResLoc TEMPLATE_ROUND = ResLoc.of(RES_TEXTURES_DECO, "template/round");

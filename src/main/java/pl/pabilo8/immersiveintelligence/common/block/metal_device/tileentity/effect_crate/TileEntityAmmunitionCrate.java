@@ -24,13 +24,14 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.gun.ItemIIAmmoMachinegun;
-import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 
 import static pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.EffectCrates.ammoCrateEnergyPerAction;
 
 /**
- * @author Pabilo8 (pabilo@iiteam.net)
+ * Stores ammunition and resupplies living entities or compatible bullet containers.
+ *
+ * @author Pabilo8(pabilo@iiteam.net)
+ * @updated 10.08.2026
  * @since 17.05.2019
  */
 public class TileEntityAmmunitionCrate extends TileEntityEffectCrate
@@ -43,14 +44,13 @@ public class TileEntityAmmunitionCrate extends TileEntityEffectCrate
 
 	public TileEntityAmmunitionCrate()
 	{
-		inventory = NonNullList.withSize(50, ItemStack.EMPTY);
-		insertionHandler = new IEInventoryHandler(50, this);
+		super(NonNullList.withSize(50, ItemStack.EMPTY), IEInventoryHandler::new);
 	}
 
 	@Override
-	public int getGuiID()
+	public IIGUI getGUI()
 	{
-		return IIGUI.AMMUNITION_CRATE.ordinal();
+		return IIGUI.AMMUNITION_CRATE;
 	}
 
 	@Override
@@ -59,12 +59,11 @@ public class TileEntityAmmunitionCrate extends TileEntityEffectCrate
 		if(slot < 20)
 			return stack.getItem() instanceof ItemBullet&&!(stack.isItemEqual(BulletHandler.emptyCasing)||stack.isItemEqual(BulletHandler.emptyShell));
 		if(slot < 29)
-			return stack.getItem() instanceof ItemBullet&&(stack.isItemEqual(BulletHandler.emptyCasing))||stack.isItemEqual(BulletHandler.emptyShell)&&!stack.hasTagCompound();
+			return stack.getItem() instanceof ItemBullet&&stack.isItemEqual(BulletHandler.emptyCasing)||stack.isItemEqual(BulletHandler.emptyShell)&&!stack.hasTagCompound();
 		if(slot < 37)
 			return stack.getItem() instanceof ItemBullet&&!(stack.equals(BulletHandler.emptyCasing)||stack.equals(BulletHandler.emptyShell));
 		if(slot==37)
 			return stack.getItem() instanceof ItemRevolver||stack.getItem() instanceof ItemSpeedloader;
-
 		return isUpgradeInstalled(IIContent.UPGRADE_MG_LOADER)&&stack.getItem() instanceof ItemIIAmmoMachinegun;
 	}
 
@@ -73,13 +72,13 @@ public class TileEntityAmmunitionCrate extends TileEntityEffectCrate
 	{
 		if(player.isSneaking())
 		{
-			IIPacketHandler.sendToClient(new MessageBooleanAnimatedPartsSync(0, open = !open, this));
+			setLidState(!lid.getState());
 			return true;
 		}
-		else if(open)
+		if(lid.getState())
 		{
-			reloadRevolver(player, hand);
-			//affectEntityBasic(player);
+			if(!world.isRemote)
+				reloadRevolver(player, hand);
 			return true;
 		}
 		return false;
@@ -94,27 +93,28 @@ public class TileEntityAmmunitionCrate extends TileEntityEffectCrate
 	@Override
 	void useSupplies()
 	{
-
 	}
 
 	@Override
 	boolean affectEntity(Entity entity, boolean upgraded)
 	{
-		if(!upgraded||(ammoCrateEnergyPerAction <= energyStorage))
-		{
-			boolean healed = false;
-			if(entity instanceof EntityLivingBase)
-				if(!((EntityLivingBase)entity).isPotionActive(IIPotions.wellSupplied))
-				{
-					((EntityLivingBase)entity).addPotionEffect(new PotionEffect(IIPotions.wellSupplied, 80, 0, true, true));
-					healed = true;
-				}
-			if(!upgraded&&healed)
-				energyStorage -= ammoCrateEnergyPerAction;
+		if(upgraded&&energyStorage < ammoCrateEnergyPerAction)
+			return false;
 
-			return healed;
+		boolean supplied = false;
+		if(entity instanceof EntityLivingBase)
+		{
+			EntityLivingBase living = (EntityLivingBase)entity;
+			if(!living.isPotionActive(IIPotions.wellSupplied))
+			{
+				living.addPotionEffect(new PotionEffect(IIPotions.wellSupplied, 80, 0, true, true));
+				supplied = true;
+			}
 		}
-		return false;
+
+		if(upgraded&&supplied)
+			consumeEnergy(ammoCrateEnergyPerAction);
+		return supplied;
 	}
 
 	@Override
@@ -126,53 +126,45 @@ public class TileEntityAmmunitionCrate extends TileEntityEffectCrate
 	private void reloadRevolver(EntityPlayer player, EnumHand hand)
 	{
 		ItemStack heldItem = player.getHeldItem(hand);
+		if(heldItem.isEmpty()||!(heldItem.getItem() instanceof IBulletContainer))
+			return;
 
-		if(!heldItem.isEmpty()&&heldItem.getItem() instanceof IBulletContainer)
+		if(heldItem.getItem() instanceof ItemRevolver)
+			ItemNBTHelper.setInt(heldItem, "reload", Math.round(30*Tools.ammunitionCrateResupplyTime));
+
+		IItemHandler bulletHandler = heldItem.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+		if(bulletHandler==null)
+			return;
+
+		for(int i = 0; i < 8; i++)
 		{
-			if(heldItem.getItem() instanceof ItemRevolver)
-				ItemNBTHelper.setInt(heldItem, "reload", Math.round(30*Tools.ammunitionCrateResupplyTime));
-
-			IItemHandler bullethandler = heldItem.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-
-			if(bullethandler==null)
-				return;
-
-			for(int i = 0; i < 8; i++)
-			{
-				ItemStack s = bullethandler.extractItem(i, 1, false);
-				if(s.isItemEqual(BulletHandler.emptyCasing)||s.isItemEqual(BulletHandler.emptyShell))
-					for(int j = 20; j < 29; j++)
-					{
-						s = insertionHandler.insertItem(j, s, false);
-						if(s.isEmpty())
-							break;
-					}
-				else
-					for(int j = 0; j < 20; j++)
-					{
-						s = insertionHandler.insertItem(j, s, false);
-						if(s.isEmpty())
-							break;
-					}
-			}
-
-			for(int j = 0; j < 8; j++)
-			{
-				ItemStack required = inventory.get(29+j);
-				if(!required.isEmpty())
-				{
-					ItemStack s = ItemStack.EMPTY;
-					for(int k = 0; k < 20; k++)
-						if(!insertionHandler.getStackInSlot(k).isEmpty()&&insertionHandler.getStackInSlot(k).getTagCompound().equals(required.getTagCompound()))
-						{
-							s = insertionHandler.extractItem(k, 1, false);
-							break;
-						}
-
-					bullethandler.insertItem(j, s, false);
-				}
-			}
+			ItemStack stack = bulletHandler.extractItem(i, 1, false);
+			if(stack.isItemEqual(BulletHandler.emptyCasing)||stack.isItemEqual(BulletHandler.emptyShell))
+				for(int j = 20; j < 29&&!stack.isEmpty(); j++)
+					stack = insertionHandler.insertItem(j, stack, false);
+			else
+				for(int j = 0; j < 20&&!stack.isEmpty(); j++)
+					stack = insertionHandler.insertItem(j, stack, false);
 		}
 
+		for(int slot = 0; slot < 8; slot++)
+		{
+			ItemStack required = inventory.get(29+slot);
+			if(required.isEmpty())
+				continue;
+
+			ItemStack round = ItemStack.EMPTY;
+			for(int source = 0; source < 20; source++)
+			{
+				ItemStack available = insertionHandler.getStackInSlot(source);
+				if(!available.isEmpty()&&ItemStack.areItemStackTagsEqual(available, required))
+				{
+					round = insertionHandler.extractItem(source, 1, false);
+					break;
+				}
+			}
+			bulletHandler.insertItem(slot, round, false);
+		}
+		markDirty();
 	}
 }

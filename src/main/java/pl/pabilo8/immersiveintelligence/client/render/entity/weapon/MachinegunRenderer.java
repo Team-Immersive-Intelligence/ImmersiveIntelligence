@@ -176,7 +176,7 @@ public class MachinegunRenderer extends Render<EntityMachinegun> implements IRel
 
 								int beltLength = (int)(24+Math.max(Math.abs(entity.aim.getYaw(0f))-55, 0)/2-Math.max(entity.aim.getPitch(partialTicks)-20, 0)/2);
 
-								if(crate.open&&crate.isUpgradeInstalled(IIContent.UPGRADE_MG_LOADER))
+								if(crate.lid.isFullyOpened()&&crate.isUpgradeInstalled(IIContent.UPGRADE_MG_LOADER))
 								{
 									ArrayList<ItemStack> ammoStacks = new ArrayList<>();
 									for(int i = 38, cc = 0; i < 50&&cc < beltLength; i++)

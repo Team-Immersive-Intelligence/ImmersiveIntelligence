@@ -25,9 +25,9 @@ public class GuiMedicalCrate extends DecoTileGui<TileEntityMedicalCrate, Contain
 	@DecoResource
 	public static final ResourceLocation TEXTURE_MED = IIReference.RES_II.with("gui/medical_crate");
 	@DecoResource
-	public static final ResourceLocation SPEED = IIReference.RES_II.with("deco/icons/icon_speed");
+	public static final ResourceLocation SPEED = IIReference.RES_II.with("gui/deco/icons/icon_speed");
 	@DecoResource
-	public static final ResourceLocation HEAL = IIReference.RES_II.with("deco/icons/icon_progress");
+	public static final ResourceLocation HEAL = IIReference.RES_II.with("gui/deco/icons/icon_progress");
 
 	public GuiMedicalCrate(EntityPlayer player, TileEntityMedicalCrate tile)
 	{

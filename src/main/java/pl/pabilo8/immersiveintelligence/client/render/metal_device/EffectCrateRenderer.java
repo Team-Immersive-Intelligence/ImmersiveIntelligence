@@ -7,7 +7,6 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.model.obj.OBJModel;
-import pl.pabilo8.immersiveintelligence.api.upgrade.Upgrade;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
 import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIAnimationCompiledMap;
 import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
@@ -18,6 +17,8 @@ import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IITileRenderer;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate.TileEntityEffectCrate;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -31,33 +32,11 @@ public abstract class EffectCrateRenderer<T extends TileEntityEffectCrate> exten
 	private AMTUpgradeModel modelUpgrade = null;
 	private AMT partInserter, partLower, partUpper;
 
-	public static void renderWithUpgrade(Upgrade... upgrades)
-	{
-		GlStateManager.pushMatrix();
-		GlStateManager.translate(-0.5, 0, 0.5);
-		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
-
-		//model.getBlockRotation(EnumFacing.NORTH, false);
-
-		for(Upgrade upgrade : upgrades)
-		{
-			if(upgrade==IIContent.UPGRADE_INSERTER)
-			{
-				GlStateManager.pushMatrix();
-				GlStateManager.popMatrix();
-			}
-		}
-
-		GlStateManager.popMatrix();
-	}
-
 	@Override
 	public void draw(T te, BufferBuilder buf, float partialTicks, Tessellator tes)
 	{
-		float progress = Math.min(1.5f, Math.max(te.lidAngle+(te.open?0.2f*partialTicks: -0.3f*partialTicks), 0f))/1.5f;
-
 		//apply animation
-		animationOpen.apply(progress);
+		animationOpen.apply(te.lid.getProgress(partialTicks));
 
 		//apply rotation for block facing
 		GlStateManager.pushMatrix();
@@ -83,22 +62,26 @@ public abstract class EffectCrateRenderer<T extends TileEntityEffectCrate> exten
 	}
 
 	@Override
-	public void compileModels(IBlockState state, OBJModel model)
+	public final void compileModels(IBlockState state, OBJModel model)
 	{
-		this.model = new AMTModel(state, model);
+		this.model = getModel(state, model);
 		animationOpen = IIAnimationCompiledMap.create(this.model, getOpenAnimationPath());
 
-		modelUpgrade = new AMTUpgradeModel(
-				IIContent.UPGRADE_INSERTER, getInserterUpgradePath(), getInserterUpgradeAnimationPath()
-		);
-
+		modelUpgrade = new AMTUpgradeModel(IIContent.UPGRADE_INSERTER,
+				getInserterUpgradePath(), getInserterUpgradeAnimationPath());
 		partInserter = modelUpgrade.getPart("inserter");
 		partUpper = modelUpgrade.getPart("upper");
 		partLower = modelUpgrade.getPart("lower");
 	}
 
+	@Nonnull
+	protected AMTModel getModel(IBlockState state, OBJModel model)
+	{
+		return new AMTModel(state, model);
+	}
+
 	@Override
-	protected void nullifyModels()
+	protected final void nullifyModels()
 	{
 		model = AMTUtils.disposeOf(model);
 		modelUpgrade = AMTUtils.disposeOf(modelUpgrade);

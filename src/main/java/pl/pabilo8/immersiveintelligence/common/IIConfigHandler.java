@@ -1629,15 +1629,6 @@ public class IIConfigHandler
 
 			public static class Grenade
 			{
-				@Comment({
-						"Changes looks of the grenades",
-						"0 - new look",
-						"1 - old look, but cores are colored",
-						"2 - old look"
-				})
-				@RangeInt(min = 0, max = 2)
-				public static int classicGrenades = 0;
-
 				@Comment({"Grenade's initial speed modifier."})
 				@RangeDouble(min = 0)
 				public static float throwSpeedModifier = 1.65f;
