@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ttt",
+    " t "
+  ],
+  "key": {
+    "t": {
+      "type": "forge:ore_dict",
+      "ore": "plankTreatedWood"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:harbor",
+    "count": 4,
+    "data": 0
+  }
+}

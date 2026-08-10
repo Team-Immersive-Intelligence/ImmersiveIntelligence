@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " t ",
+    " t ",
+    " c "
+  ],
+  "key": {
+    "t": {
+      "item": "immersiveengineering:wooden_decoration",
+      "data": 0
+    },
+    "c": {
+      "item": "immersiveintelligence:concrete_decoration",
+      "data": 0
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:harbor_support",
+    "count": 4,
+    "data": 0
+  }
+}
