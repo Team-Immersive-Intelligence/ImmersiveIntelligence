@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ttt",
+    "ccc"
+  ],
+  "key": {
+    "t": {
+      "type": "forge:ore_dict",
+      "ore": "plankTreatedWood"
+    },
+    "c": {
+      "item": "immersiveintelligence:concrete_decoration",
+      "data": 0
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:harbor",
+    "count": 6,
+    "data": 1
+  }
+}

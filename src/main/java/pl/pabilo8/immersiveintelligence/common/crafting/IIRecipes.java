@@ -3,18 +3,20 @@ package pl.pabilo8.immersiveintelligence.common.crafting;
 import blusunrize.immersiveengineering.api.ApiUtils;
 import blusunrize.immersiveengineering.api.IEApi;
 import blusunrize.immersiveengineering.api.crafting.*;
+import blusunrize.immersiveengineering.api.energy.wires.WireType;
 import blusunrize.immersiveengineering.common.Config.IEConfig.Machines;
 import blusunrize.immersiveengineering.common.IEContent;
-import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_MetalDecoration0;
-import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_MetalDecoration2;
-import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_MetalDevice0;
-import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_MetalDevice1;
+import blusunrize.immersiveengineering.common.blocks.BlockTypes_MetalsAll;
+import blusunrize.immersiveengineering.common.blocks.BlockTypes_MetalsIE;
+import blusunrize.immersiveengineering.common.blocks.metal.*;
 import blusunrize.immersiveengineering.common.blocks.stone.BlockTypes_StoneDecoration;
 import blusunrize.immersiveengineering.common.blocks.wooden.BlockTypes_WoodenDevice0;
 import blusunrize.immersiveengineering.common.crafting.RecipeRGBColouration;
 import blusunrize.immersiveengineering.common.util.EnergyHelper;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.immersiveengineering.common.util.Utils;
+import dan200.computercraft.core.filesystem.JarMount;
+import net.dries007.tfc.api.types.Metal.ItemType;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockShulkerBox;
 import net.minecraft.init.Blocks;
@@ -55,6 +57,9 @@ import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Overrides;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Overrides.Railgun;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.block.data_device.BlockIIDataDevice;
+import pl.pabilo8.immersiveintelligence.common.block.data_device.BlockIIDataDevice.IIBlockTypes_Connector;
+import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDecoration.IIBlockTypes_MetalDecoration;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDevice.IIBlockTypes_MetalDevice;
 import pl.pabilo8.immersiveintelligence.common.block.mines.BlockIIMine.IIBlockTypes_Mine;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIConcreteDecoration.ConcreteDecorations;
@@ -1192,7 +1197,8 @@ public class IIRecipes
 				.withRequiredProgress(32000);
 
 		//Printing Press
-		IIContent.UPGRADE_PRESS_PUNCHTAPES.withRequiredProgress(32000);
+		IIContent.UPGRADE_PRESS_PUNCHTAPES
+				.withRequiredProgress(32000);
 		IIContent.UPGRADE_PRESS_BATCHING.withRequiredProgress(32000);
 		IIContent.UPGRADE_PRESS_ENVELOPER.withRequiredProgress(32000);
 
@@ -1225,8 +1231,9 @@ public class IIRecipes
 
 		//Gates
 		IIContent.UPGRADE_REDSTONE_ACTIVATION
-				.withCost(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 4, BlockTypes_MetalDecoration0.LIGHT_ENGINEERING.getMeta())))
-				.withCost(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 2, BlockTypes_MetalDecoration0.RS_ENGINEERING.getMeta())))
+				.withCost(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 2, BlockTypes_MetalDecoration0.LIGHT_ENGINEERING.getMeta())))
+				.withCost(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 1, BlockTypes_MetalDecoration0.RS_ENGINEERING.getMeta())))
+				.withCost(new IngredientStack(new ItemStack(IEContent.itemWireCoil, 1, WireType.REDSTONE.getWireCoil().getMetadata())))
 				.withRequiredProgress(20000);
 		IIContent.UPGRADE_RAZOR_WIRE
 				.withCost(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration2, 6, BlockTypes_MetalDecoration2.RAZOR_WIRE.getMeta())))
@@ -1237,24 +1244,24 @@ public class IIRecipes
 				.withCost(new IngredientStack(new ItemStack(IIContent.blockSandbags, 4))) //Sandbags
 				.withCost(new IngredientStack(new ItemStack(IIContent.itemMachinegun, 2)))
 				.withCost(new IngredientStack(new ItemStack(IIContent.blockMetalDevice, 2, IIBlockTypes_MetalDevice.AMMUNITION_CRATE.getMeta())))
-				.withCost(new IngredientStack("circuitBasic", 4))
+				.withCost(new IngredientStack("opticsBasic", 2))
 				.withRequiredProgress(40000);
 
 		IIContent.UPGRADE_EMPLACEMENT_WEAPON_IROBSERVER
-				.withCost(new IngredientStack("blockGlassRed", 1))
-				.withCost(new IngredientStack("blockGlass", 1))
+				.withCost(new IngredientStack("lensInfrared", 1))
+				.withCost(new IngredientStack("lens", 1))
 				.withCost(new IngredientStack("blockSteel", 2))
 				.withCost(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 2, BlockTypes_MetalDecoration0.LIGHT_ENGINEERING.getMeta())))
-				.withCost(new IngredientStack("circuitBasic", 6))
+				.withCost(new IngredientStack("opticsBasic", 2))
 				.withRequiredProgress(40000);
 
 		//Weapons - Advanced Tier
 		IIContent.UPGRADE_EMPLACEMENT_WEAPON_AUTOCANNON
 				.withCost(new IngredientStack(new ItemStack(IEContent.itemMaterial, 4, 14)))
 				.withCost(new IngredientStack("blockSteel", 2))
-				.withCost(new IngredientStack(new ItemStack(IEContent.itemMaterial, 3, 9)))
+				.withCost(new IngredientStack("gunpartAdvanced", 2))
 				.withCost(new IngredientStack(new ItemStack(IIContent.blockMetalDevice, 1, IIBlockTypes_MetalDevice.AMMUNITION_CRATE.getMeta())))
-				.withCost(new IngredientStack("circuitAdvanced", 6))
+				.withCost(new IngredientStack("opticsAdvanced", 6))
 				.withRequiredProgress(80000);
 
 		IIContent.UPGRADE_EMPLACEMENT_WEAPON_HEAVY_CHEMTHROWER
@@ -1262,7 +1269,7 @@ public class IIRecipes
 				.withCost(new IngredientStack(new ItemStack(IEContent.blockMetalDevice1, 4, BlockTypes_MetalDevice1.FLUID_PIPE.getMeta())))
 				.withCost(new IngredientStack(new ItemStack(IEContent.itemMaterial, 2, 14)))
 				.withCost(new IngredientStack("blockSteel", 1))
-				.withCost(new IngredientStack("circuitAdvanced", 6))
+				.withCost(new IngredientStack("opticsAdvanced", 6))
 				.withRequiredProgress(80000);
 
 		IIContent.UPGRADE_EMPLACEMENT_WEAPON_HEAVY_RAILGUN
@@ -1271,41 +1278,72 @@ public class IIRecipes
 				.withCost(new IngredientStack("blockSteel", 1))
 				.withCost(new IngredientStack(new ItemStack(IEContent.itemMaterial, 2, 9)))
 				.withCost(new IngredientStack(new ItemStack(IIContent.blockMetalDevice, 1, IIBlockTypes_MetalDevice.AMMUNITION_CRATE.getMeta())))
-				.withCost(new IngredientStack("circuitAdvanced", 6))
+				.withCost(new IngredientStack("opticsAdvanced", 1))
 				.withRequiredProgress(80000);
 
 		IIContent.UPGRADE_EMPLACEMENT_WEAPON_TESLA
 				.withCost(new IngredientStack(new ItemStack(IEContent.blockMetalDevice0, 8, BlockTypes_MetalDevice0.CAPACITOR_HV.getMeta())))
 				.withCost(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 8, BlockTypes_MetalDecoration0.COIL_HV.getMeta())))
-				.withCost(new IngredientStack("circuitAdvanced", 6))
 				.withRequiredProgress(120000);
 
 		IIContent.UPGRADE_EMPLACEMENT_SPOTLIGHT_TOWER
-				.withCost(new IngredientStack(new ItemStack(IEContent.blockMetalDevice0, 2, BlockTypes_MetalDevice0.CAPACITOR_MV.getMeta())))
+				.withCost(new IngredientStack(new ItemStack(IEContent.blockMetalDevice0, 2, BlockTypes_MetalDevice0.CAPACITOR_HV.getMeta())))
+				.withCost(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration1, 5, BlockTypes_MetalDecoration1.STEEL_SCAFFOLDING_0.getMeta())))
+				.withCost(new IngredientStack(IIContent.blockDataConnector.getStack(IIBlockTypes_Connector.PROGRAMMABLE_SPEAKER)))
+				.withCost(new IngredientStack(new ItemStack(IEContent.blockMetalDevice1,1, BlockTypes_MetalDevice1.FLOODLIGHT.getMeta())))
+				.withCost(new IngredientStack("opticsAdvanced", 1))
+				.withCost(new IngredientStack(new ItemStack(IEContent.itemWireCoil, 5, 0)))
+				.withRequiredProgress(80000);
+
+		IIContent.UPGRADE_EMPLACEMENT_SEARCHLIGHT
+				.withCost(new IngredientStack(new ItemStack(IEContent.blockMetalDevice0, 1, BlockTypes_MetalDevice0.CAPACITOR_HV.getMeta())))
+				.withCost(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration1, 2, BlockTypes_MetalDecoration1.STEEL_SCAFFOLDING_0.getMeta())))
+				.withCost(new IngredientStack(new ItemStack(IEContent.blockSheetmetal,4,8)))
+				.withCost(new IngredientStack(new ItemStack(IEContent.blockSheetmetal,1,3)))
+				.withCost(new IngredientStack(new ItemStack(IEContent.itemGraphiteElectrode,1)))
+				.withCost(new IngredientStack("opticsAdvanced", 1))
 				.withRequiredProgress(80000);
 
 		IIContent.UPGRADE_EMPLACEMENT_WEAPON_MORTAR
-				.withCost(new IngredientStack((new ItemStack(IEContent.blockMetalDevice1, 2, BlockTypes_MetalDevice1.FLUID_PIPE.getMeta()))))
+				.withCost(new IngredientStack(new ItemStack(IEContent.itemMaterial, 2, 9)))
+				.withCost(new IngredientStack(new ItemStack(IIContent.itemMortar, 1)))
+				.withCost(new IngredientStack("opticsAdvanced", 2))
+				.withCost(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration1, 2, BlockTypes_MetalDecoration1.STEEL_SCAFFOLDING_0.getMeta())))
+				.withCost(new IngredientStack(new ItemStack(IEContent.itemWireCoil, 2, 1)))
 				.withRequiredProgress(160000);
 
 		IIContent.UPGRADE_EMPLACEMENT_WEAPON_LIGHT_HOWITZER
-				.withCost(new IngredientStack((new ItemStack(IEContent.blockMetalDevice1, 2, BlockTypes_MetalDevice1.FLUID_PIPE.getMeta()))))
+				.withCost(new IngredientStack((new ItemStack(IEContent.blockMetalDecoration0, 1, BlockTypes_MetalDecoration0.HEAVY_ENGINEERING.getMeta()))))
+				.withCost(new IngredientStack(new ItemStack(IEContent.blockStorage, 2, BlockTypes_MetalsIE.STEEL.getMeta())))
+				.withCost(new IngredientStack(new ItemStack(IEContent.blockSheetmetal, 4, BlockTypes_MetalsAll.STEEL.getMeta())))
+				.withCost(new IngredientStack("opticsAdvanced", 2))
+				.withCost(new IngredientStack(new ItemStack(IEContent.itemWireCoil, 2, 1)))
 				.withRequiredProgress(160000);
 
 		IIContent.UPGRADE_EMPLACEMENT_WEAPON_MLRS
-				.withCost(new IngredientStack((new ItemStack(IEContent.blockMetalDevice1, 2, BlockTypes_MetalDevice1.FLUID_PIPE.getMeta()))))
+				.withCost(new IngredientStack(new ItemStack(IEContent.blockSheetmetal, 6, BlockTypes_MetalsAll.STEEL.getMeta())))
+				.withCost(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 2, BlockTypes_MetalDecoration0.LIGHT_ENGINEERING.getMeta())))
+				.withCost(new IngredientStack(new ItemStack(IEContent.itemWireCoil, 4, 4)))
+				.withCost(new IngredientStack("opticsAdvanced", 2))
+				.withCost(new IngredientStack(new ItemStack(IEContent.itemMaterial, 2, 9)))
 				.withRequiredProgress(160000);
 
 		IIContent.UPGRADE_EMPLACEMENT_WEAPON_GUIDED_MISSILE_LAUNCHER
-				.withCost(new IngredientStack((new ItemStack(IEContent.blockMetalDevice1, 2, BlockTypes_MetalDevice1.FLUID_PIPE.getMeta()))))
+				.withCost(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration1, 4, BlockTypes_MetalDecoration1.STEEL_SCAFFOLDING_0.getMeta())))
+				.withCost(new IngredientStack(new ItemStack(IIContent.blockDataConnector, 1, IIBlockTypes_Connector.INSERTER.getMeta())))
+				.withCost(new IngredientStack("opticsBasic", 1))
+				.withCost(new IngredientStack("opticsAdvanced", 2))
+				.withCost(new IngredientStack(new ItemStack(IIContent.blockMetalDecoration, 1, IIBlockTypes_MetalDecoration.COIL_DATA.getMeta())))
 				.withRequiredProgress(160000);
 
 		//Weapons - Processor Tier
 		IIContent.UPGRADE_EMPLACEMENT_WEAPON_CPDS
 				.withCost(new IngredientStack(new ItemStack(IEContent.itemMaterial, 8, 14)))
-				.withCost(new IngredientStack(new ItemStack(IEContent.itemMaterial, 2, 9)))
+				.withCost(new IngredientStack(new ItemStack(IIContent.itemMaterial, 2, 14)))
+				.withCost(new IngredientStack(new ItemStack(IIContent.itemMaterial, 4, 39)))
 				.withCost(new IngredientStack("blockSteel", 3))
-				.withCost(new IngredientStack("circuitProcessor", 6))
+				.withCost(new IngredientStack("opticsAdvanced", 3))
+				.withCost(new IngredientStack("circuitProcessor", 4))
 				.withRequiredProgress(300000);
 
 	}
