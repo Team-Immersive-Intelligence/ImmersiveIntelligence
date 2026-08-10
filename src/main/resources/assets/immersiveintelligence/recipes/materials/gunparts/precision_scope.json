@@ -11,10 +11,12 @@
   ],
   "key": {
     "G": {
-      "item": "#paneGlassColorless"
+      "type": "forge:ore_dict",
+      "ore": "paneGlassColorless"
     },
     "C": {
-      "item": "#ingotCopper"
+      "type": "forge:ore_dict",
+      "ore": "ingotCopper"
     }
   }
 }
