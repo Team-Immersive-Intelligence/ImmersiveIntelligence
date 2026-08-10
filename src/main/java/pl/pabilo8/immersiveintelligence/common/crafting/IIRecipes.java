@@ -15,8 +15,6 @@ import blusunrize.immersiveengineering.common.crafting.RecipeRGBColouration;
 import blusunrize.immersiveengineering.common.util.EnergyHelper;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.immersiveengineering.common.util.Utils;
-import dan200.computercraft.core.filesystem.JarMount;
-import net.dries007.tfc.api.types.Metal.ItemType;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockShulkerBox;
 import net.minecraft.init.Blocks;
