@@ -32,7 +32,6 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemUtils;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIConnectable;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockRedstoneNetwork;
 
 import javax.annotation.Nonnull;
@@ -90,18 +89,6 @@ public abstract class TileEntityGateBase<T extends TileEntityGateBase<T>> extend
 		return super.getBounds(collision);
 	}
 
-	@Override
-	protected int[] listAllPOI(MultiblockPOI poi)
-	{
-		switch(poi)
-		{
-			case MISC_DOOR:
-				return getPOI("gate");
-			case REDSTONE_CABLE_MOUNT:
-				return getPOI("redstone");
-		}
-		return new int[0];
-	}
 
 	public boolean isDoorPart()
 	{

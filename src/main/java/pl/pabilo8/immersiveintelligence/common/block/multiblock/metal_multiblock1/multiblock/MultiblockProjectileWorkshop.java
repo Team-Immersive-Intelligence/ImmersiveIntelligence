@@ -10,6 +10,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityProjectileWorkshop;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 public class MultiblockProjectileWorkshop extends MultiblockStuctureBase<TileEntityProjectileWorkshop>
 {
@@ -23,6 +24,15 @@ public class MultiblockProjectileWorkshop extends MultiblockStuctureBase<TileEnt
 		super(new ResourceLocation(ImmersiveIntelligence.MODID, "multiblocks/projectile_workshop"));
 		offset = new Vec3i(2, 1, 0);
 		INSTANCE = this;
+
+		//POI
+		addPOI(MultiblockPOI.ITEM_INPUT, "item_inputs");
+		addPOI(MultiblockPOI.ITEM_OUTPUT, "item_out");
+		addPOI(MultiblockPOI.FLUID_INPUT, "component_fluid_in");
+		addPOI(MultiblockPOI.ENERGY_INPUT, "energy");
+		addPOI(MultiblockPOI.REDSTONE_INPUT, "redstone");
+
+		//Upgrades
 		UpgradeTechTree.getTreeFor(TileEntityProjectileWorkshop.class)
 				.withUpgrade(IIContent.UPGRADE_CORE_FILLER, UpgradeTier.TIER_1);
 	}

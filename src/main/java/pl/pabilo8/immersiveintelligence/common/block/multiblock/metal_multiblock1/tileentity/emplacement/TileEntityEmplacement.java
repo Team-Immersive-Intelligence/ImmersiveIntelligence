@@ -260,36 +260,6 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 	}
 
 	@Override
-	protected int[] listAllPOI(MultiblockPOI poi)
-	{
-		switch(poi)
-		{
-			case ENERGY_INPUT:
-				return getPOI("energy");
-			case REDSTONE_INPUT:
-				return getPOI("redstone");
-			case DATA_INPUT:
-				return getPOI("data");
-			case DATA_OUTPUT:
-				return getPOI("data");
-			case ITEM_INPUT:
-				return getPOI("input");
-			case FLUID_INPUT:
-				return getPOI("input");
-			case ITEM_OUTPUT:
-				return getPOI("input");
-			case FLUID_OUTPUT:
-				return getPOI("output");
-			case MISC_WEAPON:
-				return getPOI("weapon");
-			case MISC_HATCH:
-				return getPOI("hatch");
-			default:
-				return new int[0];
-		}
-	}
-
-	@Override
 	public void receiveData(DataPacket packet, int pos)
 	{
 		if(!this.dataControlEnabled)

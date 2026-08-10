@@ -10,6 +10,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityPrintingPress;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -29,6 +30,14 @@ public class MultiblockPrintingPress extends MultiblockStuctureBase<TileEntityPr
 		offset = new Vec3i(1, 1, 0);
 		INSTANCE = this;
 
+		//POI
+		addPOI(MultiblockPOI.DATA_INPUT, "data");
+		addPOI(MultiblockPOI.ENERGY_INPUT, "energy");
+		addPOI(MultiblockPOI.ITEM_INPUT, "paper_input");
+		addPOI(MultiblockPOI.FLUID_INPUT, "fluid_input");
+		addPOI(MultiblockPOI.ITEM_OUTPUT, "output");
+
+		//Upgrades
 		UpgradeTechTree.getTreeFor(TileEntityPrintingPress.class)
 				.withUpgrade(IIContent.UPGRADE_PRESS_PUNCHTAPES, UpgradeTier.TIER_1)
 				.withUpgrade(IIContent.UPGRADE_PRESS_BATCHING, UpgradeTier.TIER_1)

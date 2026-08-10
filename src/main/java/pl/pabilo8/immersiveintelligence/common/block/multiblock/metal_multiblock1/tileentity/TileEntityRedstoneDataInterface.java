@@ -34,7 +34,6 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IIIGuiMultiblockTile;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIConnectable;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockRedstoneNetwork;
 
 import javax.annotation.Nonnull;
@@ -205,19 +204,6 @@ public class TileEntityRedstoneDataInterface extends TileEntityMultiblockIIConne
 		return punchtape;
 	}
 
-	@Override
-	protected int[] listAllPOI(MultiblockPOI poi)
-	{
-		switch(poi)
-		{
-			case REDSTONE_CABLE_MOUNT:
-				return getPOI("redstone");
-			case DATA_INPUT:
-				return getPOI("data");
-			default:
-				return new int[0];
-		}
-	}
 
 	@Override
 	public boolean isRelay()

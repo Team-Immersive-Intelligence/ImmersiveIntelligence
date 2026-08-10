@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.api.data.radio;
 
 import blusunrize.immersiveengineering.api.DimensionBlockPos;
+import lombok.Getter;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
@@ -19,6 +20,7 @@ public class RadioNetwork
 {
 	public static RadioNetwork INSTANCE = new RadioNetwork();
 
+	@Getter
 	ArrayList<IRadioDevice> devices = new ArrayList<>();
 	ArrayList<IRadioDevice> toRemove = new ArrayList<>();
 
@@ -46,11 +48,6 @@ public class RadioNetwork
 	{
 		devices.clear();
 		toRemove.clear();
-	}
-
-	public ArrayList<IRadioDevice> getDevices()
-	{
-		return devices;
 	}
 
 	/**

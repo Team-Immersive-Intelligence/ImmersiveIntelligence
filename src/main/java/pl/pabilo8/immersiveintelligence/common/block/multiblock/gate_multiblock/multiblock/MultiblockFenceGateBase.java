@@ -10,6 +10,7 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -21,6 +22,8 @@ public abstract class MultiblockFenceGateBase<T extends TileEntityGateBase<T>> e
 	{
 		super(loc);
 		offset = new Vec3i(0, 1, 0);
+		addPOI(MultiblockPOI.MISC_DOOR, "gate");
+		addPOI(MultiblockPOI.REDSTONE_CABLE_MOUNT, "redstone");
 		UpgradeTechTree.getTreeFor(klass)
 				.withUpgrade(IIContent.UPGRADE_REDSTONE_ACTIVATION, UpgradeTier.TIER_1)
 				.withUpgrade(IIContent.UPGRADE_RAZOR_WIRE, UpgradeTier.TIER_1);

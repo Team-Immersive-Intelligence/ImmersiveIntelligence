@@ -14,6 +14,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityRedstoneDataInterface;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -29,6 +30,10 @@ public class MultiblockRedstoneInterface extends MultiblockStuctureBase<TileEnti
 		super(new ResourceLocation(ImmersiveIntelligence.MODID, "multiblocks/redstone_data_interface"));
 		offset = new Vec3i(0, 0, 0);
 		INSTANCE = this;
+
+		//POI
+		addPOI(MultiblockPOI.REDSTONE_CABLE_MOUNT, "redstone");
+		addPOI(MultiblockPOI.DATA_INPUT, "data");
 	}
 
 	@Override

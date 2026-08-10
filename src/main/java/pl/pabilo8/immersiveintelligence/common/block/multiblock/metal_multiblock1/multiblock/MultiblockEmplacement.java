@@ -16,6 +16,7 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 import java.util.Collections;
 
@@ -30,13 +31,30 @@ public class MultiblockEmplacement extends MultiblockStuctureBase<TileEntityEmpl
 		super(new ResourceLocation(ImmersiveIntelligence.MODID, "multiblocks/emplacement"));
 		offset = new Vec3i(1, 4, 0);
 		INSTANCE = this;
+
+		//POI
+		addPOI(MultiblockPOI.ENERGY_INPUT, "energy");
+		addPOI(MultiblockPOI.REDSTONE_INPUT, "redstone");
+		addPOI(MultiblockPOI.DATA, "data");
+		addPOI(MultiblockPOI.MISC_WEAPON, "weapon");
+		addPOI(MultiblockPOI.MISC_HATCH, "hatch");
+
+		addPOI(MultiblockPOI.ITEM_INPUT, "input");
+		addPOI(MultiblockPOI.FLUID_INPUT, "input");
+
+		addPOI(MultiblockPOI.ITEM_OUTPUT, "output");
+		addPOI(MultiblockPOI.FLUID_OUTPUT, "output");
+
+		//Customzation
 		STYLE_CONSTRAINTS = new StyleConstraints("sandbags", PaintStyleConstraint.NOT_APPLICABLE,
 				Sets.newHashSet("sandbags", "wooden", "steel", "bricks", "concrete"),
 				Collections.emptySet()
 		);
 
+		//Tactile AMT
 		animationPlatform = ResLoc.of(IIReference.RES_II, "emplacement/open");
 
+		//Upgrades
 		UpgradeTechTree.getTreeFor(TileEntityEmplacement.class)
 				.reset()
 				//Generic Upgrades
@@ -71,13 +89,6 @@ public class MultiblockEmplacement extends MultiblockStuctureBase<TileEntityEmpl
 
 				//Weapons lockout
 				.withLockOut(UpgradePurpose.PRIMARY_WEAPON);
-
-		//Register fire mission classes for serialization
-//		NBTSerialisation.registerPolimorphicTypeClass(EmplacementFireMissionCustom.class);
-//		NBTSerialisation.registerPolimorphicTypeClass(EmplacementFireMissionEntities.class);
-//		NBTSerialisation.registerPolimorphicTypeClass(EmplacementFireMissionEntity.class);
-//		NBTSerialisation.registerPolimorphicTypeClass(EmplacementFireMissionPosition.class);
-//		NBTSerialisation.registerPolimorphicTypeClass(EmplacementFireMissionShells.class);
 	}
 
 	@Override

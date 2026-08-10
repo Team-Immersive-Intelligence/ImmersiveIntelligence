@@ -10,6 +10,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityDataInputMachine;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -26,6 +27,12 @@ public class MultiblockDataInputMachine extends MultiblockStuctureBase<TileEntit
 		super(new ResourceLocation(ImmersiveIntelligence.MODID, "multiblocks/data_input_machine"));
 		offset = new Vec3i(0, 1, 0);
 		INSTANCE = this;
+
+		//POI
+		addPOI(MultiblockPOI.ENERGY_INPUT, "energy");
+		addPOI(MultiblockPOI.REDSTONE_INPUT, "redstone");
+		addPOI(MultiblockPOI.DATA_OUTPUT, "data");
+		addPOI(MultiblockPOI.MISC_HATCH, "hatch");
 
 		//Init Tech Tree
 		UpgradeTechTree.getTreeFor(TileEntityDataInputMachine.class)

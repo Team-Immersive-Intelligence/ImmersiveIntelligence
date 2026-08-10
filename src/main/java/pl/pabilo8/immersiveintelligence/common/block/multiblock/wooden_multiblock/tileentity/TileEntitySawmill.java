@@ -101,21 +101,6 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 
 	}
 
-	@Override
-	protected int[] listAllPOI(MultiblockPOI poi)
-	{
-		switch(poi)
-		{
-			case ROTARY_INPUT:
-				return getPOI("rotary");
-			case ITEM_INPUT:
-				return getPOI("item_input");
-			case ITEM_OUTPUT:
-				return getPOI("all_item_output");
-			default:
-				return new int[0];
-		}
-	}
 
 	//--- Capabilities ---//
 

@@ -225,23 +225,6 @@ public class TileEntityFuelStation extends TileEntityMultiblockIIGeneric<TileEnt
 		return IIMath.progressValue(inserterDistance, goalDistance, 0.125f, partialTicks);
 	}
 
-	@Override
-	protected int[] listAllPOI(MultiblockPOI poi)
-	{
-		switch(poi)
-		{
-			case ENERGY_INPUT:
-				return getPOI("energy_input");
-			case FLUID_INPUT:
-				return getPOI("fluid_input");
-			case REDSTONE:
-				return getPOI("redstone");
-			case MISC_CONTROL_PANEL:
-				return getPOI("table");
-			default:
-				return new int[0];
-		}
-	}
 
 	@Override
 	public boolean isStackValid(int slot, ItemStack stack)

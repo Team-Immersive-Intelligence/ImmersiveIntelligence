@@ -121,28 +121,6 @@ public class TileEntityChemicalPainter extends TileEntityMultiblockProductionSin
 	}
 
 	@Override
-	protected int[] listAllPOI(MultiblockPOI poi)
-	{
-		switch(poi)
-		{
-			case FLUID_INPUT:
-				return getPOI("fluid_inputs");
-			case ENERGY_INPUT:
-				return getPOI("energy_input");
-			case DATA_INPUT:
-				return getPOI("data");
-			case ITEM_INPUT:
-				return getPOI("item_input");
-			case ITEM_OUTPUT:
-				return getPOI("item_output");
-			case REDSTONE_INPUT:
-				return getPOI("redstone");
-			default:
-				return new int[0];
-		}
-	}
-
-	@Override
 	public void receiveData(DataPacket packet, int pos)
 	{
 		DataType p = packet.get('p');

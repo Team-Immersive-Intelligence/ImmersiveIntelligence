@@ -29,7 +29,6 @@ import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockBallisticComputer;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIGeneric;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -153,21 +152,6 @@ public class TileEntityBallisticComputer extends TileEntityMultiblockIIGeneric<T
 		packet.set('p', new DataTypeFloat(pitch));
 
 		sendData(packet, getDirection("data_output"), multiblock.getPointOfInterest("data_output"));
-	}
-
-	@Override
-	protected int[] listAllPOI(MultiblockPOI poi)
-	{
-		switch(poi)
-		{
-			case ENERGY_INPUT:
-				return getPOI("energy");
-			case DATA_INPUT:
-				return getPOI("data_input");
-			case DATA_OUTPUT:
-				return getPOI("data_output");
-		}
-		return new int[0];
 	}
 
 	@Override

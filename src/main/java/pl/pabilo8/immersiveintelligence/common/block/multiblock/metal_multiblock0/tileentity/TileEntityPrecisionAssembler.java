@@ -32,7 +32,10 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 
 /**
+ * Multiblock machine producing items according to {@link PrecisionAssemblerRecipe recipes} by using {@link IPrecisionTool tools}.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 07.08.2026
  * @since 28.06.2019
  */
 public class TileEntityPrecisionAssembler extends TileEntityMultiblockProductionSingle<TileEntityPrecisionAssembler, PrecisionAssemblerRecipe> implements IBooleanAnimatedPartsBlock
@@ -98,24 +101,6 @@ public class TileEntityPrecisionAssembler extends TileEntityMultiblockProduction
 		{
 			attemptStackOutput(outputMainHandler, getDirection("item_output"), getPOI(MultiblockPOI.ITEM_OUTPUT));
 			attemptStackOutput(outputSecondaryHandler, getDirection("item_output"), getPOI(MultiblockPOI.ITEM_OUTPUT));
-		}
-	}
-
-	@Override
-	protected int[] listAllPOI(MultiblockPOI poi)
-	{
-		switch(poi)
-		{
-			case ENERGY_INPUT:
-				return getPOI("energy");
-			case ITEM_INPUT:
-				return getPOI("all_item_inputs");
-			case ITEM_OUTPUT:
-				return getPOI("item_out");
-			case REDSTONE:
-				return getPOI("redstone");
-			default:
-				return new int[0];
 		}
 	}
 

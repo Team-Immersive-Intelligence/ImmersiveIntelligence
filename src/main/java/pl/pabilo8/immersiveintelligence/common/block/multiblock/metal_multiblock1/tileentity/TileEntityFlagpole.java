@@ -26,7 +26,6 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInter
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IManagedDamageResistantMultiblock;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.MultiblockHealth;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIBase;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 import javax.annotation.Nonnull;
 
@@ -85,14 +84,6 @@ public class TileEntityFlagpole extends TileEntityMultiblockIIBase<TileEntityFla
 
 		if(!world.isRemote&&ticket!=null)
 			ForgeChunkManager.forceChunk(ticket, this.world.getChunkFromBlockCoords(getPos()).getPos());*/
-	}
-
-	@Override
-	protected int[] listAllPOI(MultiblockPOI poi)
-	{
-		if(poi==MultiblockPOI.MISC_FLAGPOLE)
-			return getPOI("pole");
-		return new int[0];
 	}
 
 	@Override

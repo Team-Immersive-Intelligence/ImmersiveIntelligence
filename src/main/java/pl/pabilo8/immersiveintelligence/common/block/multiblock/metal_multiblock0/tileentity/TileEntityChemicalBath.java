@@ -142,27 +142,6 @@ public class TileEntityChemicalBath extends TileEntityMultiblockProductionSingle
 	}
 
 	@Override
-	protected int[] listAllPOI(MultiblockPOI poi)
-	{
-		switch(poi)
-		{
-			case ENERGY_INPUT:
-				return getPOI("energy");
-			case REDSTONE:
-				return getPOI("redstone");
-			case ITEM_INPUT:
-				return getPOI("item_in");
-			case FLUID_INPUT:
-				return getPOI("fluid");
-			case ITEM_OUTPUT:
-				return getPOI("item_out");
-
-			default:
-				return new int[0];
-		}
-	}
-
-	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
 	{
 		if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY&&isPOI("item_in"))

@@ -202,22 +202,6 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockProductionSi
 			this.currentProcess.ticks = this.currentProcess.maxTicks;
 	}
 
-	@Override
-	protected int[] listAllPOI(MultiblockPOI poi)
-	{
-		switch(poi)
-		{
-			case ENERGY_INPUT:
-				return getPOI("energy");
-			case REDSTONE_INPUT:
-				return getPOI("redstone");
-			case DATA_OUTPUT:
-				return getPOI("data");
-			case MISC_HATCH:
-				return getPOI("hatch");
-		}
-		return new int[0];
-	}
 
 	@Override
 	public boolean isStackValid(int slot, ItemStack stack)

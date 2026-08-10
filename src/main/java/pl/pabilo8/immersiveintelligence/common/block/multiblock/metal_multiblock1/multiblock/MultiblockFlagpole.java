@@ -13,6 +13,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityFlagpole;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 import java.util.Collections;
 
@@ -26,11 +27,17 @@ public class MultiblockFlagpole extends MultiblockStuctureBase<TileEntityFlagpol
 		super(new ResourceLocation(ImmersiveIntelligence.MODID, "multiblocks/flagpole"));
 		offset = new Vec3i(1, 3, 0);
 		INSTANCE = this;
+
+		//POI
+		addPOI(MultiblockPOI.MISC_FLAGPOLE, "pole");
+
+		//Customization
 		STYLE_CONSTRAINTS = new StyleConstraints("sandbags", PaintStyleConstraint.NOT_APPLICABLE,
 				Sets.newHashSet("sandbags", "wooden", "steel", "bricks", "concrete"),
 				Collections.emptySet()
 		);
 
+		//Upgrades
 		UpgradeTechTree.getTreeFor(TileEntityFlagpole.class)
 				.reset()
 				.withUpgrade(IIContent.UPGRADE_FLAGPOLE_CAPTURE_DEFIANCE, UpgradeTier.TIER_1)

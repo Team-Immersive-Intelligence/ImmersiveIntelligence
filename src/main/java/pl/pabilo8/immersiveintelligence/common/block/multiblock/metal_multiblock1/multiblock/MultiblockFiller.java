@@ -8,6 +8,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityFiller;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 public class MultiblockFiller extends MultiblockStuctureBase<TileEntityFiller>
 {
@@ -20,6 +21,12 @@ public class MultiblockFiller extends MultiblockStuctureBase<TileEntityFiller>
 		super(new ResourceLocation(ImmersiveIntelligence.MODID, "multiblocks/filler"));
 		offset = new Vec3i(1, 1, 0);
 		INSTANCE = this;
+
+		//POI
+		addPOI(MultiblockPOI.ITEM_INPUT, "inputs");
+		addPOI(MultiblockPOI.ITEM_OUTPUT, "conveyor_out");
+		addPOI(MultiblockPOI.ENERGY_INPUT, "energy");
+		addPOI(MultiblockPOI.REDSTONE_INPUT, "redstone");
 	}
 
 	@Override

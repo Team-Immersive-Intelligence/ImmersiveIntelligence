@@ -31,7 +31,6 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IIIGuiMultiblockTile;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIGeneric;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -140,27 +139,6 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockIIGene
 		drawer.update();
 		keyboard.update();
 		upgradeManager.update();
-	}
-
-	@Override
-	protected int[] listAllPOI(MultiblockPOI poi)
-	{
-		switch(poi)
-		{
-			case ENERGY_INPUT:
-				return getPOI("energy");
-			case DATA_INPUT:
-				return getPOI("data_in");
-			case DATA_OUTPUT:
-				return getPOI("data_out");
-			case MISC_CONTROL_PANEL:
-				return getPOI("front_panel");
-			case MISC_CRATE:
-				return getPOI("crates");
-			case MISC_DOOR:
-				return getPOI("door");
-		}
-		return new int[0];
 	}
 
 	@Override

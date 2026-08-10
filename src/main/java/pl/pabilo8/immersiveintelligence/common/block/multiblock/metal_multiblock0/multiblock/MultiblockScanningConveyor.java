@@ -8,6 +8,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityScanningConveyor;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -22,6 +23,11 @@ public class MultiblockScanningConveyor extends MultiblockStuctureBase<TileEntit
 		super(new ResourceLocation(ImmersiveIntelligence.MODID, "multiblocks/scanning_conveyor"));
 		offset = new Vec3i(0, 1, 0);
 		INSTANCE = this;
+
+		//POI
+		addPOI(MultiblockPOI.DATA_OUTPUT, "data");
+		addPOI(MultiblockPOI.ENERGY_INPUT, "power");
+		addPOI(MultiblockPOI.REDSTONE_INPUT, "redstone");
 	}
 
 	@Override

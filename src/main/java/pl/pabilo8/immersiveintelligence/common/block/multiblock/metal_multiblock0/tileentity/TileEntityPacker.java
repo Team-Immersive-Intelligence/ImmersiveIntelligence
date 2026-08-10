@@ -230,21 +230,19 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 	}
 
 	@Override
-	protected int[] listAllPOI(MultiblockPOI poi)
+	protected int[] listDynamicPOI(MultiblockPOI poi)
 	{
-		boolean fluid = false, energy = false, railway = false;
+		boolean fluid = false, energy = false;
 		TileEntityPacker master = master();
 		if(master!=null)
 		{
 			fluid = master.isUpgradeInstalled(IIContent.UPGRADE_PACKER_FLUID);
 			energy = master.isUpgradeInstalled(IIContent.UPGRADE_PACKER_ENERGY);
-			railway = master.isUpgradeInstalled(IIContent.UPGRADE_PACKER_RAILWAY);
 		}
-
 		switch(poi)
 		{
 			case ENERGY_INPUT:
-				return energy?getPOI("all_energy_input"): getPOI("energy");
+				return energy?getPOI("all_energy_input"): new int[0];
 			case ITEM_INPUT:
 				return !fluid&&!energy?getPOI("inputs_items"): getPOI("conveyor_in");
 			case FLUID_INPUT:
@@ -255,12 +253,9 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 				return fluid?getPOI("output"): new int[0];
 			case ENERGY_OUTPUT:
 				return energy?getPOI("output"): new int[0];
-			case REDSTONE_INPUT:
-				return getPOI("redstone");
-			case DATA_INPUT:
-				return getPOI("data");
+			default:
+				return new int[0];
 		}
-		return new int[0];
 	}
 
 	private void performPackerAction(ItemStack packedItem)

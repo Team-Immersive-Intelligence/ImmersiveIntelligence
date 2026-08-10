@@ -41,6 +41,13 @@ public class TileEntityRadioStation extends TileEntityMultiblockIIGeneric<TileEn
 	}
 
 	@Override
+	public void invalidate()
+	{
+		super.invalidate();
+		RadioNetwork.INSTANCE.removeDevice(this);
+	}
+
+	@Override
 	protected void dummyCleanup()
 	{
 		super.dummyCleanup();
@@ -54,21 +61,9 @@ public class TileEntityRadioStation extends TileEntityMultiblockIIGeneric<TileEn
 			tickRadioCooldown();
 		if(!construction.update())
 			return;
+		RadioNetwork.INSTANCE.addDevice(this);
 	}
 
-	@Override
-	protected int[] listAllPOI(MultiblockPOI poi)
-	{
-		switch(poi)
-		{
-			case ENERGY_INPUT:
-				return getPOI("energy");
-			case DATA:
-				return getPOI("data");
-			default:
-				return new int[0];
-		}
-	}
 
 	@Override
 	public void receiveData(DataPacket packet, int pos)
@@ -101,7 +96,7 @@ public class TileEntityRadioStation extends TileEntityMultiblockIIGeneric<TileEn
 		//Added because of getting double (and fake (with pos -1 and facing north) tile entities) when using world.getTileEntity
 		if(isRadioAvailable()&&this.formed&&!this.isDummy()&&isConstructionFinished())
 		{
-			sendData(packet, facing, getPOI(MultiblockPOI.DATA)[0]);
+			sendData(packet, getDirection("data"), getPOI(MultiblockPOI.DATA)[0]);
 			soundDelay = 10;
 			return true;
 		}

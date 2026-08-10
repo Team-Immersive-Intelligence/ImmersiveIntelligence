@@ -44,13 +44,13 @@ import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAn
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.lambda.NBTTagCollector;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.ILadderMultiblock;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IManagedDamageResistantMultiblock;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.MultiblockHealth;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIGeneric;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 import pl.pabilo8.immersiveintelligence.common.util.sound.IISoundAnimation;
 import pl.pabilo8.immersiveintelligence.common.util.sound.SoundHandler;
 
@@ -63,7 +63,11 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 /**
+ * A strategic artillery gun multiblock.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 09.08.2026
+ * @ii-approved 0.3.1
  * @since 28.06.2019
  */
 public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<TileEntityArtilleryHowitzer>
@@ -72,21 +76,24 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 	//--- Variables ---//
 
 	//currently performed action
-	@SyncNBT
+	@SyncNBT(events = SyncEvents.TILE_CUSTOM1)
 	public ArtilleryHowitzerAction action = ArtilleryHowitzerAction.STOP;
 	public ArrayList<HowitzerOrder> orderList = new ArrayList<>();
 	@SyncNBT
 	public MultiblockInteractablePart door, platform;
-	@SyncNBT
+	@SyncNBT(events = SyncEvents.TILE_DAMAGED)
+
 	public MultiblockHealth health;
 	//animation related variables
-	@SyncNBT
-	public int animationTime = 0, animationTimeMax = 0, shellConveyorTime = 0;
-	@SyncNBT
+	@SyncNBT(events = SyncEvents.TILE_CUSTOM1)
+	public int animationTime = 0, animationTimeMax = 0;
+	@SyncNBT(events = SyncEvents.TILE_RECIPE_CHANGED)
+	public int shellConveyorTime = 0;
+	@SyncNBT(events = SyncEvents.TILE_CUSTOM1)
 	public float turretYaw = 0, turretPitch = 0, plannedYaw = 0, plannedPitch = 0;
 
 	//shells loaded into the rack
-	@SyncNBT
+	@SyncNBT(events = SyncEvents.TILE_RECIPE_CHANGED)
 	public NonNullList<ItemStack> loadedShells;
 	public IItemHandler inventoryHandler, insertionHandler;
 
@@ -158,22 +165,51 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 
 		//hide howitzer if door is closed
 		if(!door.getState())
-			action = ArtilleryHowitzerAction.HIDE;
+		{
+			if(platform.isFullyClosed()&&action!=ArtilleryHowitzerAction.STOP)
+			{
+				action = ArtilleryHowitzerAction.STOP;
+				animationTime = animationTimeMax = 0;
+				syncForEvent(SyncEvents.TILE_CUSTOM1);
+			}
+			else if(!platform.isFullyClosed()&&action!=ArtilleryHowitzerAction.HIDE)
+			{
+				action = ArtilleryHowitzerAction.HIDE;
+				animationTime = animationTimeMax = 0;
+				syncForEvent(SyncEvents.TILE_CUSTOM1);
+			}
+		}
 
 		//shell conveyor action
 		if(shellConveyorTime < ArtilleryHowitzer.conveyorTime)
 			shellConveyorTime += 1;
 		else
 		{
+			boolean inventoryChanged = false;
+
 			//push up
 			//input 0->5
 			for(int i = 5; i > 0; i--)
 				if(inventoryHandler.getStackInSlot(i).isEmpty())
-					inventory.set(i, inventoryHandler.extractItem(i-1, 1, false));
+				{
+					ItemStack moved = inventoryHandler.extractItem(i-1, 1, false);
+					if(!moved.isEmpty())
+					{
+						inventory.set(i, moved);
+						inventoryChanged = true;
+					}
+				}
 			//output 6->11
 			for(int i = 11; i > 6; i--)
 				if(inventoryHandler.getStackInSlot(i).isEmpty())
-					inventory.set(i, inventoryHandler.extractItem(i-1, 1, false));
+				{
+					ItemStack moved = inventoryHandler.extractItem(i-1, 1, false);
+					if(!moved.isEmpty())
+					{
+						inventory.set(i, moved);
+						inventoryChanged = true;
+					}
+				}
 
 			//output shell into TileEntity or drop as item
 			if(!world.isRemote&&!inventoryHandler.getStackInSlot(11).isEmpty())
@@ -182,6 +218,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 						.offset(facing.getOpposite())
 						.offset(EnumFacing.UP);
 				ItemStack casing = inventoryHandler.extractItem(11, 1, false);
+				inventoryChanged = true;
 
 				if(world.getTileEntity(outPos)!=null)
 					casing = Utils.insertStackIntoInventory(world.getTileEntity(outPos), casing, facing);
@@ -192,8 +229,8 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 
 			shellConveyorTime = 0;
 
-			if(!world.isRemote)
-				forceTileUpdate();
+			if(inventoryChanged)
+				syncForEvent(SyncEvents.TILE_RECIPE_CHANGED);
 		}
 
 		/*if(!animation.matchesRequirements(this))
@@ -208,13 +245,16 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 		//S T O P
 		if(action==ArtilleryHowitzerAction.STOP)
 		{
-			if(world.isRemote||orderList.isEmpty())
+			if(world.isRemote||orderList.isEmpty()||!door.getState())
 				return;
 			HowitzerOrder newOrder = orderList.get(0);
 			//only apply when valid
 
 			if(newOrder.animation.isFulfilled(this)) //already fulfilled
+			{
 				orderList.remove(0);
+				markDirty();
+			}
 			else if(newOrder.animation.matchesRequirements(this)) //can be done
 			{
 				action = newOrder.animation;
@@ -223,8 +263,8 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 				plannedPitch = newOrder.pitch;
 				plannedYaw = newOrder.yaw;
 
-				forceTileUpdate();
 				orderList.remove(0);
+				syncForEvent(SyncEvents.TILE_CUSTOM1);
 			}
 			return;
 		}
@@ -264,7 +304,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 				action = ArtilleryHowitzerAction.STOP;
 				animationTimeMax = 0;
 				animationTime = 0;
-				forceTileUpdate();
+				syncForEvent(SyncEvents.TILE_CUSTOM1);
 			}
 
 			if(world.isRemote)
@@ -298,6 +338,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 			//update animations
 			if(animationTime==(int)(animationTimeMax*action.executeTime))
 			{
+				boolean inventoryChanged = false;
 				switch(action)
 				{
 					case AIM:
@@ -307,6 +348,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 					case FIRE3:
 					case FIRE4:
 						fireGun(action.ordinal()-ArtilleryHowitzerAction.FIRE1.ordinal());
+						inventoryChanged = true;
 						break;
 					case LOAD1:
 					case LOAD2:
@@ -315,6 +357,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 					{
 						int slot = action.ordinal()-ArtilleryHowitzerAction.LOAD1.ordinal();
 						loadedShells.set(slot, inventoryHandler.extractItem(5, 1, false));
+						inventoryChanged = true;
 					}
 					break;
 					case UNLOAD1:
@@ -325,15 +368,28 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 						int slot = action.ordinal()-ArtilleryHowitzerAction.UNLOAD1.ordinal();
 						inventory.set(6, loadedShells.get(slot).copy());
 						loadedShells.set(slot, ItemStack.EMPTY);
+						inventoryChanged = true;
 					}
 					break;
 				}
+
+				if(inventoryChanged)
+					syncForEvent(SyncEvents.TILE_RECIPE_CHANGED);
 			}
 		}
 
 		//in case an animation overrides the gun yaw and pitch or of an early return
 		animateGunTactiles();
 		energyStorage.extractEnergy(ArtilleryHowitzer.energyUsagePassive, false);
+	}
+
+	private void syncForEvent(SyncEvents event)
+	{
+		if(world.isRemote)
+			return;
+
+		markDirty();
+		updateTileForEvent(event);
 	}
 
 	private void animateGunTactiles()
@@ -527,29 +583,6 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 	}
 
 	@Override
-	protected int[] listAllPOI(MultiblockPOI poi)
-	{
-		switch(poi)
-		{
-			case ENERGY_INPUT:
-				return getPOI("energy");
-			case ITEM_INPUT:
-				return getPOI("item_input");
-			case ITEM_OUTPUT:
-				return getPOI("item_output");
-			case REDSTONE_INPUT:
-				return getPOI("redstone");
-			case DATA_INPUT:
-				return getPOI("data");
-			case MISC_DOOR:
-				return getPOI("bunker_door");
-			case MISC_WEAPON:
-				return getPOI("gun");
-		}
-		return new int[0];
-	}
-
-	@Override
 	public void receiveData(DataPacket packet, int pos)
 	{
 		IIDataHandlingUtils.expectingNumericParam('y', packet, f -> plannedYaw = f);
@@ -653,7 +686,6 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 								action = anim;
 								animationTime = 0;
 								animationTimeMax = anim.animationTime;
-								forceTileUpdate();
 							}
 						}
 					}
@@ -676,7 +708,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 	@Override
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing)
 	{
-		if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY&&pos==410)
+		if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY&&isPOI("item_input"))
 		{
 			TileEntityArtilleryHowitzer master = master();
 			if(master==null)
@@ -711,7 +743,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 	@Override
 	public void onEntityCollision(@Nonnull World world, @Nonnull Entity entity)
 	{
-		if(!world.isRemote&&pos==410&&entity instanceof EntityItem)
+		if(!world.isRemote&&isPOI("item_input")&&entity instanceof EntityItem)
 		{
 			//perform on master TE, check if insertion slot is empty
 			TileEntityArtilleryHowitzer master = master();
@@ -726,7 +758,10 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 			//insert copied stack to inventory
 			ItemStack stack = master.inventoryHandler.insertItem(0, entityItem.getItem().copy(), false);
 			if(stack.isEmpty())
+			{
 				entityItem.setItem(ItemStack.EMPTY);
+				master.syncForEvent(SyncEvents.TILE_RECIPE_CHANGED);
+			}
 		}
 	}
 
@@ -764,6 +799,16 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 	public MultiblockHealth getHealthManager()
 	{
 		return health;
+	}
+
+	@Override
+	public boolean damageHealth(float damage)
+	{
+		float previousHealth = health.getHealth();
+		boolean destroyed = health.damageHealth(damage);
+		if(Float.compare(previousHealth, health.getHealth())!=0)
+			syncForEvent(SyncEvents.TILE_DAMAGED);
+		return destroyed;
 	}
 
 	public enum ArtilleryHowitzerAction implements ISerializableEnum

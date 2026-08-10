@@ -184,26 +184,6 @@ public class TileEntityCoagulator extends TileEntityMultiblockProductionSingle<T
 	}
 
 	@Override
-	protected int[] listAllPOI(MultiblockPOI poi)
-	{
-		switch(poi)
-		{
-			case FLUID_INPUT:
-				return getPOI("fluid_inputs");
-			case ITEM_OUTPUT:
-				return getPOI("item_outputs");
-			case ENERGY_INPUT:
-				return getPOI("energy");
-			case REDSTONE_INPUT:
-				return getPOI("redstone");
-			case MISC_CONTROL_PANEL:
-				return getPOI("control_panel");
-			default:
-				return new int[0];
-		}
-	}
-
-	@Override
 	protected IIMultiblockProcess<CoagulatorRecipe> findNewProductionProcess()
 	{
 		//Both tanks must have some fluid
