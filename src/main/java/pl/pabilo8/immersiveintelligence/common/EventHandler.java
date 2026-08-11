@@ -371,7 +371,7 @@ public class EventHandler
 		EntityLivingBase living = event.getEntityLiving();
 		World world = living.world;
 
-		if(!world.isRemote||!(living instanceof EntityPlayer))
+		if(world.isRemote||!(living instanceof EntityPlayer))
 			return;
 
 		EntityPlayer player = (EntityPlayer)living;
