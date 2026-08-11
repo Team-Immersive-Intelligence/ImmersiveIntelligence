@@ -30,13 +30,13 @@ base {
 	archivesName.set(mkxString('archives_base_name', mkxString('mod_id')))
 }
 
-apply from: rootProject.file('gradle/scripts/cleanroom.gradle')
-
 def customGradle = rootProject.file('custom.gradle')
 if (customGradle.exists()) {
 	logger.lifecycle('[Mk.X] applying local custom.gradle')
 	apply from: customGradle
 }
+
+apply from: rootProject.file('gradle/scripts/cleanroom.gradle')
 
 gradle.ext.mkxScriptSwitches.each { propertyName, scriptPath ->
 	mkxApplyScript(propertyName as String, scriptPath as String)
