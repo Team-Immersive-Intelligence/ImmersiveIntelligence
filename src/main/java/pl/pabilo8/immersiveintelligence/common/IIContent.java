@@ -75,6 +75,7 @@ import pl.pabilo8.immersiveintelligence.common.item.tools.*;
 import pl.pabilo8.immersiveintelligence.common.item.tools.backpack.ItemIIAdvancedPowerPack;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.*;
 import pl.pabilo8.immersiveintelligence.common.util.IBatchOredictRegister;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.advancements.UpgradeTrigger;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIFluid;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIISlab;
@@ -119,9 +120,6 @@ public class IIContent
 
 	//used by effect crates
 	public static final Upgrade UPGRADE_INSERTER = new Upgrade("inserter")
-			.withType(UpgradePurpose.SPECIAL);
-	//allows to use belt fed upgrade for mg
-	public static final Upgrade UPGRADE_MG_LOADER = new Upgrade("mg_loader")
 			.withType(UpgradePurpose.SPECIAL);
 
 	//increases machine speed
@@ -421,31 +419,33 @@ public class IIContent
 	public static Fluid fluidBrine;
 	public static Fluid gasHydrogen, gasOxygen, gasChlorine, gasCO2, gasCO;
 	public static Fluid gasMustardGas;
-	public static Fluid fluidLatex;
+	public static Fluid fluidLatex, fluidMilk;
 	//biomes
 	public static BiomeWasteland biomeWasteland = new BiomeWasteland();
 
 	static
 	{
-		IIContent.fluidInkBlack = makeFluid("ink", 6000, 2250);
-		IIContent.fluidInkCyan = makeFluid("ink_cyan", 6000, 2250);
-		IIContent.fluidInkMagenta = makeFluid("ink_magenta", 6000, 2250);
-		IIContent.fluidInkYellow = makeFluid("ink_yellow", 6000, 2250);
-		IIContent.fluidEtchingAcid = makeFluid("etching_acid", 2900, 1200);
-		IIContent.fluidSulfuricAcid = makeFluid("sulfuric_acid", 1830, 2670);
-		IIContent.fluidHydrofluoricAcid = makeFluid("hydrofluoric_acid", 1170, 981);
-		IIContent.fluidFormicAcid = makeFluid("formic_acid", 1221, 1784);
-		IIContent.fluidNitricAcid = makeFluid("nitric_acid", 1510, 2500, "rdx_fluids/");
-		IIContent.fluidBrine = makeFluid("brine", 1030, 1002);
-		IIContent.gasHydrogen = makeFluid("hydrogen", -1000+100, 88).setGaseous(true);
-		IIContent.gasOxygen = makeFluid("oxygen", -1000+200, 204).setGaseous(true);
-		IIContent.gasCO2 = makeFluid("carbon_dioxide", -1000+100, 147).setGaseous(true);
-		IIContent.gasCO = makeFluid("carbon_monoxide", -1000+145, 166).setGaseous(true);
-		IIContent.gasChlorine = makeFluid("chlorine", -1000+100, 132).setGaseous(true);
-		IIContent.fluidAmmonia = makeFluid("ammonia", 771, 1007, "rdx_fluids/");
-		IIContent.fluidMethanol = makeFluid("methanol", 792, 553, "rdx_fluids/");
-		IIContent.fluidLatex = makeFluid("latex", 4300, 3500);
-		IIContent.gasMustardGas = makeFluid("mustard_gas", 127, 340); //heavier than water
+		IIContent.fluidInkBlack = makeFluid("ink", IIColor.fromHex("282828"), false, 6000, 2250);
+		IIContent.fluidInkCyan = makeFluid("ink_cyan", IIColor.fromHex("468884"), false, 6000, 2250);
+		IIContent.fluidInkMagenta = makeFluid("ink_magenta", IIColor.fromHex("6e375e"), false, 6000, 2250);
+		IIContent.fluidInkYellow = makeFluid("ink_yellow", IIColor.fromHex("777033"), false, 6000, 2250);
+		IIContent.fluidEtchingAcid = makeFluid("etching_acid", IIColor.fromHex("dd938a29"), false, 2900, 1200);
+		IIContent.fluidSulfuricAcid = makeFluid("sulfuric_acid", IIColor.fromHex("dd48410f"), false, 1830, 2670);
+		IIContent.fluidHydrofluoricAcid = makeFluid("hydrofluoric_acid", IIColor.fromHex("dd142929"), false, 1170, 981);
+		IIContent.fluidFormicAcid = makeFluid("formic_acid", IIColor.fromHex("a3b1b1"), false, 1221, 1784);
+		IIContent.fluidNitricAcid = makeFluid("nitric_acid", IIColor.fromHex("cbcbc2"), false, 1510, 2500);
+		IIContent.fluidBrine = makeFluid("brine", IIColor.fromHex("757cbd"), false, 1030, 1002);
+		IIContent.gasHydrogen = makeFluid("hydrogen", IIColor.fromHex("11eecdcd"), true, -1000+100, 88);
+		IIContent.gasOxygen = makeFluid("oxygen", IIColor.fromHex("11ffffff"), true, -1000+200, 204);
+		IIContent.gasCO2 = makeFluid("carbon_dioxide", IIColor.fromHex("22000000"), true, -1000+100, 147);
+		IIContent.gasCO = makeFluid("carbon_monoxide", IIColor.fromHex("55000000"), true, -1000+145, 166);
+//		IIContent.fluidHexamine = makeFluid("hexamine", IIColor.fromHex("788d8d"), true, -1000+100, 132);
+		IIContent.gasChlorine = makeFluid("chlorine", IIColor.fromHex("557b7a72"), true, -1000+100, 132);
+		IIContent.fluidAmmonia = makeFluid("ammonia", IIColor.fromHex("f0e5d1"), false, 771, 1007);
+		IIContent.fluidMethanol = makeFluid("methanol", IIColor.fromHex("806d94"), false, 792, 553);
+		IIContent.fluidLatex = makeFluid("latex", IIColor.fromHex("cccccc"), false, 4300, 3500);
+		IIContent.gasMustardGas = makeFluid("mustard_gas", IIColor.fromHex("66807551"), true, 127, 340);
+		IIContent.fluidMilk = makeFluid("milk", "item.milk.name", IIColor.fromHex("ffffff"), false, 1000, 1200, 0, 298);
 
 		IIContent.blockFluidInkBlack = new BlockIIFluid("ink", IIContent.fluidInkBlack, Material.WATER);
 		IIContent.blockFluidInkCyan = new BlockIIFluid("ink_cyan", IIContent.fluidInkCyan, Material.WATER);
@@ -481,7 +481,6 @@ public class IIContent
 		new ItemStack(IIContent.itemLightEngineerHelmet);
 	}
 
-	//TODO: 12.09.2025 rework fluids
 	public static void refreshFluidReferences()
 	{
 		IIContent.fluidInkBlack = FluidRegistry.getFluid("ink");
@@ -503,5 +502,6 @@ public class IIContent
 		IIContent.fluidMethanol = FluidRegistry.getFluid("methanol");
 		IIContent.fluidLatex = FluidRegistry.getFluid("latex");
 		IIContent.gasMustardGas = FluidRegistry.getFluid("mustard_gas");
+		IIContent.fluidMilk = FluidRegistry.getFluid("milk");
 	}
 }

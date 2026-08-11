@@ -177,6 +177,9 @@ public class IIClientUtils
 		if(CACHED_COLORS.containsKey(fluid))
 			return CACHED_COLORS.get(fluid);
 
+		if(fluid.getColor()!=0xFFFFFFFF)
+			return IIColor.fromPackedARGB(fluid.getColor());
+
 		InputStream is;
 		BufferedImage image;
 		IIColor color;

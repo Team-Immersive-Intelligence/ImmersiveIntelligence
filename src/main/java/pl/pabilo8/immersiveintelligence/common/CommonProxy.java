@@ -44,6 +44,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.ForgeChunkManager;
@@ -51,6 +52,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent.Register;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -69,6 +71,7 @@ import pl.pabilo8.immersiveintelligence.api.VehicleFuelHandler;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.PenetrationRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
+import pl.pabilo8.immersiveintelligence.api.ammocrate.AmmunitionCrateHandler;
 import pl.pabilo8.immersiveintelligence.api.api.protection.CorrosionHandler;
 import pl.pabilo8.immersiveintelligence.api.api.protection.capability.ProtectionCapabilities;
 import pl.pabilo8.immersiveintelligence.api.crafting.DustUtils;
@@ -146,6 +149,7 @@ import pl.pabilo8.immersiveintelligence.common.world.IIWorldGen.EnumOreType;
 import pl.pabilo8.immersiveintelligence.common.world.IIWorldGenRubberTree;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -454,24 +458,54 @@ public class CommonProxy implements IGuiHandler
 		return ores;
 	}
 
-	public static Fluid makeFluid(String name, int density, int viscosity)
+	public static Fluid makeFluid(String name, IIColor color, boolean gas, int density, int viscosity)
 	{
-		return makeFluid(name, density, viscosity, "");
+		return makeFluid(name, color, gas, density, viscosity, 0, 300);
 	}
 
-	//--- Chunkloading Handling ---//
-
-	public static Fluid makeFluid(String name, int density, int viscosity, String prefix)
+	public static Fluid makeFluid(String name, IIColor color, boolean gas, int density, int viscosity, int luminosity, int temperature)
 	{
-		Fluid fl = new Fluid(
-				name,
-				new ResourceLocation(ImmersiveIntelligence.MODID+":blocks/fluid/"+prefix+name+"_still"),
-				new ResourceLocation(ImmersiveIntelligence.MODID+":blocks/fluid/"+prefix+name+"_flow")
-		).setDensity(density).setViscosity(viscosity);
+		return makeFluid(name, null, color, gas, density, viscosity, luminosity, temperature);
+	}
+
+	public static Fluid makeFluid(String name, @Nullable String localizationKey, IIColor color, boolean gas, int density, int viscosity, int luminosity, int temperature)
+	{
+		ResourceLocation still, flowing;
+		if(color==IIColor.WHITE)
+		{
+			//Non-colored fluids use custom textures
+			still = new ResourceLocation(ImmersiveIntelligence.MODID+":blocks/fluid/"+name+"_still");
+			flowing = new ResourceLocation(ImmersiveIntelligence.MODID+":blocks/fluid/"+name+"_flow");
+		}
+		else
+		{
+			//Colored fluids use standard textures
+			still = new ResourceLocation(ImmersiveIntelligence.MODID+":blocks/fluid/"+(gas?"gas": "fluid")+"_still");
+			flowing = new ResourceLocation(ImmersiveIntelligence.MODID+":blocks/fluid/"+(gas?"gas": "fluid")+"_flow");
+		}
+		Fluid fl = new Fluid(name, still, flowing, color.toAWTColor())
+		{
+			@Override
+			public String getLocalizedName(FluidStack stack)
+			{
+				//Apply custom localization (f.e. Milk)
+				return localizationKey==null?super.getLocalizedName(stack): I18n.translateToLocal(localizationKey);
+			}
+		};
+
+		//Set properties
+		fl.setDensity(density);
+		fl.setViscosity(viscosity);
+		fl.setLuminosity(luminosity);
+		fl.setTemperature(temperature);
+		fl.setGaseous(gas);
+
+		//Register fluid
 		FluidRegistry.addBucketForFluid(fl);
 		if(!FluidRegistry.registerFluid(fl))
 			fl = FluidRegistry.getFluid(fl.getName());
 
+		//Add fluid to creative menu
 		IICreativeTab.fluidBucketMap.add(fl);
 		return fl;
 	}

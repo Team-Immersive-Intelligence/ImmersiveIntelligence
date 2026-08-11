@@ -9,6 +9,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Graphics;
 
 import javax.annotation.Nullable;
+import java.awt.*;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Optional;
@@ -418,6 +419,18 @@ public class IIColor implements Comparable<IIColor>, ToIntFunction<IIColor>
 	public int getBrightness()
 	{
 		return Math.max(red, Math.max(green, blue));
+	}
+
+	//--- AWT ---//
+
+	public Color toAWTColor()
+	{
+		return new Color(red, green, blue, alpha);
+	}
+
+	public static IIColor fromAWTColor(Color color)
+	{
+		return new IIColor(color.getAlpha(), color.getRed(), color.getGreen(), color.getBlue());
 	}
 
 	//--- Dyes and TextFormatting ---//
