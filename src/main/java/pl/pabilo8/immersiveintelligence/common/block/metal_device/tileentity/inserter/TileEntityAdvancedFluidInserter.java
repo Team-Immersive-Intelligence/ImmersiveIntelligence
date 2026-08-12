@@ -1,9 +1,9 @@
-package pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity;
+package pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.inserter;
 
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.AdvancedFluidInserter;
 
 /**
- * Fluid variant of the inserter
+ * Advanced variant of {@link TileEntityFluidInserter}
  *
  * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1

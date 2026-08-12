@@ -1,10 +1,12 @@
 package pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection;
 
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.IStringSerializable;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.util.EnumFacing;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent;
 import pl.pabilo8.immersiveintelligence.client.util.font.IIFontRenderer;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ILocalizedEnum;
 
 import javax.annotation.Nullable;
@@ -34,8 +36,15 @@ public class DecoElementDisplays
 		return (t, width, font, mouseX, mouseY, partialTicks, heightProbe) -> {
 			if(!heightProbe)
 			{
-				String displayed = t instanceof ILocalizedEnum?((ILocalizedEnum)t).getLocalizedName(): t.toString();
-				font.drawString(displayed, 2, 2, IIColor.fromHex("afafaf").getPackedRGB());
+				String localizedText;
+				if(t instanceof EnumFacing)
+					localizedText = I18n.format(IIReference.DESCRIPTION_KEY+"side."+((EnumFacing)t).getName());
+				else if(t instanceof ILocalizedEnum)
+					localizedText = ((ILocalizedEnum)t).getLocalizedName();
+				else
+					localizedText = t.toString();
+
+				font.drawString(localizedText, 2, 2, IIColor.fromHex("afafaf").getPackedRGB());
 			}
 			return font.FONT_HEIGHT+1;
 		};
@@ -189,18 +198,19 @@ public class DecoElementDisplays
 		@Nullable
 		default List<T> autocomplete(List<T> elements, String input)
 		{
-			if(elements instanceof IStringSerializable)
-			{
-				//noinspection unchecked
-				return elements.stream()
-						.map(e -> (IStringSerializable)e)
-						.filter(e -> e.getName().toLowerCase().startsWith(input.toLowerCase()))
-						.map(e -> (T)e)
-						.collect(Collectors.toList());
-			}
 			return elements.stream()
-					.filter(e -> e.toString().toLowerCase().startsWith(input.toLowerCase()))
+					.filter(element -> {
+						String localizedText;
+						if(element instanceof EnumFacing)
+							localizedText = I18n.format(IIReference.DESCRIPTION_KEY+"side."+((EnumFacing)element).getName());
+						else if(element instanceof ILocalizedEnum)
+							localizedText = ((ILocalizedEnum)element).getLocalizedName();
+						else
+							localizedText = element.toString();
+						return localizedText.toLowerCase().startsWith(input.toLowerCase());
+					})
 					.collect(Collectors.toList());
+
 		}
 	}
 }

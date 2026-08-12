@@ -21,10 +21,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.property.Properties;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.BlockIIDataDevice.IIBlockTypes_Connector;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity.*;
-import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.TileEntityAdvancedFluidInserter;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.TileEntityChemicalDispenser;
-import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.TileEntityFluidInserter;
+import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.inserter.TileEntityAdvancedFluidInserter;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.inserter.TileEntityAdvancedInserter;
+import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.inserter.TileEntityFluidInserter;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.inserter.TileEntityInserter;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIITileProvider;
@@ -121,7 +121,6 @@ public class BlockIIDataDevice extends BlockIITileProvider<IIBlockTypes_Connecto
 					ArrayList<ItemStack> applicableWires = new ArrayList<>();
 					NonNullList<ItemStack> pInventory = player.inventory.mainInventory;
 					for(ItemStack s : pInventory)
-					{
 						if(s.getItem() instanceof IWireCoil)
 						{
 							IWireCoil coilItem = (IWireCoil)s.getItem();
@@ -164,7 +163,6 @@ public class BlockIIDataDevice extends BlockIITileProvider<IIBlockTypes_Connecto
 									applicableWires.add(insertIndex, coil);
 							}
 						}
-					}
 					if(applicableWires.size() > 0)
 					{
 						ItemStack heldItem = pInventory.get(player.inventory.currentItem);

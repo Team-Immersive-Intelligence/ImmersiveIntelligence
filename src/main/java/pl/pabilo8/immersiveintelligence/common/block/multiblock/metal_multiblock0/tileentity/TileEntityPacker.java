@@ -1,7 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity;
 
 import blusunrize.immersiveengineering.api.IEApi;
-import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorage;
 import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
 import blusunrize.immersiveengineering.api.tool.ConveyorHandler.IConveyorAttachable;
@@ -29,6 +28,7 @@ import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -40,9 +40,9 @@ import pl.pabilo8.immersiveintelligence.api.PackerHandler.LabelingTask;
 import pl.pabilo8.immersiveintelligence.api.PackerHandler.PackerActionType;
 import pl.pabilo8.immersiveintelligence.api.PackerHandler.PackerPutMode;
 import pl.pabilo8.immersiveintelligence.api.PackerHandler.PackerTask;
+import pl.pabilo8.immersiveintelligence.api.crafting.IngredientReference;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataHandlingUtils;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeLogisticTag;
 import pl.pabilo8.immersiveintelligence.api.upgrade.IManagedUpgradableDevice;
 import pl.pabilo8.immersiveintelligence.api.upgrade.Upgrade;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeManager;
@@ -68,7 +68,10 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 /**
+ * Packs items, fluids, or energy into compatible containers by configured tasks.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 12.08.2026
  * @since 28.06.2019
  */
 public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPacker>
@@ -317,12 +320,8 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 				if(world.isRemote&&task.unpack)
 					continue;
 
-				//Container filter gating ("*" = any)
-				if(task.containerFilter!=null&&!"*".equals(task.containerFilter.oreName))
-					if(!task.containerFilter.matchesItemStackIgnoringSize(containerStack))
-						continue;
-				//Container logistic tag gating (if present)
-				if(task.logiTag!=null&&!task.logiTag.itemMatches(containerStack))
+				//Apply the base ingredient and optional logistics-tag predicates together.
+				if(task.containerFilter!=null&&!task.containerFilter.matchesItemStackIgnoringSize(containerStack))
 					continue;
 
 				//Do not repeat non-repeatable tasks in later passes
@@ -350,7 +349,7 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 						for(int i = 0; i < handlerIn.getSlots(); i++)
 						{
 							//"*" means a wildcard, else use standard ingredientstack matching
-							if("*".equals(task.stack.oreName)||task.stack.matchesItemStackIgnoringSize(handlerIn.extractItem(i, amount, true)))
+							if(task.stack.matchesItemStackIgnoringSize(handlerIn.extractItem(i, amount, true)))
 							{
 								ItemStack extracted = handlerIn.extractItem(i, amount, false);
 								if(extracted.isEmpty())
@@ -401,13 +400,18 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 						//Output fluid to container
 						if(task.unpack)
 						{
-							FluidStack simulated = fluidHandler.drain(amount, false);
-							if(simulated!=null&&simulated.amount > 0&&("*".equals(task.stack.oreName)||simulated.isFluidEqual(task.stack.fluid)))
+							FluidStack request = getFluidDrainRequest(fluidHandler, task.stack, amount);
+							FluidStack simulated = task.stack.isWildcard()?
+									fluidHandler.drain(amount, false):
+									(request==null?null: fluidHandler.drain(request, false));
+							if(simulated!=null&&simulated.amount > 0&&task.stack.matchesFluidStackIgnoringSize(simulated))
 							{
 								int accepted = fluidTankUpgradeOutput.fill(simulated.copy(), true);
 								if(accepted > 0)
 								{
-									FluidStack drained = fluidHandler.drain(accepted, true);
+									FluidStack drainRequest = simulated.copy();
+									drainRequest.amount = accepted;
+									FluidStack drained = fluidHandler.drain(drainRequest, true);
 									if(drained!=null&&drained.amount > 0)
 									{
 										progressForTask = true;
@@ -426,7 +430,7 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 							{
 								if(fluid==null||fluid.amount <= 0)
 									continue;
-								if(!("*".equals(task.stack.oreName)||fluid.isFluidEqual(task.stack.fluid)))
+								if(!task.stack.matchesFluidStackIgnoringSize(fluid))
 									continue;
 
 								int request = Math.min(amount, fluid.amount);
@@ -549,6 +553,33 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 		}
 	}
 
+	@Nullable
+	private static FluidStack getFluidDrainRequest(IFluidHandler handler, IngredientReference reference, int amount)
+	{
+		if(reference.isWildcard()||reference.fluid==null)
+			return null;
+
+		FluidStack requested;
+		if(reference.useNBT)
+			requested = reference.fluid.copy();
+		else
+		{
+			requested = null;
+			for(IFluidTankProperties properties : handler.getTankProperties())
+			{
+				FluidStack contents = properties.getContents();
+				if(contents!=null&&contents.amount > 0&&reference.matchesFluidStackIgnoringSize(contents))
+				{
+					requested = contents.copy();
+					break;
+				}
+			}
+		}
+		if(requested!=null)
+			requested.amount = amount;
+		return requested;
+	}
+
 	private void applyLabelingToContainer(@Nonnull ItemStack containerStack)
 	{
 		if(labels==null||labels.isEmpty()||containerStack.isEmpty())
@@ -560,13 +591,8 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 			if(isLimited&&label.expirationAmount <= 0)
 				continue;
 
-			//Filter match ("*" = any)
-			if(label.filter!=null&&!"*".equals(label.filter.oreName))
-				if(!label.filter.matchesItemStackIgnoringSize(containerStack))
-					continue;
-
-			//Incoming logistic tag match (if present)
-			if(label.logiTagIn!=null&&!label.logiTagIn.itemMatches(containerStack))
+			//Apply the base ingredient and optional logistics-tag predicates together.
+			if(label.filter!=null&&!label.filter.matchesItemStackIgnoringSize(containerStack))
 				continue;
 
 			//Process exactly one matching labeling task per container per pack action
@@ -652,7 +678,7 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 			T: (optional) ItemStack carrying logiTagOut (if used with o absent)
 			x: (optional) index for remove/remove_label
 			*/
-		IngredientStack stack = IIDataHandlingUtils.asIngredient('s', packet);
+		IngredientReference stack = IIDataHandlingUtils.asIngredient('s', packet);
 		PackerActionType action = IIDataHandlingUtils.asEnum('a', packet, PackerActionType.class);
 		PackerPutMode mode = IIDataHandlingUtils.asEnum('m', packet, PackerPutMode.class);
 		boolean unpack = IIDataHandlingUtils.asBoolean('u', packet);
@@ -678,8 +704,8 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 						tasks.remove((int)pid.get());
 					else
 					{
-						Predicate<PackerTask> p = "*".equals(stack.oreName)?(packerTask -> true):
-								(packerTask -> packerTask.stack.matches(stack));
+						Predicate<PackerTask> p = stack.isWildcard()&&!stack.hasLogisticTag()?
+								packerTask -> true: packerTask -> packerTask.stack.matches(stack);
 						if(packet.has('m'))
 							p = p.and(packerTask -> packerTask.mode==mode);
 						if(packet.has('a'))
@@ -696,7 +722,7 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 				{
 					//Output tag is non-optional, because it is applied to the processed container
 					IIDataHandlingUtils.optionalLogisticTag('o', packet).ifPresent(logisticTagOutput -> {
-						IngredientStack filter = packet.has('f')?IIDataHandlingUtils.asIngredient('f', packet): new IngredientStack("*");
+						IngredientReference filter = packet.has('f')?IIDataHandlingUtils.asIngredient('f', packet): new IngredientReference();
 						LabelingTask lt = new LabelingTask();
 						lt.filter = filter;
 
@@ -708,10 +734,7 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 
 						//Input tag is optional, works as a filter
 						if(packet.has('i'))
-						{
-							DataTypeLogisticTag variable = packet.getVarInType(DataTypeLogisticTag.class, packet.get('i'));
-							lt.logiTagIn = variable.value.clone();
-						}
+							IIDataHandlingUtils.optionalLogisticTag('i', packet).ifPresent(lt.filter::withLogisticTag);
 
 						labels.add(lt);
 						updateTileForEvent(SyncEvents.TILE_CUSTOM1);
@@ -725,9 +748,10 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 						labels.remove((int)pid.get());
 					else
 					{
-						IngredientStack filter = packet.has('f')?IIDataHandlingUtils.asIngredient('f', packet): new IngredientStack("*");
+						IngredientReference filter = packet.has('f')?IIDataHandlingUtils.asIngredient('f', packet): new IngredientReference();
 
-						Predicate<LabelingTask> p = "*".equals(filter.oreName)?(l -> true): (l -> l.filter.matches(filter));
+						Predicate<LabelingTask> p = filter.isWildcard()&&!filter.hasLogisticTag()?
+								l -> true: l -> l.filter.matches(filter);
 
 						Optional<LogisticTag> outputLogiTag = IIDataHandlingUtils.optionalLogisticTag('o', packet);
 						if(outputLogiTag.isPresent())

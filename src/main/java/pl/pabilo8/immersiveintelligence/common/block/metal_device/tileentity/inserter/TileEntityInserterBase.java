@@ -1,21 +1,17 @@
 package pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.inserter;
 
-import blusunrize.immersiveengineering.api.ApiUtils;
 import blusunrize.immersiveengineering.api.TargetingInfo;
-import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.api.energy.wires.IImmersiveConnectable;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
-import blusunrize.immersiveengineering.api.energy.wires.TileEntityImmersiveConnectable;
 import blusunrize.immersiveengineering.api.energy.wires.WireType;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IBlockBounds;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IComparatorOverride;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IHammerInteraction;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.ITileDrop;
-import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
-import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
 import blusunrize.immersiveengineering.common.util.inventory.IIEInventory;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -24,86 +20,102 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3i;
+import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import pl.pabilo8.immersiveintelligence.api.crafting.IngredientReference;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.device.DataWireNetwork;
 import pl.pabilo8.immersiveintelligence.api.data.device.IDataConnector;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Inserter;
+import pl.pabilo8.immersiveintelligence.client.util.carversound.ConditionCompoundSound;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
+import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.BlockIIDataDevice.IIBlockTypes_Connector;
-import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyMultiTypeCollection;
-import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.ITypeNBTSerializable;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.NBTSerialisation;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IIIGuiMultiblockTile;
+import pl.pabilo8.immersiveintelligence.common.util.tile.TileEntityIIConnectable;
 import pl.pabilo8.immersiveintelligence.common.wire.IIDataWireType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Set;
 import java.util.function.Supplier;
 
 /**
+ * Provides common wire, task, inventory, synchronization, and animation logic for Inserters.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 12.08.2026
  * @since 28.09.2020
  */
-public abstract class TileEntityInserterBase extends TileEntityImmersiveConnectable implements IIEInventory, ITileDrop, IComparatorOverride, IHammerInteraction, ITickable, IBlockBounds, IDataConnector, IIIGuiMultiblockTile
+public abstract class TileEntityInserterBase extends TileEntityIIConnectable implements IIEInventory, ITileDrop,
+		IComparatorOverride, IHammerInteraction, ITickable, IBlockBounds, IDataConnector, IIIGuiMultiblockTile
 {
+	private static final int TASK_RETRY_DELAY = 10;
+
+	@SyncNBT(name = "energyStorage", events = {SyncEvents.TILE_ENERGY_CHANGED, SyncEvents.TILE_GUI_OPENED})
 	public int energyStorage = 0;
+	@SyncNBT(name = "pickProgress", events = {SyncEvents.TILE_CUSTOM1, SyncEvents.TILE_RECIPE_CHANGED, SyncEvents.TILE_GUI_OPENED})
 	public int pickProgress = 0;
+	@SyncNBT(name = "takeAmount", events = {SyncEvents.TILE_CUSTOM2, SyncEvents.TILE_GUI_OPENED})
 	public int takeAmount = getMaxTakeAmount();
 
+	@SyncNBT(name = "outputFacing", events = {SyncEvents.TILE_CUSTOM2, SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_DROP_AS_ITEM})
 	public EnumFacing defaultOutputFacing = EnumFacing.NORTH;
+	@SyncNBT(name = "inputFacing", events = {SyncEvents.TILE_CUSTOM2, SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_DROP_AS_ITEM})
 	public EnumFacing defaultInputFacing = EnumFacing.SOUTH;
 
 	public int defaultOutputDistance = 2, defaultInputDistance = 2;
 
 	@Nullable
 	public InserterTask current = null;
-	public IItemHandler insertionHandler = new IEInventoryHandler(1, this);
+	@SyncNBT(name = "currentTaskIndex", events = {SyncEvents.TILE_CUSTOM1, SyncEvents.TILE_RECIPE_CHANGED, SyncEvents.TILE_GUI_OPENED})
+	public int currentTaskIndex = -1;
+	@SyncNBT(name = "inventory", events = {SyncEvents.TILE_CUSTOM1, SyncEvents.TILE_RECIPE_CHANGED, SyncEvents.TILE_GUI_OPENED})
+	public NonNullList<ItemStack> inventory = NonNullList.withSize(1, ItemStack.EMPTY);
+	@SyncNBT(name = "nextTaskAfterFinish", events = {SyncEvents.TILE_CUSTOM2, SyncEvents.TILE_GUI_OPENED})
 	public boolean nextTaskAfterFinish = true;
+	@SyncNBT(name = "tasks", events = {SyncEvents.TILE_RECIPE_CHANGED, SyncEvents.TILE_GUI_OPENED})
+	public EasyMultiTypeCollection<InserterTask> tasks = new EasyMultiTypeCollection<>(InserterTask.class);
+	@SyncNBT(name = "taskRetryDelay")
+	public int taskRetryDelay = 0;
+	@SyncNBT(name = "secondCable", events = SyncEvents.TILE_CUSTOM2, nullable = true)
+	public WireType secondCable;
+
+	public final IItemHandler insertionHandler = new IEInventoryHandler(1, this);
 	protected DataWireNetwork wireNetwork = new DataWireNetwork().add(this);
-	protected EasyMultiTypeCollection<InserterTask> tasks = new EasyMultiTypeCollection<>(InserterTask.class);
-	protected NonNullList<ItemStack> inventory = NonNullList.withSize(1, ItemStack.EMPTY); //The currently held item
 	private boolean refreshWireNetwork = false;
-	private WireType secondCable;
+
+	@SideOnly(Side.CLIENT)
+	private ConditionCompoundSound<TileEntityInserterBase> pitchSound;
+	@SideOnly(Side.CLIENT)
+	private ConditionCompoundSound<TileEntityInserterBase> yawSound;
+
+	//--- Wire system ---//
 
 	@Override
-	protected boolean canTakeLV()
+	public boolean acceptsWireType(WireType wireType)
 	{
-		return getAcceptedPowerWires().contains(WireType.LV_CATEGORY);
+		String category = wireType.getCategory();
+		return IIDataWireType.DATA_CATEGORY.equals(category)||getAcceptedPowerWires().contains(category);
 	}
 
 	@Override
-	protected boolean canTakeMV()
+	public boolean isRelay()
 	{
-		return getAcceptedPowerWires().contains(WireType.MV_CATEGORY);
-	}
-
-	@Override
-	protected boolean canTakeHV()
-	{
-		return getAcceptedPowerWires().contains(WireType.HV_CATEGORY);
-	}
-
-	@Override
-	public boolean canConnect()
-	{
-		return true;
+		return false;
 	}
 
 	@Override
@@ -115,38 +127,37 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 	@Override
 	public int outputEnergy(int amount, boolean simulate, int energyType)
 	{
-		if(amount > 0&&energyStorage < getEnergyCapacity())
+		if(amount <= 0||energyStorage >= getEnergyCapacity())
+			return 0;
+
+		int received = Math.min(amount, Math.min(getEnergyCapacity()-energyStorage, getEnergyUsage()));
+		if(!simulate)
 		{
-			if(!simulate)
-			{
-				int rec = Math.min(getEnergyCapacity()-energyStorage, getEnergyUsage());
-				energyStorage += rec;
-				return rec;
-			}
-			return Math.min(getEnergyCapacity()-energyStorage, getEnergyUsage());
+			boolean wasPowered = hasTaskEnergy();
+			energyStorage += received;
+			markDirty();
+			if(!wasPowered&&hasTaskEnergy())
+				updateTileForEvent(SyncEvents.TILE_ENERGY_CHANGED);
 		}
-		return 0;
+		return received;
 	}
 
 	@Override
 	public boolean canConnectCable(WireType cableType, TargetingInfo target, Vec3i offset)
 	{
-		int tc = getTargetedConnector(target);
-		return canAttach(cableType, tc);
+		return canAttach(cableType, getTargetedConnector(target));
 	}
 
-	private boolean canAttach(WireType toAttach, int conn)
+	private boolean canAttach(WireType toAttach, int connector)
 	{
-		String attachCat = toAttach.getCategory();
-
-		if(attachCat==null)
+		String category = toAttach.getCategory();
+		if(category==null)
 			return false;
 
-		if(conn==0)
-			return attachCat.equals(IIDataWireType.DATA_CATEGORY)&&limitType==null;
-		else if(conn==1)
-			return getAcceptedPowerWires().contains(attachCat)&&secondCable==null;
-
+		if(connector==0)
+			return IIDataWireType.DATA_CATEGORY.equals(category)&&limitType==null;
+		if(connector==1)
+			return getAcceptedPowerWires().contains(category)&&secondCable==null;
 		return false;
 	}
 
@@ -156,18 +167,20 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 		switch(getTargetedConnector(target))
 		{
 			case 0:
-				if(this.limitType==null)
+				if(limitType==null)
 				{
 					DataWireNetwork.updateConnectors(pos, world, wireNetwork);
-					this.limitType = cableType;
+					limitType = cableType;
 				}
 				break;
 			case 1:
 				if(secondCable==null)
-					this.secondCable = cableType;
+					secondCable = cableType;
 				break;
 		}
-		this.markContainingBlockForUpdate(null);
+		markDirty();
+		if(!world.isRemote)
+			updateTileForEvent(SyncEvents.TILE_CUSTOM2);
 	}
 
 	@Override
@@ -179,34 +192,39 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 				return limitType;
 			case 1:
 				return secondCable;
+			default:
+				return null;
 		}
-		return null;
 	}
 
 	@Override
-	public void removeCable(Connection connection)
+	public void removeCable(@Nullable Connection connection)
 	{
-		WireType type = connection!=null?connection.cableType: null;
-		if(type==null)
-		{
-			limitType = null;
-			secondCable = null;
-		}
-		if(type==limitType)
+		WireType type = connection==null?null: connection.cableType;
+		if(type==null||type==limitType)
 		{
 			wireNetwork.removeFromNetwork(this);
-			this.limitType = null;
+			limitType = null;
 		}
-		if(type==secondCable)
-			this.secondCable = null;
-		this.markContainingBlockForUpdate(null);
+		if(type==null||type==secondCable)
+			secondCable = null;
+
+		markDirty();
+		if(world!=null&&!world.isRemote)
+			updateTileForEvent(SyncEvents.TILE_CUSTOM2);
+	}
+
+	@Override
+	public void onConnectivityUpdate(BlockPos pos, int dimension)
+	{
+		super.onConnectivityUpdate(pos, dimension);
+		refreshWireNetwork = false;
 	}
 
 	@Override
 	public Vec3d getConnectionOffset(Connection con)
 	{
-		boolean right = con.cableType==limitType;
-		return getConnectionOffset(right);
+		return getConnectionOffset(con.cableType==limitType);
 	}
 
 	@Override
@@ -217,234 +235,333 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 
 	private Vec3d getConnectionOffset(boolean data)
 	{
-		if(data)
-			return new Vec3d(0.875f, 0.5f, 0.875f);
-		else
-			return new Vec3d(0.125f, 0.475f, 0.125f);
+		return data?new Vec3d(0.875f, 0.5f, 0.875f): new Vec3d(0.125f, 0.475f, 0.125f);
 	}
 
+	/**
+	 * Gets the connector selected by the wire hit position.
+	 *
+	 * @param target wire target data
+	 * @return 0 for data or 1 for power
+	 */
 	public int getTargetedConnector(TargetingInfo target)
 	{
-		if(target.hitX < 1&&target.hitX > 0.75&&target.hitZ < 1&&target.hitZ > 0.75)
-			return 0;
-		else
-			return 1;
+		return target.hitX < 1&&target.hitX > 0.75&&target.hitZ < 1&&target.hitZ > 0.75?0: 1;
 	}
 
-	@Override
-	public void receiveMessageFromClient(NBTTagCompound message)
-	{
-		super.receiveMessageFromClient(message);
-		if(message.hasKey("tasks"))
-		{
-			tasks.deserializeNBT(message.getTagList("tasks", 10));
-			sendUpdate();
-		}
-	}
-
-	@Override
-	public void receiveMessageFromServer(@Nonnull NBTTagCompound message)
-	{
-		super.receiveMessageFromServer(message);
-		if(message.hasKey("pickProgress"))
-			pickProgress = message.getInteger("pickProgress");
-		if(message.hasKey("takeAmount"))
-			takeAmount = Math.min(message.getInteger("takeAmount"), getMaxTakeAmount());
-		if(message.hasKey("nextTaskAfterFinish"))
-			nextTaskAfterFinish = message.getBoolean("nextTaskAfterFinish");
-
-		if(message.hasKey("energyStorage"))
-			energyStorage = message.getInteger("energyStorage");
-
-		if(message.hasKey("outputFacing"))
-			defaultOutputFacing = EnumFacing.getFront(message.getInteger("outputFacing"));
-		if(message.hasKey("inputFacing"))
-			defaultInputFacing = EnumFacing.getFront(message.getInteger("inputFacing"));
-
-		if(message.hasKey("inventory"))
-			inventory = Utils.readInventory(message.getTagList("inventory", 10), 1);
-
-		if(message.hasKey("tasks"))
-			tasks.deserializeNBT(message.getTagList("tasks", 10));
-		if(message.hasKey("current"))
-		{
-			ITypeNBTSerializable task = NBTSerialisation.deserializePolymorphic(message.getCompoundTag("current"));
-			if(task instanceof InserterTask)
-				current = ((InserterTask)task);
-		}
-		else current = null;
-
-	}
-
-	@Override
-	public void readCustomNBT(@Nonnull NBTTagCompound nbt, boolean descPacket)
-	{
-		super.readCustomNBT(nbt, descPacket);
-		if(nbt.hasKey("inventory"))
-			inventory = Utils.readInventory(nbt.getTagList("inventory", 10), 1);
-		if(nbt.hasKey("pickProgress"))
-			pickProgress = nbt.getInteger("pickProgress");
-		if(nbt.hasKey("takeAmount"))
-			takeAmount = Math.min(nbt.getInteger("takeAmount"), getMaxTakeAmount());
-		if(nbt.hasKey("nextTaskAfterFinish"))
-			nextTaskAfterFinish = nbt.getBoolean("nextTaskAfterFinish");
-
-		if(nbt.hasKey("outputFacing"))
-			defaultOutputFacing = EnumFacing.getFront(nbt.getInteger("outputFacing"));
-		if(nbt.hasKey("inputFacing"))
-			defaultInputFacing = EnumFacing.getFront(nbt.getInteger("inputFacing"));
-
-		if(nbt.hasKey("secondCable"))
-			secondCable = nbt.hasKey("secondCable")?ApiUtils.getWireTypeFromNBT(nbt, "secondCable"): null;
-		if(nbt.hasKey("energyStorage"))
-			energyStorage = nbt.getInteger("energyStorage");
-
-		if(nbt.hasKey("tasks"))
-			tasks.deserializeNBT(nbt.getTagList("tasks", 10));
-	}
-
-	@Override
-	public void writeCustomNBT(@Nonnull NBTTagCompound nbt, boolean descPacket)
-	{
-		super.writeCustomNBT(nbt, descPacket);
-		nbt.setTag("inventory", Utils.writeInventory(inventory));
-		nbt.setInteger("pickProgress", pickProgress);
-		nbt.setInteger("takeAmount", Math.min(takeAmount, getMaxTakeAmount()));
-		nbt.setBoolean("nextTaskAfterFinish", nextTaskAfterFinish);
-
-		nbt.setInteger("outputFacing", defaultOutputFacing.ordinal());
-		nbt.setInteger("inputFacing", defaultInputFacing.ordinal());
-		if(secondCable!=null)
-			nbt.setString("secondCable", secondCable.getUniqueName());
-		nbt.setTag("tasks", tasks.serializeNBT());
-
-		nbt.setInteger("energyStorage", energyStorage);
-	}
+	//--- Tick and task handling ---//
 
 	@Override
 	public void update()
 	{
+		refreshCurrentTask();
 		if(world.isRemote)
+		{
 			handleSounds();
-		else if(!refreshWireNetwork)
+			if(current!=null&&hasTaskEnergy())
+				performTasks();
+			return;
+		}
+
+		if(!refreshWireNetwork)
 		{
 			refreshWireNetwork = true;
 			wireNetwork.removeFromNetwork(null);
 		}
 
-		if(energyStorage > Inserter.energyUsage)
-			performTasks();
+		if(taskRetryDelay > 0)
+			taskRetryDelay--;
 
-	}
-
-	protected void performTasks()
-	{
-		if(tasks.isEmpty())
+		if(!hasTaskEnergy())
 			return;
 
-		if(this.current==null)
+		if(performTasks())
+		{
+			energyStorage = Math.max(0, energyStorage-getEnergyUsage());
+			markDirty();
+			if(!hasTaskEnergy())
+				updateTileForEvent(SyncEvents.TILE_ENERGY_CHANGED);
+		}
+	}
+
+	protected boolean performTasks()
+	{
+		if(tasks.isEmpty())
+		{
+			setCurrentTask(null);
+			return false;
+		}
+
+		if(current==null)
+		{
+			if(world.isRemote||taskRetryDelay > 0)
+				return false;
+
 			for(InserterTask task : tasks)
 			{
+				task.clearCachedTargets();
 				EnumFacing facingIn = task.facingIn==null?defaultInputFacing: task.facingIn;
 				EnumFacing facingOut = task.facingOut==null?defaultOutputFacing: task.facingOut;
-
 				BlockPos posIn = pos.offset(facingIn, task.distanceIn > 0?task.distanceIn: defaultInputDistance);
 				BlockPos posOut = pos.offset(facingOut, task.distanceOut > 0?task.distanceOut: defaultOutputDistance);
 
-				if(!task.canExecute(this, world, posIn, posOut, facingIn, facingOut, true))
-					continue;
-				if(!task.canExecute(this, world, posIn, posOut, facingIn, facingOut, false))
-					continue;
-
-				current = task;
-				if(!world.isRemote)
-					sendUpdate();
-				break;
-			}
-		//you should be, but who knows ^^
-		if(this.current!=null)
-		{
-			EnumFacing facingIn = current.facingIn==null?defaultInputFacing: current.facingIn;
-			EnumFacing facingOut = current.facingOut==null?defaultOutputFacing: current.facingOut;
-
-			BlockPos posIn = pos.offset(facingIn, current.distanceIn > 0?current.distanceIn: defaultInputDistance);
-			BlockPos posOut = pos.offset(facingOut, current.distanceOut > 0?current.distanceOut: defaultOutputDistance);
-
-			int maxProgress = (int)(getPickupSpeed()*(1+current.getTimeModifier()));
-
-
-			//better check
-			if(pickProgress==0)
-				if(!world.isRemote)
+				if(task.canExecute(this, world, posIn, posOut, facingIn, facingOut, true)
+						&&task.canExecute(this, world, posIn, posOut, facingIn, facingOut, false))
 				{
-					if(current.canExecute(this, world, posIn, posOut, facingIn, facingOut, true))
-					{
-						this.current.execute(this, world, posIn, posOut, facingIn, facingOut, true);
-						pickProgress++;
-					}
-					else
-						this.current = null;
-					sendUpdate();
+					setCurrentTask(task);
+					taskRetryDelay = 0;
+					break;
 				}
-				else
-					pickProgress++;
-			else if(pickProgress==maxProgress)
+				task.clearCachedTargets();
+			}
+
+			if(current==null)
 			{
-				if(!world.isRemote)
-				{
-					if(this.current.execute(this, world, posIn, posOut, facingIn, facingOut, false)) //most of the time, if inventory.get(0).isEmpty()
-					{
-						int id = tasks.indexOf(current);
-						if(!current.shouldContinue())
-							tasks.remove(current);
-						current = (!tasks.isEmpty())?tasks.get((id+(nextTaskAfterFinish?1: 0))%tasks.size()): null;
-						pickProgress = 0;
-						sendUpdate();
-					}
-				}
-				else if(this.current.canExecute(this, world, posIn, posOut, facingIn, facingOut, false))
-					pickProgress = 0;
-
+				taskRetryDelay = TASK_RETRY_DELAY;
+				return false;
 			}
-			else if(pickProgress < maxProgress)
-				pickProgress++;
 		}
 
+		EnumFacing facingIn = current.facingIn==null?defaultInputFacing: current.facingIn;
+		EnumFacing facingOut = current.facingOut==null?defaultOutputFacing: current.facingOut;
+		BlockPos posIn = pos.offset(facingIn, current.distanceIn > 0?current.distanceIn: defaultInputDistance);
+		BlockPos posOut = pos.offset(facingOut, current.distanceOut > 0?current.distanceOut: defaultOutputDistance);
+		int maxProgress = getTaskDuration(current);
+
+		if(pickProgress==0)
+		{
+			if(world.isRemote)
+			{
+				pickProgress++;
+				return true;
+			}
+
+			boolean canStart = current.canExecute(this, world, posIn, posOut, facingIn, facingOut, true)
+					&&current.canExecute(this, world, posIn, posOut, facingIn, facingOut, false);
+			boolean started = canStart&&current.execute(this, world, posIn, posOut, facingIn, facingOut, true);
+			current.clearCachedTargets();
+			if(started)
+			{
+				pickProgress++;
+				updateTileForEvent(SyncEvents.TILE_CUSTOM1);
+				return true;
+			}
+
+			setCurrentTask(null);
+			updateTileForEvent(SyncEvents.TILE_CUSTOM1);
+			return false;
+		}
+
+		if(pickProgress >= maxProgress)
+		{
+			if(world.isRemote)
+				return false;
+
+			boolean completed = current.canExecute(this, world, posIn, posOut, facingIn, facingOut, false)
+					&&current.execute(this, world, posIn, posOut, facingIn, facingOut, false);
+			current.clearCachedTargets();
+			if(completed)
+			{
+				int id = tasks.indexOf(current);
+				boolean removed = !current.shouldContinue();
+				if(removed)
+					tasks.remove(current);
+
+				if(tasks.isEmpty())
+					setCurrentTask(null);
+				else
+				{
+					int next = Math.max(0, id)+(removed?0: nextTaskAfterFinish?1: 0);
+					setCurrentTask(tasks.get(next%tasks.size()));
+				}
+				pickProgress = 0;
+				updateTileForEvent(removed?SyncEvents.TILE_RECIPE_CHANGED: SyncEvents.TILE_CUSTOM1);
+				return true;
+			}
+			return false;
+		}
+
+		pickProgress++;
+		return true;
 	}
 
-	protected void sendUpdate()
+	private boolean hasTaskEnergy()
 	{
-		IIPacketHandler.sendToClient(this, new MessageIITileSync(this, EasyNBT.newNBT()
-				.withTag("inventory", Utils.writeInventory(inventory))
-				.withInt("pickProgress", pickProgress)
-				.withInt("takeAmount", takeAmount)
-				.withBoolean("nextTaskAfterFinish", nextTaskAfterFinish)
-				.withInt("outputFacing", defaultOutputFacing.ordinal())
-				.withInt("inputFacing", defaultInputFacing.ordinal())
-				.withTag("tasks", tasks.serializeNBT())
-				.withInt("energyStorage", energyStorage)
-				.conditionally(current!=null, e -> e.withTag("current",
-						EasyNBT.wrapNBT(current.serializeNBT())
-								.withString("type", current.getClass().getSimpleName())
-				))
-		));
+		return energyStorage >= getEnergyUsage();
 	}
+
+	private int getTaskDuration(InserterTask task)
+	{
+		return Math.max(1, (int)(getPickupSpeed()*(1+task.getTimeModifier())));
+	}
+
+	private void setCurrentTask(@Nullable InserterTask task)
+	{
+		current = task;
+		currentTaskIndex = task==null?-1: tasks.indexOf(task);
+		if(currentTaskIndex < 0)
+			current = null;
+	}
+
+	protected final void refreshCurrentTask()
+	{
+		if(current!=null)
+		{
+			int actualIndex = tasks.indexOf(current);
+			if(actualIndex >= 0)
+			{
+				currentTaskIndex = actualIndex;
+				return;
+			}
+		}
+
+		if(currentTaskIndex >= 0&&currentTaskIndex < tasks.size())
+			current = tasks.get(currentTaskIndex);
+		else
+		{
+			current = null;
+			currentTaskIndex = -1;
+		}
+	}
+
+	//--- Repeated sounds ---//
+
+	@SideOnly(Side.CLIENT)
+	private void handleSounds()
+	{
+		if(isArmMoving()&&(pitchSound==null||pitchSound.isDonePlaying()))
+		{
+			pitchSound = new ConditionCompoundSound<>(IISounds.inserterPitchM,
+					new Vec3d(pos).addVector(0.5, 0.5, 0.5), this, TileEntityInserterBase::isArmMoving);
+			pitchSound.setVolume(0.25f);
+		}
+		if(isArmRotating()&&(yawSound==null||yawSound.isDonePlaying()))
+		{
+			yawSound = new ConditionCompoundSound<>(IISounds.inserterYawM,
+					new Vec3d(pos).addVector(0.5, 0.5, 0.5), this, TileEntityInserterBase::isArmRotating);
+			yawSound.setVolume(0.25f);
+		}
+	}
+
+	private boolean isArmMoving()
+	{
+		return !isInvalid()&&current!=null&&hasTaskEnergy()
+				&&pickProgress > 0&&pickProgress < getTaskDuration(current);
+	}
+
+	private boolean isArmRotating()
+	{
+		if(!isArmMoving())
+			return false;
+		EnumFacing input = getCurrentInputFacing();
+		EnumFacing output = getCurrentOutputFacing();
+		return input.getAxis()!=EnumFacing.Axis.Y&&output.getAxis()!=EnumFacing.Axis.Y&&input!=output;
+	}
+
+	//--- Capability lookup ---//
+
+	/**
+	 * Finds a capability on the target side or on the top face of a tile or entity.
+	 *
+	 * @param world      target world
+	 * @param pos        target block position
+	 * @param capability capability to find
+	 * @param side       preferred side
+	 * @param <T>        capability type
+	 * @return capability instance or null
+	 */
+	@Nullable
+	public static <T> T findTargetCapability(World world, BlockPos pos, Capability<T> capability, EnumFacing side)
+	{
+		TileEntity tile = world.getTileEntity(pos);
+		T found = getCapability(tile, capability, side);
+		if(found!=null)
+			return found;
+
+		for(Entity entity : world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(pos)))
+		{
+			found = getCapability(entity, capability, side);
+			if(found!=null)
+				return found;
+		}
+		return null;
+	}
+
+	@Nullable
+	private static <T> T getCapability(@Nullable ICapabilityProvider provider, Capability<T> capability, EnumFacing side)
+	{
+		if(provider==null)
+			return null;
+		T found = provider.getCapability(capability, side);
+		if(found==null&&side!=EnumFacing.UP)
+			found = provider.getCapability(capability, EnumFacing.UP);
+		return found;
+	}
+
+	private static class CachedCapability<T>
+	{
+		private final BlockPos pos;
+		private final EnumFacing side;
+		private final Capability<T> capability;
+		@Nullable
+		private final T value;
+
+		private CachedCapability(World world, BlockPos pos, Capability<T> capability, EnumFacing side)
+		{
+			this.pos = pos;
+			this.side = side;
+			this.capability = capability;
+			this.value = findTargetCapability(world, pos, capability, side);
+		}
+
+		private boolean matches(BlockPos pos, Capability<?> capability, EnumFacing side)
+		{
+			return this.capability==capability&&this.side==side&&this.pos.equals(pos);
+		}
+	}
+
+	//--- Inventory ---//
 
 	@Override
 	public boolean hasCapability(@Nonnull Capability<?> capability, EnumFacing facing)
 	{
-		if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-			return true;
-		return super.hasCapability(capability, facing);
+		return capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY||super.hasCapability(capability, facing);
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public <T> T getCapability(@Nonnull Capability<T> capability, EnumFacing facing)
 	{
 		if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
 			return (T)insertionHandler;
 		return super.getCapability(capability, facing);
 	}
+
+	@Nonnull
+	@Override
+	public NonNullList<ItemStack> getInventory()
+	{
+		return inventory;
+	}
+
+	@Override
+	public boolean isStackValid(int slot, ItemStack stack)
+	{
+		return true;
+	}
+
+	@Override
+	public int getSlotLimit(int slot)
+	{
+		return current!=null&&current.overrideTakeAmount!=-1?current.overrideTakeAmount: takeAmount;
+	}
+
+	@Override
+	public void doGraphicalUpdates(int slot)
+	{
+	}
+
+	//--- Block and placement ---//
 
 	@Nonnull
 	@Override
@@ -462,33 +579,26 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 	@Override
 	public void readOnPlacement(@Nullable EntityLivingBase placer, ItemStack stack)
 	{
-		if(stack.getTagCompound()!=null)
-			receiveMessageFromServer(stack.getTagCompound());
-
+		//noinspection unchecked
+		if(stack.hasTagCompound())
+			NBTSerialisation.synchroniseFor(this, (tag, tile) -> tag.deserializeAll(tile, stack.getTagCompound(), true));
 	}
 
+	@Nonnull
 	@Override
-	public NonNullList<ItemStack> getInventory()
+	public ItemStack getTileDrop(@Nullable EntityPlayer player, IBlockState state)
 	{
-		return inventory;
+		return withDropData(new ItemStack(state.getBlock(), 1, IIBlockTypes_Connector.INSERTER.getMeta()));
 	}
 
-	@Override
-	public boolean isStackValid(int slot, ItemStack stack)
+	protected ItemStack withDropData(ItemStack stack)
 	{
-		return true;
-	}
-
-	@Override
-	public int getSlotLimit(int slot)
-	{
-		return (current!=null&&current.overrideTakeAmount!=-1)?current.overrideTakeAmount: takeAmount;
-	}
-
-	@Override
-	public void doGraphicalUpdates(int slot)
-	{
-
+		NBTTagCompound nbt = new NBTTagCompound();
+		//noinspection unchecked
+		NBTSerialisation.synchroniseFor(this, (tag, tile) -> tag.serializeForEvent(tile, nbt, SyncEvents.TILE_DROP_AS_ITEM));
+		if(!nbt.hasNoTags())
+			stack.setTagCompound(nbt);
+		return stack;
 	}
 
 	@Override
@@ -497,39 +607,37 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 		if(world.isRemote)
 			return true;
 
-		EnumFacing hitside = null;
-
+		EnumFacing hitSide = null;
 		if(IIMath.isPointInRectangle(0.25, 0.75, 0.75, 1, hitX, hitZ))
-			hitside = EnumFacing.SOUTH;
+			hitSide = EnumFacing.SOUTH;
 		else if(IIMath.isPointInRectangle(0.25, 0, 0.75, 0.25, hitX, hitZ))
-			hitside = EnumFacing.NORTH;
+			hitSide = EnumFacing.NORTH;
 		else if(IIMath.isPointInRectangle(0.75, 0.25, 1, 0.75, hitX, hitZ))
-			hitside = EnumFacing.EAST;
+			hitSide = EnumFacing.EAST;
 		else if(IIMath.isPointInRectangle(0, 0.25, 0.25, 0.75, hitX, hitZ))
-			hitside = EnumFacing.WEST;
+			hitSide = EnumFacing.WEST;
 
-
-		if(hitside!=null)
+		if(hitSide!=null)
+		{
 			if(player.isSneaking())
 			{
-				if(defaultInputFacing==hitside)
+				if(defaultInputFacing==hitSide)
 					defaultInputFacing = EnumFacing.UP;
-				defaultOutputFacing = hitside;
+				defaultOutputFacing = hitSide;
 			}
 			else
 			{
-				if(defaultOutputFacing==hitside)
+				if(defaultOutputFacing==hitSide)
 					defaultOutputFacing = EnumFacing.UP;
-				defaultInputFacing = hitside;
+				defaultInputFacing = hitSide;
 			}
-
-		IIPacketHandler.sendToClient(this, new MessageIITileSync(this, EasyNBT.newNBT()
-				.withInt("inputFacing", defaultInputFacing.ordinal())
-				.withInt("outputFacing", defaultOutputFacing.ordinal())
-		));
-
+			markDirty();
+			updateTileForEvent(SyncEvents.TILE_CUSTOM2);
+		}
 		return true;
 	}
+
+	//--- Data network ---//
 
 	@Override
 	public DataWireNetwork getDataNetwork()
@@ -547,29 +655,18 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 	public void onDataChange()
 	{
 		if(!isInvalid())
-		{
 			markDirty();
-			IBlockState stateHere = world.getBlockState(pos);
-			markContainingBlockForUpdate(stateHere);
-		}
-	}
-
-	@Override
-	public World getConnectorWorld()
-	{
-		return getWorld();
 	}
 
 	@Override
 	public void onPacketReceive(DataPacket packet)
 	{
-		// TODO: 21.12.2021 packet receiving
+		// Implemented by concrete Inserters.
 	}
 
 	@Override
 	public void sendPacket(DataPacket packet)
 	{
-		//Nope
 	}
 
 	@Override
@@ -578,18 +675,10 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 		return true;
 	}
 
-	@Nonnull
-	@Override
-	public ItemStack getTileDrop(@Nullable EntityPlayer player, IBlockState state)
-	{
-		ItemStack stack = new ItemStack(state.getBlock(), 1, IIBlockTypes_Connector.INSERTER.getMeta());
-		ItemNBTHelper.setInt(stack, "outputFacing", defaultOutputFacing.ordinal());
-		ItemNBTHelper.setInt(stack, "inputFacing", defaultInputFacing.ordinal());
-		return stack;
-	}
-
 	/**
-	 * @return all tasks assigned to this inserter
+	 * Gets all tasks assigned to this Inserter.
+	 *
+	 * @return task collection
 	 */
 	@Nonnull
 	public final EasyMultiTypeCollection<InserterTask> getTasks()
@@ -600,42 +689,36 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 	//--- Abstract variables ---//
 
 	/**
-	 * @return names of all power wires able to connect to this inserter
+	 * @return names of all power wires that can connect to this Inserter
 	 */
 	@Nonnull
 	protected abstract Set<String> getAcceptedPowerWires();
 
 	/**
-	 * @return how many ticks does it take to perform a task
+	 * @return task duration in ticks
 	 */
 	public abstract int getPickupSpeed();
 
 	/**
-	 * @return how much IF this inserter uses per tick
+	 * @return IF used for each active task tick
 	 */
 	public abstract int getEnergyUsage();
 
 	/**
-	 * @return how much IF this inserter can store
+	 * @return maximum stored IF
 	 */
 	public abstract int getEnergyCapacity();
 
 	/**
-	 * @return max amount of items this inserter can take per operation
+	 * @return maximum amount moved per operation
 	 */
 	public abstract int getMaxTakeAmount();
 
 	/**
-	 * @return all available tasks for this inserter
+	 * @return registered tasks available to this Inserter
 	 */
 	@Nonnull
-	public abstract HashMap<String, Supplier<InserterTask>> getAvailableTasks();
-
-	/**
-	 * Control the sounds played here.
-	 */
-	@SideOnly(Side.CLIENT)
-	protected abstract void handleSounds();
+	public abstract LinkedHashMap<String, Supplier<InserterTask>> getAvailableTasks();
 
 	public final EnumFacing getCurrentInputFacing()
 	{
@@ -690,11 +773,16 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 		/**
 		 * Inserter will only take the item if the item matches this
 		 **/
-		public IngredientStack stack = new IngredientStack("*");
+		public IngredientReference stack = new IngredientReference();
 		/**
 		 * Whether the task shouldn't end after items are taken
 		 **/
 		public boolean isJob = true;
+
+		@Nullable
+		private transient CachedCapability<?> cachedInputCapability;
+		@Nullable
+		private transient CachedCapability<?> cachedOutputCapability;
 
 		public InserterTask()
 		{
@@ -714,7 +802,7 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 				nbt.setInteger("facingOut", facingOut.getIndex());
 			if(distanceOut!=-1)
 				nbt.setInteger("distanceOut", MathHelper.clamp(distanceOut, -1, 2));
-			nbt.setTag("stack", stack.writeToNBT(new NBTTagCompound()));
+			nbt.setTag("stack", stack.serializeNBT());
 
 			nbt.setBoolean("isJob", isJob);
 			nbt.setBoolean("strictAmount", strictAmount);
@@ -736,17 +824,49 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 			if(nbt.hasKey("distanceOut"))
 				distanceOut = MathHelper.clamp(nbt.getInteger("distanceOut"), -1, 2);
 			if(nbt.hasKey("stack"))
-			{
-				stack = IngredientStack.readFromNBT(nbt.getCompoundTag("stack"));
-				if(stack.fluid!=null)
-					stack.inputSize = stack.fluid.amount;
-			}
+				stack = IngredientReference.readFromNBT(nbt.getCompoundTag("stack"));
 			if(nbt.hasKey("isJob"))
 				isJob = nbt.getBoolean("isJob");
 			if(nbt.hasKey("strictAmount"))
 				strictAmount = nbt.getBoolean("strictAmount");
 			if(nbt.hasKey("overrideTakeAmount"))
 				overrideTakeAmount = nbt.getInteger("overrideTakeAmount");
+		}
+
+		/**
+		 * Gets and caches a capability for one task endpoint.
+		 *
+		 * @param world      target world
+		 * @param pos        target position
+		 * @param capability capability to get
+		 * @param side       preferred capability side
+		 * @param input      true for the input endpoint
+		 * @param <T>        capability type
+		 * @return capability instance or null
+		 */
+		@Nullable
+		@SuppressWarnings("unchecked")
+		protected final <T> T getTargetCapability(World world, BlockPos pos, Capability<T> capability, EnumFacing side, boolean input)
+		{
+			CachedCapability<?> cached = input?cachedInputCapability: cachedOutputCapability;
+			if(cached==null||!cached.matches(pos, capability, side))
+			{
+				cached = new CachedCapability<>(world, pos, capability, side);
+				if(input)
+					cachedInputCapability = cached;
+				else
+					cachedOutputCapability = cached;
+			}
+			return (T)cached.value;
+		}
+
+		/**
+		 * Clears endpoint caches after one task phase.
+		 */
+		protected void clearCachedTargets()
+		{
+			cachedInputCapability = null;
+			cachedOutputCapability = null;
 		}
 
 		/**
@@ -787,7 +907,7 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 		/**
 		 * GUI/support accessor
 		 */
-		public final IngredientStack getIngredient()
+		public final IngredientReference getIngredient()
 		{
 			return stack;
 		}

@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.api.data;
 
-import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -11,7 +10,9 @@ import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidStack;
 import pl.pabilo8.immersiveintelligence.api.LogisticTag;
+import pl.pabilo8.immersiveintelligence.api.crafting.IngredientReference;
 import pl.pabilo8.immersiveintelligence.api.data.device.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.device.IDataDevice;
 import pl.pabilo8.immersiveintelligence.api.data.types.*;
@@ -23,16 +24,15 @@ import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.EnumSet;
-import java.util.IdentityHashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
+ * Provides conversion and dispatch utilities for II data variables and packets.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 19.07.2026
+ * @updated 12.08.2026
  * @ii-approved 0.3.1
  * @since 28.08.2024
  */
@@ -92,22 +92,76 @@ public class IIDataHandlingUtils
 		return null;
 	}
 
-	public static IngredientStack asIngredient(char variable, DataPacket packet)
+	/**
+	 * Gets an ingredient reference from a packet variable.
+	 */
+	public static IngredientReference asIngredient(char variable, DataPacket packet)
 	{
 		return ingredientFromData(packet.get(variable));
 	}
 
-	public static IngredientStack ingredientFromData(DataType dataType)
+	/**
+	 * Converts a data variable to an ingredient reference.
+	 */
+	@Nonnull
+	public static IngredientReference ingredientFromData(@Nullable DataType dataType)
 	{
 		if(dataType instanceof DataTypeItemStack)
 		{
-			ItemStack stack = ((DataTypeItemStack)dataType).value.copy();
-			return new IngredientStack(stack).setUseNBT(stack.hasTagCompound());
+			ItemStack value = ((DataTypeItemStack)dataType).value;
+			ItemStack stack = value==null?ItemStack.EMPTY: value.copy();
+			return stack.isEmpty()?new IngredientReference():
+					new IngredientReference(stack).setUseNBT(stack.hasTagCompound());
 		}
-		else if(dataType instanceof DataTypeString)
-			return new IngredientStack(dataType.toString());
-		else
-			return new IngredientStack("*");
+		if(dataType instanceof DataTypeFluidStack)
+		{
+			FluidStack fluid = ((DataTypeFluidStack)dataType).value;
+			return fluid==null?new IngredientReference():
+					new IngredientReference(fluid.copy()).setUseNBT(fluid.tag!=null);
+		}
+		if(dataType instanceof DataTypeLogisticTag)
+		{
+			LogisticTag logisticTag = ((DataTypeLogisticTag)dataType).value;
+			return logisticTag==null?new IngredientReference(): new IngredientReference(logisticTag);
+		}
+		if(dataType instanceof DataTypeArray)
+		{
+			List<ItemStack> stacks = new ArrayList<>();
+			boolean useNBT = false;
+			for(DataType entry : ((DataTypeArray)dataType).value)
+			{
+				if(!(entry instanceof DataTypeItemStack)||((DataTypeItemStack)entry).value==null)
+					return new IngredientReference();
+				ItemStack stack = ((DataTypeItemStack)entry).value.copy();
+				useNBT |= stack.hasTagCompound();
+				stacks.add(stack);
+			}
+			return stacks.isEmpty()?new IngredientReference(): new IngredientReference(stacks).setUseNBT(useNBT);
+		}
+		if(dataType instanceof DataTypeString)
+			return new IngredientReference(((DataTypeString)dataType).value);
+		return new IngredientReference();
+	}
+
+	@Nonnull
+	private static DataType ingredientToData(IngredientReference reference)
+	{
+		if(reference.fluid!=null)
+		{
+			FluidStack fluid = reference.fluid.copy();
+			fluid.amount = reference.inputSize;
+			return new DataTypeFluidStack(fluid);
+		}
+		if(reference.oreName!=null)
+			return new DataTypeString(reference.oreName);
+		if(reference.stackList!=null)
+		{
+			List<DataType> stacks = new ArrayList<>();
+			for(ItemStack stack : reference.stackList)
+				stacks.add(new DataTypeItemStack(stack.copy()));
+			return new DataTypeArray(stacks);
+		}
+		return new DataTypeItemStack(reference.stack==null?ItemStack.EMPTY: reference.stack.copy());
 	}
 
 	//--- Optional ---//

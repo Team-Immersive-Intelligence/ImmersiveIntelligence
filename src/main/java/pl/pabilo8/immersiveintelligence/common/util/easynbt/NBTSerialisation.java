@@ -14,9 +14,9 @@ import net.minecraftforge.fluids.FluidTank;
 import pl.pabilo8.immersiveintelligence.api.data.DataVariable;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataTypeUtils;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
-import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.TileEntityFluidInserter.InserterTaskFluid;
-import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.TileEntityFluidInserter.InserterTaskLatexCollectorDrain;
-import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.TileEntityFluidInserter.InserterTaskMilkCow;
+import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.inserter.TileEntityFluidInserter.InserterTaskFluid;
+import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.inserter.TileEntityFluidInserter.InserterTaskLatexCollectorDrain;
+import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.inserter.TileEntityFluidInserter.InserterTaskMilkCow;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.inserter.TileEntityInserter.InserterTaskFromMinecart;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.inserter.TileEntityInserter.InserterTaskIntoMinecart;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.inserter.TileEntityInserter.InserterTaskItem;
@@ -526,12 +526,10 @@ public class NBTSerialisation
 			try
 			{
 				if(from.hasKey(nbtName))
-				{
 					if(canBeNull&&from.getTag(nbtName).hasNoTags())
 						setter.invoke(obj, null);
 					else
 						setter.invoke(obj, fromNBT(obj, (NBT)from.getTag(nbtName)));
-				}
 				else
 				{
 					if(canSkip)
