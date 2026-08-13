@@ -46,7 +46,8 @@ public class BlockIIDataDevice extends BlockIITileProvider<IIBlockTypes_Connecto
 	public BlockIIDataDevice()
 	{
 		super("data_connector", Material.IRON, PropertyEnum.create("type", IIBlockTypes_Connector.class), ItemBlockIIBase::new,
-				IEProperties.FACING_ALL, IEProperties.BOOLEANS[0], IEProperties.CONNECTIONS, IEProperties.DYNAMICRENDER, IOBJModelCallback.PROPERTY, Properties.AnimationProperty);
+				IEProperties.FACING_ALL, IEProperties.BOOLEANS[0], IEProperties.CONNECTIONS,
+				IEProperties.DYNAMICRENDER, IOBJModelCallback.PROPERTY, Properties.AnimationProperty);
 		setHardness(3.0F);
 		setResistance(15.0F);
 		setLightOpacity(0);

@@ -27,7 +27,7 @@ import static pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.M
 /**
  * Stores repair materials and repairs supported entities or worn equipment.
  *
- * @author Pabilo8(pabilo@iiteam.net)
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @updated 10.08.2026
  * @since 06.07.2020
  */
@@ -39,9 +39,9 @@ public class TileEntityRepairCrate extends TileEntityEffectCrate
 				.withUpgrade(IIContent.UPGRADE_INSERTER, UpgradeTier.TIER_1);
 	}
 
-	@SyncNBT(name = "shouldHeal", events = SyncEvents.TILE_CUSTOM1)
+	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CLIENT_MESSAGE})
 	public boolean shouldRepairArmor = true;
-	@SyncNBT(name = "shouldBoost", events = SyncEvents.TILE_CUSTOM1)
+	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CLIENT_MESSAGE})
 	public boolean shouldRepairVehicles = true;
 	public boolean repaired = false;
 
@@ -106,7 +106,7 @@ public class TileEntityRepairCrate extends TileEntityEffectCrate
 	@Override
 	boolean affectEntity(Entity entity, boolean upgraded)
 	{
-		if(upgraded&&energyStorage < repairCrateEnergyPerAction)
+		if(upgraded&&energyStorage.getEnergyStored() < repairCrateEnergyPerAction)
 			return false;
 
 		repaired = false;

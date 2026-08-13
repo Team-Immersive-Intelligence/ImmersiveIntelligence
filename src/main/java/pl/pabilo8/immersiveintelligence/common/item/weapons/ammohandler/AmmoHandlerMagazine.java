@@ -9,7 +9,6 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine.Magazines;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIGunBase;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
@@ -19,7 +18,10 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
+ * Handles magazine-based ammunition storage and reload sequences.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 10.08.2026
  * @since 20.02.2023
  */
 public abstract class AmmoHandlerMagazine extends AmmoHandler
@@ -72,10 +74,22 @@ public abstract class AmmoHandlerMagazine extends AmmoHandler
 		return ammo;
 	}
 
+	/**
+	 * Gets the magazine currently installed in the weapon.
+	 *
+	 * @param nbt weapon NBT
+	 * @return loaded magazine or an empty stack
+	 */
+	@Nonnull
+	public ItemStack getLoadedMagazine(EasyNBT nbt)
+	{
+		return nbt.getItemStack(tag);
+	}
+
 	@Override
 	public int reloadWeapon(ItemStack weapon, World world, Entity user, EasyNBT nbt, EasyNBT upgrades, int reloading)
 	{
-		ItemStack loaded = nbt.getItemStack(tag), found;
+		ItemStack loaded = getLoadedMagazine(nbt), found;
 		final int reloadTime = item.getReloadTime(weapon, loaded, upgrades);
 
 		if(!loaded.isEmpty())
@@ -90,11 +104,12 @@ public abstract class AmmoHandlerMagazine extends AmmoHandler
 			{
 				if(!world.isRemote)
 				{
-					//Give or drop the magazine
+					//Return the magazine through the active reload source
 					IIContent.itemBulletMagazine.defaultize(loaded);
-					IIUtils.giveOrDropCasingStack(user, loaded);
-					nbt.without(tag);
+					item.returnReloadedMagazine(user, weapon, loaded);
 				}
+				//Mirror the visual weapon state on both sides. Item transfer stays server-side.
+				nbt.without(tag);
 				return 0; //Stop
 			}
 			return reloading; //Continue
@@ -112,13 +127,11 @@ public abstract class AmmoHandlerMagazine extends AmmoHandler
 		//Reloading
 		if(reloading >= reloadTime)
 		{
+			//Mirror the loaded magazine for the renderer on both sides.
+			nbt.withItemStack(tag, found.copy());
 			if(!world.isRemote)
-			{
-				//Set the magazine to the newly found one
-				nbt.withItemStack(tag, found);
-				//Take away the item from inventory
+				//Take away the item from the authoritative source.
 				found.shrink(1);
-			}
 			return 0;
 		}
 

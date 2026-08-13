@@ -1171,11 +1171,6 @@ public class IIRecipes
 				.withRequiredProgress(20000)
 				.withProgressStages(12);
 
-		IIContent.UPGRADE_MG_LOADER
-				.withCost(new IngredientStack("plateSteel", 8))
-				.withRequiredProgress(20000)
-				.withProgressStages(10);
-
 		//Sawmill
 		IIContent.UPGRADE_SAW_UNREGULATOR
 				.withCost(

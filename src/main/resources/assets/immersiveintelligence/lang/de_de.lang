@@ -1313,11 +1313,11 @@ desc.immersiveintelligence.data_merger.0=Beide
 desc.immersiveintelligence.data_merger.1=Links
 desc.immersiveintelligence.data_merger.2=Rechts
 
-desc.immersiveintelligence.medical_crate.heal=Verwundete Entitäten heilen
-desc.immersiveintelligence.medical_crate.boost=Entitäten Effekte hinzufügen
+ii.gui.medical_crate.heal=Verwundete Entitäten heilen
+ii.gui.medical_crate.boost=Entitäten Effekte hinzufügen
 
-desc.immersiveintelligence.repair_crate.repair_armor=Beschädigte Rüstung Reparieren
-desc.immersiveintelligence.repair_crate.repair_vehicles=Fahrzeuge Reparieren
+ii.gui.repair_crate.repair_armor=Beschädigte Rüstung Reparieren
+ii.gui.repair_crate.repair_vehicles=Fahrzeuge Reparieren
 
 desc.immersiveintelligence.jei.washing_recipe=Chemisches Waschen
 

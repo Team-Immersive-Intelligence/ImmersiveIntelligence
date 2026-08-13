@@ -30,6 +30,7 @@ import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoFactory;
+import pl.pabilo8.immersiveintelligence.api.ammocrate.AmmunitionCrateHandler;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IAdvancedTooltipItem;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.ISkinnable;
@@ -232,7 +233,11 @@ public abstract class ItemIIGunBase extends ItemIIUpgradableTool implements ISki
 		super.onUpdate(stack, world, user, itemSlot, isSelected);
 
 		if(!isSelected||!(user instanceof EntityLivingBase)||!((EntityLivingBase)user).getItemStackFromSlot(EntityEquipmentSlot.MAINHAND).equals(stack))
+		{
+			if(!world.isRemote)
+				AmmunitionCrateHandler.finishReload(user, stack);
 			return;
+		}
 
 		//Setup variables
 		EasyNBT nbt = getNBT(stack);
@@ -273,10 +278,19 @@ public abstract class ItemIIGunBase extends ItemIIUpgradableTool implements ISki
 		{
 			reloading = ammoHandler.reloadWeapon(stack, world, user, nbt, upgrades, reloading);
 			if(reloading==0)
-				shouldReload = false;
+			{
+				boolean continueReload = AmmunitionCrateHandler.shouldContinueGunReload(user, stack, ammoHandler, nbt);
+				shouldReload = continueReload;
+				if(!continueReload&&!world.isRemote)
+					AmmunitionCrateHandler.finishReload(user, stack);
+			}
 		}
 		else
+		{
 			reloading = 0;
+			if(!world.isRemote)
+				AmmunitionCrateHandler.finishReload(user, stack);
+		}
 
 
 		//Save parameters
@@ -426,6 +440,29 @@ public abstract class ItemIIGunBase extends ItemIIUpgradableTool implements ISki
 	}
 
 	/**
+	 * Starts the normal weapon reload state machine.
+	 *
+	 * @param weapon weapon to reload
+	 */
+	public void startReload(ItemStack weapon)
+	{
+		getNBT(weapon).withBoolean(SHOULD_RELOAD, true);
+	}
+
+	/**
+	 * Returns an unloaded magazine to the active crate or the entity inventory.
+	 *
+	 * @param entity   entity holding the weapon
+	 * @param weapon   weapon being reloaded
+	 * @param magazine unloaded magazine
+	 */
+	public void returnReloadedMagazine(Entity entity, ItemStack weapon, ItemStack magazine)
+	{
+		if(!AmmunitionCrateHandler.returnReloadedMagazine(entity, weapon, magazine))
+			IIUtils.giveOrDropCasingStack(entity, magazine);
+	}
+
+	/**
 	 * @param entity entity holding the gun
 	 * @param weapon the gun itemstack
 	 * @return valid ammo or {@link ItemStack#EMPTY}
@@ -435,12 +472,16 @@ public abstract class ItemIIGunBase extends ItemIIUpgradableTool implements ISki
 		if(!(entity instanceof EntityLivingBase))
 			return ItemStack.EMPTY;
 
+		AmmoHandler handler = getAmmoHandler(weapon);
+		if(AmmunitionCrateHandler.hasReloadSource(entity, weapon))
+			return AmmunitionCrateHandler.findReloadAmmunition(entity, weapon,
+					ammo -> handler.isValidAmmo(weapon, ammo));
+
 		if(entity.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null))
 		{
 			final IItemHandler capability = entity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
 			if(capability==null)
 				return ItemStack.EMPTY;
-			AmmoHandler handler = getAmmoHandler(weapon);
 
 			for(int i = 0; i < capability.getSlots(); i++)
 			{

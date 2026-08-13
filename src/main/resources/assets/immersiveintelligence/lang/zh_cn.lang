@@ -1511,11 +1511,11 @@ desc.immersiveintelligence.bullets.armor_penetration=护甲穿透:
 desc.immersiveintelligence.bullet_magazine.remaining=剩余子弹: %s
 desc.immersiveintelligence.bullet_magazine.empty=空
 
-desc.immersiveintelligence.medical_crate.heal=治愈受伤的实体
-desc.immersiveintelligence.medical_crate.boost=将效果应用于实体
+ii.gui.medical_crate.heal=治愈受伤的实体
+ii.gui.medical_crate.boost=将效果应用于实体
 
-desc.immersiveintelligence.repair_crate.repair_armor=修理磨损的装甲
-desc.immersiveintelligence.repair_crate.repair_vehicles=修理载具
+ii.gui.repair_crate.repair_armor=修理磨损的装甲
+ii.gui.repair_crate.repair_vehicles=修理载具
 
 desc.immersiveintelligence.jei.washing_recipe=化学浸洗
 

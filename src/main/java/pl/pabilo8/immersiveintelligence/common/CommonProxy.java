@@ -790,6 +790,7 @@ public class CommonProxy implements IGuiHandler
 		IICompatModule.doModulesPostInit();
 		IIConfigHandler.onConfigUpdate();
 		NBTSerialisation.postInit();
+		AmmunitionCrateHandler.init();
 		//Init Hans Weapons
 		HansUtils.init();
 

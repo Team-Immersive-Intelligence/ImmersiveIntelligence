@@ -1,117 +1,71 @@
 package pl.pabilo8.immersiveintelligence.client.gui.block;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTileGui;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoCheckbox;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate.TileEntityRepairCrate;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerRepairCrate;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @author Avalon (avalon@iiteam.net)
+ * @updated 13.08.2026
+ * @ii-approved 0.3.1
  * @since 17.05.2019
- * @since 24.10.2025
  */
-@DecoTemplate(name = "repaircrate", category = DecoGuiCategory.GENERIC_TILE)
+@DecoTemplate(name = "repair_crate", category = DecoGuiCategory.GENERIC_TILE)
 public class GuiRepairCrate extends DecoTileGui<TileEntityRepairCrate, ContainerRepairCrate>
 {
-
-	@DecoResource
-	public static final ResourceLocation TEXTURE_REP = IIReference.RES_II.with("gui/repair_crate");
+	@SyncNBT(events = SyncEvents.TILE_CLIENT_MESSAGE)
+	public boolean shouldRepairArmor;
+	@SyncNBT(events = SyncEvents.TILE_CLIENT_MESSAGE)
+	public boolean shouldRepairVehicles;
 
 	public GuiRepairCrate(EntityPlayer player, TileEntityRepairCrate tile)
 	{
 		super(player, tile, IIGUI.REPAIR_CRATE);
 	}
 
-
 	@Override
 	public void onInit()
 	{
+		boolean upgrade = tile.isUpgradeInstalled(IIContent.UPGRADE_INSERTER);
 		startBackground()
-				.withBox(null, 0, 0, 176, 76)
-				.withBox(DecoTextures.BG_WOODEN, DecoTextures.TEMPLATE_ROUND_WOODEN, 0, 87, 176, 92)
+				.withBox(DecoTextures.BG_STEEL_ROUGH, 32, 0, 176-64, 76+12)
+				.withFrame(DecoTextures.FRAME_STEEL, 6, false)
+				.withInventorySlots(SlotStyle.VANILLA, container.slots)
+				.withTitleBar(tile)
+				.withNextLayer()
+
+				.conditionally(upgrade, builder -> builder
+						.withBox(DecoTextures.BG_STEEL, DecoTextures.TEMPLATE_SQUARE, 0, 87+8, 176, 24)
+				)
+
+				.withBox(DecoTextures.BG_WOODEN, DecoTextures.TEMPLATE_ROUND_WOODEN, 0, 87+8+(upgrade?24: 0), 176, 92)
 				.withInventorySlots(SlotStyle.VANILLA, container.playerInventory)
-				.withInventorySlots(SlotStyle.IE_CUSTOM1, container.inputSlot)
 				.withInventoryTitleBar()
 				.build();
 
-
-		addComponents(
-
-				new DecoImage(40, 10)
-						.withSize(101, 78)
-						.withImageLocation(TEXTURE_REP, true)
-						.withUV(256, 9, 0, 110, 78)
-		);
+		if(upgrade)
+			addComponents(
+					//Energy bar
+					new DecoBar(168-32-1, 4)
+							.withTemplate(DecoTemplates.BAR_ELECTRIC_ENERGY.apply(tile.energyStorage)),
+					new DecoCheckbox(3, 87+8+1)
+							.withText(IIReference.GUI_LABEL_KEY+"repair_crate.repair_armor")
+							.withChecked(this.shouldRepairArmor = tile.shouldRepairArmor)
+							.withOnToggle(value -> shouldRepairArmor = value),
+					new DecoCheckbox(3, 87+8+11)
+							.withText(IIReference.GUI_LABEL_KEY+"repair_crate.repair_vehicles")
+							.withChecked(this.shouldRepairVehicles = tile.shouldRepairVehicles)
+							.withOnToggle(value -> shouldRepairVehicles = value)
+			);
 	}
 }
-/**
- * @Override public void initGui()
- * {
- * super.initGui();
- * addButton(buttonHealing = new GuiButtonState(0, guiLeft+111, guiTop+2, 28, 24, "", tile.shouldRepairArmor, TEXTURE, 176, 75, 0));
- * addButton(buttonBoost = new GuiButtonState(1, guiLeft+111, guiTop+24, 28, 24, "", tile.shouldRepairVehicles, TEXTURE, 176, 51, 0));
- * <p>
- * boolean upgraded = tile.isUpgradeInstalled(IIContent.UPGRADE_INSERTER);
- * buttonHealing.visible = upgraded;
- * buttonBoost.visible = upgraded;
- * }
- * @Override protected void actionPerformed(GuiButton button)
- * {
- * if(button==buttonHealing)
- * {
- * tile.shouldRepairArmor = !tile.shouldRepairArmor;
- * buttonHealing.state = tile.shouldRepairArmor;
- * IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(1, tile.shouldRepairArmor, tile.getPos()));
- * }
- * else if(button==buttonBoost)
- * {
- * tile.shouldRepairVehicles = !tile.shouldRepairVehicles;
- * buttonBoost.state = tile.shouldRepairVehicles;
- * IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(2, tile.shouldRepairVehicles, tile.getPos()));
- * }
- * }
- * @Override public void drawScreen(int mouseX, int mouseY, float partialTicks)
- * {
- * super.drawScreen(mouseX, mouseY, partialTicks);
- * boolean upgraded = tile.isUpgradeInstalled(IIContent.UPGRADE_INSERTER);
- * <p>
- * if(upgraded)
- * {
- * ArrayList<String> tooltip = new ArrayList<>();
- * <p>
- * if(IIMath.isPointInRectangle(buttonHealing.x, buttonHealing.y, buttonHealing.x+buttonHealing.width, buttonHealing.y+buttonHealing.height, mouseX, mouseY))
- * tooltip.add(I18n.format(IIReference.DESCRIPTION_KEY+"repair_crate.repair_armor"));
- * else if(IIMath.isPointInRectangle(buttonBoost.x, buttonBoost.y, buttonBoost.x+buttonBoost.width, buttonBoost.y+buttonBoost.height, mouseX, mouseY))
- * tooltip.add(I18n.format(IIReference.DESCRIPTION_KEY+"repair_crate.repair_vehicles"));
- * <p>
- * if(IIMath.isPointInRectangle(guiLeft+153, guiTop+24, guiLeft+153+7, guiTop+24+47, mouseX, mouseY))
- * tooltip.add(tile.energyStorage+"/"+EffectCrates.maxEnergyStored+" IF");
- * <p>
- * if(!tooltip.isEmpty())
- * {
- * ClientUtils.drawHoveringText(tooltip, mouseX, mouseY, fontRenderer, guiLeft+xSize, -1);
- * RenderHelper.enableGUIStandardItemLighting();
- * }
- * }
- * <p>
- * }
- * @Override protected void drawGuiContainerBackgroundLayer(float f, int mx, int my)
- * {
- * boolean upgraded = tile.isUpgradeInstalled(IIContent.UPGRADE_INSERTER);
- * int ww = upgraded?9: 36;
- * <p>
- * GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
- * ClientUtils.bindTexture(TEXTURE);
- * this.drawTexturedModalRect(guiLeft, guiTop+79, 0, 79, xSize, ySize-79);
- * this.drawTexturedModalRect(guiLeft+ww, guiTop, 9, 0, upgraded?167: 102, 79);
- * <p>
- * IIClientUtils.drawPowerBar(guiLeft+153, guiTop+24, 7, 47, tile.energyStorage/(float)EffectCrates.maxEnergyStored);
- * }
- **/
-

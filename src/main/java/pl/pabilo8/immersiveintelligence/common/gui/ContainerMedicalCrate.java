@@ -11,22 +11,19 @@ import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIITileBase;
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @author Avalon (avalon@iiteam.net)
+ * @updated 13.08.2026
+ * @ii-approved 0.3.1
  * @since 17.05.2019
- * @since 08.14.2025
  */
 public class ContainerMedicalCrate extends ContainerIITileBase<TileEntityMedicalCrate>
 {
-
 	public Slot inputSlot, inputFluidSlot, outputSlot, outputSlot2;
 
 	public ContainerMedicalCrate(EntityPlayer player, TileEntityMedicalCrate tile)
 	{
-		//Normal bullet slots
-
 		super(player, tile);
-		int shift = tile.isUpgradeInstalled(IIContent.UPGRADE_INSERTER)?0: 27;
 
-
+		//Machine slots
 		inputFluidSlot = this.addSlotToContainer(new IESlot.FluidContainer(this, this.inv, 0, 68, 19, 2));
 		outputSlot = this.addSlotToContainer(new IESlot.Output(this, this.inv, 1, 68, 55));
 
@@ -38,9 +35,10 @@ public class ContainerMedicalCrate extends ContainerIITileBase<TileEntityMedical
 				return TileEntityMedicalCrate.BOOST_POTION_ITEM.test(stack);
 			}
 		});
-
 		outputSlot2 = this.addSlotToContainer(new IESlot.Output(this, this.inv, 3, 112, 55));
 
-		addPlayerInventory(player.inventory, 8, 87);
+		//Player inventory
+		boolean upgrade = tile.isUpgradeInstalled(IIContent.UPGRADE_INSERTER);
+		addPlayerInventory(player.inventory, 8, 100+8+(upgrade?24: 0));
 	}
 }

@@ -1,6 +1,8 @@
 package pl.pabilo8.immersiveintelligence.common.util.tile;
 
+import blusunrize.immersiveengineering.client.models.IOBJModelCallback;
 import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
@@ -19,7 +21,7 @@ import javax.annotation.Nonnull;
  * @since 28.06.2026
  */
 @SuppressWarnings({"unchecked", "unused"})
-public class TileEntityIIBase extends TileEntityIEBase implements IWorldPosProvider
+public class TileEntityIIBase extends TileEntityIEBase implements IWorldPosProvider, IOBJModelCallback<IBlockState>
 {
 	//--- NBT ---//
 

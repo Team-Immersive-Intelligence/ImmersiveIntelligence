@@ -48,7 +48,9 @@ public class BlockIIMetalDevice extends BlockIITileProvider<IIBlockTypes_MetalDe
 		setToolTypes(IIReference.TOOL_HAMMER);
 
 		setBlockLayer(BlockRenderLayer.CUTOUT_MIPPED);
-		setSubBlockLayer(IIBlockTypes_MetalDevice.METAL_CRATE, BlockRenderLayer.CUTOUT);
+		setSubBlockLayer(IIBlockTypes_MetalDevice.AMMUNITION_CRATE, BlockRenderLayer.SOLID, BlockRenderLayer.CUTOUT);
+		setSubBlockLayer(IIBlockTypes_MetalDevice.REPAIR_CRATE, BlockRenderLayer.SOLID, BlockRenderLayer.CUTOUT);
+		setSubBlockLayer(IIBlockTypes_MetalDevice.MEDIC_CRATE, BlockRenderLayer.SOLID, BlockRenderLayer.CUTOUT);
 
 		addToTESRMap(IIBlockTypes_MetalDevice.TIMED_BUFFER, IIBlockTypes_MetalDevice.REDSTONE_BUFFER,
 				IIBlockTypes_MetalDevice.SMALL_DATA_BUFFER, IIBlockTypes_MetalDevice.DATA_MERGER);

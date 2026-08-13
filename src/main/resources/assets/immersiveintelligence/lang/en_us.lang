@@ -1561,12 +1561,6 @@ desc.immersiveintelligence.bullets.armor_penetration=Armor Penetration:
 desc.immersiveintelligence.bullet_magazine.remaining=Remaining Bullets: %s
 desc.immersiveintelligence.bullet_magazine.empty=Empty
 
-desc.immersiveintelligence.medical_crate.heal=Heal Wounded Entities
-desc.immersiveintelligence.medical_crate.boost=Apply Effects to Entities
-
-desc.immersiveintelligence.repair_crate.repair_armor=Repair Worn Armor
-desc.immersiveintelligence.repair_crate.repair_vehicles=Repair Vehicles
-
 desc.immersiveintelligence.jei.washing_recipe=Chemical Washing
 
 #Potion effects
@@ -3348,6 +3342,24 @@ ii.gui.inserter.tasks.into_minecart=Into Minecart
 ii.gui.inserter.tasks.fluid=Fluid
 ii.gui.inserter.tasks.fluid_milk_cow=Milk Cow
 ii.gui.inserter.tasks.fluid_latex_collector=Collect Latex
+
+ii.gui.ammunition_crate.mode=Mode:
+ii.gui.ammunition_crate.section.ammunition=Ammunition
+ii.gui.ammunition_crate.section.spent_casings=Spent Casings
+ii.gui.ammunition_crate.section.spent_magazines=Spent Magazines
+ii.gui.ammunition_crate.mode.revolver=Revolver
+ii.gui.ammunition_crate.mode.submachinegun=Submachinegun
+ii.gui.ammunition_crate.mode.assault_rifle=Assault Rifle
+ii.gui.ammunition_crate.mode.rifle_bullets=Rifle (Bullets)
+ii.gui.ammunition_crate.mode.rifle_magazines=Rifle (Magazines)
+ii.gui.ammunition_crate.mode.machinegun_magazines=Machinegun (Magazines)
+ii.gui.ammunition_crate.mode.machinegun_belt_fed=Machinegun (Belt-Fed)
+
+ii.gui.repair_crate.repair_armor=Repair Worn Armor
+ii.gui.repair_crate.repair_vehicles=Repair Vehicles
+
+ii.gui.medical_crate.heal=Heal Wounded Entities
+ii.gui.medical_crate.boost=Apply Effects to Entities
 
 ii.gui.packer.task=Transfer:
 ii.gui.packer.task.item=Items

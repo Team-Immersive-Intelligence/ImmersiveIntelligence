@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate;
 
 import blusunrize.immersiveengineering.api.TargetingInfo;
+import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorage;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
 import blusunrize.immersiveengineering.api.energy.wires.WireType;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IBlockBounds;
@@ -61,7 +62,7 @@ import static pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.M
 /**
  * Provides shared inventory, upgrade, wire, GUI, and entity-effect logic for effect crates.
  *
- * @author Pabilo8(pabilo@iiteam.net)
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @updated 10.08.2026
  * @since 06.07.2020
  */
@@ -78,7 +79,7 @@ public abstract class TileEntityEffectCrate extends TileEntityIIDirectionalConne
 	@SyncNBT(events = SyncEvents.TILE_CUSTOM1)
 	public MultiblockInteractablePart lid;
 	@SyncNBT(events = {SyncEvents.TILE_ENERGY_CHANGED, SyncEvents.TILE_GUI_OPENED})
-	public int energyStorage = 0;
+	public FluxStorage energyStorage = new FluxStorage(maxEnergyStored);
 	@SyncNBT(events = {SyncEvents.TILE_CUSTOM1, SyncEvents.TILE_GUI_OPENED})
 	public UpgradeManager<TileEntityEffectCrate> upgradeManager = new UpgradeManager<>(this);
 	@SyncNBT(events = SyncEvents.TILE_CUSTOM2)
@@ -168,7 +169,7 @@ public abstract class TileEntityEffectCrate extends TileEntityIIDirectionalConne
 
 		if(world.isRemote)
 		{
-			if(energyStorage > 0&&isUpgradeInstalled(IIContent.UPGRADE_INSERTER))
+			if(energyStorage.getEnergyStored() > 0&&isUpgradeInstalled(IIContent.UPGRADE_INSERTER))
 			{
 				inserterAnimation = calculateInserterAnimation(0);
 				inserterHeight = calculateInserterHeight(0);
@@ -177,7 +178,7 @@ public abstract class TileEntityEffectCrate extends TileEntityIIDirectionalConne
 			return;
 		}
 
-		if(energyStorage <= energyDrain||!isUpgradeInstalled(IIContent.UPGRADE_INSERTER)||!isSupplied())
+		if(energyStorage.getEnergyStored() <= energyDrain||!isUpgradeInstalled(IIContent.UPGRADE_INSERTER)||!isSupplied())
 		{
 			setFocusedEntity(null);
 			return;
@@ -340,17 +341,13 @@ public abstract class TileEntityEffectCrate extends TileEntityIIDirectionalConne
 	@Override
 	public int outputEnergy(int amount, boolean simulate, int energyType)
 	{
-		if(amount <= 0||energyStorage >= maxEnergyStored)
+		if(amount <= 0)
 			return 0;
 
-		int received = Math.min(maxEnergyStored-energyStorage, energyDrain);
-		if(!simulate)
-		{
-			boolean wasEmpty = energyStorage==0;
-			energyStorage += received;
-			if(wasEmpty)
-				updateTileForEvent(SyncEvents.TILE_ENERGY_CHANGED);
-		}
+		boolean wasEmpty = energyStorage.getEnergyStored()==0;
+		int received = energyStorage.receiveEnergy(Math.min(amount, energyDrain), simulate);
+		if(!simulate&&received > 0&&wasEmpty)
+			updateTileForEvent(SyncEvents.TILE_ENERGY_CHANGED);
 		return received;
 	}
 
@@ -392,8 +389,7 @@ public abstract class TileEntityEffectCrate extends TileEntityIIDirectionalConne
 
 	protected void consumeEnergy(int amount)
 	{
-		energyStorage = Math.max(0, energyStorage-amount);
-		if(world!=null&&!world.isRemote)
+		if(energyStorage.extractEnergy(amount, false) > 0&&world!=null&&!world.isRemote)
 			updateTileForEvent(SyncEvents.TILE_ENERGY_CHANGED);
 	}
 

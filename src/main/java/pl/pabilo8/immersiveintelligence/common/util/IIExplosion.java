@@ -408,7 +408,7 @@ public class IIExplosion extends Explosion
 		//play explosion sound
 		IIPacketHandler.playRangedSound(world, getPosition(),
 				causesFire?IISounds.explosionIncendiary: IISounds.explosion,
-				SoundCategory.NEUTRAL, (int)(72*size), 1f, pitch);
+				SoundCategory.NEUTRAL, (int)(72+6*size), 1f, pitch);
 
 		if(spawnParticles)
 			IIPacketHandler.sendToClient(MessageExplosion.createExplosionMessage(

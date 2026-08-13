@@ -29,6 +29,7 @@ import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -132,10 +133,27 @@ public class DecoBackgroundBuilder<T, C extends Container>
 	 */
 	public DecoBackgroundBuilder<T, C> withFrame(ResLoc imageLocation, int thickness, boolean cornersOnly, boolean[] frame)
 	{
+		return withFrame(imageLocation, thickness, cornersOnly, frame, null);
+	}
+
+
+	/**
+	 * Sets the frame of the most recently added background tile
+	 *
+	 * @param imageLocation location of the frame texture
+	 * @param thickness     thickness of the frame in pixels
+	 * @param cornersOnly   if true, only the corners of the framewill be drawn
+	 * @param frame         sides of the frame to draw, in order: top, bottom, left, right
+	 * @param color         color of the frame; if null, the frame will be drawn with the default color.
+	 * @return this
+	 */
+	public DecoBackgroundBuilder<T, C> withFrame(ResLoc imageLocation, int thickness, boolean cornersOnly, boolean[] frame, @Nullable IIColor color)
+	{
 		List<DecoBackgroundTile> tiles = backgroundTiles.get(backgroundTiles.size()-1);
 		DecoBackgroundTile lastTile = tiles.get(tiles.size()-1);
-		lastTile.frame = new DecoFrame(imageLocation, false, thickness)
-				.withSides(frame[0], frame[1], frame[2], frame[3]);
+		lastTile.frame = new DecoFrame(imageLocation, cornersOnly, thickness)
+				.withSides(frame[0], frame[1], frame[2], frame[3])
+				.withColor(color==null?(lastTile.color==null?IIColor.WHITE: lastTile.color): color);
 		return this;
 	}
 
@@ -168,9 +186,31 @@ public class DecoBackgroundBuilder<T, C extends Container>
 	 */
 	public DecoBackgroundBuilder<T, C> withStandaloneFrame(int x, int y, int width, int height, ResLoc imageLocation, int thickness, boolean cornersOnly, boolean[] frame)
 	{
+		return withStandaloneFrame(x, y, width, height, imageLocation, thickness, cornersOnly, frame, null);
+	}
+
+	/**
+	 * Adds a standalone frame to the background, which is not attached to any background tile.
+	 * This is useful for decorative frames that are not meant to be part of the background layers.
+	 *
+	 * @param x             x position of the frame
+	 * @param y             y position ofthe frame
+	 * @param width         width of the frame in pixels
+	 * @param height        height of the frame in pixels
+	 * @param imageLocation location of the frame texture
+	 * @param thickness     thickness of the frame in pixels
+	 * @param cornersOnly   if true, only the corners of the frame will be drawn
+	 * @param frame         sides of the frame to draw, in order: top, bottom, left, right
+	 * @param color         color of the frame; if null, the frame will be drawn with the default color.
+	 * @return this
+	 */
+	public DecoBackgroundBuilder<T, C> withStandaloneFrame(int x, int y, int width, int height, ResLoc imageLocation, int thickness, boolean cornersOnly, boolean[] frame, @Nullable IIColor color)
+	{
 		DecoBackgroundTile tile = new DecoBackgroundTile(x, y, width, height, IIColor.WHITE, imageLocation, DecoTextures.TEMPLATE_ROUND);
 		tile.frame = new DecoFrame(imageLocation, cornersOnly, thickness)
 				.withSides(frame[0], frame[1], frame[2], frame[3]);
+		if(color!=null)
+			tile.frame.withColor(color);
 
 		backgroundFrames.add(tile);
 		return this;
@@ -439,9 +479,9 @@ public class DecoBackgroundBuilder<T, C extends Container>
 		DecoFrame frame = backgroundFrame.frame;
 		assert frame!=null;
 		if(frame.cornersOnly)
-			drawFrameCorners(draw, backgroundFrame.x, backgroundFrame.y, backgroundFrame.width, backgroundFrame.height, frame.style, frame.sides);
+			drawFrameCorners(draw, backgroundFrame.x, backgroundFrame.y, backgroundFrame.width, backgroundFrame.height, frame.style, frame.color, frame.sides);
 		else
-			drawFrame(draw, backgroundFrame.x, backgroundFrame.y, backgroundFrame.width, backgroundFrame.height, frame.style, frame.sides, frame.frameThickness);
+			drawFrame(draw, backgroundFrame.x, backgroundFrame.y, backgroundFrame.width, backgroundFrame.height, frame.style, frame.color, frame.sides, frame.frameThickness);
 	}
 
 	@Nonnull
@@ -614,30 +654,30 @@ public class DecoBackgroundBuilder<T, C extends Container>
 		return draw;
 	}
 
-	private void drawFrameCorners(IIDrawUtils draw, int x, int y, int width, int height, ResLoc style, boolean[] sides)
+	private void drawFrameCorners(IIDrawUtils draw, int x, int y, int width, int height, ResLoc style, IIColor color, boolean[] sides)
 	{
 		TextureAtlasSprite sprite = ClientUtils.getSprite(style);
 		int cornerSize = 16;
 
 		//Top-left corner
 		if(sides[0]&&sides[3])
-			draw.drawTexColorRect(x, y, cornerSize, cornerSize, IIColor.WHITE,
+			draw.drawTexColorRect(x, y, cornerSize, cornerSize, color,
 					sprite.getMinU(), sprite.getInterpolatedU(8), sprite.getMinV(), sprite.getInterpolatedV(8));
 		//Top-right corner
 		if(sides[0]&&sides[1])
-			draw.drawTexColorRect(x+width-cornerSize, y, cornerSize, cornerSize, IIColor.WHITE,
+			draw.drawTexColorRect(x+width-cornerSize, y, cornerSize, cornerSize, color,
 					sprite.getInterpolatedU(16-8), sprite.getInterpolatedU(16), sprite.getMinV(), sprite.getInterpolatedV(8));
 		//Bottom-left corner
 		if(sides[2]&&sides[3])
-			draw.drawTexColorRect(x, y+height-cornerSize, cornerSize, cornerSize, IIColor.WHITE,
+			draw.drawTexColorRect(x, y+height-cornerSize, cornerSize, cornerSize, color,
 					sprite.getMinU(), sprite.getInterpolatedU(8), sprite.getInterpolatedV(16-8), sprite.getInterpolatedV(16));
 		//Bottom-right corner
 		if(sides[2]&&sides[1])
-			draw.drawTexColorRect(x+width-cornerSize, y+height-cornerSize, cornerSize, cornerSize, IIColor.WHITE,
+			draw.drawTexColorRect(x+width-cornerSize, y+height-cornerSize, cornerSize, cornerSize, color,
 					sprite.getInterpolatedU(16-8), sprite.getInterpolatedU(16), sprite.getInterpolatedV(16-8), sprite.getInterpolatedV(16));
 	}
 
-	private void drawFrame(IIDrawUtils draw, int x, int y, int width, int height, ResLoc style, boolean[] sides, int frameThickness)
+	private void drawFrame(IIDrawUtils draw, int x, int y, int width, int height, ResLoc style, IIColor color, boolean[] sides, int frameThickness)
 	{
 		TextureAtlasSprite sprite = ClientUtils.getSprite(style);
 
@@ -656,33 +696,33 @@ public class DecoBackgroundBuilder<T, C extends Container>
 
 		//Top
 		if(sides[0])
-			draw.drawRepeatedTexColorRect(x+frameThickness, y, width-frameThickness*2, frameThickness, IIColor.WHITE,
+			draw.drawRepeatedTexColorRect(x+frameThickness, y, width-frameThickness*2, frameThickness, color,
 					32-2*frameThickness, frameThickness, minUU, maxU, minV, minVV);
 		//Bottom
 		if(sides[1])
-			draw.drawRepeatedTexColorRect(x+frameThickness, y+height-frameThickness, width-frameThickness*2, frameThickness, IIColor.WHITE,
+			draw.drawRepeatedTexColorRect(x+frameThickness, y+height-frameThickness, width-frameThickness*2, frameThickness, color,
 					32-2*frameThickness, frameThickness, minUU, maxU, maxV, maxVV);
 		//Left
 		if(sides[2])
-			draw.drawRepeatedTexColorRect(x, y+frameThickness, frameThickness, height-frameThickness*2, IIColor.WHITE,
+			draw.drawRepeatedTexColorRect(x, y+frameThickness, frameThickness, height-frameThickness*2, color,
 					frameThickness, 32-2*frameThickness, minU, minUU, minVV, maxV);
 		//Right
 		if(sides[3])
-			draw.drawRepeatedTexColorRect(x+width-frameThickness, y+frameThickness, frameThickness, height-frameThickness*2, IIColor.WHITE,
+			draw.drawRepeatedTexColorRect(x+width-frameThickness, y+frameThickness, frameThickness, height-frameThickness*2, color,
 					frameThickness, 32-2*frameThickness, maxU, maxUU, minVV, maxV);
 
 		//Draw squares on frame edges
 		if(sides[0]||sides[3])
-			draw.drawTexColorRect(x, y, frameThickness, frameThickness, IIColor.WHITE,
+			draw.drawTexColorRect(x, y, frameThickness, frameThickness, color,
 					minU, minUU, minV, minVV);
 		if(sides[0]||sides[1])
-			draw.drawTexColorRect(x+width-frameThickness, y, frameThickness, frameThickness, IIColor.WHITE,
+			draw.drawTexColorRect(x+width-frameThickness, y, frameThickness, frameThickness, color,
 					maxU, maxUU, minV, minVV);
 		if(sides[2]||sides[3])
-			draw.drawTexColorRect(x, y+height-frameThickness, frameThickness, frameThickness, IIColor.WHITE,
+			draw.drawTexColorRect(x, y+height-frameThickness, frameThickness, frameThickness, color,
 					minU, minUU, maxV, maxVV);
 		if(sides[2]||sides[1])
-			draw.drawTexColorRect(x+width-frameThickness, y+height-frameThickness, frameThickness, frameThickness, IIColor.WHITE,
+			draw.drawTexColorRect(x+width-frameThickness, y+height-frameThickness, frameThickness, frameThickness, color,
 					maxU, maxUU, maxV, maxVV);
 	}
 

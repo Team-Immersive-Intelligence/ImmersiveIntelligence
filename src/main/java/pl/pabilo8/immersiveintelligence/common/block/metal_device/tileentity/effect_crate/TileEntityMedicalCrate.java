@@ -35,7 +35,7 @@ import static pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.M
 /**
  * Stores medical fluids and applies configured treatment effects to living entities.
  *
- * @author Pabilo8(pabilo@iiteam.net)
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @updated 10.08.2026
  * @since 06.07.2020
  */
@@ -56,9 +56,9 @@ public class TileEntityMedicalCrate extends TileEntityEffectCrate
 	@SyncNBT(name = "potion_tank", events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_DROP_AS_ITEM})
 	public FluidTank boostTank = new FluidTank(mediCrateTankSize);
 	public FluidTank[] tanks = {healthTank, boostTank};
-	@SyncNBT(name = "shouldHeal", events = SyncEvents.TILE_CUSTOM1)
+	@SyncNBT(events = SyncEvents.TILE_CUSTOM1)
 	public boolean shouldHeal = true;
-	@SyncNBT(name = "shouldBoost", events = SyncEvents.TILE_CUSTOM1)
+	@SyncNBT(events = SyncEvents.TILE_CUSTOM1)
 	public boolean shouldBoost = true;
 
 	private final FluidWrapper fluidWrapper = new FluidWrapper(this);
@@ -112,7 +112,7 @@ public class TileEntityMedicalCrate extends TileEntityEffectCrate
 	@Override
 	boolean affectEntity(Entity entity, boolean upgraded)
 	{
-		if(upgraded&&energyStorage < mediCrateEnergyPerAction||!(entity instanceof EntityLivingBase))
+		if(upgraded&&energyStorage.getEnergyStored() < mediCrateEnergyPerAction||!(entity instanceof EntityLivingBase))
 			return false;
 
 		EntityLivingBase living = (EntityLivingBase)entity;
@@ -160,7 +160,8 @@ public class TileEntityMedicalCrate extends TileEntityEffectCrate
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
 	{
-		if(isUpgradeInstalled(IIContent.UPGRADE_INSERTER)&&facing==this.facing.getOpposite()&&capability==CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+		if(capability==CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY&&
+				isUpgradeInstalled(IIContent.UPGRADE_INSERTER)&&facing!=EnumFacing.UP)
 			return true;
 		return super.hasCapability(capability, facing);
 	}
@@ -169,7 +170,8 @@ public class TileEntityMedicalCrate extends TileEntityEffectCrate
 	@SuppressWarnings("unchecked")
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
 	{
-		if(isUpgradeInstalled(IIContent.UPGRADE_INSERTER)&&facing==this.facing.getOpposite()&&capability==CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+		if(capability==CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY&&
+				isUpgradeInstalled(IIContent.UPGRADE_INSERTER)&&facing!=EnumFacing.UP)
 			return (T)fluidWrapper;
 		return super.getCapability(capability, facing);
 	}
