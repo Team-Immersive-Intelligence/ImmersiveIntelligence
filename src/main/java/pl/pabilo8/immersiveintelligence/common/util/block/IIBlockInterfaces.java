@@ -98,6 +98,11 @@ public class IIBlockInterfaces
 		TernaryValue fullCube() default TernaryValue.UNSET;
 
 		/**
+		 * @return whether this SubBlock can be set on fire
+		 */
+		TernaryValue flammable() default TernaryValue.UNSET;
+
+		/**
 		 * @return max stack size of ItemBlock for this SubBlock, if different from block
 		 */
 		int stackSize() default -1;

@@ -45,7 +45,12 @@ public class GuiMedicalCrate extends DecoTileGui<TileEntityMedicalCrate, Contain
 	@Override
 	public void onInit()
 	{
+		//Variables
 		boolean upgrade = tile.isUpgradeInstalled(IIContent.UPGRADE_INSERTER);
+		this.shouldHeal = tile.shouldHeal;
+		this.shouldBoost = tile.shouldBoost;
+
+		//Background
 		final IIColor backgroundColor = IIColor.fromHex("a86465");
 		startBackground()
 				.withBox(DecoTextures.BG_STEEL_ROUGH, DecoTextures.TEMPLATE_ROUND, 32, 0, 176-64, 76+12, backgroundColor)
@@ -68,6 +73,7 @@ public class GuiMedicalCrate extends DecoTileGui<TileEntityMedicalCrate, Contain
 				.withInventoryTitleBar()
 				.build();
 
+		//Components
 		addComponents(
 				//Display tanks
 				new DecoFluidTank(46-2, 19-2+4)
@@ -107,12 +113,12 @@ public class GuiMedicalCrate extends DecoTileGui<TileEntityMedicalCrate, Contain
 					new DecoCheckbox(3, 87+8+1)
 							.withText(IIReference.GUI_LABEL_KEY+"medical_crate.heal")
 							.withTextColor(IIReference.COLOR_GUI_BRASS, IIColor.WHITE)
-							.withChecked(this.shouldHeal = tile.shouldHeal)
+							.withChecked(this.shouldHeal)
 							.withOnToggle(value -> shouldHeal = value),
 					new DecoCheckbox(3, 87+8+11)
 							.withText(IIReference.GUI_LABEL_KEY+"medical_crate.boost")
 							.withTextColor(IIReference.COLOR_GUI_BRASS, IIColor.WHITE)
-							.withChecked(this.shouldBoost = tile.shouldBoost)
+							.withChecked(this.shouldBoost)
 							.withOnToggle(value -> shouldBoost = value)
 			);
 	}

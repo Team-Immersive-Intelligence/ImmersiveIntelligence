@@ -25,6 +25,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
@@ -172,6 +173,15 @@ public class IIClientUtils
 	}
 
 	@Nonnull
+	public static IIColor getFluidTextureColor(@Nonnull FluidStack fluid)
+	{
+		int color = fluid.getFluid().getColor(fluid);
+		if(color!=0xFFFFFFFF)
+			return IIColor.fromPackedARGB(color);
+		return getFluidTextureColor(fluid.getFluid());
+	}
+
+	@Nonnull
 	public static IIColor getFluidTextureColor(@Nonnull Fluid fluid)
 	{
 		if(CACHED_COLORS.containsKey(fluid))
@@ -189,7 +199,37 @@ public class IIClientUtils
 			final IResource resource = Minecraft.getMinecraft().getResourceManager().getResource(f);
 			is = resource.getInputStream();
 			image = ImageIO.read(is);
-			color = IIColor.fromPackedRGB((image.getRGB(0, 0)-0xff000000)<<2);
+
+			//Calculate mean color from the entire image
+			long sumR = 0, sumG = 0, sumB = 0;
+			int pixelCount = 0;
+			int width = image.getWidth();
+			int height = image.getHeight();
+
+			for(int y = 0; y < height; y++)
+				for(int x = 0; x < width; x++)
+				{
+					int rgb = image.getRGB(x, y);
+					int alpha = (rgb>>24)&0xFF;
+					//Only count non-transparent pixels
+					if(alpha > 0)
+					{
+						sumR += (rgb>>16)&0xFF;
+						sumG += (rgb>>8)&0xFF;
+						sumB += rgb&0xFF;
+						pixelCount++;
+					}
+				}
+
+			if(pixelCount > 0)
+			{
+				int avgR = (int)(sumR/pixelCount);
+				int avgG = (int)(sumG/pixelCount);
+				int avgB = (int)(sumB/pixelCount);
+				color = IIColor.fromPackedRGB((avgR<<16)|(avgG<<8)|avgB);
+			}
+			else
+				color = IIColor.WHITE;
 		} catch(IOException e)
 		{
 			IILogger.error("Could not load fluid texture file for color analysis");

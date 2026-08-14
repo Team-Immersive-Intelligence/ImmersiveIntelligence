@@ -1291,6 +1291,14 @@ desc.immersiveintelligence.fire_missions_module.tooltip=Add and modify fire miss
 
 desc.immersiveintelligence.tooltip.armor=Armor %f%%
 
+desc.immersiveintelligence.coagulator.input_tank=Input Tank
+desc.immersiveintelligence.coagulator.coagulant_tank=Coagulant Tank
+
+desc.immersiveintelligence.chemical_painter.tank_cyan=Cyan Ink Tank
+desc.immersiveintelligence.chemical_painter.tank_magenta=Magenta Ink Tank
+desc.immersiveintelligence.chemical_painter.tank_yellow=Yellow Ink Tank
+desc.immersiveintelligence.chemical_painter.tank_black=Black Ink Tank
+
 desc.immersiveintelligence.upgrade_gui.title=Upgrade Machine
 desc.immersiveintelligence.upgrade_gui.tech_tree=Tech Tree
 desc.immersiveintelligence.upgrade_gui.info=Information

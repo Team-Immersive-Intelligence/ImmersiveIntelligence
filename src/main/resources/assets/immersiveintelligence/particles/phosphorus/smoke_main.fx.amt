@@ -8,5 +8,6 @@
   "programs": [
     "smoke_transition"
   ],
-  "size": 4.5
+  "size": 4.5,
+  "motion": [0.0, 0.0, 0.0]
 }

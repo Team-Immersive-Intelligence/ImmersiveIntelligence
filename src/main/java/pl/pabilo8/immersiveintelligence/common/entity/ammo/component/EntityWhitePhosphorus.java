@@ -24,13 +24,13 @@ public class EntityWhitePhosphorus extends EntityIEProjectile implements IEntity
 	public EntityWhitePhosphorus(World world)
 	{
 		super(world);
-		setTickLimit(8);
+		setTickLimit(60);
 	}
 
 	public EntityWhitePhosphorus(World world, double x, double y, double z, double ax, double ay, double az)
 	{
 		super(world, x, y, z, ax, ay, az);
-		setTickLimit(8);
+		setTickLimit(60);
 	}
 
 	@Override

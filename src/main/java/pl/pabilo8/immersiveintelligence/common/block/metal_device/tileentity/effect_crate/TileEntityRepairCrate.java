@@ -158,38 +158,4 @@ public class TileEntityRepairCrate extends TileEntityEffectCrate
 	{
 		return Utils.compareToOreName(stack, "plateSteel");
 	}
-
-	@Override
-	public void onAnimationChangeClient(boolean state, int part)
-	{
-		if(part==1)
-			shouldRepairArmor = state;
-		else if(part==2)
-			shouldRepairVehicles = state;
-		else
-			super.onAnimationChangeClient(state, part);
-	}
-
-	@Override
-	public void onAnimationChangeServer(boolean state, int part)
-	{
-		boolean changed;
-		if(part==1)
-		{
-			changed = shouldRepairArmor!=state;
-			shouldRepairArmor = state;
-		}
-		else if(part==2)
-		{
-			changed = shouldRepairVehicles!=state;
-			shouldRepairVehicles = state;
-		}
-		else
-		{
-			super.onAnimationChangeServer(state, part);
-			return;
-		}
-		if(changed)
-			updateTileForEvent(SyncEvents.TILE_CUSTOM1);
-	}
 }

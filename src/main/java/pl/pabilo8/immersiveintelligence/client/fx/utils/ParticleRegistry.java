@@ -578,13 +578,15 @@ public class ParticleRegistry
 	{
 		Vec3d position = initialPosition;
 		Vec3d motion = initialMotion;
-		for(int tick = 0; tick < 8; tick++)
+		for(int tick = 0; tick < 12; tick++)
 		{
-			float progress = (tick+1)/7f;
+			float progress = (tick+1)/12f;
 			scheduleSpawnParticle("phosphorus/ember", position, motion, new Vector2f(0, 0), tick)
 					.withProperty(ParticleProperties.SIZE, Math.max(0.05f, 0.25f-0.07f*progress));
 			scheduleSpawnParticle("phosphorus/smoke_trace", position, Vec3d.ZERO, new Vector2f(0, 0), tick)
-					.withProperty(ParticleProperties.SIZE, Math.max(0.15f, 0.8f-0.5f*progress));
+					.withProperty(ParticleProperties.SIZE, Math.max(0.25f, 2.5f-(1.75f*progress)))
+					.withProperty(ParticleProperties.TEXTURE_SHIFT, (int)(6*progress))
+					.withProperty(ParticleProperties.MAX_LIFETIME, (int)(60+60*IIParticleUtils.randFloat.get()));
 
 			if(tick < 6)
 			{

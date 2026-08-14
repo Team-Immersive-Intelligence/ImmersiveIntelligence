@@ -166,7 +166,9 @@
     "tank_coagulant": 140,
     "tank_input": 146,
     "item_outputs": [33, 32, 31, 30, 29, 28],
-    "control_panel": 69
+    "control_panel": 69,
+    "tank_input_blocks": [146, 145, 152, 153, 111, 110, 117, 118],
+    "tank_coagulant_blocks": [140, 141, 147, 148, 105, 106, 112, 113]
   },
   "rotations": {
     "item_outputs": "clockwise_180"

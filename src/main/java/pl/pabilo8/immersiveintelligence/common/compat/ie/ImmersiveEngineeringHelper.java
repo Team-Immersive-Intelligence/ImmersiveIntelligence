@@ -41,6 +41,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.client.gui.block.overrides.GuiIECrateOverride;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Overrides;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Overrides.Chemthrower;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Overrides.Railgun;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
@@ -51,6 +52,7 @@ import pl.pabilo8.immersiveintelligence.common.compat.ie.recipe.*;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerIICrate;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing.Casing;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIMaterial.Materials;
+import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIChemthrowerOverride;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIRailgunOverride;
 import pl.pabilo8.immersiveintelligence.common.util.IIReflectionUtils;
 
@@ -77,6 +79,11 @@ public class ImmersiveEngineeringHelper extends IICompatModule
 		{
 			IEContent.itemRailgun = new ItemIIRailgunOverride();
 			IILogger.info("Immersive Engineering Railgun was overridden by Immersive Intelligence");
+		}
+		if(Chemthrower.enableChemthrowerOverride)
+		{
+			IEContent.itemChemthrower = new ItemIIChemthrowerOverride();
+			IILogger.info("Immersive Engineering Chemthrower was overridden by Immersive Intelligence");
 		}
 		if(Overrides.concreteOverride)
 		{
@@ -250,6 +257,18 @@ public class ImmersiveEngineeringHelper extends IICompatModule
 					.setTransformations(TransformType.GUI, new Matrix4().translate(-.1875, 0, 0).scale(.1875, .1875, .1875).rotate(-Math.PI*.6875, 0, 1, 0).rotate(-Math.PI*.1875, 0, 0, 1))
 					.setTransformations(TransformType.GROUND, new Matrix4().translate(.125, .125, .0625).scale(.125, .125, .125)));
 			IEContent.itemRailgun.setTileEntityItemStackRenderer(ItemRendererIEOBJ.INSTANCE);
+		}
+		if(Chemthrower.enableChemthrowerOverride)
+		{
+			ImmersiveModelRegistry.instance.registerCustomItemModel(new ItemStack(IEContent.itemChemthrower, 1, 0), new ItemModelReplacement_OBJ("immersiveengineering:models/item/chemthrower.obj", true)
+					.setTransformations(TransformType.FIRST_PERSON_RIGHT_HAND, new Matrix4().scale(.375, .375, .375).translate(-.25, 1, .5).rotate(Math.PI*.5, 0, 1, 0))
+					.setTransformations(TransformType.FIRST_PERSON_LEFT_HAND, new Matrix4().scale(-.375, .375, .375).translate(-.25, 1, .5).rotate(-Math.PI*.5, 0, 1, 0))
+					.setTransformations(TransformType.THIRD_PERSON_RIGHT_HAND, new Matrix4().translate(0, .75, .1875).scale(.5, .5, .5).rotate(Math.PI*.75, 0, 1, 0).rotate(Math.PI*.375, 0, 0, 1).rotate(-Math.PI*.25, 1, 0, 0))
+					.setTransformations(TransformType.THIRD_PERSON_LEFT_HAND, new Matrix4().translate(0, .75, .1875).scale(.5, -.5, .5).rotate(Math.PI*.75, 0, 1, 0).rotate(Math.PI*.625, 0, 0, 1).rotate(-Math.PI*.25, 1, 0, 0))
+					.setTransformations(TransformType.FIXED, new Matrix4().translate(.125, .125, -.25).scale(.3125, .3125, .3125).rotate(Math.PI, 0, 1, 0).rotate(Math.PI*.25, 0, 0, 1))
+					.setTransformations(TransformType.GUI, new Matrix4().translate(-.1875, .3125, 0).scale(.4375, .4375, .4375).rotate(-Math.PI*.6875, 0, 1, 0).rotate(-Math.PI*.125, 0, 0, 1))
+					.setTransformations(TransformType.GROUND, new Matrix4().translate(0, .25, .125).scale(.25, .25, .25)));
+			IEContent.itemChemthrower.setTileEntityItemStackRenderer(ItemRendererIEOBJ.INSTANCE);
 		}
 
 		//Enable overriding IE GUIs with II's Deco based ones

@@ -6,8 +6,8 @@ import blusunrize.immersiveengineering.api.tool.RailgunHandler.RailgunProjectile
 import blusunrize.immersiveengineering.common.Config.IEConfig;
 import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.blocks.TileEntityMultiblockPart;
-import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
 import blusunrize.immersiveengineering.common.blocks.stone.BlockTypes_StoneDecoration;
+import blusunrize.immersiveengineering.common.util.EnergyHelper.IIEInternalFluxHandler;
 import blusunrize.immersiveengineering.common.util.IEDamageSources;
 import blusunrize.immersiveengineering.common.util.IEDamageSources.ElectricDamageSource;
 import blusunrize.immersiveengineering.common.util.IEPotions;
@@ -524,9 +524,9 @@ public class IIAmmoUtils
 			if(te!=null)
 			{
 				boolean affected = false;
-				if(te instanceof TileEntityMultiblockMetal)
+				if(te instanceof IIEInternalFluxHandler)
 				{
-					((TileEntityMultiblockMetal<?, ?>)te).energyStorage.extractEnergy(extractedEnergy, false);
+					((IIEInternalFluxHandler)te).getFluxStorage().modifyEnergyStored(-extractedEnergy);
 					affected = true;
 				}
 				else

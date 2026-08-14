@@ -1,6 +1,9 @@
 {
-  "type": "ParticleModel",
-  "models": ["ammo/rocket_wire.obj"],
+  "type": "ParticleRibbon",
+  "textures": [
+    "immersiveintelligence:particle/tracer/missile_wire"
+  ],
+  "size": 1.0,
   "max_lifetime": 200,
   "draw_stage": "custom",
   "alpha": 0.05,

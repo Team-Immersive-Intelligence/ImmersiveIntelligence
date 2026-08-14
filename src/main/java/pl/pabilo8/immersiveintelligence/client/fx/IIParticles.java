@@ -41,6 +41,7 @@ public class IIParticles
 		//Register particle types
 		ParticleRegistry.registerParticleType("ParticleModel", () -> new ParticleModelFactory<>(ParticleAMTModel::new));
 		ParticleRegistry.registerParticleType("ParticleVanilla", () -> new ParticleVanillaFactory(ParticleVanilla::new));
+		ParticleRegistry.registerParticleType("ParticleRibbon", () -> new ParticleVanillaFactory(ParticleRibbon::new));
 		ParticleRegistry.registerParticleType("ParticleGlow", () -> new ParticleFactory<>(ParticleGlow::new));
 		ParticleRegistry.registerParticleType("ParticleLightning", () -> new ParticleFactory<>(ParticleLightning::new));
 

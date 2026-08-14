@@ -9,6 +9,7 @@ import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -19,6 +20,7 @@ import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.IIPotions;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate.TileEntityAmmunitionCrate;
 import pl.pabilo8.immersiveintelligence.common.entity.mounted_weapon.EntityMachinegun;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerAmmunitionCrate;
@@ -133,7 +135,13 @@ public class AmmunitionCrateHandler
 
 		for(Map.Entry<Predicate<ItemStack>, ReloadHandler> entry : handlers.entrySet())
 			if(entry.getKey().test(held))
-				return entry.getValue().reload(crate, player, hand, held);
+			{
+				if(entry.getValue().reload(crate, player, hand, held))
+				{
+					player.addPotionEffect(new PotionEffect(IIPotions.wellSupplied, 100));
+					return true;
+				}
+			}
 		return false;
 	}
 

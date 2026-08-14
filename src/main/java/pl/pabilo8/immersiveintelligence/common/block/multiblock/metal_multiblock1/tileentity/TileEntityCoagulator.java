@@ -1,19 +1,29 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity;
 
 import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
+import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidTank;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.crafting.CoagulatorRecipe;
 import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIMultiblockRecipe;
+import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedTextOverlay;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Coagulator;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockCoagulator;
 import pl.pabilo8.immersiveintelligence.common.util.FilteredFluidTank;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
@@ -29,6 +39,7 @@ import javax.annotation.Nullable;
  * @since 04.03.2021
  */
 public class TileEntityCoagulator extends TileEntityMultiblockProductionSingle<TileEntityCoagulator, CoagulatorRecipe>
+		implements IAdvancedTextOverlay
 {
 	@SyncNBT(events = {SyncEvents.TILE_CUSTOM1, SyncEvents.TILE_RECIPE_CHANGED})
 	public FluidTank tankCoagulant;
@@ -291,5 +302,33 @@ public class TileEntityCoagulator extends TileEntityMultiblockProductionSingle<T
 		FILL_BUCKET,
 		MOVE_BACK,
 		PLACE_BUCKET
+	}
+
+
+	//--- IAdvancedTextOverlay ---//
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public String[] getOverlayText(EntityPlayer player, RayTraceResult mop)
+	{
+		if(!Utils.isFluidRelatedItemStack(player.getHeldItem(EnumHand.MAIN_HAND)))
+			return new String[0];
+
+		TileEntityCoagulator master = master();
+		if(master!=null)
+		{
+			if(isPOI("tank_input_blocks"))
+				return new String[]{
+						TextFormatting.GRAY+I18n.format(IIReference.DESCRIPTION_KEY+"coagulator.input_tank")+TextFormatting.RESET,
+						IIUtils.getFluidNameOverlayText(master.tankInput.getFluid())
+				};
+			else if(isPOI("tank_coagulant_blocks"))
+				return new String[]{
+						TextFormatting.GRAY+I18n.format(IIReference.DESCRIPTION_KEY+"coagulator.coagulant_tank")+TextFormatting.RESET,
+						IIUtils.getFluidNameOverlayText(master.tankCoagulant.getFluid())
+				};
+		}
+
+		return new String[0];
 	}
 }

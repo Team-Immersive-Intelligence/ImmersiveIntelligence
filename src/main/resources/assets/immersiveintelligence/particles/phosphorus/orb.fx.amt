@@ -18,7 +18,7 @@
     {
       "time": 20,
       "generator": "rand_xz",
-      "distance": 2.0,
+      "distance": 1.5,
       "amount": 4,
       "type": "phosphorus/smoke_main"
     }

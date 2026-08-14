@@ -181,39 +181,6 @@ public class TileEntityMedicalCrate extends TileEntityEffectCrate
 		return index==0?HEALTH_POTION.test(resource): BOOST_POTION.test(resource);
 	}
 
-	@Override
-	public void onAnimationChangeClient(boolean state, int part)
-	{
-		if(part==1)
-			shouldHeal = state;
-		else if(part==2)
-			shouldBoost = state;
-		else
-			super.onAnimationChangeClient(state, part);
-	}
-
-	@Override
-	public void onAnimationChangeServer(boolean state, int part)
-	{
-		boolean changed;
-		if(part==1)
-		{
-			changed = shouldHeal!=state;
-			shouldHeal = state;
-		}
-		else if(part==2)
-		{
-			changed = shouldBoost!=state;
-			shouldBoost = state;
-		}
-		else
-		{
-			super.onAnimationChangeServer(state, part);
-			return;
-		}
-		if(changed)
-			updateTileForEvent(SyncEvents.TILE_CUSTOM1);
-	}
 
 	public static class FluidWrapper implements IFluidHandler
 	{

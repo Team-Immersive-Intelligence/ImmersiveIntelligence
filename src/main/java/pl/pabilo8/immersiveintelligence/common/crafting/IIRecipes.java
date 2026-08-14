@@ -53,6 +53,7 @@ import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.PrintingPress;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Sawmill;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Overrides;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Overrides.Chemthrower;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Overrides.Railgun;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDevice.IIBlockTypes_MetalDevice;
@@ -134,7 +135,7 @@ public class IIRecipes
 		replaceRecipe(recipeRegistry, Overrides.changeRevolverProduction, "toolupgrades/railgun_scope", "materials/gunparts/precision_scope");
 		replaceRecipe(recipeRegistry, Overrides.changeRevolverProduction, "tool/revolver");
 		replaceRecipe(recipeRegistry, Railgun.changeRailgunProduction, "tool/railgun");
-		replaceRecipe(recipeRegistry, Overrides.changeChemthrowerProduction, "tool/chemthrower");
+		replaceRecipe(recipeRegistry, Chemthrower.changeChemthrowerProduction, "tool/chemthrower");
 
 		//--- Add Recipes ---//
 		addMinecartRecipes(recipeRegistry);
@@ -1811,7 +1812,7 @@ public class IIRecipes
 
 		OreDictionary.registerOre("logWood", new ItemStack(IIContent.blockRubberLog));
 		OreDictionary.registerOre("woodRubber", new ItemStack(IIContent.blockRubberLog));
-		OreDictionary.registerOre("blockLeaves", new ItemStack(IIContent.blockRubberLeaves));
+		OreDictionary.registerOre("treeLeaves", new ItemStack(IIContent.blockRubberLeaves));
 
 		OreDictionary.registerOre("tnt", new ItemStack(Blocks.TNT));
 		OreDictionary.registerOre("materialTNT", new ItemStack(Blocks.TNT));

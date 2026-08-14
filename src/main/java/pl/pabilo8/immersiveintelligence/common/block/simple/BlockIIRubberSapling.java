@@ -43,6 +43,7 @@ public class BlockIIRubberSapling extends BlockIIBase<RubberStuff> implements IG
 				BlockSapling.STAGE);
 		setBlockLayer(BlockRenderLayer.CUTOUT_MIPPED);
 		setLightOpacity(0);
+		setFlammable(true);
 		setFullCube(false);
 		setCategory(IICategory.RESOURCES);
 	}

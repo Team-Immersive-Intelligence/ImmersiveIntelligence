@@ -15,9 +15,8 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIITracerPowder;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
-import pl.pabilo8.immersiveintelligence.common.util.entity.IIEntityUtils;
-
 import javax.vecmath.Vector2f;
+import javax.vecmath.Vector3f;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -48,10 +47,10 @@ public class AmmoComponentTracerPowder extends AmmoComponent
 	public boolean spawnParticleTrail(EntityAmmoBase<?> ammo, NBTTagCompound nbt)
 	{
 		IIColor color = nbt.hasKey(ItemIITracerPowder.NBT_TRACER_COLOUR)?IIColor.fromPackedRGB(nbt.getInteger(ItemIITracerPowder.NBT_TRACER_COLOUR)): IIColor.WHITE;
-		ParticleRegistry.spawnParticle("ammo/tracer", ammo.getPositionVector(), IIEntityUtils.getEntityMotion(ammo),
-						new Vector2f((float)Math.toRadians(ammo.rotationYaw), (float)Math.toRadians(ammo.rotationPitch+90)))
+		ParticleRegistry.spawnParticle("ammo/tracer", ammo.getPositionVector(), Vec3d.ZERO, new Vector2f())
 				.withProperty(ParticleProperties.COLOR, color)
-				.withProperty(ParticleProperties.SIZE, ammo.getAmmoType().getCaliber()/8f)
+				.withProperty(ParticleProperties.SIZE, ammo.getAmmoType().getCaliber()*3f/64f)
+				.withProperty(ParticleProperties.STRETCH, new Vector3f((float)ammo.prevPosX, (float)ammo.prevPosY, (float)ammo.prevPosZ))
 				.withProperty(ParticleProperties.MAX_LIFETIME, 20);
 		return true;
 	}

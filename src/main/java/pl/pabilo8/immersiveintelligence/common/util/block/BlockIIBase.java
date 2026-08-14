@@ -76,7 +76,7 @@ public class BlockIIBase<E extends Enum<E> & IIBlockEnum> extends Block implemen
 	 * Hiding block's ItemBlock by meta<br>
 	 * Whether SubBlocks are not full cubes
 	 */
-	protected final boolean[] hidden, fullCubes;
+	protected final boolean[] hidden, fullCubes, flammable;
 	/**
 	 * Language key for tooltip description in ItemBlock
 	 */
@@ -131,6 +131,8 @@ public class BlockIIBase<E extends Enum<E> & IIBlockEnum> extends Block implemen
 		Arrays.fill(this.hidden, false);
 		this.fullCubes = new boolean[sub];
 		Arrays.fill(this.fullCubes, false);
+		this.flammable = new boolean[sub];
+		Arrays.fill(this.flammable, false);
 
 		this.stackAmounts = new int[sub];
 		Arrays.fill(this.stackAmounts, 64);
@@ -198,6 +200,7 @@ public class BlockIIBase<E extends Enum<E> & IIBlockEnum> extends Block implemen
 
 			if(properties.hidden().isSet()) hidden[i] = properties.hidden().isTrue();
 			if(properties.fullCube().isSet()) fullCubes[i] = properties.fullCube().isTrue();
+			if(properties.flammable().isSet()) flammable[i] = properties.flammable().isTrue();
 
 			if(properties.stackSize()!=-1) stackAmounts[i] = properties.stackSize();
 			if(properties.opacity()!=-1) opaqueness[i] = properties.opacity();
@@ -535,6 +538,12 @@ public class BlockIIBase<E extends Enum<E> & IIBlockEnum> extends Block implemen
 		return this;
 	}
 
+	public final BlockIIBase<E> setFlammable(boolean flammable)
+	{
+		Arrays.fill(this.flammable, flammable);
+		return this;
+	}
+
 	protected boolean normalBlockCheck(@Nonnull IBlockState state)
 	{
 		if(enumValues==null||!this.equals(state.getBlock())) return true;
@@ -590,6 +599,16 @@ public class BlockIIBase<E extends Enum<E> & IIBlockEnum> extends Block implemen
 	public boolean isNormalCube(@Nonnull IBlockState state, @Nullable IBlockAccess world, @Nullable BlockPos pos)
 	{
 		return normalBlockCheck(state);
+	}
+
+	@Override
+	public boolean isFlammable(IBlockAccess world, BlockPos pos, EnumFacing face)
+	{
+		IBlockState state = world.getBlockState(pos);
+		if(enumValues==null||!this.equals(state.getBlock()))
+			return true;
+		int meta = state.getValue(property).getMeta();
+		return flammable[meta%enumValues.length];
 	}
 
 	//--- Tool Types ---//

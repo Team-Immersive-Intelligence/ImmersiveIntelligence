@@ -36,7 +36,12 @@ public class GuiRepairCrate extends DecoTileGui<TileEntityRepairCrate, Container
 	@Override
 	public void onInit()
 	{
+		//Variables
 		boolean upgrade = tile.isUpgradeInstalled(IIContent.UPGRADE_INSERTER);
+		this.shouldRepairArmor = tile.shouldRepairArmor;
+		this.shouldRepairVehicles = tile.shouldRepairVehicles;
+
+		//Background
 		startBackground()
 				.withBox(DecoTextures.BG_STEEL_ROUGH, 32, 0, 176-64, 76+12)
 				.withFrame(DecoTextures.FRAME_STEEL, 6, false)
@@ -53,6 +58,7 @@ public class GuiRepairCrate extends DecoTileGui<TileEntityRepairCrate, Container
 				.withInventoryTitleBar()
 				.build();
 
+		//Components
 		if(upgrade)
 			addComponents(
 					//Energy bar
@@ -60,11 +66,11 @@ public class GuiRepairCrate extends DecoTileGui<TileEntityRepairCrate, Container
 							.withTemplate(DecoTemplates.BAR_ELECTRIC_ENERGY.apply(tile.energyStorage)),
 					new DecoCheckbox(3, 87+8+1)
 							.withText(IIReference.GUI_LABEL_KEY+"repair_crate.repair_armor")
-							.withChecked(this.shouldRepairArmor = tile.shouldRepairArmor)
+							.withChecked(this.shouldRepairArmor)
 							.withOnToggle(value -> shouldRepairArmor = value),
 					new DecoCheckbox(3, 87+8+11)
 							.withText(IIReference.GUI_LABEL_KEY+"repair_crate.repair_vehicles")
-							.withChecked(this.shouldRepairVehicles = tile.shouldRepairVehicles)
+							.withChecked(this.shouldRepairVehicles)
 							.withOnToggle(value -> shouldRepairVehicles = value)
 			);
 	}
