@@ -7,9 +7,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
-import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.common.util.INBTSerializable;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
+import pl.pabilo8.immersiveintelligence.api.data.IIDataHandlingUtils;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.api.upgrade.IManagedUpgradableDevice;
@@ -118,15 +119,15 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockIIGene
 			forceTileUpdate();
 		}
 
-		if(message.hasKey("memory_load_rules", Constants.NBT.TAG_LIST))
+		if(message.hasKey("memory_load_rules", NBT.TAG_LIST))
 		{
-			memoryLoadRules.deserializeNBT(message.getTagList("memory_load_rules", Constants.NBT.TAG_COMPOUND));
+			memoryLoadRules.deserializeNBT(message.getTagList("memory_load_rules", NBT.TAG_COMPOUND));
 			markDirty();
 			forceTileUpdate();
 		}
-		if(message.hasKey("memory_save_rules", Constants.NBT.TAG_LIST))
+		if(message.hasKey("memory_save_rules", NBT.TAG_LIST))
 		{
-			memorySaveRules.deserializeNBT(message.getTagList("memory_save_rules", Constants.NBT.TAG_COMPOUND));
+			memorySaveRules.deserializeNBT(message.getTagList("memory_save_rules", NBT.TAG_COMPOUND));
 			markDirty();
 			forceTileUpdate();
 		}
@@ -189,7 +190,9 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockIIGene
 					char condition = exp.getRequiredVariable();
 
 					//Respect condition, if set: expressions with a required variable only run when that variable is present in the input packet.
-					if(condition==' '||packet.has(condition))
+					if(condition==' '||(newPacket.has(condition)&&
+							//In case the variable is a boolean, it must be true
+							IIDataHandlingUtils.optionalBoolean(condition, newPacket).orElse(true)))
 						newPacket.set(c, exp.getValue(newPacket));
 				}
 			}
