@@ -65,11 +65,17 @@ import java.util.*;
 import java.util.stream.Stream;
 
 /**
+ * Provides shared ammunition, ballistic, penetration, and effect utilities.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 14.08.2026
  * @since 14.03.2020
  */
 public class IIAmmoUtils
 {
+	private static final int MAX_TRAJECTORY_SIMULATION_STEPS = 4096;
+	private static final double MIN_TRAJECTORY_VELOCITY = 1e-7D;
+
 	//--- Global Values ---//
 	public static boolean ammoBreaksBlocks = Weapons.blockDamage;
 	public static boolean ammoExplodesBlocks = Ammunition.blockDamage;
@@ -160,29 +166,42 @@ public class IIAmmoUtils
 	 */
 	public static float calculateBallisticAngle(double distance, double height, float force, double gravity, double drag, double anglePrecision)
 	{
-		double bestAngle = 0;
-		double bestDistance = Float.MAX_VALUE;
+		if(!areFinite(distance, height, force, gravity, drag, anglePrecision)
+				||distance < 0||force <= 0||gravity < 0||drag <= 0||drag > 1||anglePrecision <= 0||anglePrecision >= 0.5D)
+			return Float.NaN;
 		if(gravity==0D)
-			return 90F-(float)(Math.atan(height/distance)*180F/Math.PI);
+			return 90F-(float)Math.toDegrees(Math.atan2(height, distance));
+
+		double bestAngle = 0;
+		double bestDistance = Double.MAX_VALUE;
+		int angleSteps = 0;
 		/*
-		 * simulate the trajectory for angles from 45 to 90 degrees,
-		 * returning the angle which lands the projectile closest to the target distance
+		 * Simulate the trajectory for candidate angles and stop malformed or unreachable
+		 * calculations before they can hold the server thread indefinitely.
 		 */
 		for(double i = Math.PI*anglePrecision; i < Math.PI*0.5D; i += anglePrecision)
 		{
-			double motionX = MathHelper.cos((float)i)*force;// calculate the x component of the vector
-			double motionY = MathHelper.sin((float)i)*force;// calculate the y component of the vector
+			if(++angleSteps > MAX_TRAJECTORY_SIMULATION_STEPS)
+				return Float.NaN;
+
+			double motionX = MathHelper.cos((float)i)*force;
+			double motionY = MathHelper.sin((float)i)*force;
 			double posX = 0;
 			double posY = 0;
+			int trajectorySteps = 0;
 			while(posY > height||motionY > 0)
 			{
-				// simulate movement, until we reach the y-level required
+				if(++trajectorySteps > MAX_TRAJECTORY_SIMULATION_STEPS)
+					return Float.NaN;
+
 				motionX *= drag;
-				motionY *= drag;
-				motionY -= gravity;
+				motionY = motionY*drag-gravity;
 				posX += motionX;
 				posY += motionY;
+				if(!areFinite(motionX, motionY, posX, posY))
+					return Float.NaN;
 			}
+
 			double distanceToTarget = Math.abs(distance-posX);
 			if(distanceToTarget < bestDistance)
 			{
@@ -191,7 +210,7 @@ public class IIAmmoUtils
 			}
 		}
 
-		return 90F-(float)(bestAngle*180D/Math.PI);
+		return 90F-(float)Math.toDegrees(bestAngle);
 	}
 
 	//TODO: 15.02.2024 check out optimized version
@@ -235,31 +254,121 @@ public class IIAmmoUtils
 }
 	 */
 
-	public static float getDirectFireAngle(double initialVelocity, double mass, Vec3d toTarget)
-	{
-		double force = initialVelocity;
-		double dist = toTarget.distanceTo(new Vec3d(0, toTarget.y, 0));
-		double gravityMotionY = 0, motionY = 0, baseMotionY = toTarget.normalize().y, baseMotionYC;
 
-		while(dist > 0)
+	/**
+	 * Calculates the direct-fire travel time with projectile drag.
+	 *
+	 * @param distance horizontal distance to the target
+	 * @param pitch    calculated projectile pitch
+	 * @param velocity initial projectile velocity
+	 * @return travel time in ticks, or -1 if the target cannot be reached
+	 */
+	public static int calculateDirectImpactTime(double distance, float pitch, double velocity)
+	{
+		if(distance <= 0D)
+			return 0;
+		if(!Double.isFinite(distance)||!Float.isFinite(pitch)||!Double.isFinite(velocity)||velocity <= 0D)
+			return -1;
+
+		double drag = 1D-EntityAmmoProjectile.DRAG;
+		double horizontalVelocity = Math.cos(Math.toRadians(90D-pitch))*velocity;
+		if(drag <= 0D||drag >= 1D||horizontalVelocity <= 0D)
+			return -1;
+
+		double remaining = 1D-distance*(1D-drag)/(horizontalVelocity*drag);
+		return remaining > 0D?(int)Math.ceil(Math.log(remaining)/Math.log(drag)): -1;
+	}
+
+	/**
+	 * Calculates the ballistic travel time until the projectile reaches the target height.
+	 *
+	 * @param height  target height relative to the shooter
+	 * @param pitch   calculated projectile pitch
+	 * @param force   initial projectile velocity
+	 * @param gravity projectile gravity
+	 * @param drag    projectile drag factor
+	 * @return travel time in ticks, or -1 if the parameters are invalid
+	 */
+	public static int calculateBallisticImpactTime(double height, float pitch, float force, double gravity, double drag)
+	{
+		if(!Double.isFinite(height)||!Float.isFinite(pitch)||!Float.isFinite(force)
+				||!Double.isFinite(gravity)||!Double.isFinite(drag)
+				||force <= 0F||gravity <= 0D||drag <= 0D||drag >= 1D)
+			return -1;
+
+		double motionY = Math.sin(Math.toRadians(90D-pitch))*force;
+		int min = 0;
+		if(motionY > 0D)
 		{
-			force -= EntityAmmoProjectile.DRAG*force;
-			gravityMotionY -= EntityAmmoProjectile.GRAVITY*mass;
-			baseMotionYC = baseMotionY*(force/(initialVelocity));
-			motionY += (baseMotionYC+gravityMotionY);
-			dist -= force;
+			double apex = gravity/(gravity+(1D-drag)*motionY);
+			min = (int)Math.ceil(Math.log(apex)/Math.log(drag));
 		}
 
+		int max = Integer.MAX_VALUE;
+		if(getBallisticHeightAtTick(max, motionY, gravity, drag) > height)
+			return -1;
+
+		while(min < max)
+		{
+			int tick = min+(max-min)/2;
+			if(getBallisticHeightAtTick(tick, motionY, gravity, drag) <= height)
+				max = tick;
+			else
+				min = tick+1;
+		}
+		return min;
+	}
+
+	private static double getBallisticHeightAtTick(int tick, double initialMotionY, double gravity, double drag)
+	{
+		double dragSum = drag*(1D-Math.pow(drag, tick))/(1D-drag);
+		return initialMotionY*dragSum-gravity/(1D-drag)*(tick-dragSum);
+	}
+
+	/**
+	 * Calculates a direct-fire elevation angle with drag and gravity compensation.
+	 *
+	 * @param initialVelocity projectile velocity
+	 * @param mass            projectile mass
+	 * @param toTarget        relative target position
+	 * @return compensated elevation angle, or {@link Float#NaN} for invalid or unreachable input
+	 */
+	public static float getDirectFireAngle(double initialVelocity, double mass, Vec3d toTarget)
+	{
+		if(toTarget==null||!areFinite(initialVelocity, mass, toTarget.x, toTarget.y, toTarget.z)
+				||initialVelocity <= 0||mass < 0)
+			return Float.NaN;
+
+		double force = initialVelocity;
+		double dist = Math.hypot(toTarget.x, toTarget.z);
+		double gravityMotionY = 0, motionY = 0, baseMotionY = toTarget.normalize().y, baseMotionYC;
+
+		for(int step = 0; dist > 0&&step < MAX_TRAJECTORY_SIMULATION_STEPS; step++)
+		{
+			force -= EntityAmmoProjectile.DRAG*force;
+			if(force <= MIN_TRAJECTORY_VELOCITY||!Double.isFinite(force))
+				return Float.NaN;
+
+			gravityMotionY -= EntityAmmoProjectile.GRAVITY*mass;
+			baseMotionYC = baseMotionY*(force/initialVelocity);
+			motionY += baseMotionYC+gravityMotionY;
+			dist -= force;
+			if(!areFinite(gravityMotionY, motionY, dist))
+				return Float.NaN;
+		}
+		if(dist > 0)
+			return Float.NaN;
+
 		toTarget = toTarget.addVector(0, motionY-baseMotionY, 0).normalize();
+		return (float)Math.toDegrees(Math.atan2(toTarget.y, Math.hypot(toTarget.x, toTarget.z)));
+	}
 
-		/*return (float)Math.toDegrees(calculateFireAngle(initialVelocity,
-				mass*EntityAmmoProjectile.GRAVITY,
-				toTarget.distanceTo(new Vec3d(0, toTarget.y, 0)),
-				toTarget.y
-		));*/
-
-
-		return (float)Math.toDegrees((Math.atan2(toTarget.y, toTarget.distanceTo(new Vec3d(0, toTarget.y, 0)))));
+	private static boolean areFinite(double... values)
+	{
+		for(double value : values)
+			if(!Double.isFinite(value))
+				return false;
+		return true;
 	}
 
 	public static float calculateFireAngle(double initialVelocity, double gravity, double distance, double heightDifference)

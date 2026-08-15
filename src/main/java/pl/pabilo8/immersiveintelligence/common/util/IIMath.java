@@ -236,4 +236,12 @@ public class IIMath extends MathHelper
 
 		return gcd;
 	}
+
+	public static boolean isNumberFinite(double... values)
+	{
+		for(double value : values)
+			if(!Double.isFinite(value))
+				return false;
+		return true;
+	}
 }
