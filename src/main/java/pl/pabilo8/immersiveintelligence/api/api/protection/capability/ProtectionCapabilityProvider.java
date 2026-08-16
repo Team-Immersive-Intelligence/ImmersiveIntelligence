@@ -69,7 +69,7 @@ public class ProtectionCapabilityProvider implements ICapabilitySerializable<NBT
 		for(Map.Entry<Capability<?>, Object> entry : capabilities.entrySet())
 		{
 			Object instance = entry.getValue();
-			if(!(instance instanceof INBTSerializable))
+			if(!ProtectionCapabilities.isSerializableCapabilityInstance(instance))
 				continue;
 
 			Object serialized = ((INBTSerializable<?>)instance).serializeNBT();
@@ -92,7 +92,7 @@ public class ProtectionCapabilityProvider implements ICapabilitySerializable<NBT
 		{
 			Object instance = entry.getValue();
 			String name = entry.getKey().getName();
-			if(instance instanceof INBTSerializable&&serializedCapabilities.hasKey(name))
+			if(ProtectionCapabilities.isSerializableCapabilityInstance(instance)&&serializedCapabilities.hasKey(name))
 				((INBTSerializable)instance).deserializeNBT(serializedCapabilities.getTag(name));
 		}
 	}
