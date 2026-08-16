@@ -3770,7 +3770,7 @@ ii.gui_tooltip.soil_fertility=Soil Fertility: %s %
 item.immersiveintelligence.bullet.component.core_netherite.name=Netherite
 ie.manual.entry.bullet_core.core_netherite=Netherite Core
 ie.manual.entry.bullet_core.core_netherite.lore=Nether-Forged
-ie.manual.entry.bullet_core.core_netherite.desc=Ancient debris is what remains of the mining activity of the piglins, who extracted all the original netherite ore. Currently they are a product of an industrialized fallen empire and in the past they were a united front.
+ie.manual.entry.bullet_core.core_netherite.desc=Ancient debris is what remains of the mining activity of the piglins, who extracted all the original netherite ore. Very sturdy and dense. A very good pick for ammo, but *expensive*.
 
 item.immersiveintelligence.bullet.component.nether_fire.name=Nether Fire
 ie.manual.entry.bullet_component.nether_fire=Nether Fire
@@ -3784,33 +3784,36 @@ ie.manual.entry.bullet_component.windcharge.lore=How?
 ie.manual.entry.bullet_component.windcharge.desc=Condensed wind obtained from Breeze, wind charges knock targets back and apply slowness and suppression in small radius. Due to properties of the charge, it remains on the same level of potency regardless of the shell size.
 
 # Thaumcraft Compat
+# Despite its small size, rules of physics dictate that compression of such matter by integrated detonator explosive can only result in unparraleled levels of destruction from sheer amount of energy unleashed at once.
 item.immersiveintelligence.bullet.component.primordial_pearl.name=Primordial Pearl
 ie.manual.entry.bullet_component.primordial_pearl=Primordial Pearl
 ie.manual.entry.bullet_component.primordial_pearl.lore=Magical Oppenheimer
-ie.manual.entry.bullet_component.primordial_pearl.desc=A potent artifact containing vast magical power and nearly unlimited potential that is beyond the known magical and physical laws. Despite its small size, rules of physics dictate that compression of such matter by integrated detonator explosive can only result in unparraleled levels of destruction from sheer amount of energy unleashed at once.
+ie.manual.entry.bullet_component.primordial_pearl.desc=A potent artifact containing vast magical power and nearly unlimited potential that is beyond the known magical and physical laws. Unparralleled destruction power.
 
 item.immersiveintelligence.bullet.component.alumentum.name=Alumentum
 ie.manual.entry.bullet_component.alumentum=Alumentum
 ie.manual.entry.bullet_component.alumentum.lore=Alchemist's explosives
-ie.manual.entry.bullet_component.alumentum.desc=A very volatile fiery substance, Alumentum is smaller in radius compared to TNT, but contains more concentrated power. Being in explosive container allows to focus its explosive power, making it more destructive than otherwise hand-thrown Alumentum.
-
+ie.manual.entry.bullet_component.alumentum.desc=A very volatile fiery substance, Alumentum is smaller in radius compared to TNT, but contains more concentrated power.
+ 
 item.immersiveintelligence.bullet.component.bottled_taint.name=Bottled Taint
 ie.manual.entry.bullet_component.bottled_taint=Bottled Taint
 ie.manual.entry.bullet_component.bottled_taint.lore=Ruinous power
 ie.manual.entry.bullet_component.bottled_taint.desc=Moving the contents of the bottle into a shell allows to deliver the corruptive Taint at much longer distances than it is possible to throw the bottle manually. Spread forth magical corruption, now at long distances!
 
-ie.manual.entry.bullet_core.core_core_thaumium=Thaumium
+ie.manual.entry.bullet_core.core_thaumium=Thaumium
 ie.manual.entry.bullet_core.core_thaumium=Thaumium Core
-ie.manual.entry.bullet_core.ore_thaumium.lore=Thaumaturgicallymtallurgic
-ie.manual.entry.bullet_core.core_thaumium.desc=A result of infusing iron with raw magical energy. Harder and better than base iron, it is a good candidate for massproduced shells, provided you can make alchemical mettalurgy supply keep up with the industrial demands.
+ie.manual.entry.bullet_core.core_thaumium.lore=Thaumaturgicallymtallurgic
+ie.manual.entry.bullet_core.core_thaumium.desc=A result of infusing iron with raw magical energy. Harder and better than base iron, it is a good candidate for massproduced shells.
 
-ie.manual.entry.bullet_core.core_core_core_voidmetal=Void Metal
+
+# Void metal is Disturbingly slick and warm to the touch, easy to work like gold, becoming as hard as tungsten and harder when struck 
+ie.manual.entry.bullet_core.core_voidmetal=Void Metal
 ie.manual.entry.bullet_core.core_voidmetal=Void Metal Core
-ie.manual.entry.bullet_core.core_voidmetal.lore=Thaumaturgicallymtallurgic
-ie.manual.entry.bullet_core.core_voidmetal.desc=Disturbingly slick and warm to the touch, easy to work like gold, becoming as hard as tungsten and harder when struck - Void Metal is an excellent choice for bullets. However, properties of the metal make it somewhat difficult for conventional explosives to detonate with proper force. Furthermore, you cannot retrieve this metal core despite its regenerative properties, as it becomes unuseable after hitting the target.
+ie.manual.entry.bullet_core.core_voidmetal.lore=Magical-military-industrial-complex
+ie.manual.entry.bullet_core.core_voidmetal.desc=Void Metal is an excellent choice for bullets. However, properties of the metal make it somewhat difficult for conventional explosives to detonate with proper force.
 
 # Thaumic Augmentation Compat
 item.immersiveintelligence.bullet.component.impetus.name=Impetus
 ie.manual.entry.bullet_component.impetus=Impetus
 ie.manual.entry.bullet_component.impetus.lore=Rift power in a can
-ie.manual.entry.bullet_component.impetus.desc=Dangerous byproduct of Flux Rifts, and not fully understood material or phenomena, full range of usages for Impetus is shrouded in mystery. However, "infusing" the shell with the Impetus energy very significantly magnifies and supercharges its lethality.
+ie.manual.entry.bullet_component.impetus.desc=Dangerous byproduct of Flux Rifts, and not fully understood material or phenomena. "Infusing" the shell with the Impetus energy very significantly magnifies and supercharges its lethality.
