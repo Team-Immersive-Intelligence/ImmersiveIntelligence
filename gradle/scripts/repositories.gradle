@@ -17,8 +17,15 @@ repositories {
 	maven { name = 'tterrag Maven'; url = 'https://maven.tterrag.com/' }
 	maven { name = 'SpongePowered Maven'; url = 'https://repo.spongepowered.org/maven/' }
 	exclusiveContent {
-		forRepository { maven { name = 'CurseMaven'; url = 'https://www.cursemaven.com' } }
-		filter { includeGroup 'curse.maven' }
+		forRepository {
+			maven {
+				name 'CurseMaven'
+				url 'https://curse.cleanroommc.com'
+			}
+		}
+		filter {
+			includeGroup 'curse.maven'
+		}
 	}
 	exclusiveContent {
 		forRepository { maven { name = 'Modrinth'; url = 'https://api.modrinth.com/maven' } }
