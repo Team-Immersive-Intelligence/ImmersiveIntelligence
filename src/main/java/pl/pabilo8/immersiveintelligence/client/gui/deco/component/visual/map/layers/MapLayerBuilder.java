@@ -49,6 +49,20 @@ public class MapLayerBuilder
 		return this;
 	}
 
+
+	/**
+	 * Adds a frame overlay consisting of 4 rectangles.
+	 */
+	public MapLayerBuilder addRectangleFrame(int fromX, int fromZ, int toX, int toZ, IIColor color, IIColor outline)
+	{
+		addRectangle(fromX, fromZ, toX, toZ, color);
+		addLine(fromX, fromZ, toX, fromZ, outline, 1);
+		addLine(toX, fromZ, toX, toZ, outline, 1);
+		addLine(toX, toZ, fromX, toZ, outline, 1);
+		addLine(fromX, toZ, fromX, fromZ, outline, 1);
+		return this;
+	}
+
 	/**
 	 * Adds a sprite overlay (direct texture) at world coordinates.
 	 * Uses UV 0..1 by default.

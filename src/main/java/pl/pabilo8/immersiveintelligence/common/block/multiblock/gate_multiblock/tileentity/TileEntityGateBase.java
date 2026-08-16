@@ -102,18 +102,6 @@ public abstract class TileEntityGateBase<T extends TileEntityGateBase<T>> extend
 	}
 
 	@Override
-	public int getSlotLimit(int slot)
-	{
-		return 0;
-	}
-
-	@Override
-	public void doGraphicalUpdates(int slot)
-	{
-
-	}
-
-	@Override
 	public void onAnimationChangeClient(boolean state, int part)
 	{
 		gate.setState(state);

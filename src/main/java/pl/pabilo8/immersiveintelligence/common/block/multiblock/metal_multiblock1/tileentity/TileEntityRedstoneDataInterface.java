@@ -348,12 +348,6 @@ public class TileEntityRedstoneDataInterface extends TileEntityMultiblockIIConne
 		return 1;
 	}
 
-	@Override
-	public void doGraphicalUpdates(int slot)
-	{
-
-	}
-
 	//--- IIIGuiMultiblockTile ---//
 
 	@Override

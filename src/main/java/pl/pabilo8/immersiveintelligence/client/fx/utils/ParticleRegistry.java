@@ -816,6 +816,28 @@ public class ParticleRegistry
 					.withProperty(ParticleProperties.COLOR, color);
 	}
 
+	public static void spawnTeslaFX(World world, Vec3d centerPos, List<Vec3d> affectedTargets)
+	{
+		IIColor coreColor = IIColor.fromPackedRGB(0xDDF7FF);
+		IIColor edgeColor = IIColor.fromPackedRGB(0x2F7FFF);
+
+		AbstractParticle glow = spawnParticle("emp/glow", centerPos, Vec3d.ZERO, new Vector2f(0, 0));
+		if(glow!=null)
+			glow.withProperty(ParticleProperties.SIZE, 0.125f)
+					.withProperty(ParticleProperties.COLOR, coreColor)
+					.withProperty(ParticleProperties.COLOR_SECONDARY, edgeColor);
+
+		if(affectedTargets==null)
+			return;
+		for(Vec3d target : affectedTargets)
+		{
+			if(target==null)
+				continue;
+			spawnLightning("emp/lightning", centerPos, target);
+			spawnLightning("emp/lightning_core", centerPos, target);
+		}
+	}
+
 	//--- Utils ---//
 
 	private static class ParticleFileEntry

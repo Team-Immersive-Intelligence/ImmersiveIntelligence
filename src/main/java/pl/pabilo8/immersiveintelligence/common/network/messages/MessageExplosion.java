@@ -35,6 +35,7 @@ public class MessageExplosion extends IIMessage implements IPositionBoundMessage
 	private static final int NUKE_MESSAGE_DISTANCE = 512;
 	private static final int WHITE_PHOSPHORUS_MESSAGE_DISTANCE = 128;
 	private static final int EMP_MESSAGE_DISTANCE = 192;
+	private static final int TESLA_MESSAGE_DISTANCE = 64;
 	private static final int SHRAPNEL_MESSAGE_DISTANCE = 128;
 	private static final int MAX_EMP_TARGETS = 4096;
 
@@ -130,6 +131,19 @@ public class MessageExplosion extends IIMessage implements IPositionBoundMessage
 	}
 
 	/**
+	 * Creates an tesla effect message.
+	 */
+	public static MessageExplosion createTeslaMessage(World world, Vec3d pos, List<Vec3d> targets)
+	{
+		MessageExplosion message = new MessageExplosion(EffectType.TESLA, world, pos);
+		if(targets==null||targets.isEmpty())
+			message.effectTargets = Collections.emptyList();
+		else
+			message.effectTargets = new ArrayList<>(targets.subList(0, Math.min(MAX_EMP_TARGETS, targets.size())));
+		return message;
+	}
+
+	/**
 	 * Creates a shrapnel activation effect message.
 	 */
 	public static MessageExplosion createShrapnelMessage(World world, Vec3d pos, IIColor color, float size,
@@ -153,25 +167,27 @@ public class MessageExplosion extends IIMessage implements IPositionBoundMessage
 	{
 		switch(effectType)
 		{
-			case WHITE_PHOSPHORUS:
-				ParticleRegistry.spawnWhitePhosphorusFX(world, pos, direction, shape, size);
-				break;
-			case NUKE:
+			case WHITE_PHOSPHORUS -> ParticleRegistry.spawnWhitePhosphorusFX(world, pos, direction, shape, size);
+			case NUKE ->
+			{
 				ClientEventHandler.addScreenshakeSource(pos, MathHelper.clamp(size*2f, 1f, 4f), 20, 0);
 				ParticleRegistry.spawnAtomicExplosionFX(world, pos, size);
-				break;
-			case EMP:
+			}
+			case EMP ->
+			{
 				ClientEventHandler.addScreenshakeSource(pos, MathHelper.clamp(radius/10f, 0.5f, 2f), 8, 0);
 				ParticleRegistry.spawnEMPExplosionFX(world, pos, radius, effectTargets);
-				break;
-			case SHRAPNEL:
-				ParticleRegistry.spawnShrapnelFX(pos, color, size, fallsSlowly);
-				break;
-			case EXPLOSION:
-			default:
+			}
+			case TESLA ->
+			{
+				ParticleRegistry.spawnTeslaFX(world, pos, effectTargets);
+			}
+			case SHRAPNEL -> ParticleRegistry.spawnShrapnelFX(pos, color, size, fallsSlowly);
+			default ->
+			{
 				ClientEventHandler.addScreenshakeSource(pos, MathHelper.clamp(strength/4f, 0.25f, 3f), 4, 2);
 				ParticleRegistry.spawnExplosionBoomFX(world, pos, direction, radius, strength, shape, particleBlocks);
-				break;
+			}
 		}
 	}
 
@@ -183,29 +199,38 @@ public class MessageExplosion extends IIMessage implements IPositionBoundMessage
 
 		switch(effectType)
 		{
-			case WHITE_PHOSPHORUS:
+			case WHITE_PHOSPHORUS ->
+			{
 				this.direction = readVec3(buf);
 				this.shape = readEnum(buf, ComponentEffectShape.class);
 				this.size = buf.readFloat();
-				break;
-			case NUKE:
-				this.size = buf.readFloat();
-				break;
-			case EMP:
+			}
+			case NUKE -> this.size = buf.readFloat();
+			case EMP ->
+			{
 				this.radius = buf.readFloat();
 				int effectTargetCount = Math.min(MAX_EMP_TARGETS,
 						Math.min(buf.readUnsignedShort(), buf.readableBytes()/24));
 				this.effectTargets = new ArrayList<>(effectTargetCount);
 				for(int i = 0; i < effectTargetCount; i++)
 					this.effectTargets.add(readVec3(buf));
-				break;
-			case SHRAPNEL:
+			}
+			case TESLA ->
+			{
+				int effectTargetCount = Math.min(MAX_EMP_TARGETS,
+						Math.min(buf.readUnsignedShort(), buf.readableBytes()/24));
+				this.effectTargets = new ArrayList<>(effectTargetCount);
+				for(int i = 0; i < effectTargetCount; i++)
+					this.effectTargets.add(readVec3(buf));
+			}
+			case SHRAPNEL ->
+			{
 				this.color = readColor(buf);
 				this.size = buf.readFloat();
 				this.fallsSlowly = buf.readBoolean();
-				break;
-			case EXPLOSION:
-			default:
+			}
+			default ->
+			{
 				this.flaming = buf.readBoolean();
 				this.damagesTerrain = buf.readBoolean();
 				this.radius = buf.readFloat();
@@ -217,7 +242,7 @@ public class MessageExplosion extends IIMessage implements IPositionBoundMessage
 				this.particleBlocks = new ArrayList<>(particleBlockCount);
 				for(int i = 0; i < particleBlockCount; i++)
 					this.particleBlocks.add(readPos(buf));
-				break;
+			}
 		}
 	}
 
@@ -229,28 +254,36 @@ public class MessageExplosion extends IIMessage implements IPositionBoundMessage
 
 		switch(effectType)
 		{
-			case WHITE_PHOSPHORUS:
+			case WHITE_PHOSPHORUS ->
+			{
 				writeVec3(buf, direction);
 				writeEnum(buf, shape);
 				buf.writeFloat(size);
-				break;
-			case NUKE:
-				buf.writeFloat(size);
-				break;
-			case EMP:
+			}
+			case NUKE -> buf.writeFloat(size);
+			case EMP ->
+			{
 				buf.writeFloat(radius);
 				int effectTargetCount = Math.min(MAX_EMP_TARGETS, effectTargets.size());
 				buf.writeShort(effectTargetCount);
 				for(int i = 0; i < effectTargetCount; i++)
 					writeVec3(buf, effectTargets.get(i));
-				break;
-			case SHRAPNEL:
+			}
+			case TESLA ->
+			{
+				int effectTargetCount = Math.min(MAX_EMP_TARGETS, effectTargets.size());
+				buf.writeShort(effectTargetCount);
+				for(int i = 0; i < effectTargetCount; i++)
+					writeVec3(buf, effectTargets.get(i));
+			}
+			case SHRAPNEL ->
+			{
 				writeColor(buf, color);
 				buf.writeFloat(size);
 				buf.writeBoolean(fallsSlowly);
-				break;
-			case EXPLOSION:
-			default:
+			}
+			default ->
+			{
 				buf.writeBoolean(flaming);
 				buf.writeBoolean(damagesTerrain);
 				buf.writeFloat(radius);
@@ -262,7 +295,7 @@ public class MessageExplosion extends IIMessage implements IPositionBoundMessage
 				buf.writeShort(particleBlockCount);
 				for(int i = 0; i < particleBlockCount; i++)
 					writePos(buf, particleBlocks.get(i));
-				break;
+			}
 		}
 	}
 
@@ -281,20 +314,15 @@ public class MessageExplosion extends IIMessage implements IPositionBoundMessage
 	@Override
 	public int getPacketDistance()
 	{
-		switch(effectType)
+		return switch(effectType)
 		{
-			case NUKE:
-				return Math.max(Graphics.explosionMessageDistance, NUKE_MESSAGE_DISTANCE);
-			case WHITE_PHOSPHORUS:
-				return Math.max(Graphics.explosionMessageDistance, WHITE_PHOSPHORUS_MESSAGE_DISTANCE);
-			case EMP:
-				return Math.max(Graphics.explosionMessageDistance, EMP_MESSAGE_DISTANCE);
-			case SHRAPNEL:
-				return Math.max(Graphics.explosionMessageDistance, SHRAPNEL_MESSAGE_DISTANCE);
-			case EXPLOSION:
-			default:
-				return Graphics.explosionMessageDistance;
-		}
+			case NUKE -> Math.max(Graphics.explosionMessageDistance, NUKE_MESSAGE_DISTANCE);
+			case WHITE_PHOSPHORUS -> Math.max(Graphics.explosionMessageDistance, WHITE_PHOSPHORUS_MESSAGE_DISTANCE);
+			case EMP -> Math.max(Graphics.explosionMessageDistance, EMP_MESSAGE_DISTANCE);
+			case TESLA -> Math.max(Graphics.explosionMessageDistance, TESLA_MESSAGE_DISTANCE);
+			case SHRAPNEL -> Math.max(Graphics.explosionMessageDistance, SHRAPNEL_MESSAGE_DISTANCE);
+			default -> Graphics.explosionMessageDistance;
+		};
 	}
 
 	/**
@@ -309,6 +337,7 @@ public class MessageExplosion extends IIMessage implements IPositionBoundMessage
 		WHITE_PHOSPHORUS,
 		NUKE,
 		EMP,
+		TESLA,
 		SHRAPNEL
 	}
 }

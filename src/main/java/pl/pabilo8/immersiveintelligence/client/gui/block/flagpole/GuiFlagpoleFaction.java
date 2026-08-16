@@ -39,6 +39,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
+ * Provides basic faction management.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
  * @author Avalon (avalon@iiteam.net)
  * @ii-approved 0.3.1
@@ -76,6 +78,7 @@ public class GuiFlagpoleFaction extends DecoTileGui<TileEntityFlagpole, Containe
 
 		//Tabs
 		addLinkTab(IIGUI.FLAGPOLE, DecoTextures.ICON_MAP, "map_module");
+		addLinkTab(IIGUI.FLAGPOLE_CONFIG, DecoTextures.ICON_CONFIG, "configuration_module");
 		addLinkTab(IIGUI.FLAGPOLE_FACTION, DecoTextures.ICON_FACTION_CONFIG, "faction_module");
 
 		//Content tabs

@@ -45,16 +45,24 @@ public abstract class MapScanner
 	 */
 	public void update(DecoMapDisplay mapDisplay, World world, CustomMapData mapData)
 	{
-		if(!updateCondition.get()||world==null) return;
+		if(world==null)
+			return;
+		if(!updateCondition.get())
+		{
+			this.lastScanTick = (int)(world.getTotalWorldTime()-this.updateInterval);
+			mapDisplay.withLayer(layerName)
+					.clear();
+			return;
+		}
 
 		//Check if it's time for a full scan
-		if(world.getTotalWorldTime()-lastScanTick < updateInterval)
+		if(world.getTotalWorldTime()-this.lastScanTick < this.updateInterval)
 			return;
-		lastScanTick = (int)world.getTotalWorldTime();
+		this.lastScanTick = (int)world.getTotalWorldTime();
 
 		//Get or create the layer
-		MapLayerBuilder layer = mapDisplay.withLayer(layerName)
-				.withNoiseShader(usesNoiseShader)
+		MapLayerBuilder layer = mapDisplay.withLayer(this.layerName)
+				.withNoiseShader(this.usesNoiseShader)
 				.clear();
 
 		//Calculate scan area based on map center and scale
@@ -73,9 +81,9 @@ public abstract class MapScanner
 	 * Scan the specified area and add markers to the layer.
 	 */
 	protected abstract void scanArea(DecoMapDisplay mapDisplay, World world,
-									 CustomMapData mapData,
-									 MapLayerBuilder layer,
-									 int minX, int maxX, int minZ, int maxZ);
+	                                 CustomMapData mapData,
+	                                 MapLayerBuilder layer,
+	                                 int minX, int maxX, int minZ, int maxZ);
 
 	//--- Configuration methods ---
 

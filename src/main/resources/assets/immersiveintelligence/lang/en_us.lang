@@ -1088,7 +1088,7 @@ machineupgrade.immersiveintelligence.saw_unregulator.desc=Unregulating the saw l
 #Flagpole
 machineupgrade.immersiveintelligence.flagpole.capture_defiance=Capture Defiance
 machineupgrade.immersiveintelligence.flagpole.capture_defiance.desc=Reinforces the Flagpole, raising its structural integrity and troops required to actively capture it.
-machineupgrade.immersiveintelligence.flagpole.taser_locks=Taser Locks
+machineupgrade.immersiveintelligence.flagpole.taser_locks=Tesla Coil
 machineupgrade.immersiveintelligence.flagpole.taser_locks.desc=Adds a defensive tesla coil, that strikes enemies aiming to capture the Flagpole.
 machineupgrade.immersiveintelligence.flagpole.distress_signal=Distress Signal
 machineupgrade.immersiveintelligence.flagpole.distress_signal.desc=Adds a radio-connected alarm siren, that activates when enemy troops are close.
@@ -3527,6 +3527,21 @@ ii.gui.map_display.marker.vehicles=Vehicles
 ii.gui.map_display.marker.missiles=Missiles
 ii.gui.map_display.marker.artillery=Artillery
 ii.gui.map_display.marker.bullets=Bullets
+
+ii.gui.flagpole.config.chunk_loading_range=Chunk Loading Range
+ii.gui.flagpole.config.chunks=%s Chunks
+ii.gui.flagpole.config.display_faction_flag=Display Faction Flag
+ii.gui.flagpole.config.display_faction_flag.tooltip=Display Owner's flag, when no banner was placed on the Flagpole.
+ii.gui.flagpole.config.prioritize_faction_flag=Prioritize Faction Flag
+ii.gui.flagpole.config.prioritize_faction_flag.tooltip=Display Owner's flag, even if there is a banner on the Flagpole.
+ii.gui.flagpole.config.distress_signal=Distress Signal
+ii.gui.flagpole.config.sound_alarm=Sound Alarm
+ii.gui.flagpole.config.sound_alarm.tooltip=Activates the siren, when enemies are nearby.
+ii.gui.flagpole.config.send_distress_packet=Send Distress Packet
+ii.gui.flagpole.config.send_distress_packet.tooltip=Sends a distress packet on the radio network, when enemies are nearby.
+ii.gui.flagpole.config.tesla_coil=Tesla Coil
+ii.gui.flagpole.config.tesla_coil_active=Tesla Coil Active
+ii.gui.flagpole.config.tesla_coil_active.tooltip=Activates the Tesla Coil, which strikes nearby enemies.
 
 ii.gui.faction_invitation=Faction
 ii.gui.faction_invitation.invalid=Could not get faction data. Please close and open this screen again.

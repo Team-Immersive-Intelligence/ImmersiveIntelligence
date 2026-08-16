@@ -6,7 +6,6 @@ import blusunrize.immersiveengineering.common.EventHandler;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IMirrorAble;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IUsesBooleanProperty;
 import blusunrize.immersiveengineering.common.blocks.TileEntityMultiblockPart;
-import blusunrize.immersiveengineering.common.util.inventory.IIEInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -35,6 +34,7 @@ import pl.pabilo8.immersiveintelligence.common.util.diplomacy.property.IOwnableP
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.NBTSerialisation;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IAdvancedBounds;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IIIInventory;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 import javax.annotation.Nonnull;
@@ -51,7 +51,7 @@ import java.util.stream.IntStream;
  * @since 04.08.2022
  */
 public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockIIBase<T>> extends TileEntityMultiblockPart<T>
-		implements IMirrorAble, IIEInventory, IAdvancedBounds, IWorldPosProvider
+		implements IMirrorAble, IIIInventory, IAdvancedBounds, IWorldPosProvider
 {
 	public static final String KEY_SYNC_AABB = "_sync_aabb";
 	public static final String KEY_SYNC_ALL_VALUES = "_sync_all_values";

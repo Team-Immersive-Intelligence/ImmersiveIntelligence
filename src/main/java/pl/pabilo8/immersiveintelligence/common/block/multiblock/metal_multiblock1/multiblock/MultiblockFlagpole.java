@@ -30,6 +30,7 @@ public class MultiblockFlagpole extends MultiblockStuctureBase<TileEntityFlagpol
 
 		//POI
 		addPOI(MultiblockPOI.MISC_FLAGPOLE, "pole");
+		addPOI(MultiblockPOI.WIRE_MOUNT, "wire");
 
 		//Customization
 		STYLE_CONSTRAINTS = new StyleConstraints("sandbags", PaintStyleConstraint.NOT_APPLICABLE,
@@ -45,7 +46,7 @@ public class MultiblockFlagpole extends MultiblockStuctureBase<TileEntityFlagpol
 				.withUpgrade(IIContent.UPGRADE_FLAGPOLE_UNIT_POST, UpgradeTier.TIER_1)
 				.withUpgrade(IIContent.UPGRADE_FLAGPOLE_DISTRESS_SIGNAL, UpgradeTier.TIER_1)
 				.withDependency(IIContent.UPGRADE_FLAGPOLE_CAPTURE_DEFIANCE, IIContent.UPGRADE_FLAGPOLE_TASER_LOCKS)
-				.withLockOut(IIContent.UPGRADE_FLAGPOLE_UNIT_POST, IIContent.UPGRADE_FLAGPOLE_TASER_LOCKS);
+				.withLockOut(IIContent.UPGRADE_FLAGPOLE_UNIT_POST, IIContent.UPGRADE_FLAGPOLE_TASER_LOCKS, IIContent.UPGRADE_FLAGPOLE_DISTRESS_SIGNAL);
 	}
 
 	@Override

@@ -1138,6 +1138,55 @@ public class IIConfigHandler
 
 				@Comment({"How much explosion and block breaking damage the multiblock can take (in half-hearts)."})
 				public static int baseHealth = 800;
+
+				@RangeInt(min = 0)
+				@Comment({"Energy capacity of the Flagpole (in IF)."})
+				public static int energyCapacity = 32000;
+
+				//Distress signal upgrade
+
+				@Comment({"How often should an upgraded Flagpole scan for entities triggering the distress signal (in ticks)."})
+				public static int distressScanInterval = 20;
+
+				@RangeInt(min = 0)
+				@Comment({"Energy used by the distress alarm on each distress scan (in IF)."})
+				public static int distressAlarmEnergyUsage = 512;
+
+				@RangeInt(min = 0)
+				@Comment({"Distance from which the Flagpole distress alarm can be heard (in blocks)."})
+				public static int distressAlarmSoundRange = 36;
+
+				@Comment({"How long should an upgraded Flagpole wait between sending distress signals (in ticks)."})
+				public static int distressPacketInterval = 100;
+
+				@RangeInt(min = 0)
+				@Comment({"Energy used to send one distress radio packet (in IF)."})
+				public static int distressPacketEnergyUsage = 512;
+
+				@RangeInt(min = 0)
+				@Comment({"Radio transmission range of the Distress Signal upgrade (in blocks)."})
+				public static int distressRadioRange = 128;
+
+				@RangeDouble(min = 0, max = 1)
+				@Comment({"Radio range multiplier during bad weather (1 - full range, 0.5 - half range, 0 - no range)."})
+				public static double distressRadioWeatherHarshness = 0.75;
+
+				//Tesla
+
+				@Comment({"How often should the Taser Locks upgrade strike enemies."})
+				public static int teslaScanInterval = 10;
+
+				@RangeInt(min = 0)
+				@Comment({"Energy used by the Taser Locks upgrade per strike (in IF)."})
+				public static int teslaEnergyUsage = 512;
+
+				@RangeDouble(min = 0)
+				@Comment({"Damage dealt by the Taser Locks upgrade (in half-hearts)."})
+				public static float teslaDamage = 6;
+
+				@RangeDouble(min = 0)
+				@Comment({"Range of the Taser Locks upgrade (in blocks)."})
+				public static double teslaRange = 8;
 			}
 
 			public static class Emplacement

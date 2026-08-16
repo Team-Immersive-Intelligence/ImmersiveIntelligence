@@ -115,17 +115,5 @@ class MultiblockStuctureBaseTest
 		{
 			return false;
 		}
-
-		@Override
-		public int getSlotLimit(int slot)
-		{
-			return 0;
-		}
-
-		@Override
-		public void doGraphicalUpdates(int slot)
-		{
-
-		}
 	}
 }

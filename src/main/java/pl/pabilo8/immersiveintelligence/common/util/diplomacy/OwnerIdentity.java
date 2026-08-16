@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common.util.diplomacy;
 
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemBanner;
@@ -404,6 +405,8 @@ public class OwnerIdentity implements INBTSerializable<NBTTagCompound>
 
 	public boolean isHostile(@Nonnull EntityLivingBase entity)
 	{
+		if(entity instanceof EntityMob)
+			return !getRelationTowards(entity).atLeast(DiplomaticStatus.ALLIED);
 		return getRelationTowards(entity)==DiplomaticStatus.ENEMY;
 	}
 
