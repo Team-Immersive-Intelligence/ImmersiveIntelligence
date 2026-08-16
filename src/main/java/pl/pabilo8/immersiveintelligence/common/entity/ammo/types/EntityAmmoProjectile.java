@@ -212,7 +212,7 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 	{
 		float[] rotation = IIMath.getRotationFromVector(motionX, motionY, motionZ);
 		this.rotationYaw = rotation[0];
-		this.rotationPitch = rotation[1];
+		this.rotationPitch = -rotation[1];
 	}
 
 	/**
@@ -536,6 +536,11 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 		this.baseMotion = dir.normalize();
 		this.velocity *= velocityModifier;
 		this.velocityModifier = velocityModifier;
+
+		float[] rotation = IIMath.getRotationFromVector(baseMotion);
+		this.rotationYaw = rotation[0];
+		this.rotationPitch = -rotation[1];
+
 		markVelocityChanged();
 	}
 

@@ -190,7 +190,7 @@ public class NBTSerialisation
 					TypeSerializationData data = nameToSerializers.get(nbtTagCompound.getString("type"));
 					if(data==null)
 						return null;
-					return data.deserialize(nbtTagCompound);
+					return data.deserialize(nbtTagCompound, type);
 				});
 
 		registerSerializer(
@@ -635,6 +635,15 @@ public class NBTSerialisation
 		@Nullable
 		public T deserialize(NBTTagCompound from)
 		{
+			return deserialize(from, null);
+		}
+
+		/**
+		 * Deserializes a polymorphic value and reuses the current instance when its subtype matches.
+		 */
+		@Nullable
+		public T deserialize(NBTTagCompound from, @Nullable T current)
+		{
 			String typeId = from.getString("type");
 			if(typeId.isEmpty()||"null".equals(typeId))
 				return null;
@@ -645,7 +654,9 @@ public class NBTSerialisation
 				return null;
 			}
 
-			T instance = supplier.get();
+			T instance = current;
+			if(instance==null||!typeId.equals(nameFromClass.get(instance.getClass())))
+				instance = supplier.get();
 			if(instance==null)
 			{
 				IILogger.error("Failed to instantiate ITypeNBTSerializable type \""+typeId+"\".");
@@ -659,7 +670,6 @@ public class NBTSerialisation
 			} catch(Exception e)
 			{
 				IILogger.error("Error deserializing ITypeNBTSerializable type \""+typeId+"\".", e);
-				return instance;
 			}
 			return instance;
 		}

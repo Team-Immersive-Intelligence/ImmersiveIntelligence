@@ -248,7 +248,7 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockIIGene
 	public void onGuiOpened(@Nullable EntityPlayer player, boolean clientside)
 	{
 		if(!clientside)
-			forceTileUpdate();
+			updateTileForEvent(SyncEvents.TILE_GUI_OPENED);
 	}
 
 	@Override

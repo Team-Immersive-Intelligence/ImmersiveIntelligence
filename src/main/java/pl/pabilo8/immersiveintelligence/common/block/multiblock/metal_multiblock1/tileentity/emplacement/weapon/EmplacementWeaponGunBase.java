@@ -2,7 +2,6 @@ package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multibloc
 
 import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoFactory;
@@ -11,6 +10,8 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement.EmplacementStateNeeds;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.TargetCoordinateReference;
 import pl.pabilo8.immersiveintelligence.common.util.gun.GunRecoil;
 import pl.pabilo8.immersiveintelligence.common.util.gun.GunShootingHandler;
@@ -24,7 +25,7 @@ import java.util.function.Predicate;
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
- * @updated 03.06.2026
+ * @updated 16.08.2026
  * @since 04.09.2025
  */
 public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> extends EmplacementWeaponTurretBase
@@ -38,8 +39,10 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 	@Nullable
 	protected IEInventoryHandler inventoryPlatformHandler;
 
-	protected GunShootingHandler gunHandler = new GunShootingHandler();
-	protected GunRecoil recoil = new GunRecoil();
+	@SyncNBT(time = 0, events = SyncEvents.WEAPON_RELOAD)
+	public GunShootingHandler gunHandler = new GunShootingHandler();
+	@SyncNBT(time = 0, events = SyncEvents.WEAPON_RELOAD)
+	public GunRecoil recoil = new GunRecoil();
 	@Nullable
 	protected GunAmmoProviderItemHandler platformAmmoProvider;
 
@@ -66,8 +69,10 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 			ammoFactory.setOwner(te.getOwnerIdentity().getFirstResponsibleMember(te.getWorld()));
 
 		ensureShootingComponents();
-		if(gunHandler!=null)
-			gunHandler.update();
+		boolean wasReloading = platformAmmoProvider!=null&&platformAmmoProvider.isReloading();
+		gunHandler.update();
+		if(!te.getWorld().isRemote&&wasReloading&&platformAmmoProvider!=null&&!platformAmmoProvider.isReloading())
+			syncWithClient(te, SyncEvents.WEAPON_RELOAD);
 
 		return super.onUpdate(te, baseNeeds, currentTarget);
 	}
@@ -97,18 +102,22 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 	public boolean canShoot(TileEntityEmplacement te)
 	{
 		ensureShootingComponents();
-		return platformAmmoProvider!=null&&(platformAmmoProvider.isLoaded()||platformAmmoProvider.hasAvailableAmmo());
+		return gunHandler.canShoot()&&platformAmmoProvider!=null
+				&&(platformAmmoProvider.isLoaded()||platformAmmoProvider.hasAvailableAmmo());
 	}
 
 	@Override
 	protected boolean shoot(TileEntityEmplacement te, TargetCoordinateReference target)
 	{
 		ensureShootingComponents();
-		if(te.getWorld().isRemote||platformAmmoProvider==null||gunHandler==null)
+		if(te.getWorld().isRemote||platformAmmoProvider==null)
 			return false;
 
 		if(platformAmmoProvider.isEmpty()&&platformAmmoProvider.hasAvailableAmmo())
-			gunHandler.startReloading();
+		{
+			if(gunHandler.startReloading())
+				syncWithClient(te, SyncEvents.WEAPON_RELOAD);
+		}
 		if(!platformAmmoProvider.isLoaded())
 			return false;
 
@@ -132,9 +141,20 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 	@Override
 	public boolean needsRestock(TileEntityEmplacement te)
 	{
-		return inventoryBaseHandler!=null&&inventoryPlatformHandler!=null
-				&&isHandlerEmpty(inventoryPlatformHandler)
-				&&!isHandlerEmpty(inventoryBaseHandler);
+		if(inventoryBaseHandler==null||inventoryPlatformHandler==null)
+			return false;
+
+		for(int baseSlot = 0; baseSlot < inventoryBaseHandler.getSlots(); baseSlot++)
+		{
+			ItemStack available = inventoryBaseHandler.getStackInSlot(baseSlot);
+			if(available.isEmpty())
+				continue;
+
+			for(int platformSlot = 0; platformSlot < inventoryPlatformHandler.getSlots(); platformSlot++)
+				if(inventoryPlatformHandler.insertItem(platformSlot, available, true).getCount() < available.getCount())
+					return true;
+		}
+		return false;
 	}
 
 	@Override
@@ -161,19 +181,10 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 				changed = true;
 			}
 
-			if(!isHandlerEmpty(inventoryPlatformHandler))
-				break;
 		}
 		return changed;
 	}
 
-	protected boolean isHandlerEmpty(IEInventoryHandler handler)
-	{
-		for(int i = 0; i < handler.getSlots(); i++)
-			if(!handler.getStackInSlot(i).isEmpty())
-				return false;
-		return true;
-	}
 
 	@Override
 	public void setDead()
@@ -217,7 +228,7 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 	 * @param platformFilter filter for platform-section insertion
 	 */
 	protected final void setupItemHandlers(TileEntityEmplacement te, int baseSlots, int platformSlots,
-										   Predicate<ItemStack> baseFilter, Predicate<ItemStack> platformFilter)
+	                                       Predicate<ItemStack> baseFilter, Predicate<ItemStack> platformFilter)
 	{
 		baseSlots = Math.max(0, Math.min(baseSlots, te.inventory.size()));
 		platformSlots = Math.max(0, Math.min(platformSlots, te.inventory.size()-baseSlots));
@@ -227,6 +238,7 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 		this.inventoryPlatformHandler = platformSlots > 0?
 				new FilteredEmplacementInventoryHandler(platformSlots, te, baseSlots, platformFilter): null;
 		this.platformAmmoProvider = null;
+		ensureShootingComponents();
 	}
 
 	/**
@@ -265,22 +277,4 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 		}
 	}
 
-	@Override
-	public NBTTagCompound serializeNBT()
-	{
-		NBTTagCompound nbt = super.serializeNBT();
-		nbt.setTag("gunHandler", gunHandler.serializeNBT());
-		nbt.setTag("recoil", recoil.serializeNBT());
-		return nbt;
-	}
-
-	@Override
-	public void deserializeNBT(NBTTagCompound nbt)
-	{
-		super.deserializeNBT(nbt);
-		if(nbt.hasKey("gunHandler"))
-			gunHandler.deserializeNBT((net.minecraft.nbt.NBTTagFloat)nbt.getTag("gunHandler"));
-		if(nbt.hasKey("recoil"))
-			recoil.deserializeNBT(nbt.getCompoundTag("recoil"));
-	}
 }

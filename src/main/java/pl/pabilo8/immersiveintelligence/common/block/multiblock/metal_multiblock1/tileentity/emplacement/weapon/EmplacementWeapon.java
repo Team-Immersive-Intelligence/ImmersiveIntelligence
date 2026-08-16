@@ -27,6 +27,8 @@ import pl.pabilo8.immersiveintelligence.common.entity.tactile.EntityAMTTactile;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.ITypeNBTSerializable;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.NBTSerialisation;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.TargetCoordinateReference;
 
@@ -35,13 +37,21 @@ import javax.annotation.Nullable;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 16.08.2026
  * @since 15.02.2024
  */
 public abstract class EmplacementWeapon implements ITypeNBTSerializable
 {
+	private static final String NBT_PARTIAL_SYNC = "_partial_sync";
+
+	@SyncNBT(time = 0, events = SyncEvents.WEAPON_MISC)
 	public float health = getMaxHealth();
 	protected AxisAlignedBB visionAABB, attackAABB;
 	protected boolean initialized = false;
+	protected boolean restoredFromNBT = false;
+	private transient boolean partialSync = false;
+	@Nullable
+	private transient SyncEvents partialSyncEvent = null;
 	@Nullable
 	protected EntityLivingBase baseEntity;
 
@@ -52,7 +62,6 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable
 	protected void onInit(TileEntityEmplacement te)
 	{
 		this.initialized = true;
-		this.health = getMaxHealth();
 		this.visionAABB = new AxisAlignedBB(new BlockPos(te.getWeaponCenter()));
 		this.attackAABB = new AxisAlignedBB(new BlockPos(te.getWeaponCenter()));
 
@@ -69,7 +78,10 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable
 	public final void init(TileEntityEmplacement te)
 	{
 		if(!initialized)
+		{
 			onInit(te);
+			restoredFromNBT = false;
+		}
 	}
 
 	/**
@@ -93,15 +105,29 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable
 	}
 
 	/**
-	 * Internal method for sending an update packet for this weapon on client side.
+	 * Sends a partial weapon update through the owning tile entity.
 	 *
-	 * @param te the emplacement tile entity
+	 * @param te    owning emplacement
+	 * @param event event that selects weapon fields
 	 */
-	protected final void syncWithClient(TileEntityEmplacement te)
+	protected final void syncWithClient(TileEntityEmplacement te, SyncEvents event)
 	{
-		te.updateTileForEvent(SyncEvents.TILE_CUSTOM2);
-	}
+		if(te.getWorld().isRemote)
+			return;
 
+		boolean previousPartial = this.partialSync;
+		SyncEvents previousEvent = this.partialSyncEvent;
+		this.partialSync = true;
+		this.partialSyncEvent = event;
+		try
+		{
+			te.updateTileForEvent(event);
+		} finally
+		{
+			this.partialSync = previousPartial;
+			this.partialSyncEvent = previousEvent;
+		}
+	}
 
 	public boolean handleDataCommand(DataPacket packet)
 	{
@@ -269,13 +295,23 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable
 	public NBTTagCompound serializeNBT()
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
-		nbt.setFloat("health", health);
+		SyncEvents event = this.partialSyncEvent;
+		NBTSerialisation.synchroniseFor(this, (serializer, weapon) -> {
+			if(partialSync&&event!=null)
+				serializer.serializeForEvent(weapon, nbt, event);
+			else
+				serializer.serializeAll(weapon, nbt);
+		});
+		if(partialSync&&event!=null)
+			nbt.setBoolean(NBT_PARTIAL_SYNC, true);
 		return nbt;
 	}
 
 	@Override
 	public void deserializeNBT(NBTTagCompound nbt)
 	{
-		health = nbt.getFloat("health");
+		boolean canSkip = nbt.getBoolean(NBT_PARTIAL_SYNC);
+		NBTSerialisation.synchroniseFor(this, (serializer, weapon) -> serializer.deserializeAll(weapon, nbt, canSkip));
+		restoredFromNBT = !initialized;
 	}
 }

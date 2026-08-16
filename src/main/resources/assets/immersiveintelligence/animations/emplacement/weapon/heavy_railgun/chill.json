@@ -1,0 +1,65 @@
+{
+  "comment": "Made by Pabilo8 with Blockbench",
+  "groups": {
+    "base": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.16667,
+          "transform": [0, -10, 0]
+        },
+        {
+          "time": 0.25,
+          "transform": [0, -10, 0]
+        },
+        {
+          "time": 0.31943,
+          "transform": [0, -14.17, 0]
+        },
+        {
+          "time": 0.40277,
+          "transform": [0, -14.17, 0]
+        },
+        {
+          "time": 0.70833,
+          "transform": [0, 10, 0]
+        },
+        {
+          "time": 0.79167,
+          "transform": [0, 10, 0]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "gun": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.20833,
+          "transform": [-7.5, 0, 0]
+        },
+        {
+          "time": 0.34723,
+          "transform": [-7.5, 0, 0]
+        },
+        {
+          "time": 0.70833,
+          "transform": [-5, 0, 0]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, 0]
+        }
+      ]
+    }
+  }
+}

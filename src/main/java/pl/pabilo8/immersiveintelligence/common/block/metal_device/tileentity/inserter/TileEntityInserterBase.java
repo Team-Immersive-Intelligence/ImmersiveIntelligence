@@ -735,6 +735,7 @@ public abstract class TileEntityInserterBase extends TileEntityIIConnectable imp
 	@Override
 	public boolean canOpenGui()
 	{
+		updateTileForEvent(SyncEvents.TILE_GUI_OPENED);
 		return true;
 	}
 

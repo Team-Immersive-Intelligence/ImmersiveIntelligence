@@ -32,10 +32,7 @@ public class EntityAmmoMissile extends EntityAmmoProjectile
 	{
 		//Gravity suppressed by missile jet
 		if(fuelRemaining > 0)
-		{
-			velocity -= DRAG*velocity;
 			fuelRemaining--;
-		}
 		else
 			super.updatePhysics();
 	}

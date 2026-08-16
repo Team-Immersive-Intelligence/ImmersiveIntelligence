@@ -440,8 +440,6 @@ public abstract class TileEntityEffectCrate extends TileEntityIIDirectionalConne
 			}
 		}
 
-		if(!clientside)
-			updateTileForEvent(SyncEvents.TILE_GUI_OPENED);
 	}
 
 	//--- Capabilities ---//

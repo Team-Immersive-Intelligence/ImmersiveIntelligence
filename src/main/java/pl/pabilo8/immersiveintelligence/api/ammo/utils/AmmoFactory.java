@@ -213,7 +213,7 @@ public class AmmoFactory<E extends EntityAmmoBase<? super E>>
 	public AmmoFactory<E> setPositionAndVelocity(Vec3d positionVector, GunAimCoordinate aim, float offset, float velocity)
 	{
 		Vec3d target = aim.getTarget(0);
-		return setPositionAndVelocity(positionVector.add(target.scale(offset)), target, offset);
+		return setPositionAndVelocity(positionVector.add(target.scale(offset)), target, velocity);
 	}
 
 	/**
@@ -362,12 +362,14 @@ public class AmmoFactory<E extends EntityAmmoBase<? super E>>
 			float pp = IIAmmoUtils.calculateBallisticAngle(
 					shooterPos.add(shooterMotion), targetPos.add(targetMotion), stack, 0.01f
 			);
-			return new float[]{MathHelper.wrapDegrees(180-yy), 90-pp};
+			return new float[]{MathHelper.wrapDegrees(180-yy), pp-90};
 		}
 
-		return IIAmmoUtils.getInterceptionAngles(
+		float[] angles = IIAmmoUtils.getInterceptionAngles(
 				shooterPos, shooterMotion, targetPos, targetMotion, ammo.getVelocity(), ammo.getMass(stack)
 		);
+		angles[0] = MathHelper.wrapDegrees(180-angles[0]);
+		return angles;
 	}
 
 	/**

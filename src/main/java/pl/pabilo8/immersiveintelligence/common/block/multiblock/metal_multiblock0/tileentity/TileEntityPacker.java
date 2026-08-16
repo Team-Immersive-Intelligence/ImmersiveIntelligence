@@ -855,6 +855,13 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 	//--- IIIGuiMultiblockTile ---//
 
 	@Override
+	public void onGuiOpened(@Nullable EntityPlayer player, boolean clientside)
+	{
+		if(!clientside)
+			updateTileForEvent(SyncEvents.TILE_GUI_OPENED);
+	}
+
+	@Override
 	public boolean canOpenGui()
 	{
 		return true;

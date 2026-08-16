@@ -13,6 +13,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPane
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.InfraredObserver;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement.EmplacementStateNeeds;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.TargetCoordinateReference;
 import pl.pabilo8.immersiveintelligence.common.util.gun.GunAimCoordinate;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
@@ -22,8 +23,11 @@ import javax.annotation.Nonnull;
 public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 {
 	@Nonnull
+	@SyncNBT
 	private EnumFacing facing, plannedFacing;
+	@SyncNBT
 	public GunAimCoordinate aim = new GunAimCoordinate();
+	@SyncNBT
 	public MultiblockInteractablePart setup;
 
 	public EmplacementWeaponInfraredObserver()
@@ -36,7 +40,8 @@ public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 	protected void onInit(TileEntityEmplacement te)
 	{
 		super.onInit(te);
-		this.facing = this.plannedFacing = te.facing;
+		if(!restoredFromNBT)
+			this.facing = this.plannedFacing = te.facing;
 
 		Vec3i viewFront = this.facing.getDirectionVec();
 		Vec3i viewSides = this.facing.rotateY().getDirectionVec();

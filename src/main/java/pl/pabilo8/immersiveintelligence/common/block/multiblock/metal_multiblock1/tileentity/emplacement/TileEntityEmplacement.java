@@ -66,7 +66,7 @@ import java.util.Optional;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 05.09.2025
+ * @updated 16.08.2026
  * @ii-approved 0.3.1
  * @since 27.10.2020
  */
@@ -88,20 +88,26 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 
 	@SyncNBT(name = "tasks", events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CUSTOM1})
 	public EmplacementTargetManager taskManager = new EmplacementTargetManager();
-	@SyncNBT
 	public TargetCoordinateReference currentTarget;
 
-	@SyncNBT(nullable = true, events = SyncEvents.TILE_CUSTOM2)
+	@SyncNBT(nullable = true, events = {
+			SyncEvents.TILE_CUSTOM2,
+			SyncEvents.WEAPON_ROTATION,
+			SyncEvents.WEAPON_RELOAD,
+			SyncEvents.WEAPON_MISC
+	})
 	public EmplacementWeapon currentWeapon;
 	@SyncNBT(events = SyncEvents.TILE_DAMAGED)
 	public MultiblockHealth baseHealth;
 
 	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CLIENT_MESSAGE})
-	public boolean redstoneControlEnabled = true, dataControlEnabled = true, weaponRepairing = false;
+	public boolean redstoneControlEnabled = true, dataControlEnabled = true;
+	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CLIENT_MESSAGE, SyncEvents.TILE_CUSTOM2})
+	public boolean weaponRepairing = false;
 	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CLIENT_MESSAGE})
 	public float weaponHideHealthThreshold = 0.25f, weaponRepairSatisfactoryThreshold = 0.85f;
 	private int weaponRepairTicker = 0;
-	@SyncNBT
+	@SyncNBT(events = SyncEvents.TILE_CUSTOM2)
 	public MultiblockInteractablePart door;
 
 	public TileEntityEmplacement()
@@ -180,7 +186,9 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 				weaponNeeds = this.currentWeapon.onUpdate(this, weaponNeeds, currentTarget);
 
 			//Handle the door/platform
-			door.setState(combineNeeds(baseNeeds, weaponNeeds)==EmplacementStateNeeds.WANTS_SURFACE);
+			boolean surface = combineNeeds(baseNeeds, weaponNeeds)==EmplacementStateNeeds.WANTS_SURFACE;
+			if(door.setState(surface)&&!world.isRemote)
+				updateTileForEvent(SyncEvents.TILE_CUSTOM2);
 			door.update();
 
 			if(!door.getState()&&door.isFullyClosed())
@@ -209,11 +217,11 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 		float readyThreshold = MathHelper.clamp(Math.max(weaponRepairSatisfactoryThreshold, hideThreshold), 0f, 1f);
 
 		if(currentWeapon.isBelowHealthThreshold(hideThreshold))
-			weaponRepairing = true;
+			setWeaponRepairing(true);
 		if(weaponRepairing)
 		{
 			if(currentWeapon.isRepairedTo(readyThreshold))
-				weaponRepairing = false;
+				setWeaponRepairing(false);
 			else
 				return EmplacementStateNeeds.MUST_HIDE;
 		}
@@ -224,14 +232,26 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 		return EmplacementStateNeeds.WANTS_SURFACE;
 	}
 
+	private void setWeaponRepairing(boolean repairing)
+	{
+		if(weaponRepairing==repairing)
+			return;
+		weaponRepairing = repairing;
+		if(!world.isRemote)
+			updateTileForEvent(SyncEvents.TILE_CUSTOM2);
+	}
+
 	private void serviceWeaponInBase()
 	{
 		if(currentWeapon==null||world.isRemote)
 			return;
 
 		boolean changed = false;
+		boolean inventoryChanged = false;
+		boolean energyChanged = false;
 		if(currentWeapon.needsRestock(this))
-			changed |= currentWeapon.restockFromBase(this);
+			inventoryChanged = currentWeapon.restockFromBase(this);
+		changed |= inventoryChanged;
 
 		if(currentWeapon.getHealth() < currentWeapon.getMaxHealth())
 		{
@@ -240,12 +260,20 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 			{
 				weaponRepairTicker = 0;
 				if(energyStorage.extractEnergy(WEAPON_REPAIR_ENERGY_COST, true)==WEAPON_REPAIR_ENERGY_COST)
+				{
+					energyStorage.extractEnergy(WEAPON_REPAIR_ENERGY_COST, false);
+					energyChanged = true;
 					changed |= currentWeapon.repair(WEAPON_REPAIR_AMOUNT);
+				}
 			}
 		}
 		else
 			weaponRepairTicker = 0;
 
+		if(inventoryChanged)
+			updateTileForEvent(SyncEvents.TILE_RECIPE_CHANGED);
+		if(energyChanged)
+			updateTileForEvent(SyncEvents.TILE_ENERGY_CHANGED);
 		if(changed)
 			updateTileForEvent(SyncEvents.TILE_CUSTOM2);
 	}
@@ -442,6 +470,13 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 	}
 
 	@Override
+	public void onGuiOpened(@Nullable EntityPlayer player, boolean clientside)
+	{
+		if(!clientside)
+			updateTileForEvent(SyncEvents.TILE_GUI_OPENED);
+	}
+	
+	@Override
 	public boolean canOpenGui()
 	{
 		return true;
@@ -598,7 +633,13 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 		if(tactile.name.equals("door1")||tactile.name.equals("door2"))
 			return damageHealth(amount*0.5f);
 		if(currentWeapon!=null)
-			return currentWeapon.applyDamage(tactile, source, amount);
+		{
+			float previousHealth = currentWeapon.getHealth();
+			boolean result = currentWeapon.applyDamage(tactile, source, amount);
+			if(!world.isRemote&&Float.compare(previousHealth, currentWeapon.getHealth())!=0)
+				updateTileForEvent(SyncEvents.TILE_CUSTOM2);
+			return result;
+		}
 
 		return ITactileListener.super.onTactileDamage(tactile, source, amount);
 	}

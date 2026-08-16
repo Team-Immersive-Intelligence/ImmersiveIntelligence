@@ -13,7 +13,7 @@ import javax.annotation.Nonnull;
  * Stores yaw and pitch coordinates of a gun and provides utility methods for targetting and rendering.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 15.08.2026
+ * @updated 16.08.2026
  * @ii-approved 0.3.1
  * @implNote only pitch, yaw, targetPitch, targetYaw and centerYaw are synced to NBT, the rest is for runtime use only and not saved
  * @since 24.02.2026

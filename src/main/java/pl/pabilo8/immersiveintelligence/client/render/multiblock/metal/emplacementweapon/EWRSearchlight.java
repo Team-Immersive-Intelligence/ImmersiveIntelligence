@@ -12,7 +12,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 @SideOnly(Side.CLIENT)
 public class EWRSearchlight extends EmplacementWeaponRenderer<EmplacementWeaponSearchlight>
 {
-	private IIAnimationCachedMap rotateYaw, rotatePitch, fire;
+	private IIAnimationCachedMap rotateYaw, rotatePitch;
 
 	public EWRSearchlight()
 	{
@@ -24,7 +24,6 @@ public class EWRSearchlight extends EmplacementWeaponRenderer<EmplacementWeaponS
 	{
 		this.rotateYaw = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("rotate_yaw"));
 		this.rotatePitch = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("rotate_pitch"));
-		this.fire = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("fire"));
 	}
 
 	@Override
@@ -34,6 +33,5 @@ public class EWRSearchlight extends EmplacementWeaponRenderer<EmplacementWeaponS
 
 		this.rotateYaw.apply(weapon.aim.getYawNormalized(partialTicks));
 		this.rotatePitch.apply(weapon.aim.getPitchNormalized(partialTicks));
-		this.fire.apply(weapon.shootDelay);
 	}
 }

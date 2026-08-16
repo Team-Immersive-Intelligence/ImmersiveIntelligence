@@ -87,6 +87,7 @@ public class TileEntityDataRouter extends TileEntityIIBase implements IDataDevic
 	@Override
 	public boolean canOpenGui()
 	{
+		updateTileForEvent(SyncEvents.TILE_GUI_OPENED);
 		return true;
 	}
 

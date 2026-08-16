@@ -175,6 +175,7 @@ public class TileEntityDataMerger extends TileEntityIIDirectional implements IPl
 	@Override
 	public boolean canOpenGui()
 	{
+		updateTileForEvent(SyncEvents.TILE_GUI_OPENED);
 		return true;
 	}
 

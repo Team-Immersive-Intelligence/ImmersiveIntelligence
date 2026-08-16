@@ -22,7 +22,7 @@ public class EmplacementWeaponRocketLauncher extends EmplacementWeaponGunBase<En
 
 		setupItemHandlers(te, 12, 6, this.ammoFactory::isValidAmmo, this.ammoFactory::isValidAmmo);
 		this.aim.withAimSpeed(CPDS.yawRotateSpeed, CPDS.pitchRotateSpeed);
-		this.ammoFactory.setUseArtilleryAngles(true);
+		this.ammoFactory.setUseArtilleryAngles(false);
 	}
 
 	@Override

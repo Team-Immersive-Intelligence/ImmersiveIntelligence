@@ -140,6 +140,13 @@ public class TileEntityRadar extends TileEntityMultiblockIIGeneric<TileEntityRad
 	}
 
 	@Override
+	public void onGuiOpened(@Nullable EntityPlayer player, boolean clientside)
+	{
+		if(!clientside)
+			updateTileForEvent(SyncEvents.TILE_GUI_OPENED);
+	}
+
+	@Override
 	public boolean canOpenGui()
 	{
 		return construction.isConstructionFinished();
