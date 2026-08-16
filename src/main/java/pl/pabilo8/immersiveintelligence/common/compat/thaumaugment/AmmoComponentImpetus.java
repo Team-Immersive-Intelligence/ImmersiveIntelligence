@@ -41,13 +41,7 @@ public class AmmoComponentImpetus extends AmmoComponent
 {
 	public AmmoComponentImpetus()
 	{
-		super("impetus", 0.25f, ComponentRole.SPECIAL, IIColor.fromPackedRGB(0x000b10));
-	}
-
-	@Override
-	public int getSlotsTaken()
-	{
-		return 3;
+		super("impetus", 0.25f, ComponentRole.SPECIAL, IIColor.fromPackedRGB(0x000b10), 3);
 	}
 
 	@Override

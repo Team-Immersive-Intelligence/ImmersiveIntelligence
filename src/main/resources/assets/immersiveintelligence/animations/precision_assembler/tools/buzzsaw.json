@@ -12,6 +12,36 @@
           "transform": [3240, 0, 0]
         }
       ]
+    },
+    "particle": {
+      "property": [
+        {
+          "time": 0.0,
+          "property": 0.0
+        },
+        {
+          "time": 1.0,
+          "property": 1.0
+        }
+      ],
+      "visibility": [
+        {
+          "time": 0,
+          "visibility": false
+        },
+        {
+          "time": 0.05,
+          "visibility": true
+        },
+        {
+          "time": 0.99,
+          "visibility": true
+        },
+        {
+          "time": 1.0,
+          "visibility": false
+        }
+      ]
     }
   }
 }

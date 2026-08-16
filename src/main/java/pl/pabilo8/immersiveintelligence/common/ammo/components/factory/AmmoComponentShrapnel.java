@@ -33,7 +33,7 @@ public class AmmoComponentShrapnel extends AmmoComponent
 
 	public AmmoComponentShrapnel(String material)
 	{
-		super("shrapnel_"+material, 1f, ComponentRole.SHRAPNEL, ShrapnelHandler.registry.get(material).color);
+		super("shrapnel_"+material, 1f, ComponentRole.SHRAPNEL, ShrapnelHandler.registry.get(material).color, 1);
 		shrapnel = ShrapnelHandler.registry.get(material);
 		stack = new IngredientStack("dust"+Character.toUpperCase(material.charAt(0))+material.substring(1));
 	}

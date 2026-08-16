@@ -11,9 +11,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.IFluidTank;
+import net.minecraftforge.fluids.*;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
@@ -49,6 +47,8 @@ import java.util.Arrays;
 import java.util.Optional;
 
 /**
+ * Machine that handles ammunition core production and filling.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
  * @updated 09.07.2024
  * @ii-approved 0.3.1
@@ -62,12 +62,10 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 	@Nonnull
 	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CLIENT_MESSAGE})
 	public CoreType coreType = producedAmmo.getAllowedCoreTypes()[0];
-	@SyncNBT
+	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CLIENT_MESSAGE})
 	public int componentFillAmount = 1;
-	@SyncNBT
+	@SyncNBT(events = SyncEvents.TILE_CUSTOM1)
 	public BulletComponentStack componentInside = new BulletComponentStack();
-
-	private static final int COMPONENT_AMOUNT_PER_ITEM = 16;
 
 	/**
 	 * Stores fluids to be converted to ammo components
@@ -135,6 +133,8 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 		super.onUpdate();
 	}
 
+	//--- NBT ---//
+
 	@Override
 	public void readCustomNBT(@Nonnull NBTTagCompound nbt, boolean descPacket)
 	{
@@ -168,10 +168,8 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 			IAmmoTypeItem<?, ?> bb = AmmoRegistry.getAmmoItem(message.getString("produced_bullet"));
 			producedAmmo = bb==null?IIContent.itemAmmoHeavyArtillery: bb;
 		}
-		if(message.hasKey("core_type"))
-			coreType = CoreType.v(message.getString("core_type"));
-		if(message.hasKey("component_fill_amount"))
-			componentFillAmount = Math.max(1, message.getInteger("component_fill_amount"));
+		componentFillAmount = Math.max(1, componentFillAmount);
+		validateCoreType();
 	}
 
 	@Override
@@ -183,17 +181,19 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 			IAmmoTypeItem<?, ?> bb = AmmoRegistry.getAmmoItem(message.getString("produced_bullet"));
 			producedAmmo = bb==null?IIContent.itemAmmoHeavyArtillery: bb;
 		}
-		if(message.hasKey("core_type"))
-			coreType = CoreType.v(message.getString("core_type"));
-		if(message.hasKey("component_fill_amount"))
-			componentFillAmount = Math.max(1, message.getInteger("component_fill_amount"));
+		componentFillAmount = Math.max(1, componentFillAmount);
+		validateCoreType();
 	}
+
+	//--- IEInventoryHandler ---//
 
 	@Override
 	public boolean isStackValid(int slot, ItemStack stack)
 	{
 		if(slot==MultiblockProjectileWorkshop.SLOT_COMPONENT_INPUT&&isUpgradeInstalled(IIContent.UPGRADE_CORE_FILLER))
-			return AmmoRegistry.getAllComponents().stream().anyMatch(comp -> comp.getMaterial().matchesItemStackIgnoringSize(stack));
+			return AmmoRegistry.getAllComponents().stream()
+					.filter(this::canUseComponent)
+					.anyMatch(comp -> comp.getMaterial().matchesItemStackIgnoringSize(stack));
 		else if(slot==MultiblockProjectileWorkshop.SLOT_INPUT)
 		{
 			if(isUpgradeInstalled(IIContent.UPGRADE_CORE_FILLER))
@@ -204,12 +204,7 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 		return false;
 	}
 
-	@Override
-	public int getSlotLimit(int i)
-	{
-		return i==MultiblockProjectileWorkshop.SLOT_COMPONENT_INPUT?1: 64;
-	}
-
+	//--- Ammo Component Handling ---//
 
 	private int getFluidPerComponentAmount()
 	{
@@ -222,9 +217,18 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 			return Optional.empty();
 
 		return AmmoRegistry.getAllComponents().stream()
+				.filter(this::canUseComponent)
 				.filter(component -> component.getMaterial().fluid!=null)
 				.filter(component -> fluid.isFluidEqual(component.getMaterial().fluid))
 				.findFirst();
+	}
+
+	/**
+	 * Checks if the machine can install the specified component.
+	 */
+	private boolean canUseComponent(AmmoComponent component)
+	{
+		return component!=null&&(!component.isSpaciousComponent()||isUpgradeInstalled(IIContent.UPGRADE_INSERTER));
 	}
 
 	private void pullComponentItem()
@@ -234,6 +238,7 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 			return;
 
 		Optional<AmmoComponent> matching = AmmoRegistry.getAllComponents().stream()
+				.filter(this::canUseComponent)
 				.filter(comp -> comp.getMaterial().matchesItemStackIgnoringSize(stack))
 				.findFirst();
 
@@ -241,20 +246,35 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 			return;
 
 		AmmoComponent component = matching.get();
+		if(component.getMaterial().fluid!=null)
+		{
+			FluidActionResult result = FluidUtil.tryEmptyContainer(stack.copy(), tanksFiller, Integer.MAX_VALUE, null, true);
+			if(result.isSuccess())
+			{
+				inventory.set(MultiblockProjectileWorkshop.SLOT_COMPONENT_INPUT, result.getResult());
+				updateTileForEvent(SyncEvents.TILE_RECIPE_CHANGED);
+			}
+			return;
+		}
+
 		if(componentInside.isEmpty())
 		{
-			if(COMPONENT_AMOUNT_PER_ITEM <= ProjectileWorkshop.componentCapacity)
-			{
-				ItemStack extracted = componentInputHandler.extractItem(0, 1, false);
-				componentInside = new BulletComponentStack(component, COMPONENT_AMOUNT_PER_ITEM, extracted.getTagCompound());
-			}
+			if(MultiblockProjectileWorkshop.COMPONENT_AMOUNT_PER_ITEM > ProjectileWorkshop.componentCapacity)
+				return;
+
+			componentInside = new BulletComponentStack(component, MultiblockProjectileWorkshop.COMPONENT_AMOUNT_PER_ITEM, stack.getTagCompound());
 		}
 		else if(componentInside.matches(stack)
-				&&componentInside.amount+COMPONENT_AMOUNT_PER_ITEM <= ProjectileWorkshop.componentCapacity)
-		{
-			componentInside.amount += COMPONENT_AMOUNT_PER_ITEM;
-			componentInputHandler.extractItem(0, 1, false);
-		}
+				&&componentInside.amount+MultiblockProjectileWorkshop.COMPONENT_AMOUNT_PER_ITEM <= ProjectileWorkshop.componentCapacity)
+			componentInside.amount += MultiblockProjectileWorkshop.COMPONENT_AMOUNT_PER_ITEM;
+		else
+			return;
+
+		//The exposed component handler is insert-only. Consume the item from the backing inventory directly.
+		stack.shrink(1);
+		if(stack.isEmpty())
+			inventory.set(MultiblockProjectileWorkshop.SLOT_COMPONENT_INPUT, ItemStack.EMPTY);
+		updateTileForEvent(SyncEvents.TILE_RECIPE_CHANGED);
 	}
 
 	private void pullComponentFluid()
@@ -298,12 +318,61 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 
 	private boolean canApplyComponent(ItemStack stack, IAmmoTypeItem<?, ?> ammo, AmmoComponent component, int fillAmount)
 	{
-		if(!component.matchesBullet(ammo))
+		if(!canUseComponent(component)||!component.matchesBullet(ammo))
 			return false;
 
 		int componentSlotsTaken = component.getSlotsTaken()*fillAmount;
 		return getRemainingComponentSlots(ammo, stack) >= componentSlotsTaken;
 	}
+
+	//--- Ammo Core Handling ---//
+
+	private void validateCoreType()
+	{
+		if(Arrays.stream(producedAmmo.getAllowedCoreTypes()).noneMatch(type -> type==coreType))
+			coreType = producedAmmo.getAllowedCoreTypes()[0];
+	}
+
+	private String getCoreProductionRecipeName(IAmmoTypeItem<?, ?> ammo, AmmoCore core, CoreType type)
+	{
+		return ProjectileWorkshopRecipe.CORE_PRODUCTION_RECIPE_PREFIX+ammo.getName()+"|"+core.getName()+"|"+type.getName();
+	}
+
+	private ProjectileWorkshopRecipe getOrCreateCoreProductionRecipe(IAmmoTypeItem<?, ?> ammo, AmmoCore core, CoreType type)
+	{
+		String name = getCoreProductionRecipeName(ammo, core, type);
+		ProjectileWorkshopRecipe recipe = IIMultiblockRecipe.streamRecipes(ProjectileWorkshopRecipe.class)
+				.filter(existing -> name.equals(existing.getName()))
+				.findFirst()
+				.orElse(null);
+		if(recipe==null)
+		{
+			recipe = new ProjectileWorkshopRecipe(ammo, core, type);
+			recipe.setName(name);
+		}
+		return recipe;
+	}
+
+	@Nullable
+	private ProjectileWorkshopRecipe restoreCoreProductionRecipe(String name)
+	{
+		if(!name.startsWith(ProjectileWorkshopRecipe.CORE_PRODUCTION_RECIPE_PREFIX))
+			return null;
+
+		String[] parts = name.substring(ProjectileWorkshopRecipe.CORE_PRODUCTION_RECIPE_PREFIX.length()).split("\\|", -1);
+		if(parts.length!=3)
+			return null;
+
+		IAmmoTypeItem<?, ?> ammo = AmmoRegistry.getAmmoItem(parts[0]);
+		AmmoCore core = AmmoRegistry.getCore(parts[1]);
+		CoreType type = CoreType.v(parts[2]);
+		if(ammo==null||core==null||Arrays.stream(ammo.getAllowedCoreTypes()).noneMatch(allowed -> allowed==type))
+			return null;
+
+		return getOrCreateCoreProductionRecipe(ammo, core, type);
+	}
+
+	//--- TileEntityMultiblockProductionSingle ---//
 
 	@Override
 	protected IIMultiblockProcess<ProjectileWorkshopRecipe> findNewProductionProcess()
@@ -327,7 +396,8 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 		if(!first.isPresent()||stack.getCount() < producedAmmo.getCoreMaterialNeeded())
 			return null;
 
-		ProjectileWorkshopRecipe recipe = new ProjectileWorkshopRecipe(producedAmmo, first.get(), coreType);
+		validateCoreType();
+		ProjectileWorkshopRecipe recipe = getOrCreateCoreProductionRecipe(producedAmmo, first.get(), coreType);
 		stack.shrink(producedAmmo.getCoreMaterialNeeded());
 		return new IIMultiblockProcess<>(recipe);
 	}
@@ -346,29 +416,28 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 			return null;
 
 		int fillAmount = Math.max(1, componentFillAmount);
-		if(componentInside.amount < fillAmount)
+		int componentAmount = fillAmount*ammo.getComponentUsed();
+		if(componentInside.amount < componentAmount)
 			return null;
 
 		ItemStack effect = stack.copy();
 		effect.setCount(1);
 
 		AmmoComponent component = componentInside.component;
-		BulletComponentStack usedComponent = new BulletComponentStack(component, fillAmount, componentInside.tagCompound.copy());
-		boolean canFill = canApplyComponent(effect, ammo, component, fillAmount);
+		if(!canApplyComponent(effect, ammo, component, fillAmount))
+			return null;
 
-		if(canFill)
-		{
-			for(int i = 0; i < fillAmount; i++)
-				ammo.addComponents(effect, component, componentInside.tagCompound.copy());
-			componentInside.subtract(fillAmount);
-		}
+		BulletComponentStack usedComponent = new BulletComponentStack(component, componentAmount, componentInside.tagCompound.copy());
+		for(int i = 0; i < fillAmount; i++)
+			ammo.addComponents(effect, component, componentInside.tagCompound.copy());
 
+		componentInside.subtract(componentAmount);
 		stack.shrink(1);
 
 		IIMultiblockProcess<ProjectileWorkshopRecipe> process = new IIMultiblockProcess<>(ProjectileWorkshopRecipe.CORE_FILLING)
 				.withNBT(nbt -> nbt
 						.withItemStack("effect", effect)
-						.withBoolean("filled", canFill)
+						.withBoolean("filled", true)
 						.withSerializable("component", usedComponent)
 				);
 		process.maxTicks *= ammo.getCaliber();
@@ -381,7 +450,12 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 		if(ProjectileWorkshopRecipe.FILLING_RECIPE_NAME.equals(name))
 			return new IIMultiblockProcess<>(ProjectileWorkshopRecipe.CORE_FILLING);
 
-		ProjectileWorkshopRecipe recipe = IIMultiblockRecipe.getRecipe(ProjectileWorkshopRecipe.class, name);
+		ProjectileWorkshopRecipe recipe = IIMultiblockRecipe.streamRecipes(ProjectileWorkshopRecipe.class)
+				.filter(existing -> name.equals(existing.getName()))
+				.findFirst()
+				.orElse(null);
+		if(recipe==null)
+			recipe = restoreCoreProductionRecipe(name);
 		return recipe==null?null: new IIMultiblockProcess<>(recipe);
 	}
 
@@ -415,6 +489,8 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 	{
 		return IIGUI.PROJECTILE_WORKSHOP;
 	}
+
+	//--- IBooleanAnimatedPartsBlock ---//
 
 	@Override
 	public void onAnimationChangeClient(boolean state, int part)
@@ -473,19 +549,19 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 		if(packet.has('t'))
 			this.coreType = CoreType.v(packet.get('t').toString());
 
-		if(Arrays.stream(producedAmmo.getAllowedCoreTypes()).noneMatch(ct -> ct==coreType))
-			this.coreType = this.producedAmmo.getAllowedCoreTypes()[0];
+		validateCoreType();
 
 		if(packet.has('a'))
-			this.componentFillAmount = packet.getVarInType(DataTypeInteger.class, packet.get('a')).value;
+			this.componentFillAmount = Math.max(1, packet.getVarInType(DataTypeInteger.class, packet.get('a')).value);
 	}
+
+	//--- Collision / Conveyor Input ---//
 
 	@Override
 	public void onEntityCollision(World world, Entity entity)
 	{
-		if(pos==15&&!world.isRemote&&entity instanceof EntityItem&&!entity.isDead)
+		if(isPOI("item_in")&&!world.isRemote&&entity instanceof EntityItem ei&&!entity.isDead)
 		{
-			EntityItem ei = (EntityItem)entity;
 			if(ei.getItem().isEmpty())
 				return;
 

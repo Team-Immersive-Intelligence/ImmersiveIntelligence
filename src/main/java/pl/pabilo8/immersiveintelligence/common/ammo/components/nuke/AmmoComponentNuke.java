@@ -53,7 +53,7 @@ public class AmmoComponentNuke extends AmmoComponent
 
 	public AmmoComponentNuke()
 	{
-		super("nuke", 2.5f, ComponentRole.TERRAIN_DENIAL, IIColor.fromPackedRGB(0x6b778a));
+		super("nuke", 2.5f, ComponentRole.TERRAIN_DENIAL, IIColor.fromPackedRGB(0x6b778a), 3);
 	}
 
 	@Override

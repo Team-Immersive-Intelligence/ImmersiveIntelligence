@@ -207,7 +207,7 @@ public class IIUtils
 	public static String getFluidNameOverlayText(@Nullable FluidStack stack)
 	{
 		return (stack==null||stack.amount <= 0)?I18n.format(Lib.GUI+"empty"):
-				(stack.getLocalizedName()+": "+stack.amount);
+				(stack.getLocalizedName()+": "+stack.amount+"mB");
 	}
 
 	public static char cycleDataPacketChars(char current, boolean forward, boolean hasEmpty)

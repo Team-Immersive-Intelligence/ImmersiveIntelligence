@@ -286,7 +286,7 @@ public class AmmoTweaker
 				final ComponentRole componentRole = IIUtils.enumValue(ComponentRole.class, component.role);
 
 				AmmoRegistry.registerComponent(
-						new AmmoComponent(component.name, component.density, componentRole, IIColor.fromPackedRGB(component.color))
+						new AmmoComponent(component.name, component.density, componentRole, IIColor.fromPackedRGB(component.color), 1)
 						{
 							private final IngredientStack stack = ApiUtils.createIngredientStack(component.stack);
 

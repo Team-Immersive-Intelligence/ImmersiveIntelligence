@@ -154,5 +154,8 @@ public class ParticleGlow extends AbstractParticle
 		buffer.pos(second.x, second.y, second.z)
 				.color(edgeColor.red, edgeColor.green, edgeColor.blue, 0)
 				.endVertex();
+		buffer.pos(second.x, second.y, second.z)
+				.color(edgeColor.red, edgeColor.green, edgeColor.blue, 0)
+				.endVertex();
 	}
 }

@@ -149,8 +149,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 			tactileManager = new TactileManager(multiblock, this);
 		tactileManager.defaultize();
 
-		boolean rs = getRedstoneAtPos(0);
-		if(door.setState(rs)&&!world.isRemote)
+		if(!world.isRemote&&door.setState(getRedstoneAtPos(0)))
 			IIPacketHandler.sendToClient(new MessageBooleanAnimatedPartsSync(door, this));
 
 		//operate only if energy is sufficient

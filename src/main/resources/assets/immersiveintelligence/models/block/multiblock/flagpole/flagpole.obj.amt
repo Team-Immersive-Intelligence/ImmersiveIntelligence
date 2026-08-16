@@ -10,7 +10,7 @@
   },
   "properties": {
     "flag": {
-      "rotation": [0.0, 180.0, 0.0]
+      "rotation": [0.0, 0.0, 0.0]
     }
   }
 }

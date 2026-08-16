@@ -11,9 +11,7 @@ import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType.TypeMetaInfo;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTileGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent.MouseButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoTab;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoDropdown;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoList;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
@@ -80,29 +78,7 @@ public class GuiDataInputMachine extends DecoTileGui<TileEntityDataInputMachine,
 						.withSize(20, 52)
 						.withImageLocation(PROGRESS_IMAGE, true)
 						.withUV(64, 20, 0, 40, 52)
-						.withAnimation(ImageAnimationDirection.TOP_TO_BOTTOM, DecoGuiUtils.getMultiblockProductionSingleProgress(tile)),
-				new DecoTab()
-						.withLink(IIGUI.DATA_INPUT_MACHINE_STORAGE)
-						.withIcon(DecoTextures.ICON_STORAGE)
-						.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+"storage_module"),
-				new DecoTab()
-						.withLink(IIGUI.DATA_INPUT_MACHINE_VARIABLES)
-						.withIcon(DecoTextures.ICON_VARIABLES)
-						.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+"variables_module"),
-
-				new DecoTab()
-						.withIcon(ICON_SEND_PACKET, 32)
-						.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+"variable_send_packet")
-						.withOnPressed((gui, mouseButton, mouseX, mouseY) -> {
-					if(mouseButton==MouseButton.LEFT)
-					{
-						IIPacketHandler.sendToServer(new MessageIITileSync(tile, EasyNBT.newNBT()
-								.withBoolean("send_packet", true)
-						));
-						return true;
-					}
-					return false;
-				})
+						.withAnimation(ImageAnimationDirection.TOP_TO_BOTTOM, DecoGuiUtils.getMultiblockProductionSingleProgress(tile))
 		};
 	}
 
@@ -133,8 +109,16 @@ public class GuiDataInputMachine extends DecoTileGui<TileEntityDataInputMachine,
 				.withInventorySlots(SlotStyle.IE_OUTPUT, container.dataOutput)
 				.build();
 
-		//Add tabs and energy bars
+		//Shared parts, like punchtape progress bar
 		addComponents(getCommonParts(tile));
+
+		//Add tabs
+		addLinkTab(IIGUI.DATA_INPUT_MACHINE_STORAGE, DecoTextures.ICON_STORAGE, "storage_module");
+		addLinkTab(IIGUI.DATA_INPUT_MACHINE_VARIABLES, DecoTextures.ICON_VARIABLES, "variables_module");
+		addLinkTab(this.gui, GuiDataInputMachine.ICON_SEND_PACKET, "variable_send_packet")
+				.withIcon(GuiDataInputMachine.ICON_SEND_PACKET, 32)
+				.withOnLMBPressed(() -> IIPacketHandler.sendToServer(new MessageIITileSync(tile, EasyNBT.newNBT().withBoolean("send_packet", true))));
+
 
 		//Add storage display and bars or the variable list, if in the "variables" tab
 		if(isStorage)

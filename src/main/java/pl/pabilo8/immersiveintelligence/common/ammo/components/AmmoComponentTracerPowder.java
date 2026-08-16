@@ -15,6 +15,7 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIITracerPowder;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
+
 import javax.vecmath.Vector2f;
 import javax.vecmath.Vector3f;
 
@@ -28,7 +29,7 @@ public class AmmoComponentTracerPowder extends AmmoComponent
 {
 	public AmmoComponentTracerPowder()
 	{
-		super("tracer_powder", 1f, ComponentRole.TRACER, IIColor.fromPackedRGB(0x6b778a));
+		super("tracer_powder", 1f, ComponentRole.TRACER, IIColor.fromPackedRGB(0x5f788a), 1);
 	}
 
 	@Override

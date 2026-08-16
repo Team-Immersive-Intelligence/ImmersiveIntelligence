@@ -1310,7 +1310,7 @@ desc.immersiveintelligence.variable_add_desc=Add a new variable
 desc.immersiveintelligence.variable_set=Set
 desc.immersiveintelligence.variable_set_desc=Change the value of a variable
 desc.immersiveintelligence.variable_send_packet=Send Packet
-desc.immersiveintelligence.variable_send_packet_desc=Sends the current packet to data network
+desc.immersiveintelligence.variable_send_packet.tooltip=Sends the current packet to data network
 desc.immersiveintelligence.variable_remove_desc=Remove a variable
 desc.immersiveintelligence.variable_properties=Properties
 desc.immersiveintelligence.variable_properties.tooltip=Edit expression properties, like conditional variables.
@@ -1553,6 +1553,7 @@ desc.immersiveintelligence.bullets.details=Details:
 desc.immersiveintelligence.bullets.core=Fitted with %1$s %2$s Core
 desc.immersiveintelligence.bullets.fuse=%s Fuse
 desc.immersiveintelligence.bullets.mass=Mass: %s
+desc.immersiveintelligence.bullets.component_slots=Free Component Slots: %s
 desc.immersiveintelligence.bullets.caliber=Caliber: %s bCal
 
 desc.immersiveintelligence.bullets.components=Components:

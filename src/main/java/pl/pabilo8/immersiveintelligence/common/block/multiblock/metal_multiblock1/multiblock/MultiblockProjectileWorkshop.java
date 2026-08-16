@@ -17,6 +17,7 @@ public class MultiblockProjectileWorkshop extends MultiblockStuctureBase<TileEnt
 	public static final int SLOT_INPUT = 0;
 	public static final int SLOT_COMPONENT_INPUT = 1;
 	public static final int SLOT_OUTPUT = 2;
+	public static final int COMPONENT_AMOUNT_PER_ITEM = 16;
 	public static MultiblockProjectileWorkshop INSTANCE;
 
 	public MultiblockProjectileWorkshop()
@@ -31,10 +32,13 @@ public class MultiblockProjectileWorkshop extends MultiblockStuctureBase<TileEnt
 		addPOI(MultiblockPOI.FLUID_INPUT, "component_fluid_in");
 		addPOI(MultiblockPOI.ENERGY_INPUT, "energy");
 		addPOI(MultiblockPOI.REDSTONE_INPUT, "redstone");
+		addPOI(MultiblockPOI.DATA_INPUT, "data");
 
 		//Upgrades
 		UpgradeTechTree.getTreeFor(TileEntityProjectileWorkshop.class)
-				.withUpgrade(IIContent.UPGRADE_CORE_FILLER, UpgradeTier.TIER_1);
+				.withUpgrade(IIContent.UPGRADE_CORE_FILLER, UpgradeTier.TIER_1)
+				.withUpgrade(IIContent.UPGRADE_INSERTER, UpgradeTier.TIER_2)
+				.withDependency(IIContent.UPGRADE_CORE_FILLER, IIContent.UPGRADE_INSERTER);
 	}
 
 	@Override

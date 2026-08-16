@@ -38,12 +38,15 @@ import java.util.ArrayList;
  * @updated 07.08.2026
  * @since 28.06.2019
  */
-public class TileEntityPrecisionAssembler extends TileEntityMultiblockProductionSingle<TileEntityPrecisionAssembler, PrecisionAssemblerRecipe> implements IBooleanAnimatedPartsBlock
+public class TileEntityPrecisionAssembler extends TileEntityMultiblockProductionSingle<TileEntityPrecisionAssembler, PrecisionAssemblerRecipe>
+		implements IBooleanAnimatedPartsBlock
 {
-	@SyncNBT
+	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_GUI_OPENED})
 	public MultiblockInteractablePart drawer1, drawer2;
-	@SyncNBT
+	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED})
 	public String toolHash = "";
+	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED})
+	public String toolOrder = "";
 	private IEInventoryHandler outputMainHandler, outputSecondaryHandler, inputHandler;
 	private IEInventoryHandler[] toolInputHandlers;
 
@@ -91,6 +94,10 @@ public class TileEntityPrecisionAssembler extends TileEntityMultiblockProduction
 			if(!world.isRemote)
 				updateTileForEvent(SyncEvents.TILE_RECIPE_CHANGED);
 		}
+
+		//Populate the slot-preserving key for tiles saved before this field existed.
+		if(!world.isRemote&&toolOrder.isEmpty()&&!toolHash.isEmpty())
+			rebuildToolConfiguration();
 
 		//Handle drawer animations
 		this.drawer1.update();
@@ -218,26 +225,40 @@ public class TileEntityPrecisionAssembler extends TileEntityMultiblockProduction
 	{
 		if(slot >= MultiblockPrecisionAssembler.SLOT_TOOL1&&slot <= MultiblockPrecisionAssembler.SLOT_TOOL3)
 		{
-			//Rebuild tool hash
-			ArrayList<String> toolList = new ArrayList<>();
-			for(int i = MultiblockPrecisionAssembler.SLOT_TOOL1; i <= MultiblockPrecisionAssembler.SLOT_TOOL3; i++)
-			{
-				ItemStack toolStack = inventory.get(i);
-				if(toolStack.getItem() instanceof IPrecisionTool)
-					toolList.add(((IPrecisionTool)toolStack.getItem()).getToolID(toolStack));
-			}
-			this.toolHash = PrecisionAssemblerRecipe.buildToolHash(toolList.toArray(new String[0]));
+			rebuildToolConfiguration();
+			if(!world.isRemote)
+				updateTileForEvent(SyncEvents.TILE_GUI_OPENED);
 		}
+	}
+
+	private void rebuildToolConfiguration()
+	{
+		ArrayList<String> toolList = new ArrayList<>();
+		StringBuilder orderBuilder = new StringBuilder();
+		for(int i = MultiblockPrecisionAssembler.SLOT_TOOL1; i <= MultiblockPrecisionAssembler.SLOT_TOOL3; i++)
+		{
+			if(i > MultiblockPrecisionAssembler.SLOT_TOOL1)
+				orderBuilder.append(';');
+
+			ItemStack toolStack = inventory.get(i);
+			if(toolStack.getItem() instanceof IPrecisionTool)
+			{
+				String toolID = ((IPrecisionTool)toolStack.getItem()).getToolID(toolStack);
+				toolList.add(toolID);
+				orderBuilder.append(toolID);
+			}
+		}
+
+		this.toolHash = PrecisionAssemblerRecipe.buildToolHash(toolList.toArray(new String[0]));
+		this.toolOrder = orderBuilder.toString();
 	}
 
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
 	{
 		if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-		{
 			if(isPOI("item_in")||isPOI("tool1")||isPOI("tool2")||isPOI("tool3"))
 				return true;
-		}
 		return super.hasCapability(capability, facing);
 	}
 

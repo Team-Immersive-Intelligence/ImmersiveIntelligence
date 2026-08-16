@@ -17,6 +17,7 @@ import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTCrossVariantRe
 import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
 import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMT;
 import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTItem;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTParticle;
 import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIMultiblockRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IITileRenderer.RegisteredTileRenderer;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.PrecisionAssembler;
@@ -32,12 +33,12 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEn
 
 import javax.annotation.Nullable;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 /**
+ * Renders the Precision Assembler and composes tool-slot-specific work animations.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 01.04.2026
+ * @updated 07.08.2026
  * @ii-approved 0.3.1
  * @since 21.06.2019
  */
@@ -59,7 +60,8 @@ public class PrecisionAssemblerRenderer extends IIMultiblockRenderer<TileEntityP
 	@Override
 	public void drawAnimated(TileEntityPrecisionAssembler te, BufferBuilder buf, float partialTicks, Tessellator tes)
 	{
-		model.getVariant(te, te.toolHash);
+		String toolOrder = getToolOrder(te);
+		model.getVariant(te, toolOrder);
 
 		//Drawer animations
 		drawer1.apply(te.drawer1.getProgress(partialTicks));
@@ -87,12 +89,12 @@ public class PrecisionAssemblerRenderer extends IIMultiblockRenderer<TileEntityP
 		{
 			PrecisionAssemblerRecipe recipe = te.currentProcess.recipe;
 			//Apply work animation
-			IIAnimationCachedMap animation = getAnimationForRecipe(recipe, te.toolHash);
+			IIAnimationCachedMap animation = getAnimationForRecipe(recipe, toolOrder, te.toolHash);
 			if(animation!=null)
 			{
 				float productionProgress = te.getProductionProgress(te.currentProcess, partialTicks);
 				animation.apply(productionProgress);
-				getSlotStatesForRecipe(recipe, te.toolHash).apply(productionProgress);
+				getSlotStatesForRecipe(recipe, toolOrder).apply(productionProgress);
 			}
 
 			//Output slot is now handled by SlotItemStates, so we don't set it here
@@ -112,6 +114,7 @@ public class PrecisionAssemblerRenderer extends IIMultiblockRenderer<TileEntityP
 	public void compileModels(IBlockState state, OBJModel model)
 	{
 		this.workAnimations.clearMap();
+		this.slotStateCache.clearMap();
 		this.model = AMTCachedModelBuilder.startTileEntityModel(TileEntityPrecisionAssembler.class)
 				.withModel(model)
 				.withHeader(AMTLoader.loadHeader(model))
@@ -127,11 +130,15 @@ public class PrecisionAssemblerRenderer extends IIMultiblockRenderer<TileEntityP
 								new AMTItem("held2", header),
 								new AMTItem("held3", header),
 
+								new AMTParticle("particle1", header),
+								new AMTParticle("particle2", header),
+								new AMTParticle("particle3", header),
+
 								new AMTItem("print_image", header)
 						),
-						getPrecisionToolModels(te==null?null: te.toolHash)
+						getPrecisionToolModels(getToolOrder(te))
 				).getParts())
-				.withHeaderProvider((te) -> getPrecisionToolHeaders(te==null?null: te.toolHash))
+				.withHeaderProvider((te) -> getPrecisionToolHeaders(getToolOrder(te)))
 				.build();
 
 		this.drawer1 = IIAnimationCachedMap.create(this.model, IIReference.RES_II.with("precision_assembler/drawer1"));
@@ -168,15 +175,15 @@ public class PrecisionAssemblerRenderer extends IIMultiblockRenderer<TileEntityP
 		this.itemSchematic = new AMTCrossVariantReference<>("print_image", this.model);
 	}
 
-	private SlotItemStates getSlotStatesForRecipe(PrecisionAssemblerRecipe recipe, String toolHash)
+	private SlotItemStates getSlotStatesForRecipe(PrecisionAssemblerRecipe recipe, String toolOrder)
 	{
-		int hash = Objects.hash(recipe, toolHash);
+		int hash = Objects.hash(recipe, toolOrder);
 		return this.slotStateCache.lookup(hash);
 	}
 
-	private IIAnimationCachedMap getAnimationForRecipe(PrecisionAssemblerRecipe recipe, String toolHash)
+	private IIAnimationCachedMap getAnimationForRecipe(PrecisionAssemblerRecipe recipe, String toolOrder, String toolHash)
 	{
-		int hash = Objects.hash(recipe, toolHash);
+		int hash = Objects.hash(recipe, toolOrder);
 		if(this.workAnimations.containsItem(hash))
 			return this.workAnimations.lookup(hash);
 
@@ -184,16 +191,20 @@ public class PrecisionAssemblerRenderer extends IIMultiblockRenderer<TileEntityP
 		if(!recipe.toolHash.equals(toolHash))
 			return null;
 
-		PrecisionToolInfo[] tools = PrecisionAssemblerRecipe.toolsFromHash(toolHash);
-		HashMap<String, Integer> orderMap = IntStream.range(0, tools.length).boxed()
-				.collect(Collectors.toMap(i -> tools[i].getToolName(), i -> i, (a, b) -> b, HashMap::new));
+		PrecisionToolInfo[] tools = getToolsBySlot(toolOrder);
+		HashMap<String, Integer> orderMap = new HashMap<>();
+		for(int i = 0; i < tools.length; i++)
+			if(tools[i]!=null)
+				orderMap.put(tools[i].getToolName(), i);
 
-		IIAnimationBuilder builder = new IIAnimationBuilder(IIReference.RES_II.with("precision_assembler/production/"+recipe.getName()+"_"+toolHash));
+		IIAnimationBuilder builder = new IIAnimationBuilder(IIReference.RES_II.with(
+				"precision_assembler/production/"+recipe.getName()+"_"+Integer.toHexString(toolOrder.hashCode())
+		));
 
 		//Opening animation
 		builder.addAnimation(0, PrecisionAssembler.hatchTime, workBegin);
 		//Initial tool rotation
-		builder.addAnimation(0, 1, AMTLoader.loadAnimation(IIReference.RES_II.with("precision_assembler/tools")));
+		builder.addAnimation(0, recipe.getTotalProcessTime(), AMTLoader.loadAnimation(IIReference.RES_II.with("precision_assembler/tools")));
 		int processDuration = PrecisionAssembler.hatchTime;
 
 		//Initial slot stacks from recipe inputs (output slot starts empty)
@@ -263,6 +274,18 @@ public class PrecisionAssemblerRenderer extends IIMultiblockRenderer<TileEntityP
 				if(toolIdxObj!=null)
 				{
 					int toolIdx = toolIdxObj;
+					//Pick and drop transfer the item halfway through their action animation.
+					float transferMoment = processDuration+PrecisionAssembler.toolMoveTime*0.33f;
+					IIAnimation toolWorkAnimation = new IIAnimationBuilder(
+							IIReference.RES_II.with("precision_assembler/tools/generated/"+tool.getToolName()))
+							.addAnimation(0, 1, AMTLoader.loadAnimation(IIReference.RES_II.with("precision_assembler/tools/"+tool.getToolName())))
+							.renameGroup("inserter", "inserter"+(toolIdx+1))
+							.renameGroup("lower", "lower"+(toolIdx+1))
+							.renameGroup("upper", "upper"+(toolIdx+1))
+							.renameGroup("held", "held"+(toolIdx+1))
+							.renameGroup("particle", "particle"+(toolIdx+1))
+							.build();
+
 					switch(toolIdx)
 					{
 						case 0:
@@ -284,13 +307,16 @@ public class PrecisionAssemblerRenderer extends IIMultiblockRenderer<TileEntityP
 					{
 						case "pick":
 						{
+							if(toolWorkAnimation!=null)
+								builder.addAnimation(processDuration, PrecisionAssembler.toolMoveTime, toolWorkAnimation, 1);
+
 							//Source slot (0-4)
 							ItemStack picked = slotStacks[target].copy();
 							slotStacks[target] = ItemStack.EMPTY;
 							heldStacks[toolIdx] = picked.copy();
 
 							pendingNormalizations.add(() -> {
-								float t = (float)toolArrivalTime/recipe.getTotalProcessTime();
+								float t = transferMoment/recipe.getTotalProcessTime();
 								slotStates.addSlotChange(target, t, ItemStack.EMPTY);
 								slotStates.addHeldChange(toolIdx, t, picked.copy());
 							});
@@ -298,6 +324,9 @@ public class PrecisionAssemblerRenderer extends IIMultiblockRenderer<TileEntityP
 						}
 						case "drop":
 						{
+							if(toolWorkAnimation!=null)
+								builder.addAnimation(processDuration, PrecisionAssembler.toolMoveTime, toolWorkAnimation.getReversedAnimation(), 1);
+
 							ItemStack dropped = heldStacks[toolIdx].copy();
 							heldStacks[toolIdx] = ItemStack.EMPTY;
 
@@ -306,7 +335,7 @@ public class PrecisionAssemblerRenderer extends IIMultiblockRenderer<TileEntityP
 							{
 								slotStacks[target] = dropped.copy();
 								pendingNormalizations.add(() -> {
-									float t = (float)toolArrivalTime/recipe.getTotalProcessTime();
+									float t = transferMoment/recipe.getTotalProcessTime();
 									slotStates.addSlotChange(target, t, dropped.copy());
 									slotStates.addHeldChange(toolIdx, t, ItemStack.EMPTY);
 								});
@@ -315,7 +344,7 @@ public class PrecisionAssemblerRenderer extends IIMultiblockRenderer<TileEntityP
 							{
 								//Slot not empty, just clear held
 								pendingNormalizations.add(() -> {
-									float t = (float)toolArrivalTime/recipe.getTotalProcessTime();
+									float t = transferMoment/recipe.getTotalProcessTime();
 									slotStates.addHeldChange(toolIdx, t, ItemStack.EMPTY);
 								});
 							}
@@ -323,18 +352,8 @@ public class PrecisionAssemblerRenderer extends IIMultiblockRenderer<TileEntityP
 						}
 						case "work":
 						{
-							if(workTime!=0)
-							{
-								IIAnimationBuilder workBuilder = new IIAnimationBuilder(
-										IIReference.RES_II.with("precision_assembler/tools/generated/"+tool.getToolName()))
-										.addAnimation(0, 1, AMTLoader.loadAnimation(IIReference.RES_II.with("precision_assembler/tools/"+tool.getToolName())))
-										.renameGroup("inserter", "inserter"+(toolIdx+1))
-										.renameGroup("lower", "lower"+(toolIdx+1))
-										.renameGroup("upper", "upper"+(toolIdx+1))
-										.renameGroup("held", "held"+(toolIdx+1));
-
-								builder.addAnimation(toolArrivalTime, workTime, workBuilder.build(), 1);
-							}
+							if(toolWorkAnimation!=null)
+								builder.addAnimation(toolArrivalTime, workTime, toolWorkAnimation, 1);
 							break;
 						}
 						default:
@@ -371,37 +390,78 @@ public class PrecisionAssemblerRenderer extends IIMultiblockRenderer<TileEntityP
 		return animation;
 	}
 
-	private AMTModel getPrecisionToolModels(String toolHash)
+	private AMTModel getPrecisionToolModels(@Nullable String toolOrder)
 	{
-		if(toolHash==null)
-			return new AMTModel();
-		PrecisionToolInfo[] tools = PrecisionAssemblerRecipe.toolsFromHash(toolHash);
-		AMTModel[] toolModels = new AMTModel[tools.length];
+		PrecisionToolInfo[] tools = getToolsBySlot(toolOrder);
+		List<AMTModel> toolModels = new ArrayList<>();
 		for(int i = 0; i < tools.length; i++)
 		{
-			toolModels[i] = new AMTModel(DefaultVertexFormats.BLOCK, tools[i].getToolModelRes());
-			toolModels[i].renamePart("inserter", "inserter"+(i+1));
-			toolModels[i].renamePart("lower", "lower"+(i+1));
-			toolModels[i].renamePart("upper", "upper"+(i+1));
+			PrecisionToolInfo tool = tools[i];
+			if(tool==null)
+				continue;
+
+			AMTModel toolModel = new AMTModel(DefaultVertexFormats.BLOCK, tool.getToolModelRes());
+			toolModel.renamePart("inserter", "inserter"+(i+1));
+			toolModel.renamePart("lower", "lower"+(i+1));
+			toolModel.renamePart("upper", "upper"+(i+1));
+			toolModels.add(toolModel);
 		}
-		return new AMTModel(toolModels);
+		return new AMTModel(toolModels.toArray(new AMTModel[0]));
 	}
 
-	private AMTModelHeader getPrecisionToolHeaders(@Nullable String toolHash)
+	private AMTModelHeader getPrecisionToolHeaders(@Nullable String toolOrder)
 	{
-		if(toolHash==null)
-			return new AMTModelHeader();
-		PrecisionToolInfo[] tools = PrecisionAssemblerRecipe.toolsFromHash(toolHash);
-		AMTModelHeader[] toolHeaders = new AMTModelHeader[tools.length];
+		PrecisionToolInfo[] tools = getToolsBySlot(toolOrder);
+		List<AMTModelHeader> toolHeaders = new ArrayList<>();
 		for(int i = 0; i < tools.length; i++)
 		{
-			toolHeaders[i] = AMTLoader.loadHeader(tools[i].getToolModelRes().withExtension(ResLoc.EXT_OBJAMT));
-			toolHeaders[i].renameElement("inserter", "inserter"+(i+1));
-			toolHeaders[i].renameElement("lower", "lower"+(i+1));
-			toolHeaders[i].renameElement("upper", "upper"+(i+1));
-			toolHeaders[i].renameElement("held", "held"+(i+1));
+			PrecisionToolInfo tool = tools[i];
+			if(tool==null)
+				continue;
+
+			AMTModelHeader toolHeader = AMTLoader.loadHeader(tool.getToolModelRes().withExtension(ResLoc.EXT_OBJAMT));
+			toolHeader.renameElement("inserter", "inserter"+(i+1));
+			toolHeader.renameElement("lower", "lower"+(i+1));
+			toolHeader.renameElement("upper", "upper"+(i+1));
+			toolHeader.renameElement("held", "held"+(i+1));
+			toolHeader.renameElement("particle", "particle"+(i+1));
+			toolHeaders.add(toolHeader);
 		}
-		return new AMTModelHeader(toolHeaders);
+		return new AMTModelHeader(toolHeaders.toArray(new AMTModelHeader[0]));
+	}
+
+	@Nullable
+	private String getToolOrder(@Nullable TileEntityPrecisionAssembler te)
+	{
+		if(te==null)
+			return null;
+		if(!te.toolOrder.isEmpty())
+			return te.toolOrder;
+
+		//Fallback for tiles saved before slot order was stored.
+		String[] packedTools = te.toolHash.split(";");
+		StringBuilder builder = new StringBuilder();
+		for(int i = 0; i < 3; i++)
+		{
+			if(i > 0)
+				builder.append(';');
+			if(i < packedTools.length)
+				builder.append(packedTools[i]);
+		}
+		return builder.toString();
+	}
+
+	private PrecisionToolInfo[] getToolsBySlot(@Nullable String toolOrder)
+	{
+		PrecisionToolInfo[] tools = new PrecisionToolInfo[3];
+		if(toolOrder==null||toolOrder.isEmpty())
+			return tools;
+
+		String[] toolNames = toolOrder.split(";", -1);
+		for(int i = 0; i < tools.length&&i < toolNames.length; i++)
+			if(!toolNames[i].isEmpty())
+				tools[i] = PrecisionAssemblerRecipe.getToolByName(toolNames[i]);
+		return tools;
 	}
 
 	private ItemStack getDisplayedItem(@Nullable IIMultiblockProcess<PrecisionAssemblerRecipe> process, TileEntityPrecisionAssembler te, int id)

@@ -27,7 +27,7 @@ public class AmmoComponentFish extends AmmoComponent
 {
 	public AmmoComponentFish()
 	{
-		super("fish", 0.125f, ComponentRole.SPECIAL, IIColor.fromPackedRGB(0x6b778a));
+		super("fish", 0.125f, ComponentRole.SPECIAL, IIColor.fromPackedRGB(0x6b778a), 1);
 	}
 
 	@Override

@@ -451,7 +451,6 @@ public class IIAmmoUtils
 			AmmoComponent[] components = ammo.getComponents(stack);
 
 			//information section
-
 			tooltip.add(IIReference.COLOR_IMMERSIVE_ORANGE.getHexCol(I18n.format(IIReference.DESC_BULLETS+"details")));
 
 			//core + type
@@ -459,8 +458,6 @@ public class IIAmmoUtils
 					IIStringUtil.getItalicString(I18n.format(IIReference.DESCRIPTION_KEY+"bullet_core_type."+coreType.getName())),
 					core.getColor().getHexCol(I18n.format("item."+ImmersiveIntelligence.MODID+".bullet.component."+core.getName()+".name"))
 			);
-
-			//TODO: 20.08.2025 propellant
 
 			//fuse
 			if(ammo.getAllowedFuseTypes().length > 0)
@@ -475,12 +472,19 @@ public class IIAmmoUtils
 			tooltip.add(I18n.format(IIReference.DESC_BULLETS+"mass", Utils.formatDouble(ammo.getMass(stack), "0.##")));
 
 			//components section
+			ArrayList<String> componentTooltips = new ArrayList<>();
+			int componentSlotsTaken = 0;
 			if(components.length > 0)
 			{
-				tooltip.add(IIReference.COLOR_IMMERSIVE_ORANGE.getHexCol(I18n.format(IIReference.DESC_BULLETS+"components")));
+				componentTooltips.add(IIReference.COLOR_IMMERSIVE_ORANGE.getHexCol(I18n.format(IIReference.DESC_BULLETS+"components")));
 				for(AmmoComponent comp : components)
-					tooltip.add("   "+comp.getTranslatedName());
+				{
+					componentTooltips.add("   "+comp.getTranslatedName());
+					componentSlotsTaken += comp.getSlotsTaken();
+				}
 			}
+			tooltip.add(I18n.format(IIReference.DESC_BULLETS+"component_slots", ammo.getCoreType(stack).getComponentSlots()-componentSlotsTaken));
+			tooltip.addAll(componentTooltips);
 		}
 
 		//Performance tab
@@ -546,7 +550,8 @@ public class IIAmmoUtils
 		//Add all components with role different from "general purpose"
 		Stream.concat(Stream.of(ammo.getCoreType(stack).getRole()),
 						Arrays.stream(ammo.getComponents(stack)).map(AmmoComponent::getRole))
-				.filter(c -> c==ComponentRole.GENERAL_PURPOSE)
+				.filter(c -> c!=ComponentRole.GENERAL_PURPOSE)
+				.distinct()
 				.map(c -> c.getColor().getHexCol(I18n.format(IIReference.DESCRIPTION_KEY+"bullet_type."+c.getName())))
 				.forEach(c -> builder.append(c).append(" - "));
 

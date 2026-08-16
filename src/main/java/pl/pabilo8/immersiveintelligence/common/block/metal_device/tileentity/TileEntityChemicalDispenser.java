@@ -14,6 +14,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.AxisDirection;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.MathHelper;
@@ -505,6 +506,8 @@ public class TileEntityChemicalDispenser extends TileEntityIIDirectionalConnecta
 	@Override
 	public String[] getOverlayText(EntityPlayer player, RayTraceResult mop)
 	{
+		if(!Utils.isFluidRelatedItemStack(player.getHeldItem(EnumHand.MAIN_HAND)))
+			return new String[0];
 		return new String[]{IIUtils.getFluidNameOverlayText(tank.getFluid())};
 	}
 }
