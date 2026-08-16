@@ -1,15 +1,14 @@
 {
   "type": "ParticleVanilla",
   "textures": [
-    "immersiveintelligence:particle/rough/smoke1",
-    "immersiveintelligence:particle/rough/smoke2",
-    "immersiveintelligence:particle/rough/smoke3",
-    "immersiveintelligence:particle/rough/smoke2",
-    "immersiveintelligence:particle/rough/smoke3",
-    "immersiveintelligence:particle/rough/smoke4",
-    "immersiveintelligence:particle/rough/smoke2",
-    "immersiveintelligence:particle/rough/smoke1",
-    "immersiveintelligence:particle/rough/smoke0"
+    "immersiveintelligence:particle/shrapnel/shrapnel0",
+    "immersiveintelligence:particle/shrapnel/shrapnel1",
+    "immersiveintelligence:particle/shrapnel/shrapnel2",
+    "immersiveintelligence:particle/shrapnel/shrapnel3",
+    "immersiveintelligence:particle/shrapnel/shrapnel0",
+    "immersiveintelligence:particle/shrapnel/shrapnel1",
+    "immersiveintelligence:particle/shrapnel/shrapnel2",
+    "immersiveintelligence:particle/shrapnel/shrapnel3"
   ],
   "max_lifetime": 45,
   "draw_stage": "custom_additive",

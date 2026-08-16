@@ -3,11 +3,21 @@
     "inserter": [8, 4, 8],
     "lower": [8, 8, 8],
     "upper": [8, 21.5, 8],
-    "drill": [8, 34.25, 14]
+    "drill": [8, 34.25, 14],
+    "particle": [8, 34.25, 14]
   },
   "hierarchy": {
     "lower": "inserter",
     "upper": "lower",
-    "drill": "upper"
+    "drill": "upper",
+    "particle": "upper"
+  },
+  "properties": {
+    "particle": {
+      "particle": "machine/precision_assembler/drilling",
+      "progress": 0.0,
+      "correct_rotation": true,
+      "visible": false
+    }
   }
 }

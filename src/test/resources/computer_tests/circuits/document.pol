@@ -1,0 +1,12 @@
+use DOCUMENT
+use ARRAY
+use TEXT
+
+type document_read_page @d 0
+array p = document_read_all_pages_array @d
+type array_get @p 1
+type string_contains (document_read_all_pages_string @d) "Second page"
+type document_get_author @d
+type document_get_title @d
+
+end

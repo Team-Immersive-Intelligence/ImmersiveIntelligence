@@ -6,8 +6,6 @@ import pl.pabilo8.immersiveintelligence.api.data.types.*;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -33,11 +31,9 @@ public class DataOperationArraySet extends DataOperation
 			tries++;
 		}
 
-		DataType[] arr = array.value;
-		ArrayList<DataType> dataTypes = new ArrayList<>(Arrays.asList(arr));
-		dataTypes.add(index, t3);
-		array.value = dataTypes.toArray(new DataType[0]);
+		if(index >= 0&&index < array.value.length)
+			array.value[index] = t3;
 
-		return array;
+		return new DataTypeNull();
 	}
 }

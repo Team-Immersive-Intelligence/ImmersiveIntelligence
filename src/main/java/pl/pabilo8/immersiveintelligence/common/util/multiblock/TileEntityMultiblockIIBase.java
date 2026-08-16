@@ -6,7 +6,6 @@ import blusunrize.immersiveengineering.common.EventHandler;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IMirrorAble;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IUsesBooleanProperty;
 import blusunrize.immersiveengineering.common.blocks.TileEntityMultiblockPart;
-import blusunrize.immersiveengineering.common.util.inventory.IIEInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -35,25 +34,24 @@ import pl.pabilo8.immersiveintelligence.common.util.diplomacy.property.IOwnableP
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.NBTSerialisation;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IAdvancedBounds;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IIIInventory;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Consumer;
+import java.util.stream.IntStream;
 
 /**
- * A new beginning!<br>
- * A lightweight alternative to using {@link blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal}
+ * Provides common runtime behaviour for II multiblock tile entities.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 09.08.2026
  * @since 04.08.2022
  */
 public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockIIBase<T>> extends TileEntityMultiblockPart<T>
-		implements IMirrorAble, IIEInventory, IAdvancedBounds, IWorldPosProvider
+		implements IMirrorAble, IIIInventory, IAdvancedBounds, IWorldPosProvider
 {
 	public static final String KEY_SYNC_AABB = "_sync_aabb";
 	public static final String KEY_SYNC_ALL_VALUES = "_sync_all_values";
@@ -440,20 +438,34 @@ public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockI
 
 	//--- Points of Interest ---//
 
-	protected abstract int[] listAllPOI(MultiblockPOI poi);
-
-	public final int[] getPOI(MultiblockPOI poi)
+	/**
+	 * Lists POIs that depend on the current tile state.
+	 * Use this only for points that can change while the multiblock exists.
+	 *
+	 * @param poi direct POI type
+	 * @return local multiblock positions
+	 */
+	protected int[] listDynamicPOI(MultiblockPOI poi)
 	{
-		if(poi.hasChildren())
-			return getAllPOI(poi.getChildren());
-		return listAllPOI(poi);
+		return new int[0];
 	}
 
-	private int[] getAllPOI(List<MultiblockPOI> pois)
+	/**
+	 * Gets all static and dynamic positions that match a POI type.
+	 *
+	 * @param poi queried POI type
+	 * @return sorted local multiblock positions
+	 */
+	public final int[] getPOI(MultiblockPOI poi)
 	{
-		return pois.stream()
-				.map(this::getPOI)
+		int[] dynamicPOIs = Arrays.stream(MultiblockPOI.values())
+				.filter(dynamicPOI -> dynamicPOI.matches(poi))
+				.map(this::listDynamicPOI)
+				.filter(Objects::nonNull)
 				.flatMapToInt(Arrays::stream)
+				.toArray();
+
+		return IntStream.concat(Arrays.stream(multiblock.getPointsOfInterest(poi)), Arrays.stream(dynamicPOIs))
 				.distinct()
 				.sorted()
 				.toArray();

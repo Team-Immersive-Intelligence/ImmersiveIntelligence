@@ -164,10 +164,6 @@ public class IIConfigHandler
 			@RequiresMcRestart
 			public static boolean changeRevolverProduction = true;
 
-			@Comment({"Whether the the chemthrower should require a gun stock instead of a grip to be constructed"})
-			@RequiresMcRestart
-			public static boolean changeChemthrowerProduction = true;
-
 			@Comment({"Whether Immersive Engineering liquid concrete behavior should be replaced by II."})
 			@RequiresMcRestart
 			public static boolean concreteOverride = true;
@@ -181,9 +177,14 @@ public class IIConfigHandler
 			public static boolean enableDecoOverride = false;
 
 			@SubConfig
-			@LangKey("desc.immersiveintelligence.toolupgrade.item.railgun")
+			@LangKey("item.immersiveengineering.railgun.name")
 			@Comment("Config for the Railgun, allows for the toggling of II related features, such as recoil and penetration")
 			public static Railgun railgun;
+
+			@SubConfig
+			@LangKey("item.immersiveengineering.chemthrower.name")
+			@Comment("Config for the Chemical Thrower, allows for the toggling of II related features, such as the range, scatter and block scorching")
+			public static Chemthrower chemthrower;
 
 			public static class Railgun
 			{
@@ -201,6 +202,53 @@ public class IIConfigHandler
 
 				@Comment({"Whether the the railgun should require a gun stock instead of a grip to be constructed"})
 				public static boolean changeRailgunProduction = true;
+			}
+
+			public static class Chemthrower
+			{
+				@Comment({"Whether the the Chemthrower should require a gun stock instead of a grip to be constructed"})
+				@RequiresMcRestart
+				public static boolean changeChemthrowerProduction = true;
+
+				@Comment({"If enabled, II replaces IE's Chemthrower item with its own implementation."})
+				@RequiresMcRestart
+				public static boolean enableChemthrowerOverride = true;
+
+				@Comment({"How many shot entities should be created in one tick of using the Chemthrower"})
+				public static int chemthrowerShotsPerTick = 4;
+
+				@Comment({"Horizontal and vertical scatter for non-gasseous fluids"})
+				public static float chemthrowerScatterFluid = 0.075f;
+
+				@Comment({"Horizontal and vertical scatter for gasses"})
+				public static float chemthrowerScatterGas = 0.125f;
+
+				@Comment({"Range multiplier for non-gasseous fluids"})
+				public static float chemthrowerRangeFluid = 1.25f;
+
+				@Comment({"Range multiplier for gasses"})
+				public static float chemthrowerRangeGas = 0.55f;
+
+				@Comment({"Range modifier when the focus upgrade is installed on the Chemthrower"})
+				public static float chemthrowerRangeFocusModifier = 0.25f;
+
+				@Comment({"Scatter reduction when the focus upgrade is installed on the Chemthrower"})
+				public static float chemthrowerScatterFocusModifier = 0.025f;
+
+				@Comment({"Pushback / recoil applied to the player when firing the Chemthrower"})
+				public static float chemthrowerPushback = 0.0025f;
+
+				@Comment({"Maximum lifetime of a Chemthrower Shot entity (in ticks)"})
+				public static int chemthrowerShotLifetime = 40;
+
+				@Comment({"How long should the Chemthrower Shot entity stay on ground after contact (in ticks)"})
+				public static int shotRemainingTicks = 5;
+
+				@Comment({"Maximum burn damage dealt to blocks (requires)"})
+				public static float shotBlockBurnDamage = 25f;
+
+				@Comment({"Size (half of the hitbox) of the chemthrower shot entity"})
+				public static float shotEntitySize = 0.5f;
 			}
 		}
 
@@ -1090,6 +1138,55 @@ public class IIConfigHandler
 
 				@Comment({"How much explosion and block breaking damage the multiblock can take (in half-hearts)."})
 				public static int baseHealth = 800;
+
+				@RangeInt(min = 0)
+				@Comment({"Energy capacity of the Flagpole (in IF)."})
+				public static int energyCapacity = 32000;
+
+				//Distress signal upgrade
+
+				@Comment({"How often should an upgraded Flagpole scan for entities triggering the distress signal (in ticks)."})
+				public static int distressScanInterval = 20;
+
+				@RangeInt(min = 0)
+				@Comment({"Energy used by the distress alarm on each distress scan (in IF)."})
+				public static int distressAlarmEnergyUsage = 512;
+
+				@RangeInt(min = 0)
+				@Comment({"Distance from which the Flagpole distress alarm can be heard (in blocks)."})
+				public static int distressAlarmSoundRange = 36;
+
+				@Comment({"How long should an upgraded Flagpole wait between sending distress signals (in ticks)."})
+				public static int distressPacketInterval = 100;
+
+				@RangeInt(min = 0)
+				@Comment({"Energy used to send one distress radio packet (in IF)."})
+				public static int distressPacketEnergyUsage = 512;
+
+				@RangeInt(min = 0)
+				@Comment({"Radio transmission range of the Distress Signal upgrade (in blocks)."})
+				public static int distressRadioRange = 128;
+
+				@RangeDouble(min = 0, max = 1)
+				@Comment({"Radio range multiplier during bad weather (1 - full range, 0.5 - half range, 0 - no range)."})
+				public static double distressRadioWeatherHarshness = 0.75;
+
+				//Tesla
+
+				@Comment({"How often should the Taser Locks upgrade strike enemies."})
+				public static int teslaScanInterval = 10;
+
+				@RangeInt(min = 0)
+				@Comment({"Energy used by the Taser Locks upgrade per strike (in IF)."})
+				public static int teslaEnergyUsage = 512;
+
+				@RangeDouble(min = 0)
+				@Comment({"Damage dealt by the Taser Locks upgrade (in half-hearts)."})
+				public static float teslaDamage = 6;
+
+				@RangeDouble(min = 0)
+				@Comment({"Range of the Taser Locks upgrade (in blocks)."})
+				public static double teslaRange = 8;
 			}
 
 			public static class Emplacement
@@ -1178,18 +1275,37 @@ public class IIConfigHandler
 
 			public static class ChemicalDispenser
 			{
-				@Comment({"Energy capacity of the chemical dispenser."})
+				@Comment({"Energy capacity of the Chemical Dispenser."})
 				public static int energyCapacity = 2048;
 
-				@Comment({"Energy usage of the chemical dispenser per one shot."})
+				@Comment({"Energy usage of the Chemical Dispenser per one shot."})
 				public static int energyUsage = 128;
 
-				@Comment({"How long does it take for the chemical dispenser to rotate 45 degrees horizontally (in ticks)"})
+				@Comment({"How long it takes the Chemical Dispenser to rotate 45 degrees horizontally (in ticks)."})
 				public static int rotateHTime = 240;
 
-				@Comment({"How long does it take for the chemical dispenser to rotate 45 degrees vertically (in ticks)"})
+				@Comment({"How long it takes the Chemical Dispenser to rotate 45 degrees vertically (in ticks)."})
 				public static int rotateVTime = 180;
 
+				@RangeInt(min = 1)
+				@Comment({"How many shot entities the Chemical Dispenser creates per spray tick."})
+				public static int sprayShotsPerTick = 4;
+
+				@RangeDouble(min = 0)
+				@Comment({"Base scatter of non-gaseous fluids sprayed by the Chemical Dispenser."})
+				public static float sprayScatterFluid = 0.025f;
+
+				@RangeDouble(min = 0)
+				@Comment({"Base scatter of gaseous fluids sprayed by the Chemical Dispenser."})
+				public static float sprayScatterGas = 0.05f;
+
+				@RangeDouble(min = 0)
+				@Comment({"Base range multiplier of non-gaseous fluids sprayed by the Chemical Dispenser."})
+				public static float sprayRangeFluid = 1.5f;
+
+				@RangeDouble(min = 0)
+				@Comment({"Base range multiplier of gaseous fluids sprayed by the Chemical Dispenser."})
+				public static float sprayRangeGas = 0.75f;
 			}
 
 			public static class SmallDataBuffer
@@ -1629,15 +1745,6 @@ public class IIConfigHandler
 
 			public static class Grenade
 			{
-				@Comment({
-						"Changes looks of the grenades",
-						"0 - new look",
-						"1 - old look, but cores are colored",
-						"2 - old look"
-				})
-				@RangeInt(min = 0, max = 2)
-				public static int classicGrenades = 0;
-
 				@Comment({"Grenade's initial speed modifier."})
 				@RangeDouble(min = 0)
 				public static float throwSpeedModifier = 1.65f;

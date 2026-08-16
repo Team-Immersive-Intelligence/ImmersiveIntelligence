@@ -2,10 +2,12 @@
   "origins": {
     "inserter": [8, 4, 8],
     "lower": [8, 8, 8],
-    "upper": [8, 21.5, 8]
+    "upper": [8, 21.5, 8],
+    "particle": [8, 42.5, 8]
   },
   "hierarchy": {
     "lower": "inserter",
-    "upper": "lower"
+    "upper": "lower",
+    "particle": "upper"
   }
 }

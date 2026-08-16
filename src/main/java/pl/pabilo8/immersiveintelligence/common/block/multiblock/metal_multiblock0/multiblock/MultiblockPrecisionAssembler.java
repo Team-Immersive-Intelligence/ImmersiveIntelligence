@@ -8,6 +8,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityPrecisionAssembler;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -27,6 +28,12 @@ public class MultiblockPrecisionAssembler extends MultiblockStuctureBase<TileEnt
 		super(new ResourceLocation(ImmersiveIntelligence.MODID, "multiblocks/precision_assembler"));
 		offset = new Vec3i(2, 0, 0);
 		INSTANCE = this;
+
+		//POI
+		addPOI(MultiblockPOI.ENERGY_INPUT, "energy");
+		addPOI(MultiblockPOI.ITEM_INPUT, "all_item_inputs");
+		addPOI(MultiblockPOI.ITEM_OUTPUT, "item_out");
+		addPOI(MultiblockPOI.REDSTONE, "redstone");
 	}
 
 	@Override

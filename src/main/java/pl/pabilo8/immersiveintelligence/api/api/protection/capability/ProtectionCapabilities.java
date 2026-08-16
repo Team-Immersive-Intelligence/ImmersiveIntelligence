@@ -1,7 +1,9 @@
 package pl.pabilo8.immersiveintelligence.api.api.protection.capability;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
@@ -56,6 +58,15 @@ public final class ProtectionCapabilities
 		CapabilityManager.INSTANCE.register(IRadiationEmitter.class, new SerializableStorage<>(), RadiationEmitter::new);
 	}
 
+	static boolean isSerializableCapabilityInstance(Object instance)
+	{
+		// Entity and tile entity instances own their NBT.
+		// Do not serialize them as capability data because this calls the capability dispatcher again.
+		return instance instanceof INBTSerializable
+				&&!(instance instanceof Entity)
+				&&!(instance instanceof TileEntity);
+	}
+
 	private static final class EmptyStorage<T> implements IStorage<T>
 	{
 		@Override
@@ -76,7 +87,7 @@ public final class ProtectionCapabilities
 		@Override
 		public NBTBase writeNBT(Capability<T> capability, T instance, EnumFacing side)
 		{
-			if(instance instanceof INBTSerializable)
+			if(isSerializableCapabilityInstance(instance))
 				return ((INBTSerializable<?>)instance).serializeNBT();
 			return null;
 		}
@@ -85,7 +96,7 @@ public final class ProtectionCapabilities
 		@SuppressWarnings({"rawtypes", "unchecked"})
 		public void readNBT(Capability<T> capability, T instance, EnumFacing side, NBTBase nbt)
 		{
-			if(instance instanceof INBTSerializable)
+			if(isSerializableCapabilityInstance(instance))
 				((INBTSerializable)instance).deserializeNBT(nbt);
 		}
 	}

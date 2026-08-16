@@ -7,6 +7,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.ammo.penetration.IPenetrationHandler;
 import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleProperties;
 import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleRegistry;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.entity.IIEntityUtils;
 
 import javax.vecmath.Vector2f;
@@ -18,6 +19,7 @@ import javax.vecmath.Vector2f;
  */
 public class EntityAmmoMissile extends EntityAmmoProjectile
 {
+	@SyncNBT
 	int fuelRemaining = 1000;
 
 	public EntityAmmoMissile(World world)
@@ -30,10 +32,7 @@ public class EntityAmmoMissile extends EntityAmmoProjectile
 	{
 		//Gravity suppressed by missile jet
 		if(fuelRemaining > 0)
-		{
-			velocity -= DRAG*velocity;
 			fuelRemaining--;
-		}
 		else
 			super.updatePhysics();
 	}

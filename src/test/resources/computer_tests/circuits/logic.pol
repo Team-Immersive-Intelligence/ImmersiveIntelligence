@@ -1,0 +1,17 @@
+use ADVANCED_LOGIC
+use COMPARATOR
+
+type and true false
+type or true false
+type not false
+type nand true true
+type nor false false
+type xor true false
+type xnor true true
+type greater 5 2
+type less 2 5
+type greater_or_equal 5 5
+type less_or_equal 5 5
+type equal 5 5
+
+end

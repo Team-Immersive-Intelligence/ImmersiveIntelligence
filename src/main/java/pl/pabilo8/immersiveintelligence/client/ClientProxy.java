@@ -54,8 +54,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import org.lwjgl.input.Keyboard;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler;
-import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler.Shrapnel;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
@@ -170,7 +168,6 @@ import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
-import java.util.Map.Entry;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -398,7 +395,8 @@ public class ClientProxy extends CommonProxy
 		registerEntityRenderer(EntityAmmoProjectile.class, ProjectileAmmoRenderer::new);
 		registerEntityRenderer(EntityNavalMine.class, NavalMineRenderer::new);
 		registerEntityRenderer(EntityNavalMineAnchor.class, NavalMineAnchorRenderer::new);
-		registerEntityRenderer(EntityShrapnel.class, ShrapnelRenderer::new);
+		registerEntityRenderer(EntityShrapnel.class, EntityRenderNone::new);
+		registerEntityRenderer(EntityIIChemthrowerShot.class, EntityRenderNone::new);
 		registerEntityRenderer(EntityWhitePhosphorus.class, EntityRenderNone::new);
 		registerEntityRenderer(EntityMachinegun.class, MachinegunRenderer::new);
 		registerEntityRenderer(EntityMotorbike.class, MotorbikeRenderer::new);
@@ -415,7 +413,7 @@ public class ClientProxy extends CommonProxy
 		registerEntityRenderer(EntitySkycrateInternal.class, EntityRenderNone::new);
 		registerEntityRenderer(EntityVehicleSeat.class, EntityRenderNone::new);
 
-		registerEntityRenderer(EntityAtomicBoom.class, AtomicBoomRenderer::new);
+		registerEntityRenderer(EntityAtomicBoom.class, EntityRenderNone::new);
 		registerEntityRenderer(EntityGasCloud.class, EntityRenderNone::new);
 		registerEntityRenderer(EntityFlare.class, EntityRenderNone::new);
 
@@ -602,8 +600,6 @@ public class ClientProxy extends CommonProxy
 			if(item instanceof IIIItemTextureOverride)
 				((IIIItemTextureOverride)item).registerSprites(event.getMap());
 
-		for(Entry<String, Shrapnel> s : ShrapnelHandler.registry.entrySet())
-			ApiUtils.getRegisterSprite(event.getMap(), s.getValue().texture.replace("textures/", ""));
 		for(DrillHeads perm : DrillHeads.values())
 			perm.sprite = ApiUtils.getRegisterSprite(event.getMap(), perm.texture);
 

@@ -1,0 +1,845 @@
+{
+  "comment": "Made by Pabilo8 with Blockbench",
+  "groups": {
+    "tray_lower": {
+      "rotation": [
+        {
+          "time": 0.125,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.175,
+          "transform": [2.5, 0, 0]
+        },
+        {
+          "time": 0.225,
+          "transform": [1.5, 0, 0]
+        },
+        {
+          "time": 0.3,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.30729,
+          "transform": [-1, 0, 0]
+        },
+        {
+          "time": 0.3125,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.39792,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.40208,
+          "transform": [-2, 0, 0]
+        },
+        {
+          "time": 0.40521,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.425,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.44375,
+          "transform": [-2.5, 0, 0]
+        },
+        {
+          "time": 0.46875,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.55729,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.58229,
+          "transform": [-2.5, 0, 0]
+        },
+        {
+          "time": 0.60104,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.62083,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.62396,
+          "transform": [-2, 0, 0]
+        },
+        {
+          "time": 0.62813,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.71354,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.71875,
+          "transform": [-1, 0, 0]
+        },
+        {
+          "time": 0.72604,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.80104,
+          "transform": [1.5, 0, 0]
+        },
+        {
+          "time": 0.85104,
+          "transform": [2.5, 0, 0]
+        },
+        {
+          "time": 0.90104,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "position": [
+        {
+          "time": 0.125,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.175,
+          "transform": [0, -0.8, 9.5]
+        },
+        {
+          "time": 0.225,
+          "transform": [0, -0.5, 19]
+        },
+        {
+          "time": 0.275,
+          "transform": [0, 0, 30.67]
+        },
+        {
+          "time": 0.3,
+          "transform": [0, 0, 33]
+        },
+        {
+          "time": 0.30729,
+          "transform": [0, 0.2, 31.71]
+        },
+        {
+          "time": 0.3125,
+          "transform": [0, 0, 32]
+        },
+        {
+          "time": 0.325,
+          "transform": [0, 0, 31.71]
+        },
+        {
+          "time": 0.4,
+          "transform": [0, -23.5, 32]
+        },
+        {
+          "time": 0.40521,
+          "transform": [0, -24, 32]
+        },
+        {
+          "time": 0.425,
+          "transform": [0, -24, 32]
+        },
+        {
+          "time": 0.44375,
+          "transform": [0, -23.5, 30]
+        },
+        {
+          "time": 0.48854,
+          "transform": [0, -23, 10]
+        },
+        {
+          "time": 0.5375,
+          "transform": [0, -23, 10]
+        },
+        {
+          "time": 0.58229,
+          "transform": [0, -23.5, 30]
+        },
+        {
+          "time": 0.60104,
+          "transform": [0, -24, 32]
+        },
+        {
+          "time": 0.62083,
+          "transform": [0, -24, 32]
+        },
+        {
+          "time": 0.62604,
+          "transform": [0, -23.5, 32]
+        },
+        {
+          "time": 0.70104,
+          "transform": [0, 0, 31.71]
+        },
+        {
+          "time": 0.71354,
+          "transform": [0, 0, 32]
+        },
+        {
+          "time": 0.71875,
+          "transform": [0, 0.2, 31.71]
+        },
+        {
+          "time": 0.72604,
+          "transform": [0, 0, 33]
+        },
+        {
+          "time": 0.75104,
+          "transform": [0, 0, 30.67]
+        },
+        {
+          "time": 0.80104,
+          "transform": [0, -0.5, 19]
+        },
+        {
+          "time": 0.85104,
+          "transform": [0, -0.8, 9.5]
+        },
+        {
+          "time": 0.90104,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "rocket5": {
+      "position": [
+        {
+          "time": 0.48854,
+          "transform": [0, 0, -20]
+        },
+        {
+          "time": 0.525,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "scale": [
+        {
+          "time": 0.4875,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.48854,
+          "transform": [1, 1, 1]
+        }
+      ]
+    },
+    "rocket6": {
+      "position": [
+        {
+          "time": 0.48854,
+          "transform": [0, 0, -20]
+        },
+        {
+          "time": 0.525,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "scale": [
+        {
+          "time": 0.4875,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.48854,
+          "transform": [1, 1, 1]
+        }
+      ]
+    },
+    "rocket7": {
+      "position": [
+        {
+          "time": 0.48854,
+          "transform": [0, 0, -20]
+        },
+        {
+          "time": 0.51979,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "scale": [
+        {
+          "time": 0.4875,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.48854,
+          "transform": [1, 1, 1]
+        }
+      ]
+    },
+    "rocket8": {
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.48854,
+          "transform": [0, 0, -20]
+        },
+        {
+          "time": 0.52292,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "scale": [
+        {
+          "time": 0.4875,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.48854,
+          "transform": [1, 1, 1]
+        }
+      ]
+    },
+    "loader_crane": {
+      "rotation": [
+        {
+          "time": 0.225,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.46875,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.55729,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.80104,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "position": [
+        {
+          "time": 0.225,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.275,
+          "transform": [0, 0, 9.67]
+        },
+        {
+          "time": 0.3,
+          "transform": [0, 0, 12]
+        },
+        {
+          "time": 0.30729,
+          "transform": [0, 0, 11]
+        },
+        {
+          "time": 0.325,
+          "transform": [0, 0, 11]
+        },
+        {
+          "time": 0.4,
+          "transform": [0, 0, 11]
+        },
+        {
+          "time": 0.40521,
+          "transform": [0, 0, 11]
+        },
+        {
+          "time": 0.425,
+          "transform": [0, 0, 11]
+        },
+        {
+          "time": 0.44375,
+          "transform": [0, 0, 9]
+        },
+        {
+          "time": 0.46875,
+          "transform": [0, 0, 9]
+        },
+        {
+          "time": 0.48854,
+          "transform": [0, 0, 9]
+        },
+        {
+          "time": 0.5375,
+          "transform": [0, 0, 9]
+        },
+        {
+          "time": 0.55729,
+          "transform": [0, 0, 9]
+        },
+        {
+          "time": 0.58229,
+          "transform": [0, 0, 9]
+        },
+        {
+          "time": 0.60104,
+          "transform": [0, 0, 11]
+        },
+        {
+          "time": 0.62083,
+          "transform": [0, 0, 11]
+        },
+        {
+          "time": 0.62604,
+          "transform": [0, 0, 11]
+        },
+        {
+          "time": 0.70104,
+          "transform": [0, 0, 11]
+        },
+        {
+          "time": 0.71875,
+          "transform": [0, 0, 11]
+        },
+        {
+          "time": 0.72604,
+          "transform": [0, 0, 12]
+        },
+        {
+          "time": 0.75104,
+          "transform": [0, 0, 9.67]
+        },
+        {
+          "time": 0.80104,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "loader_crane2": {
+      "rotation": [
+        {
+          "time": 0.46875,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.55729,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.025,
+          "transform": [0, 0, 1]
+        },
+        {
+          "time": 0.0375,
+          "transform": [0, 0, 1]
+        },
+        {
+          "time": 0.1,
+          "transform": [0, 0, 1]
+        },
+        {
+          "time": 0.125,
+          "transform": [0, 0, 1]
+        },
+        {
+          "time": 0.225,
+          "transform": [0, 0, 20]
+        },
+        {
+          "time": 0.275,
+          "transform": [0, 0, 22]
+        },
+        {
+          "time": 0.3,
+          "transform": [0, 0, 22]
+        },
+        {
+          "time": 0.325,
+          "transform": [0, 0, 22]
+        },
+        {
+          "time": 0.44375,
+          "transform": [0, 0, 22]
+        },
+        {
+          "time": 0.46875,
+          "transform": [0, 0, 10.67]
+        },
+        {
+          "time": 0.48854,
+          "transform": [0, 0, 2]
+        },
+        {
+          "time": 0.5375,
+          "transform": [0, 0, 2]
+        },
+        {
+          "time": 0.55729,
+          "transform": [0, 0, 10.67]
+        },
+        {
+          "time": 0.58229,
+          "transform": [0, 0, 22]
+        },
+        {
+          "time": 0.70104,
+          "transform": [0, 0, 22]
+        },
+        {
+          "time": 0.72604,
+          "transform": [0, 0, 22]
+        },
+        {
+          "time": 0.75104,
+          "transform": [0, 0, 22]
+        },
+        {
+          "time": 0.80104,
+          "transform": [0, 0, 20]
+        },
+        {
+          "time": 0.90104,
+          "transform": [0, 0, 1]
+        },
+        {
+          "time": 0.92604,
+          "transform": [0, 0, 1]
+        },
+        {
+          "time": 0.98438,
+          "transform": [0, 0, 1]
+        },
+        {
+          "time": 0.99167,
+          "transform": [0, 0, 1]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "loader_winch1": {
+      "rotation": [
+        {
+          "time": 0.46875,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.48854,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.5375,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.55729,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "position": [
+        {
+          "time": 0.0375,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.1,
+          "transform": [0, -21, 0]
+        },
+        {
+          "time": 0.10313,
+          "transform": [0, -21.4, 0]
+        },
+        {
+          "time": 0.10625,
+          "transform": [0, -21, 0]
+        },
+        {
+          "time": 0.125,
+          "transform": [0, -21, 0]
+        },
+        {
+          "time": 0.325,
+          "transform": [0, -21, 0]
+        },
+        {
+          "time": 0.4,
+          "transform": [0, -45, 0]
+        },
+        {
+          "time": 0.40521,
+          "transform": [0, -45, 0]
+        },
+        {
+          "time": 0.46875,
+          "transform": [0, -44, 0]
+        },
+        {
+          "time": 0.48854,
+          "transform": [0, -44, 0]
+        },
+        {
+          "time": 0.5375,
+          "transform": [0, -44, 0]
+        },
+        {
+          "time": 0.55729,
+          "transform": [0, -44, 0]
+        },
+        {
+          "time": 0.62083,
+          "transform": [0, -45, 0]
+        },
+        {
+          "time": 0.62604,
+          "transform": [0, -45, 0]
+        },
+        {
+          "time": 0.70104,
+          "transform": [0, -21, 0]
+        },
+        {
+          "time": 0.90104,
+          "transform": [0, -21, 0]
+        },
+        {
+          "time": 0.91979,
+          "transform": [0, -21, 0]
+        },
+        {
+          "time": 0.92292,
+          "transform": [0, -21.4, 0]
+        },
+        {
+          "time": 0.92604,
+          "transform": [0, -21, 0]
+        },
+        {
+          "time": 0.98438,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "loader_rope_coil": {
+      "rotation": [
+        {
+          "time": 0.0375,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.1,
+          "transform": [285, 0, 0]
+        },
+        {
+          "time": 0.10313,
+          "transform": [288.54, 0, 0]
+        },
+        {
+          "time": 0.10625,
+          "transform": [285, 0, 0]
+        },
+        {
+          "time": 0.125,
+          "transform": [285, 0, 0]
+        },
+        {
+          "time": 0.325,
+          "transform": [285, 0, 0]
+        },
+        {
+          "time": 0.4,
+          "transform": [755, 0, 0]
+        },
+        {
+          "time": 0.40521,
+          "transform": [755, 0, 0]
+        },
+        {
+          "time": 0.46875,
+          "transform": [755, 0, 0]
+        },
+        {
+          "time": 0.48854,
+          "transform": [755, 0, 0]
+        },
+        {
+          "time": 0.5375,
+          "transform": [755, 0, 0]
+        },
+        {
+          "time": 0.55729,
+          "transform": [755, 0, 0]
+        },
+        {
+          "time": 0.62083,
+          "transform": [755, 0, 0]
+        },
+        {
+          "time": 0.62604,
+          "transform": [755, 0, 0]
+        },
+        {
+          "time": 0.70104,
+          "transform": [285, 0, 0]
+        },
+        {
+          "time": 0.90104,
+          "transform": [285, 0, 0]
+        },
+        {
+          "time": 0.91979,
+          "transform": [285, 0, 0]
+        },
+        {
+          "time": 0.92292,
+          "transform": [288.54, 0, 0]
+        },
+        {
+          "time": 0.92604,
+          "transform": [285, 0, 0]
+        },
+        {
+          "time": 0.98438,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "position": [
+        {
+          "time": 0.4,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.40521,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.46875,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.48854,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.5375,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.55729,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.62083,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.62604,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "loader_winch2": {
+      "rotation": [
+        {
+          "time": 0.225,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.25,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.78958,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.81458,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "position": [
+        {
+          "time": 0.225,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.25,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.2625,
+          "transform": [0, -14, 0]
+        },
+        {
+          "time": 0.325,
+          "transform": [0, -14, 0]
+        },
+        {
+          "time": 0.4,
+          "transform": [0, -36.7, 0]
+        },
+        {
+          "time": 0.40521,
+          "transform": [0, -38, 0]
+        },
+        {
+          "time": 0.425,
+          "transform": [0, -38, 0]
+        },
+        {
+          "time": 0.44375,
+          "transform": [0, -38, 0]
+        },
+        {
+          "time": 0.46875,
+          "transform": [0, -18, 0]
+        },
+        {
+          "time": 0.48854,
+          "transform": [0, -18, 0]
+        },
+        {
+          "time": 0.5375,
+          "transform": [0, -18, 0]
+        },
+        {
+          "time": 0.55729,
+          "transform": [0, -18, 0]
+        },
+        {
+          "time": 0.58229,
+          "transform": [0, -38, 0]
+        },
+        {
+          "time": 0.60104,
+          "transform": [0, -38, 0]
+        },
+        {
+          "time": 0.62083,
+          "transform": [0, -38, 0]
+        },
+        {
+          "time": 0.62604,
+          "transform": [0, -36.7, 0]
+        },
+        {
+          "time": 0.70104,
+          "transform": [0, -14, 0]
+        },
+        {
+          "time": 0.77708,
+          "transform": [0, -14, 0]
+        },
+        {
+          "time": 0.78958,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.81458,
+          "transform": [0, 0, 0]
+        }
+      ]
+    }
+  }
+}

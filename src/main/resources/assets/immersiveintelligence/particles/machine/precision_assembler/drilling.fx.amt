@@ -1,0 +1,38 @@
+{
+  "type": "ParticleVanilla",
+  "textures": [
+    "immersiveintelligence:particle/smoke_trej/smoke0",
+    "immersiveintelligence:particle/smoke_trej/smoke1",
+    "immersiveintelligence:particle/smoke_trej/smoke2",
+    "immersiveintelligence:particle/smoke_trej/smoke1",
+    "immersiveintelligence:particle/smoke_trej/smoke2",
+    "immersiveintelligence:particle/smoke_trej/smoke1",
+    "immersiveintelligence:particle/smoke_trej/smoke2",
+    "immersiveintelligence:particle/smoke_trej/smoke1",
+    "immersiveintelligence:particle/smoke_trej/smoke2",
+    "immersiveintelligence:particle/smoke_trej/smoke1",
+    "immersiveintelligence:particle/smoke_trej/smoke2",
+    "immersiveintelligence:particle/smoke_trej/smoke1",
+    "immersiveintelligence:particle/smoke_trej/smoke2",
+    "immersiveintelligence:particle/smoke_trej/smoke1",
+    "immersiveintelligence:particle/smoke_trej/smoke2",
+    "immersiveintelligence:particle/smoke_trej/smoke1",
+    "immersiveintelligence:particle/smoke_trej/smoke2",
+    "immersiveintelligence:particle/smoke_trej/smoke1",
+    "immersiveintelligence:particle/smoke_trej/smoke2",
+    "immersiveintelligence:particle/smoke_trej/smoke1",
+    "immersiveintelligence:particle/smoke_trej/smoke2",
+    "immersiveintelligence:particle/smoke_trej/smoke3",
+    "immersiveintelligence:particle/smoke_trej/smoke4",
+    "immersiveintelligence:particle/smoke_trej/smoke5",
+    "immersiveintelligence:particle/smoke_trej/smoke6"
+  ],
+  "color": "464646",
+  "max_lifetime": 20,
+  "draw_stage": "custom",
+  "size": 0.45,
+  "programs": [
+    "lifetime_retexture",
+    "shockwave_transition"
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "type": "ParticleGlow",
+  "max_lifetime": 24,
+  "draw_stage": "color_only_additive_triangles",
+  "color": "FFDDF7FF",
+  "color_secondary": "FF2F7FFF",
+  "size": 1.0
+}

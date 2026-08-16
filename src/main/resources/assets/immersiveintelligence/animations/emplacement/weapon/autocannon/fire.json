@@ -1,0 +1,69 @@
+{
+  "comment": "Made by Pabilo8 with Blockbench",
+  "groups": {
+    "cannon1": {
+      "position": [
+        {
+          "time": 0.2499,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.50011,
+          "transform": [0, 0, 5]
+        },
+        {
+          "time": 0.99991,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "cannon4": {
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.2499,
+          "transform": [0, 0, 5]
+        },
+        {
+          "time": 0.75001,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "cannon2": {
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.2499,
+          "transform": [0, 0, 5]
+        },
+        {
+          "time": 0.75001,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "cannon3": {
+      "position": [
+        {
+          "time": 0.2499,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.50011,
+          "transform": [0, 0, 5]
+        },
+        {
+          "time": 0.99991,
+          "transform": [0, 0, 0]
+        }
+      ]
+    }
+  }
+}

@@ -10,7 +10,6 @@ import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
 import pl.pabilo8.immersiveintelligence.api.upgrade.Upgrade;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeTechTree;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoColors;
-import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
 import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIAnimationCachedMap;
 import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTCachedModel;
 import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTCrossVariantReference;
@@ -81,14 +80,14 @@ public class EWRGuidedMissileLauncher extends EmplacementWeaponRenderer<Emplacem
 	@Override
 	public void apply(EmplacementWeaponGuidedMissileLauncher weapon, AMTCachedModel<TileEntityEmplacement> model, BufferBuilder buf, Tessellator tes, float partialTicks)
 	{
-		rocket.get().withState(BulletState.BULLET_UNUSED)
+		this.rocket.get().withState(BulletState.BULLET_UNUSED)
 				.withProperties(IIContent.ammoCoreIron, CoreType.SHAPED, DecoColors.POWER2);
-		load.apply(AMTUtils.getDebugProgress(120, partialTicks));
 
-		rotateYaw.apply(weapon.aim.getYawNormalized(partialTicks));
+		this.rotateYaw.apply(weapon.aim.getYawNormalized(partialTicks));
 		float pitch = weapon.aim.getPitchNormalized(partialTicks);
-		rotatePitch.apply(pitch);
-		trackerPitch.apply(pitch);
-		fire.apply(weapon.shootDelay);
+		this.rotatePitch.apply(pitch);
+		this.trackerPitch.apply(pitch);
+		this.load.apply(weapon.gunHandler.getLoadingProgress(partialTicks));
+		this.fire.apply(weapon.gunHandler.getShotDelay(partialTicks));
 	}
 }

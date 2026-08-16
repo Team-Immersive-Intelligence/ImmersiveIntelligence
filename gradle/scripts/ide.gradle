@@ -27,6 +27,15 @@ idea {
 	}
 }
 
+dependencies {
+	runtimeOnlyNonPublishable rfg.deobf("lumien:ResourceLoader:${mkxString('resourceloader_version')}")
+}
+
 tasks.named('processIdeaSettings').configure {
 	dependsOn tasks.named('mkxAfterSync')
+}
+
+tasks.named('runClient').configure {
+	extraArgs.add('--resourceLoaderAssets')
+	extraArgs.add(rootProject.file('src/main/resources/assets').absolutePath)
 }

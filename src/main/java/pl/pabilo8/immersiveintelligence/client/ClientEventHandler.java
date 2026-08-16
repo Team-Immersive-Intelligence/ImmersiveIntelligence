@@ -4,7 +4,6 @@ import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.Config.IEConfig;
 import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
-import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.lib.manual.IManualPage;
 import blusunrize.lib.manual.ManualInstance;
 import blusunrize.lib.manual.ManualInstance.ManualEntry;
@@ -73,6 +72,7 @@ import pl.pabilo8.immersiveintelligence.api.LogisticTag;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.ammo.penetration.DamageBlockPos;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoUtils;
+import pl.pabilo8.immersiveintelligence.api.api.protection.RadiationHandler;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IAdvancedTooltipItem;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IItemScrollable;
@@ -146,6 +146,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	private static final ArrayList<TextOverlayBase> TEXT_OVERLAYS = new ArrayList<>();
 	private static final ArrayList<InWorldOverlayBase> IN_WORLD_OVERLAYS = new ArrayList<>();
 	private static final ArrayList<ScreenShake> SCREEN_SHAKE_EFFECTS = new ArrayList<>();
+	private static float cameraFov = 70f;
 	public static GuiScreen lastGui = null;
 	//Whether the Light Engineer Armor is worn
 	public static boolean gotTheDrip = false, nightVisionActive = false;
@@ -403,52 +404,42 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	public void onFogUpdate(RenderFogEvent event)
 	{
 		Entity entity = event.getEntity();
-		World world = entity.getEntityWorld();
+		if(!(entity instanceof EntityLivingBase))
+			return;
 
-		if(entity instanceof EntityLivingBase)
+		EntityLivingBase living = (EntityLivingBase)entity;
+		//Suppression
+		if(living.getActivePotionEffect(IIPotions.suppression)!=null)
 		{
-			EntityLivingBase living = (EntityLivingBase)entity;
-			//Nuke/Wasteland
-			if(living.getActivePotionEffect(IIPotions.nuclearHeat)!=null)
-			{
-				PotionEffect effect = living.getActivePotionEffect(IIPotions.nuclearHeat);
-				assert effect!=null;
+			PotionEffect effect = living.getActivePotionEffect(IIPotions.suppression);
+			assert effect!=null;
+			int amplifier = effect.getAmplifier();
+			if(amplifier < 0)
+				amplifier = 254+amplifier;
 
-				GlStateManager.setFog(FogMode.EXP2);
-				GlStateManager.setFogStart(0); //(
-				GlStateManager.setFogEnd(0.5f);
-				GlStateManager.setFogDensity(.015f);
-			}
-			else if(living.isPotionActive(IIPotions.radiation))
-			{
-				GlStateManager.setFog(FogMode.EXP2);
-				GlStateManager.setFogStart(0); //(
-				GlStateManager.setFogEnd(1.25f);
-				GlStateManager.setFogDensity(.015f);
-			}
-			//Suppression
-			if(living.getActivePotionEffect(IIPotions.suppression)!=null)
-			{
-				PotionEffect effect = living.getActivePotionEffect(IIPotions.suppression);
-				assert effect!=null;
-				int amplifier = effect.getAmplifier();
-				if(amplifier < 0)
-					amplifier = 254+amplifier;
+			float f1 = MathHelper.clamp((float)amplifier/255f, 0f, 1f);
+			//if(timeLeft < 20)
+			//f1 += (event.getFarPlaneDistance()/4)*(1-timeLeft/20f);
 
-				float f1 = MathHelper.clamp((float)amplifier/255f, 0f, 1f);
-				//if(timeLeft < 20)
-				//f1 += (event.getFarPlaneDistance()/4)*(1-timeLeft/20f);
+			GlStateManager.setFog(FogMode.LINEAR);
+			GlStateManager.setFogStart((float)Math.pow(1f-f1, 2)*12); //(
+			GlStateManager.setFogEnd((float)Math.pow(1f-f1, 2)*16);
+			GlStateManager.setFogDensity(.00625f+.00625f*f1);
 
-				GlStateManager.setFog(FogMode.LINEAR);
-				GlStateManager.setFogStart((float)Math.pow(1f-f1, 2)*12); //(
-				GlStateManager.setFogEnd((float)Math.pow(1f-f1, 2)*16);
-				GlStateManager.setFogDensity(.00625f+.00625f*f1);
-
-				if(GLContext.getCapabilities().GL_NV_fog_distance)
-					GlStateManager.glFogi(34138, 34139);
-			}
-
+			if(GLContext.getCapabilities().GL_NV_fog_distance)
+				GlStateManager.glFogi(34138, 34139);
+			return;
 		}
+
+		float fogFactor = getRadiationFogFactor(living, event.getRenderPartialTicks());
+		if(fogFactor <= 0)
+			return;
+
+		float normalFogEnd = event.getFarPlaneDistance();
+		float denseFogEnd = Math.min(5f, normalFogEnd);
+		GlStateManager.setFog(FogMode.LINEAR);
+		GlStateManager.setFogStart((float)IIMath.clampedLerp(normalFogEnd*0.75f, 0f, fogFactor));
+		GlStateManager.setFogEnd((float)IIMath.clampedLerp(normalFogEnd, denseFogEnd, fogFactor));
 	}
 
 	@SubscribeEvent()
@@ -462,22 +453,24 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 			EntityLivingBase living = (EntityLivingBase)entity;
 
 			//Nuke/Wasteland
-			if(living.getActivePotionEffect(IIPotions.nuclearHeat)!=null)
+			float fogFactor = getRadiationFogFactor(living, event.getRenderPartialTicks());
+			PotionEffect nuclearHeat = living.getActivePotionEffect(IIPotions.nuclearHeat);
+			if(nuclearHeat!=null)
 			{
-				float v = event.getEntity().getEntityWorld().provider.getSunBrightnessFactor(0);
-				//float min = Math.min(Math.min(event.getRed(), event.getGreen()), event.getBlue());
-				event.setRed(v);
-				event.setGreen(v);
-				event.setBlue(v);
+				float remainingDuration = (float)(nuclearHeat.getDuration()-event.getRenderPartialTicks());
+				float brightness = MathHelper.clamp((remainingDuration-400f)/20f, 0f, 1f);
+				event.setRed(brightness);
+				event.setGreen(brightness);
+				event.setBlue(brightness);
 			}
-			else if(living.isPotionActive(IIPotions.radiation))
+			else if(fogFactor > 0&&living.isPotionActive(IIPotions.radiation))
 			{
 				float[] rgb = IIColor.fromPackedRGB(0x64604e)
-						.withBrightness(0.2f*event.getEntity().getEntityWorld().provider.getSunBrightnessFactor(0.25f))
+						.withBrightness(0.2f*world.provider.getSunBrightnessFactor(0.25f))
 						.getFloatRGB();
-				event.setRed(rgb[0]);
-				event.setGreen(rgb[1]);
-				event.setBlue(rgb[2]);
+				event.setRed((float)IIMath.clampedLerp(event.getRed(), rgb[0], fogFactor));
+				event.setGreen((float)IIMath.clampedLerp(event.getGreen(), rgb[1], fogFactor));
+				event.setBlue((float)IIMath.clampedLerp(event.getBlue(), rgb[2], fogFactor));
 			}
 
 			//Suppression
@@ -513,6 +506,27 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 
 	}
 
+
+	private float getRadiationFogFactor(EntityLivingBase living, double partialTicks)
+	{
+		PotionEffect nuclearHeat = living.getActivePotionEffect(IIPotions.nuclearHeat);
+		PotionEffect radiation = living.getActivePotionEffect(IIPotions.radiation);
+		if(nuclearHeat!=null)
+			return 1f;
+		if(radiation==null)
+			return 0;
+
+		Vec3d position = new Vec3d(
+				living.prevPosX+(living.posX-living.prevPosX)*partialTicks,
+				living.prevPosY+(living.posY-living.prevPosY)*partialTicks+living.getEyeHeight(),
+				living.prevPosZ+(living.posZ-living.prevPosZ)*partialTicks
+		);
+		float proximity = RadiationHandler.INSTANCE.getRadiationProximity(living.world, position);
+		if(proximity > 0)
+			return proximity;
+		return MathHelper.clamp((radiation.getAmplifier()+1)/5f, 0.2f, 1f);
+	}
+
 	/**
 	 * Handling zoom for player view (on items)
 	 */
@@ -534,11 +548,13 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	{
 		CameraHandler.handleZoom();
 
-		if (CameraHandler.zoom != null)
+		float newFOV = event.getFOV();
+		if(CameraHandler.zoom!=null)
 		{
-			float newFOV = event.getFOV() * CameraHandler.fovZoom;
+			newFOV *= CameraHandler.fovZoom;
 			event.setFOV(newFOV);
 		}
+		cameraFov = newFOV;
 	}
 
 	@SubscribeEvent
@@ -811,23 +827,15 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 
 		//--- ScreenShake Handling ---//
 		if(Graphics.cameraScreenShake)
-		{
-			//Display the strongest effect
 			SCREEN_SHAKE_EFFECTS.stream()
-					.max(ScreenShake::compareTo)
-					.ifPresent(
-							screenShake -> {
-								double shakex = (Utils.RAND.nextGaussian()-0.5)*screenShake.getStrength();
-								double shakey = (Utils.RAND.nextGaussian()-0.5)*screenShake.getStrength();
-								double shakez = (Utils.RAND.nextGaussian()-0.5)*screenShake.getStrength();
-								event.setRoll((float)shakez);
-								event.setYaw((float)(event.getYaw()+shakex));
-								event.setPitch((float)(event.getPitch()+shakey));
-							}
-					);
-			//Tick and remove past effects
-			SCREEN_SHAKE_EFFECTS.removeIf(screenShake -> screenShake.tick(partialTicks));
-		}
+					.max((first, second) -> Double.compare(
+							first.getStrength(partialTicks), second.getStrength(partialTicks)))
+					.ifPresent(screenShake -> {
+						Vec3d rotation = screenShake.getRotation(partialTicks, cameraFov);
+						event.setYaw((float)(event.getYaw()+rotation.x));
+						event.setPitch((float)(event.getPitch()+rotation.y));
+						event.setRoll((float)(event.getRoll()+rotation.z));
+					});
 
 		//TODO: 15.11.2025 revisit, fix camera bug at -180/180 degrees
 		/*if(player.getRidingEntity() instanceof EntityVehicleSeat)
@@ -1054,6 +1062,8 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		if(event.phase!=Phase.END)
 			return;
 		Minecraft mc = ClientUtils.mc();
+
+		SCREEN_SHAKE_EFFECTS.removeIf(ScreenShake::tick);
 
 		if(ParticleSystem.INSTANCE!=null)
 			ParticleSystem.INSTANCE.updateParticles();

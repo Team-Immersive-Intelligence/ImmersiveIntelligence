@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.api.data.radio;
 import blusunrize.immersiveengineering.api.DimensionBlockPos;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.invocation.InvocationOnMock;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 
 import java.util.ArrayList;
@@ -61,17 +62,26 @@ public class RadioNetworkTest
 		when(mockDevice1.getFrequency()).thenReturn(1);
 		when(mockDevice2.getFrequency()).thenReturn(1);
 		when(mockDevice1.getRange()).thenReturn(100.0f);
+		when(mockDevice1.isRadioAvailable()).thenReturn(true);
+		when(mockDevice2.isRadioAvailable()).thenReturn(true);
 		when(mockDevice1.getDevicePosition()).thenReturn(new DimensionBlockPos(0, 0, 0, 0));
 		when(mockDevice2.getDevicePosition()).thenReturn(new DimensionBlockPos(0, 0, 50, 0));
 		when(mockDevice2.onRadioReceive(mockPacket)).thenReturn(true);
 
-		radioNetwork.addDevice(mockDevice1);
-		radioNetwork.addDevice(mockDevice2);
+		//Create radio network
+		createRadioNetwork();
 
+		//Same frequency
 		radioNetwork.sendPacket(mockPacket, mockDevice1, new ArrayList<>());
-
 		verify(mockDevice1).onRadioSend(mockPacket);
 		verify(mockDevice2).onRadioReceive(mockPacket);
+		clearInvocations(mockDevice1, mockDevice2);
+
+		//Different frequency
+		when(mockDevice1.getFrequency()).thenReturn(5);
+		radioNetwork.sendPacket(mockPacket, mockDevice1, new ArrayList<>());
+		verify(mockDevice1).onRadioSend(mockPacket);
+		verify(mockDevice2, never()).onRadioReceive(mockPacket);
 	}
 
 	@Test
@@ -91,4 +101,51 @@ public class RadioNetworkTest
 		when(mockDevice2.getDevicePosition()).thenReturn(new DimensionBlockPos(0, 0, 0, 1));
 		assertFalse(radioNetwork.distanceCheck(mockDevice1, mockDevice2));
 	}
+
+	@Test
+	public void testCooldownCheck()
+	{
+		when(mockDevice1.getFrequency()).thenReturn(1);
+		when(mockDevice2.getFrequency()).thenReturn(1);
+		when(mockDevice1.getRange()).thenReturn(100.0f);
+		when(mockDevice1.isRadioAvailable()).then(InvocationOnMock::callRealMethod);
+		when(mockDevice2.isRadioAvailable()).then(InvocationOnMock::callRealMethod);
+		when(mockDevice1.getDevicePosition()).thenReturn(new DimensionBlockPos(0, 0, 0, 0));
+		when(mockDevice2.getDevicePosition()).thenReturn(new DimensionBlockPos(0, 0, 50, 0));
+		when(mockDevice2.onRadioReceive(mockPacket)).thenReturn(true);
+
+		createRadioNetwork();
+
+		//No jamming
+		when(mockDevice1.getRadioCooldown()).thenReturn(0);
+		when(mockDevice2.getRadioCooldown()).thenReturn(0);
+		radioNetwork.sendPacket(mockPacket, mockDevice1, new ArrayList<>());
+		verify(mockDevice1).onRadioSend(mockPacket);
+		verify(mockDevice2).onRadioReceive(mockPacket);
+		clearInvocations(mockDevice1, mockDevice2);
+
+		//Receiver is being jammed
+		when(mockDevice1.getRadioCooldown()).thenReturn(0);
+		when(mockDevice2.getRadioCooldown()).thenReturn(100);
+		radioNetwork.sendPacket(mockPacket, mockDevice1, new ArrayList<>());
+		verify(mockDevice1).onRadioSend(mockPacket);
+		verify(mockDevice2, never()).onRadioReceive(mockPacket);
+		clearInvocations(mockDevice1, mockDevice2);
+
+		//Sender is being jammed
+		when(mockDevice1.getRadioCooldown()).thenReturn(100);
+		when(mockDevice2.getRadioCooldown()).thenReturn(0);
+		radioNetwork.sendPacket(mockPacket, mockDevice1, new ArrayList<>());
+		verify(mockDevice1, never()).onRadioSend(mockPacket);
+		verify(mockDevice2, never()).onRadioReceive(mockPacket);
+	}
+
+	//--- Utils ---//
+
+	private void createRadioNetwork()
+	{
+		radioNetwork.addDevice(mockDevice1);
+		radioNetwork.addDevice(mockDevice2);
+	}
+
 }

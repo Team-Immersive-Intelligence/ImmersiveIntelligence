@@ -408,12 +408,15 @@ public class IIExplosion extends Explosion
 		//play explosion sound
 		IIPacketHandler.playRangedSound(world, getPosition(),
 				causesFire?IISounds.explosionIncendiary: IISounds.explosion,
-				SoundCategory.NEUTRAL, (int)(72*size), 1f, pitch);
+				SoundCategory.NEUTRAL, (int)(80+8*size), 1f, pitch);
 
 		if(spawnParticles)
-			IIPacketHandler.sendToClient(new MessageExplosion(this.world, this.causesFire, this.damagesTerrain, this.size, this.power, center, direction, shape,
+			IIPacketHandler.sendToClient(MessageExplosion.createExplosionMessage(
+					this.world, this.causesFire, this.damagesTerrain, this.size, this.power,
+					center, direction, shape,
 					this.size > PARTICLE_SURFACE_SAMPLE_SIZE_THRESHOLD?
-							getParticleEffectBlocks(MAX_PARTICLE_SURFACE_SAMPLES): Collections.emptyList()));
+							getParticleEffectBlocks(MAX_PARTICLE_SURFACE_SAMPLES): Collections.emptyList()
+			));
 
 		EventHandler.pendingExplosions.add(this);
 	}

@@ -1,0 +1,22 @@
+use ADVANCED_ARITHMETIC
+
+type add 5 7
+type subtract 5 7
+type multiply 6 7
+type divide 7 2
+type modulo 17 5
+type abs (subtract 0 8)
+type power 2 8
+type root 81 2
+type min 7 3
+type max 7 3
+type sign (subtract 0 12)
+type ceil 2.1
+type round 2.6
+type floor 2.9
+type sin 30
+type cos 60
+type tan 45
+type add -2 5
+
+end

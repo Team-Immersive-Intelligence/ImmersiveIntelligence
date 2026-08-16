@@ -25,7 +25,7 @@ public class AmmoComponentFirework extends AmmoComponent
 {
 	public AmmoComponentFirework()
 	{
-		super("firework", 1f, ComponentRole.FLARE, IIColor.fromPackedRGB(0xcab1b1));
+		super("firework", 1f, ComponentRole.FLARE, IIColor.fromPackedRGB(0xcab1b1), 1);
 	}
 
 	@Override

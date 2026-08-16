@@ -3,11 +3,21 @@
     "inserter": [8, 4, 8],
     "lower": [8, 8, 8],
     "upper": [8, 21.5, 8],
-    "saw": [8, 42.5, 8]
+    "saw": [8, 42.5, 8],
+    "particle": [8, 32.5, 8]
   },
   "hierarchy": {
     "lower": "inserter",
     "upper": "lower",
-    "saw": "upper"
+    "saw": "upper",
+    "particle": "upper"
+  },
+  "properties": {
+    "particle": {
+      "particle": "machine/precision_assembler/buzzsaw",
+      "progress": 0.0,
+      "correct_rotation": true,
+      "visible": false
+    }
   }
 }

@@ -2,8 +2,6 @@
 
 newmtl weapon_autocannon
 map_Kd immersiveintelligence:blocks/multiblock/fortification/weapon_autocannon
-newmtl camera
-map_Kd immersiveintelligence:blocks/common/camera
 newmtl common_copper_cable
 map_Kd immersiveintelligence:blocks/common/common_copper_cable
 newmtl inserter

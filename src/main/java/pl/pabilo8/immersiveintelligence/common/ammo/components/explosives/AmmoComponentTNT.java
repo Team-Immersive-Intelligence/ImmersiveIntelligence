@@ -21,7 +21,7 @@ public class AmmoComponentTNT extends AmmoComponent
 {
 	public AmmoComponentTNT()
 	{
-		super("tnt", 1f, ComponentRole.EXPLOSIVE, IIColor.fromPackedRGB(0x282828));
+		super("tnt", 1f, ComponentRole.EXPLOSIVE, IIColor.fromPackedRGB(0x75585b), 1);
 	}
 
 	@Override

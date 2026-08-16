@@ -12,6 +12,22 @@
           "transform": [0, 0, 205]
         }
       ]
+    },
+    "wrench": {
+      "visibility": [
+        {
+          "time": 0,
+          "visibility": false
+        },
+        {
+          "time": 0.05,
+          "visibility": true
+        },
+        {
+          "time": 1.0,
+          "visibility": true
+        }
+      ]
     }
   }
 }

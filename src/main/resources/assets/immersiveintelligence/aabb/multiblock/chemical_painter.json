@@ -56,10 +56,10 @@
     "item_input": 29,
     "item_output": 25,
     "uv_light": 47,
-    "tank_cyan": [39, 59],
-    "tank_magenta": [38, 58],
-    "tank_yellow": [36, 56],
-    "tank_black": [35, 55]
+    "tank_black": [39, 59],
+    "tank_yellow": [38, 58],
+    "tank_magenta": [36, 56],
+    "tank_cyan": [35, 55]
   },
   "rotations": {
     "item_output": "clockwise_90"

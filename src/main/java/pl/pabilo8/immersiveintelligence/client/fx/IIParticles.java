@@ -5,18 +5,17 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.client.fx.factories.ParticleFactory;
 import pl.pabilo8.immersiveintelligence.client.fx.factories.ParticleModelFactory;
 import pl.pabilo8.immersiveintelligence.client.fx.factories.ParticleVanillaFactory;
-import pl.pabilo8.immersiveintelligence.client.fx.particles.AbstractParticle;
-import pl.pabilo8.immersiveintelligence.client.fx.particles.ParticleAMTModel;
-import pl.pabilo8.immersiveintelligence.client.fx.particles.ParticleAbstractModel;
-import pl.pabilo8.immersiveintelligence.client.fx.particles.ParticleVanilla;
+import pl.pabilo8.immersiveintelligence.client.fx.particles.*;
 import pl.pabilo8.immersiveintelligence.client.fx.utils.IIParticleUtils.PositionGenerator;
 import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleOffspring;
 import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleProgram;
 import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleProperties;
 import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleRegistry;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIFileUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIFileUtils.ResourceException;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
@@ -42,6 +41,9 @@ public class IIParticles
 		//Register particle types
 		ParticleRegistry.registerParticleType("ParticleModel", () -> new ParticleModelFactory<>(ParticleAMTModel::new));
 		ParticleRegistry.registerParticleType("ParticleVanilla", () -> new ParticleVanillaFactory(ParticleVanilla::new));
+		ParticleRegistry.registerParticleType("ParticleRibbon", () -> new ParticleVanillaFactory(ParticleRibbon::new));
+		ParticleRegistry.registerParticleType("ParticleGlow", () -> new ParticleFactory<>(ParticleGlow::new));
+		ParticleRegistry.registerParticleType("ParticleLightning", () -> new ParticleFactory<>(ParticleLightning::new));
 
 		//Register programs
 		ParticleRegistry.registerProgram(() -> new ParticleProgram("dust_transition")
@@ -56,6 +58,15 @@ public class IIParticles
 		});
 		ParticleRegistry.registerProgram(() -> new ParticleProgram("smoke_transition")
 		{
+			float defaultAlpha = 1f;
+
+			@Override
+			public void initArguments(String... args) throws ParticleArgumentException
+			{
+				if(args.length > 0)
+					defaultAlpha = Float.parseFloat(args[0]);
+			}
+
 			@Override
 			public void onParticleRender(AbstractParticle particle, float partialTicks)
 			{
@@ -70,7 +81,7 @@ public class IIParticles
 				else
 					alpha = 0.25f*(1-(progress-0.7f)/0.3f);
 
-				particle.setProperty(ParticleProperties.ALPHA, alpha);
+				particle.setProperty(ParticleProperties.ALPHA, alpha*defaultAlpha);
 			}
 		});
 		ParticleRegistry.registerProgram(() -> new ParticleProgram("shockwave_transition")
@@ -81,6 +92,45 @@ public class IIParticles
 				float progress = particle.getProgress(partialTicks);
 				particle.setProperty(ParticleProperties.SCALE, 1+progress*2);
 				particle.setProperty(ParticleProperties.ALPHA, 1-progress);
+			}
+		});
+		ParticleRegistry.registerProgram(() -> new ParticleProgram("color_transition")
+		{
+			IIColor[] colors = new IIColor[]{IIColor.WHITE, IIColor.WHITE};
+
+			@Override
+			public void initArguments(String... args) throws ParticleArgumentException
+			{
+				if(args.length < 2)
+					throw new ParticleArgumentException("Color transition requires at least two hexadecimal colors.");
+
+				colors = new IIColor[args.length];
+				for(int i = 0; i < args.length; i++)
+				{
+					String hex = args[i].trim();
+					if(hex.startsWith("#"))
+						hex = hex.substring(1);
+					else if(hex.startsWith("0x")||hex.startsWith("0X"))
+						hex = hex.substring(2);
+
+					if(!hex.matches("(?i)[0-9a-f]{6}([0-9a-f]{2})?"))
+						throw new ParticleArgumentException("Invalid hexadecimal color: "+args[i]);
+					colors[i] = IIColor.fromHex(hex);
+				}
+			}
+
+			@Override
+			public void onParticleRender(AbstractParticle particle, float partialTicks)
+			{
+				float scaledProgress = particle.getProgress(partialTicks)*(colors.length-1);
+				int segment = Math.min(colors.length-2, MathHelper.floor(scaledProgress));
+				float segmentProgress = scaledProgress-segment;
+				float[] rgb = colors[segment].mixedWith(colors[segment+1], segmentProgress).getFloatRGB();
+
+				//Set RGB separately so that another program can control alpha.
+				particle.setProperty(ParticleProperties.RED, rgb[0]);
+				particle.setProperty(ParticleProperties.GREEN, rgb[1]);
+				particle.setProperty(ParticleProperties.BLUE, rgb[2]);
 			}
 		});
 		ParticleRegistry.registerProgram(() -> new ParticleProgram("lifetime_retexture")

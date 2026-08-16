@@ -26,6 +26,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
+import pl.pabilo8.immersiveintelligence.api.ammocrate.AmmunitionCrateHandler;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IAdvancedTooltipItem;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
@@ -55,6 +56,7 @@ import java.util.Optional;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 11.08.2026
  * @since 01.11.2019
  */
 @IIItemProperties(category = IICategory.WARFARE)
@@ -130,10 +132,18 @@ public class ItemIIBulletMagazine extends ItemIISubItemsBase<Magazines> implemen
 			{
 				reloading = reload(stack, stackToSub(stack), entity, reloading);
 				if(reloading==0)
+				{
 					shouldReload = false;
+					if(!world.isRemote)
+						AmmunitionCrateHandler.finishReload(entity, stack);
+				}
 			}
 			else
+			{
 				reloading = 0;
+				if(!world.isRemote)
+					AmmunitionCrateHandler.finishReload(entity, stack);
+			}
 
 			if(world.isRemote)
 				if(!shouldReload&&ClientProxy.keybindManualReload.isKeyDown())
@@ -143,9 +153,23 @@ public class ItemIIBulletMagazine extends ItemIISubItemsBase<Magazines> implemen
 			nbt.withInt(RELOADING, reloading);
 		}
 		else if(nbt.hasKey(SHOULD_RELOAD))
+		{
 			nbt.without(SHOULD_RELOAD, RELOADING);
+			if(!world.isRemote)
+				AmmunitionCrateHandler.finishReload(entity, stack);
+		}
 
 		super.onUpdate(stack, world, entity, itemSlot, isSelected);
+	}
+
+	/**
+	 * Starts the normal magazine reload state machine.
+	 *
+	 * @param stack magazine to reload
+	 */
+	public void startReload(ItemStack stack)
+	{
+		EasyNBT.wrapNBT(stack).withBoolean(SHOULD_RELOAD, true);
 	}
 
 	private int reload(ItemStack stack, Magazines magazine, Entity user, int reloading)
@@ -203,6 +227,10 @@ public class ItemIIBulletMagazine extends ItemIISubItemsBase<Magazines> implemen
 	{
 		if(!(entity instanceof EntityLivingBase))
 			return ItemStack.EMPTY;
+
+		if(AmmunitionCrateHandler.hasReloadSource(entity, stack))
+			return AmmunitionCrateHandler.findReloadAmmunition(entity, stack,
+					ammo -> ammo.getItem()==magazine.ammo&&!magazine.ammo.isBulletCore(ammo));
 
 		if(entity.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null))
 		{

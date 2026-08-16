@@ -10,6 +10,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityPacker;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 public class MultiblockPacker extends MultiblockStuctureBase<TileEntityPacker>
 {
@@ -23,6 +24,12 @@ public class MultiblockPacker extends MultiblockStuctureBase<TileEntityPacker>
 		offset = new Vec3i(1, 1, 0);
 		INSTANCE = this;
 
+		//POI
+		addPOI(MultiblockPOI.ENERGY_INPUT, "energy");
+		addPOI(MultiblockPOI.REDSTONE_INPUT, "redstone");
+		addPOI(MultiblockPOI.DATA_INPUT, "data");
+
+		//Upgrades
 		UpgradeTechTree.getTreeFor(TileEntityPacker.class)
 				.reset()
 				.withUpgrade(IIContent.UPGRADE_PACKER_FLUID, UpgradeTier.TIER_1)

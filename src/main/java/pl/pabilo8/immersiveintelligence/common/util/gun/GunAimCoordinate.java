@@ -13,6 +13,7 @@ import javax.annotation.Nonnull;
  * Stores yaw and pitch coordinates of a gun and provides utility methods for targetting and rendering.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 16.08.2026
  * @ii-approved 0.3.1
  * @implNote only pitch, yaw, targetPitch, targetYaw and centerYaw are synced to NBT, the rest is for runtime use only and not saved
  * @since 24.02.2026
@@ -38,8 +39,8 @@ public class GunAimCoordinate implements INBTSerializable<NBTTagCompound>
 
 	public GunAimCoordinate withAimSpeed(float aimSpeedYaw, float aimSpeedPitch)
 	{
-		this.aimSpeedYaw = aimSpeedYaw;
-		this.aimSpeedPitch = aimSpeedPitch;
+		this.aimSpeedYaw = Math.max(0, aimSpeedYaw);
+		this.aimSpeedPitch = Math.max(0, aimSpeedPitch);
 		return this;
 	}
 
@@ -65,7 +66,7 @@ public class GunAimCoordinate implements INBTSerializable<NBTTagCompound>
 	 */
 	public GunAimCoordinate withCenterYaw(float centerYaw)
 	{
-		this.centerYaw = centerYaw;
+		this.centerYaw = MathHelper.wrapDegrees(centerYaw);
 		this.yaw = clampYawToRange(this.yaw);
 		this.targetYaw = clampYawToRange(this.targetYaw);
 		return this;
@@ -82,8 +83,8 @@ public class GunAimCoordinate implements INBTSerializable<NBTTagCompound>
 	 */
 	public GunAimCoordinate withYawLimit(float minYawLimit, float maxYawLimit)
 	{
-		this.yawLimitMin = minYawLimit;
-		this.yawLimitMax = maxYawLimit;
+		this.yawLimitMin = MathHelper.clamp(minYawLimit, -180f, 180f);
+		this.yawLimitMax = MathHelper.clamp(maxYawLimit, -180f, 180f);
 		//Re‑clamp current and target values to the new limits
 		this.targetYaw = clampYawToRange(this.targetYaw);
 		this.yaw = clampYawToRange(this.yaw);
@@ -94,7 +95,7 @@ public class GunAimCoordinate implements INBTSerializable<NBTTagCompound>
 	{
 		this.pitchLimitMin = Math.min(minPitchLimit, maxPitchLimit);
 		this.pitchLimitMax = Math.max(minPitchLimit, maxPitchLimit);
-		this.targetPitch = MathHelper.clamp(this.pitch, this.pitchLimitMin, this.pitchLimitMax);
+		this.targetPitch = MathHelper.clamp(this.targetPitch, this.pitchLimitMin, this.pitchLimitMax);
 		this.pitch = MathHelper.clamp(this.pitch, this.pitchLimitMin, this.pitchLimitMax);
 		return this;
 	}
@@ -118,7 +119,7 @@ public class GunAimCoordinate implements INBTSerializable<NBTTagCompound>
 		{
 			this.targetYaw = targetYaw;
 			this.targetPitch = targetPitch;
-			this.target = IIMath.offsetPosDirection(1, this.targetYaw, this.targetPitch);
+			this.target = IIMath.offsetPosDirection(1, Math.toRadians(-this.targetYaw), Math.toRadians(-this.targetPitch));
 			return true;
 		}
 		return false;
@@ -133,7 +134,7 @@ public class GunAimCoordinate implements INBTSerializable<NBTTagCompound>
 	 */
 	public boolean setTargetClamped(float targetYaw, float targetPitch)
 	{
-		return setTarget(clampYawToRange(targetYaw), clampYawToRange(targetPitch));
+		return setTarget(clampYawToRange(targetYaw), clampPitchToRange(targetPitch));
 	}
 
 	public boolean setTarget(Vec3d shooterPos, Vec3d shooterMotion, Vec3d targetPos, Vec3d targetMotion)
@@ -190,10 +191,10 @@ public class GunAimCoordinate implements INBTSerializable<NBTTagCompound>
 	public void deserializeNBT(NBTTagCompound nbt)
 	{
 		pitch = nbt.getFloat("pitch");
-		yaw = nbt.getFloat("yaw");
+		yaw = MathHelper.wrapDegrees(nbt.getFloat("yaw"));
 		targetPitch = nbt.getFloat("target_pitch");
-		targetYaw = nbt.getFloat("target_yaw");
-		centerYaw = nbt.getFloat("center_yaw");
+		targetYaw = MathHelper.wrapDegrees(nbt.getFloat("target_yaw"));
+		centerYaw = MathHelper.wrapDegrees(nbt.getFloat("center_yaw"));
 	}
 
 	//--- Utility methods --- //
@@ -206,77 +207,64 @@ public class GunAimCoordinate implements INBTSerializable<NBTTagCompound>
 	{
 		if(partialTicks==0)
 			return yaw;
-		if(Math.abs(yaw-targetYaw) <= MINIMAL)
-			return targetYaw;
 
-		float step = aimSpeedYaw*partialTicks;
-		float newYaw = moveYawTowards(yaw, targetYaw, step);
-		//Snap if very close
-		if(Math.abs(newYaw-targetYaw) <= MINIMAL)
-			newYaw = targetYaw;
+		float newYaw = moveYawTowards(yaw, targetYaw, aimSpeedYaw*partialTicks);
+		if(getYawDistance(newYaw, targetYaw) <= MINIMAL)
+			return targetYaw;
 		return clampYawToRange(newYaw);
 	}
 
 	/**
-	 * Moves {@code current} towards {@code target} by at most {@code maxStep} degrees,
-	 * staying inside the allowed yaw region defined by {@link #yawLimitMin} and {@link #yawLimitMax}
-	 * (relative to {@link #centerYaw}). Handles both normal and wrapped ranges, and always chooses
-	 * the direction (shortest or longest) that keeps the movement within limits.
-	 *
-	 * @param current current absolute yaw (in -180..180)
-	 * @param target  target absolute yaw (in -180..180, guaranteed to be within limits)
-	 * @param maxStep maximum angular change (positive)
-	 * @return new absolute yaw after moving
+	 * Moves the absolute yaw towards the target inside the configured relative yaw range.
 	 */
 	private float moveYawTowards(float current, float target, float maxStep)
 	{
-		if(current==target||maxStep <= 0)
+		if(maxStep <= 0)
 			return current;
-		if(Math.abs(current-target) <= MINIMAL)
-			return target;
 
-		//Convert to [0,360) for easier circle arithmetic
-		float curr = (current%360+360)%360;
-		float targ = (target%360+360)%360;
+		float currentRelative = MathHelper.wrapDegrees(current-centerYaw);
+		float targetRelative = MathHelper.wrapDegrees(target-centerYaw);
+		float difference;
 
-		//Convert limits to [0,360)
-		float a = (yawLimitMin%360+360)%360;
-		float b = (yawLimitMax%360+360)%360;
-
-		//Full circle allowed? (forbidden length == 0)
-		float forbiddenLen = (a-b+360)%360;
-		boolean fullCircle = (forbiddenLen==0);
-
-		float newAngle;
-		if(fullCircle)
-		{
-			//Simple shortest path
-			float diff = (targ-curr+360)%360;
-			if(diff > 180) diff -= 360; //signed delta
-			float move = Math.copySign(Math.min(maxStep, Math.abs(diff)), diff);
-			newAngle = curr+move;
-		}
+		if(isFullYawRange())
+			difference = MathHelper.wrapDegrees(targetRelative-currentRelative);
+		else if(yawLimitMin <= yawLimitMax)
+			difference = targetRelative-currentRelative;
 		else
 		{
-			//Map allowed region to a contiguous interval
-			float currU = curr < a?curr+360: curr;
-			float targU = targ < a?targ+360: targ;
-
-			//Linear movement in unwrapped space
-			float diffU = targU-currU;
-			float moveU = Math.copySign(Math.min(maxStep, Math.abs(diffU)), diffU);
-			float newU = currU+moveU;
-
-			//Map back to [0,360)
-			newAngle = newU%360;
-			if(newAngle < 0) newAngle += 360;
+			if(currentRelative < yawLimitMin)
+				currentRelative += 360f;
+			if(targetRelative < yawLimitMin)
+				targetRelative += 360f;
+			difference = targetRelative-currentRelative;
 		}
 
-		//Convert back to -180..180 range
-		float result = newAngle;
-		if(result > 180) result -= 360;
-		return result;
+		float movement = Math.copySign(Math.min(maxStep, Math.abs(difference)), difference);
+		return MathHelper.wrapDegrees(centerYaw+currentRelative+movement);
 	}
+
+	private float getYawDistance(float current, float target)
+	{
+		float currentRelative = MathHelper.wrapDegrees(current-centerYaw);
+		float targetRelative = MathHelper.wrapDegrees(target-centerYaw);
+
+		if(isFullYawRange())
+			return Math.abs(MathHelper.wrapDegrees(targetRelative-currentRelative));
+		if(yawLimitMin <= yawLimitMax)
+			return Math.abs(targetRelative-currentRelative);
+
+		if(currentRelative < yawLimitMin)
+			currentRelative += 360f;
+		if(targetRelative < yawLimitMin)
+			targetRelative += 360f;
+		return Math.abs(targetRelative-currentRelative);
+	}
+
+	private boolean isFullYawRange()
+	{
+		return yawLimitMin <= -180f&&yawLimitMax >= 180f;
+	}
+
 
 	/**
 	 * @return a value in [0,1] representing how far the current relative yaw is
@@ -286,23 +274,28 @@ public class GunAimCoordinate implements INBTSerializable<NBTTagCompound>
 	 */
 	public float getYawNormalized(float partialTicks)
 	{
-		float relYaw = MathHelper.wrapDegrees(getYaw(partialTicks)-centerYaw);
+		float relYaw = getRelativeYaw(partialTicks);
 
-		if(yawLimitMin <= yawLimitMax) //Normal range
+		if(isFullYawRange())
+			return (relYaw+180f)/360f;
+		if(yawLimitMin <= yawLimitMax)
 		{
 			if(yawLimitMin==yawLimitMax)
 				return 0.5f;
-			return (relYaw-yawLimitMin)/(yawLimitMax-yawLimitMin);
+			return MathHelper.clamp((relYaw-yawLimitMin)/(yawLimitMax-yawLimitMin), 0f, 1f);
 		}
-		else //Wrapped range: map the arc [min, max+360] linearly
-		{
-			float effectiveMin = yawLimitMin;
-			float effectiveMax = yawLimitMax+360;
-			float relYaw2 = relYaw;
-			if(relYaw2 < yawLimitMin)
-				relYaw2 += 360;
-			return (relYaw2-effectiveMin)/(effectiveMax-effectiveMin);
-		}
+
+		if(relYaw < yawLimitMin)
+			relYaw += 360f;
+		return MathHelper.clamp((relYaw-yawLimitMin)/(yawLimitMax+360f-yawLimitMin), 0f, 1f);
+	}
+
+	/**
+	 * @return current yaw relative to the gun centre in the -180 to 180 degree range.
+	 */
+	public float getRelativeYaw(float partialTicks)
+	{
+		return MathHelper.wrapDegrees(getYaw(partialTicks)-centerYaw);
 	}
 
 	public float getPitch(float partialTicks)
@@ -333,7 +326,7 @@ public class GunAimCoordinate implements INBTSerializable<NBTTagCompound>
 
 	public boolean isAimed(float allowedInaccuracy)
 	{
-		return Math.abs(yaw-targetYaw) <= allowedInaccuracy&&Math.abs(pitch-targetPitch) <= allowedInaccuracy;
+		return getYawDistance(yaw, targetYaw) <= allowedInaccuracy&&Math.abs(pitch-targetPitch) <= allowedInaccuracy;
 	}
 
 	/**
@@ -365,7 +358,7 @@ public class GunAimCoordinate implements INBTSerializable<NBTTagCompound>
 			{
 				float distToMin = Math.abs(relYaw-min);
 				float distToMax = Math.abs(relYaw-max);
-				return distToMin <= distToMin?min: max;
+				return distToMin <= distToMax?min: max;
 			}
 			return relYaw;
 		}
@@ -378,9 +371,9 @@ public class GunAimCoordinate implements INBTSerializable<NBTTagCompound>
 
 	public Vec3d getTarget(float partialTicks)
 	{
-		double yawRad = Math.toRadians(MathHelper.wrapDegrees(getYaw(partialTicks)+centerYaw));
+		double yawRad = Math.toRadians(-getYaw(partialTicks));
 		double pitchRad = Math.toRadians(-getPitch(partialTicks));
-		return IIMath.offsetPosDirection(1, -yawRad, pitchRad);
+		return IIMath.offsetPosDirection(1, yawRad, pitchRad);
 	}
 
 	public float getCenterYaw()
@@ -406,16 +399,16 @@ public class GunAimCoordinate implements INBTSerializable<NBTTagCompound>
 		 * @param shooterMotion motion of the shooter/gun
 		 * @param targetPos     position of the target
 		 * @param targetMotion  motion of the target
-		 * @return array of pitch and yaw in degrees (absolute)
+		 * @return array of yaw and pitch in degrees (absolute)
 		 */
 		float[] getAnglePrediction(Vec3d shooterPos, Vec3d shooterMotion, Vec3d targetPos, Vec3d targetMotion);
 	}
 
 	private static float[] getTargetLead(Vec3d shooterPos, Vec3d shooterMotion, Vec3d targetPos, Vec3d targetMotion)
 	{
-		Vec3d vv = shooterPos.subtract(targetPos).add(targetMotion).normalize();
-		float yy = (float)((Math.atan2(vv.x, vv.z)*180D)/Math.PI);
-		float pp = (float)Math.toDegrees(Math.atan2(vv.y, vv.distanceTo(new Vec3d(0, vv.y, 0))));
-		return new float[]{yy, pp};
+		Vec3d direction = targetPos.subtract(shooterPos).add(targetMotion.subtract(shooterMotion)).normalize();
+		float yaw = (float)Math.toDegrees(Math.atan2(-direction.x, direction.z));
+		float pitch = (float)-Math.toDegrees(Math.atan2(direction.y, direction.distanceTo(new Vec3d(0, direction.y, 0))));
+		return new float[]{yaw, pitch};
 	}
 }

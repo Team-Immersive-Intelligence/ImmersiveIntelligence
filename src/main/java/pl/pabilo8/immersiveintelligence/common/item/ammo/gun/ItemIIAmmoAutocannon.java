@@ -61,7 +61,6 @@ public class ItemIIAmmoAutocannon extends ItemIIAmmoBase<EntityAmmoProjectile>
 		return PropellantType.SOLID;
 	}
 
-
 	@Override
 	public int getCoreMaterialNeeded()
 	{

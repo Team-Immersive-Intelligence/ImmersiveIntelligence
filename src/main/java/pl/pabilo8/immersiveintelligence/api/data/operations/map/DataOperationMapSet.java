@@ -16,7 +16,7 @@ import javax.annotation.Nonnull;
  **/
 @DataOperation.DataOperationMeta(name = "map_set",
 		allowedTypes = {DataTypeMap.class, DataType.class, DataType.class}, params = {"map", "key", "value"},
-		expectedResult = DataTypeMap.class)
+		expectedResult = DataTypeNull.class, resultMatters = false)
 public class DataOperationMapSet extends DataOperation
 {
 	@Nonnull
@@ -24,8 +24,8 @@ public class DataOperationMapSet extends DataOperation
 	public DataType execute(DataPacket packet, DataTypeExpression data)
 	{
 		DataTypeMap map = packet.getVarInType(DataTypeMap.class, data.getArgument(0));
-		DataType key = data.getArgument(1);
-		DataType value = data.getArgument(2);
+		DataType key = packet.evaluateVariable(data.getArgument(1), false);
+		DataType value = packet.evaluateVariable(data.getArgument(2), false);
 		map.put(key, value);
 		return new DataTypeNull();
 	}

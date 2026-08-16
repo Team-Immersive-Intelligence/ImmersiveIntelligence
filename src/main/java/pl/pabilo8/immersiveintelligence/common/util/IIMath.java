@@ -15,6 +15,7 @@ import javax.annotation.Nonnull;
 public class IIMath extends MathHelper
 {
 	public static final Vec3d ONE = new Vec3d(1, 1, 1);
+	public static final double GOLDEN_ANGLE = Math.PI*(3-Math.sqrt(5));
 
 	/**
 	 * @param value to be squared
@@ -117,6 +118,36 @@ public class IIMath extends MathHelper
 				.add(offsetPosDirection(offset.z, yawZ, 0));
 	}
 
+
+	/**
+	 * Calculates yaw and pitch from a vector.
+	 *
+	 * @param x x component of the vector
+	 * @param y y component of the vector
+	 * @param z z component of the vector
+	 * @return yaw and pitch of the vector in degrees (-180 to 180)
+	 */
+	public static float[] getRotationFromVector(double x, double y, double z)
+	{
+		return getRotationFromVector(new Vec3d(x, y, z));
+	}
+
+	/**
+	 * Calculates yaw and pitch from a vector.
+	 *
+	 * @param vector the vector to get the rotation from
+	 * @return yaw and pitch of the vector in degrees (-180 to 180)
+	 */
+	public static float[] getRotationFromVector(Vec3d vector)
+	{
+		Vec3d normalized = vector.normalize();
+		float horizontal = MathHelper.sqrt(normalized.x*normalized.x+normalized.z*normalized.z);
+		return new float[]{
+				(float)((MathHelper.atan2(normalized.x, normalized.z)*180D)/Math.PI),
+				(float)((MathHelper.atan2(normalized.y, horizontal)*180D)/Math.PI)
+		};
+	}
+
 	/**
 	 * Works™
 	 */
@@ -204,5 +235,13 @@ public class IIMath extends MathHelper
 			gcd = IntMath.gcd(gcd, numbers[i]);
 
 		return gcd;
+	}
+
+	public static boolean isNumberFinite(double... values)
+	{
+		for(double value : values)
+			if(!Double.isFinite(value))
+				return false;
+		return true;
 	}
 }

@@ -6,7 +6,7 @@
 [![Discord](https://img.shields.io/discord/610912351142674434?logo=discord&logoColor=237289da&color=%237289da&label=Discord)](https://discord.gg/teMfm3R)
 [![Become a Patron!](https://img.shields.io/badge/Become%20a%20Patron-Pabilo8-red?&logo=patreon)](https://www.patreon.com/bePatron?u=34304036)
 [![Commit Activity!](https://img.shields.io/github/commit-activity/m/Team-Immersive-Intelligence/ImmersiveIntelligence)](https://github.com/Team-Immersive-Intelligence/ImmersiveIntelligence/pulse)
-[![Test Status](https://img.shields.io/github/check-suites/Team-Immersive-Intelligence/ImmersiveIntelligence/dev%2Fpabilo%2Ffixes?label=Test%20Status)](https://github.com/Team-Immersive-Intelligence/ImmersiveIntelligence/actions/workflows/push.yml)
+[![Test Status](https://img.shields.io/github/check-suites/Team-Immersive-Intelligence/ImmersiveIntelligence/dev%2Fmain?label=Test%20Status)](https://github.com/Team-Immersive-Intelligence/ImmersiveIntelligence/actions/workflows/push.yml)
 
 ### Description
 

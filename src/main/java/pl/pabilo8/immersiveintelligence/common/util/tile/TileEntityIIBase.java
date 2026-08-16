@@ -1,11 +1,15 @@
 package pl.pabilo8.immersiveintelligence.common.util.tile;
 
+import blusunrize.immersiveengineering.client.models.IOBJModelCallback;
 import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
+import pl.pabilo8.immersiveintelligence.common.util.IWorldPosProvider;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.NBTSerialisation;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 
@@ -17,7 +21,7 @@ import javax.annotation.Nonnull;
  * @since 28.06.2026
  */
 @SuppressWarnings({"unchecked", "unused"})
-public class TileEntityIIBase extends TileEntityIEBase
+public class TileEntityIIBase extends TileEntityIEBase implements IWorldPosProvider, IOBJModelCallback<IBlockState>
 {
 	//--- NBT ---//
 
@@ -82,5 +86,19 @@ public class TileEntityIIBase extends TileEntityIEBase
 	public void onEntityCollision(@Nonnull World world, @Nonnull Entity entity)
 	{
 		super.onEntityCollision(world, entity);
+	}
+
+	//--- IWorldPosProvider ---//
+
+	@Override
+	public BlockPos getIIPos()
+	{
+		return getPos();
+	}
+
+	@Override
+	public World getIIWorld()
+	{
+		return getWorld();
 	}
 }

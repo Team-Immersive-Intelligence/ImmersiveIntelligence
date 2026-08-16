@@ -12,7 +12,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 @SideOnly(Side.CLIENT)
 public class EWRRocketLauncher extends EmplacementWeaponRenderer<EmplacementWeaponRocketLauncher>
 {
-	private IIAnimationCachedMap rotateYaw, rotatePitch, fire;
+	private IIAnimationCachedMap rotateYaw, rotatePitch, fire, loadUpper, loadLower;
 
 	public EWRRocketLauncher()
 	{
@@ -25,6 +25,8 @@ public class EWRRocketLauncher extends EmplacementWeaponRenderer<EmplacementWeap
 		this.rotateYaw = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("rotate_yaw"));
 		this.rotatePitch = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("rotate_pitch"));
 		this.fire = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("fire"));
+		this.loadUpper = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("load_upper"));
+		this.loadLower = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("load_lower"));
 	}
 
 	@Override
@@ -34,6 +36,7 @@ public class EWRRocketLauncher extends EmplacementWeaponRenderer<EmplacementWeap
 
 		this.rotateYaw.apply(weapon.aim.getYawNormalized(partialTicks));
 		this.rotatePitch.apply(weapon.aim.getPitchNormalized(partialTicks));
-		this.fire.apply(weapon.shootDelay);
+		this.loadLower.apply(weapon.gunHandler.getLoadingProgress(partialTicks));
+		this.fire.apply(weapon.gunHandler.getShotDelay(partialTicks));
 	}
 }

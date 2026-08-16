@@ -544,9 +544,12 @@ public abstract class BlockIITileProvider<E extends Enum<E> & IITileProviderEnum
 			TileEntity master = ((IGuiTile)tile).getGuiMaster();
 
 			if(!world.isRemote&&master!=null&&((IGuiTile)master).canOpenGui(player))
+			{
 				player.openGui(ImmersiveIntelligence.INSTANCE, ((IGuiTile)master).getGuiID(), master.getWorld(), master.getPos().getX(),
 						master.getPos().getY(), master.getPos().getZ());
-			return true;
+				return true;
+			}
+
 		}
 		return false;
 	}

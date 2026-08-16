@@ -17,7 +17,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 @SideOnly(Side.CLIENT)
 public class EWRHeavyChemthrower extends EmplacementWeaponRenderer<EmplacementWeaponHeavyChemthrower>
 {
-	private IIAnimationCachedMap install, uninstall, rotateYaw, rotatePitch, fire;
+	private IIAnimationCachedMap install, uninstall, rotateYaw, rotatePitch;
 
 	public EWRHeavyChemthrower()
 	{
@@ -31,7 +31,6 @@ public class EWRHeavyChemthrower extends EmplacementWeaponRenderer<EmplacementWe
 		this.uninstall = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("uninstall"));
 		this.rotateYaw = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("rotate_yaw"));
 		this.rotatePitch = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("rotate_pitch"));
-		this.fire = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("fire"));
 	}
 
 	@Override
@@ -45,6 +44,5 @@ public class EWRHeavyChemthrower extends EmplacementWeaponRenderer<EmplacementWe
 
 		this.rotateYaw.apply(weapon.aim.getYawNormalized(partialTicks));
 		this.rotatePitch.apply(weapon.aim.getPitchNormalized(partialTicks));
-		this.fire.apply(weapon.shootDelay);
 	}
 }

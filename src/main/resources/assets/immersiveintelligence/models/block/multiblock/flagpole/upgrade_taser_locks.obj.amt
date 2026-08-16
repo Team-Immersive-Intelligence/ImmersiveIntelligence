@@ -1,0 +1,18 @@
+{
+  "origins": {
+    "upgrade_taser_locks": [5, 7.25, 2.4875],
+    "taser_locks_wire": [-1.8, 67.5, 28]
+  },
+  "hierarchy": {
+    "taser_locks_wire": "upgrade_taser_locks"
+  },
+  "properties": {
+    "taser_locks_wire": {
+      "start": [3.5, 72.9, 31.6],
+      "end": [20.6, -5.8, 26.1],
+      "wire_type": "copper",
+      "diameter": 0.0625,
+      "slack": 1.02
+    }
+  }
+}

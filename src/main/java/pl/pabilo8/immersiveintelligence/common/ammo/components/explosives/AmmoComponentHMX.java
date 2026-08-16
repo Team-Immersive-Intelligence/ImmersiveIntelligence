@@ -21,7 +21,7 @@ public class AmmoComponentHMX extends AmmoComponent
 {
 	public AmmoComponentHMX()
 	{
-		super("hmx", 1.75f, ComponentRole.EXPLOSIVE, IIColor.fromPackedRGB(0xfbfbfb));
+		super("hmx", 1.75f, ComponentRole.EXPLOSIVE, IIColor.fromPackedRGB(0xfbfbfb), 2);
 	}
 
 	@Override

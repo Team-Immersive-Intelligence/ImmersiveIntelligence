@@ -50,6 +50,7 @@ public class BlockIIRubberLeaves extends BlockIIBase<RubberStuff> implements ISh
 		this.setTickRandomly(true);
 		this.setHardness(0.2F);
 		this.setLightOpacity(1);
+		setFlammable(true);
 		lightOpacity = 0;
 		setCategory(IICategory.RESOURCES);
 	}

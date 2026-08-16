@@ -16,98 +16,287 @@ import pl.pabilo8.immersiveintelligence.client.ClientEventHandler;
 import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleRegistry;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Graphics;
 import pl.pabilo8.immersiveintelligence.common.network.IIMessage;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Sends an explosion visual effect to nearby clients.
+ *
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 06.08.2026
+ * @ii-approved 0.3.1
+ * @since 01.09.2022
+ */
 public class MessageExplosion extends IIMessage implements IPositionBoundMessage
 {
+	private static final int NUKE_MESSAGE_DISTANCE = 512;
+	private static final int WHITE_PHOSPHORUS_MESSAGE_DISTANCE = 128;
+	private static final int EMP_MESSAGE_DISTANCE = 192;
+	private static final int TESLA_MESSAGE_DISTANCE = 64;
+	private static final int SHRAPNEL_MESSAGE_DISTANCE = 128;
+	private static final int MAX_EMP_TARGETS = 4096;
+
+	private EffectType effectType = EffectType.EXPLOSION;
 	private World world;
-	private boolean flaming, damagesTerrain;
-	private float radius, strength;
-	private Vec3d pos, direction;
-	private ComponentEffectShape shape;
+	private boolean flaming, damagesTerrain, fallsSlowly;
+	private float radius, strength, size;
+	private Vec3d pos = Vec3d.ZERO, direction = Vec3d.ZERO;
+	private ComponentEffectShape shape = ComponentEffectShape.ORB;
+	private IIColor color = IIColor.WHITE;
 	private List<BlockPos> particleBlocks = Collections.emptyList();
+	private List<Vec3d> effectTargets = Collections.emptyList();
 
-	public MessageExplosion(World world, boolean flaming, boolean damagesTerrain, float radius, float strength, Vec3d pos, Vec3d direction, ComponentEffectShape shape)
+	private MessageExplosion(EffectType effectType, World world, Vec3d pos)
 	{
-		this(world, flaming, damagesTerrain, radius, strength, pos, direction, shape, Collections.emptyList());
-	}
-
-	public MessageExplosion(World world, boolean flaming, boolean damagesTerrain, float radius, float strength,
-	                        Vec3d pos, Vec3d direction, ComponentEffectShape shape, List<BlockPos> particleBlocks)
-	{
+		this.effectType = effectType;
 		this.world = world;
-		this.flaming = flaming;
-		this.damagesTerrain = damagesTerrain;
-		this.radius = radius;
-		this.strength = strength;
 		this.pos = pos;
-		this.direction = direction;
-		this.shape = shape;
-		this.particleBlocks = particleBlocks==null?Collections.emptyList(): particleBlocks;
 	}
 
+	/**
+	 * Creates an empty message for Forge decoding.
+	 */
 	public MessageExplosion()
 	{
+	}
+
+	/**
+	 * Creates a regular explosion effect message without a surface sample.
+	 */
+	public static MessageExplosion createExplosionMessage(World world, boolean flaming, boolean damagesTerrain,
+	                                                      float radius, float strength, Vec3d pos, Vec3d direction,
+	                                                      ComponentEffectShape shape)
+	{
+		return createExplosionMessage(world, flaming, damagesTerrain, radius, strength, pos, direction, shape,
+				Collections.emptyList());
+	}
+
+	/**
+	 * Creates a regular explosion effect message with a bounded surface sample.
+	 */
+	public static MessageExplosion createExplosionMessage(World world, boolean flaming, boolean damagesTerrain,
+	                                                      float radius, float strength, Vec3d pos, Vec3d direction,
+	                                                      ComponentEffectShape shape, List<BlockPos> particleBlocks)
+	{
+		MessageExplosion message = new MessageExplosion(EffectType.EXPLOSION, world, pos);
+		message.flaming = flaming;
+		message.damagesTerrain = damagesTerrain;
+		message.radius = radius;
+		message.strength = strength;
+		message.direction = direction;
+		message.shape = shape;
+		message.particleBlocks = particleBlocks==null||particleBlocks.isEmpty()?Collections.emptyList():
+				new ArrayList<>(particleBlocks);
+		return message;
+	}
+
+	/**
+	 * Creates a white phosphorus effect message.
+	 */
+	public static MessageExplosion createWhitePhosphorusMessage(World world, Vec3d pos, Vec3d direction,
+	                                                            ComponentEffectShape shape, float size)
+	{
+		MessageExplosion message = new MessageExplosion(EffectType.WHITE_PHOSPHORUS, world, pos);
+		message.direction = direction;
+		message.shape = shape;
+		message.size = size;
+		return message;
+	}
+
+	/**
+	 * Creates a nuclear explosion effect message.
+	 */
+	public static MessageExplosion createNukeMessage(World world, Vec3d pos, float size)
+	{
+		MessageExplosion message = new MessageExplosion(EffectType.NUKE, world, pos);
+		message.size = size;
+		return message;
+	}
+
+	/**
+	 * Creates an EMP explosion effect message.
+	 */
+	public static MessageExplosion createEMPMessage(World world, Vec3d pos, float radius, List<Vec3d> targets)
+	{
+		MessageExplosion message = new MessageExplosion(EffectType.EMP, world, pos);
+		message.radius = radius;
+		if(targets==null||targets.isEmpty())
+			message.effectTargets = Collections.emptyList();
+		else
+			message.effectTargets = new ArrayList<>(targets.subList(0, Math.min(MAX_EMP_TARGETS, targets.size())));
+		return message;
+	}
+
+	/**
+	 * Creates an tesla effect message.
+	 */
+	public static MessageExplosion createTeslaMessage(World world, Vec3d pos, List<Vec3d> targets)
+	{
+		MessageExplosion message = new MessageExplosion(EffectType.TESLA, world, pos);
+		if(targets==null||targets.isEmpty())
+			message.effectTargets = Collections.emptyList();
+		else
+			message.effectTargets = new ArrayList<>(targets.subList(0, Math.min(MAX_EMP_TARGETS, targets.size())));
+		return message;
+	}
+
+	/**
+	 * Creates a shrapnel activation effect message.
+	 */
+	public static MessageExplosion createShrapnelMessage(World world, Vec3d pos, IIColor color, float size,
+	                                                     boolean fallsSlowly)
+	{
+		MessageExplosion message = new MessageExplosion(EffectType.SHRAPNEL, world, pos);
+		message.color = color;
+		message.size = size;
+		message.fallsSlowly = fallsSlowly;
+		return message;
 	}
 
 	@Override
 	protected void onServerReceive(WorldServer world, NetHandlerPlayServer handler)
 	{
-
 	}
 
 	@SideOnly(Side.CLIENT)
 	@Override
 	protected void onClientReceive(WorldClient world, NetHandlerPlayClient handler)
 	{
-		ClientEventHandler.addScreenshakeSource(pos, MathHelper.clamp(strength/4f, 0.25f, 3f), 4, 2);
-		ParticleRegistry.spawnExplosionBoomFX(world, pos, direction, radius, strength, shape, particleBlocks);
+		switch(effectType)
+		{
+			case WHITE_PHOSPHORUS -> ParticleRegistry.spawnWhitePhosphorusFX(world, pos, direction, shape, size);
+			case NUKE ->
+			{
+				ClientEventHandler.addScreenshakeSource(pos, MathHelper.clamp(size*2f, 1f, 4f), 20, 0);
+				ParticleRegistry.spawnAtomicExplosionFX(world, pos, size);
+			}
+			case EMP ->
+			{
+				ClientEventHandler.addScreenshakeSource(pos, MathHelper.clamp(radius/10f, 0.5f, 2f), 8, 0);
+				ParticleRegistry.spawnEMPExplosionFX(world, pos, radius, effectTargets);
+			}
+			case TESLA ->
+			{
+				ParticleRegistry.spawnTeslaFX(world, pos, effectTargets);
+			}
+			case SHRAPNEL -> ParticleRegistry.spawnShrapnelFX(pos, color, size, fallsSlowly);
+			default ->
+			{
+				ClientEventHandler.addScreenshakeSource(pos, MathHelper.clamp(strength/4f, 0.25f, 3f), 4, 2);
+				ParticleRegistry.spawnExplosionBoomFX(world, pos, direction, radius, strength, shape, particleBlocks);
+			}
+		}
 	}
 
 	@Override
 	public void fromBytes(ByteBuf buf)
 	{
-		this.flaming = buf.readBoolean();
-		this.damagesTerrain = buf.readBoolean();
-
-		this.radius = buf.readFloat();
-		this.strength = buf.readFloat();
-
+		this.effectType = readEnum(buf, EffectType.class);
 		this.pos = readVec3(buf);
-		this.direction = readVec3(buf);
 
-		this.shape = readEnum(buf, ComponentEffectShape.class);
-
-		if(buf.readableBytes() >= 2)
+		switch(effectType)
 		{
-			int particleBlockCount = buf.readUnsignedShort();
-			this.particleBlocks = new ArrayList<>(particleBlockCount);
-			for(int i = 0; i < particleBlockCount&&buf.readableBytes() >= 8; i++)
-				this.particleBlocks.add(BlockPos.fromLong(buf.readLong()));
+			case WHITE_PHOSPHORUS ->
+			{
+				this.direction = readVec3(buf);
+				this.shape = readEnum(buf, ComponentEffectShape.class);
+				this.size = buf.readFloat();
+			}
+			case NUKE -> this.size = buf.readFloat();
+			case EMP ->
+			{
+				this.radius = buf.readFloat();
+				int effectTargetCount = Math.min(MAX_EMP_TARGETS,
+						Math.min(buf.readUnsignedShort(), buf.readableBytes()/24));
+				this.effectTargets = new ArrayList<>(effectTargetCount);
+				for(int i = 0; i < effectTargetCount; i++)
+					this.effectTargets.add(readVec3(buf));
+			}
+			case TESLA ->
+			{
+				int effectTargetCount = Math.min(MAX_EMP_TARGETS,
+						Math.min(buf.readUnsignedShort(), buf.readableBytes()/24));
+				this.effectTargets = new ArrayList<>(effectTargetCount);
+				for(int i = 0; i < effectTargetCount; i++)
+					this.effectTargets.add(readVec3(buf));
+			}
+			case SHRAPNEL ->
+			{
+				this.color = readColor(buf);
+				this.size = buf.readFloat();
+				this.fallsSlowly = buf.readBoolean();
+			}
+			default ->
+			{
+				this.flaming = buf.readBoolean();
+				this.damagesTerrain = buf.readBoolean();
+				this.radius = buf.readFloat();
+				this.strength = buf.readFloat();
+				this.direction = readVec3(buf);
+				this.shape = readEnum(buf, ComponentEffectShape.class);
+
+				int particleBlockCount = Math.min(buf.readUnsignedShort(), buf.readableBytes()/12);
+				this.particleBlocks = new ArrayList<>(particleBlockCount);
+				for(int i = 0; i < particleBlockCount; i++)
+					this.particleBlocks.add(readPos(buf));
+			}
 		}
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf)
 	{
-		buf.writeBoolean(flaming);
-		buf.writeBoolean(damagesTerrain);
-
-		buf.writeFloat(radius);
-		buf.writeFloat(strength);
-
+		writeEnum(buf, effectType);
 		writeVec3(buf, pos);
-		writeVec3(buf, direction);
 
-		writeEnum(buf, shape);
+		switch(effectType)
+		{
+			case WHITE_PHOSPHORUS ->
+			{
+				writeVec3(buf, direction);
+				writeEnum(buf, shape);
+				buf.writeFloat(size);
+			}
+			case NUKE -> buf.writeFloat(size);
+			case EMP ->
+			{
+				buf.writeFloat(radius);
+				int effectTargetCount = Math.min(MAX_EMP_TARGETS, effectTargets.size());
+				buf.writeShort(effectTargetCount);
+				for(int i = 0; i < effectTargetCount; i++)
+					writeVec3(buf, effectTargets.get(i));
+			}
+			case TESLA ->
+			{
+				int effectTargetCount = Math.min(MAX_EMP_TARGETS, effectTargets.size());
+				buf.writeShort(effectTargetCount);
+				for(int i = 0; i < effectTargetCount; i++)
+					writeVec3(buf, effectTargets.get(i));
+			}
+			case SHRAPNEL ->
+			{
+				writeColor(buf, color);
+				buf.writeFloat(size);
+				buf.writeBoolean(fallsSlowly);
+			}
+			default ->
+			{
+				buf.writeBoolean(flaming);
+				buf.writeBoolean(damagesTerrain);
+				buf.writeFloat(radius);
+				buf.writeFloat(strength);
+				writeVec3(buf, direction);
+				writeEnum(buf, shape);
 
-		int particleBlockCount = Math.min(0xFFFF, particleBlocks.size());
-		buf.writeShort(particleBlockCount);
-		for(int i = 0; i < particleBlockCount; i++)
-			buf.writeLong(particleBlocks.get(i).toLong());
+				int particleBlockCount = Math.min(0xFFFF, particleBlocks.size());
+				buf.writeShort(particleBlockCount);
+				for(int i = 0; i < particleBlockCount; i++)
+					writePos(buf, particleBlocks.get(i));
+			}
+		}
 	}
 
 	@Override
@@ -125,6 +314,30 @@ public class MessageExplosion extends IIMessage implements IPositionBoundMessage
 	@Override
 	public int getPacketDistance()
 	{
-		return Graphics.explosionMessageDistance;
+		return switch(effectType)
+		{
+			case NUKE -> Math.max(Graphics.explosionMessageDistance, NUKE_MESSAGE_DISTANCE);
+			case WHITE_PHOSPHORUS -> Math.max(Graphics.explosionMessageDistance, WHITE_PHOSPHORUS_MESSAGE_DISTANCE);
+			case EMP -> Math.max(Graphics.explosionMessageDistance, EMP_MESSAGE_DISTANCE);
+			case TESLA -> Math.max(Graphics.explosionMessageDistance, TESLA_MESSAGE_DISTANCE);
+			case SHRAPNEL -> Math.max(Graphics.explosionMessageDistance, SHRAPNEL_MESSAGE_DISTANCE);
+			default -> Graphics.explosionMessageDistance;
+		};
+	}
+
+	/**
+	 * Selects the payload and client effect handled by this message.
+	 *
+	 * @author Pabilo8 (pabilo@iiteam.net)
+	 * @since 06.08.2026
+	 */
+	public enum EffectType
+	{
+		EXPLOSION,
+		WHITE_PHOSPHORUS,
+		NUKE,
+		EMP,
+		TESLA,
+		SHRAPNEL
 	}
 }

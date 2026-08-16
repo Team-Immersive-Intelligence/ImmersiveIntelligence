@@ -34,7 +34,6 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IIIGuiMultiblockTile;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIConnectable;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockRedstoneNetwork;
 
 import javax.annotation.Nonnull;
@@ -87,9 +86,9 @@ public class TileEntityRedstoneDataInterface extends TileEntityMultiblockIIConne
 	}
 
 	@Override
-	public void onChange() 
+	public void onChange()
 	{
-		
+
 	}
 
 	@Override
@@ -115,7 +114,7 @@ public class TileEntityRedstoneDataInterface extends TileEntityMultiblockIIConne
 		super.writeCustomNBT(nbt, descPacket);
 		try
 		{
-			if(redstoneOutput != null)
+			if(redstoneOutput!=null)
 				nbt.setByteArray("redstoneOutput", redstoneOutput);
 		} catch(Exception e)
 		{
@@ -129,7 +128,7 @@ public class TileEntityRedstoneDataInterface extends TileEntityMultiblockIIConne
 	{
 
 		//Go through all redstone Settings and check if there are any Inputs that need to be reset
-		if (deactivateUnusedSignals)
+		if(deactivateUnusedSignals)
 		{
 			boolean[] skipReset = new boolean[16];
 
@@ -139,7 +138,7 @@ public class TileEntityRedstoneDataInterface extends TileEntityMultiblockIIConne
 			}
 			for(int index = 0; index < skipReset.length; index++)
 			{
-				if (!skipReset[index])
+				if(!skipReset[index])
 					redstoneOutput[index] = 0;
 			}
 
@@ -205,19 +204,6 @@ public class TileEntityRedstoneDataInterface extends TileEntityMultiblockIIConne
 		return punchtape;
 	}
 
-	@Override
-	protected int[] listAllPOI(MultiblockPOI poi)
-	{
-		switch(poi)
-		{
-			case REDSTONE_CABLE_MOUNT:
-				return getPOI("redstone");
-			case DATA_INPUT:
-				return getPOI("data");
-			default:
-				return new int[0];
-		}
-	}
 
 	@Override
 	public boolean isRelay()
@@ -253,12 +239,12 @@ public class TileEntityRedstoneDataInterface extends TileEntityMultiblockIIConne
 	{
 
 		// Filter duplicate signals from the Restone Network, in particular when the restone network is updating
-		if (signals != null)
+		if(signals!=null)
 		{
-			if (!Arrays.equals(signals, this.recentSignals))
+			if(!Arrays.equals(signals, this.recentSignals))
 			{
 				this.recentSignals = signals;
-			} 
+			}
 			else
 			{
 				return;
@@ -270,10 +256,10 @@ public class TileEntityRedstoneDataInterface extends TileEntityMultiblockIIConne
 		for(ConversionSetting setting : dataSettings)
 		{
 			byte value;
-			if (signals == null)
+			if(signals==null)
 			{
 				value = redstoneOutput[setting.getColor().getMetadata()];
-			} 
+			}
 			else
 			{
 				value = signals[setting.getColor().getMetadata()];
@@ -299,7 +285,8 @@ public class TileEntityRedstoneDataInterface extends TileEntityMultiblockIIConne
 	public void updateInput(byte[] signals)
 	{
 		TileEntityRedstoneDataInterface master = master();
-		if(master!=null) {
+		if(master!=null)
+		{
 			for(int i = 0; i < 16; i += 1)
 				if(signals[i] < master.redstoneOutput[i])
 					signals[i] = master.redstoneOutput[i];
@@ -320,15 +307,23 @@ public class TileEntityRedstoneDataInterface extends TileEntityMultiblockIIConne
 		double x = 0.5;
 		double z = 0.5;
 
-		if (direction != null)
+		if(direction!=null)
 		{
 			// We just make the assumption, that the data connector is always on the opposite side.
 			switch(direction)
 			{
-				case NORTH: x += mirrored ? 0.125 : -0.125; break;
-				case SOUTH: x += mirrored ? -0.125 : 0.125;break;
-				case EAST: z += mirrored ? 0.125 : -0.125;break;
-				case WEST: z += mirrored ? -0.125 : 0.125;break;
+				case NORTH:
+					x += mirrored?0.125: -0.125;
+					break;
+				case SOUTH:
+					x += mirrored?-0.125: 0.125;
+					break;
+				case EAST:
+					z += mirrored?0.125: -0.125;
+					break;
+				case WEST:
+					z += mirrored?-0.125: 0.125;
+					break;
 			}
 		}
 		return new Vec3d(x, 0.75f, z);
@@ -351,12 +346,6 @@ public class TileEntityRedstoneDataInterface extends TileEntityMultiblockIIConne
 	public int getSlotLimit(int slot)
 	{
 		return 1;
-	}
-
-	@Override
-	public void doGraphicalUpdates(int slot)
-	{
-
 	}
 
 	//--- IIIGuiMultiblockTile ---//

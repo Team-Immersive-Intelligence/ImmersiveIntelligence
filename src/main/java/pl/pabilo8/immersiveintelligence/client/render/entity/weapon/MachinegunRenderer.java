@@ -11,11 +11,10 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
+import pl.pabilo8.immersiveintelligence.api.ammocrate.AmmunitionCrateHandler;
 import pl.pabilo8.immersiveintelligence.client.model.builtin.IAmmoModel;
 import pl.pabilo8.immersiveintelligence.client.model.weapon.ModelMachinegun;
 import pl.pabilo8.immersiveintelligence.client.render.IPassengerAnimationsRenderer;
@@ -25,7 +24,6 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.TmtNamedBoxGroup;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDevice.IIBlockTypes_MetalDevice;
-import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate.TileEntityAmmunitionCrate;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.common.entity.mounted_weapon.EntityMachinegun;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase;
@@ -96,7 +94,7 @@ public class MachinegunRenderer extends Render<EntityMachinegun> implements IRel
 
 		if(entity!=null)
 		{
-			float yaw = entity.aim.getYaw(partialTicks)-entity.aim.getCenterYaw(), pitch = entity.aim.getPitch(partialTicks);
+			float yaw = entity.aim.getRelativeYaw(partialTicks), pitch = entity.aim.getPitch(partialTicks);
 			boolean tripod = entity.upgrades.contains(WeaponUpgrade.TRIPOD);
 			if(tripod)
 				GlStateManager.translate(0f, 0.5, 0f);
@@ -168,61 +166,45 @@ public class MachinegunRenderer extends Render<EntityMachinegun> implements IRel
 							GlStateManager.rotate(90, 1, 0, 0);
 							GlStateManager.scale(0.5f, 0.5f, 0.5f);
 
-							BlockPos cratePos = entity.getPosition().offset(EnumFacing.fromAngle(entity.aim.getCenterYaw()).getOpposite()).down();
-							if(entity.getEntityWorld().getTileEntity(cratePos) instanceof TileEntityAmmunitionCrate)
+							ArrayList<ItemStack> ammoStacks = new ArrayList<>(AmmunitionCrateHandler.getMountedAmmunition(entity));
+							if(!ammoStacks.isEmpty())
 							{
-								TileEntityAmmunitionCrate crate = (TileEntityAmmunitionCrate)entity.getEntityWorld().getTileEntity(cratePos);
-								assert crate!=null;
+								float relativeYaw = entity.aim.getRelativeYaw(0f);
+								int beltLength = (int)(24+Math.max(Math.abs(relativeYaw)-55, 0)/2-Math.max(entity.aim.getPitch(partialTicks)-20, 0)/2);
 
-								int beltLength = (int)(24+Math.max(Math.abs(entity.aim.getYaw(0f))-55, 0)/2-Math.max(entity.aim.getPitch(partialTicks)-20, 0)/2);
+								beltLength -= 4;
+								float ammoDir = relativeYaw/(tripod?90f: 50f)*(1-Math.abs(entity.aim.getPitch(partialTicks))/40f);
+								float ammoTurn = tripod?Math.abs(relativeYaw)/90f*(beltLength > 24?(beltLength-24)/24f: 1): 0;
 
-								if(crate.open&&crate.isUpgradeInstalled(IIContent.UPGRADE_MG_LOADER))
+								GlStateManager.pushMatrix();
+								for(int i = 0; i < 4&&!ammoStacks.isEmpty(); i++)
 								{
-									ArrayList<ItemStack> ammoStacks = new ArrayList<>();
-									for(int i = 38, cc = 0; i < 50&&cc < beltLength; i++)
-									{
-										ItemStack bs = crate.getInventory().get(i);
-										if(!bs.isEmpty())
-										{
-											ammoStacks.add(bs.copy());
-											cc += bs.getCount();
-										}
-									}
+									mm.renderAmmoComplete(false, ammoStacks.get(0));
+									GlStateManager.rotate(180f/4f, 0, 1, 0);
+									GlStateManager.translate(0, 0, -0.1225f);
 
-									beltLength -= 4;
-									float ammoDir = entity.aim.getYaw(0f)/(tripod?90f: 50f)*(1-Math.abs(entity.aim.getPitch(partialTicks))/40f);
-									float ammoTurn = tripod?Math.abs(entity.aim.getYaw(0f))/90f*(beltLength > 24?(beltLength-24)/24f: 1): 0;
-
-									GlStateManager.pushMatrix();
-									for(int i = 0; i < 4&&!ammoStacks.isEmpty(); i++)
-									{
-										mm.renderAmmoComplete(false, ammoStacks.get(0));
-										GlStateManager.rotate(180f/4f, 0, 1, 0);
-										GlStateManager.translate(0, 0, -0.1225f);
-
-										ammoStacks.get(0).shrink(1);
-										if(ammoStacks.get(0).getCount() <= 0)
-											ammoStacks.remove(0);
-									}
-									GlStateManager.popMatrix();
-
-									GlStateManager.translate(-0.25f, 0, 0.25);
-									GlStateManager.pushMatrix();
-									for(int i = 0; i < beltLength&&!ammoStacks.isEmpty(); i++)
-									{
-										mm.renderAmmoComplete(false, ammoStacks.get(0));
-										GlStateManager.translate(0f, 0, 0.125f);
-
-										GlStateManager.rotate(ammoDir*-5f, 0, 1, 0);
-										GlStateManager.rotate(ammoTurn*-8f, 1, 0, 0);
-
-										ammoStacks.get(0).shrink(1);
-										if(ammoStacks.get(0).getCount() <= 0)
-											ammoStacks.remove(0);
-
-									}
-									GlStateManager.popMatrix();
+									ammoStacks.get(0).shrink(1);
+									if(ammoStacks.get(0).getCount() <= 0)
+										ammoStacks.remove(0);
 								}
+								GlStateManager.popMatrix();
+
+								GlStateManager.translate(-0.25f, 0, 0.25);
+								GlStateManager.pushMatrix();
+								for(int i = 0; i < beltLength&&!ammoStacks.isEmpty(); i++)
+								{
+									mm.renderAmmoComplete(false, ammoStacks.get(0));
+									GlStateManager.translate(0f, 0, 0.125f);
+
+									GlStateManager.rotate(ammoDir*-5f, 0, 1, 0);
+									GlStateManager.rotate(ammoTurn*-8f, 1, 0, 0);
+
+									ammoStacks.get(0).shrink(1);
+									if(ammoStacks.get(0).getCount() <= 0)
+										ammoStacks.remove(0);
+
+								}
+								GlStateManager.popMatrix();
 							}
 
 
@@ -352,25 +334,26 @@ public class MachinegunRenderer extends Render<EntityMachinegun> implements IRel
 
 		IBlockState state = passenger.world.getBlockState(passenger.getPosition());
 		boolean tripod = mg.upgrades.contains(WeaponUpgrade.TRIPOD);
-		float aimYaw = mg.aim.getYaw(0f)-setYaw;
+		float aimYaw = mg.aim.getRelativeYaw(0f);
 		if(!tripod&&state.getMaterial().isSolid()&&!(state.getBlock()==IIContent.blockMetalDevice&&state.getValue(IIContent.blockMetalDevice.property)==IIBlockTypes_MetalDevice.AMMUNITION_CRATE))
 		{
-			if(Math.abs(aimYaw-true_head_angle) > 5)
+			float headDelta = MathHelper.wrapDegrees(aimYaw-true_head_angle);
+			if(Math.abs(headDelta) > 5)
 			{
 				wtime = Math.abs((mg.getEntityWorld().getTotalWorldTime()+partialTicks)%20/20f-0.5f)/0.5f;
 				wtime *= 0.25f;
 
 				if(!mg.isSetupComplete())
 					wtime = 0;
-				if(aimYaw < true_head_angle)
+				if(headDelta < 0)
 				{
 					model.bipedRightLeg.rotateAngleY = -wtime*2f;
 					model.bipedLeftLeg.rotateAngleY = wtime*2f;
 				}
-				else if(aimYaw > true_head_angle)
+				else
 				{
-					model.bipedRightLeg.rotateAngleY = -wtime*2f;
-					model.bipedLeftLeg.rotateAngleY = wtime*2f;
+					model.bipedRightLeg.rotateAngleY = wtime*2f;
+					model.bipedLeftLeg.rotateAngleY = -wtime*2f;
 				}
 			}
 
@@ -402,13 +385,14 @@ public class MachinegunRenderer extends Render<EntityMachinegun> implements IRel
 			if(!mg.isSetupComplete())
 				wtime = 0;
 			model.bipedBody.rotateAngleX -= 0.0625f;
-			if(Math.abs(aimYaw-true_head_angle) > 5)
-				if(aimYaw < true_head_angle)
+			float headDelta = MathHelper.wrapDegrees(aimYaw-true_head_angle);
+			if(Math.abs(headDelta) > 5)
+				if(headDelta < 0)
 				{
 					model.bipedRightLeg.rotateAngleX = wtime*2f;
 					model.bipedLeftLeg.rotateAngleX = -wtime*2f;
 				}
-				else if(aimYaw > true_head_angle)
+				else
 				{
 					model.bipedRightLeg.rotateAngleX = -wtime*2f;
 					model.bipedLeftLeg.rotateAngleX = wtime*2f;

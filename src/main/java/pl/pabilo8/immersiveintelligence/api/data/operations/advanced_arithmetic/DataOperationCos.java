@@ -14,7 +14,7 @@ import javax.annotation.Nonnull;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 05.07.2019
  */
-@DataOperationMeta(name = "cos", allowedTypes = {NumericDataType.class}, params = {"angle"}, expectedResult = NumericDataType.class)
+@DataOperationMeta(name = "cos", allowedTypes = {NumericDataType.class}, params = {"angle"}, expectedResult = DataTypeFloat.class)
 public class DataOperationCos extends DataOperation
 {
 	@Nonnull

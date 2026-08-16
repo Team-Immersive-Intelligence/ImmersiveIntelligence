@@ -1,11 +1,11 @@
 package pl.pabilo8.immersiveintelligence.client.gui.block.packer;
 
-import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import pl.pabilo8.immersiveintelligence.api.LogisticTag;
 import pl.pabilo8.immersiveintelligence.api.PackerHandler.LabelingTask;
+import pl.pabilo8.immersiveintelligence.api.crafting.IngredientReference;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTileGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoCheckbox;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoTab;
@@ -28,7 +28,6 @@ import pl.pabilo8.immersiveintelligence.common.gui.ContainerPacker;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyCollection;
-import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 
@@ -37,8 +36,10 @@ import javax.annotation.Nullable;
 import static pl.pabilo8.immersiveintelligence.common.util.IIReference.GUI_LABEL_KEY;
 
 /**
+ * Edits Packer labeling tasks and logistics-tag filters.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 24.01.2026
+ * @updated 12.08.2026
  * @ii-approved 0.3.1
  * @since 25.08.2022
  */
@@ -104,7 +105,7 @@ public class GuiPackerLabeler extends DecoTileGui<TileEntityPacker, ContainerPac
 				.withModeHandling(mode, m -> mode = m)
 				.withBlankTaskSupplier(() -> {
 					LabelingTask created = new LabelingTask();
-					created.filter = new IngredientStack("*");
+					created.filter = new IngredientReference();
 					created.expirationAmount = (taskList.getMode()==ListMode.JOBS)?-1: 1;
 					created.serialBatch = 0;
 					return created;
@@ -127,12 +128,14 @@ public class GuiPackerLabeler extends DecoTileGui<TileEntityPacker, ContainerPac
 								.withTextColor(IIReference.COLOR_IMMERSIVE_ORANGE)
 						)
 						.withElementApplyMethod((task, panel) -> {
-							IngredientStack ing = task.filter;
-							boolean wildcard = ing==null||"*".equals(ing.oreName);
+							IngredientReference ing = task.filter;
+							boolean wildcard = ing==null||ing.isWildcard()&&!ing.hasLogisticTag();
 
 							DecoItemStackDisplay icon = panel.component("icon", DecoItemStackDisplay.class);
 							icon.visible = icon.enabled = !wildcard;
-							icon.withStack(!wildcard?ing.getExampleStack(): ItemStack.EMPTY);
+							icon.withStack(ing.hasLogisticTag()?
+									IIContent.itemLogisticTag.getStack(ing.getLogisticTag(), 1):
+									(!wildcard?ing.getExampleStack(): ItemStack.EMPTY));
 
 							panel.label("type").withText(GUI_LABEL_KEY+"packer.labeler.task");
 
@@ -226,32 +229,20 @@ public class GuiPackerLabeler extends DecoTileGui<TileEntityPacker, ContainerPac
 		//Filter + (optional) tags
 		panelDetails.addComponent((panelFilterPicker = new DecoIngredientStackPickerPanel(4, panelDetails.height-56-4))
 				.withMode(PickerPanelMode.ITEM_LOGISTIC_TAG)
-				.withIngredientStack(task.filter)
+				.withIngredientReference(task.filter)
 				.withOnStackChanged(is -> {
-					//Prefer LogiTags
-					if(LogisticTag.hasLogisticsTag(is.getExampleStack()))
-					{
-						task.logiTagIn = LogisticTag.getLogisticsTagFromStack(is.getExampleStack());
-						task.filter = new IngredientStack("*", task.filter.inputSize);
-					}
-					else
-					{
-						task.filter = is;
-						if(task.filter.getExampleStack().isEmpty())
-							task.filter = new IngredientStack("*", task.filter.inputSize);
-					}
+					task.filter = is;
+					taskList.cleanup();
 				})
 				.withSize(panelDetails.width-8, 56)
 		);
 		panelDetails.addComponent((panelOutputPicker = new DecoIngredientStackPickerPanel(4, panelDetails.height-56-4))
 				.withMode(PickerPanelMode.ITEM)
-				.withIngredientStack(new IngredientStack(IIContent.itemLogisticTag.getStack(task.logiTagOut, 1)))
+				.withIngredientReference(new IngredientReference(IIContent.itemLogisticTag.getStack(task.logiTagOut, 1)))
 				.withOnStackChanged(is -> {
 					if(LogisticTag.hasLogisticsTag(is.getExampleStack()))
-					{
 						task.logiTagOut = LogisticTag.getLogisticsTagFromStack(is.getExampleStack());
-						task.filter = new IngredientStack("*", task.filter.inputSize);
-					}
+					taskList.cleanup();
 				})
 				.withSize(panelDetails.width-8, 56)
 		);
@@ -290,12 +281,5 @@ public class GuiPackerLabeler extends DecoTileGui<TileEntityPacker, ContainerPac
 			expiresTextField.withText(selected.expirationAmount==-1?"": String.valueOf(selected.expirationAmount));
 		if(taskList!=null)
 			taskList.setMode(selected.expirationAmount==-1?ListMode.JOBS: ListMode.REQUESTS);
-	}
-
-	@Override
-	protected EasyNBT onSaveTileData()
-	{
-		tile.labels = labels;
-		return super.onSaveTileData();
 	}
 }

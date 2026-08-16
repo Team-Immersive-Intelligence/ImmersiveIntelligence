@@ -39,7 +39,7 @@ public class AmmoComponentPrimordialPearl extends AmmoComponent
 {
 	public AmmoComponentPrimordialPearl()
 	{
-		super("primordial_pearl", 1f, ComponentRole.SPECIAL, IIColor.fromPackedARGB(0xff3dae));
+		super("primordial_pearl", 1f, ComponentRole.SPECIAL, IIColor.fromPackedARGB(0xff3dae), 3);
 	}
 
 	@Override
@@ -50,12 +50,6 @@ public class AmmoComponentPrimordialPearl extends AmmoComponent
 		return new IngredientStack(new ItemStack(primordialpearl, 1, 3));
 
 		//itemeldritchobject:3 is the true name, other sources have it as primordial_pearl
-	}
-
-	@Override
-	public int getSlotsTaken()
-	{
-		return 3;
 	}
 
 	@Override

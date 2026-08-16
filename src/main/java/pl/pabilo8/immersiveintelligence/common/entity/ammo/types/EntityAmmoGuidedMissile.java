@@ -27,9 +27,7 @@ public class EntityAmmoGuidedMissile extends EntityAmmoMissile
 	protected void spawnTrailParticles()
 	{
 		super.spawnTrailParticles();
-
-		ParticleRegistry.spawnParticle("ammo/missile_wire", getPositionVector(),
-						Vec3d.ZERO, new Vector2f((float)Math.toRadians(rotationYaw), (float)Math.toRadians(rotationPitch-90)))
-				.withProperty(ParticleProperties.STRETCH, new Vector3f(1, velocity, 1));
+		ParticleRegistry.spawnParticle("ammo/missile_wire", getPositionVector(), Vec3d.ZERO, new Vector2f())
+				.withProperty(ParticleProperties.STRETCH, new Vector3f((float)prevPosX, (float)prevPosY, (float)prevPosZ));
 	}
 }

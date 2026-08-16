@@ -1,16 +1,14 @@
 {
-  "type": "ParticleModel",
-  "models": ["ammo/tracer_start.obj"],
+  "type": "ParticleRibbon",
+  "textures": [
+    "immersiveintelligence:particle/tracer/tracer_start",
+    "immersiveintelligence:particle/tracer/tracer_mid",
+    "immersiveintelligence:particle/tracer/tracer_end"
+  ],
   "max_lifetime": 2,
   "draw_stage": "custom",
-  "chained": [
-    {
-      "time": 1,
-      "generator": "same",
-      "distance": 0,
-      "amount": 1,
-      "inherited_properties": ["size", "color", "motion", "position", "rotation"],
-      "type": "ammo/tracer_mid"
-    }
+  "programs": [
+    "lifetime_retexture",
+    "shockwave_transition"
   ]
 }

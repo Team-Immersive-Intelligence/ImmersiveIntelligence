@@ -40,6 +40,7 @@ import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTLocator;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.ammo.components.factory.AmmoComponentFluid;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityProjectileWorkshop;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerProjectileWorkshop;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
@@ -183,8 +184,12 @@ public class GuiProjectileWorkshop extends DecoTileGui<TileEntityProjectileWorks
 							if(current==null||tile.componentInside.amount <= 0)
 								return Collections.singleton(I18n.format("gui.immersiveengineering.empty"));
 							return Arrays.asList(
-									tile.componentInside.getColor().getHexCol(tile.componentInside.getTranslatedName()),
-									tile.componentInside.amount+" mB"
+									current.getColor().getHexCol(current.getTranslatedName()),
+									TextFormatting.GRAY.toString()+tile.componentInside.amount+" Units"+TextFormatting.RESET,
+									TextFormatting.GRAY+
+											(current instanceof AmmoComponentFluid?(current.getTranslatedName()+" "+Utils.formatDouble(tile.componentInside.amount/16f*1000, "0")+" mB"):
+													(Utils.formatDouble(tile.componentInside.amount/16f, "0.#")+" x "+current.getMaterial().getExampleStack().getDisplayName()))
+											+TextFormatting.RESET
 							);
 						})
 						.withBackgroundTexture(DecoSprite.atlasSprite(DecoTextures.SLOT_IE, 32, true))

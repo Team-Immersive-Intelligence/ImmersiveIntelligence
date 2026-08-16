@@ -1,6 +1,9 @@
 package pl.pabilo8.immersiveintelligence.client.gui.deco.util;
 
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -12,6 +15,7 @@ public class DecoFrame
 	/**
 	 * Resource location of the frame texture
 	 */
+	@Nonnull
 	public final ResLoc style;
 	/**
 	 * If true, only the corners of the frame will be drawn.
@@ -28,8 +32,14 @@ public class DecoFrame
 	 * If a side is true, it will be drawn.
 	 */
 	public boolean[] sides = new boolean[]{true, true, true, true};
+	/**
+	 * The color of the frame.
+	 * This color determines how the frame is tinted when rendered.
+	 */
+	@Nonnull
+	public IIColor color = IIColor.WHITE;
 
-	public DecoFrame(ResLoc style, boolean cornersOnly, int frameThickness)
+	public DecoFrame(@Nonnull ResLoc style, boolean cornersOnly, int frameThickness)
 	{
 		this.style = style;
 		this.cornersOnly = cornersOnly;
@@ -47,6 +57,18 @@ public class DecoFrame
 		sides[1] = bottom;
 		sides[2] = left;
 		sides[3] = right;
+		return this;
+	}
+
+	/**
+	 * Sets the color of the frame.
+	 *
+	 * @param color the color of the frame
+	 * @return this DecoFrame instance for method chaining
+	 */
+	public DecoFrame withColor(@Nonnull IIColor color)
+	{
+		this.color = color;
 		return this;
 	}
 

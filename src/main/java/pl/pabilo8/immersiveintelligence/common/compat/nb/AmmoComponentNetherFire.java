@@ -31,7 +31,7 @@ public class AmmoComponentNetherFire extends AmmoComponent
 {
 	public AmmoComponentNetherFire()
 	{
-		super("nether_fire", 1f, ComponentRole.SPECIAL, IIColor.fromPackedRGB(0x36D9E6));
+		super("nether_fire", 1f, ComponentRole.INCENDIARY, IIColor.fromPackedRGB(0x36D9E6), 1);
 	}
 
 	@Override

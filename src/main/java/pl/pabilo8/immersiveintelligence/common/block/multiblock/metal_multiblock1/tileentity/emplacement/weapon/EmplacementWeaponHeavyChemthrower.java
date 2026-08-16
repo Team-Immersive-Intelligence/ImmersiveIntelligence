@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon;
 
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -12,14 +11,17 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPane
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoFluidTank;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.HeavyChemthrower;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
 
 import javax.annotation.Nullable;
 
 public class EmplacementWeaponHeavyChemthrower extends EmplacementWeaponTurretBase
 {
+	@SyncNBT
 	private FluidTank tank = new FluidTank(HeavyChemthrower.tankCapacity);
 	private SidedFluidHandler fluidHandler = new SidedFluidHandler(this);
+	@SyncNBT
 	private boolean shouldIgnite = false;
 
 	public EmplacementWeaponHeavyChemthrower()
@@ -34,7 +36,6 @@ public class EmplacementWeaponHeavyChemthrower extends EmplacementWeaponTurretBa
 		this.visionAABB = this.visionAABB.grow(HeavyChemthrower.detectionRadius);
 		this.attackAABB = this.attackAABB.grow(HeavyChemthrower.attackRadius);
 		this.aim.withAimSpeed(HeavyChemthrower.yawRotateSpeed, HeavyChemthrower.pitchRotateSpeed);
-		this.setup = new MultiblockInteractablePart(HeavyChemthrower.setupTime);
 	}
 
 	@Override
@@ -194,20 +195,4 @@ public class EmplacementWeaponHeavyChemthrower extends EmplacementWeaponTurretBa
 		}
 	}
 
-	//--- NBT ---//
-
-	@Override
-	public NBTTagCompound serializeNBT()
-	{
-		NBTTagCompound nbt = super.serializeNBT();
-		nbt.setTag("tank", tank.writeToNBT(new NBTTagCompound()));
-		return nbt;
-	}
-
-	@Override
-	public void deserializeNBT(NBTTagCompound nbt)
-	{
-		super.deserializeNBT(nbt);
-		tank.readFromNBT(nbt.getCompoundTag("tank"));
-	}
 }

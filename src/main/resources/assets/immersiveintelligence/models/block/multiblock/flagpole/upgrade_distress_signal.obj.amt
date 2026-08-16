@@ -1,0 +1,18 @@
+{
+  "origins": {
+    "upgrade_distress_signal": [8, -48, 24],
+    "taser_locks_wire": [-1.8, 67.5, 28]
+  },
+  "hierarchy": {
+    "distress_signal_wire": "upgrade_distress_signal"
+  },
+  "properties": {
+    "distress_signal_wire": {
+      "start": [3.5, 72.9, 31.6],
+      "end": [1.2, 131, 3.3],
+      "wire_type": "copper",
+      "diameter": 1.0625,
+      "slack": 1.02
+    }
+  }
+}

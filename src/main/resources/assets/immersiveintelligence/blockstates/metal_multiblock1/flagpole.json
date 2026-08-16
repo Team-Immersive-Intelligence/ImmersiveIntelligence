@@ -69,7 +69,7 @@
         "model": "immersiveintelligence:multiblock/flagpole/flagpole_base.obj"
       },
       "true": {
-        "model": "immersiveintelligence:multiblock/flagpole/flagpole_base_flipped.obj"
+        "model": "immersiveintelligence:multiblock/flagpole/flagpole_flipped.obj"
       }
     },
     "boolean1": {
@@ -79,7 +79,7 @@
     "_0multiblockslave": {
       "false": {},
       "true": {
-        "model": "immersiveengineering:ie_empty"
+        "model": "immersiveintelligence:smartmodel/conn_empty"
       }
     },
     "_1dynamicrender": {

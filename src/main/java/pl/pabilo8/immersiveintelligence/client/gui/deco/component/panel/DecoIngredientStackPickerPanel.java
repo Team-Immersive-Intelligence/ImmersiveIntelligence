@@ -10,6 +10,7 @@ import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.oredict.OreDictionary;
 import org.lwjgl.input.Keyboard;
 import pl.pabilo8.immersiveintelligence.api.LogisticTag;
+import pl.pabilo8.immersiveintelligence.api.crafting.IngredientReference;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeFluidStack;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeItemStack;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
@@ -33,9 +34,10 @@ import javax.annotation.Nullable;
 import java.util.function.Consumer;
 
 /**
- * {@link IngredientStack} picker panel ({@link ItemStack} + settings). Supports {@link FluidStack} picking via {@link #isFluidMode}.
+ * Edits {@link IngredientReference} item, fluid, energy, and logistics filters.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 12.08.2026
  * @ii-approved 0.3.1
  * @since 21.01.2026
  */
@@ -43,7 +45,7 @@ public class DecoIngredientStackPickerPanel extends DecoPanel
 {
 	private static final String TRANSLATION_KEY = IIReference.GUI_LABEL_KEY+"itemstack_editor.";
 	@Nonnull
-	protected IngredientStack stack = new IngredientStack(ItemStack.EMPTY);
+	protected IngredientReference stack = new IngredientReference();
 	@Nonnull
 	protected PickerPanelMode mode = PickerPanelMode.ITEM;
 
@@ -54,7 +56,7 @@ public class DecoIngredientStackPickerPanel extends DecoPanel
 	protected DecoSlider energySlider;
 	protected DecoTextField energyField, fluidNameField;
 
-	private Consumer<IngredientStack> onStackChanged;
+	private Consumer<? super IngredientReference> onStackChanged;
 	private int maxEnergyCount = 1000000;
 
 	public DecoIngredientStackPickerPanel(int x, int y)
@@ -65,17 +67,28 @@ public class DecoIngredientStackPickerPanel extends DecoPanel
 
 	public DecoIngredientStackPickerPanel withStack(@Nonnull ItemStack stack)
 	{
-		return withIngredientStack(new IngredientStack(stack.copy()));
+		return withIngredientReference(new IngredientReference(stack.copy()));
 	}
 
 	public DecoIngredientStackPickerPanel withIngredientStack(@Nonnull IngredientStack stack)
 	{
-		this.stack = stack;
+		return withIngredientReference(IngredientReference.fromIngredientStack(stack));
+	}
+
+	/**
+	 * Sets the ingredient reference edited by this panel.
+	 */
+	public DecoIngredientStackPickerPanel withIngredientReference(@Nonnull IngredientReference stack)
+	{
+		this.stack = stack.clone();
 		this.stack.inputSize = clampInteger(this.stack.inputSize, getMinimumCount(), Integer.MAX_VALUE);
-		if(!isFluidMode()&&this.stack.stack==null)
-			this.stack.stack = ItemStack.EMPTY;
 		if(isItemDataTypeMode())
+		{
 			this.stack.oreName = null;
+			if(this.stack.stack==null)
+				this.stack.stack = ItemStack.EMPTY;
+			this.stack.withLogisticTag(null);
+		}
 
 		applyToUI();
 		if(!initialized)
@@ -127,7 +140,7 @@ public class DecoIngredientStackPickerPanel extends DecoPanel
 	public DecoIngredientStackPickerPanel withItemStackDataType(@Nonnull DataTypeItemStack dataType)
 	{
 		ItemStack itemStack = dataType.value==null?ItemStack.EMPTY: dataType.value.copy();
-		IngredientStack ingredientStack = new IngredientStack(itemStack);
+		IngredientReference ingredientStack = new IngredientReference(itemStack);
 		ingredientStack.inputSize = itemStack.isEmpty()?1: Math.max(1, itemStack.getCount());
 		ingredientStack.oreName = null;
 		ingredientStack.useNBT = false;
@@ -136,12 +149,12 @@ public class DecoIngredientStackPickerPanel extends DecoPanel
 
 	public DecoIngredientStackPickerPanel withFluidStackDataType(@Nonnull DataTypeFluidStack dataType)
 	{
-		IngredientStack ingredientStack;
+		IngredientReference ingredientStack;
 		if(dataType.value==null)
-			ingredientStack = new IngredientStack(ItemStack.EMPTY);
+			ingredientStack = new IngredientReference();
 		else
 		{
-			ingredientStack = new IngredientStack(dataType.value.copy());
+			ingredientStack = new IngredientReference(dataType.value.copy()).setUseNBT(dataType.value.tag!=null);
 			ingredientStack.inputSize = Math.max(1, dataType.value.amount);
 		}
 		return withIngredientStack(ingredientStack);
@@ -199,13 +212,13 @@ public class DecoIngredientStackPickerPanel extends DecoPanel
 			this.stack.oreName = null;
 		else if(oreDict&&this.stack.stack!=null&&!this.stack.stack.isEmpty())
 			this.stack.oreName = findFirstOreName(this.stack.stack);
-		else
+		else if(this.stack.stack!=null&&!this.stack.stack.isEmpty())
 			this.stack.oreName = null;
 		applyToUI();
 		return this;
 	}
 
-	public DecoIngredientStackPickerPanel withOnStackChanged(Consumer<IngredientStack> onStackChanged)
+	public DecoIngredientStackPickerPanel withOnStackChanged(Consumer<? super IngredientReference> onStackChanged)
 	{
 		this.onStackChanged = onStackChanged;
 		return this;
@@ -305,8 +318,7 @@ public class DecoIngredientStackPickerPanel extends DecoPanel
 									//Reset stack
 									if(button==MouseButton.RIGHT||(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)&&button==MouseButton.LEFT))
 									{
-										stack.fluid = null;
-										applyToUI();
+										withIngredientReference(new IngredientReference("*", Math.max(1, stack.inputSize)));
 										return true;
 									}
 									if(button!=MouseButton.LEFT||parentGui==null)
@@ -319,9 +331,9 @@ public class DecoIngredientStackPickerPanel extends DecoPanel
 									FluidStack fluid = FluidUtil.getFluidContained(held);
 									if(fluid!=null)
 									{
-										IngredientStack fluidIng = new IngredientStack(fluid);
-										fluidIng.inputSize = fluid.amount;
-										withIngredientStack(fluidIng);
+										IngredientReference fluidReference = new IngredientReference(fluid)
+												.setUseNBT(fluid.tag!=null);
+										withIngredientReference(fluidReference);
 										applyToUI();
 										return true;
 									}
@@ -346,15 +358,6 @@ public class DecoIngredientStackPickerPanel extends DecoPanel
 								.withOnTextChanged(this::handleCountTextChanged)
 								.withTranslatedTooltip(TRANSLATION_KEY+"count.tooltip")
 				);
-
-				//toggles not applicable (kept for backward behavior: allow NBT toggle in fluid mode if you really want)
-				addComponents(
-						toggleNBT = new DecoSwitch(4, height-16-2)
-								.withSize(width/2-8, 16)
-								.withText(TRANSLATION_KEY+"nbt")
-								.withOnToggle(this::withMatchNBT)
-								.withTranslatedTooltip(TRANSLATION_KEY+"nbt.fluid.tooltip")
-				);
 			}
 			break;
 			case ITEM:
@@ -373,7 +376,7 @@ public class DecoIngredientStackPickerPanel extends DecoPanel
 									//Reset stack
 									if(button==MouseButton.RIGHT||(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)&&button==MouseButton.LEFT))
 									{
-										withIngredientStack(new IngredientStack(ItemStack.EMPTY));
+										withIngredientReference(new IngredientReference());
 										applyToUI();
 										return true;
 									}
@@ -385,7 +388,13 @@ public class DecoIngredientStackPickerPanel extends DecoPanel
 									if(held.isEmpty())
 										return false;
 
-									withIngredientStack(new IngredientStack(held.copy()));
+									if(isLogisticTagMode()&&LogisticTag.hasLogisticsTag(held))
+									{
+										LogisticTag logisticTag = LogisticTag.getLogisticsTagFromStack(held);
+										withIngredientReference(new IngredientReference().withLogisticTag(logisticTag));
+									}
+									else
+										withIngredientReference(new IngredientReference(held.copy()));
 									applyToUI();
 									return true;
 								})
@@ -449,7 +458,7 @@ public class DecoIngredientStackPickerPanel extends DecoPanel
 			case ITEM_LOGISTIC_TAG:
 			case ITEM_DATA_TYPE:
 			{
-				boolean fieldsHidden = isLogisticTagMode()&&getLogisticTag()!=null;
+				boolean fieldsHidden = isLogisticTagMode()&&stack.hasLogisticTag();
 				if(metadataField!=null)
 					metadataField.visible = !fieldsHidden;
 				if(toggleOre!=null)
@@ -465,10 +474,17 @@ public class DecoIngredientStackPickerPanel extends DecoPanel
 				if(isItemDataTypeMode())
 				{
 					this.stack.oreName = null;
+					if(this.stack.stack==null)
+						this.stack.stack = ItemStack.EMPTY;
+					this.stack.withLogisticTag(null);
 					this.stack.useNBT = false;
 				}
 				if(stackDisplay!=null)
-					stackDisplay.withStack(stack);
+				{
+					ItemStack display = stack.hasLogisticTag()?
+							IIContent.itemLogisticTag.getStack(stack.getLogisticTag(), 1): stack.getExampleStack();
+					stackDisplay.withStack(display);
+				}
 			}
 			break;
 			case FLUID:
@@ -502,15 +518,26 @@ public class DecoIngredientStackPickerPanel extends DecoPanel
 	{
 		if(isFluidMode()||isEnergyMode())
 			return ItemStack.EMPTY;
+		if(isLogisticTagMode()&&stack.hasLogisticTag())
+			return IIContent.itemLogisticTag.getStack(stack.getLogisticTag(), 1);
 		if(isItemDataTypeMode()&&stack.stack!=null)
 			return stack.stack.copy();
 		return stack.getExampleStack();
 	}
 
+	/**
+	 * @return the edited ingredient reference
+	 */
 	@Nonnull
-	public IngredientStack getIngredientStack()
+	public IngredientReference getIngredientReference()
 	{
 		return stack;
+	}
+
+	@Nonnull
+	public IngredientReference getIngredientStack()
+	{
+		return getIngredientReference();
 	}
 
 	@Nonnull
@@ -567,15 +594,10 @@ public class DecoIngredientStackPickerPanel extends DecoPanel
 		return dataType;
 	}
 
+	@Nullable
 	public LogisticTag getLogisticTag()
 	{
-		ItemStack itemStack = getItemStack();
-		if(isLogisticTagMode()&&!itemStack.isEmpty()&&itemStack.getItem()==IIContent.itemLogisticTag)
-		{
-			LogisticTag tag = LogisticTag.getLogisticsTagFromStack(itemStack);
-			return tag==null?new LogisticTag(): tag;
-		}
-		return null;
+		return isLogisticTagMode()?stack.getLogisticTag(): null;
 	}
 
 	@Nullable
@@ -681,20 +703,16 @@ public class DecoIngredientStackPickerPanel extends DecoPanel
 		switch(event)
 		{
 			case COPY:
-				DecoGuiUtils.setClipboardNBT(getIngredientStack().writeToNBT(new NBTTagCompound()));
+				DecoGuiUtils.setClipboardNBT(getIngredientReference().serializeNBT());
 				break;
 			case CUT:
-				DecoGuiUtils.setClipboardNBT(getIngredientStack().writeToNBT(new NBTTagCompound()));
-				withIngredientStack(new IngredientStack(ItemStack.EMPTY));
+				DecoGuiUtils.setClipboardNBT(getIngredientReference().serializeNBT());
+				withIngredientReference(new IngredientReference());
 				break;
 			case PASTE:
 				NBTTagCompound nbt = DecoGuiUtils.getClipboardNBT();
 				if(!nbt.hasNoTags())
-				{
-					IngredientStack ingredientStack = IngredientStack.readFromNBT(nbt);
-					if(ingredientStack!=null)
-						withIngredientStack(ingredientStack);
-				}
+					withIngredientReference(IngredientReference.readFromNBT(nbt));
 				break;
 			default:
 				super.onGuiEvent(event);

@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.client.gui.block.packer;
 
-import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -8,6 +7,7 @@ import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.api.PackerHandler;
 import pl.pabilo8.immersiveintelligence.api.PackerHandler.PackerActionType;
 import pl.pabilo8.immersiveintelligence.api.PackerHandler.PackerTask;
+import pl.pabilo8.immersiveintelligence.api.crafting.IngredientReference;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTileGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoCheckbox;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoTab;
@@ -37,7 +37,6 @@ import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 import pl.pabilo8.immersiveintelligence.common.util.ILocalizedEnum;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyCollection;
-import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 
@@ -47,8 +46,10 @@ import static pl.pabilo8.immersiveintelligence.common.util.IIReference.GUI_LABEL
 import static pl.pabilo8.immersiveintelligence.common.util.IIReference.RES_II;
 
 /**
+ * Edits Packer transfer tasks and displays Packer resources.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 24.01.2026
+ * @updated 12.08.2026
  * @ii-approved 0.3.1
  * @since 25.08.2022
  */
@@ -122,7 +123,7 @@ public class GuiPacker extends DecoTileGui<TileEntityPacker, ContainerPacker>
 				.withIsJobPredicate(t -> t.expirationAmount==-1)
 				.withModeHandling(mode, m -> mode = m)
 				.withBlankTaskSupplier(() -> {
-					PackerTask created = new PackerTask(PackerHandler.PackerPutMode.ALL_POSSIBLE, actionType, new IngredientStack("*"));
+					PackerTask created = new PackerTask(PackerHandler.PackerPutMode.ALL_POSSIBLE, actionType, new IngredientReference());
 					created.expirationAmount = (taskList.getMode()==ListMode.JOBS)?-1: 1;
 					return created;
 				})
@@ -147,13 +148,15 @@ public class GuiPacker extends DecoTileGui<TileEntityPacker, ContainerPacker>
 						.withElementApplyMethod((task, panel) -> {
 							panel.label("type").withText(task.actionType.getFullLocaleKey()+(task.unpack?".in": ".out"));
 
-							IngredientStack ing = task.stack;
-							boolean wildcard = ing==null||"*".equals(ing.oreName);
+							IngredientReference ing = task.stack;
+							boolean wildcard = ing==null||ing.isWildcard()&&!ing.hasLogisticTag();
 							panel.label("wild").visible = wildcard;
 
 							DecoItemStackDisplay icon = panel.component("icon", DecoItemStackDisplay.class);
 							icon.visible = icon.enabled = !wildcard;
-							icon.withStack(!wildcard?ing.getExampleStack(): ItemStack.EMPTY);
+							icon.withStack(ing.hasLogisticTag()?
+									IIContent.itemLogisticTag.getStack(ing.getLogisticTag(), 1):
+									(!wildcard?ing.getExampleStack(): ItemStack.EMPTY));
 						})
 				)
 		);
@@ -332,22 +335,20 @@ public class GuiPacker extends DecoTileGui<TileEntityPacker, ContainerPacker>
 				(actionType==PackerActionType.FLUID?PickerPanelMode.FLUID: PickerPanelMode.ENERGY);
 		panelDetails.addComponent((panelStackFilterPicker = new DecoIngredientStackPickerPanel(4, panelDetails.height-56-4))
 				.withMode(panelMode)
-				.withIngredientStack(task.stack)
+				.withIngredientReference(task.stack)
 				.withOnStackChanged(is -> {
 					task.stack = is;
-					if(task.stack.getExampleStack().isEmpty())
-						task.stack = new IngredientStack("*", task.stack.inputSize);
+					taskList.cleanup();
 				})
 				.withMaxEnergy(Packer.energyCapacityUpgradeMaxTransfer)
 				.withSize(panelDetails.width-8, 56)
 		);
 		panelDetails.addComponent((panelContainerFilterPicker = new DecoIngredientStackPickerPanel(4, panelDetails.height-56-4))
-				.withMode(panelMode)
-				.withIngredientStack(task.containerFilter)
+				.withMode(PickerPanelMode.ITEM_LOGISTIC_TAG)
+				.withIngredientReference(task.containerFilter)
 				.withOnStackChanged(is -> {
 					task.containerFilter = is;
-					if(task.containerFilter.getExampleStack().isEmpty())
-						task.containerFilter = new IngredientStack("*");
+					taskList.cleanup();
 				})
 				.withMaxEnergy(Packer.energyCapacityUpgradeMaxTransfer)
 				.withSize(panelDetails.width-8, 56)
@@ -391,12 +392,5 @@ public class GuiPacker extends DecoTileGui<TileEntityPacker, ContainerPacker>
 		{
 			return GUI_LABEL_KEY+"packer.direction.";
 		}
-	}
-
-	@Override
-	protected EasyNBT onSaveTileData()
-	{
-		tile.tasks = tasks;
-		return super.onSaveTileData();
 	}
 }

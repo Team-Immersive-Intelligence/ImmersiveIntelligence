@@ -1,6 +1,0 @@
-{
-  "type": "ParticleModel",
-  "models": ["ammo/tracer_end.obj"],
-  "max_lifetime": 2,
-  "draw_stage": "custom_additive"
-}

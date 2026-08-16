@@ -8,10 +8,10 @@ import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
+import pl.pabilo8.immersiveintelligence.api.crafting.IngredientReference;
 import pl.pabilo8.immersiveintelligence.common.util.ILocalizedEnum;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -20,7 +20,10 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 /**
+ * Registers container adapters and stores Packer task definitions.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 12.08.2026
  * @since 19.08.2022
  */
 public class PackerHandler
@@ -115,11 +118,11 @@ public class PackerHandler
 		/**
 		 * Filter for item and fluid tasks
 		 */
-		public IngredientStack stack = new IngredientStack("*");
+		public IngredientReference stack = new IngredientReference();
 		/**
 		 * Filter for the container to be packed
 		 */
-		public IngredientStack containerFilter = new IngredientStack("*");
+		public IngredientReference containerFilter = new IngredientReference();
 		/**
 		 * Amount of items/fluid/energy transferred after which this task expires<br>
 		 * -1 Means task will never expire
@@ -134,22 +137,25 @@ public class PackerHandler
 		 * as long as it keeps making progress.
 		 */
 		public boolean repeat = false;
-		/**
-		 * Logistic tag, acting as a filter for the container
-		 */
-		@Nullable
-		public LogisticTag logiTag = null;
 
 		public PackerTask()
 		{
 
 		}
 
-		public PackerTask(PackerPutMode mode, PackerActionType actionType, IngredientStack stack)
+		public PackerTask(PackerPutMode mode, PackerActionType actionType, IngredientReference stack)
 		{
 			this.mode = mode;
 			this.actionType = actionType;
 			this.stack = stack;
+		}
+
+		/**
+		 * Creates a task from a legacy IE ingredient stack.
+		 */
+		public PackerTask(PackerPutMode mode, PackerActionType actionType, IngredientStack stack)
+		{
+			this(mode, actionType, IngredientReference.fromIngredientStack(stack));
 		}
 
 		public PackerTask(NBTTagCompound nbt)
@@ -163,12 +169,11 @@ public class PackerHandler
 			return EasyNBT.newNBT()
 					.withEnum("mode", mode)
 					.withEnum("action_type", actionType)
-					.withIngredientStack("stack", stack)
-					.withIngredientStack("container_filter", containerFilter)
+					.withSerializable("stack", stack)
+					.withSerializable("container_filter", containerFilter)
 					.withInt("expiration_amount", expirationAmount)
 					.withBoolean("unpack", unpack)
 					.withBoolean("repeat_task", repeat)
-					.conditionally(logiTag!=null, e -> e.withSerializable("logi_tag", logiTag))
 					.unwrap();
 		}
 
@@ -178,23 +183,23 @@ public class PackerHandler
 			EasyNBT enbt = EasyNBT.wrapNBT(nbt);
 			this.mode = enbt.getEnum("mode", PackerPutMode.class);
 			this.actionType = enbt.getEnum("action_type", PackerActionType.class);
-			this.stack = enbt.getIngredientStack("stack");
-			this.containerFilter = enbt.getIngredientStack("container_filter");
+			this.stack = IngredientReference.readFromNBT(enbt.getCompound("stack"));
+			this.containerFilter = IngredientReference.readFromNBT(enbt.getCompound("container_filter"));
 			this.expirationAmount = enbt.getInt("expiration_amount");
 			this.unpack = enbt.getBoolean("unpack");
 			this.repeat = enbt.hasKey("repeat_task")&&enbt.getBoolean("repeat_task");
-			this.logiTag = enbt.hasKey("logi_tag")?new LogisticTag(enbt.getCompound("logi_tag")): null;
+			// Migrate the old separate container logistics-tag filter.
+			if(enbt.hasKey("logi_tag"))
+				this.containerFilter.withLogisticTag(new LogisticTag(enbt.getCompound("logi_tag")));
 		}
 	}
 
 	public static class LabelingTask implements INBTSerializable<NBTTagCompound>
 	{
-		public IngredientStack filter = new IngredientStack("*");
+		public IngredientReference filter = new IngredientReference();
 		public int expirationAmount = -1;
 		public int serialBatch = 0;
 		public String name = "";
-		@Nullable
-		public LogisticTag logiTagIn = null;
 		public LogisticTag logiTagOut = new LogisticTag();
 
 		public LabelingTask()
@@ -212,10 +217,9 @@ public class PackerHandler
 		{
 			return EasyNBT.newNBT()
 					.withString("name", name)
-					.withIngredientStack("stack", filter)
+					.withSerializable("stack", filter)
 					.withInt("expiration_amount", expirationAmount)
 					.withInt("serial_batch", serialBatch)
-					.conditionally(logiTagIn!=null, e -> e.withSerializable("logi_tag", logiTagIn))
 					.withSerializable("logi_tag_out", logiTagOut)
 					.unwrap();
 		}
@@ -225,10 +229,12 @@ public class PackerHandler
 		{
 			EasyNBT enbt = EasyNBT.wrapNBT(nbt);
 			this.name = enbt.getString("name");
-			this.filter = enbt.getIngredientStack("stack");
+			this.filter = IngredientReference.readFromNBT(enbt.getCompound("stack"));
 			this.expirationAmount = enbt.getInt("expiration_amount");
 			this.serialBatch = enbt.getInt("serial_batch");
-			this.logiTagIn = enbt.hasKey("logi_tag")?new LogisticTag(enbt.getCompound("logi_tag")): null;
+			// Migrate the old separate input logistics-tag filter.
+			if(enbt.hasKey("logi_tag"))
+				this.filter.withLogisticTag(new LogisticTag(enbt.getCompound("logi_tag")));
 			this.logiTagOut = new LogisticTag(enbt.getCompound("logi_tag_out"));
 		}
 	}

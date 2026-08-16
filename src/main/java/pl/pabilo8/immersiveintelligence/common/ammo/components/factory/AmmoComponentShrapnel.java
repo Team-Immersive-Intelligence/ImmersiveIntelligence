@@ -15,19 +15,25 @@ import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentEffectShape;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentRole;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.EntityShrapnel;
+import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageExplosion;
 
 /**
- * @author Pabilo8 (pabilo@iiteam.net)
+ * An ammo component that spawns {@link EntityShrapnel shrapnel fragments} around.
+ *
+ * @author Pabilo8(pabilo.iiteam.net)
+ * @updated 06.08.2026
+ * @ii-approved 0.3.1
  * @since 30.08.2019
  */
 public class AmmoComponentShrapnel extends AmmoComponent
 {
-	Shrapnel shrapnel;
-	IngredientStack stack;
+	private final Shrapnel shrapnel;
+	private final IngredientStack stack;
 
 	public AmmoComponentShrapnel(String material)
 	{
-		super("shrapnel_"+material, 1f, ComponentRole.SHRAPNEL, ShrapnelHandler.registry.get(material).color);
+		super("shrapnel_"+material, 1f, ComponentRole.SHRAPNEL, ShrapnelHandler.registry.get(material).color, 1);
 		shrapnel = ShrapnelHandler.registry.get(material);
 		stack = new IngredientStack("dust"+Character.toUpperCase(material.charAt(0))+material.substring(1));
 	}
@@ -46,21 +52,61 @@ public class AmmoComponentShrapnel extends AmmoComponent
 	}
 
 	@Override
-	public void onEffect(World world, Vec3d pos, Vec3d dir, ComponentEffectShape shape, NBTTagCompound tag, float size, float multiplier, Entity owner)
+	public void onEffect(World world, Vec3d pos, Vec3d dir, ComponentEffectShape shape, NBTTagCompound tag,
+	                     float size, float multiplier, Entity owner)
 	{
-		Vec3d v = new Vec3d(0, -1, 0);
-		Vec3d throwerPos = pos.addVector(0, 3, 0);
-		for(int i = 0; i < 20*size; i++)
-		{
-			Vec3d vecDir = v.addVector(Utils.RAND.nextGaussian()*.25f, Utils.RAND.nextGaussian()*.25f, Utils.RAND.nextGaussian()*.25f);
+		if(world.isRemote)
+			return;
 
-			EntityShrapnel shrap = new EntityShrapnel(world, throwerPos.x+v.x*2, throwerPos.y+v.y*2,
-					throwerPos.z+v.z*2, 0, 0, 0, shrapnel);
-			shrap.motionX = vecDir.x*2;
-			shrap.motionY = vecDir.y*0.05f;
-			shrap.motionZ = vecDir.z*2;
-			if(!world.isRemote)
-				world.spawnEntity(shrap);
+		IIPacketHandler.sendToClient(MessageExplosion.createShrapnelMessage(
+				world, pos, shrapnel.color, size, shrapnel.fallsSlowly
+		));
+
+		int fragmentCount = Math.max(1, (int)(20*size));
+		if(shrapnel.fallsSlowly)
+			spawnSlowFragments(world, pos, fragmentCount);
+		else
+			spawnBurstFragments(world, pos, fragmentCount);
+	}
+
+	private void spawnBurstFragments(World world, Vec3d pos, int fragmentCount)
+	{
+		Vec3d baseDirection = new Vec3d(0, -1, 0);
+		Vec3d throwerPos = pos.addVector(0, 3, 0);
+		for(int i = 0; i < fragmentCount; i++)
+		{
+			Vec3d direction = baseDirection.addVector(
+					Utils.RAND.nextGaussian()*.25f,
+					Utils.RAND.nextGaussian()*.25f,
+					Utils.RAND.nextGaussian()*.25f
+			);
+			EntityShrapnel fragment = new EntityShrapnel(world,
+					throwerPos.x+baseDirection.x*2,
+					throwerPos.y+baseDirection.y*2,
+					throwerPos.z+baseDirection.z*2,
+					0, 0, 0, shrapnel
+			);
+			fragment.motionX = direction.x*2;
+			fragment.motionY = direction.y*0.05f;
+			fragment.motionZ = direction.z*2;
+			world.spawnEntity(fragment);
+		}
+	}
+
+	private void spawnSlowFragments(World world, Vec3d pos, int fragmentCount)
+	{
+		for(int i = 0; i < fragmentCount; i++)
+		{
+			EntityShrapnel fragment = new EntityShrapnel(world,
+					pos.x+Utils.RAND.nextGaussian()*0.25,
+					pos.y+0.25,
+					pos.z+Utils.RAND.nextGaussian()*0.25,
+					0, 0, 0, shrapnel
+			);
+			fragment.motionX = Utils.RAND.nextGaussian()*0.18;
+			fragment.motionY = 0.65+Math.abs(Utils.RAND.nextGaussian())*0.18;
+			fragment.motionZ = Utils.RAND.nextGaussian()*0.18;
+			world.spawnEntity(fragment);
 		}
 	}
 }

@@ -47,7 +47,6 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionMulti;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -118,25 +117,6 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 
 
 	//--- Properties ---//
-
-	@Override
-	protected int[] listAllPOI(MultiblockPOI poi)
-	{
-		switch(poi)
-		{
-			case DATA_INPUT:
-				return getPOI("data");
-			case ENERGY_INPUT:
-				return getPOI("energy");
-			case ITEM_INPUT:
-				return getPOI("paper_input");
-			case FLUID_INPUT:
-				return getPOI("fluid_input");
-			case ITEM_OUTPUT:
-				return getPOI("output");
-		}
-		return new int[0];
-	}
 
 	@Override
 	public void receiveData(DataPacket packet, int pos)

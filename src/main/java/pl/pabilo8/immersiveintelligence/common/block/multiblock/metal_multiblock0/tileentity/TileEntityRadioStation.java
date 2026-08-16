@@ -29,14 +29,22 @@ public class TileEntityRadioStation extends TileEntityMultiblockIIGeneric<TileEn
 	public MultiblockConstructionManager construction;
 	@SyncNBT(events = {SyncEvents.TILE_CLIENT_MESSAGE, SyncEvents.TILE_CUSTOM1})
 	public int frequency;
+	@SyncNBT(time = 0)
+	public int radioCooldown;
 	public int soundDelay = 0;
-	private boolean sountIn = false;
 
 	public TileEntityRadioStation()
 	{
 		super(MultiblockRadioStation.INSTANCE);
 		this.energyStorage = new FluxStorageAdvanced(RadioStation.energyCapacity);
 		this.construction = new MultiblockConstructionManager(this, RadioStation.constructionEnergy);
+	}
+
+	@Override
+	public void invalidate()
+	{
+		super.invalidate();
+		RadioNetwork.INSTANCE.removeDevice(this);
 	}
 
 	@Override
@@ -49,27 +57,19 @@ public class TileEntityRadioStation extends TileEntityMultiblockIIGeneric<TileEn
 	@Override
 	protected void onUpdate()
 	{
+		if(!world.isRemote&&!isDummy())
+			tickRadioCooldown();
 		if(!construction.update())
 			return;
+		RadioNetwork.INSTANCE.addDevice(this);
 	}
 
-	@Override
-	protected int[] listAllPOI(MultiblockPOI poi)
-	{
-		switch(poi)
-		{
-			case ENERGY_INPUT:
-				return getPOI("energy");
-			case DATA:
-				return getPOI("data");
-			default:
-				return new int[0];
-		}
-	}
 
 	@Override
 	public void receiveData(DataPacket packet, int pos)
 	{
+		if(!isRadioAvailable())
+			return;
 		energyStorage.extractEnergy(RadioStation.energyUsage, false);
 		RadioNetwork.INSTANCE.sendPacket(packet, this, new ArrayList<>());
 	}
@@ -94,9 +94,9 @@ public class TileEntityRadioStation extends TileEntityMultiblockIIGeneric<TileEn
 	public boolean onRadioReceive(DataPacket packet)
 	{
 		//Added because of getting double (and fake (with pos -1 and facing north) tile entities) when using world.getTileEntity
-		if(this.formed&&!this.isDummy()&&isConstructionFinished())
+		if(isRadioAvailable()&&this.formed&&!this.isDummy()&&isConstructionFinished())
 		{
-			sendData(packet, facing, getPOI(MultiblockPOI.DATA)[0]);
+			sendData(packet, getDirection("data"), getPOI(MultiblockPOI.DATA)[0]);
 			soundDelay = 10;
 			return true;
 		}
@@ -141,6 +141,28 @@ public class TileEntityRadioStation extends TileEntityMultiblockIIGeneric<TileEn
 	public DimensionBlockPos getDevicePosition()
 	{
 		return new DimensionBlockPos(getPOIPos("radio_center"), world);
+	}
+
+	@Override
+	public int getRadioCooldown()
+	{
+		if(!isDummy())
+			return radioCooldown;
+		TileEntityRadioStation master = master();
+		return master==null?0: master.getRadioCooldown();
+	}
+
+	@Override
+	public void setRadioCooldown(int ticks)
+	{
+		if(!isDummy())
+			radioCooldown = Math.max(0, ticks);
+		else
+		{
+			TileEntityRadioStation master = master();
+			if(master!=null)
+				master.setRadioCooldown(ticks);
+		}
 	}
 
 	@Override

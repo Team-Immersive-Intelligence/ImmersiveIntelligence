@@ -1,0 +1,25 @@
+{
+  "type": "ParticleVanilla",
+  "max_lifetime": 3,
+  "size": 0.5,
+  "draw_stage": "custom",
+  "textures": [
+    "immersiveintelligence:particle/shrapnel/shrapnel0",
+    "immersiveintelligence:particle/shrapnel/shrapnel1",
+    "immersiveintelligence:particle/shrapnel/shrapnel2",
+    "immersiveintelligence:particle/shrapnel/shrapnel3"
+  ],
+  "programs": [
+    "smoke_transition(0.55)",
+    "lifetime_retexture"
+  ],
+  "scheduled": [
+    {
+      "amount": 1,
+      "time": 1,
+      "type": "chemthrower/fire",
+      "generator": "same",
+      "inherited_properties": ["size"]
+    }
+  ]
+}

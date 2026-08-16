@@ -42,8 +42,7 @@ public class DeeperDepthsHelper extends IICompatModule
 	@Override
 	public void preInit()
 	{
-		addShrapnel("amethyst", IIColor.fromPackedRGB(0xba73de),
-				RES_DD.with("amethyst_block"), 1, 0.08f, 0.1f);
+		addShrapnel("amethyst", IIColor.fromPackedRGB(0xba73de), 1, 0.08f, 0.1f);
 
 		//Register ores for recipes
 		OreDictionary.registerOre("blockBone", Blocks.BONE_BLOCK);

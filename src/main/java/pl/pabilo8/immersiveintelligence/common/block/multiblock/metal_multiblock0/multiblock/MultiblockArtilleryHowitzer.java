@@ -13,6 +13,7 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 import pl.pabilo8.immersiveintelligence.common.util.sound.IISoundAnimation;
 
 /**
@@ -41,6 +42,15 @@ public class MultiblockArtilleryHowitzer extends MultiblockStuctureBase<TileEnti
 		super(new ResourceLocation(ImmersiveIntelligence.MODID, "multiblocks/artillery_howitzer"));
 		offset = new Vec3i(4, 5, 0);
 		INSTANCE = this;
+
+		//POI
+		addPOI(MultiblockPOI.ENERGY_INPUT, "energy");
+		addPOI(MultiblockPOI.ITEM_INPUT, "item_input");
+		addPOI(MultiblockPOI.ITEM_OUTPUT, "item_output");
+		addPOI(MultiblockPOI.REDSTONE_INPUT, "redstone");
+		addPOI(MultiblockPOI.DATA_INPUT, "data");
+		addPOI(MultiblockPOI.MISC_DOOR, "bunker_door");
+		addPOI(MultiblockPOI.MISC_WEAPON, "gun");
 
 		//Load tactile animations
 		animationOpen = ResLoc.of(IIReference.RES_II, "artillery_howitzer/artillery_howitzer_door");

@@ -17,13 +17,22 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoEntr
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar.BarTooltipFormat;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.map.scanners.BlockTypeScanner;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityArtilleryHowitzer;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityRadioStation;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityFlagpole;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityRadar;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IDamageResistantMultiblock;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIBase;
 
 import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -226,5 +235,59 @@ public class DecoTemplates
 						.collect(Collectors.toList());
 			}
 		};
+	}
+
+	public static <T extends TileEntityMultiblockIIBase<T>> BlockTypeScanner getScanner
+			(String name, Class<T> klass, ResLoc location, Supplier<Boolean> filter)
+	{
+		return (BlockTypeScanner)new BlockTypeScanner(name)
+				.withMultiblockFilter(klass)
+				.withUpdateCondition(filter)
+				.withMarkerStyle(location, 4, IIColor.WHITE);
+	}
+
+	/**
+	 * @param filter display filter, for whether to show the marker on the map
+	 * @return {@link BlockTypeScanner} for detecting flagpoles   .
+	 */
+	public static BlockTypeScanner getFlagpoleScanner(Supplier<Boolean> filter)
+	{
+		return getScanner("flagpoles", TileEntityFlagpole.class, DecoTextures.MAP_MARKER_FLAGPOLE, filter);
+	}
+
+	/**
+	 * @param filter display filter, for whether to show the marker on the map
+	 * @return {@link BlockTypeScanner} for detecting emplacements
+	 */
+	public static BlockTypeScanner getEmplacementScanner(Supplier<Boolean> filter)
+	{
+		return getScanner("emplacement", TileEntityEmplacement.class, DecoTextures.MAP_MARKER_EMPLACEMENT, filter);
+	}
+
+	/**
+	 * @param filter display filter, for whether to show the marker on the map
+	 * @return {@link BlockTypeScanner} for detecting emplacements
+	 */
+	public static BlockTypeScanner getArtilleryHowitzerScanner(Supplier<Boolean> filter)
+	{
+		return getScanner("artillery_howitzer", TileEntityArtilleryHowitzer.class, DecoTextures.MAP_MARKER_ARTILLERY_HOWITZER, filter);
+	}
+
+	/**
+	 * @param filter display filter, for whether to show the marker on the map
+	 * @return {@link BlockTypeScanner} for detecting radars
+	 */
+	public static BlockTypeScanner getRadarScanner(Supplier<Boolean> filter)
+	{
+		return getScanner("radar", TileEntityRadar.class, DecoTextures.MAP_MARKER_RADAR, filter);
+	}
+
+	/**
+	 * @param filter display filter, for whether to show the marker on the map
+	 * @return {@link BlockTypeScanner} for detecting radio stations
+	 */
+	public static BlockTypeScanner getRadioStationScanner(Supplier<Boolean> filter)
+	{
+		return getScanner("radio_station", TileEntityRadioStation.class, DecoTextures.MAP_MARKER_RADIO_STATION, filter);
 	}
 }

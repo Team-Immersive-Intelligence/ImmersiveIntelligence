@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.client.gui.deco.util;
 
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 /**
  * Colors commonly used inside {@link pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui}.
@@ -11,6 +12,16 @@ import pl.pabilo8.immersiveintelligence.common.util.IIColor;
  */
 public class DecoColors
 {
+	public static final IIColor TEXT = IIColor.fromHex("afafaf");
+	public static final IIColor TEXT_HOVERED = IIColor.fromHex("cfcfcf");
+	public static final IIColor TEXT_PRESSED = IIReference.COLOR_IMMERSIVE_ORANGE;
+	public static final IIColor TEXT_DISABLED = IIColor.BLACK;
+
+	public static final IIColor BACKGROUND = IIColor.fromHex("efefef");
+	public static final IIColor BACKGROUND_HOVERED = IIColor.WHITE;
+	public static final IIColor BACKGROUND_PRESSED = IIColor.MC_GRAY;
+	public static final IIColor BACKGROUND_DISABLED = IIColor.MC_GRAY;
+
 	public static final IIColor H1 = IIColor.fromPackedRGB(0x0a0a0a);
 	public static final IIColor H2 = IIColor.fromPackedRGB(0x1a1a1a);
 

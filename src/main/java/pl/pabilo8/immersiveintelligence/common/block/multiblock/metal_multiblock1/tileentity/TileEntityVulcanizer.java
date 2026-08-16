@@ -70,24 +70,6 @@ public class TileEntityVulcanizer extends TileEntityMultiblockProductionMulti<Ti
 	}
 
 	@Override
-	protected int[] listAllPOI(MultiblockPOI poi)
-	{
-		switch(poi)
-		{
-			case ENERGY_INPUT:
-				return getPOI("energy");
-			case REDSTONE_INPUT:
-				return getPOI("redstone");
-			case ITEM_INPUT:
-				return getPOI("inputs");
-			case ITEM_OUTPUT:
-				return getPOI("outputs");
-			default:
-				return new int[0];
-		}
-	}
-
-	@Override
 	public boolean isStackValid(int i, ItemStack itemStack)
 	{
 		switch(i)

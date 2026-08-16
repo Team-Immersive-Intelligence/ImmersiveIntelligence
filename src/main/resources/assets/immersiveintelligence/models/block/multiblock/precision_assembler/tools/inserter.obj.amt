@@ -1,8 +1,5 @@
 {
   "origins": {
-    "base": [8, 0, 8],
-    "input": [8, 0, 8],
-    "output": [8, 0, 8],
     "inserter": [8, 4, 8],
     "lower": [8, 8, 8],
     "upper": [8, 21.5, 8],

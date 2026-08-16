@@ -13,6 +13,7 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 @IAdvancedMultiblock
 public class MultiblockRadar extends MultiblockStuctureBase<TileEntityRadar>
@@ -26,7 +27,15 @@ public class MultiblockRadar extends MultiblockStuctureBase<TileEntityRadar>
 		offset = new Vec3i(4, 0, 0);
 		INSTANCE = this;
 
+		//POI
+		addPOI(MultiblockPOI.DATA_OUTPUT, "data");
+		addPOI(MultiblockPOI.REDSTONE_INPUT, "redstone");
+		addPOI(MultiblockPOI.ENERGY_INPUT, "energy");
+
+		//Animations
 		animationDish = ResLoc.of(IIReference.RES_II, "radar/dish");
+
+		//Upgrades
 		UpgradeTechTree.getTreeFor(TileEntityRadar.class)
 				.withUpgrade(IIContent.UPGRADE_RADIO_LOCATORS, UpgradeTier.TIER_1);
 	}

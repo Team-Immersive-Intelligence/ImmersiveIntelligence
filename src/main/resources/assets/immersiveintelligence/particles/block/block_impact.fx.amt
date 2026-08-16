@@ -1,6 +1,6 @@
 {
   "type": "ParticleModel",
-  "model": "block/block_impact.obj",
+  "model": "ammo/shockwave.obj",
   "max_lifetime": 40,
   "draw_stage": "custom",
   "aabb": 0.0625,

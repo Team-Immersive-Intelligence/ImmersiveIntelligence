@@ -72,7 +72,7 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 	public List<String> getTooltip()
 	{
 		List<String> tooltip = super.getTooltip();
-		return tooltip.isEmpty()?display.getTooltip(): tooltip;
+		return (tooltip.isEmpty()&&display!=this)?display.getTooltip(): tooltip;
 	}
 
 	/**

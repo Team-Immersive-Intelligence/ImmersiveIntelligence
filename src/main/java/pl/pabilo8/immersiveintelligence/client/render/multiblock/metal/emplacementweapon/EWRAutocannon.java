@@ -17,7 +17,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 @SideOnly(Side.CLIENT)
 public class EWRAutocannon extends EmplacementWeaponRenderer<EmplacementWeaponAutocannon>
 {
-	private IIAnimationCachedMap install, uninstall, rotateYaw, rotatePitch, load, unload, fire;
+	private IIAnimationCachedMap rotateYaw, rotatePitch, load, unload, fire, chill;
 
 	public EWRAutocannon()
 	{
@@ -27,8 +27,7 @@ public class EWRAutocannon extends EmplacementWeaponRenderer<EmplacementWeaponAu
 	@Override
 	public void loadAnimations(AMTCachedModel<TileEntityEmplacement> model)
 	{
-		this.install = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("install"));
-		this.uninstall = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("uninstall"));
+		this.chill = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("chill"));
 		this.rotateYaw = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("rotate_yaw"));
 		this.rotatePitch = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("rotate_pitch"));
 		this.load = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("load"));
@@ -39,6 +38,9 @@ public class EWRAutocannon extends EmplacementWeaponRenderer<EmplacementWeaponAu
 	@Override
 	public void apply(EmplacementWeaponAutocannon weapon, AMTCachedModel<TileEntityEmplacement> model, BufferBuilder buf, Tessellator tes, float partialTicks)
 	{
-		// TODO: hook up to weapon state (aim/reload/fire). Kept minimal until server-side state fields are finalized.
+		this.rotateYaw.apply(weapon.aim.getYawNormalized(partialTicks));
+		this.rotatePitch.apply(weapon.aim.getPitchNormalized(partialTicks));
+		this.load.apply(weapon.gunHandler.getLoadingProgress(partialTicks));
+		this.fire.apply(weapon.gunHandler.getShotDelay(partialTicks));
 	}
 }

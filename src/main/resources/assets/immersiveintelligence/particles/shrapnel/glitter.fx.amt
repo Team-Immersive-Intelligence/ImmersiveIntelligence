@@ -1,0 +1,30 @@
+{
+  "type": "ParticleVanilla",
+  "textures": [
+    "immersiveintelligence:particle/shrapnel/shrapnel0",
+    "immersiveintelligence:particle/shrapnel/shrapnel1",
+    "immersiveintelligence:particle/shrapnel/shrapnel2",
+    "immersiveintelligence:particle/shrapnel/shrapnel3",
+    "immersiveintelligence:particle/shrapnel/shrapnel0",
+    "immersiveintelligence:particle/shrapnel/shrapnel1",
+    "immersiveintelligence:particle/shrapnel/shrapnel2",
+    "immersiveintelligence:particle/shrapnel/shrapnel3",
+    "immersiveintelligence:particle/shrapnel/shrapnel0",
+    "immersiveintelligence:particle/shrapnel/shrapnel1",
+    "immersiveintelligence:particle/shrapnel/shrapnel2",
+    "immersiveintelligence:particle/shrapnel/shrapnel3",
+    "immersiveintelligence:particle/shrapnel/shrapnel0",
+    "immersiveintelligence:particle/shrapnel/shrapnel1",
+    "immersiveintelligence:particle/shrapnel/shrapnel2",
+    "immersiveintelligence:particle/shrapnel/shrapnel3"
+  ],
+  "max_lifetime": 40,
+  "draw_stage": "custom",
+  "color": "FFFFFFFF",
+  "size": 1.0,
+  "programs": [
+    "lifetime_retexture",
+    "dust_transition",
+    "gravity(0.997,0.00125)"
+  ]
+}

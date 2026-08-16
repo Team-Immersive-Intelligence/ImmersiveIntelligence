@@ -44,6 +44,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.ForgeChunkManager;
@@ -51,6 +52,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent.Register;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -69,6 +71,7 @@ import pl.pabilo8.immersiveintelligence.api.VehicleFuelHandler;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.PenetrationRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
+import pl.pabilo8.immersiveintelligence.api.ammocrate.AmmunitionCrateHandler;
 import pl.pabilo8.immersiveintelligence.api.api.protection.CorrosionHandler;
 import pl.pabilo8.immersiveintelligence.api.api.protection.capability.ProtectionCapabilities;
 import pl.pabilo8.immersiveintelligence.api.crafting.DustUtils;
@@ -124,7 +127,9 @@ import pl.pabilo8.immersiveintelligence.common.gui.ContainerTileUpgrade;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIIMinecart.Minecarts;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMaterialDust.MaterialsDust;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.util.*;
+import pl.pabilo8.immersiveintelligence.common.util.IBatchOredictRegister;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
+import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIFluid;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBlockEnum;
@@ -144,6 +149,7 @@ import pl.pabilo8.immersiveintelligence.common.world.IIWorldGen.EnumOreType;
 import pl.pabilo8.immersiveintelligence.common.world.IIWorldGenRubberTree;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -452,24 +458,54 @@ public class CommonProxy implements IGuiHandler
 		return ores;
 	}
 
-	public static Fluid makeFluid(String name, int density, int viscosity)
+	public static Fluid makeFluid(String name, IIColor color, boolean gas, int density, int viscosity)
 	{
-		return makeFluid(name, density, viscosity, "");
+		return makeFluid(name, color, gas, density, viscosity, 0, 300);
 	}
 
-	//--- Chunkloading Handling ---//
-
-	public static Fluid makeFluid(String name, int density, int viscosity, String prefix)
+	public static Fluid makeFluid(String name, IIColor color, boolean gas, int density, int viscosity, int luminosity, int temperature)
 	{
-		Fluid fl = new Fluid(
-				name,
-				new ResourceLocation(ImmersiveIntelligence.MODID+":blocks/fluid/"+prefix+name+"_still"),
-				new ResourceLocation(ImmersiveIntelligence.MODID+":blocks/fluid/"+prefix+name+"_flow")
-		).setDensity(density).setViscosity(viscosity);
+		return makeFluid(name, null, color, gas, density, viscosity, luminosity, temperature);
+	}
+
+	public static Fluid makeFluid(String name, @Nullable String localizationKey, IIColor color, boolean gas, int density, int viscosity, int luminosity, int temperature)
+	{
+		ResourceLocation still, flowing;
+		if(color==IIColor.WHITE)
+		{
+			//Non-colored fluids use custom textures
+			still = new ResourceLocation(ImmersiveIntelligence.MODID+":blocks/fluid/"+name+"_still");
+			flowing = new ResourceLocation(ImmersiveIntelligence.MODID+":blocks/fluid/"+name+"_flow");
+		}
+		else
+		{
+			//Colored fluids use standard textures
+			still = new ResourceLocation(ImmersiveIntelligence.MODID+":blocks/fluid/"+(gas?"gas": "fluid")+"_still");
+			flowing = new ResourceLocation(ImmersiveIntelligence.MODID+":blocks/fluid/"+(gas?"gas": "fluid")+"_flow");
+		}
+		Fluid fl = new Fluid(name, still, flowing, color.toAWTColor())
+		{
+			@Override
+			public String getLocalizedName(FluidStack stack)
+			{
+				//Apply custom localization (f.e. Milk)
+				return localizationKey==null?super.getLocalizedName(stack): I18n.translateToLocal(localizationKey);
+			}
+		};
+
+		//Set properties
+		fl.setDensity(density);
+		fl.setViscosity(viscosity);
+		fl.setLuminosity(luminosity);
+		fl.setTemperature(temperature);
+		fl.setGaseous(gas);
+
+		//Register fluid
 		FluidRegistry.addBucketForFluid(fl);
 		if(!FluidRegistry.registerFluid(fl))
 			fl = FluidRegistry.getFluid(fl.getName());
 
+		//Add fluid to creative menu
 		IICreativeTab.fluidBucketMap.add(fl);
 		return fl;
 	}
@@ -570,54 +606,32 @@ public class CommonProxy implements IGuiHandler
 		DustUtils.registerDust(new IngredientStack("sand", 100), "sand", IIColor.fromPackedRGB(0xaca37b));
 		DustUtils.registerDust(new IngredientStack("gravel", 100), "gravel", IIColor.fromPackedRGB(0x383937));
 
-		ResLoc IERes = ResLoc.of(IIReference.RES_IE, "textures/blocks/%s");
-		ResLoc MCRes = ResLoc.of(IIReference.RES_MC, "textures/blocks/%s");
-		ResLoc IIRes = ResLoc.of(IIReference.RES_II, "textures/blocks/metal/%s");
-
-
-		ShrapnelHandler.addShrapnel("white_phosphorus", IIColor.fromPackedRGB(0x6b778a),
-						IERes.with("sheetmetal_aluminum"), 5, 0.3f, 0f)
+		ShrapnelHandler.addShrapnel("white_phosphorus", IIColor.fromPackedRGB(0x6b778a), 5, 0.3f, 0f)
 				.setFlammable(true);
-		ShrapnelHandler.addShrapnel("aluminum", IIColor.fromPackedRGB(0xd9ecea),
-						IERes.with("sheetmetal_aluminum"), 1, 0.05f, 0f)
-				.setDisruptsRadio(true);
-		ShrapnelHandler.addShrapnel("zinc", IIColor.fromPackedRGB(0xdee3dc),
-				IIRes.with("sheetmetal_zinc"), 1, 0.15f, 0f);
-		ShrapnelHandler.addShrapnel("copper", IIColor.fromPackedRGB(0xe37c26),
-				IERes.with("sheetmetal_copper"), 2, 0.25f, 0f);
-		ShrapnelHandler.addShrapnel("platinum", IIColor.fromPackedRGB(0xd8e1e1),
-				IIRes.with("sheetmetal_platinum"), 2, 0.05f, 0f);
-		ShrapnelHandler.addShrapnel("gold", IIColor.fromPackedRGB(0xd1b039),
-				MCRes.with("gold_block"), 2, 0.25f, 0f);
-		ShrapnelHandler.addShrapnel("nickel", IIColor.fromPackedRGB(0x838877),
-				IERes.with("sheetmetal_nickel"), 2, 0.25f, 0f);
-		ShrapnelHandler.addShrapnel("silver", IIColor.fromPackedRGB(0xa7cac8),
-						IERes.with("sheetmetal_silver"), 2, 0.25f, 0f)
+		ShrapnelHandler.addShrapnel("aluminum", IIColor.fromPackedRGB(0xd9ecea), 1, 0.05f, 0f)
+				.setDisruptsRadio(true)
+				.setFallsSlowly(true);
+		ShrapnelHandler.addShrapnel("zinc", IIColor.fromPackedRGB(0xdee3dc), 1, 0.15f, 0f);
+		ShrapnelHandler.addShrapnel("copper", IIColor.fromPackedRGB(0xe37c26), 2, 0.25f, 0f);
+		ShrapnelHandler.addShrapnel("platinum", IIColor.fromPackedRGB(0xd8e1e1), 2, 0.05f, 0f);
+		ShrapnelHandler.addShrapnel("gold", IIColor.fromPackedRGB(0xd1b039), 2, 0.25f, 0f);
+		ShrapnelHandler.addShrapnel("nickel", IIColor.fromPackedRGB(0x838877), 2, 0.25f, 0f);
+		ShrapnelHandler.addShrapnel("silver", IIColor.fromPackedRGB(0xa7cac8), 2, 0.25f, 0f)
 				.setGoodVsUndead(true);
-		ShrapnelHandler.addShrapnel("electrum", IIColor.fromPackedRGB(0xf6ad59),
-						IERes.with("sheetmetal_electrum"), 2, 0.25f, 0f)
+		ShrapnelHandler.addShrapnel("electrum", IIColor.fromPackedRGB(0xf6ad59), 2, 0.25f, 0f)
 				.setGoodVsUndead(true)
 				.setDisruptsRadio(true);
-		ShrapnelHandler.addShrapnel("constantan", IIColor.fromPackedRGB(0xf97456),
-						IERes.with("sheetmetal_constantan"), 3, 0.25f, 0f)
+		ShrapnelHandler.addShrapnel("constantan", IIColor.fromPackedRGB(0xf97456), 3, 0.25f, 0f)
 				.setFlammable(true);
-		ShrapnelHandler.addShrapnel("brass", IIColor.fromPackedRGB(0x957743),
-				IIRes.with("sheetmetal_brass"), 3, 0.35f, 0f);
-		ShrapnelHandler.addShrapnel("iron", IIColor.fromPackedRGB(0xc7c7c7),
-				MCRes.with("iron_block"), 4, 0.25f, 0f);
-		ShrapnelHandler.addShrapnel("lead", IIColor.fromPackedRGB(0x3a3e44),
-				IERes.with("sheetmetal_lead"), 4, 0.75f, 0f);
-		ShrapnelHandler.addShrapnel("steel", IIColor.fromPackedRGB(0x4d4d4d),
-				IERes.with("sheetmetal_steel"), 6, 0.35f, 0f);
-		ShrapnelHandler.addShrapnel("tungsten", IIColor.fromPackedRGB(0x3b3e43),
-				IIRes.with("sheetmetal_tungsten"), 7, 0.45f, 0f);
-		ShrapnelHandler.addShrapnel("HOPGraphite", IIColor.fromPackedRGB(0x282828),
-				IERes.with("stone_decoration_coke"), 7, 0.45f, 0f);
-		ShrapnelHandler.addShrapnel("uranium", IIColor.fromPackedRGB(0x659269),
-						IERes.with("sheetmetal_uranium"), 8, 0.45f, 8f)
+		ShrapnelHandler.addShrapnel("brass", IIColor.fromPackedRGB(0x957743), 3, 0.35f, 0f);
+		ShrapnelHandler.addShrapnel("iron", IIColor.fromPackedRGB(0xc7c7c7), 4, 0.25f, 0f);
+		ShrapnelHandler.addShrapnel("lead", IIColor.fromPackedRGB(0x3a3e44), 4, 0.75f, 0f);
+		ShrapnelHandler.addShrapnel("steel", IIColor.fromPackedRGB(0x4d4d4d), 6, 0.35f, 0f);
+		ShrapnelHandler.addShrapnel("tungsten", IIColor.fromPackedRGB(0x3b3e43), 7, 0.45f, 0f);
+		ShrapnelHandler.addShrapnel("HOPGraphite", IIColor.fromPackedRGB(0x282828), 7, 0.45f, 0f);
+		ShrapnelHandler.addShrapnel("uranium", IIColor.fromPackedRGB(0x659269), 8, 0.45f, 8f)
 				.setGoodVsUndead(true);
-		ShrapnelHandler.addShrapnel("wood", IIColor.fromPackedRGB(0x514135),
-						MCRes.with(""), 1, 0.25f, 0f)
+		ShrapnelHandler.addShrapnel("wood", IIColor.fromPackedRGB(0x514135), 1, 0.25f, 0f)
 				.setFlammable(true);
 
 		BulletHandler.registerBullet("ii_bullet", IIContent.itemAmmoRevolver);
@@ -734,7 +748,7 @@ public class CommonProxy implements IGuiHandler
 		registerEntity(i++, EntityShrapnel.class, "shrapnel", 16, 1, true);
 		registerEntity(i++, EntityWhitePhosphorus.class, "white_phosphorus", 16, 1, true);
 
-		registerEntity(i++, EntityMachinegun.class, "machinegun", 64, 1, true);
+		registerEntity(i++, EntityMachinegun.class, "machinegun", 64, 1, false);
 		registerEntity(i++, EntitySkycrateInternal.class, "skycrate_internal", 64, 1, true);
 
 		registerEntity(i++, EntityVehicleSeat.class, "seat", 64, 1, false);
@@ -744,9 +758,9 @@ public class CommonProxy implements IGuiHandler
 		registerEntity(i++, EntityFieldFlak.class, "field_flak", 64, 1, false);
 		registerEntity(i++, EntityFieldGun.class, "field_gun", 64, 1, false);
 
-		registerEntity(i++, EntityTripodPeriscope.class, "tripod_periscope", 64, 1, true);
-		registerEntity(i++, EntityAtomicBoom.class, "atomic_boom", 64, 1, true);
-		registerEntity(i++, EntityGasCloud.class, "gas_cloud", 64, 1, true);
+		registerEntity(i++, EntityTripodPeriscope.class, "tripod_periscope", 64, 1, false);
+		registerEntity(i++, EntityAtomicBoom.class, "atomic_boom", 64, 1, false);
+		registerEntity(i++, EntityGasCloud.class, "gas_cloud", 64, 1, false);
 
 		registerEntity(i++, EntityHans.class, "hans", 64, 4, true);
 
@@ -776,6 +790,7 @@ public class CommonProxy implements IGuiHandler
 		IICompatModule.doModulesPostInit();
 		IIConfigHandler.onConfigUpdate();
 		NBTSerialisation.postInit();
+		AmmunitionCrateHandler.init();
 		//Init Hans Weapons
 		HansUtils.init();
 

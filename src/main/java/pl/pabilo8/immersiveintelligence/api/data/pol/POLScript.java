@@ -13,19 +13,16 @@ import pl.pabilo8.immersiveintelligence.common.item.data.ItemIIFunctionalCircuit
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 /**
- * An executable script of the POL Programming Language
+ * Compiles and stores executable POL programs.
  *
- * @author Pabilo8 (pabilo@iiteam.net)
+ * @author Pabilo8(pabilo@iiteam.net)
+ * @updated 09.08.2026
  * @since 16.04.2022
  */
 public class POLScript
 {
-	private static final Pattern SPECIAL_REGEX_CHARS = Pattern.compile("[{}()\\[\\].+*?^$\\\\|]");
-
 	private final HashMap<String, Tuple<Integer, Integer>> markers;
 	private final POLInstruction[] instructions;
 
@@ -48,62 +45,98 @@ public class POLScript
 	 */
 	protected static ArrayList<Tuple<POLKeywords, String>> processText(ArrayList<String> text)
 	{
-		//remove comments and empty lines
-		text = (ArrayList<String>)text.stream()
-				.map(s -> SPECIAL_REGEX_CHARS.matcher(s).replaceAll("\\\\$0")) //replace regex chars
-				.map(s -> s.replaceAll(";(?<=;).*$", "")) //remove comments
-				.map(s -> s.replaceAll("\\\\", "")) //revert regex chars
-				.map(s -> s.replaceAll("\\s+$", "")) //trim end whitespace
-				.map(s -> s.replaceAll(" {4}", "\t")) //turn 4x string into tabulations
-				.filter(s -> !s.isEmpty()) //remove empty lines
-				.collect(Collectors.toList());
-
 		int level = 0;
-
 		ArrayList<Tuple<POLKeywords, String>> output = new ArrayList<>();
 
-		for(String next : text)
+		for(String line : text)
 		{
-			int indents = countChars(next, '\t');
-			next = next.replaceAll("\t", "");
+			String next = stripComment(line);
+			if(next.trim().isEmpty())
+				continue;
 
-			//add BEGIN or END if the level differs
+			int indents = getIndentLevel(next);
+			next = stripIndent(next).replaceFirst("\\s+$", "");
+
+			// Add BEGIN or END if the level differs.
 			for(int j = level-indents; j > 0; j--)
-				output.add(new Tuple<>(POLKeywords.END, "")); //add end keywords
+				output.add(new Tuple<>(POLKeywords.END, ""));
 			for(int j = indents-level; j > 0; j--)
-				output.add(new Tuple<>(POLKeywords.BEGIN, "")); //add begin keywords
+				output.add(new Tuple<>(POLKeywords.BEGIN, ""));
 
 			level = indents;
 
-			String element = next.split(" ")[0];
+			String[] split = next.split("\\s+", 2);
+			String element = split[0];
 			POLKeywords keyword = POLKeywords.v(element);
 
-			if(element.length()==0) //letter
-				output.add(new Tuple<>(POLKeywords.SET, "generic "+next));
-			else if(IIDataTypeUtils.metaTypesByName.containsKey(element)) //type name
+			if(IIDataTypeUtils.metaTypesByName.containsKey(element))
 				output.add(new Tuple<>(POLKeywords.SET, next));
 			else if(keyword!=null)
-			{
-				output.add(new Tuple<>(keyword,
-						next.split(" ").length > 1?next.split(" ", 2)[1]: ""
-				));
-			}
+				output.add(new Tuple<>(keyword, split.length > 1?split[1]: ""));
 		}
 
-		//add END if there is no finish marker
 		for(int i = 0; i < level; i++)
 			output.add(new Tuple<>(POLKeywords.END, ""));
 
 		return output;
+	}
 
-		/*return (ArrayList<Tuple<POLKeywords, String>>)
-				text.stream().map(s -> {
-					String[] split = s.split(" ", 2);
-					return new Tuple<>(
-							Optional.ofNullable(POLKeywords.v(split[0])).orElse(POLKeywords.WAIT), //shouldn't happen
-							split.length>1?split[1]:""
-					);
-				}).collect(Collectors.toList());*/
+	private static String stripComment(String line)
+	{
+		char quote = 0;
+		boolean escaped = false;
+
+		for(int i = 0; i < line.length(); i++)
+		{
+			char c = line.charAt(i);
+			if(quote!=0)
+			{
+				if(escaped)
+				{
+					escaped = false;
+					continue;
+				}
+				if(c=='\\')
+				{
+					escaped = true;
+					continue;
+				}
+				if(c==quote)
+					quote = 0;
+				continue;
+			}
+
+			if(c=='\''||c=='"')
+				quote = c;
+			else if(c==';')
+				return line.substring(0, i);
+		}
+
+		return line;
+	}
+
+	private static int getIndentLevel(String line)
+	{
+		int columns = 0;
+		for(int i = 0; i < line.length(); i++)
+		{
+			char c = line.charAt(i);
+			if(c==' ')
+				columns++;
+			else if(c=='\t')
+				columns += 4;
+			else
+				break;
+		}
+		return columns/4;
+	}
+
+	private static String stripIndent(String line)
+	{
+		int index = 0;
+		while(index < line.length()&&(line.charAt(index)==' '||line.charAt(index)=='\t'))
+			index++;
+		return line.substring(index);
 	}
 
 	/**
@@ -184,7 +217,7 @@ public class POLScript
 					break;
 				case SWAP: //swap variables
 				{
-					String[] words = rest.split(" ", 4);
+					String[] words = rest.split("\\s+", 4);
 					in = new POLInstructionSwap(
 							words[0].charAt(0),
 							words.length > 1?words[1].charAt(0): words[0].charAt(0),
@@ -194,7 +227,7 @@ public class POLScript
 				break;
 				case MOVE: //move a variable
 				{
-					String[] words = rest.split(" ", 4);
+					String[] words = rest.split("\\s+", 4);
 					in = new POLInstructionMove(
 							words[0].charAt(0),
 							words.length > 1?words[1].charAt(0): words[0].charAt(0),
@@ -204,7 +237,7 @@ public class POLScript
 				break;
 				case COPY: //copy a variable
 				{
-					String[] words = rest.split(" ", 4);
+					String[] words = rest.split("\\s+", 4);
 					in = new POLInstructionCopy(
 							words[0].charAt(0),
 							words.length > 1?words[1].charAt(0): words[0].charAt(0),
@@ -214,7 +247,7 @@ public class POLScript
 				break;
 				case SET: //set variable value
 				{
-					String[] words = rest.split(" ", 4);
+					String[] words = rest.split("\\s+", 4);
 					char letter = words[1].charAt(0);
 
 					in = new POLInstructionSet(letter, beginParseExpression(operations, words[3]), IIDataTypeUtils.getVarInstance(words[0]).getClass());
@@ -271,180 +304,253 @@ public class POLScript
 
 	private static DataType beginParseExpression(ArrayList<DataOperation> operations, String text)
 	{
-		if(countChars(text, '(')!=countChars(text, ')'))
-			return new DataTypeNull(); //unbalanced brackets
-
-		if((countChars(text, '\'')+countChars(text, '\"'))%2!=0)
-			return new DataTypeNull(); //non even number of apostrophes
-
+		text = text.trim();
+		if(!isExpressionBalanced(text))
+			return new DataTypeNull();
 		return parseExpression(operations, text);
 	}
 
-	// TODO: 19.04.2022 somehow add escaping special characters
-
 	/**
-	 * Polish Notation for the win!
-	 * (what else would you expect in a language named POL) :D
+	 * Parses a POL expression in prefix notation.
 	 */
 	private static DataType parseExpression(ArrayList<DataOperation> operations, String text)
 	{
-		if(text.length()==0)
+		text = text.trim();
+		if(text.isEmpty())
 			return new DataTypeNull();
 
-		if(text.startsWith("("))
+		if(text.charAt(0)=='(')
 		{
-			return parseExpression(operations, text.substring(1, Math.max(text.length()-2, 1)));
+			int closing = findClosingBracket(text);
+			if(closing==text.length()-1)
+				return parseExpression(operations, text.substring(1, closing));
 		}
 
-		DataOperation op = null;
-		ArrayList<DataType> arguments = new ArrayList<>();
-		String keyword = text.split(" ")[0];
-
-		for(DataOperation operation : operations)
-			if(operation.getMeta().name().equals(keyword))
-			{
-				op = operation;
-				break;
-			}
-		if(op==null)
-			for(DataOperation operation : operations)
-			{
-				String expression = operation.getMeta().expression();
-				if(!expression.isEmpty()&&expression.equals(keyword))
-				{
-					op = operation;
-					keyword = SPECIAL_REGEX_CHARS.matcher(keyword).replaceAll("\\\\$0"); //replace special chars, like +, -, etc.
-					break;
-				}
-			}
-
-		if(op!=null)
-		{
-			String remaining = text.replaceFirst(keyword, "").trim();
-			while(remaining.length() > 0)
-			{
-				Tuple<DataType, String> tuple;
-				if(remaining.startsWith("("))
-				{
-					String exp = findFullBracket(remaining);
-					tuple = new Tuple<>(
-							parseExpression(operations, exp),
-							remaining
-									.replaceFirst("\\(", "")
-									.replaceFirst(SPECIAL_REGEX_CHARS.matcher(exp).replaceAll("\\\\$0"), "") //replace special chars, like +, -, etc.
-									.replaceFirst("\\)", "")
-					);
-				}
-				else
-					tuple = parseValue(remaining);
-
-				arguments.add(tuple.getFirst());
-				remaining = tuple.getSecond().trim();
-			}
-
-			return new DataTypeExpression(arguments.toArray(new DataType[0]), op, ' ');
-		}
-		else
-		{
+		String keyword = firstToken(text);
+		DataOperation operation = findOperation(operations, keyword);
+		if(operation==null)
 			return parseValue(text).getFirst();
+
+		ArrayList<DataType> arguments = new ArrayList<>();
+		String remaining = text.substring(keyword.length()).trim();
+		while(!remaining.isEmpty())
+		{
+			Tuple<DataType, String> tuple;
+			if(remaining.charAt(0)=='(')
+			{
+				int closing = findClosingBracket(remaining);
+				if(closing < 0)
+					return new DataTypeNull();
+				tuple = new Tuple<>(
+						parseExpression(operations, remaining.substring(1, closing)),
+						remaining.substring(closing+1)
+				);
+			}
+			else
+				tuple = parseValue(remaining);
+
+			arguments.add(tuple.getFirst());
+			String next = tuple.getSecond().trim();
+			if(next.equals(remaining))
+				break;
+			remaining = next;
 		}
 
-
-		//parse into operation
-		/*for(DataOperation op : operations)
-		{
-			if(op.expression!=null)
-			{
-				Pattern pattern = Pattern.compile(op.expression.replaceAll("%s", "\\w"));
-			}
-		}*/
+		return new DataTypeExpression(arguments.toArray(new DataType[0]), operation, ' ');
 	}
 
-	private static String findFullBracket(String remaining)
+	private static DataOperation findOperation(ArrayList<DataOperation> operations, String keyword)
 	{
-		int opening = 1, closing = 0, c = 1;
-		final int l = remaining.length();
-		while(opening!=closing&&c < l)
+		for(DataOperation operation : operations)
 		{
-			switch(remaining.charAt(c))
+			if(operation.getMeta().name().equals(keyword)||operation.getMeta().expression().equals(keyword))
+				return operation;
+		}
+		return null;
+	}
+
+	private static int findClosingBracket(String text)
+	{
+		int depth = 0;
+		char quote = 0;
+		boolean escaped = false;
+
+		for(int i = 0; i < text.length(); i++)
+		{
+			char c = text.charAt(i);
+			if(quote!=0)
 			{
-				case '(':
-					opening++;
-					break;
-				case ')':
-					closing++;
-					break;
-				default:
-					break;
+				if(escaped)
+				{
+					escaped = false;
+					continue;
+				}
+				if(c=='\\')
+				{
+					escaped = true;
+					continue;
+				}
+				if(c==quote)
+					quote = 0;
+				continue;
 			}
-			c++;
+
+			if(c=='\''||c=='"')
+				quote = c;
+			else if(c=='(')
+				depth++;
+			else if(c==')'&&--depth==0)
+				return i;
 		}
 
-		return remaining.substring(1, c-1);
+		return -1;
+	}
+
+	private static boolean isExpressionBalanced(String text)
+	{
+		int depth = 0;
+		char quote = 0;
+		boolean escaped = false;
+
+		for(int i = 0; i < text.length(); i++)
+		{
+			char c = text.charAt(i);
+			if(quote!=0)
+			{
+				if(escaped)
+				{
+					escaped = false;
+					continue;
+				}
+				if(c=='\\')
+				{
+					escaped = true;
+					continue;
+				}
+				if(c==quote)
+					quote = 0;
+				continue;
+			}
+
+			if(c=='\''||c=='"')
+				quote = c;
+			else if(c=='(')
+				depth++;
+			else if(c==')'&&--depth < 0)
+				return false;
+		}
+
+		return depth==0&&quote==0;
 	}
 
 	private static Tuple<DataType, String> parseValue(String text)
 	{
-		DataType data;
+		text = text.trim();
+		if(text.isEmpty())
+			return new Tuple<>(new DataTypeNull(), "");
 
-		if(text.charAt(0)=='\"')
+		char first = text.charAt(0);
+		if(first=='"'||first=='\'')
 		{
-			data = new DataTypeString(text.substring(1, text.indexOf('\"', 1)));
-			text = text.replaceFirst("\".+\"", "");
+			int closing = findClosingQuote(text, first);
+			if(closing < 0)
+				return new Tuple<>(new DataTypeNull(), "");
+			return new Tuple<>(
+					new DataTypeString(unescapeString(text.substring(1, closing), first)),
+					text.substring(closing+1)
+			);
 		}
-		else if(text.charAt(0)=='\'')
+
+		if(first=='@')
 		{
-			data = new DataTypeString(text.substring(1, text.indexOf('\'', 1)));
-			text = text.replaceFirst("'.+'", "");
+			if(text.length() < 2)
+				return new Tuple<>(new DataTypeNull(), "");
+			return new Tuple<>(new DataTypeAccessor(text.charAt(1)), text.substring(2));
 		}
-		else if(text.charAt(0)=='@')
+
+		String token = firstToken(text);
+		if(isNumericToken(token))
 		{
-			data = new DataTypeAccessor(text.charAt(1));
-			text = text.replaceFirst("@.", "");
-		}
-		else if(Character.isDigit(text.charAt(0)))
-		{
-			String num = text.split(" ")[0];
 			try
 			{
-				data = countChars(num, '.') > 0?new DataTypeFloat(Float.parseFloat(num)): new DataTypeInteger(Integer.parseInt(num));
-			} catch(Exception i)
+				DataType value = token.indexOf('.') >= 0||token.indexOf('e') >= 0||token.indexOf('E') >= 0?
+						new DataTypeFloat(Float.parseFloat(token)):
+						new DataTypeInteger(Integer.parseInt(token));
+				return new Tuple<>(value, text.substring(token.length()));
+			} catch(NumberFormatException ignored)
 			{
-				try
-				{
-					data = new DataTypeInteger(Integer.parseInt(num));
-				} catch(Exception i2)
-				{
-					data = new DataTypeInteger(0);
-				}
+				return new Tuple<>(new DataTypeInteger(0), text.substring(token.length()));
 			}
-
-			text = text.replaceFirst(num, "");
-		}
-		else if(text.split(" ")[0].equals("true"))
-		{
-			return new Tuple<>(new DataTypeBoolean(true), text.replaceFirst("true", ""));
-		}
-		else if(text.split(" ")[0].equals("false"))
-		{
-			return new Tuple<>(new DataTypeBoolean(false), text.replaceFirst("false", ""));
-		}
-		else if(text.split(" ")[0].equals("null"))
-		{
-			return new Tuple<>(new DataTypeNull(), text.replaceFirst("null", ""));
-		}
-		else
-		{
-			data = new DataTypeNull();
-			text = "";
 		}
 
-		return new Tuple<>(data, text);
+		if(token.equals("true"))
+			return new Tuple<>(new DataTypeBoolean(true), text.substring(token.length()));
+		if(token.equals("false"))
+			return new Tuple<>(new DataTypeBoolean(false), text.substring(token.length()));
+		if(token.equals("null"))
+			return new Tuple<>(new DataTypeNull(), text.substring(token.length()));
+
+		return new Tuple<>(new DataTypeNull(), text.substring(token.length()));
 	}
 
-	private static int countChars(String s, char c)
+	private static int findClosingQuote(String text, char quote)
 	{
-		return (int)s.chars().filter(v -> v==c).count();
+		boolean escaped = false;
+		for(int i = 1; i < text.length(); i++)
+		{
+			char c = text.charAt(i);
+			if(escaped)
+			{
+				escaped = false;
+				continue;
+			}
+			if(c=='\\')
+			{
+				escaped = true;
+				continue;
+			}
+			if(c==quote)
+				return i;
+		}
+		return -1;
+	}
+
+	private static String unescapeString(String text, char quote)
+	{
+		StringBuilder result = new StringBuilder(text.length());
+		for(int i = 0; i < text.length(); i++)
+		{
+			char c = text.charAt(i);
+			if(c=='\\'&&i+1 < text.length())
+			{
+				char next = text.charAt(i+1);
+				if(next==quote||next=='\\')
+				{
+					result.append(next);
+					i++;
+					continue;
+				}
+			}
+			result.append(c);
+		}
+		return result.toString();
+	}
+
+	private static String firstToken(String text)
+	{
+		int end = 0;
+		while(end < text.length()&&!Character.isWhitespace(text.charAt(end)))
+			end++;
+		return text.substring(0, end);
+	}
+
+	private static boolean isNumericToken(String token)
+	{
+		if(token.isEmpty())
+			return false;
+		char first = token.charAt(0);
+		return Character.isDigit(first)||((first=='-'||first=='+')&&token.length() > 1&&
+				(Character.isDigit(token.charAt(1))||token.charAt(1)=='.'));
 	}
 
 	public POLInstruction[] getInstructions()

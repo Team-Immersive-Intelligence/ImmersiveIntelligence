@@ -32,6 +32,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacem
 import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageStorage;
 import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageTargetFilters;
 import pl.pabilo8.immersiveintelligence.client.gui.block.flagpole.GuiFlagpole;
+import pl.pabilo8.immersiveintelligence.client.gui.block.flagpole.GuiFlagpoleConfig;
 import pl.pabilo8.immersiveintelligence.client.gui.block.flagpole.GuiFlagpoleFaction;
 import pl.pabilo8.immersiveintelligence.client.gui.block.inserter.GuiInserter;
 import pl.pabilo8.immersiveintelligence.client.gui.block.packer.GuiPacker;
@@ -79,9 +80,12 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 /**
+ * Routes II GUI identifiers to their server containers and client screens.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
  * @updated 08.06.2020
  * @updated 09.06.2025
+ * @updated 14.08.2026
  * @ii-approved 0.3.1
  * @since 17.05.2019
  */
@@ -161,6 +165,7 @@ public enum IIGUI implements ISerializableEnum
 	VULCANIZER(TileEntityVulcanizer.class, ContainerVulcanizer::new),
 
 	FLAGPOLE(TileEntityFlagpole.class, ContainerFlagpole::getContainerForFlagpolePage),
+	FLAGPOLE_CONFIG(TileEntityFlagpole.class, ContainerFlagpole::getContainerForConfigPage),
 	FLAGPOLE_FACTION(TileEntityFlagpole.class, ContainerFlagpole::getContainerForFactionPage),
 	EMPLACEMENT_STORAGE(TileEntityEmplacement.class, ContainerEmplacement::getContainerForStoragePage),
 	EMPLACEMENT_CONFIG(TileEntityEmplacement.class, ContainerEmplacement::new),
@@ -337,6 +342,7 @@ public enum IIGUI implements ISerializableEnum
 		IIGUI.UPGRADE_ENTITY.setClientEntityGui((player, tile) -> new GuiEntityUpgrade(player, tile));
 
 		IIGUI.FLAGPOLE.setClientTileGui(GuiFlagpole::new);
+		IIGUI.FLAGPOLE_CONFIG.setClientTileGui(GuiFlagpoleConfig::new);
 		IIGUI.FLAGPOLE_FACTION.setClientTileGui(GuiFlagpoleFaction::new);
 		IIGUI.EMPLACEMENT_STORAGE.setClientTileGui(GuiEmplacementPageStorage::new);
 		IIGUI.EMPLACEMENT_CONFIG.setClientTileGui(GuiEmplacementPageConfig::new);

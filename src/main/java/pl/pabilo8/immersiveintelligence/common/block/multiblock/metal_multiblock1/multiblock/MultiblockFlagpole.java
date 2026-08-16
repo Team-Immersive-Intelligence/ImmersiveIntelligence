@@ -13,6 +13,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityFlagpole;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 import java.util.Collections;
 
@@ -26,11 +27,18 @@ public class MultiblockFlagpole extends MultiblockStuctureBase<TileEntityFlagpol
 		super(new ResourceLocation(ImmersiveIntelligence.MODID, "multiblocks/flagpole"));
 		offset = new Vec3i(1, 3, 0);
 		INSTANCE = this;
+
+		//POI
+		addPOI(MultiblockPOI.MISC_FLAGPOLE, "pole");
+		addPOI(MultiblockPOI.WIRE_MOUNT, "wire");
+
+		//Customization
 		STYLE_CONSTRAINTS = new StyleConstraints("sandbags", PaintStyleConstraint.NOT_APPLICABLE,
 				Sets.newHashSet("sandbags", "wooden", "steel", "bricks", "concrete"),
 				Collections.emptySet()
 		);
 
+		//Upgrades
 		UpgradeTechTree.getTreeFor(TileEntityFlagpole.class)
 				.reset()
 				.withUpgrade(IIContent.UPGRADE_FLAGPOLE_CAPTURE_DEFIANCE, UpgradeTier.TIER_1)
@@ -38,7 +46,7 @@ public class MultiblockFlagpole extends MultiblockStuctureBase<TileEntityFlagpol
 				.withUpgrade(IIContent.UPGRADE_FLAGPOLE_UNIT_POST, UpgradeTier.TIER_1)
 				.withUpgrade(IIContent.UPGRADE_FLAGPOLE_DISTRESS_SIGNAL, UpgradeTier.TIER_1)
 				.withDependency(IIContent.UPGRADE_FLAGPOLE_CAPTURE_DEFIANCE, IIContent.UPGRADE_FLAGPOLE_TASER_LOCKS)
-				.withLockOut(IIContent.UPGRADE_FLAGPOLE_UNIT_POST, IIContent.UPGRADE_FLAGPOLE_TASER_LOCKS);
+				.withLockOut(IIContent.UPGRADE_FLAGPOLE_UNIT_POST, IIContent.UPGRADE_FLAGPOLE_TASER_LOCKS, IIContent.UPGRADE_FLAGPOLE_DISTRESS_SIGNAL);
 	}
 
 	@Override

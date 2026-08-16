@@ -1,27 +1,29 @@
 package pl.pabilo8.immersiveintelligence.api;
 
+import net.minecraft.potion.PotionEffect;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.common.ammo.components.factory.AmmoComponentShrapnel;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
-import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 
 /**
+ * Registers shrapnel materials and their ammunition components.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 06.08.2026
+ * @ii-approved 0.3.1
  * @since 24.05.2019
  */
 public class ShrapnelHandler
 {
 	public static HashMap<String, Shrapnel> registry = new HashMap<>();
 
-	public static Shrapnel addShrapnel(String name, IIColor color, ResLoc texture, int damage, float mass, float brightness)
+	public static Shrapnel addShrapnel(String name, IIColor color, int damage, float mass, float brightness)
 	{
-		//Register the shrapnel
-		Shrapnel shrapnel = registry.computeIfAbsent(name, s -> new Shrapnel(name, texture, color, damage, mass, brightness));
-		//Register an ammo component of the shrapnel
-		AmmoComponentShrapnel component = new AmmoComponentShrapnel(name);
-		AmmoRegistry.registerComponent(component);
+		Shrapnel shrapnel = registry.computeIfAbsent(name, s -> new Shrapnel(name, color, damage, mass, brightness));
+		AmmoRegistry.registerComponent(new AmmoComponentShrapnel(name));
 		return shrapnel;
 	}
 
@@ -31,33 +33,36 @@ public class ShrapnelHandler
 		//TODO: 28.04.2024 remove ammo component
 	}
 
+	/**
+	 * Defines the gameplay and visual properties of one shrapnel material.
+	 *
+	 * @author Pabilo8 (pabilo@iiteam.net)
+	 * @since 24.05.2019
+	 */
 	public static class Shrapnel
 	{
-		//--- Properties ---//
 		public final String name;
-		public final ResLoc texture;
 		public final int damage;
 		public final IIColor color;
 		public final float mass, brightness;
 		public boolean flammable = false;
 		public boolean goodVsUndead = false;
-		private boolean disruptsRadio;
+		private boolean disruptsRadio = false;
+		public boolean fallsSlowly = false;
+		@Nullable
+		public PotionEffect potion = null;
 
-		private Shrapnel(String name, ResLoc texture, IIColor color, int damage, float mass, float brightness)
+		private Shrapnel(String name, IIColor color, int damage, float mass, float brightness)
 		{
 			this.name = name;
 			this.color = color;
-			this.texture = texture;
 			this.damage = damage;
 			this.mass = mass;
 			this.brightness = brightness;
 		}
 
-		//--- Setters ---//
-
 		/**
-		 * @param flammable whether the shrapnel can be ignited and deal fire damage
-		 * @return this
+		 * Sets whether this shrapnel can ignite.
 		 */
 		public Shrapnel setFlammable(boolean flammable)
 		{
@@ -66,8 +71,7 @@ public class ShrapnelHandler
 		}
 
 		/**
-		 * @param goodVsUndead whether the shrapnel deals extra damage to the undead
-		 * @return this
+		 * Sets whether this shrapnel deals double damage to undead targets.
 		 */
 		public Shrapnel setGoodVsUndead(boolean goodVsUndead)
 		{
@@ -75,17 +79,39 @@ public class ShrapnelHandler
 			return this;
 		}
 
+		/**
+		 * Returns whether this shrapnel disrupts nearby radio devices.
+		 */
 		public boolean isDisruptsRadio()
 		{
 			return disruptsRadio;
 		}
 
 		/**
-		 * @param disruptsRadio whether the shrapnel disrupts radio signals
+		 * Sets whether this shrapnel disrupts nearby radio devices.
 		 */
-		public void setDisruptsRadio(boolean disruptsRadio)
+		public Shrapnel setDisruptsRadio(boolean disruptsRadio)
 		{
 			this.disruptsRadio = disruptsRadio;
+			return this;
+		}
+
+		/**
+		 * Sets whether this shrapnel uses a long, slow-falling trajectory.
+		 */
+		public Shrapnel setFallsSlowly(boolean fallsSlowly)
+		{
+			this.fallsSlowly = fallsSlowly;
+			return this;
+		}
+
+		/**
+		 * Sets the potion effect applied to living targets on hit.
+		 */
+		public Shrapnel setPotion(@Nullable PotionEffect potion)
+		{
+			this.potion = potion==null?null: new PotionEffect(potion);
+			return this;
 		}
 	}
 }

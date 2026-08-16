@@ -1088,7 +1088,7 @@ machineupgrade.immersiveintelligence.saw_unregulator.desc=Unregulating the saw l
 #Flagpole
 machineupgrade.immersiveintelligence.flagpole.capture_defiance=Capture Defiance
 machineupgrade.immersiveintelligence.flagpole.capture_defiance.desc=Reinforces the Flagpole, raising its structural integrity and troops required to actively capture it.
-machineupgrade.immersiveintelligence.flagpole.taser_locks=Taser Locks
+machineupgrade.immersiveintelligence.flagpole.taser_locks=Tesla Coil
 machineupgrade.immersiveintelligence.flagpole.taser_locks.desc=Adds a defensive tesla coil, that strikes enemies aiming to capture the Flagpole.
 machineupgrade.immersiveintelligence.flagpole.distress_signal=Distress Signal
 machineupgrade.immersiveintelligence.flagpole.distress_signal.desc=Adds a radio-connected alarm siren, that activates when enemy troops are close.
@@ -1291,6 +1291,14 @@ desc.immersiveintelligence.fire_missions_module.tooltip=Add and modify fire miss
 
 desc.immersiveintelligence.tooltip.armor=Armor %f%%
 
+desc.immersiveintelligence.coagulator.input_tank=Input Tank
+desc.immersiveintelligence.coagulator.coagulant_tank=Coagulant Tank
+
+desc.immersiveintelligence.chemical_painter.tank_cyan=Cyan Ink Tank
+desc.immersiveintelligence.chemical_painter.tank_magenta=Magenta Ink Tank
+desc.immersiveintelligence.chemical_painter.tank_yellow=Yellow Ink Tank
+desc.immersiveintelligence.chemical_painter.tank_black=Black Ink Tank
+
 desc.immersiveintelligence.upgrade_gui.title=Upgrade Machine
 desc.immersiveintelligence.upgrade_gui.tech_tree=Tech Tree
 desc.immersiveintelligence.upgrade_gui.info=Information
@@ -1302,7 +1310,7 @@ desc.immersiveintelligence.variable_add_desc=Add a new variable
 desc.immersiveintelligence.variable_set=Set
 desc.immersiveintelligence.variable_set_desc=Change the value of a variable
 desc.immersiveintelligence.variable_send_packet=Send Packet
-desc.immersiveintelligence.variable_send_packet_desc=Sends the current packet to data network
+desc.immersiveintelligence.variable_send_packet.tooltip=Sends the current packet to data network
 desc.immersiveintelligence.variable_remove_desc=Remove a variable
 desc.immersiveintelligence.variable_properties=Properties
 desc.immersiveintelligence.variable_properties.tooltip=Edit expression properties, like conditional variables.
@@ -1545,6 +1553,7 @@ desc.immersiveintelligence.bullets.details=Details:
 desc.immersiveintelligence.bullets.core=Fitted with %1$s %2$s Core
 desc.immersiveintelligence.bullets.fuse=%s Fuse
 desc.immersiveintelligence.bullets.mass=Mass: %s
+desc.immersiveintelligence.bullets.component_slots=Free Component Slots: %s
 desc.immersiveintelligence.bullets.caliber=Caliber: %s bCal
 
 desc.immersiveintelligence.bullets.components=Components:
@@ -1560,12 +1569,6 @@ desc.immersiveintelligence.bullets.armor_penetration=Armor Penetration:
 
 desc.immersiveintelligence.bullet_magazine.remaining=Remaining Bullets: %s
 desc.immersiveintelligence.bullet_magazine.empty=Empty
-
-desc.immersiveintelligence.medical_crate.heal=Heal Wounded Entities
-desc.immersiveintelligence.medical_crate.boost=Apply Effects to Entities
-
-desc.immersiveintelligence.repair_crate.repair_armor=Repair Worn Armor
-desc.immersiveintelligence.repair_crate.repair_vehicles=Repair Vehicles
 
 desc.immersiveintelligence.jei.washing_recipe=Chemical Washing
 
@@ -3349,6 +3352,24 @@ ii.gui.inserter.tasks.fluid=Fluid
 ii.gui.inserter.tasks.fluid_milk_cow=Milk Cow
 ii.gui.inserter.tasks.fluid_latex_collector=Collect Latex
 
+ii.gui.ammunition_crate.mode=Mode:
+ii.gui.ammunition_crate.section.ammunition=Ammunition
+ii.gui.ammunition_crate.section.spent_casings=Spent Casings
+ii.gui.ammunition_crate.section.spent_magazines=Spent Magazines
+ii.gui.ammunition_crate.mode.revolver=Revolver
+ii.gui.ammunition_crate.mode.submachinegun=Submachinegun
+ii.gui.ammunition_crate.mode.assault_rifle=Assault Rifle
+ii.gui.ammunition_crate.mode.rifle_bullets=Rifle (Bullets)
+ii.gui.ammunition_crate.mode.rifle_magazines=Rifle (Magazines)
+ii.gui.ammunition_crate.mode.machinegun_magazines=Machinegun (Magazines)
+ii.gui.ammunition_crate.mode.machinegun_belt_fed=Machinegun (Belt-Fed)
+
+ii.gui.repair_crate.repair_armor=Repair Worn Armor
+ii.gui.repair_crate.repair_vehicles=Repair Vehicles
+
+ii.gui.medical_crate.heal=Heal Wounded Entities
+ii.gui.medical_crate.boost=Apply Effects to Entities
+
 ii.gui.packer.task=Transfer:
 ii.gui.packer.task.item=Items
 ii.gui.packer.task.item.out=Pack
@@ -3506,6 +3527,21 @@ ii.gui.map_display.marker.vehicles=Vehicles
 ii.gui.map_display.marker.missiles=Missiles
 ii.gui.map_display.marker.artillery=Artillery
 ii.gui.map_display.marker.bullets=Bullets
+
+ii.gui.flagpole.config.chunk_loading_range=Chunk Loading Range
+ii.gui.flagpole.config.chunks=%s Chunks
+ii.gui.flagpole.config.display_faction_flag=Display Faction Flag
+ii.gui.flagpole.config.display_faction_flag.tooltip=Display Owner's flag, when no banner was placed on the Flagpole.
+ii.gui.flagpole.config.prioritize_faction_flag=Prioritize Faction Flag
+ii.gui.flagpole.config.prioritize_faction_flag.tooltip=Display Owner's flag, even if there is a banner on the Flagpole.
+ii.gui.flagpole.config.distress_signal=Distress Signal
+ii.gui.flagpole.config.sound_alarm=Sound Alarm
+ii.gui.flagpole.config.sound_alarm.tooltip=Activates the siren, when enemies are nearby.
+ii.gui.flagpole.config.send_distress_packet=Send Distress Packet
+ii.gui.flagpole.config.send_distress_packet.tooltip=Sends a distress packet on the radio network, when enemies are nearby.
+ii.gui.flagpole.config.tesla_coil=Tesla Coil
+ii.gui.flagpole.config.tesla_coil_active=Tesla Coil Active
+ii.gui.flagpole.config.tesla_coil_active.tooltip=Activates the Tesla Coil, which strikes nearby enemies.
 
 ii.gui.faction_invitation=Faction
 ii.gui.faction_invitation.invalid=Could not get faction data. Please close and open this screen again.

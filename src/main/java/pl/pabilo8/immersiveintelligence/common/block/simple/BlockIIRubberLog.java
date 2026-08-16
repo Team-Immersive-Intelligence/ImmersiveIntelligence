@@ -40,10 +40,12 @@ public class BlockIIRubberLog extends BlockIIBase<RubberLogs>
 		super("rubber_log", PropertyEnum.create("type", RubberLogs.class), Material.WOOD, ItemBlockIIBase::new, BlockLog.LOG_AXIS);
 		this.setHardness(2.0F);
 		this.setResistance(1F);
+		setFlammable(true);
 		setCategory(IICategory.RESOURCES);
 
 		setBlockLayer(BlockRenderLayer.SOLID);
 		setSubBlockLayer(RubberLogs.STRIPPED, BlockRenderLayer.CUTOUT);
+
 	}
 
 	@Nullable

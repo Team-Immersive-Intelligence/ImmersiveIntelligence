@@ -15,6 +15,7 @@ import blusunrize.immersiveengineering.common.blocks.TileEntityMultiblockPart;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.immersiveengineering.common.util.chickenbones.Matrix4;
 import com.google.gson.*;
+import lombok.Getter;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GlStateManager;
@@ -48,6 +49,7 @@ import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyHandler;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.property.IOwnableProperty;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 import pl.pabilo8.immersiveintelligence.common.util.raytracer.AxisAlignedFacingBB;
 
 import javax.annotation.Nonnull;
@@ -59,7 +61,10 @@ import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 /**
+ * Stores the definition of a multiblock structure.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 09.08.2026
  * @since 31.05.2021
  */
 public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<T>> implements IMultiblock
@@ -73,10 +78,12 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 	/**
 	 * The name generated from resLoc
 	 */
-	private final String name;
+	@Getter
+	private final String uniqueName;
 	/**
 	 * Offset for trigger block
 	 */
+	@Getter
 	protected Vec3i offset = Vec3i.NULL_VECTOR;
 	/**
 	 * The .nbt file
@@ -85,11 +92,13 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 	/**
 	 * Stacks for manual list
 	 */
-	private IngredientStack[] materials = new IngredientStack[0];
+	@Getter
+	private IngredientStack[] totalMaterials = new IngredientStack[0];
 	/**
 	 * Stacks for manual block display
 	 */
-	private ItemStack[][][] structure = new ItemStack[0][0][0];
+	@Getter
+	private ItemStack[][][] structureManual = new ItemStack[0][0][0];
 	/**
 	 * Check array for blockstates
 	 */
@@ -111,16 +120,28 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 	/**
 	 * Bounding boxes for collision and interaction detection at [pos] [facing (ordinal)]
 	 */
-	private ArrayList<ArrayList<AxisAlignedFacingBB>> AABBs = new ArrayList<>();
-	//TODO: 30.07.2024 second map for caching of MultiblockPOIs
+	private final ArrayList<ArrayList<AxisAlignedFacingBB>> AABBs = new ArrayList<>();
 	/**
-	 * Map of named Points of Interest and their local positions in this multiblock
+	 * Named Points-of-Interest loaded from the multiblock JSON file.
 	 */
-	private HashMap<String, int[]> POIs = new HashMap<>();
-	private HashMap<String, Rotation> rotations = new HashMap<>();
+	private final Map<String, int[]> namedPOIs = new HashMap<>();
+	/**
+	 * Direct typed POIs declared by the multiblock class.
+	 */
+	private final EnumMap<MultiblockPOI, int[]> declaredPOIs = new EnumMap<>(MultiblockPOI.class);
+	/**
+	 * Named POI groups bound to typed POIs by the multiblock class.
+	 */
+	private final EnumMap<MultiblockPOI, Set<String>> poiBindings = new EnumMap<>(MultiblockPOI.class);
+	/**
+	 * Resolved typed POIs with parent and child relations applied.
+	 */
+	private final EnumMap<MultiblockPOI, int[]> resolvedPOIs = new EnumMap<>(MultiblockPOI.class);
+	private final HashMap<String, Rotation> rotations = new HashMap<>();
 	/**
 	 * Whether this structure requires an infinite bounding box in rendering due to its size
 	 */
+	@Getter
 	private boolean massiveStructure;
 	private T te;
 	@SideOnly(Side.CLIENT)
@@ -130,7 +151,7 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 	{
 		this.loc = loc;
 		String[] split = loc.getResourcePath().split("/");
-		this.name = "II:"+IIStringUtil.toCamelCase(split[split.length-1], false);
+		this.uniqueName = "II:"+IIStringUtil.toCamelCase(split[split.length-1], false);
 	}
 
 	public void updateStructure()
@@ -143,11 +164,11 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 		this.manualScale = 7f/(Math.max(Math.max(size.getX(), size.getZ()), size.getY())/12f);
 
 		//Set structure ItemStacks to default
-		structure = new ItemStack[size.getY()][size.getZ()][size.getX()];
+		structureManual = new ItemStack[size.getY()][size.getZ()][size.getX()];
 		for(int x = 0; x < size.getX(); x++)
 			for(int y = 0; y < size.getY(); y++)
 				for(int z = 0; z < size.getZ(); z++)
-					structure[y][z][x] = ItemStack.EMPTY;
+					structureManual[y][z][x] = ItemStack.EMPTY;
 
 		checkStructure = new IngredientStack[size.getY()][size.getZ()][size.getX()];
 		List<BlockInfo> blocks = template.blocks;
@@ -159,7 +180,7 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 			IngredientStack here = getIngredientStackForBlockInfo(info);
 			if(!here.getExampleStack().isEmpty())
 			{
-				structure[info.pos.getY()][info.pos.getZ()][info.pos.getX()] = here.getExampleStack();
+				structureManual[info.pos.getY()][info.pos.getZ()][info.pos.getX()] = here.getExampleStack();
 				checkStructure[info.pos.getY()][info.pos.getZ()][info.pos.getX()] = here;
 				Optional<IngredientStack> match = matsSet.stream().filter(here::equals).findAny();
 				if(match.isPresent())
@@ -168,7 +189,7 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 					matsSet.add(here);
 			}
 		}
-		materials = matsSet.toArray(new IngredientStack[0]);
+		totalMaterials = matsSet.toArray(new IngredientStack[0]);
 		//Whether this multiblock has an infinite render bounding box
 		massiveStructure = size.getX() > 5||size.getY() > 5||size.getZ() > 5;
 
@@ -202,7 +223,7 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 		AABBs.clear();
 		if(!file.has("bounds"))
 		{
-			IILogger.error("Multiblock"+name+" has no Axis-Aligned Bounding Boxes defined");
+			IILogger.error("Multiblock"+uniqueName+" has no Axis-Aligned Bounding Boxes defined");
 			return;
 		}
 
@@ -263,11 +284,12 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 
 	private void updatePOI(@Nonnull JsonObject file)
 	{
-		//Load POIs
-		POIs.clear();
+		//Load named POIs
+		namedPOIs.clear();
 		if(!file.has("poi"))
 		{
 			IILogger.error("Multiblock "+loc.toString()+" has no Points of Interest defined!");
+			rebuildPOICache();
 			return;
 		}
 
@@ -281,20 +303,21 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 				ArrayList<Integer> positions = new ArrayList<>();
 				for(JsonElement jsonElement : arr)
 					positions.addAll(Arrays.asList(IIStringUtil.parseNumberListString(jsonElement.getAsString())));
-				POIs.put(poi.getKey(), positions.stream().mapToInt(Integer::intValue).toArray());
+				namedPOIs.put(poi.getKey(), positions.stream().mapToInt(Integer::intValue).toArray());
 			}
 			//Single Value or Range
 			else if(poi.getValue() instanceof JsonPrimitive)
 			{
 				Integer[] IDs = IIStringUtil.parseNumberListString(poi.getValue().getAsString());
-				POIs.put(poi.getKey(), Arrays.stream(IDs).mapToInt(Integer::intValue).toArray());
+				namedPOIs.put(poi.getKey(), Arrays.stream(IDs).mapToInt(Integer::intValue).toArray());
 			}
 			else
 				IILogger.warn("Invalid POI value for \""+poi.getKey()+"\" in multiblock "+loc.toString()+", expected array or primitive, got "+poi.getValue().getClass().getSimpleName());
 		}
 
-		//Sorting needed for binary search to work
-		POIs.values().forEach(Arrays::sort);
+		//Sorting is needed for binary search to work
+		namedPOIs.values().forEach(Arrays::sort);
+		rebuildPOICache();
 	}
 
 	private void updateRotations(@Nonnull JsonObject file)
@@ -343,12 +366,6 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 	}
 
 	@Override
-	public String getUniqueName()
-	{
-		return name;
-	}
-
-	@Override
 	public boolean isBlockTrigger(IBlockState state)
 	{
 		return checkState(state, checkStructure[offset.getY()][offset.getZ()][offset.getX()], null, null);
@@ -379,7 +396,7 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 			for(int l = -offset.getZ(); l < size.getZ()-offset.getZ(); l++)
 				for(int w = -offset.getX(); w < size.getX()-offset.getX(); w++)
 				{
-					if(structure[h+offset.getY()][l+offset.getZ()][w+offset.getX()].isEmpty())
+					if(structureManual[h+offset.getY()][l+offset.getZ()][w+offset.getX()].isEmpty())
 						continue;
 
 					int ww = mirrored?-w: w;
@@ -426,7 +443,7 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 			for(int l = -offset.getZ(); l < size.getZ()-offset.getZ(); l++)
 				for(int w = -offset.getX(); w < size.getX()-offset.getX(); w++)
 				{
-					if(structure[h+offset.getY()][l+offset.getZ()][w+offset.getX()].isEmpty())
+					if(structureManual[h+offset.getY()][l+offset.getZ()][w+offset.getX()].isEmpty())
 						continue;
 
 					int ww = mirror?-w: w;
@@ -451,19 +468,8 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 	protected T placeTile(World world, BlockPos pos)
 	{
 		world.setBlockState(pos, getBlock().getStateFromMeta(getMeta()));
+		//noinspection unchecked
 		return (T)world.getTileEntity(pos);
-	}
-
-	@Override
-	public ItemStack[][][] getStructureManual()
-	{
-		return structure;
-	}
-
-	@Override
-	public IngredientStack[] getTotalMaterials()
-	{
-		return materials;
 	}
 
 	@Override
@@ -621,14 +627,6 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 	}
 
 	/**
-	 * @return the multiblock XYZ offset vector
-	 */
-	public Vec3i getOffset()
-	{
-		return offset;
-	}
-
-	/**
 	 * @param h height (y)
 	 * @param l length (z)
 	 * @param w width (x)
@@ -674,25 +672,124 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 	//--- POIs ---//
 
 	/**
-	 * @param pos  position of the block in multiblock
-	 * @param name of the POI
-	 * @return whether this position is a POI of that type
+	 * Binds a typed POI to one or more named POI groups from the multiblock JSON file.
+	 * Call this method from the multiblock constructor.
+	 *
+	 * @param poi   typed POI
+	 * @param names named POI groups
+	 */
+	protected final void addPOI(@Nonnull MultiblockPOI poi, @Nonnull String... names)
+	{
+		Set<String> bindings = poiBindings.computeIfAbsent(poi, key -> new LinkedHashSet<>());
+		Arrays.stream(names)
+				.filter(Objects::nonNull)
+				.filter(name -> !name.isEmpty())
+				.forEach(bindings::add);
+		rebuildPOICache();
+	}
+
+	/**
+	 * Adds typed POI positions directly to the multiblock definition.
+	 * Call this method from the multiblock constructor.
+	 *
+	 * @param poi       typed POI
+	 * @param positions local multiblock positions
+	 */
+	protected final void addPOIPositions(@Nonnull MultiblockPOI poi, int... positions)
+	{
+		declaredPOIs.merge(poi, normalisePOI(positions), MultiblockStuctureBase::mergePOI);
+		rebuildPOICache();
+	}
+
+	private void rebuildPOICache()
+	{
+		EnumMap<MultiblockPOI, int[]> directPOIs = new EnumMap<>(MultiblockPOI.class);
+		for(MultiblockPOI poi : MultiblockPOI.values())
+		{
+			List<int[]> sources = new ArrayList<>();
+			sources.add(declaredPOIs.getOrDefault(poi, new int[0]));
+
+			for(String binding : poiBindings.getOrDefault(poi, Collections.emptySet()))
+				sources.add(namedPOIs.getOrDefault(binding, new int[0]));
+
+			directPOIs.put(poi, mergePOI(sources));
+		}
+
+		resolvedPOIs.clear();
+		for(MultiblockPOI requested : MultiblockPOI.values())
+		{
+			List<int[]> sources = Arrays.stream(MultiblockPOI.values())
+					.filter(declared -> declared.matches(requested))
+					.map(directPOIs::get)
+					.collect(Collectors.toList());
+			resolvedPOIs.put(requested, mergePOI(sources));
+		}
+	}
+
+	private static int[] normalisePOI(@Nullable int[] positions)
+	{
+		if(positions==null||positions.length==0)
+			return new int[0];
+		return Arrays.stream(positions).distinct().sorted().toArray();
+	}
+
+	private static int[] mergePOI(@Nonnull int[] first, @Nonnull int[] second)
+	{
+		return mergePOI(Arrays.asList(first, second));
+	}
+
+	private static int[] mergePOI(@Nonnull Collection<int[]> arrays)
+	{
+		return arrays.stream()
+				.filter(Objects::nonNull)
+				.flatMapToInt(Arrays::stream)
+				.distinct()
+				.sorted()
+				.toArray();
+	}
+
+	/**
+	 * @param pos position of the block in the multiblock
+	 * @param poi typed POI
+	 * @return true if this position is a POI of that type
+	 */
+	public boolean isPointOfInterest(int pos, @Nonnull MultiblockPOI poi)
+	{
+		return Arrays.binarySearch(getPointsOfInterest(poi), pos) >= 0;
+	}
+
+	/**
+	 * @param pos  position of the block in the multiblock
+	 * @param name name of the POI
+	 * @return true if this position is a POI of that type
 	 */
 	public boolean isPointOfInterest(int pos, String name)
 	{
-		return Arrays.binarySearch(POIs.get(name), pos) >= 0;
+		return Arrays.binarySearch(getPointsOfInterest(name), pos) >= 0;
 	}
 
 	public int getPointOfInterest(String name)
 	{
-		int[] arr = POIs.get(name);
+		int[] arr = getPointsOfInterest(name);
 		return arr.length==0?0: arr[0];
+	}
+
+	/**
+	 * Gets cached positions for a typed POI.
+	 *
+	 * @param poi typed POI
+	 * @return sorted POI positions
+	 */
+	@Nonnull
+	public int[] getPointsOfInterest(@Nonnull MultiblockPOI poi)
+	{
+		return resolvedPOIs.getOrDefault(poi, new int[0]);
 	}
 
 	@Nonnull
 	public int[] getPointsOfInterest(String name)
 	{
-		return POIs.getOrDefault(name, new int[0]);
+		return namedPOIs.getOrDefault(name, new int[0]);
 	}
 
 	@Nullable
@@ -701,8 +798,4 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 		return rotations.get(name);
 	}
 
-	public boolean isMassiveStructure()
-	{
-		return massiveStructure;
-	}
 }

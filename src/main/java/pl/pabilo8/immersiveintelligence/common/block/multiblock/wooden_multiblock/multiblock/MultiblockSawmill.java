@@ -10,6 +10,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multibloc
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySawmill;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -27,6 +28,10 @@ public class MultiblockSawmill extends MultiblockStuctureBase<TileEntitySawmill>
 		super(new ResourceLocation(ImmersiveIntelligence.MODID, "multiblocks/sawmill"));
 		offset = new Vec3i(2, 0, 0);
 		INSTANCE = this;
+
+		addPOI(MultiblockPOI.ROTARY_INPUT, "rotary");
+		addPOI(MultiblockPOI.ITEM_INPUT, "item_input");
+		addPOI(MultiblockPOI.ITEM_OUTPUT, "all_item_output");
 
 		UpgradeTechTree.getTreeFor(TileEntitySawmill.class)
 				.withUpgrade(IIContent.UPGRADE_IMPROVED_GEARBOX, UpgradeTier.TIER_1)

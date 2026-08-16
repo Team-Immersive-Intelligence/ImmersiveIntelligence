@@ -153,7 +153,6 @@ public class EWRMachinegun extends EmplacementWeaponRenderer<EmplacementWeaponMa
 
 		this.rotateYaw.apply(weapon.aim.getYawNormalized(partialTicks));
 		this.rotatePitch.apply(weapon.aim.getPitchNormalized(partialTicks));
-
-		this.fire.apply(weapon.shootDelay);
+		this.fire.apply(weapon.gunHandler.getShotDelay(partialTicks));
 	}
 }

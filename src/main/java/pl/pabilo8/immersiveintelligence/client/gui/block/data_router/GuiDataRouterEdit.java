@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.client.gui.block.data_router;
 
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.nbt.NBTTagCompound;
@@ -14,7 +13,6 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoBut
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoCheckbox;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoDropdownDataLetters;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoDropdown;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoElementDisplays;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.data_editor.DecoDataEditor;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPanel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoTaskList.ListMode;
@@ -161,9 +159,6 @@ public class GuiDataRouterEdit extends DecoTileGui<TileEntityDataRouter, Contain
 				.withEntries(EnumFacing.VALUES)
 				.withSelectedEntry(edited.outgoingSide)
 				.withOnSelectedEntry((oldSide, newSide) -> edited.outgoingSide = newSide)
-				.withDisplayFunction(DecoElementDisplays.getSimpleTextDisplay(side ->
-						I18n.format(IIReference.DESCRIPTION_KEY+"side."+side.getName())
-				))
 		);
 
 		panel.addLabel(KEY+"action", 132, yy+18)

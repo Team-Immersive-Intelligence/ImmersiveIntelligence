@@ -17,9 +17,9 @@ import pl.pabilo8.immersiveintelligence.common.util.IIExplosion;
  */
 public class AmmoComponentAlumentum extends AmmoComponent
 {
-	public AmmoComponentAlumentum ()
+	public AmmoComponentAlumentum()
 	{
-		super("alumentum", 1f, ComponentRole.EXPLOSIVE, IIColor.fromPackedRGB(0xe2ed68));
+		super("alumentum", 1f, ComponentRole.EXPLOSIVE, IIColor.fromPackedRGB(0xe2ed68), 1);
 	}
 
 	@Override

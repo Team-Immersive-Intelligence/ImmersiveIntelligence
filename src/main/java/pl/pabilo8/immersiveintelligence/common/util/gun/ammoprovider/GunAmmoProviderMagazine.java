@@ -6,6 +6,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import pl.pabilo8.immersiveintelligence.api.ammocrate.AmmunitionCrateHandler;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine.Magazines;
 import pl.pabilo8.immersiveintelligence.common.util.gun.GunAmmoProvider;
@@ -16,11 +17,10 @@ import java.util.Collections;
 import java.util.function.Supplier;
 
 /**
- * Magazine-fed ammunition provider.
- * Stores bullets internally as a list for fast access, and keeps a magazine ItemStack
- * for simple persistence and external representation.
+ * Supplies a mounted weapon from magazines in the operator inventory or an Ammunition Crate.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 10.08.2026
  * @ii-approved 0.3.1
  * @since 26.05.2026
  */
@@ -41,32 +41,32 @@ public class GunAmmoProviderMagazine extends GunAmmoProvider
 	//--- Bullet list and Magazine stack sync ---//
 
 	/**
-	 * Rebuilds the magazine ItemStack from the current bullet list.
-	 * Should be called after any modification to the bullet list.
+	 * Rebuilds the magazine stack after the bullet list changes.
 	 */
 	private void rebuildMagazineFromBullets()
 	{
 		if(getBulletCount()==0)
 		{
-			magazineStack = ItemStack.EMPTY;
+			//Keep the physical magazine after its last round is fired.
+			if(!magazineStack.isEmpty())
+				magazineStack = IIContent.itemBulletMagazine.getMagazine(magazineType);
 			return;
 		}
 
-		//Build a list of only non‑empty bullets (up to capacity)
 		NonNullList<ItemStack> bulletList = NonNullList.create();
-		for(ItemStack b : bullets)
-			if(!b.isEmpty())
-				bulletList.add(b);
+		for(ItemStack bullet : bullets)
+			if(!bullet.isEmpty())
+				bulletList.add(bullet);
+
 
 		magazineStack = IIContent.itemBulletMagazine.getMagazine(magazineType);
 		IIContent.itemBulletMagazine.writeInventory(magazineStack, bulletList);
 	}
 
 	/**
-	 * Rebuilds the bullet list from the given magazine stack.
-	 * Clears the current bullets and refills from the magazine.
+	 * Rebuilds the internal bullet list from a magazine stack.
 	 *
-	 * @param stack the magazine ItemStack to load from
+	 * @param stack magazine to read
 	 */
 	private void rebuildBulletsFromMagazine(@Nonnull ItemStack stack)
 	{
@@ -89,18 +89,16 @@ public class GunAmmoProviderMagazine extends GunAmmoProvider
 	@Override
 	protected void onLoadFinished()
 	{
-		//Bullets have already been added during canFindAmmo().
-		//Create the magazine stack from the bullets.
 		rebuildMagazineFromBullets();
 	}
 
 	@Override
 	protected void onUnloadFinished()
 	{
-		if(getBulletCount() > 0)
+		if(!magazineStack.isEmpty())
 		{
-			//Drop or give the magazine stack (which reflects the current bullets)
-			giveOrDrop(magazineStack);
+			if(!AmmunitionCrateHandler.returnMountedMagazine(gun, magazineType, magazineStack))
+				giveOrDrop(magazineStack);
 			clear();
 			magazineStack = ItemStack.EMPTY;
 		}
@@ -113,14 +111,13 @@ public class GunAmmoProviderMagazine extends GunAmmoProvider
 		if(getBulletCount()==0)
 			return ItemStack.EMPTY;
 
-		//Find the first non‑empty bullet
 		for(int i = 0; i < bullets.size(); i++)
 		{
 			ItemStack bullet = bullets.get(i);
 			if(!bullet.isEmpty())
 			{
 				bullets.set(i, ItemStack.EMPTY);
-				rebuildMagazineFromBullets(); //Keep magazine stack in sync
+				rebuildMagazineFromBullets();
 				return bullet.copy();
 			}
 		}
@@ -137,49 +134,60 @@ public class GunAmmoProviderMagazine extends GunAmmoProvider
 	@Override
 	protected boolean canFindAmmo()
 	{
-		//Check if full
 		if(getBulletCount() >= magazineType.capacity)
 			return false;
 
 		//Try to find a matching magazine in the operator's hotbar
-		ItemStack foundMagazine = findMagazineInHotbar(magazineType);
-		if(foundMagazine!=null&&!foundMagazine.isEmpty())
-		{
-			int needed = magazineType.capacity-getBulletCount();
-			NonNullList<ItemStack> magazineBullets = IIContent.itemBulletMagazine.readInventory(foundMagazine);
-			int taken = 0;
+		ItemStack foundMagazine = AmmunitionCrateHandler.findMountedMagazine(gun, magazineType);
+		boolean fromCrate = foundMagazine!=null&&!foundMagazine.isEmpty();
+		if(!fromCrate)
+			foundMagazine = findMagazineInHotbar(magazineType);
 
-			//Transfer bullets from the found magazine into our internal list
-			for(int i = 0; i < magazineBullets.size()&&taken < needed; i++)
+		if(foundMagazine==null||foundMagazine.isEmpty())
+			return false;
+
+		int needed = magazineType.capacity-getBulletCount();
+		NonNullList<ItemStack> magazineBullets = IIContent.itemBulletMagazine.readInventory(foundMagazine);
+		int taken = 0;
+
+		//Transfer bullets from the found magazine into our internal list
+		for(int i = 0; i < magazineBullets.size()&&taken < needed; i++)
+		{
+			ItemStack bullet = magazineBullets.get(i);
+			if(!bullet.isEmpty())
 			{
-				ItemStack bullet = magazineBullets.get(i);
-				if(!bullet.isEmpty())
+				for(int j = 0; j < bullets.size(); j++)
 				{
-					for(int j = 0; j < bullets.size(); j++)
+					if(bullets.get(j).isEmpty())
 					{
-						if(bullets.get(j).isEmpty())
-						{
-							bullets.set(j, bullet.copy());
-							taken++;
-							break;
-						}
+						bullets.set(j, bullet.copy());
+						taken++;
+						break;
 					}
 				}
 			}
-
-			if(taken > 0)
-			{
-				//Update the found magazine (remove transferred bullets)
-				IIContent.itemBulletMagazine.writeInventory(foundMagazine, magazineBullets);
-
-				//If the magazine becomes empty, remove it from the operator's inventory
-				if(IIContent.itemBulletMagazine.hasNoBullets(foundMagazine))
-					consumeMagazineFromHotbar(foundMagazine);
-
-				return true;
-			}
 		}
-		return false;
+
+		if(taken > 0)
+		{
+			//Update the found magazine (remove transferred bullets)
+			IIContent.itemBulletMagazine.writeInventory(foundMagazine, magazineBullets);
+		}
+		else
+			return false;
+
+		IIContent.itemBulletMagazine.writeInventory(foundMagazine, magazineBullets);
+		if(IIContent.itemBulletMagazine.hasNoBullets(foundMagazine))
+		{
+			if(fromCrate)
+				AmmunitionCrateHandler.consumeMountedMagazine(gun, foundMagazine);
+			else
+				consumeMagazineFromHotbar(foundMagazine);
+		}
+		else if(fromCrate)
+			AmmunitionCrateHandler.markMountedMagazineChanged(gun);
+
+		return true;
 	}
 
 	//--- Utils ---//
@@ -192,13 +200,13 @@ public class GunAmmoProviderMagazine extends GunAmmoProvider
 	private int getBulletCount()
 	{
 		int count = 0;
-		for(ItemStack b : bullets)
-			if(!b.isEmpty())
+		for(ItemStack bullet : bullets)
+			if(!bullet.isEmpty())
 				count++;
 		return count;
 	}
 
-	//--- Persistence (for saving/loading to originStack) ---//
+	//--- Persistence ---//
 
 	@Nonnull
 	public ItemStack getLoadedStack()
@@ -234,7 +242,8 @@ public class GunAmmoProviderMagazine extends GunAmmoProvider
 			setLoadedStack(ItemStack.EMPTY);
 	}
 
-	//--- Hotbar interaction helpers (copied from your existing code) ---//
+	//--- Hotbar interaction ---//
+
 
 	@Nullable
 	protected ItemStack findMagazineInHotbar(Magazines expectedType)
@@ -243,15 +252,14 @@ public class GunAmmoProviderMagazine extends GunAmmoProvider
 		if(player==null)
 			return null;
 
-		IItemHandler inv = player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-		if(inv==null)
+		IItemHandler inventory = player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+		if(inventory==null)
 			return null;
 
 		for(int i = 0; i < 9; i++)
 		{
-			ItemStack stack = inv.getStackInSlot(i);
-			if(stack.getItem()==IIContent.itemBulletMagazine&&
-					IIContent.itemBulletMagazine.stackToSub(stack)==expectedType)
+			ItemStack stack = inventory.getStackInSlot(i);
+			if(stack.getItem()==IIContent.itemBulletMagazine&&IIContent.itemBulletMagazine.stackToSub(stack)==expectedType)
 				return stack;
 		}
 		return null;
@@ -263,14 +271,15 @@ public class GunAmmoProviderMagazine extends GunAmmoProvider
 		if(player==null)
 			return false;
 
-		IItemHandler inv = player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-		if(inv==null)
+
+		IItemHandler inventory = player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+		if(inventory==null)
 			return false;
 
 		for(int i = 0; i < 9; i++)
-			if(inv.getStackInSlot(i)==magazine)
+			if(inventory.getStackInSlot(i)==magazine)
 			{
-				ItemStack extracted = inv.extractItem(i, 1, false);
+				ItemStack extracted = inventory.extractItem(i, 1, false);
 				return !extracted.isEmpty();
 			}
 		return false;

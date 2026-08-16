@@ -38,6 +38,10 @@ public final class RadiationHandler implements INBTSerializable<NBTTagCompound>
 	private final Map<RadiationKey, RadiationCenter> centers = new LinkedHashMap<>();
 	private final Map<Integer, Map<Long, List<RadiationCenter>>> centerIndex = new HashMap<>();
 	private final Map<Integer, Map<Long, List<EmitterSource>>> emitterIndex = new HashMap<>();
+	private final Map<Long, List<EmitterSource>> clientEmitterIndex = new HashMap<>();
+	@Nullable
+	private World clientEmitterWorld;
+	private long clientEmitterUpdate = Long.MIN_VALUE;
 
 	private RadiationHandler()
 	{
@@ -191,6 +195,50 @@ public final class RadiationHandler implements INBTSerializable<NBTTagCompound>
 		}
 	}
 
+	/**
+	 * Gets the strongest linear fall-off of a radiation source at the specified position.
+	 * The result is 1 at the source centre and 0 at its radius edge.
+	 *
+	 * @param world    the source world
+	 * @param position the test position
+	 * @return the strongest source proximity in the 0-1 range
+	 */
+	public float getRadiationProximity(@Nonnull World world, @Nonnull Vec3d position)
+	{
+		int dimension = world.provider.getDimension();
+		long chunk = chunkKey(MathHelper.floor(position.x)>>4, MathHelper.floor(position.z)>>4);
+		float proximity = 0;
+
+		Map<Long, List<RadiationCenter>> persistent = centerIndex.get(dimension);
+		if(persistent!=null)
+		{
+			List<RadiationCenter> candidates = persistent.get(chunk);
+			if(candidates!=null)
+				for(RadiationCenter center : candidates)
+				{
+					Vec3d source = new Vec3d(center.getPosition()).addVector(0.5, 0.5, 0.5);
+					proximity = Math.max(proximity, getLinearFalloff(source, center.getRadius(), position));
+				}
+		}
+
+		Map<Long, List<EmitterSource>> dynamic;
+		if(world.isRemote)
+		{
+			refreshClientEmitterIndex(world);
+			dynamic = clientEmitterIndex;
+		}
+		else
+			dynamic = emitterIndex.get(dimension);
+		if(dynamic!=null)
+		{
+			List<EmitterSource> candidates = dynamic.get(chunk);
+			if(candidates!=null)
+				for(EmitterSource source : candidates)
+					proximity = Math.max(proximity, source.getProximityAt(position));
+		}
+		return MathHelper.clamp(proximity, 0, 1);
+	}
+
 	public float getRadiationAt(@Nonnull World world, @Nonnull BlockPos position)
 	{
 		return getRadiationAt(world, new Vec3d(position).addVector(0.5, 0.5, 0.5));
@@ -231,6 +279,23 @@ public final class RadiationHandler implements INBTSerializable<NBTTagCompound>
 	{
 		Map<Long, List<EmitterSource>> index = new HashMap<>();
 		emitterIndex.put(world.provider.getDimension(), index);
+		collectEmitters(world, index);
+	}
+
+	private void refreshClientEmitterIndex(World world)
+	{
+		long update = world.getTotalWorldTime()/10;
+		if(clientEmitterWorld==world&&clientEmitterUpdate==update)
+			return;
+
+		clientEmitterWorld = world;
+		clientEmitterUpdate = update;
+		clientEmitterIndex.clear();
+		collectEmitters(world, clientEmitterIndex);
+	}
+
+	private void collectEmitters(World world, Map<Long, List<EmitterSource>> index)
+	{
 		if(ProtectionCapabilities.RADIATION_EMITTER==null)
 			return;
 
@@ -312,6 +377,17 @@ public final class RadiationHandler implements INBTSerializable<NBTTagCompound>
 		return (x&0xffffffffL)|((z&0xffffffffL)<<32);
 	}
 
+	private static float getLinearFalloff(Vec3d source, float radius, Vec3d point)
+	{
+		if(radius <= 0)
+			return 0;
+		double distanceSq = source.squareDistanceTo(point);
+		double radiusSq = radius*radius;
+		if(distanceSq >= radiusSq)
+			return 0;
+		return 1f-(float)(Math.sqrt(distanceSq)/radius);
+	}
+
 	//--- Persistence ---//
 
 	@Override
@@ -328,10 +404,7 @@ public final class RadiationHandler implements INBTSerializable<NBTTagCompound>
 	@Override
 	public void deserializeNBT(NBTTagCompound nbt)
 	{
-		centers.clear();
-		centerIndex.clear();
-		emitterIndex.clear();
-
+		cleanup();
 		NBTTagList list = nbt.getTagList("centers", Constants.NBT.TAG_COMPOUND);
 		for(int i = 0; i < list.tagCount(); i++)
 		{
@@ -339,6 +412,16 @@ public final class RadiationHandler implements INBTSerializable<NBTTagCompound>
 			center.deserializeNBT(list.getCompoundTagAt(i));
 			putRadiationCenter(center.getDimension(), center.getPosition(), center.getRadius(), center.getStrength(), false);
 		}
+	}
+
+	public void cleanup()
+	{
+		centers.clear();
+		centerIndex.clear();
+		emitterIndex.clear();
+		clientEmitterIndex.clear();
+		clientEmitterWorld = null;
+		clientEmitterUpdate = Long.MIN_VALUE;
 	}
 
 	private static final class RadiationKey
@@ -385,10 +468,12 @@ public final class RadiationHandler implements INBTSerializable<NBTTagCompound>
 
 		private float getRadiationAt(Vec3d point)
 		{
-			double distanceSq = position.squareDistanceTo(point);
-			if(distanceSq >= radius*radius)
-				return 0;
-			return strength*(1f-(float)(Math.sqrt(distanceSq)/radius));
+			return strength*getProximityAt(point);
+		}
+
+		private float getProximityAt(Vec3d point)
+		{
+			return getLinearFalloff(position, radius, point);
 		}
 	}
 }

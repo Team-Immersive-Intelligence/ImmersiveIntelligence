@@ -1,0 +1,6 @@
+{
+  "type": "ParticleLightning",
+  "max_lifetime": 20,
+  "draw_stage": "color_only_line_strip_thin",
+  "color": "FFFFFFFF"
+}

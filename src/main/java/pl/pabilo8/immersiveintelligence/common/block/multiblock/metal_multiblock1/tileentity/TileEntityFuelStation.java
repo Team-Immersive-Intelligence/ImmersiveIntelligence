@@ -39,6 +39,7 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInter
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIGeneric;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
 
@@ -225,23 +226,6 @@ public class TileEntityFuelStation extends TileEntityMultiblockIIGeneric<TileEnt
 		return IIMath.progressValue(inserterDistance, goalDistance, 0.125f, partialTicks);
 	}
 
-	@Override
-	protected int[] listAllPOI(MultiblockPOI poi)
-	{
-		switch(poi)
-		{
-			case ENERGY_INPUT:
-				return getPOI("energy_input");
-			case FLUID_INPUT:
-				return getPOI("fluid_input");
-			case REDSTONE:
-				return getPOI("redstone");
-			case MISC_CONTROL_PANEL:
-				return getPOI("table");
-			default:
-				return new int[0];
-		}
-	}
 
 	@Override
 	public boolean isStackValid(int slot, ItemStack stack)
@@ -261,6 +245,13 @@ public class TileEntityFuelStation extends TileEntityMultiblockIIGeneric<TileEnt
 	protected boolean isTankAvailable(int pos, int tank)
 	{
 		return true;
+	}
+
+	@Override
+	public void onGuiOpened(@Nullable EntityPlayer player, boolean clientside)
+	{
+		if(!clientside)
+			updateTileForEvent(SyncEvents.TILE_GUI_OPENED);
 	}
 
 	@Override

@@ -16,6 +16,7 @@ import java.util.function.Supplier;
  *
  * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
+ * @updated 16.08.2026
  * @since 15.05.2026
  */
 public class GunRecoil implements INBTSerializable<NBTTagCompound>
@@ -27,7 +28,8 @@ public class GunRecoil implements INBTSerializable<NBTTagCompound>
 
 	//--- Overheating ---//
 	private boolean isOverheated = false;
-	private float overheat = 0, maxOverheat = 0, overheatDecrease = 1;
+	private float overheat = 0;
+	private float maxOverheat = 0, overheatDecrease = 1;
 	@Nullable
 	private Supplier<FluidTank> coolantTank = null;
 	private int coolantPerTick = 10;

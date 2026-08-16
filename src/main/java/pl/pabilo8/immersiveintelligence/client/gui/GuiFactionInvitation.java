@@ -12,7 +12,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoTitl
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoEntryPanelBuilder;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPanel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBannerDisplay;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoPlayerDisplay;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Graphics;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
@@ -89,10 +89,9 @@ public class GuiFactionInvitation extends DecoPlayerGui<ContainerPlayerGui>
 					.withBackgroundMask(DecoTextures.TEMPLATE_PAPER);
 		userPanel.addComponents(
 				//Player head
-				new DecoImage(3, 3)
-						.withSize(16, 16)
-						.withImageLocation(playerInfo.getSkin())
-						.withUV(64, 8, 8, 16, 16),
+				new DecoPlayerDisplay(3, 3)
+						.withEntity(player)
+						.withSize(16, 16),
 				//Faction banner
 				new DecoBannerDisplay(220-48+4, 3)
 						.withBanner(userIdentity.getBanner())
