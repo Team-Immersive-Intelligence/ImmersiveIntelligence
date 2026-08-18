@@ -7,6 +7,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.INBTSerializable;
+import pl.pabilo8.immersiveintelligence.common.util.entity.IIEntityUtils;
 
 import javax.annotation.Nullable;
 import java.util.function.Supplier;
@@ -116,6 +117,15 @@ public class TargetCoordinateReference implements INBTSerializable<NBTTagCompoun
 		if(entity!=null)
 			return new Vec3d(entity.posX, entity.posY+entity.height*0.5, entity.posZ);
 		return position!=null?new Vec3d(position).addVector(0.5, 0.5, 0.5): null;
+	}
+
+	@Nullable
+	public Vec3d supplyMotion()
+	{
+		Entity entity = this.entityReference.get();
+		if(entity!=null)
+			return IIEntityUtils.getEntityMotion(entity);
+		return Vec3d.ZERO;
 	}
 
 	@Nullable

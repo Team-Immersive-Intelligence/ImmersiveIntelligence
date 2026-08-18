@@ -382,6 +382,13 @@ public class AmmoFactory<E extends EntityAmmoBase<? super E>>
 		return stack.getItem()==ammo&&!((IAmmoTypeItem<?, ?>)ammo).isBulletCore(stack);
 	}
 
+	public boolean isValidCasing(ItemStack stack)
+	{
+		if(!(ammo instanceof IAmmoTypeItem))
+			return false;
+		return ammo.getCasingStack(1).isItemEqual(stack);
+	}
+
 	//--- Getters ---//
 
 	public World getWorld()

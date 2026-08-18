@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon;
 
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.Autocannon;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
@@ -23,9 +24,16 @@ public class EmplacementWeaponAutocannon extends EmplacementWeaponGunBase<Entity
 		this.attackAABB = this.attackAABB.grow(Autocannon.attackRadius);
 		this.aim.withAimSpeed(Autocannon.yawRotateSpeed, Autocannon.pitchRotateSpeed);
 
-		setupItemHandlers(te, 18, 8, stack -> OreDictionary.itemMatches(stack,
+		setupItemHandlers(te, 16, 16, 8, 16, stack -> OreDictionary.itemMatches(stack,
 				IIContent.itemBulletMagazine.getMagazine(Magazines.AUTOCANNON), false), stack -> OreDictionary.itemMatches(stack,
 				IIContent.itemBulletMagazine.getMagazine(Magazines.AUTOCANNON), false));
+	}
+
+	@Override
+	protected boolean isSpentCasing(ItemStack stack)
+	{
+		return super.storesSpentCasings()||OreDictionary.itemMatches(stack,
+				IIContent.itemBulletMagazine.getMagazine(Magazines.AUTOCANNON), false);
 	}
 
 	@Override

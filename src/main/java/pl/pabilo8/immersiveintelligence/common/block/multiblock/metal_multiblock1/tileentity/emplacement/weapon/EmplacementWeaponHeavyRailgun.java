@@ -8,9 +8,11 @@ import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIRailgunOverrid
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
 
 /**
- * To Blu:
- * I do as I promised, I promised to not add a railgun turret
- * so I added a Heavy Railgun emplacement
+ * Implements the four-round Heavy Railgun Emplacement weapon.
+ *
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 17.08.2026
+ * @since 01.01.2026
  */
 public class EmplacementWeaponHeavyRailgun extends EmplacementWeaponGunBase<EntityAmmoProjectile>
 {
@@ -26,8 +28,20 @@ public class EmplacementWeaponHeavyRailgun extends EmplacementWeaponGunBase<Enti
 		this.ammoFactory.setAmmo(IIContent.itemRailgunGrenade);
 		this.visionAABB = this.visionAABB.grow(HeavyRailgun.detectionRadius);
 		this.attackAABB = this.attackAABB.grow(HeavyRailgun.attackRadius);
-		setupItemHandlers(te, 18, 6, ItemIIRailgunOverride::isAmmo, ItemIIRailgunOverride::isAmmo);
+		setupItemHandlers(te, 3, 2, 8, 8, ItemIIRailgunOverride::isAmmo, ItemIIRailgunOverride::isAmmo);
 		this.aim.withAimSpeed(HeavyRailgun.yawRotateSpeed, HeavyRailgun.pitchRotateSpeed);
+	}
+
+	@Override
+	protected int[] getReloadStages()
+	{
+		return new int[]{4};
+	}
+
+	@Override
+	protected Float getLoadingPitch()
+	{
+		return 0f;
 	}
 
 	@Override
@@ -47,36 +61,6 @@ public class EmplacementWeaponHeavyRailgun extends EmplacementWeaponGunBase<Enti
 	{
 		return HeavyRailgun.reloadTime;
 	}
-
-	/*@Override
-	public EmplacementHitboxEntity[] getCollisionBoxes()
-	{
-		if(entity==null)
-			return new EmplacementHitboxEntity[0];
-
-		//new Vec3d(0,0,0)
-		ArrayList<EmplacementHitboxEntity> list = new ArrayList<>();
-		list.add(new EmplacementHitboxEntity(entity, "baseBox", 1f, 1.5f,
-				new Vec3d(0, 1, 0), Vec3d.ZERO, 4));
-
-		list.add(new EmplacementHitboxEntity(entity, "shieldRight", 0.75f, 2f,
-				new Vec3d(-0.5, 1, -0.625), Vec3d.ZERO, 14));
-		list.add(new EmplacementHitboxEntity(entity, "shieldRightBack", 0.75f, 2f,
-				new Vec3d(0, 1, -0.625), Vec3d.ZERO, 14));
-		list.add(new EmplacementHitboxEntity(entity, "shieldMiddle", 0.75f, 0.5f,
-				new Vec3d(-0.5, 0, -0.625), Vec3d.ZERO, 14));
-		list.add(new EmplacementHitboxEntity(entity, "shieldLeft", 0.75f, 2f,
-				new Vec3d(-0.5, 1, 0.625), Vec3d.ZERO, 14));
-
-		list.add(new EmplacementHitboxEntity(entity, "barrel", 0.625f, 0.625f,
-				new Vec3d(-0.5, 1.5, 0), new Vec3d(-0.625f, 0, 0), 12));
-		list.add(new EmplacementHitboxEntity(entity, "barrel", 0.625f, 0.625f,
-				new Vec3d(-0.5, 1.5, 0), new Vec3d(-1.25, 0, 0), 12));
-		list.add(new EmplacementHitboxEntity(entity, "barrel", 0.625f, 0.625f,
-				new Vec3d(-0.5, 1.5, 0), new Vec3d(-1.875, 0, 0), 12));
-
-		return list.toArray(new EmplacementHitboxEntity[0]);
-	}*/
 
 	@Override
 	public int getEnergyUpkeepCost()

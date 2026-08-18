@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon;
 
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.CPDS;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
@@ -38,10 +39,17 @@ public class EmplacementWeaponCPDS extends EmplacementWeaponGunBase<EntityAmmoPr
 		this.ammoFactory.setAmmo(IIContent.itemAmmoMachinegun);
 		this.visionAABB = this.visionAABB.grow(CPDS.detectionRadius);
 		this.attackAABB = this.attackAABB.grow(CPDS.attackRadius);
-		setupItemHandlers(te, 8, 3, stack -> OreDictionary.itemMatches(stack,
+		setupItemHandlers(te, 8, 24, 3, 16, stack -> OreDictionary.itemMatches(stack,
 				IIContent.itemBulletMagazine.getMagazine(Magazines.CPDS_DRUM), false), stack -> OreDictionary.itemMatches(stack,
 				IIContent.itemBulletMagazine.getMagazine(Magazines.CPDS_DRUM), false));
 		this.aim.withAimSpeed(CPDS.yawRotateSpeed, CPDS.pitchRotateSpeed);
+	}
+
+	@Override
+	protected boolean isSpentCasing(ItemStack stack)
+	{
+		return super.storesSpentCasings()||OreDictionary.itemMatches(stack,
+				IIContent.itemBulletMagazine.getMagazine(Magazines.AUTOCANNON), false);
 	}
 
 	@Override

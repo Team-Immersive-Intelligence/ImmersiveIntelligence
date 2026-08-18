@@ -3,13 +3,12 @@ package pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.emplacem
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
 import pl.pabilo8.immersiveintelligence.api.upgrade.Upgrade;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeTechTree;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoColors;
 import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIAnimationCachedMap;
 import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTCachedModel;
 import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTCrossVariantReference;
@@ -26,8 +25,11 @@ import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
+ * Renders the Guided Missile Launcher with the ammunition currently loaded by the weapon.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
+ * @updated 17.08.2026
  * @since 19.02.2026
  */
 @SideOnly(Side.CLIENT)
@@ -80,8 +82,11 @@ public class EWRGuidedMissileLauncher extends EmplacementWeaponRenderer<Emplacem
 	@Override
 	public void apply(EmplacementWeaponGuidedMissileLauncher weapon, AMTCachedModel<TileEntityEmplacement> model, BufferBuilder buf, Tessellator tes, float partialTicks)
 	{
-		this.rocket.get().withState(BulletState.BULLET_UNUSED)
-				.withProperties(IIContent.ammoCoreIron, CoreType.SHAPED, DecoColors.POWER2);
+		List<ItemStack> renderAmmo = weapon.getRenderAmmo();
+		ItemStack ammo = renderAmmo.isEmpty()?ItemStack.EMPTY: renderAmmo.get(0);
+		this.rocket.get().setVisible(!ammo.isEmpty());
+		if(!ammo.isEmpty())
+			this.rocket.get().withStack(ammo, BulletState.BULLET_UNUSED);
 
 		this.rotateYaw.apply(weapon.aim.getYawNormalized(partialTicks));
 		float pitch = weapon.aim.getPitchNormalized(partialTicks);

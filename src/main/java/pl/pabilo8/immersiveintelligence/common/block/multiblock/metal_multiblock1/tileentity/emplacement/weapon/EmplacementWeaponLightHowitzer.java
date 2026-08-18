@@ -5,6 +5,13 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
 
+/**
+ * Implements the single-round Light Howitzer Emplacement weapon.
+ *
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 17.08.2026
+ * @since 01.01.2026
+ */
 public class EmplacementWeaponLightHowitzer extends EmplacementWeaponGunBase<EntityAmmoProjectile>
 {
 	public EmplacementWeaponLightHowitzer()
@@ -19,9 +26,27 @@ public class EmplacementWeaponLightHowitzer extends EmplacementWeaponGunBase<Ent
 		this.visionAABB = this.visionAABB.grow(Autocannon.detectionRadius);
 		this.attackAABB = this.attackAABB.grow(Autocannon.attackRadius);
 
-		setupItemHandlers(te, 12, 6, this.ammoFactory::isValidAmmo, this.ammoFactory::isValidAmmo);
+		setupItemHandlers(te, 8, 12, 4, 4, this.ammoFactory::isValidAmmo, this.ammoFactory::isValidAmmo);
 		this.aim.withAimSpeed(3.5f, 3.5f);
 		this.ammoFactory.setUseArtilleryAngles(false);
+	}
+
+	@Override
+	protected int[] getReloadStages()
+	{
+		return new int[]{1};
+	}
+
+	@Override
+	protected Float getLoadingYaw()
+	{
+		return 0f;
+	}
+
+	@Override
+	protected Float getLoadingPitch()
+	{
+		return 0f;
 	}
 
 	@Override

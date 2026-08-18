@@ -5,11 +5,13 @@ import blusunrize.immersiveengineering.common.util.IEDamageSources.ElectricDamag
 import com.elytradev.mirage.event.GatherLightsEvent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.common.Optional;
@@ -34,10 +36,13 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.TargetCoordinateRefe
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.BooleanSupplier;
 
 /**
+ * Defines common state, servicing, and lifecycle behavior for an Emplacement weapon.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 16.08.2026
+ * @updated 17.08.2026
  * @since 15.02.2024
  */
 public abstract class EmplacementWeapon implements ITypeNBTSerializable
@@ -46,6 +51,8 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable
 
 	@SyncNBT(time = 0, events = SyncEvents.WEAPON_MISC)
 	public float health = getMaxHealth();
+	@SyncNBT(time = 0, events = SyncEvents.WEAPON_MISC)
+	protected boolean resupplying = false;
 	protected AxisAlignedBB visionAABB, attackAABB;
 	protected boolean initialized = false;
 	protected boolean restoredFromNBT = false;
@@ -56,8 +63,7 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable
 	protected EntityLivingBase baseEntity;
 
 	/**
-	 * Called after the weapon is installed or loaded from NBT
-	 * Initialize sight AABB here
+	 * Called after the weapon is installed or loaded from NBT.
 	 */
 	protected void onInit(TileEntityEmplacement te)
 	{
@@ -65,12 +71,10 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable
 		this.visionAABB = new AxisAlignedBB(new BlockPos(te.getWeaponCenter()));
 		this.attackAABB = new AxisAlignedBB(new BlockPos(te.getWeaponCenter()));
 
-		//Setup entity (AMT Tactiles)
 		if(!te.getWorld().isRemote)
 		{
 			te.tactileHandler.setAdditionalModel("weapon", IIReference.RES_II.with("aabb/emplacement_weapon/"+getName())
-					.withExtension(ResLoc.EXT_JSON)
-			);
+					.withExtension(ResLoc.EXT_JSON));
 			this.baseEntity = null;
 		}
 	}
@@ -85,17 +89,12 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable
 	}
 
 	/**
-	 * @return name of the emplacement, must be the same as the name in the weapon registry
+	 * @return weapon registry name
 	 */
 	public abstract String getName();
 
 	/**
-	 * Used to update the weapon every tick.
-	 *
-	 * @param te            the emplacement tile entity
-	 * @param baseNeeds
-	 * @param currentTarget
-	 * @return
+	 * Updates the weapon while the platform can operate.
 	 */
 	public EmplacementStateNeeds onUpdate(TileEntityEmplacement te, EmplacementStateNeeds baseNeeds, TargetCoordinateReference currentTarget)
 	{
@@ -105,10 +104,77 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable
 	}
 
 	/**
-	 * Sends a partial weapon update through the owning tile entity.
+	 * Updates state that must continue while the platform moves or stays hidden.
+	 */
+	public void onPlatformUpdate(TileEntityEmplacement te)
+	{
+
+	}
+
+	/**
+	 * Determines if the weapon must stay in the Base for supply or repair.
 	 *
-	 * @param te    owning emplacement
-	 * @param event event that selects weapon fields
+	 * @param minimumRepairThreshold minimum health ratio required for a fire mission
+	 * @param maximumRepairThreshold health ratio required before routine repair ends
+	 */
+	public EmplacementStateNeeds getServiceNeeds(TileEntityEmplacement te, @Nullable TargetCoordinateReference currentTarget,
+	                                             float minimumRepairThreshold, float maximumRepairThreshold)
+	{
+		if(te.getWorld().isRemote)
+			return resupplying||te.weaponRepairing?EmplacementStateNeeds.MUST_HIDE: EmplacementStateNeeds.WANTS_SURFACE;
+
+		float minimum = MathHelper.clamp(minimumRepairThreshold, 0f, 1f);
+		float maximum = MathHelper.clamp(Math.max(maximumRepairThreshold, minimum), 0f, 1f);
+		boolean belowMinimum = isBelowHealthThreshold(minimum);
+		boolean routineRepair = currentTarget==null&&!isRepairedTo(maximum);
+
+		te.setWeaponRepairing(belowMinimum||routineRepair);
+		if(handleSupplyService(te)||belowMinimum||routineRepair)
+			return EmplacementStateNeeds.MUST_HIDE;
+		return EmplacementStateNeeds.WANTS_SURFACE;
+	}
+
+	/**
+	 * Handles weapon-specific supply work and returns true while the platform must stay hidden.
+	 */
+	protected boolean handleSupplyService(TileEntityEmplacement te)
+	{
+		return false;
+	}
+
+	/**
+	 * Runs a latched supply cycle shared by item- and fluid-based weapons.
+	 */
+	protected final boolean updateResupplyState(TileEntityEmplacement te, BooleanSupplier supplyRequired,
+	                                            BooleanSupplier servicePending, Runnable serviceAction)
+	{
+		if(te.getWorld().isRemote)
+			return resupplying;
+
+		if(supplyRequired.getAsBoolean())
+			setResupplying(te, true);
+
+		//Use any hidden downtime for servicing, even when repair or redstone caused the descent.
+		if(!te.door.getState()&&te.door.isFullyClosed())
+			serviceAction.run();
+		if(!resupplying)
+			return false;
+
+		boolean keepHidden = supplyRequired.getAsBoolean()||servicePending.getAsBoolean();
+		setResupplying(te, keepHidden);
+		return keepHidden;
+	}
+
+	private void setResupplying(TileEntityEmplacement te, boolean resupplying)
+	{
+		if(this.resupplying==resupplying)
+			return;
+		this.resupplying = resupplying;
+		syncWithClient(te, SyncEvents.WEAPON_MISC);
+	}
+
+	/**
+	 * Sends a partial weapon update through the owning tile entity.
 	 */
 	protected final void syncWithClient(TileEntityEmplacement te, SyncEvents event)
 	{
@@ -154,28 +220,32 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable
 		return null;
 	}
 
+	/**
+	 * Checks if an item can be inserted into an absolute tile inventory slot.
+	 */
+	public boolean isStackValid(int slot, ItemStack stack)
+	{
+		return false;
+	}
+
 	@Nullable
 	public IFluidHandler getBaseFluidHandler()
 	{
 		return null;
 	}
 
+	@Nullable
+	public IFluidHandler getPlatformFluidHandler()
+	{
+		return null;
+	}
+
 	/**
-	 * @return true when this weapon cannot operate until the platform is lowered and serviced.
+	 * Voids fluid owned by the weapon when it is uninstalled.
 	 */
-	public boolean needsSupply(TileEntityEmplacement te)
+	public void clearFluids()
 	{
-		return false;
-	}
 
-	public boolean needsRestock(TileEntityEmplacement te)
-	{
-		return false;
-	}
-
-	public boolean restockFromBase(TileEntityEmplacement te)
-	{
-		return false;
 	}
 
 	public boolean isBelowHealthThreshold(float threshold)
@@ -229,23 +299,18 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable
 
 	public boolean applyDamage(EntityAMTTactile tactile, DamageSource source, float amount)
 	{
-		//Immersive Vehicles(tm) compat
 		if(source.damageType.equals("bullet"))
 			source = new DamageSource("bullet").setProjectile();
 
-		//Resistant to fire and magic damage by default
 		if(source.isFireDamage()||source.isMagicDamage())
 			return false;
-		//Resistant to shrapnel by default
 		if(source.damageType.equals("iiShrapnel")||source.damageType.equals("iiShrapnelNoShooter"))
 			return false;
 
 		int armor = getArmorForPart(tactile.getName());
-		//EMP and acid damage bypass armor
 		if((source instanceof ElectricDamageSource||source==IEDamageSources.acid))
 			armor = 0;
 
-		//Damage or ricochet
 		if(armor-amount > 0)
 		{
 			tactile.world.playSound(null, tactile.getPosition(), IISounds.hitMetal.getImpactSound(), SoundCategory.BLOCKS, 1.5f, armor/amount*0.95f);

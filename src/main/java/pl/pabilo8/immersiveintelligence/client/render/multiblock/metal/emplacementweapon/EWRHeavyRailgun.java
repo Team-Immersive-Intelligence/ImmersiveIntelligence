@@ -10,8 +10,11 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon.EmplacementWeaponHeavyRailgun;
 
 /**
+ * Applies Heavy Railgun aiming, staged loading, and firing animations.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
+ * @updated 17.08.2026
  * @since 21.02.2026
  */
 @SideOnly(Side.CLIENT)
@@ -40,7 +43,17 @@ public class EWRHeavyRailgun extends EmplacementWeaponRenderer<EmplacementWeapon
 		this.rotateYaw.apply(weapon.aim.getYawNormalized(partialTicks));
 		this.rotatePitch.apply(weapon.aim.getPitchNormalized(partialTicks));
 
-		this.load.apply(weapon.gunHandler.getLoadingProgress(partialTicks));
+		float loading = weapon.getReloadProgress(partialTicks);
+		if(weapon.isFinalReloadBatch())
+		{
+			this.load.apply(0);
+			this.load2.apply(loading);
+		}
+		else
+		{
+			this.load.apply(loading);
+			this.load2.apply(0);
+		}
 		this.fire.apply(weapon.gunHandler.getShotDelay(partialTicks));
 	}
 }

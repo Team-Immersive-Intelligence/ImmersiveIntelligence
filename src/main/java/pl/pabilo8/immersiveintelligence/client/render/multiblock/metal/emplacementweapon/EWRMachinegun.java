@@ -3,10 +3,11 @@ package pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.emplacem
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
 import pl.pabilo8.immersiveintelligence.api.upgrade.Upgrade;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeTechTree;
 import pl.pabilo8.immersiveintelligence.client.fx.IIParticles;
@@ -20,7 +21,6 @@ import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTParticle;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon.EmplacementWeaponMachinegun;
-import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.amt.AMTModelHeader;
 
@@ -134,23 +134,27 @@ public class EWRMachinegun extends EmplacementWeaponRenderer<EmplacementWeaponMa
 	@Override
 	public void apply(EmplacementWeaponMachinegun weapon, AMTCachedModel<TileEntityEmplacement> model, BufferBuilder buf, Tessellator tes, float partialTicks)
 	{
-		this.bulletL1.get().withProperties(IIContent.ammoCoreIron, CoreType.PIERCING, IIColor.MC_RED);
-		this.bulletL2.get().withProperties(IIContent.ammoCoreIron, CoreType.PIERCING, IIColor.MC_RED);
-		this.bulletL3.get().withProperties(IIContent.ammoCoreIron, CoreType.PIERCING, IIColor.MC_RED);
-		this.bulletL4.get().withProperties(IIContent.ammoCoreIron, CoreType.PIERCING, IIColor.MC_RED);
-		this.bulletL5.get().withProperties(IIContent.ammoCoreIron, CoreType.PIERCING, IIColor.MC_RED);
-		this.bulletR1.get().withProperties(IIContent.ammoCoreIron, CoreType.PIERCING, IIColor.MC_RED);
-		this.bulletR2.get().withProperties(IIContent.ammoCoreIron, CoreType.PIERCING, IIColor.MC_RED);
-		this.bulletR3.get().withProperties(IIContent.ammoCoreIron, CoreType.PIERCING, IIColor.MC_RED);
-		this.bulletR4.get().withProperties(IIContent.ammoCoreIron, CoreType.PIERCING, IIColor.MC_RED);
-		this.bulletR5.get().withProperties(IIContent.ammoCoreIron, CoreType.PIERCING, IIColor.MC_RED);
+		NonNullList<ItemStack> loadedAmmo = weapon.getLoadedAmmo();
+		int ammoCount = loadedAmmo.size();
+		this.bulletL1.get().withStack(ammoCount > 0?loadedAmmo.get(0): ItemStack.EMPTY, BulletState.BULLET_UNUSED);
+		this.bulletL2.get().withStack(ammoCount > 1?loadedAmmo.get(1): ItemStack.EMPTY, BulletState.BULLET_UNUSED);
+		this.bulletL3.get().withStack(ammoCount > 2?loadedAmmo.get(2): ItemStack.EMPTY, BulletState.BULLET_UNUSED);
+		this.bulletL4.get().withStack(ammoCount > 3?loadedAmmo.get(3): ItemStack.EMPTY, BulletState.BULLET_UNUSED);
+		this.bulletL5.get().withStack(ammoCount > 4?loadedAmmo.get(4): ItemStack.EMPTY, BulletState.BULLET_UNUSED);
+
+		this.bulletR1.get().withStack(ammoCount > 0?loadedAmmo.get(0): ItemStack.EMPTY, BulletState.BULLET_UNUSED);
+		this.bulletR2.get().withStack(ammoCount > 1?loadedAmmo.get(1): ItemStack.EMPTY, BulletState.BULLET_UNUSED);
+		this.bulletR3.get().withStack(ammoCount > 2?loadedAmmo.get(2): ItemStack.EMPTY, BulletState.BULLET_UNUSED);
+		this.bulletR4.get().withStack(ammoCount > 3?loadedAmmo.get(3): ItemStack.EMPTY, BulletState.BULLET_UNUSED);
+		this.bulletR5.get().withStack(ammoCount > 4?loadedAmmo.get(4): ItemStack.EMPTY, BulletState.BULLET_UNUSED);
 
 		assert weapon.setup!=null;
 		if(weapon.setup.getState())
-			this.uninstall.apply(weapon.setup.getProgress(partialTicks));
-		else
 			this.install.apply(weapon.setup.getProgress(partialTicks));
+		else
+			this.uninstall.apply(weapon.setup.getProgress(partialTicks));
 
+		weapon.aim.withCenterYaw(0);
 		this.rotateYaw.apply(weapon.aim.getYawNormalized(partialTicks));
 		this.rotatePitch.apply(weapon.aim.getPitchNormalized(partialTicks));
 		this.fire.apply(weapon.gunHandler.getShotDelay(partialTicks));
