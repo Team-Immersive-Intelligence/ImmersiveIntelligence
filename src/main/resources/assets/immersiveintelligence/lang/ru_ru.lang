@@ -1282,6 +1282,7 @@ desc.immersiveintelligence.variable_remove_desc=Удалить переменн�
 desc.immersiveintelligence.variable_properties=Свойства
 desc.immersiveintelligence.variable_properties.tooltip=Edit expression properties, like conditional variables.
 desc.immersiveintelligence.variable_value=Значение:
+desc.immersiveintelligence.variable_value.boolean=Значение
 desc.immersiveintelligence.variable_value.integer_vector=Integer Vector
 desc.immersiveintelligence.variable_value.integer_vector.tooltip=An Integer Vector does not allow numbers with decimal points.
 desc.immersiveintelligence.operation=Операция:

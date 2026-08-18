@@ -2,6 +2,7 @@
 Огневая точка
 Заперт и заряжен!
 # 0
+@hammer;level_circuits;upgradeable;repairable;paintable
 |[multiblock]{mb:"II:Emplacement"}|
 **Огневая точка** — это мощное оборонительное сооружение, используемое для защиты периметра вашей фабрики. Для её сборки используйте [молот инженера](introduction#introductionHammer) на верхнему среднему блоку мешков с песком.
 # 1
