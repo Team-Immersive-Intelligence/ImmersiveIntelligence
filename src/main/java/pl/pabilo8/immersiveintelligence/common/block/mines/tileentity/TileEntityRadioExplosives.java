@@ -30,6 +30,7 @@ public class TileEntityRadioExplosives extends TileEntityMineBase implements ITi
 {
 	private static final Vec3d CONN_OFFSET = new Vec3d(0.5, 0.25, 0.5);
 	public int frequency = 0;
+	public int radioCooldown = 0;
 	public DataPacket programmedPacket = new DataPacket();
 	public EnumFacing facing = EnumFacing.NORTH;
 
@@ -40,6 +41,7 @@ public class TileEntityRadioExplosives extends TileEntityMineBase implements ITi
 	public void readCustomNBT(NBTTagCompound nbtTagCompound, boolean b)
 	{
 		armed = nbtTagCompound.getBoolean("armed");
+		radioCooldown = nbtTagCompound.getInteger("radioCooldown");
 		facing = EnumFacing.getFront(nbtTagCompound.getInteger("facing"));
 		super.readCustomNBT(nbtTagCompound, b);
 	}
@@ -48,6 +50,7 @@ public class TileEntityRadioExplosives extends TileEntityMineBase implements ITi
 	public void writeCustomNBT(NBTTagCompound nbtTagCompound, boolean b)
 	{
 		nbtTagCompound.setBoolean("armed", armed);
+		nbtTagCompound.setInteger("radioCooldown", radioCooldown);
 		nbtTagCompound.setInteger("facing", facing.getIndex());
 		super.writeCustomNBT(nbtTagCompound, b);
 		RadioNetwork.INSTANCE.addDevice(this);
@@ -135,6 +138,8 @@ public class TileEntityRadioExplosives extends TileEntityMineBase implements ITi
 	@Override
 	public boolean onRadioReceive(DataPacket packet)
 	{
+		if(!isRadioAvailable())
+			return false;
 		if(packet.equals(this.programmedPacket))
 		{
 			explode();
@@ -171,6 +176,18 @@ public class TileEntityRadioExplosives extends TileEntityMineBase implements ITi
 	public DimensionBlockPos getDevicePosition()
 	{
 		return new DimensionBlockPos(this);
+	}
+
+	@Override
+	public int getRadioCooldown()
+	{
+		return radioCooldown;
+	}
+
+	@Override
+	public void setRadioCooldown(int ticks)
+	{
+		radioCooldown = Math.max(0, ticks);
 	}
 
 	@Override
@@ -225,6 +242,8 @@ public class TileEntityRadioExplosives extends TileEntityMineBase implements ITi
 	@Override
 	public void update()
 	{
+		if(hasWorld()&&!world.isRemote)
+			tickRadioCooldown();
 		if(hasWorld()&&!world.isRemote&&!refreshWireNetwork)
 		{
 			refreshWireNetwork = true;

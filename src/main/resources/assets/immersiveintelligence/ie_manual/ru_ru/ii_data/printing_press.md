@@ -24,11 +24,12 @@
 |[data_variable]{type:"string", direction:"in", letter:"m", name:"Output mode", description:"The type of document that will be printed", values:[["text","A page containing text"],["code","A page containing code written in the POL programming language"],["blueprint","A page containing a construction blueprint to be used manually or by a Logistics Drone"],["logi_tag","A logistics tag used to mark containers and items"]]}|
 |[data_variable]{type:"integer", direction:"in", letter:"a", name:"Amount of copies", description:"How many pages will be printed"}|
 |[data_variable]{type:"string", direction:"in", letter:"t", name:"Text to print", description:"Text content that will be printed", requirements:{m:"text/code"}}|
+
 # punchtapes_upgrade
-|[upgrade_display]{upgrade:"immersiveintelligence:printing_press/punchtape_processor"}|
-Улучшение [обработчик перфоленты] позволяет печатать [перфоленты](punchtapes.md) со всеми переменными полученных пакетов, кроме «a» и «m».
+|[upgrade_display]{upgrade:"immersiveintelligence:printing_press/punchtapes"}|
+Улучшение [обработчик перфоленты] позволяет печатать [перфоленты](punchtapes.md) со всеми переменными полученных пакетов, кроме «a», «m» и «t».
 **Вместо пустой страницы предоставьте [пустую перфоленту].**
-|[data_variable]{type:"string", direction:"in", letter:"m", name:"Output mode", description:"The type of document that will be printed", values:[["punchtape","A punchtape with variables of the received packet, except this one printed. Doesn't use any ink."]]}|
+|[data_variable]{type:"string", direction:"in", letter:"m", name:"Output mode", description:"The type of document that will be printed", values:[["punchtape","A punchtape with variables of the received packet, except 'a', 'm' and 't' printed. Doesn't use any ink."]]}|
 
 # data_callback
 |[text]{text:"Data Callback",bold:1b}|

@@ -1,7 +1,7 @@
 package pl.pabilo8.immersiveintelligence.api.data;
 
-import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import net.minecraft.item.EnumDyeColor;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -10,7 +10,9 @@ import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidStack;
 import pl.pabilo8.immersiveintelligence.api.LogisticTag;
+import pl.pabilo8.immersiveintelligence.api.crafting.IngredientReference;
 import pl.pabilo8.immersiveintelligence.api.data.device.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.device.IDataDevice;
 import pl.pabilo8.immersiveintelligence.api.data.types.*;
@@ -22,17 +24,26 @@ import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
+ * Provides conversion and dispatch utilities for II data variables and packets.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 12.08.2026
  * @ii-approved 0.3.1
  * @since 28.08.2024
  */
 public class IIDataHandlingUtils
 {
+	/**
+	 * Maximum number of nested packet deliveries allowed in one synchronous propagation chain.
+	 */
+	private static final int MAX_PACKET_CHAIN_DEPTH = 128;
+	private static final ThreadLocal<PacketDispatchContext> PACKET_DISPATCH_CONTEXT = new ThreadLocal<>();
+
 	//--- Meta Information ---//
 
 	@SuppressWarnings("unchecked")
@@ -81,9 +92,76 @@ public class IIDataHandlingUtils
 		return null;
 	}
 
-	public static IngredientStack asIngredient(char variable, DataPacket packet)
+	/**
+	 * Gets an ingredient reference from a packet variable.
+	 */
+	public static IngredientReference asIngredient(char variable, DataPacket packet)
 	{
 		return ingredientFromData(packet.get(variable));
+	}
+
+	/**
+	 * Converts a data variable to an ingredient reference.
+	 */
+	@Nonnull
+	public static IngredientReference ingredientFromData(@Nullable DataType dataType)
+	{
+		if(dataType instanceof DataTypeItemStack)
+		{
+			ItemStack value = ((DataTypeItemStack)dataType).value;
+			ItemStack stack = value==null?ItemStack.EMPTY: value.copy();
+			return stack.isEmpty()?new IngredientReference():
+					new IngredientReference(stack).setUseNBT(stack.hasTagCompound());
+		}
+		if(dataType instanceof DataTypeFluidStack)
+		{
+			FluidStack fluid = ((DataTypeFluidStack)dataType).value;
+			return fluid==null?new IngredientReference():
+					new IngredientReference(fluid.copy()).setUseNBT(fluid.tag!=null);
+		}
+		if(dataType instanceof DataTypeLogisticTag)
+		{
+			LogisticTag logisticTag = ((DataTypeLogisticTag)dataType).value;
+			return logisticTag==null?new IngredientReference(): new IngredientReference(logisticTag);
+		}
+		if(dataType instanceof DataTypeArray)
+		{
+			List<ItemStack> stacks = new ArrayList<>();
+			boolean useNBT = false;
+			for(DataType entry : ((DataTypeArray)dataType).value)
+			{
+				if(!(entry instanceof DataTypeItemStack)||((DataTypeItemStack)entry).value==null)
+					return new IngredientReference();
+				ItemStack stack = ((DataTypeItemStack)entry).value.copy();
+				useNBT |= stack.hasTagCompound();
+				stacks.add(stack);
+			}
+			return stacks.isEmpty()?new IngredientReference(): new IngredientReference(stacks).setUseNBT(useNBT);
+		}
+		if(dataType instanceof DataTypeString)
+			return new IngredientReference(((DataTypeString)dataType).value);
+		return new IngredientReference();
+	}
+
+	@Nonnull
+	private static DataType ingredientToData(IngredientReference reference)
+	{
+		if(reference.fluid!=null)
+		{
+			FluidStack fluid = reference.fluid.copy();
+			fluid.amount = reference.inputSize;
+			return new DataTypeFluidStack(fluid);
+		}
+		if(reference.oreName!=null)
+			return new DataTypeString(reference.oreName);
+		if(reference.stackList!=null)
+		{
+			List<DataType> stacks = new ArrayList<>();
+			for(ItemStack stack : reference.stackList)
+				stacks.add(new DataTypeItemStack(stack.copy()));
+			return new DataTypeArray(stacks);
+		}
+		return new DataTypeItemStack(reference.stack==null?ItemStack.EMPTY: reference.stack.copy());
 	}
 
 	//--- Optional ---//
@@ -351,6 +429,46 @@ public class IIDataHandlingUtils
 	//--- Sending ---//
 
 	/**
+	 * Delivers a packet-related action while guarding the current synchronous propagation chain against loops.
+	 * The same receiver and operation may only occur once on the active call stack, regardless of whether a device
+	 * cloned, modified, or replaced the packet while forwarding it. Separate sends made after this delivery returns
+	 * are unaffected.
+	 *
+	 * @param receiver  receiver being entered; compared by object identity
+	 * @param operation operation performed on the receiver
+	 * @param delivery  packet delivery action
+	 * @return true if the action was performed, false if it would re-enter an active operation or exceed the depth limit
+	 */
+	public static boolean dispatchPacket(@Nonnull Object receiver, @Nonnull PacketOperation operation, @Nonnull Runnable delivery)
+	{
+		PacketDispatchContext context = PACKET_DISPATCH_CONTEXT.get();
+		boolean rootDispatch = context==null;
+		if(rootDispatch)
+		{
+			context = new PacketDispatchContext();
+			PACKET_DISPATCH_CONTEXT.set(context);
+		}
+
+		try
+		{
+			if(!context.enter(receiver, operation))
+				return false;
+			try
+			{
+				delivery.run();
+				return true;
+			} finally
+			{
+				context.exit(receiver, operation);
+			}
+		} finally
+		{
+			if(rootDispatch)
+				PACKET_DISPATCH_CONTEXT.remove();
+		}
+	}
+
+	/**
 	 * Sends a {@link DataPacket} to an adjacent device or connector
 	 *
 	 * @param packet the packet to send
@@ -368,26 +486,51 @@ public class IIDataHandlingUtils
 
 		//Sending directly to a device
 		if(te instanceof IDataDevice)
-		{
-			((IDataDevice)te).onReceive(packet.clone(), facing.getOpposite());
-			return true;
-		}
-		//Sending to a wire network
+			return dispatchPacket(te, PacketOperation.DEVICE_RECEIVE,
+					() -> ((IDataDevice)te).onReceive(packet.clone(), facing.getOpposite()));
+			//Sending to a wire network
 		else if(te instanceof IDataConnector)
-		{
-			((IDataConnector)te).sendPacket(packet.clone());
-			return true;
-		}
+			return dispatchPacket(te, PacketOperation.CONNECTOR_SEND,
+					() -> ((IDataConnector)te).sendPacket(packet.clone()));
 		return false;
 	}
 
-	public static IngredientStack ingredientFromData(DataType dataType)
+	private static class PacketDispatchContext
 	{
-		if(dataType instanceof DataTypeItemStack)
-			return new IngredientStack((((DataTypeItemStack)dataType).value.copy()));
-		else if(dataType instanceof DataTypeString)
-			return new IngredientStack(dataType.toString());
-		else
-			return new IngredientStack("*");
+		private final Map<Object, EnumSet<PacketOperation>> activeOperations = new IdentityHashMap<>();
+		private int depth = 0;
+
+		private boolean enter(Object receiver, PacketOperation operation)
+		{
+			if(depth >= MAX_PACKET_CHAIN_DEPTH)
+				return false;
+
+			EnumSet<PacketOperation> operations = activeOperations.computeIfAbsent(receiver,
+					ignored -> EnumSet.noneOf(PacketOperation.class));
+			if(!operations.add(operation))
+				return false;
+
+			depth++;
+			return true;
+		}
+
+		private void exit(Object receiver, PacketOperation operation)
+		{
+			EnumSet<PacketOperation> operations = activeOperations.get(receiver);
+			if(operations!=null)
+			{
+				operations.remove(operation);
+				if(operations.isEmpty())
+					activeOperations.remove(receiver);
+			}
+			depth--;
+		}
+	}
+
+	public enum PacketOperation
+	{
+		DEVICE_RECEIVE,
+		CONNECTOR_RECEIVE,
+		CONNECTOR_SEND
 	}
 }

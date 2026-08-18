@@ -1,0 +1,21 @@
+{
+  "type": "ParticleVanilla",
+  "textures": [
+    "immersiveintelligence:particle/smoke/smoke"
+  ],
+  "color": "ccfcfcfc",
+  "max_lifetime": 8,
+  "draw_stage": "custom_additive",
+  "programs": [
+    "smoke_transition"
+  ],
+  "scheduled": [
+    {
+      "time": 1,
+      "generator": "circle_xz",
+      "distance": 1.0,
+      "amount": 36,
+      "type": "nuke/shockwave"
+    }
+  ]
+}

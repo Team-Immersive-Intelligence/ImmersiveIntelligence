@@ -169,10 +169,13 @@ public class DecoPanel extends DecoComponent<DecoPanel>
 	{
 		if(background==null||backgroundMask==null)
 			return true;
+		bindAtlas();
 		TextureAtlasSprite maskSprite = ClientUtils.getSprite(backgroundMask);
 
 		//Start
 		vbo = GlStateManager.glGenLists(1);
+		if(vbo <= 0)
+			return false;
 		GlStateManager.glNewList(vbo, GL11.GL_COMPILE);
 		GlStateManager.color(1f, 1f, 1f, 1f);
 		GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
@@ -211,7 +214,7 @@ public class DecoPanel extends DecoComponent<DecoPanel>
 		GlStateManager.disableBlend();
 		GlStateManager.glEndList();
 
-		return vbo!=-1;
+		return vbo > 0;
 	}
 
 	@Override
@@ -219,10 +222,10 @@ public class DecoPanel extends DecoComponent<DecoPanel>
 	{
 		GlStateManager.color(1, 1, 1, 1);
 		bindAtlas();
-		GlStateManager.callList(vbo);
 
 		GlStateManager.pushMatrix();
 		GlStateManager.enableBlend();
+		GlStateManager.callList(vbo);
 		GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA,
 				GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
 		GlStateManager.enableAlpha();
@@ -239,7 +242,7 @@ public class DecoPanel extends DecoComponent<DecoPanel>
 		children.clear();
 		labels.clear();
 		initialized = false;
-		if(vbo!=-1)
+		if(vbo > 0)
 		{
 			GlStateManager.glDeleteLists(vbo, 1);
 			vbo = -1;

@@ -1277,7 +1277,7 @@ desc.immersiveintelligence.variable_add_desc=Добавить новую пер�
 desc.immersiveintelligence.variable_set=Установить
 desc.immersiveintelligence.variable_set_desc=Изменить значение переменной
 desc.immersiveintelligence.variable_send_packet=Отправить пакет
-desc.immersiveintelligence.variable_send_packet_desc=Отправляет текущий пакет в сеть данных
+desc.immersiveintelligence.variable_send_packet.tooltip=Отправляет текущий пакет в сеть данных
 desc.immersiveintelligence.variable_remove_desc=Удалить переменную
 desc.immersiveintelligence.variable_properties=Свойства
 desc.immersiveintelligence.variable_properties.tooltip=Edit expression properties, like conditional variables.
@@ -1514,11 +1514,11 @@ desc.immersiveintelligence.bullets.armor_penetration=Бронебойность:
 desc.immersiveintelligence.bullet_magazine.remaining=Осталось патронов: %s
 desc.immersiveintelligence.bullet_magazine.empty=Пуст
 
-desc.immersiveintelligence.medical_crate.heal=Исцеляет раненых существ
-desc.immersiveintelligence.medical_crate.boost=Применять эффекты к существам
+ii.gui.medical_crate.heal=Исцеляет раненых существ
+ii.gui.medical_crate.boost=Применять эффекты к существам
 
-desc.immersiveintelligence.repair_crate.repair_armor=Восстанавливать изношенную броню
-desc.immersiveintelligence.repair_crate.repair_vehicles=Восстанавливать технику
+ii.gui.repair_crate.repair_armor=Восстанавливать изношенную броню
+ii.gui.repair_crate.repair_vehicles=Восстанавливать технику
 
 desc.immersiveintelligence.jei.washing_recipe=Химическая мойка
 

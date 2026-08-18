@@ -1,0 +1,61 @@
+def signingValue = { String envName, String propertyName -> mkxEnvOrProperty(envName, propertyName) }
+
+def hasSigningConfig = {
+	mkxBool('ii_enable_signing', false)
+			&& !signingValue('SIGN_ALIAS', 'signing_alias').trim().isEmpty()
+			&& !signingValue('SIGN_KEYSTORE', 'signing_keystore').trim().isEmpty()
+			&& !signingValue('SIGN_STOREPASS', 'signing_storepass').trim().isEmpty()
+}
+
+def signJar = { File jarFile ->
+	if (!jarFile.exists())
+		throw new GradleException("Cannot sign missing jar: ${jarFile}")
+
+	def args = [
+			jar: jarFile.absolutePath,
+			alias: signingValue('SIGN_ALIAS', 'signing_alias'),
+			storetype: mkxString('signing_storetype', 'pkcs12'),
+			keystore: signingValue('SIGN_KEYSTORE', 'signing_keystore'),
+			storepass: signingValue('SIGN_STOREPASS', 'signing_storepass'),
+			verbose: true,
+			preservelastmodified: true
+	]
+	def keypass = signingValue('SIGN_KEYPASS', 'signing_keypass')
+	if (!keypass.trim().isEmpty())
+		args.keypass = keypass
+	def timestamp = signingValue('SIGN_TIMESTAMP', 'signing_timestamp_url')
+	if (!timestamp.trim().isEmpty())
+		args.tsaurl = timestamp
+
+	logger.lifecycle('[Mk.X] signing {}', jarFile.name)
+	ant.signjar(args)
+}
+
+tasks.register('signMainJar') {
+	group = 'signing'
+	description = 'Signs the reobfuscated main mod jar.'
+	dependsOn tasks.named('reobfJar')
+	onlyIf { hasSigningConfig() }
+	doLast {
+		signJar(tasks.named('reobfJar', org.gradle.jvm.tasks.Jar).get().archiveFile.get().asFile)
+	}
+}
+
+if (mkxBool('ii_script_corejar', false)) {
+	tasks.register('signCoreJar') {
+		group = 'signing'
+		description = 'Signs the reobfuscated core jar before embedding it.'
+		dependsOn tasks.named('reobfCoreJar', org.gradle.jvm.tasks.Jar)
+		onlyIf { hasSigningConfig() }
+		doLast {
+			signJar(tasks.named('reobfCoreJar', org.gradle.jvm.tasks.Jar).get().archiveFile.get().asFile)
+		}
+	}
+	tasks.named('jar').configure {
+		dependsOn tasks.named('signCoreJar')
+	}
+}
+
+tasks.named('build').configure {
+	finalizedBy tasks.named('signMainJar')
+}

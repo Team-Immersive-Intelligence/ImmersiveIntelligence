@@ -109,11 +109,11 @@ public class ItemIIArmorUpgrade extends ItemIISubItemsBase<ArmorUpgrades> implem
 		//Protects from gasses
 		GASMASK(ImmutableSet.of(ArmorTypes.LIGHT_ENGINEER_HELMET)),
 		INFILTRATOR_GEAR(ImmutableSet.of(ArmorTypes.LIGHT_ENGINEER_HELMET),
-				"infiltrator_gear", "engineer_gear"),
-		TECHNICIAN_GEAR(ImmutableSet.of(ArmorTypes.LIGHT_ENGINEER_HELMET),
 				"technician_gear", "engineer_gear"),
+		TECHNICIAN_GEAR(ImmutableSet.of(ArmorTypes.LIGHT_ENGINEER_HELMET),
+				"infiltrator_gear", "engineer_gear"),
 		ENGINEER_GEAR(ImmutableSet.of(ArmorTypes.LIGHT_ENGINEER_HELMET),
-				"technician_gear", "infiltrator_gear"),
+				"infiltrator_gear", "technician_gear"),
 
 		//--- All Parts ---//
 

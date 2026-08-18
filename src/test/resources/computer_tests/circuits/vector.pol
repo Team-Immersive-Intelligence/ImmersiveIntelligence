@@ -1,0 +1,24 @@
+use VECTOR_ARITHMETIC
+
+vector a = vector_create 1 2 3
+vector b = vector_create 4 5 6
+type vector_length (vector_create_angle 0 45 30)
+type vector_add @a @b
+type vector_sub @a @b
+type vector_mul @a @b
+type vector_scale @a 2
+type vector_length (vector_create 3 4 0)
+type vector_dot @a @b
+type vector_cross @a @b
+type vector_normalize (vector_create 3 4 0)
+type vector_distance @a @a
+type vector_get_x @a
+type vector_get_y @a
+type vector_get_z @a
+type vector_set_x @a 9.0
+type vector_set_y @a 9.0
+type vector_set_z @a 9.0
+type vector_get_yaw (vector_create 1 0 0)
+type vector_get_pitch (vector_create 0 1 0)
+
+end

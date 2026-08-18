@@ -1,8 +1,12 @@
 package pl.pabilo8.immersiveintelligence.common.item.weapons;
 
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.Submachinegun;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
@@ -63,6 +67,49 @@ public class ItemIISubmachinegun extends ItemIIGunBase
 			}
 		};
 	}
+
+	@Override
+	public void onUpdate(ItemStack stack, World world, Entity user, int itemSlot, boolean isSelected)
+	{
+
+		
+		super.onUpdate(stack, world, user, itemSlot, isSelected);
+
+		//server check
+		if(world.isRemote || !isSelected || !(user instanceof EntityLivingBase))
+			return;
+
+		EntityLivingBase livingUser = (EntityLivingBase) user;
+
+		//check NBT for drum
+		EasyNBT nbt = EasyNBT.wrapNBT(stack.getTagCompound());
+		ItemStack magazineStack = nbt.getItemStack(MAGAZINE);
+		if(magazineStack.isEmpty())
+			return;
+
+		//check if drum is loaded
+		if(IIContent.itemBulletMagazine.stackToSub(magazineStack) != Magazines.SUBMACHINEGUN_DRUM)
+			return;
+
+		//check if bottom loader/ drum thing is NOT installed
+		if(!hasIIUpgrade(stack, WeaponUpgrade.BOTTOM_LOADING))
+		{
+			//clear NBT for drum from gun
+			nbt.without(MAGAZINE);
+			nbt.without("isDrum");
+			stack.setTagCompound(nbt.unwrap());
+
+			//drops drum
+			world.spawnEntity(new EntityItem(
+					world,
+					livingUser.posX,
+					livingUser.posY + livingUser.getEyeHeight(),
+					livingUser.posZ,
+					magazineStack
+			));
+		}
+	}
+
 
 	@Override
 	public int getSlotCount(ItemStack stack)

@@ -30,6 +30,7 @@ public class DecoScrollableItemSlots extends DecoComponent<DecoScrollableItemSlo
 	private static final int SLOT_SIZE = 18;
 	private static final int SLOT_INNER = 16;
 	private static final int SCROLLBAR_W = 12;
+	private static final int HIDDEN_SLOT_POS = -10000;
 
 	private final List<Slot> slots = new ArrayList<>();
 	private final Map<Slot, int[]> originalPos = new IdentityHashMap<>();
@@ -48,9 +49,7 @@ public class DecoScrollableItemSlots extends DecoComponent<DecoScrollableItemSlo
 				return false;
 			if(getMaxScrollRows() <= 0)
 				return false;
-			int delta = Integer.compare(0, scroll);
-			if(delta!=0)
-				setScrollRows(scrollRows+delta);
+			setScrollRows(scrollRows+scroll);
 			return true;
 		});
 		withOnPressed(this::handleMouse);
@@ -64,6 +63,7 @@ public class DecoScrollableItemSlots extends DecoComponent<DecoScrollableItemSlo
 	 */
 	public DecoScrollableItemSlots withSlots(@Nonnull List<Slot> slots)
 	{
+		restoreOriginalPositions();
 		this.slots.clear();
 		this.slots.addAll(slots);
 		this.initialized = false;
@@ -75,6 +75,7 @@ public class DecoScrollableItemSlots extends DecoComponent<DecoScrollableItemSlo
 	 */
 	public DecoScrollableItemSlots withSlots(@Nonnull Slot... slots)
 	{
+		restoreOriginalPositions();
 		this.slots.clear();
 		for(Slot s : slots)
 			this.slots.add(s);
@@ -117,16 +118,10 @@ public class DecoScrollableItemSlots extends DecoComponent<DecoScrollableItemSlo
 	@Override
 	protected boolean initialize()
 	{
-		//Hide real slots off-screen (but keep them functional)
-		originalPos.clear();
-		for(Slot s : slots)
-		{
-			if(s==null)
-				continue;
-			originalPos.put(s, new int[]{s.xPos, s.yPos});
-			s.xPos = -10000;
-			s.yPos = -10000;
-		}
+		//Record the container layout once, then keep every slot outside the GUI until
+		//the visible page explicitly assigns it a display position.
+		captureOriginalPositions();
+		hideSlots();
 
 		//Clamp scroll in case size/columns changed
 		setScrollRows(scrollRows);
@@ -195,6 +190,10 @@ public class DecoScrollableItemSlots extends DecoComponent<DecoScrollableItemSlo
 
 	private void drawSlots()
 	{
+		//Scrolling can change which real slots are represented by the same cells.
+		//Hide the previous page first so stale slots cannot remain clickable.
+		hideSlots();
+
 		final int cols = Math.max(1, columns);
 		final int visible = getVisibleRows()*cols;
 		final int listRight = x+getListWidth();
@@ -221,28 +220,49 @@ public class DecoScrollableItemSlots extends DecoComponent<DecoScrollableItemSlo
 	@Override
 	public void cleanup()
 	{
-		//Restore real slot positions
-		for(Map.Entry<Slot, int[]> e : originalPos.entrySet())
-		{
-			Slot s = e.getKey();
-			int[] pos = e.getValue();
-			if(s!=null&&pos!=null&&pos.length==2)
-			{
-				s.xPos = pos[0];
-				s.yPos = pos[1];
-			}
-		}
-		originalPos.clear();
+		restoreOriginalPositions();
+		initialized = false;
 	}
 
 	@Override
 	protected void updateInvisibleComponent()
 	{
-		if(initialized)
+		//A hidden tab must not restore the container's original coordinates: those may
+		//still be inside the GUI. Keep its real slots parked outside the player's view.
+		captureOriginalPositions();
+		hideSlots();
+	}
+
+	private void captureOriginalPositions()
+	{
+		for(Slot slot : slots)
+			if(slot!=null&&!originalPos.containsKey(slot))
+				originalPos.put(slot, new int[]{slot.xPos, slot.yPos});
+	}
+
+	private void hideSlots()
+	{
+		for(Slot slot : slots)
+			if(slot!=null)
+			{
+				slot.xPos = HIDDEN_SLOT_POS;
+				slot.yPos = HIDDEN_SLOT_POS;
+			}
+	}
+
+	private void restoreOriginalPositions()
+	{
+		for(Map.Entry<Slot, int[]> entry : originalPos.entrySet())
 		{
-			initialized = false;
-			cleanup();
+			Slot slot = entry.getKey();
+			int[] position = entry.getValue();
+			if(slot!=null&&position!=null&&position.length==2)
+			{
+				slot.xPos = position[0];
+				slot.yPos = position[1];
+			}
 		}
+		originalPos.clear();
 	}
 
 	//--- Utils ---//

@@ -10,7 +10,6 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoEntr
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoTaskList;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoTaskList.ListMode;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity.TileEntityDataRouter;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity.TileEntityDataRouter.DataRoutingRule;
@@ -80,12 +79,12 @@ public class GuiDataRouter extends DecoTileGui<TileEntityDataRouter, ContainerDa
 				.withDisplayFunction(new DecoEntryPanelBuilder<DataRoutingRule>()
 						.withBackground(DecoTextures.BG_PAPER)
 						.withBackgroundMask(DecoTextures.TEMPLATE_TICKET)
-						.withComponent("action", new DecoButton(3, 2)
+						.withComponent("action", p -> new DecoButton(3, 2)
 								.withSize(36, 16)
 								.withDisabled(true)
 								.withTextDisabledColor(IIColor.fromPackedRGB(0xafafaf))
 						)
-						.withLabel("route", new DecoLabel(fontRenderer, 3+36+2, 5)
+						.withLabel("route", p -> new DecoLabel(fontRenderer, 3+36+2, 5)
 								.withSize(58, 12)
 								.withAlign(DecoAlignment.LEFT)
 						)

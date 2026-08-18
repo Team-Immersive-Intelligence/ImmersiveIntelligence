@@ -4,9 +4,10 @@
   "max_lifetime": 120,
   "draw_stage": "custom_smoke_noise_shader",
   "aabb": 1.0,
-  "color": "ffffff",
+  "color": "5cffffff",
   "programs": [
     "smoke_transition"
   ],
-  "size": 4.5
+  "size": 4.5,
+  "motion": [0.0, 0.0, 0.0]
 }

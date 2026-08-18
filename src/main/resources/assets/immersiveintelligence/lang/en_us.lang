@@ -620,6 +620,8 @@ item.immersiveintelligence.naval_mine.bullet.name=Naval Mine
 item.immersiveintelligence.naval_mine.core.name=Naval Mine Core
 item.immersiveintelligence.ammo_casing.naval_mine.name=Naval Mine Casing
 
+item.immersiveintelligence.placeholder_icon.name=Placeholder
+
 tile.immersiveintelligence.stone_decoration.sandbags.name=Sandbags
 
 tile.immersiveintelligence.metal_device.metal_crate.name=Metal Crate
@@ -663,6 +665,12 @@ tile.immersiveintelligence.metal_fortification.aluminium_chain_fence.name=Alumin
 
 tile.immersiveintelligence.wooden_fortification.wooden_steel_chain_fence.name=Wooden Steel Chain Fence
 tile.immersiveintelligence.wooden_fortification.wooden_brass_chain_fence.name=Wooden Brass Chain Fence
+tile.immersiveintelligence.wooden_fortification.wooden_aluminum_chain_fence.name=Wooden Aluminium Chain Fence
+
+#Harbor Decorations
+tile.immersiveintelligence.harbor.wooden_pier.name=Wooden Pier
+tile.immersiveintelligence.harbor.wooden_quay.name=Wooden Quay
+tile.immersiveintelligence.harbor_support.wooden_pier_support.name=Wooden Pier Support
 
 tile.immersiveintelligence.metal_fortification1.tank_trap.name=Czech Hedgehog
 
@@ -1080,7 +1088,7 @@ machineupgrade.immersiveintelligence.saw_unregulator.desc=Unregulating the saw l
 #Flagpole
 machineupgrade.immersiveintelligence.flagpole.capture_defiance=Capture Defiance
 machineupgrade.immersiveintelligence.flagpole.capture_defiance.desc=Reinforces the Flagpole, raising its structural integrity and troops required to actively capture it.
-machineupgrade.immersiveintelligence.flagpole.taser_locks=Taser Locks
+machineupgrade.immersiveintelligence.flagpole.taser_locks=Tesla Coil
 machineupgrade.immersiveintelligence.flagpole.taser_locks.desc=Adds a defensive tesla coil, that strikes enemies aiming to capture the Flagpole.
 machineupgrade.immersiveintelligence.flagpole.distress_signal=Distress Signal
 machineupgrade.immersiveintelligence.flagpole.distress_signal.desc=Adds a radio-connected alarm siren, that activates when enemy troops are close.
@@ -1245,26 +1253,51 @@ desc.immersiveintelligence.weapon.magazine2=%s - Magazine #2
 
 
 desc.immersiveintelligence.storage_module=Storage
+desc.immersiveintelligence.storage_module.tooltip=Access the machine's inventory
 desc.immersiveintelligence.variables_module=Variables
+desc.immersiveintelligence.variables_module.tooltip=Manage and edit data variables
 desc.immersiveintelligence.memory_in_module=Input Memory
+desc.immersiveintelligence.memory_in_module.tooltip=Manage rules for memory loading pre machine's operation
 desc.immersiveintelligence.memory_out_module=Output Memory
+desc.immersiveintelligence.memory_out_module.tooltip=Manage rules for memory saving post machine's operation
 desc.immersiveintelligence.data_module=Data
+desc.immersiveintelligence.data_module.tooltip=Configure how input data is converted to redstone
 desc.immersiveintelligence.redstone_module=Redstone
+desc.immersiveintelligence.redstone_module.tooltip=Configure how input redstone is converted to data
 desc.immersiveintelligence.data_to_redstone_module=Data to Redstone
+desc.immersiveintelligence.data_to_redstone_module.tooltip=Configure how input data is converted to redstone
 desc.immersiveintelligence.redstone_to_data_module=Redstone to Data
+desc.immersiveintelligence.redstone_to_data_module.tooltip=Configure how input redstone is converted to data
 desc.immersiveintelligence.tasks_module=Tasks
+desc.immersiveintelligence.tasks_module.tooltip=Add and modify tasks of the machine
 desc.immersiveintelligence.status_module=Status
+desc.immersiveintelligence.status_module.tooltip=Check status of the machine
 desc.immersiveintelligence.labeler_module=Labels
+desc.immersiveintelligence.labeler_module.tooltip=Configure how labels are applied to containers
 
 desc.immersiveintelligence.map_module=Map
+desc.immersiveintelligence.map_module.tooltip=View map of the surrounding area
 desc.immersiveintelligence.radar_module=Radar
+desc.immersiveintelligence.radar_module.tooltip=Access the radar screen
 desc.immersiveintelligence.faction_module=Faction Management
+desc.immersiveintelligence.faction_module.tooltip=Manage your faction
 
 desc.immersiveintelligence.configuration_module=Configuration
+desc.immersiveintelligence.configuration_module.tooltip=Change settings of the machine
 desc.immersiveintelligence.targets_module=Targets
+desc.immersiveintelligence.targets_module.tooltip=Manage target classification
 desc.immersiveintelligence.fire_missions_module=Fire Missions
+desc.immersiveintelligence.fire_missions_module.tooltip=Add and modify fire missions
 
 desc.immersiveintelligence.tooltip.armor=Armor %f%%
+
+desc.immersiveintelligence.coagulator.input_tank=Input Tank
+desc.immersiveintelligence.coagulator.coagulant_tank=Coagulant Tank
+
+desc.immersiveintelligence.chemical_painter.tank_cyan=Cyan Ink Tank
+desc.immersiveintelligence.chemical_painter.tank_magenta=Magenta Ink Tank
+desc.immersiveintelligence.chemical_painter.tank_yellow=Yellow Ink Tank
+desc.immersiveintelligence.chemical_painter.tank_black=Black Ink Tank
 
 desc.immersiveintelligence.upgrade_gui.title=Upgrade Machine
 desc.immersiveintelligence.upgrade_gui.tech_tree=Tech Tree
@@ -1277,7 +1310,7 @@ desc.immersiveintelligence.variable_add_desc=Add a new variable
 desc.immersiveintelligence.variable_set=Set
 desc.immersiveintelligence.variable_set_desc=Change the value of a variable
 desc.immersiveintelligence.variable_send_packet=Send Packet
-desc.immersiveintelligence.variable_send_packet_desc=Sends the current packet to data network
+desc.immersiveintelligence.variable_send_packet.tooltip=Sends the current packet to data network
 desc.immersiveintelligence.variable_remove_desc=Remove a variable
 desc.immersiveintelligence.variable_properties=Properties
 desc.immersiveintelligence.variable_properties.tooltip=Edit expression properties, like conditional variables.
@@ -1286,6 +1319,15 @@ desc.immersiveintelligence.variable_value.boolean=Value
 desc.immersiveintelligence.variable_value.integer_vector=Integer Vector
 desc.immersiveintelligence.variable_value.integer_vector.tooltip=An Integer Vector does not allow numbers with decimal points.
 desc.immersiveintelligence.operation=Operation:
+
+desc.immersiveintelligence.text_filter.none=None
+desc.immersiveintelligence.text_filter.alphanumeric=Alphanumeric
+desc.immersiveintelligence.text_filter.lowercase=Lowercase
+desc.immersiveintelligence.text_filter.uppercase=Uppercase
+desc.immersiveintelligence.text_filter.decimal=Decimal
+desc.immersiveintelligence.text_filter.hexadecimal=Hexadecimal
+desc.immersiveintelligence.text_filter.binary=Binary
+desc.immersiveintelligence.text_filter.float=Float
 
 desc.immersiveintelligence.conditional_variable=Conditional Variable:
 desc.immersiveintelligence.conditional_variable.enabled=Use condition
@@ -1417,18 +1459,31 @@ desc.immersiveintelligence.diplomacy.action.declare_war=Declare War
 desc.immersiveintelligence.diplomacy.action.declare_alliance=Declare Alliance
 
 desc.immersiveintelligence.diplomacy.permission.disband=Disband
+desc.immersiveintelligence.diplomacy.permission.disband.tooltip=Allows to disband and change the faction's law form.
 desc.immersiveintelligence.diplomacy.permission.merge=Merge
+desc.immersiveintelligence.diplomacy.permission.merge.tooltip=Allows to send or accept diplomatic requests that involve merging this faction with another one.
 desc.immersiveintelligence.diplomacy.permission.foreign_affairs=Foreign Affairs
+desc.immersiveintelligence.diplomacy.permission.foreign_affairs.tooltip=Allows to send and accept diplomatic requests from other factions.
 desc.immersiveintelligence.diplomacy.permission.modify_insignia=Modify Insignia
+desc.immersiveintelligence.diplomacy.permission.modify_insignia.tooltip=Allows to change the faction's name, color and banner.
 desc.immersiveintelligence.diplomacy.permission.invite_members=Add Members
+desc.immersiveintelligence.diplomacy.permission.invite_members.tooltip=Allows to invite new members to the faction.
 desc.immersiveintelligence.diplomacy.permission.remove_members=Remove Members
+desc.immersiveintelligence.diplomacy.permission.remove_members.tooltip=Allows to remove members from the faction.
 desc.immersiveintelligence.diplomacy.permission.military_aid=Military Aid
+desc.immersiveintelligence.diplomacy.permission.military_aid.tooltip=Troops and defensive installations of this faction will guard and aid anyone with this permission in combat.
 desc.immersiveintelligence.diplomacy.permission.transit=Transit
+desc.immersiveintelligence.diplomacy.permission.transit.tooltip=Allows to freely move through this faction's territory.
 desc.immersiveintelligence.diplomacy.permission.trade=Trade
+desc.immersiveintelligence.diplomacy.permission.trade.tooltip=Allows to trade with this faction's facilities.
 desc.immersiveintelligence.diplomacy.permission.research=Research
+desc.immersiveintelligence.diplomacy.permission.research.tooltip=Grants access to this faction's research progress.
 desc.immersiveintelligence.diplomacy.permission.logistics=Logistics
+desc.immersiveintelligence.diplomacy.permission.logistics.tooltip=Allows to use this faction's logistic network.
 desc.immersiveintelligence.diplomacy.permission.container_access=Container Access
+desc.immersiveintelligence.diplomacy.permission.container_access.tooltip=Allows to open and use this faction's containers.
 desc.immersiveintelligence.diplomacy.permission.breaking_structures=Breaking Structures
+desc.immersiveintelligence.diplomacy.permission.breaking_structures.tooltip=Allows to break this faction's structures.
 
 desc.immersiveintelligence.diplomacy.permission_level.owner_allow=Owners
 desc.immersiveintelligence.diplomacy.permission_level.member_allow=Members
@@ -1498,6 +1553,7 @@ desc.immersiveintelligence.bullets.details=Details:
 desc.immersiveintelligence.bullets.core=Fitted with %1$s %2$s Core
 desc.immersiveintelligence.bullets.fuse=%s Fuse
 desc.immersiveintelligence.bullets.mass=Mass: %s
+desc.immersiveintelligence.bullets.component_slots=Free Component Slots: %s
 desc.immersiveintelligence.bullets.caliber=Caliber: %s bCal
 
 desc.immersiveintelligence.bullets.components=Components:
@@ -1513,12 +1569,6 @@ desc.immersiveintelligence.bullets.armor_penetration=Armor Penetration:
 
 desc.immersiveintelligence.bullet_magazine.remaining=Remaining Bullets: %s
 desc.immersiveintelligence.bullet_magazine.empty=Empty
-
-desc.immersiveintelligence.medical_crate.heal=Heal Wounded Entities
-desc.immersiveintelligence.medical_crate.boost=Apply Effects to Entities
-
-desc.immersiveintelligence.repair_crate.repair_armor=Repair Worn Armor
-desc.immersiveintelligence.repair_crate.repair_vehicles=Repair Vehicles
 
 desc.immersiveintelligence.jei.washing_recipe=Chemical Washing
 
@@ -2741,6 +2791,17 @@ advancement.immersiveintelligence.root.desc=RTFM?
 advancement.immersiveintelligence.connect_belt=Powerful Conveying
 advancement.immersiveintelligence.connect_belt.desc=Link two mechanical wheels with a belt coil
 
+#Reference to Wallace Hammering meme
+advancement.immersiveintelligence.craft_electric_hammer=Wallace, NO-
+advancement.immersiveintelligence.craft_electric_hammer.desc=Craft an Engineer's Electric Hammer.
+
+advancement.immersiveintelligence.craft_wrench=Turning things around
+advancement.immersiveintelligence.craft_wrench.desc=Craft an Engineer's Wrench.
+
+#Reference to ROTATO FASTER BANANA
+advancement.immersiveintelligence.craft_electric_wrench=We have reached maximum velocity
+advancement.immersiveintelligence.craft_electric_wrench.desc=Craft an Engineer's Electric Wrench.
+
 advancement.immersiveintelligence.craft_gun_barrel_iron=A Gunsmith?
 advancement.immersiveintelligence.craft_gun_barrel_iron.desc=Craft the Iron Gun Barrel, that allows you to construct basic firearms.
 
@@ -2779,9 +2840,6 @@ advancement.immersiveintelligence.infinite_power.desc=Upgrade the Submachinegun 
 
 advancement.immersiveintelligence.the_silent_unseen=The Silent Unseen
 advancement.immersiveintelligence.the_silent_unseen.desc=Upgrade the Submachinegun with a Folding Stock and Suppressor
-
-advancement.immersiveintelligence.craft_cpds=The cost of firing for 12 seconds
-advancement.immersiveintelligence.craft_cpds.desc=Craft the CPDS magazine
 
 #Reference to Tiger 1 tank memes
 advancement.immersiveintelligence.craft_steel_belt=Hans, ze Transmission Works!
@@ -2914,9 +2972,61 @@ advancement.immersiveintelligence.secret_sorry_for_ceiling.desc=Experience a how
 advancement.immersiveintelligence.emplacement=The Little Turret is also good...
 advancement.immersiveintelligence.emplacement.desc=Construct the Emplacement, a defensive structure that can be equipped with heavy weaponry.
 
+advancement.immersiveintelligence.emplacement_machinegun=Death, Fully Automated
+advancement.immersiveintelligence.emplacement_machinegun.desc=Install the Machinegun on an Emplacement.
+
+#Reference to Advance Wars: Black Hole Rising
+advancement.immersiveintelligence.emplacement_autocannon=Flak Attack
+advancement.immersiveintelligence.emplacement_autocannon.desc=Install the Autocannon on an Emplacement.
+
+#Reference to Team Fortress 2
+advancement.immersiveintelligence.emplacement_cpds=The cost of firing for 12 seconds
+advancement.immersiveintelligence.emplacement_cpds.desc=Install the CPDS on an Emplacement.
+
+#How come you don't know this mod, hm?
+advancement.immersiveintelligence.emplacement_heavy_railgun=Immersive Rail...gunning, yes
+advancement.immersiveintelligence.emplacement_heavy_railgun.desc=Install the Heavy Railgun on an Emplacement.
+
+#Reference to a song by Sabaton
+advancement.immersiveintelligence.emplacement_heavy_chemthrower=Toxic Gas and Chemical Warfare
+advancement.immersiveintelligence.emplacement_heavy_chemthrower.desc=Install the Heavy Chemthrower on an Emplacement.
+
+#Reference to an old movie "Evil Brain from Outer Space"
+advancement.immersiveintelligence.emplacement_infrared_observer=I know what lies ahead...
+advancement.immersiveintelligence.emplacement_infrared_observer.desc=Install the Infrared Observer on an Emplacement.
+
+advancement.immersiveintelligence.emplacement_light_howitzer=Bertha Jr.
+advancement.immersiveintelligence.emplacement_light_howitzer.desc=Install the Light Howitzer on an Emplacement.
+
+advancement.immersiveintelligence.emplacement_mortar=Without a Pestle
+advancement.immersiveintelligence.emplacement_mortar.desc=Install the Mortar on an Emplacement.
+
+#Reference to the folk song "Katyusha"
+advancement.immersiveintelligence.emplacement_rocket_launcher=Apple and Pear Trees Blooming
+advancement.immersiveintelligence.emplacement_rocket_launcher.desc=Install the Rocket Launcher on an Emplacement.
+
+#Reference to the game Witch's House
+advancement.immersiveintelligence.emplacement_guided_missile_launcher=A Spool of Thread
+advancement.immersiveintelligence.emplacement_guided_missile_launcher.desc=Install the Wire-Guided Missile Launcher on an Emplacement.
+
+#Reference to Company of Heroes 1
+advancement.immersiveintelligence.emplacement_searchlight=Wakes better than Coffee
+advancement.immersiveintelligence.emplacement_searchlight.desc=Install the Searchlight on an Emplacement.
+
+#Reference to Lord of The Rings
+advancement.immersiveintelligence.emplacement_spotlight_tower=Remnant of Barad-Dur
+advancement.immersiveintelligence.emplacement_spotlight_tower.desc=Install the Spotlight Tower on an Emplacement.
+
+#Reference to Command and Conquer: Red Alert 2
+advancement.immersiveintelligence.emplacement_tesla=Electrodes Primed
+advancement.immersiveintelligence.emplacement_tesla.desc=Install the Tesla Coil on an Emplacement.
+
 advancement.immersiveintelligence.flagpole=Stand for Anthem!
 advancement.immersiveintelligence.flagpole.desc=Construct the Flagpole, a decorative landmark and chunkloader.
 
+#Reference to one worker song, that almost sounded like a march
+advancement.immersiveintelligence.flagpole_unit_post=Now, Left, Two, Three!
+advancement.immersiveintelligence.flagpole_unit_post.desc=Upgrade the Flagpole to a Unit Post.
 
 #Manual Categories
 
@@ -2934,6 +3044,7 @@ ie.manual.folder.computers=Computers
 ie.manual.folder.weaponry=Weaponry
 ie.manual.folder.armortools=Armor and Tools
 ie.manual.folder.staticdefense=Defensive Structures
+ie.manual.folder.terrain_control=Terrain Control
 
 ie.manual.entry.traits.level_beginner=Complexity: Pre-Industrial
 ie.manual.entry.traits.level_early_industrial=Complexity: Early Industrial
@@ -3195,6 +3306,7 @@ death.attack.iiVehiclenoRider=%1$s was driven over
 death.attack.iiVehicleSuicide=%1$s decided to jump off a moving vehicle
 
 #Additional stuff for the Config Panel
+ii.config.Overrides=Overrides
 ii.config.Graphics=Graphics
 ii.config.Ores=Ores
 ii.config.Machines=Machines
@@ -3203,6 +3315,7 @@ ii.config.Weapons=Weapons
 ii.config.Wires=Wires
 ii.config.Tools=Tools
 ii.config.Vehicles=Vehicles
+ii.config.Factions=Factions
 ii.config.EffectCrates=Effect Crates
 
 #Weapon Configs
@@ -3238,6 +3351,24 @@ ii.gui.inserter.tasks.into_minecart=Into Minecart
 ii.gui.inserter.tasks.fluid=Fluid
 ii.gui.inserter.tasks.fluid_milk_cow=Milk Cow
 ii.gui.inserter.tasks.fluid_latex_collector=Collect Latex
+
+ii.gui.ammunition_crate.mode=Mode:
+ii.gui.ammunition_crate.section.ammunition=Ammunition
+ii.gui.ammunition_crate.section.spent_casings=Spent Casings
+ii.gui.ammunition_crate.section.spent_magazines=Spent Magazines
+ii.gui.ammunition_crate.mode.revolver=Revolver
+ii.gui.ammunition_crate.mode.submachinegun=Submachinegun
+ii.gui.ammunition_crate.mode.assault_rifle=Assault Rifle
+ii.gui.ammunition_crate.mode.rifle_bullets=Rifle (Bullets)
+ii.gui.ammunition_crate.mode.rifle_magazines=Rifle (Magazines)
+ii.gui.ammunition_crate.mode.machinegun_magazines=Machinegun (Magazines)
+ii.gui.ammunition_crate.mode.machinegun_belt_fed=Machinegun (Belt-Fed)
+
+ii.gui.repair_crate.repair_armor=Repair Worn Armor
+ii.gui.repair_crate.repair_vehicles=Repair Vehicles
+
+ii.gui.medical_crate.heal=Heal Wounded Entities
+ii.gui.medical_crate.boost=Apply Effects to Entities
 
 ii.gui.packer.task=Transfer:
 ii.gui.packer.task.item=Items
@@ -3397,6 +3528,48 @@ ii.gui.map_display.marker.missiles=Missiles
 ii.gui.map_display.marker.artillery=Artillery
 ii.gui.map_display.marker.bullets=Bullets
 
+ii.gui.flagpole.config.chunk_loading_range=Chunk Loading Range
+ii.gui.flagpole.config.chunks=%s Chunks
+ii.gui.flagpole.config.display_faction_flag=Display Faction Flag
+ii.gui.flagpole.config.display_faction_flag.tooltip=Display Owner's flag, when no banner was placed on the Flagpole.
+ii.gui.flagpole.config.prioritize_faction_flag=Prioritize Faction Flag
+ii.gui.flagpole.config.prioritize_faction_flag.tooltip=Display Owner's flag, even if there is a banner on the Flagpole.
+ii.gui.flagpole.config.distress_signal=Distress Signal
+ii.gui.flagpole.config.sound_alarm=Sound Alarm
+ii.gui.flagpole.config.sound_alarm.tooltip=Activates the siren, when enemies are nearby.
+ii.gui.flagpole.config.send_distress_packet=Send Distress Packet
+ii.gui.flagpole.config.send_distress_packet.tooltip=Sends a distress packet on the radio network, when enemies are nearby.
+ii.gui.flagpole.config.tesla_coil=Tesla Coil
+ii.gui.flagpole.config.tesla_coil_active=Tesla Coil Active
+ii.gui.flagpole.config.tesla_coil_active.tooltip=Activates the Tesla Coil, which strikes nearby enemies.
+
+ii.gui.faction_invitation=Faction
+ii.gui.faction_invitation.invalid=Could not get faction data. Please close and open this screen again.
+ii.gui.faction_invitation.current=Current Status
+ii.gui.faction_invitation.current.alone=%s is owner of their own domain.
+#[Name] is [Rank] of [Faction], e.g. Pabilo8 is Owner of Pabulograd
+ii.gui.faction_invitation.current.faction=%s is %s of %s
+ii.gui.faction_invitation.invitations=Faction Invitations
+ii.gui.faction_invitation.invitations.none=No pending invitations
+
+ii.gui.faction_management.insignia=Insignia
+ii.gui.faction_management.insignia.tooltip=Modify the faction's name and color
+ii.gui.faction_management.insignia.name=Faction Name
+ii.gui.faction_management.insignia.name.tooltip=Name of the faction
+ii.gui.faction_management.insignia.banner=Banner
+ii.gui.faction_management.insignia.banner.tooltip=Click with a banner to change the faction's banner.
+ii.gui.faction_management.members=Members
+ii.gui.faction_management.members.tooltip=Manage the faction's members
+ii.gui.faction_management.invitations=Invitations
+ii.gui.faction_management.invitations.tooltip=Invite new members and nanage existing invitations
+ii.gui.faction_management.invitations.username=Username
+ii.gui.faction_management.invitations.username.tooltip=Player username to invite
+ii.gui.faction_management.permissions=Permissions
+ii.gui.faction_management.permissions.tooltip=Manage permissions for faction members
+ii.gui.faction_management.permissions.role=Edited role:
+ii.gui.faction_management.permissions.role.tooltip=Select role to view or edit permissions for
+ii.gui.faction_management.permissions.empty=No roles available
+
 ii.gui.redstone_data_interface.from.redstone=From
 ii.gui.redstone_data_interface.from.redstone.tooltip=Specifies what redstone signal color will get converted into a data variable
 ii.gui.redstone_data_interface.from.data=From variable
@@ -3519,12 +3692,23 @@ ii.gui_tooltip.button.remove=Remove
 ii.gui_tooltip.button.edit=Edit
 ii.gui_tooltip.button.duplicate=Duplicate
 ii.gui_tooltip.button.clear=Clear
+ii.gui_tooltip.button.accept=Accept
+ii.gui_tooltip.button.reject=Reject
+ii.gui_tooltip.button.help=Show Help
+ii.gui_tooltip.button.factions=Factions
 
 #GUI Widgets
 ii.gui_tooltip.widget.style.show=Show Style Customization
 ii.gui_tooltip.widget.style.hide=Hide Style Customization
 ii.gui_tooltip.widget.style=Customization
-ii.gui_tooltip.widget.style.desc=This multiblock allows customization of style and color.
+ii.gui_tooltip.widget.style.main=This %s does not allow customization.
+ii.gui_tooltip.widget.style.main.variants=This %s allows customization of style.
+ii.gui_tooltip.widget.style.main.color=This %s allows customization of color.
+ii.gui_tooltip.widget.style.main.variants.color=This %s allows customization of style and color.
+ii.gui_tooltip.widget.style.main.tile=nachine
+ii.gui_tooltip.widget.style.main.multiblock=multiblock
+ii.gui_tooltip.widget.style.main.vehicle=vehicle
+ii.gui_tooltip.widget.style.main.entity=entity
 ii.gui_tooltip.widget.style.style=Style
 ii.gui_tooltip.widget.style.color=Color
 ii.gui_tooltip.widget.ownership.show=Show Ownership Data
@@ -3586,7 +3770,7 @@ ii.gui_tooltip.soil_fertility=Soil Fertility: %s %
 item.immersiveintelligence.bullet.component.core_netherite.name=Netherite
 ie.manual.entry.bullet_core.core_netherite=Netherite Core
 ie.manual.entry.bullet_core.core_netherite.lore=Nether-Forged
-ie.manual.entry.bullet_core.core_netherite.desc=Ancient debris is what remains of the mining activity of the piglins, who extracted all the original netherite ore. Currently they are a product of an industrialized fallen empire and in the past they were a united front.
+ie.manual.entry.bullet_core.core_netherite.desc=Ancient debris is what remains of the mining activity of the piglins, who extracted all the original netherite ore. Very sturdy and dense. A very good pick for ammo, but *expensive*.
 
 item.immersiveintelligence.bullet.component.nether_fire.name=Nether Fire
 ie.manual.entry.bullet_component.nether_fire=Nether Fire
@@ -3600,33 +3784,36 @@ ie.manual.entry.bullet_component.windcharge.lore=How?
 ie.manual.entry.bullet_component.windcharge.desc=Condensed wind obtained from Breeze, wind charges knock targets back and apply slowness and suppression in small radius. Due to properties of the charge, it remains on the same level of potency regardless of the shell size.
 
 # Thaumcraft Compat
+# Despite its small size, rules of physics dictate that compression of such matter by integrated detonator explosive can only result in unparraleled levels of destruction from sheer amount of energy unleashed at once.
 item.immersiveintelligence.bullet.component.primordial_pearl.name=Primordial Pearl
 ie.manual.entry.bullet_component.primordial_pearl=Primordial Pearl
 ie.manual.entry.bullet_component.primordial_pearl.lore=Magical Oppenheimer
-ie.manual.entry.bullet_component.primordial_pearl.desc=A potent artifact containing vast magical power and nearly unlimited potential that is beyond the known magical and physical laws. Despite its small size, rules of physics dictate that compression of such matter by integrated detonator explosive can only result in unparraleled levels of destruction from sheer amount of energy unleashed at once.
+ie.manual.entry.bullet_component.primordial_pearl.desc=A potent artifact containing vast magical power and nearly unlimited potential that is beyond the known magical and physical laws. Unparralleled destruction power.
 
 item.immersiveintelligence.bullet.component.alumentum.name=Alumentum
 ie.manual.entry.bullet_component.alumentum=Alumentum
 ie.manual.entry.bullet_component.alumentum.lore=Alchemist's explosives
-ie.manual.entry.bullet_component.alumentum.desc=A very volatile fiery substance, Alumentum is smaller in radius compared to TNT, but contains more concentrated power. Being in explosive container allows to focus its explosive power, making it more destructive than otherwise hand-thrown Alumentum.
-
+ie.manual.entry.bullet_component.alumentum.desc=A very volatile fiery substance, Alumentum is smaller in radius compared to TNT, but contains more concentrated power.
+ 
 item.immersiveintelligence.bullet.component.bottled_taint.name=Bottled Taint
 ie.manual.entry.bullet_component.bottled_taint=Bottled Taint
 ie.manual.entry.bullet_component.bottled_taint.lore=Ruinous power
 ie.manual.entry.bullet_component.bottled_taint.desc=Moving the contents of the bottle into a shell allows to deliver the corruptive Taint at much longer distances than it is possible to throw the bottle manually. Spread forth magical corruption, now at long distances!
 
-ie.manual.entry.bullet_core.core_core_thaumium=Thaumium
+ie.manual.entry.bullet_core.core_thaumium=Thaumium
 ie.manual.entry.bullet_core.core_thaumium=Thaumium Core
-ie.manual.entry.bullet_core.ore_thaumium.lore=Thaumaturgicallymtallurgic
-ie.manual.entry.bullet_core.core_thaumium.desc=A result of infusing iron with raw magical energy. Harder and better than base iron, it is a good candidate for massproduced shells, provided you can make alchemical mettalurgy supply keep up with the industrial demands.
+ie.manual.entry.bullet_core.core_thaumium.lore=Thaumaturgicallymtallurgic
+ie.manual.entry.bullet_core.core_thaumium.desc=A result of infusing iron with raw magical energy. Harder and better than base iron, it is a good candidate for massproduced shells.
 
-ie.manual.entry.bullet_core.core_core_core_voidmetal=Void Metal
+
+# Void metal is Disturbingly slick and warm to the touch, easy to work like gold, becoming as hard as tungsten and harder when struck 
+ie.manual.entry.bullet_core.core_voidmetal=Void Metal
 ie.manual.entry.bullet_core.core_voidmetal=Void Metal Core
-ie.manual.entry.bullet_core.core_voidmetal.lore=Thaumaturgicallymtallurgic
-ie.manual.entry.bullet_core.core_voidmetal.desc=Disturbingly slick and warm to the touch, easy to work like gold, becoming as hard as tungsten and harder when struck - Void Metal is an excellent choice for bullets. However, properties of the metal make it somewhat difficult for conventional explosives to detonate with proper force. Furthermore, you cannot retrieve this metal core despite its regenerative properties, as it becomes unuseable after hitting the target.
+ie.manual.entry.bullet_core.core_voidmetal.lore=Magical-military-industrial-complex
+ie.manual.entry.bullet_core.core_voidmetal.desc=Void Metal is an excellent choice for bullets. However, properties of the metal make it somewhat difficult for conventional explosives to detonate with proper force.
 
 # Thaumic Augmentation Compat
 item.immersiveintelligence.bullet.component.impetus.name=Impetus
 ie.manual.entry.bullet_component.impetus=Impetus
 ie.manual.entry.bullet_component.impetus.lore=Rift power in a can
-ie.manual.entry.bullet_component.impetus.desc=Dangerous byproduct of Flux Rifts, and not fully understood material or phenomena, full range of usages for Impetus is shrouded in mystery. However, "infusing" the shell with the Impetus energy very significantly magnifies and supercharges its lethality.
+ie.manual.entry.bullet_component.impetus.desc=Dangerous byproduct of Flux Rifts, and not fully understood material or phenomena. "Infusing" the shell with the Impetus energy very significantly magnifies and supercharges its lethality.

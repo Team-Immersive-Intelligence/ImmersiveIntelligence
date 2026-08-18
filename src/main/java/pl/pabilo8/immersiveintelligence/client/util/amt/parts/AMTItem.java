@@ -44,6 +44,19 @@ public class AMTItem extends AMT
 		return this;
 	}
 
+	public AMTItem setStack(ItemStack stack)
+	{
+		this.stack = stack;
+		return this;
+	}
+
+	public AMTItem setStack(ItemStack stackFrom, ItemStack stackInto)
+	{
+		this.stack = stackFrom;
+		this.stackInto = stackInto;
+		return this;
+	}
+
 	@Override
 	protected void preDraw()
 	{
@@ -182,16 +195,5 @@ public class AMTItem extends AMT
 		clone.drawSchematic = drawSchematic;
 		clone.drawStacked = drawStacked;
 		return clone;
-	}
-
-	public void setStack(ItemStack stack)
-	{
-		this.stack = stack;
-	}
-
-	public void setStack(ItemStack stackFrom, ItemStack stackInto)
-	{
-		this.stack = stackFrom;
-		this.stackInto = stackInto;
 	}
 }

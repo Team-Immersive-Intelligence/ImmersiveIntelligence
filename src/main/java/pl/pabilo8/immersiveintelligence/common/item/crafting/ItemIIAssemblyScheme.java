@@ -135,7 +135,7 @@ public class ItemIIAssemblyScheme extends ItemIIBase implements IAdvancedTooltip
 		ItemStack recipeResult = new ItemStack(tag);
 
 		return IIMultiblockRecipe.streamRecipes(PrecisionAssemblerRecipe.class)
-				.filter(recipe -> recipe.output.isItemEqual(recipeResult))
+				.filter(recipe -> ItemStack.areItemStacksEqual(recipe.output, recipeResult))
 				.findFirst().orElse(null);
 	}
 

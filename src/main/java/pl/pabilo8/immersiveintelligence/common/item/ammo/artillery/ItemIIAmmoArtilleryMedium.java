@@ -40,7 +40,7 @@ public class ItemIIAmmoArtilleryMedium extends ItemIIAmmoBase<EntityAmmoArtiller
 	@Override
 	public float getComponentSize()
 	{
-		return 0.65f;
+		return 1f;
 	}
 
 	@Override

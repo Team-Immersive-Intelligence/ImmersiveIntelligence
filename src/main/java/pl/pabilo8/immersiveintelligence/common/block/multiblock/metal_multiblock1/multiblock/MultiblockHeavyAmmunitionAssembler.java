@@ -8,6 +8,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityHeavyAmmunitionAssembler;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 public class MultiblockHeavyAmmunitionAssembler extends MultiblockStuctureBase<TileEntityHeavyAmmunitionAssembler>
 {
@@ -18,6 +19,13 @@ public class MultiblockHeavyAmmunitionAssembler extends MultiblockStuctureBase<T
 		super(new ResourceLocation(ImmersiveIntelligence.MODID, "multiblocks/heavy_ammunition_assembler"));
 		offset = new Vec3i(4, 0, 1);
 		INSTANCE = this;
+
+		//POI
+		addPOI(MultiblockPOI.ITEM_INPUT, "item_inputs");
+		addPOI(MultiblockPOI.ITEM_OUTPUT, "item_out");
+		addPOI(MultiblockPOI.FLUID_INPUT, "component_fluid_in");
+		addPOI(MultiblockPOI.ENERGY_INPUT, "energy");
+		addPOI(MultiblockPOI.REDSTONE_INPUT, "redstone");
 	}
 
 	@Override

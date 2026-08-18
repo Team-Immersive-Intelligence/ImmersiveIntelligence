@@ -1,0 +1,13 @@
+{
+  "type": "ParticleVanilla",
+  "textures": [
+    "immersiveintelligence:particle/round"
+  ],
+  "color": "DDF7FF",
+  "max_lifetime": 20,
+  "draw_stage": "custom_additive",
+  "size": 0.65,
+  "programs": [
+    "smoke_transition"
+  ]
+}

@@ -1,7 +1,9 @@
 package pl.pabilo8.immersiveintelligence.client.manual.categories;
 
 import net.minecraft.init.Blocks;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
+import pl.pabilo8.immersiveintelligence.api.LogisticTag;
 import pl.pabilo8.immersiveintelligence.api.crafting.SawmillRecipe;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualCategory;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
@@ -44,7 +46,14 @@ public class IIManualCategoryLogistics extends IIManualCategory
 
 		addEntry("logistics");
 		addEntry("packer");
-		addEntry("task_system");
+		addEntry("task_system")
+				.addSource("logitag_item", getSourceForItem(IIContent.itemLogisticTag.getStack(new LogisticTag()
+								.withDescription("Very important cargo")
+								.withColor(EnumDyeColor.BLUE)
+								.withOrigin("Engineer Republic")
+								.withDestination("Factory 43")
+								.withBatchNumber(1),
+						1)));
 
 		addEntry("inserters")
 				.addSource("inserter_basic", getSourceForItem(IIContent.blockDataConnector.getStack(IIBlockTypes_Connector.INSERTER)))

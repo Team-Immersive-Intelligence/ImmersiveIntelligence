@@ -8,6 +8,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityElectrolyzer;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -28,6 +29,12 @@ public class MultiblockElectrolyzer extends MultiblockStuctureBase<TileEntityEle
 		super(new ResourceLocation(ImmersiveIntelligence.MODID, "multiblocks/electrolyzer"));
 		offset = new Vec3i(1, 1, 0);
 		INSTANCE = this;
+
+		//POI
+		addPOI(MultiblockPOI.ENERGY_INPUT, "energy_input");
+		addPOI(MultiblockPOI.REDSTONE_INPUT, "redstone_input");
+		addPOI(MultiblockPOI.FLUID_INPUT, "fluid_input");
+		addPOI(MultiblockPOI.FLUID_OUTPUT, "fluid_output");
 	}
 
 	@Override

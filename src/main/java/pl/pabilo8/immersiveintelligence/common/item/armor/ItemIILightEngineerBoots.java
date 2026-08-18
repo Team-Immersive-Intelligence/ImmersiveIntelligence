@@ -74,15 +74,23 @@ public class ItemIILightEngineerBoots extends ItemIILightEngineerArmorBase imple
 
 		if(equipmentSlot==this.armorType)
 		{
-			multimap.put(EntityLivingBase.SWIM_SPEED.getName(), new AttributeModifier(ItemIIUpgradeableArmor.ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Flippers", 4, 2));
-			if(ItemNBTHelper.hasKey(stack, "rackets"))
-				multimap.put(SharedMonsterAttributes.MOVEMENT_SPEED.getName(), new AttributeModifier(RACKETS_MODIFIER_UUID, "Rackets", 0.5, 1));
-			//if(getUpgrades(stack).hasKey(""))
-			//multimap.put(SharedMonsterAttributes.MOVEMENT_SPEED.getName(), new AttributeModifier(ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Power Armor Movement Speed Debuff", -.03, 1));
-			//multimap.put(SharedMonsterAttributes.MOVEMENT_SPEED.getName(), new AttributeModifier(ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Power Armor Movement Speed Debuff", -.03, 1));
+			if(getUpgrades(stack).hasKey("flippers"))
+			{
+				multimap.put(EntityLivingBase.SWIM_SPEED.getName(),
+						new AttributeModifier(ItemIIUpgradeableArmor.ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Flippers", 4, 2));
+				if(ItemNBTHelper.hasKey(stack, "rackets"))
+				{
+					multimap.put(SharedMonsterAttributes.MOVEMENT_SPEED.getName(), new AttributeModifier(RACKETS_MODIFIER_UUID, "Rackets", 0.5, 1));
+					//if(getUpgrades(stack).hasKey(""))
+					//multimap.put(SharedMonsterAttributes.MOVEMENT_SPEED.getName(), new AttributeModifier(ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Power Armor Movement Speed Debuff", -.03, 1));
+					//multimap.put(SharedMonsterAttributes.MOVEMENT_SPEED.getName(), new AttributeModifier(ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Power Armor Movement Speed Debuff", -.03, 1));
+				}
+
+			}
 		}
 		return multimap;
 	}
+
 
 	@Override
 	public void onArmorTick(World world, EntityPlayer player, ItemStack stack)
@@ -101,15 +109,15 @@ public class ItemIILightEngineerBoots extends ItemIILightEngineerArmorBase imple
 		Material matDown = world.getBlockState(player.getPosition().down()).getMaterial();
 
 		boolean rackets = getUpgrades(stack).hasKey("snow_rackets");
-		if(rackets&&(mat==Material.SNOW||mat==Material.CRAFTED_SNOW))
-			ItemNBTHelper.setBoolean(stack, "rackets", true);
-		else if(rackets&&(matDown==Material.ICE||matDown==Material.PACKED_ICE))
+		if(rackets&&(matDown==Material.SNOW||mat==Material.CRAFTED_SNOW||matDown==Material.ICE||matDown==Material.PACKED_ICE))
 		{
+			ItemNBTHelper.setBoolean(stack, "rackets", true);
 			player.addPotionEffect(new PotionEffect(MobEffects.SPEED, 15, 0, true, false));
 		}
-		else if(ItemNBTHelper.hasKey(stack, "rackets"))
+		else if (ItemNBTHelper.hasKey(stack, "rackets"))
+		{
 			ItemNBTHelper.remove(stack, "rackets");
-
+		}
 
 		boolean springs = getUpgrades(stack).hasKey("internal_springs");
 		if(!world.isRemote&&springs)

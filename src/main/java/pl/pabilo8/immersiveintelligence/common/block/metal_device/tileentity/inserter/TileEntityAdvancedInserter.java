@@ -5,17 +5,20 @@ import com.google.common.collect.ImmutableSet;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.AdvancedInserter;
 
 import javax.annotation.Nonnull;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Set;
 import java.util.function.Supplier;
 
 /**
+ * Advanced variant of {@link TileEntityInserter}
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 12.08.2026
  * @since 15.07.2019
  */
 public class TileEntityAdvancedInserter extends TileEntityInserter
 {
-	public static final HashMap<String, Supplier<InserterTask>> TASKS = new HashMap<>();
+	public static final LinkedHashMap<String, Supplier<InserterTask>> TASKS = new LinkedHashMap<>();
 	private static final Set<String> WIRES = ImmutableSet.of(WireType.LV_CATEGORY, WireType.MV_CATEGORY);
 
 	static
@@ -59,7 +62,7 @@ public class TileEntityAdvancedInserter extends TileEntityInserter
 
 	@Nonnull
 	@Override
-	public HashMap<String, Supplier<InserterTask>> getAvailableTasks()
+	public LinkedHashMap<String, Supplier<InserterTask>> getAvailableTasks()
 	{
 		return TASKS;
 	}

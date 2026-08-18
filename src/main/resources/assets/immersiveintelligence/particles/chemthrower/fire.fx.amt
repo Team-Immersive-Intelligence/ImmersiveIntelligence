@@ -1,0 +1,19 @@
+{
+  "type": "ParticleVanilla",
+  "max_lifetime": 5,
+  "size": 0.75,
+  "draw_stage": "custom_additive",
+  "color": "cfcfcf",
+  "textures": [
+    "immersiveintelligence:particle/shrapnel/shrapnel0",
+    "immersiveintelligence:particle/shrapnel/shrapnel1",
+    "immersiveintelligence:particle/shrapnel/shrapnel2",
+    "immersiveintelligence:particle/shrapnel/shrapnel3"
+  ],
+  "programs": [
+    "dust_transition"
+  ],
+  "properties": {
+    "color": "cfcfcf"
+  }
+}

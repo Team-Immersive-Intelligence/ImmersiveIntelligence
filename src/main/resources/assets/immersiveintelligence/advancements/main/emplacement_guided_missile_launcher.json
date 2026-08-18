@@ -1,0 +1,28 @@
+{
+  "display": {
+    "icon": {
+      "item": "immersiveintelligence:placeholder_icon",
+      "data": 2
+    },
+    "title": {
+      "translate": "advancement.immersiveintelligence.emplacement_guided_missile_launcher"
+    },
+    "description": {
+      "translate": "advancement.immersiveintelligence.emplacement_guided_missile_launcher.desc"
+    }
+  },
+  "parent": "immersiveintelligence:main/emplacement",
+  "criteria": {
+    "install_upgrade": {
+      "trigger": "immersiveintelligence:upgrade_installed",
+      "conditions": {
+        "upgrade": "immersiveintelligence:emplacement/guided_missile_launcher"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "install_upgrade"
+    ]
+  ]
+}

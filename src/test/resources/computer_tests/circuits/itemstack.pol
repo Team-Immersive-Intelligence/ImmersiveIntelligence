@@ -1,0 +1,20 @@
+use ITEMSTACK
+
+itemstack a = itemstack_create "minecraft:air" 1 0
+type item_is_empty @a
+itemstack a = itemstack_create "minecraft:apple" 1 0
+type item_is_empty @a
+type item_get_count @i
+type item_get_meta @i
+type item_get_id @i
+type item_is_empty @i
+itemstack b = item_set_count @i 5
+type item_get_count @b
+itemstack c = item_set_meta @b 2
+type item_get_meta @c
+itemstack d = item_set_nbt @c "{ii_test:1}"
+type item_get_nbt @d
+type item_stacks_with @i @b
+type item_matches_oredict @i "oreDefinitelyMissing"
+
+end

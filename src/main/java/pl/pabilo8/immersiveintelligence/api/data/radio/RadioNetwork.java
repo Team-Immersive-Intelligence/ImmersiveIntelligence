@@ -1,27 +1,29 @@
 package pl.pabilo8.immersiveintelligence.api.data.radio;
 
 import blusunrize.immersiveengineering.api.DimensionBlockPos;
+import lombok.Getter;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 
 import java.util.ArrayList;
 
 /**
+ * Connects {@link IRadioDevice Radio Devices} of the same {@link IRadioDevice#getFrequency() frequency} and routes data packets through them.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 06.08.2026
+ * @ii-approved 0.3.1
  * @since 23.06.2019
  */
 public class RadioNetwork
 {
 	public static RadioNetwork INSTANCE = new RadioNetwork();
 
+	@Getter
 	ArrayList<IRadioDevice> devices = new ArrayList<>();
 	ArrayList<IRadioDevice> toRemove = new ArrayList<>();
 
-	/**
-	 * Adds a Radio device to the global network
-	 *
-	 * @param device the device to be added
-	 * @return if the device was added
-	 */
 	public boolean addDevice(IRadioDevice device)
 	{
 		if(!devices.contains(device))
@@ -32,76 +34,75 @@ public class RadioNetwork
 		return false;
 	}
 
-	/**
-	 * Removes a Radio device from the global network
-	 *
-	 * @param pos the device to be removed
-	 * @return if the device was removed
-	 */
-	public boolean removeDevice(IRadioDevice pos)
+	public boolean removeDevice(IRadioDevice device)
 	{
-		if(!toRemove.contains(pos))
+		if(!toRemove.contains(device))
 		{
-			toRemove.add(pos);
+			toRemove.add(device);
 			return true;
 		}
 		return false;
 	}
 
-
 	public void clearDevices()
 	{
 		devices.clear();
-	}
-
-	public ArrayList<IRadioDevice> getDevices()
-	{
-		return devices;
-	}
-
-
-	//Simulates radio transmission in a recursive way
-	public void sendPacket(DataPacket packet, IRadioDevice sender, ArrayList<IRadioDevice> list)
-	{
-		if(toRemove.size() > 0)
-		{
-			//prevents crashing by recursion
-			list.addAll(toRemove);
-			devices.removeAll(toRemove);
-		}
-		if(!list.contains(sender))
-		{
-			sender.onRadioSend(packet);
-			list.add(sender);
-		}
-		for(IRadioDevice dev : getDevices())
-		{
-			if(!list.contains(dev))
-			{
-				if(dev.getFrequency()==sender.getFrequency()&&distanceCheck(sender, dev))
-				{
-					if(dev.onRadioReceive(packet))
-					{
-						list.add(dev);
-						INSTANCE.sendPacket(packet, dev, list);
-					}
-				}
-			}
-		}
-
-	}
-
-	//TODO:Radio Item
-	public void sendPacketItem()
-	{
-
+		toRemove.clear();
 	}
 
 	/**
-	 * @param device1 the sending radio
-	 * @param device2 the receiving radio
-	 * @return if the distance between the two radios is less than the sending radio's range
+	 * Sends a packet through all available radios that can receive it.
 	 */
+	public void sendPacket(DataPacket packet, IRadioDevice sender, ArrayList<IRadioDevice> visited)
+	{
+		flushRemovedDevices();
+		if(sender==null||!sender.isRadioAvailable())
+			return;
+
+		if(!visited.contains(sender))
+		{
+			sender.onRadioSend(packet);
+			visited.add(sender);
+		}
+
+		for(IRadioDevice device : getDevices())
+			if(!visited.contains(device)&&device.isRadioAvailable()&&
+					device.getFrequency()==sender.getFrequency()&&distanceCheck(sender, device)&&
+					device.onRadioReceive(packet))
+			{
+				visited.add(device);
+				sendPacket(packet, device, visited);
+			}
+	}
+
+	/**
+	 * Adds a usability cooldown to radio devices within the specified radius.
+	 */
+	public void disruptDevices(World world, Vec3d position, float radius, int cooldown)
+	{
+		if(world==null||world.isRemote||radius <= 0||cooldown <= 0)
+			return;
+
+		flushRemovedDevices();
+		double radiusSq = radius*radius;
+		int dimension = world.provider.getDimension();
+		for(IRadioDevice device : devices)
+		{
+			DimensionBlockPos devicePosition = device.getDevicePosition();
+			if(devicePosition.dimension!=dimension)
+				continue;
+			double x = devicePosition.getX()+0.5-position.x;
+			double y = devicePosition.getY()+0.5-position.y;
+			double z = devicePosition.getZ()+0.5-position.z;
+			if(x*x+y*y+z*z <= radiusSq)
+				device.addRadioCooldown(cooldown);
+		}
+	}
+
+	public void sendPacketItem()
+	{
+	}
+
 	public boolean distanceCheck(IRadioDevice device1, IRadioDevice device2)
 	{
 		DimensionBlockPos pos1 = device1.getDevicePosition();
@@ -109,7 +110,14 @@ public class RadioNetwork
 		if(pos1.dimension!=pos2.dimension)
 			return false;
 		float range = device1.getRange();
-		return pos1.distanceSq(device2.getDevicePosition()) <= range*range;
+		return pos1.distanceSq(pos2) <= range*range;
 	}
 
+	private void flushRemovedDevices()
+	{
+		if(toRemove.isEmpty())
+			return;
+		devices.removeAll(toRemove);
+		toRemove.clear();
+	}
 }

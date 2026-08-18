@@ -2,14 +2,15 @@ package pl.pabilo8.immersiveintelligence.client.gui.block;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.Optional.Method;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTileGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBarGroup;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage.ImageAnimationDirection;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySawmill;
+import pl.pabilo8.immersiveintelligence.common.compat.jei.JEIHelper;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerSawmill;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
@@ -25,6 +26,7 @@ public class GuiSawmill extends DecoTileGui<TileEntitySawmill, ContainerSawmill>
 {
 	@DecoResource
 	public static final ResourceLocation PROGRESS_ARROW = ResLoc.of(IIReference.RES_II, "gui/sawmill");
+	private DecoImage imageProgress;
 
 	public GuiSawmill(EntityPlayer player, TileEntitySawmill tile)
 	{
@@ -57,7 +59,7 @@ public class GuiSawmill extends DecoTileGui<TileEntitySawmill, ContainerSawmill>
 						.withSize(49, 12)
 						.withImageLocation(PROGRESS_ARROW, true)
 						.withUV(64, 0, 12, 49, 24),
-				new DecoImage(66-10-1-14, 42-4)
+				this.imageProgress = new DecoImage(66-10-1-14, 42-4)
 						.withSize(49, 12)
 						.withImageLocation(PROGRESS_ARROW, true)
 						.withUV(64, 0, 0, 49, 12)
@@ -70,5 +72,12 @@ public class GuiSawmill extends DecoTileGui<TileEntitySawmill, ContainerSawmill>
 	{
 		super.onGuiClosed();
 		syncAnimatedParts(tile.vise, false);
+	}
+
+	@Override
+	@Method(modid = "jei")
+	public void onInitJEICompat()
+	{
+		JEIHelper.addRecipesDecoGuiLink(this.imageProgress, "ii.sawmill");
 	}
 }

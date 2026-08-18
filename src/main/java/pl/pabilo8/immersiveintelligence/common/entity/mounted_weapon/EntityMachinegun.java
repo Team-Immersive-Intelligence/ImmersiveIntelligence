@@ -104,7 +104,7 @@ public class EntityMachinegun extends EntityMountedWeapon implements IAdvancedTe
 	{
 		this(world);
 		this.setPosition(pos.getX(), pos.getY(), pos.getZ());
-		this.aim.withCenterYaw(yaw);
+		this.aim.withCenterYaw(yaw).withCurrentAngles(yaw, 0);
 		setOriginStack(stack);
 		if(upgrades.contains(WeaponUpgrade.TRIPOD))
 			this.posY += 0.385f;
@@ -218,7 +218,7 @@ public class EntityMachinegun extends EntityMountedWeapon implements IAdvancedTe
 		{
 			Entity user = getPassengers().get(0);
 			//Aim to where the user is pointing
-			this.aim.setTarget(aim.clampYawToRange(user.getRotationYawHead()), aim.clampPitchToRange(user.rotationPitch));
+			this.aim.setTargetClamped(user.getRotationYawHead(), user.rotationPitch);
 			//Set shooter and gun info
 			this.ammoFactory.setShooterAndGun(user, this)
 					.setPositionAndVelocity(this.getPositionVector().addVector(0, 0.5f, 0), this.aim, 0.25f, 1f);

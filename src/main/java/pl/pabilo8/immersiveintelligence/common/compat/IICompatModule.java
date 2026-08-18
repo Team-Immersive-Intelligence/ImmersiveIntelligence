@@ -12,6 +12,7 @@ import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.compat.dd.DeeperDepthsHelper;
+import pl.pabilo8.immersiveintelligence.common.compat.ie.ImmersiveEngineeringHelper;
 import pl.pabilo8.immersiveintelligence.common.compat.it.ImmersiveTechnologyHelper;
 import pl.pabilo8.immersiveintelligence.common.compat.nb.NetherBackportHelper;
 import pl.pabilo8.immersiveintelligence.common.compat.thaum.ThaumcraftHelper;

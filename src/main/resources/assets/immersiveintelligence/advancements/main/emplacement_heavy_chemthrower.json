@@ -1,0 +1,28 @@
+{
+  "display": {
+    "icon": {
+      "item": "immersiveintelligence:placeholder_icon",
+      "data": 3
+    },
+    "title": {
+      "translate": "advancement.immersiveintelligence.emplacement_heavy_chemthrower"
+    },
+    "description": {
+      "translate": "advancement.immersiveintelligence.emplacement_heavy_chemthrower.desc"
+    }
+  },
+  "parent": "immersiveintelligence:main/emplacement",
+  "criteria": {
+    "install_upgrade": {
+      "trigger": "immersiveintelligence:upgrade_installed",
+      "conditions": {
+        "upgrade": "immersiveintelligence:emplacement/heavy_chemthrower"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "install_upgrade"
+    ]
+  ]
+}

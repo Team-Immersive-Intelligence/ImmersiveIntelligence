@@ -2,6 +2,7 @@ package pl.pabilo8.immersiveintelligence.api.rotary;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nullable;
 
@@ -13,7 +14,7 @@ import javax.annotation.Nullable;
  * @updated 10.10.2025
  * @since 06.01.2020
  */
-public interface IRotaryEnergy
+public interface IRotaryEnergy extends INBTSerializable<NBTTagCompound>
 {
 	/**
 	 * @return Torque in IT
@@ -110,7 +111,8 @@ public interface IRotaryEnergy
 		return false;
 	}
 
-	default NBTTagCompound toNBT()
+	@Override
+	default NBTTagCompound serializeNBT()
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
 		nbt.setFloat("speed", getRotationSpeed());
@@ -118,7 +120,8 @@ public interface IRotaryEnergy
 		return nbt;
 	}
 
-	default void fromNBT(NBTTagCompound nbt)
+	@Override
+	default void deserializeNBT(NBTTagCompound nbt)
 	{
 		setRotationSpeed(nbt.getFloat("speed"));
 		setTorque(nbt.getFloat("torque"));

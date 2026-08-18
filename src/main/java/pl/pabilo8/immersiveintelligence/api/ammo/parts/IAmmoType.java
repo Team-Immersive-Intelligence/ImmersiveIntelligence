@@ -68,6 +68,14 @@ public interface IAmmoType<T extends IAmmoType<T, E>, E extends EntityAmmoBase<?
 	int getCaliber();
 
 	/**
+	 * @return Amount of {@link pl.pabilo8.immersiveintelligence.api.crafting.BulletComponentStack} used to fill this ammo type, defaults to the caliber
+	 */
+	default int getComponentUsed()
+	{
+		return getCaliber();
+	}
+
+	/**
 	 * @return Returns allowed core types, these affect the final damage, penetration and overall performance
 	 * @see CoreType
 	 */

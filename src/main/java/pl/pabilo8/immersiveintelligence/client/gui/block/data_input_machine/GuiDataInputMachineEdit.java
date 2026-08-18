@@ -12,13 +12,14 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoBut
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoDropdownDataLetters;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoDropdown;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.data_editor.DecoDataEditor;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityDataInputMachine;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerDataInputMachineEditing;
+import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
@@ -83,8 +84,15 @@ public class GuiDataInputMachineEdit extends DecoTileGui<TileEntityDataInputMach
 
 				.build();
 
-		//Shared parts, like punchtape progress bar, tabs
+		//Shared parts, like punchtape progress bar
 		addComponents(GuiDataInputMachine.getCommonParts(tile));
+
+		//Add tabs
+		addLinkTab(IIGUI.DATA_INPUT_MACHINE_STORAGE, DecoTextures.ICON_STORAGE, "storage_module");
+		addLinkTab(IIGUI.DATA_INPUT_MACHINE_VARIABLES, DecoTextures.ICON_VARIABLES, "variables_module");
+		addLinkTab(this.gui, GuiDataInputMachine.ICON_SEND_PACKET, "variable_send_packet")
+				.withIcon(GuiDataInputMachine.ICON_SEND_PACKET, 32)
+				.withOnLMBPressed(() -> IIPacketHandler.sendToServer(new MessageIITileSync(tile, EasyNBT.newNBT().withBoolean("send_packet", true))));
 
 		//Editor component specific to the data type
 		editor = DecoDataEditor.getEditorFor(variableToEdit.getValue(), 43, 43);
@@ -120,13 +128,13 @@ public class GuiDataInputMachineEdit extends DecoTileGui<TileEntityDataInputMach
 				new DecoDropdown<TypeMetaInfo<?>>(73, 15)
 						.withScrollBarBackground(DecoTextures.COMPONENT_SLIDER_PAPER)
 						.withBackground(DecoTextures.COMPONENT_BUTTON_PAPER)
-						.withListBackground(DecoTextures.COMPONENT_TEXT_FIELD)
 						.withSize(116, 18)
 						.withDropdownWidth(116)
 						.withMaxDisplayedEntries(5)
 						.withEntries(DecoDataEditor.getEditorTypes(tile.isUpgradeInstalled(IIContent.UPGRADE_ADVANCED_DATA)))
 						.withSelectedEntry(variableToEdit.getValue().getTypeMeta())
 						.withDisplayFunction(DecoTemplates.getDataTypeEntryDisplay())
+						.withSortFunction(DecoTemplates.getDataTypeEntrySorter())
 						.withOnSelectedEntry((typeMetaInfo, typeMetaInfo2) -> {
 							cancel = true;
 							variableToEdit = new DataVariable(variableToEdit.getName(), typeMetaInfo2.supplier.get());

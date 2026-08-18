@@ -187,7 +187,11 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockProductionSi
 		boolean currentSignal = getRedstoneAtPos(0);
 		if(sendPacket||((prevSignal^currentSignal)&currentSignal))
 		{
-			this.sendData(storedData, getDirection("data"), getPOI(MultiblockPOI.DATA_OUTPUT)[0]);
+			if(energyStorage.extractEnergy(DataInputMachine.energyUsage, true)==DataInputMachine.energyUsage)
+			{
+				this.sendData(storedData, getDirection("data"), getPOI(MultiblockPOI.DATA_OUTPUT)[0]);
+				this.energyStorage.extractEnergy(DataInputMachine.energyUsage, false);
+			}
 			sendPacket = false;
 		}
 
@@ -198,22 +202,6 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockProductionSi
 			this.currentProcess.ticks = this.currentProcess.maxTicks;
 	}
 
-	@Override
-	protected int[] listAllPOI(MultiblockPOI poi)
-	{
-		switch(poi)
-		{
-			case ENERGY_INPUT:
-				return getPOI("energy");
-			case REDSTONE_INPUT:
-				return getPOI("redstone");
-			case DATA_OUTPUT:
-				return getPOI("data");
-			case MISC_HATCH:
-				return getPOI("hatch");
-		}
-		return new int[0];
-	}
 
 	@Override
 	public boolean isStackValid(int slot, ItemStack stack)

@@ -1,0 +1,28 @@
+{
+  "display": {
+    "icon": {
+      "item": "immersiveintelligence:placeholder_icon",
+      "data": 0
+    },
+    "title": {
+      "translate": "advancement.immersiveintelligence.emplacement_autocannon"
+    },
+    "description": {
+      "translate": "advancement.immersiveintelligence.emplacement_autocannon.desc"
+    }
+  },
+  "parent": "immersiveintelligence:main/emplacement",
+  "criteria": {
+    "install_upgrade": {
+      "trigger": "immersiveintelligence:upgrade_installed",
+      "conditions": {
+        "upgrade": "immersiveintelligence:emplacement/autocannon"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "install_upgrade"
+    ]
+  ]
+}

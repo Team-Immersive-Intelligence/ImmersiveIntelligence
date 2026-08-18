@@ -72,6 +72,7 @@
     "item_out": 12,
     "energy": 46,
     "redstone": 9,
+    "data": 8,
     "component_fluid_in": [22]
   }
 }

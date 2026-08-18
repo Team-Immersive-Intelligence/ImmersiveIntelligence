@@ -1,0 +1,15 @@
+use FLUIDSTACK
+
+fluidstack a = fluidstack_create "water" 1000 "{}"
+type fluid_is_empty @a
+type fluid_get_id @f
+type fluid_get_amount @f
+type fluid_get_nbt @f
+type fluid_is_empty @f
+fluidstack b = fluid_set_amount @f 250
+type fluid_get_amount @b
+type fluid_stacks_with @f @b
+fluidstack c = fluid_set_nbt @b "{ii_test:1}"
+type fluid_get_nbt @c
+
+end

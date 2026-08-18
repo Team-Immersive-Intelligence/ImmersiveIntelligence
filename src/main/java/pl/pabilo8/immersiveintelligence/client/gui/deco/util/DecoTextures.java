@@ -15,6 +15,9 @@ import java.lang.reflect.Field;
  */
 public class DecoTextures
 {
+	//--- Special Textures ---//
+	public static final ResLoc TEXTURE_WHITE = IIReference.RES_IE.with("items/white");
+
 	//--- Base Directories ---//
 	public static final ResLoc RES_TEXTURES_DECO = ResLoc.of(IIReference.RES_II, "gui/deco/");
 	public static final ResLoc RES_TEXTURES_DECO_BACKGROUND = ResLoc.of(RES_TEXTURES_DECO, "background/");
@@ -31,6 +34,7 @@ public class DecoTextures
 	public static final ResLoc BG_SANDBAGS = ResLoc.of(RES_TEXTURES_DECO_BACKGROUND, "sandbags");
 	public static final ResLoc BG_DARK = ResLoc.of(RES_TEXTURES_DECO_BACKGROUND, "dark");
 	public static final ResLoc BG_DARK_TANK = ResLoc.of(RES_TEXTURES_DECO_BACKGROUND, "dark_tank");
+	public static final ResLoc BG_VANILLA = ResLoc.of(RES_TEXTURES_DECO_BACKGROUND, "vanilla");
 
 	//--- Frames ---//
 	public static final ResLoc RES_TEXTURES_DECO_FRAME = ResLoc.of(RES_TEXTURES_DECO, "frame/");
@@ -39,7 +43,7 @@ public class DecoTextures
 	public static final ResLoc FRAME_STEEL_THIN = ResLoc.of(RES_TEXTURES_DECO_FRAME, "steel_thin");
 	public static final ResLoc FRAME_STEEL = ResLoc.of(RES_TEXTURES_DECO_FRAME, "steel");
 	public static final ResLoc FRAME_WOODEN_THIN = ResLoc.of(RES_TEXTURES_DECO_FRAME, "wooden_thin");
-	public static final ResLoc FRAME_PAPER = ResLoc.of(RES_TEXTURES_DECO_FRAME, "manual");
+	public static final ResLoc FRAME_PAPER = ResLoc.of(RES_TEXTURES_DECO_FRAME, "corners_manual");
 
 	//--- Templates ---//
 	public static final ResLoc TEMPLATE_ROUND = ResLoc.of(RES_TEXTURES_DECO, "template/round");
@@ -65,6 +69,7 @@ public class DecoTextures
 	public static final ResLoc LABEL_HAZARD = ResLoc.of(RES_TEXTURES_DECO, "label/label_hazard");
 	public static final ResLoc LABEL_PAPER = ResLoc.of(RES_TEXTURES_DECO, "label/label_paper");
 	public static final ResLoc LABEL_BLUEPRINT = ResLoc.of(RES_TEXTURES_DECO, "label/label_blueprint");
+	public static final ResLoc LABEL_VANILLA = ResLoc.of(RES_TEXTURES_DECO, "label/label_vanilla");
 
 	//--- Deco Components ---//
 	public static final ResLoc COMPONENT_BUTTON = ResLoc.of(RES_TEXTURES_DECO, "component/button");
@@ -141,6 +146,9 @@ public class DecoTextures
 	public static final ResLoc ICON_ACTION_REMOVE = ResLoc.of(RES_TEXTURES_DECO_ICON, "action_remove");
 	public static final ResLoc ICON_ACTION_ADD = ResLoc.of(RES_TEXTURES_DECO_ICON, "action_add");
 	public static final ResLoc ICON_ACTION_CLEAR = ResLoc.of(RES_TEXTURES_DECO_ICON, "action_clear");
+	public static final ResLoc ICON_ACTION_ACCEPT = ResLoc.of(RES_TEXTURES_DECO_ICON, "action_accept");
+	public static final ResLoc ICON_ACTION_REJECT = ResLoc.of(RES_TEXTURES_DECO_ICON, "action_reject");
+	public static final ResLoc ICON_ACTION_HELP = ResLoc.of(RES_TEXTURES_DECO_ICON, "action_help");
 
 	//--- Custom Deco Component Textures ---//
 	public static final ResLoc COMPONENT_BUTTON_PAPER = ResLoc.of(RES_TEXTURES_DECO, "component/button_paper");
@@ -149,6 +157,7 @@ public class DecoTextures
 	public static final ResLoc COMPONENT_ARROWS_PAPER = ResLoc.of(RES_TEXTURES_DECO, "component/arrows_paper");
 	public static final ResLoc COMPONENT_BUTTON_ROUND = ResLoc.of(RES_TEXTURES_DECO, "component/button_round");
 	public static final ResLoc COMPONENT_SLIDER_PAPER = ResLoc.of(RES_TEXTURES_DECO, "component/slider_paper");
+	public static final ResLoc COMPONENT_SLIDER_VANILLA = ResLoc.of(RES_TEXTURES_DECO, "component/slider_vanilla");
 	public static final ResLoc COMPONENT_DROPDOWN_DATA_LETTER_PAPER = ResLoc.of(RES_TEXTURES_DECO, "component/data_letter_dropdown_paper");
 	public static final ResLoc COMPONENT_DROPDOWN_SYMBOL_PAPER = ResLoc.of(RES_TEXTURES_DECO, "component/dropdown_paper");
 	public static final ResLoc COMPONENT_TANK_PAPER = ResLoc.of(RES_TEXTURES_DECO, "component/tank_manual");
@@ -170,8 +179,8 @@ public class DecoTextures
 	public static final ResLoc MAP_MARKER_RADAR = ResLoc.of(RES_TEXTURES_DECO, "map/marker/radar");
 	public static final ResLoc MAP_MARKER_RADIO_STATION = ResLoc.of(RES_TEXTURES_DECO, "map/marker/radio_station");
 
-	//--- Special Textures ---//
-	public static final ResLoc TEXTURE_WHITE = IIReference.RES_IE.with("items/white");
+	public static final ResLoc ICON_INVENTORY_FACTION_INVITES = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_faction_invites");
+	public static final ResLoc ICON_INVENTORY_FACTION_INVITES_ACTIVE = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_faction_invites_active");
 
 	public static void registerAllTextures(TextureMap map)
 	{

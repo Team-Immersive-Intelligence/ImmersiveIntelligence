@@ -3,6 +3,7 @@
     "icon": {
       "item": "immersiveintelligence:assault_rifle"
     },
+    "frame": "goal",
     "title": {
       "translate": "advancement.immersiveintelligence.craft_stg"
     },

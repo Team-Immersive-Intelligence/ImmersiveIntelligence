@@ -19,6 +19,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.ClickEvent.Action;
 import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent.Post;
@@ -35,6 +36,7 @@ import pl.pabilo8.immersiveintelligence.client.ClientProxy;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent.DecoGuiEvent;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent.DecoMouseCapture;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent.MouseButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoTab;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
@@ -43,6 +45,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.widget.DecoMan
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -60,9 +63,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.*;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -106,7 +107,12 @@ public abstract class DecoGui<T, C extends Container> extends GuiContainer
 	private DecoBackgroundBuilder backgroundBuilder;
 	private List<Rectangle> takenSpace;
 	private DecoComponent<?> focusedElement;
+	private DecoMouseCapture focusedCapture, mouseCapture;
 	private DecoComponent<?> hoveredElement;
+	//OpenGL model-view translations do not affect glScissor. Virtual component trees
+	//therefore register their render origin here while drawing translated overlays.
+	private final Deque<Point> scissorOffsetStack = new ArrayDeque<>();
+	private int scissorOffsetX, scissorOffsetY;
 	//Widgets
 	private DecoComponentWidgetBase<?> previousWidget, currentWidget;
 	private int widgetTime = 0;
@@ -152,7 +158,11 @@ public abstract class DecoGui<T, C extends Container> extends GuiContainer
 		this.widgetTabList.clear();
 		this.widgetList.clear();
 		this.focusedElement = null;
+		this.focusedCapture = null;
+		this.mouseCapture = null;
 		this.hoveredElement = null;
+		this.scissorOffsetStack.clear();
+		this.scissorOffsetX = this.scissorOffsetY = 0;
 		this.previousWidget = null;
 		this.currentWidget = null;
 		this.valueListeners.clear();
@@ -277,20 +287,32 @@ public abstract class DecoGui<T, C extends Container> extends GuiContainer
 
 	protected final DecoTab addLinkTab(IIGUI gui, ResourceLocation tabIcon, String moduleName)
 	{
-		return (DecoTab)addComponent(new DecoTab()
+		DecoTab tab = (DecoTab)addComponent(new DecoTab()
 				.withLink(gui)
+				.withSelected(gui==this.gui)
 				.withIcon(tabIcon)
 				.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+moduleName)
 		);
+
+		if(IIConfig.Graphics.decoLongTabTooltips)
+			tab.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+moduleName,
+					TextFormatting.GRAY+IIReference.DESCRIPTION_KEY+moduleName+".tooltip"+TextFormatting.RESET);
+		return tab;
 	}
 
 	protected final DecoTab addLinkTab(IIGUI gui, ItemStack tabIcon, String moduleName)
 	{
-		return (DecoTab)addComponent(new DecoTab()
+		DecoTab tab = (DecoTab)addComponent(new DecoTab()
 				.withLink(gui)
+				.withSelected(gui==this.gui)
 				.withIcon(tabIcon)
 				.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+moduleName)
 		);
+
+		if(IIConfig.Graphics.decoLongTabTooltips)
+			tab.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+moduleName,
+					TextFormatting.GRAY+IIReference.DESCRIPTION_KEY+moduleName+".tooltip"+TextFormatting.RESET);
+		return tab;
 	}
 
 	/**
@@ -448,18 +470,21 @@ public abstract class DecoGui<T, C extends Container> extends GuiContainer
 
 		//Draw tiled background, labels, and buttons
 		super.drawScreen(mouseX, mouseY, partialTicks);
+		validateFocusCapture();
 		//Check scroll on components
-		float scroll = Mouse.getDWheel();
+		float scroll = Math.signum(Mouse.getDWheel());
 		if(scroll!=0)
 		{
-			if(currentWidget==null||!currentWidget.onComponentScroll(mouseX, mouseY, scroll))
-				if(focusedElement==null||!focusedElement.onComponentScroll(mouseX, mouseY, scroll))
-					for(int i = buttonList.size()-1; i >= 0; i--)
-					{
-						GuiButton b = buttonList.get(i);
-						if(b instanceof DecoComponent)
-							((DecoComponent<?>)b).onComponentScroll(mouseX, mouseY, scroll);
-					}
+			boolean handled = currentWidget!=null&&currentWidget.onComponentScroll(mouseX, mouseY, scroll);
+			if(!handled&&focusedCapture!=null)
+				handled = focusedCapture.scroll(mouseX, mouseY, scroll);
+			if(!handled)
+				for(int i = buttonList.size()-1; i >= 0; i--)
+				{
+					GuiButton b = buttonList.get(i);
+					if(b instanceof DecoComponent&&((DecoComponent<?>)b).onComponentScroll(mouseX, mouseY, scroll))
+						break;
+				}
 		}
 
 		//Draw the upper layer of buttons
@@ -507,8 +532,10 @@ public abstract class DecoGui<T, C extends Container> extends GuiContainer
 		//Update widget tabs position
 		int wSize = (int)(currentWidget!=null?currentWidget.getWidgetWidth()*progress:
 				(previousWidget!=null?previousWidget.getWidgetWidth()*(1f-progress): 0));
-		for(DecoTab decoTab : widgetTabList)
+		for(int i = 0; i < widgetTabList.size(); i++)
 		{
+			DecoTab decoTab = widgetTabList.get(i);
+			decoTab.withSelected(currentWidget==widgetList.get(i));
 			decoTab.x = this.guiLeft+this.xSize+wSize;
 			decoTab.initialize();
 		}
@@ -613,17 +640,37 @@ public abstract class DecoGui<T, C extends Container> extends GuiContainer
 	protected final void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
 	{
 		MouseButton mouseButtonEnum = MouseButton.values()[mouseButton%MouseButton.values().length];
+		DecoMouseCapture capture = null;
 
-		//Widgets are not a part of the button list, so we need to check them separately
-		boolean anyPressed = false;
+		//The focused component gets first refusal. This is required for popups such as
+		//dropdown lists, which may extend beyond the bounds of their parent panel.
+		if(focusedCapture!=null)
+			capture = focusedCapture.press(mc, mouseX, mouseY, mouseButtonEnum);
 
-		if(focusedElement!=null)
-			anyPressed = focusedElement.decoMousePressed(this.mc, mouseX, mouseY, mouseButtonEnum);
-		if(!anyPressed)
-		{
-			if(currentWidget!=null&&currentWidget.decoMousePressed(this.mc, mouseX, mouseY, mouseButtonEnum))
+		//Widgets are not part of the normal button list.
+		if(capture==null&&currentWidget!=null)
+			capture = currentWidget.decoMousePressed(mc, mouseX, mouseY, mouseButtonEnum);
+
+		//Resolve one top-most Deco target. A consumed press is never dispatched again
+		//to another root or to vanilla slot handling.
+		if(capture==null)
+			for(int i = buttonList.size()-1; i >= 0; i--)
 			{
-				anyPressed = true;
+				GuiButton guiButton = buttonList.get(i);
+				if(guiButton instanceof DecoComponent)
+				{
+					capture = ((DecoComponent<?>)guiButton).decoMousePressed(mc, mouseX, mouseY, mouseButtonEnum);
+					if(capture!=null)
+						break;
+				}
+			}
+
+		this.mouseCapture = capture;
+		if(capture!=null)
+		{
+			requestFocusCapture(capture);
+			if(currentWidget!=null&&capture.belongsTo(currentWidget))
+			{
 				Pre event = new Pre(this, currentWidget, this.buttonList);
 				if(MinecraftForge.EVENT_BUS.post(event))
 					return;
@@ -631,41 +678,33 @@ public abstract class DecoGui<T, C extends Container> extends GuiContainer
 				if(this.equals(this.mc.currentScreen))
 					MinecraftForge.EVENT_BUS.post(new Post(this, event.getButton(), this.buttonList));
 			}
-
-			if(!anyPressed)
-			{
-				for(int i = this.buttonList.size()-1; i >= 0; i--)
-				{
-					GuiButton guiButton = this.buttonList.get(i);
-					if(guiButton==focusedElement)
-						continue;
-					if(guiButton instanceof DecoComponent)
-						anyPressed = ((DecoComponent<?>)guiButton).decoMousePressed(this.mc, mouseX, mouseY, mouseButtonEnum)||anyPressed;
-					else if(mouseButtonEnum==MouseButton.LEFT)
-						anyPressed = guiButton.mousePressed(this.mc, mouseX, mouseY)||anyPressed;
-				}
-			}
+			return;
 		}
 
-		if(!anyPressed)
-			requestFocus(null);
-
+		requestFocus((DecoComponent<?>)null);
 		super.mouseClicked(mouseX, mouseY, mouseButton);
 	}
 
 	@Override
 	protected final void mouseReleased(int mouseX, int mouseY, int state)
 	{
-		if(focusedElement!=null)
-			focusedElement.decoMouseReleased(mouseX, mouseY, MouseButton.values()[state]);
+		if(mouseCapture!=null)
+		{
+			mouseCapture.release(mouseX, mouseY, MouseButton.values()[state%MouseButton.values().length]);
+			mouseCapture = null;
+			return;
+		}
 		super.mouseReleased(mouseX, mouseY, state);
 	}
 
 	@Override
 	protected final void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick)
 	{
-		if(focusedElement!=null)
-			focusedElement.decoMouseDragged(mc, mouseX, mouseY, MouseButton.values()[clickedMouseButton]);
+		if(mouseCapture!=null)
+		{
+			mouseCapture.drag(mc, mouseX, mouseY, MouseButton.values()[clickedMouseButton%MouseButton.values().length]);
+			return;
+		}
 		super.mouseClickMove(mouseX, mouseY, clickedMouseButton, timeSinceLastClick);
 	}
 
@@ -690,6 +729,8 @@ public abstract class DecoGui<T, C extends Container> extends GuiContainer
 
 	protected void cleanupDecoGui()
 	{
+		requestFocus((DecoComponent<?>)null);
+		mouseCapture = null;
 		if(backgroundBuilder!=null)
 			backgroundBuilder.cleanup();
 		for(GuiButton b : buttonList)
@@ -713,6 +754,15 @@ public abstract class DecoGui<T, C extends Container> extends GuiContainer
 	protected List<String> getTooltip()
 	{
 		this.hoveredElement = null;
+		if(focusedCapture!=null)
+		{
+			List<String> tooltip = focusedCapture.getTooltip();
+			if(!tooltip.isEmpty())
+			{
+				this.hoveredElement = focusedCapture.getComponent();
+				return tooltip;
+			}
+		}
 		//Widget
 		if(currentWidget!=null&&currentWidget.isMouseOver())
 			return currentWidget.getTooltip();
@@ -736,8 +786,22 @@ public abstract class DecoGui<T, C extends Container> extends GuiContainer
 		return Collections.emptyList();
 	}
 
-	public void requestFocus(DecoComponent<?> component)
+	private void validateFocusCapture()
 	{
+		if(focusedCapture!=null&&!focusedCapture.isValid())
+			requestFocusCapture(null);
+		if(mouseCapture!=null&&!mouseCapture.isValid())
+			mouseCapture = null;
+	}
+
+	public void requestFocus(@Nullable DecoComponent<?> component)
+	{
+		requestFocusCapture(component==null?null: DecoMouseCapture.of(component));
+	}
+
+	public void requestFocusCapture(@Nullable DecoMouseCapture capture)
+	{
+		DecoComponent<?> component = capture==null?null: capture.getComponent();
 		if(this.focusedElement!=component)
 		{
 			if(this.focusedElement!=null)
@@ -747,6 +811,19 @@ public abstract class DecoGui<T, C extends Container> extends GuiContainer
 		}
 
 		this.focusedElement = component;
+		this.focusedCapture = capture;
+	}
+
+	/**
+	 * Releases pointer and keyboard ownership held by a component contained in the
+	 * supplied subtree. Cached entry panels call this before replacing their trees.
+	 */
+	public void releaseFocusWithin(DecoComponent<?> root)
+	{
+		if(focusedCapture!=null&&focusedCapture.belongsTo(root))
+			requestFocus((DecoComponent<?>)null);
+		if(mouseCapture!=null&&mouseCapture.belongsTo(root))
+			mouseCapture = null;
 	}
 
 	//--- NBT ---//
@@ -959,6 +1036,39 @@ public abstract class DecoGui<T, C extends Container> extends GuiContainer
 	}
 
 	/**
+	 * Adds a model-view translation to subsequent scissor rectangles.
+	 * <p>
+	 * {@link GL11#glScissor(int, int, int, int)} works in window coordinates and
+	 * ignores {@link GlStateManager#translate(float, float, float)}. Components
+	 * rendered through a translated virtual tree must therefore provide the same
+	 * offset explicitly before starting a scissor region. Calls may be nested.
+	 * </p>
+	 */
+	public void pushScissorOffset(int x, int y)
+	{
+		scissorOffsetStack.push(new Point(scissorOffsetX, scissorOffsetY));
+		scissorOffsetX += x;
+		scissorOffsetY += y;
+	}
+
+	/**
+	 * Restores the scissor offset active before the latest
+	 * {@link #pushScissorOffset(int, int)} call.
+	 */
+	public void popScissorOffset()
+	{
+		if(scissorOffsetStack.isEmpty())
+		{
+			scissorOffsetX = scissorOffsetY = 0;
+			return;
+		}
+
+		Point previous = scissorOffsetStack.pop();
+		scissorOffsetX = previous.x;
+		scissorOffsetY = previous.y;
+	}
+
+	/**
 	 * Starts the scissor function, enabling OpenGL scissor test.
 	 * This is used to limit rendering to a specific area of the screen.
 	 *
@@ -969,6 +1079,8 @@ public abstract class DecoGui<T, C extends Container> extends GuiContainer
 	 */
 	public void scissorStart(int x, int y, int xSize, int ySize)
 	{
+		x += scissorOffsetX;
+		y += scissorOffsetY;
 		GL11.glEnable(GL11.GL_SCISSOR_TEST);
 
 		if(screenshotMode)
@@ -1047,9 +1159,9 @@ public abstract class DecoGui<T, C extends Container> extends GuiContainer
 
 			//Configure proper blending for transparency
 			GlStateManager.enableAlpha();
-			GlStateManager.alphaFunc(GL11.GL_GREATER, 0.003921569F); // ~1/255
+			GlStateManager.alphaFunc(GL11.GL_GREATER, 0.003921569F); //~1/255
 			GlStateManager.enableBlend();
-			GlStateManager.blendFunc(GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA); // Pre-multiplied alpha
+			GlStateManager.blendFunc(GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA); //Pre-multiplied alpha
 			GlStateManager.disableDepth();
 			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
@@ -1066,9 +1178,9 @@ public abstract class DecoGui<T, C extends Container> extends GuiContainer
 
 			GlStateManager.color(1f, 1f, 1f, 1f);
 			GlStateManager.enableAlpha();
-			GlStateManager.alphaFunc(GL11.GL_GREATER, 0.003921569F); // ~1/255
+			GlStateManager.alphaFunc(GL11.GL_GREATER, 0.003921569F); //~1/255
 			GlStateManager.enableBlend();
-			GlStateManager.blendFunc(GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA); // Pre-multiplied alpha
+			GlStateManager.blendFunc(GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA); //Pre-multiplied alpha
 			GlStateManager.disableDepth();
 			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 

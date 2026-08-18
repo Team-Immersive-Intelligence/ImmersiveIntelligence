@@ -1,81 +1,112 @@
 package pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity;
 
-import blusunrize.immersiveengineering.api.ApiUtils;
 import blusunrize.immersiveengineering.api.TargetingInfo;
 import blusunrize.immersiveengineering.api.energy.wires.IImmersiveConnectable;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
-import blusunrize.immersiveengineering.api.energy.wires.TileEntityImmersiveConnectable;
 import blusunrize.immersiveengineering.api.energy.wires.WireType;
 import blusunrize.immersiveengineering.api.tool.ChemthrowerHandler;
 import blusunrize.immersiveengineering.common.Config.IEConfig;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IBlockBounds;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IDirectionalTile;
 import blusunrize.immersiveengineering.common.util.IESounds;
 import blusunrize.immersiveengineering.common.util.Utils;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.AxisDirection;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
-import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.device.DataWireNetwork;
 import pl.pabilo8.immersiveintelligence.api.data.device.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeBoolean;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.NumericDataType;
+import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedTextOverlay;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.ChemicalDispenser;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.EntityIIChemthrowerShot;
-import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
-import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
+import pl.pabilo8.immersiveintelligence.common.util.tile.TileEntityIIDirectional.FacingLimitation;
+import pl.pabilo8.immersiveintelligence.common.util.tile.TileEntityIIDirectional.FacingSettings;
+import pl.pabilo8.immersiveintelligence.common.util.tile.TileEntityIIDirectionalConnectable;
 import pl.pabilo8.immersiveintelligence.common.wire.IIDataWireType;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Set;
 
 /**
+ * Dispenses aimed chemthrower fluid using data and power wire connections.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 14.08.2026
  * @since 15.07.2019
  */
-public class TileEntityChemicalDispenser extends TileEntityImmersiveConnectable implements ITickable, IDirectionalTile, IBlockBounds, IDataConnector
+public class TileEntityChemicalDispenser extends TileEntityIIDirectionalConnectable implements
+		ITickable, IBlockBounds, IDataConnector, IAdvancedTextOverlay
 {
-	public int energyStorage = 0, plannedAmount = 0, scatter = 0;
+	private static final FacingSettings FACING_SETTINGS = new FacingSettings(FacingLimitation.SIDE_CLICKED)
+			.withMirroringOnPlacement(true);
+	private static final Set<String> ACCEPTABLE_POWER_WIRES = ImmutableSet.of(WireType.LV_CATEGORY, WireType.MV_CATEGORY);
+	private static final double CONNECTOR_OFFSET = 0.375;
+	private static final double CONNECTOR_HIT_RADIUS = 0.125;
+
+	@SyncNBT(events = SyncEvents.TILE_ENERGY_CHANGED)
+	public int energyStorage = 0;
+	@SyncNBT(events = SyncEvents.TILE_CUSTOM1)
+	public int plannedAmount = 0, scatter = 0;
+	@SyncNBT(events = SyncEvents.TILE_CUSTOM1)
 	public float pitch = 0, plannedPitch = 0, yaw = 0, plannedYaw = 0;
+	@SyncNBT(events = SyncEvents.TILE_CUSTOM1)
 	public boolean shouldIgnite = false;
+	@SyncNBT(events = SyncEvents.TILE_CUSTOM2)
 	public FluidTank tank = new FluidTank(12000);
-	public EnumFacing facing = EnumFacing.DOWN;
+	@SyncNBT(nullable = true)
+	public WireType secondCable = null;
 
-	protected Set<String> acceptablePowerWires = ImmutableSet.of(WireType.LV_CATEGORY, WireType.MV_CATEGORY);
 	protected DataWireNetwork wireNetwork = new DataWireNetwork().add(this);
-
-	WireType secondCable;
-	SidedFluidHandler fluidHandler = new SidedFluidHandler(this, null);
+	private final SidedFluidHandler fluidHandler = new SidedFluidHandler(this);
 	private boolean refreshWireNetwork = false;
 
-	@Override
-	protected boolean canTakeLV()
+	public TileEntityChemicalDispenser()
 	{
-		return true;
+		facing = EnumFacing.DOWN;
+	}
+
+	@Nonnull
+	@Override
+	protected FacingSettings getFacingSettings()
+	{
+		return FACING_SETTINGS;
 	}
 
 	@Override
-	protected boolean canTakeMV()
+	public boolean acceptsWireType(WireType wireType)
 	{
-		return true;
+		String category = wireType.getCategory();
+		return IIDataWireType.DATA_CATEGORY.equals(category)||ACCEPTABLE_POWER_WIRES.contains(category);
+	}
+
+	@Override
+	public boolean isRelay()
+	{
+		return false;
 	}
 
 	@Override
@@ -93,17 +124,13 @@ public class TileEntityChemicalDispenser extends TileEntityImmersiveConnectable 
 	@Override
 	public int outputEnergy(int amount, boolean simulate, int energyType)
 	{
-		if(amount > 0&&energyStorage < ChemicalDispenser.energyCapacity)
-		{
-			if(!simulate)
-			{
-				int rec = Math.min(ChemicalDispenser.energyCapacity-energyStorage, ChemicalDispenser.energyUsage);
-				energyStorage += rec;
-				return rec;
-			}
-			return Math.min(ChemicalDispenser.energyCapacity-energyStorage, ChemicalDispenser.energyUsage);
-		}
-		return 0;
+		if(amount <= 0||energyStorage >= ChemicalDispenser.energyCapacity)
+			return 0;
+
+		int received = Math.min(amount, Math.min(ChemicalDispenser.energyCapacity-energyStorage, ChemicalDispenser.energyUsage));
+		if(!simulate)
+			this.energyStorage += received;
+		return received;
 	}
 
 	@Override
@@ -123,7 +150,7 @@ public class TileEntityChemicalDispenser extends TileEntityImmersiveConnectable 
 		if(conn==0)
 			return attachCat.equals(IIDataWireType.DATA_CATEGORY)&&limitType==null;
 		else if(conn==1)
-			return acceptablePowerWires.contains(attachCat)&&secondCable==null;
+			return ACCEPTABLE_POWER_WIRES.contains(attachCat)&&secondCable==null;
 
 		return false;
 	}
@@ -131,21 +158,19 @@ public class TileEntityChemicalDispenser extends TileEntityImmersiveConnectable 
 	@Override
 	public void connectCable(WireType cableType, TargetingInfo target, IImmersiveConnectable other)
 	{
-		switch(getTargetedConnector(target))
+		int connector = getTargetedConnector(target);
+		if(connector==0&&limitType==null)
 		{
-			case 0:
-				if(this.limitType==null)
-				{
-					DataWireNetwork.updateConnectors(pos, world, wireNetwork);
-					this.limitType = cableType;
-				}
-				break;
-			case 1:
-				if(secondCable==null)
-					this.secondCable = cableType;
-				break;
+			limitType = cableType;
+			DataWireNetwork.updateConnectors(pos, world, wireNetwork);
 		}
-		this.markContainingBlockForUpdate(null);
+		else if(connector==1&&secondCable==null)
+			secondCable = cableType;
+		else
+			return;
+
+		markDirty();
+		markContainingBlockForUpdate(getWorld().getBlockState(pos));
 	}
 
 	@Override
@@ -157,343 +182,212 @@ public class TileEntityChemicalDispenser extends TileEntityImmersiveConnectable 
 				return limitType;
 			case 1:
 				return secondCable;
+			default:
+				return null;
 		}
-		return null;
 	}
 
 	@Override
-	public void removeCable(Connection connection)
+	public void removeCable(@Nullable Connection connection)
 	{
 		WireType type = connection!=null?connection.cableType: null;
-		if(type==null)
-		{
-			limitType = null;
-			secondCable = null;
-		}
-		if(type==limitType)
+		String category = type!=null?type.getCategory(): null;
+
+		if(type==null||IIDataWireType.DATA_CATEGORY.equals(category))
 		{
 			wireNetwork.removeFromNetwork(this);
-			this.limitType = null;
+			limitType = null;
 		}
-		if(type==secondCable)
-			this.secondCable = null;
-		this.markContainingBlockForUpdate(null);
+		if(type==null||ACCEPTABLE_POWER_WIRES.contains(category))
+			secondCable = null;
+
+		markDirty();
+		markContainingBlockForUpdate(getWorld().getBlockState(pos));
 	}
 
 	@Override
 	public Vec3d getConnectionOffset(Connection con)
 	{
-		boolean right = con.cableType==limitType;
-		return getConnectionOffset(con, right);
+		return getConnectorOffset(con!=null&&IIDataWireType.DATA_CATEGORY.equals(con.cableType.getCategory()));
 	}
 
 	@Override
 	public Vec3d getConnectionOffset(Connection con, TargetingInfo target, Vec3i offsetLink)
 	{
-		return getConnectionOffset(con, getTargetedConnector(target)==0);
+		return getConnectorOffset(getTargetedConnector(target)==0);
 	}
 
-	private Vec3d getConnectionOffset(Connection con, boolean data)
+	private Vec3d getConnectorOffset(boolean data)
 	{
+		double multiplier = data?CONNECTOR_OFFSET: -CONNECTOR_OFFSET;
+		if(facing.getAxis()!=EnumFacing.Axis.Y)
+		{
+			Vec3i side = facing.rotateYCCW().getDirectionVec();
+			return new Vec3d(
+					0.5+side.getX()*multiplier,
+					0.5+multiplier,
+					0.5+side.getZ()*multiplier
+			);
+		}
 
+		Vec3i direction = facing.getDirectionVec();
+		Vec3d diagonal = new Vec3d(direction.getY(), 0, -1);
+		Vec3d result = new Vec3d(0.5, 0.5, 0.5).add(diagonal.scale(multiplier));
 
-		if(data)
-			switch(facing)
-			{
-				default:
-				case UP:
-				{
-					return new Vec3d(0.875f, 0.5f, 0.125f);
-				}
-				case DOWN:
-					return new Vec3d(0.125f, 0.75f, 0.125f);
-				case SOUTH:
-					return new Vec3d(0.125, 0.125, 0.5);
-				case NORTH:
-					return new Vec3d(0.125, 0.875, 0.5);
-				case EAST:
-					return new Vec3d(0.5, 0.875, 0.125);
-				case WEST:
-					return new Vec3d(0.5, 0.875, 0.875);
-			}
-		else
-			switch(facing)
-			{
-				default:
-				case UP:
-				{
-					return new Vec3d(0.125f, 0.525f, 0.875f);
-				}
-				case DOWN:
-					return new Vec3d(0.875f, 0.525f, 0.875f);
-				case SOUTH:
-					return new Vec3d(0.875, 0.875, 0.5);
-				case NORTH:
-					return new Vec3d(0.875, 0.125, 0.5);
-				case EAST:
-					return new Vec3d(0.5, 0.125, 0.875);
-				case WEST:
-					return new Vec3d(0.5, 0.125, 0.125);
-			}
+		//Keep the connector depth aligned with the existing model for vertical placement.
+		if(facing==EnumFacing.DOWN&&data)
+			result = result.addVector(0, 0.25, 0);
+		else if(!data)
+			result = result.addVector(0, 0.025, 0);
+		return result;
 	}
 
 	public int getTargetedConnector(TargetingInfo target)
 	{
-		switch(facing)
-		{
-			case UP:
-			{
-				if(target.hitX <= 1f&&target.hitX >= 0.75f&&target.hitZ <= 0.25f&&target.hitZ >= 0f)
-					return 0;
-				if(target.hitX <= 0.25&&target.hitX >= 0&&target.hitZ <= 1&&target.hitZ >= 0.75)
-					return 1;
-			}
-			break;
-			case DOWN:
-			{
-				if(target.hitX <= 0.25&&target.hitX >= 0&&target.hitZ <= 0.25f&&target.hitZ >= 0f)
-					return 0;
-				if(target.hitX <= 1f&&target.hitX >= 0.75f&&target.hitZ <= 1&&target.hitZ >= 0.75)
-					return 1;
-			}
-			break;
-			case NORTH:
-			{
-				// 0.125, 0.875, 0.5
-				if(target.hitX <= 0.25&&target.hitX >= 0&&target.hitY <= 1&&target.hitY >= 0.75)
-					return 0;
-				// 0.875, 0.125, 0.5
-				if(target.hitX <= 1f&&target.hitX >= 0.75f&&target.hitY <= 0.25f&&target.hitY >= 0f)
-					return 1;
-			}
-			break;
-			case SOUTH:
-			{
-				// 0.125, 0.125, 0.5
-				if(target.hitX <= 0.25&&target.hitX >= 0&&target.hitY <= 0.25f&&target.hitY >= 0f)
-					return 0;
-				// 0.875, 0.875, 0.5
-				if(target.hitX <= 1f&&target.hitX >= 0.75f&&target.hitY <= 1&&target.hitY >= 0.75)
-					return 1;
-			}
-			break;
-			case WEST:
-			{
-				// 0.5, 0.875, 0.875
-				if(target.hitZ <= 1f&&target.hitZ >= 0.75f&&target.hitY <= 1&&target.hitY >= 0.75)
-					return 0;
-				// 0.5, 0.125, 0.125
-				if(target.hitZ <= 0.25&&target.hitZ >= 0&&target.hitY <= 0.25f&&target.hitY >= 0f)
-					return 1;
-			}
-			break;
-			case EAST:
-			{
-				// 0.5, 0.875, 0.125
-				if(target.hitZ <= 0.25&&target.hitZ >= 0&&target.hitY <= 1&&target.hitY >= 0.75)
-					return 0;
-				// 0.5, 0.875, 0.875
-				if(target.hitZ <= 1f&&target.hitZ >= 0.75f&&target.hitY <= 0.25f&&target.hitY >= 0f)
-					return 1;
-			}
-			break;
-		}
+		Vec3d hit = new Vec3d(target.hitX, target.hitY, target.hitZ);
+		if(isConnectorHit(hit, getConnectorOffset(true)))
+			return 0;
+		if(isConnectorHit(hit, getConnectorOffset(false)))
+			return 1;
 		return -1;
 	}
 
-	public WireType getLimiter(int side)
+	private boolean isConnectorHit(Vec3d hit, Vec3d connector)
 	{
-		if(side==0)
-			return limitType;
-		return secondCable;
+		Vec3i normal = facing.getDirectionVec();
+		return (normal.getX()!=0||Math.abs(hit.x-connector.x) <= CONNECTOR_HIT_RADIUS)
+				&&(normal.getY()!=0||Math.abs(hit.y-connector.y) <= CONNECTOR_HIT_RADIUS)
+				&&(normal.getZ()!=0||Math.abs(hit.z-connector.z) <= CONNECTOR_HIT_RADIUS);
 	}
 
-	@Override
-	public void receiveMessageFromServer(NBTTagCompound message)
-	{
-		super.receiveMessageFromServer(message);
-		if(message.hasKey("energyStorage"))
-			energyStorage = message.getInteger("energyStorage");
-		if(message.hasKey("plannedAmount"))
-			plannedAmount = message.getInteger("plannedAmount");
-		if(message.hasKey("scatter"))
-			scatter = message.getInteger("scatter");
-		if(message.hasKey("pitch"))
-			pitch = message.getFloat("pitch");
-		if(message.hasKey("yaw"))
-			yaw = message.getFloat("yaw");
-		if(message.hasKey("plannedYaw"))
-			plannedYaw = message.getFloat("plannedYaw");
-		if(message.hasKey("plannedPitch"))
-			plannedPitch = message.getFloat("plannedPitch");
-		if(message.hasKey("tank"))
-			tank.readFromNBT(message.getCompoundTag("tank"));
-		if(message.hasKey("shouldIgnite"))
-			shouldIgnite = message.getBoolean("shouldIgnite");
-		if(message.hasKey("facing"))
-			facing = EnumFacing.getFront(message.getInteger("facing"));
-
-	}
-
-	@Override
-	public void readCustomNBT(NBTTagCompound nbt, boolean descPacket)
-	{
-		super.readCustomNBT(nbt, descPacket);
-		if(nbt.hasKey("secondCable"))
-			secondCable = ApiUtils.getWireTypeFromNBT(nbt, "secondCable");
-		else
-			secondCable = null;
-		energyStorage = nbt.getInteger("energyStorage");
-		plannedAmount = nbt.getInteger("plannedAmount");
-		scatter = nbt.getInteger("scatter");
-		shouldIgnite = nbt.getBoolean("shouldIgnite");
-		pitch = nbt.getInteger("pitch");
-		yaw = nbt.getInteger("yaw");
-		if(nbt.hasKey("facing"))
-			facing = EnumFacing.getFront(nbt.getInteger("facing"));
-		if(nbt.hasKey("tank"))
-			tank.readFromNBT(nbt.getCompoundTag("tank"));
-		if(nbt.hasKey("plannedYaw"))
-			plannedYaw = nbt.getFloat("plannedYaw");
-		if(nbt.hasKey("plannedPitch"))
-			plannedPitch = nbt.getFloat("plannedPitch");
-	}
-
-	@Override
-	public void writeCustomNBT(NBTTagCompound nbt, boolean descPacket)
-	{
-		super.writeCustomNBT(nbt, descPacket);
-		if(secondCable!=null)
-			nbt.setString("secondCable", secondCable.getUniqueName());
-		nbt.setInteger("energyStorage", energyStorage);
-		nbt.setInteger("plannedAmount", plannedAmount);
-		nbt.setInteger("scatter", scatter);
-		nbt.setBoolean("shouldIgnite", shouldIgnite);
-		nbt.setFloat("pitch", pitch);
-		nbt.setFloat("yaw", yaw);
-		nbt.setInteger("facing", facing.ordinal());
-		nbt.setTag("tank", tank.writeToNBT(new NBTTagCompound()));
-		nbt.setFloat("plannedYaw", plannedYaw);
-		nbt.setFloat("plannedPitch", plannedPitch);
-	}
-
+	@Nonnull
 	@Override
 	public float[] getBlockBounds()
 	{
-		switch(this.facing)
-		{
-			case UP:
-			{
-				return new float[]{0, 0.5f, 0, 1, 1, 1};
-			}
-			case DOWN:
-			{
-				return new float[]{0, 0, 0, 1, 0.5f, 1};
-			}
-			case SOUTH:
-			{
-				return new float[]{0, 0, 0.5f, 1, 1, 1};
-			}
-			case NORTH:
-			{
-				return new float[]{0, 0, 0, 1, 1, 0.5f};
-			}
-			case EAST:
-			{
-				return new float[]{0.5f, 0, 0, 1, 1, 1};
-			}
-			case WEST:
-			{
-				return new float[]{0, 0, 0, 0.5f, 1, 1};
-			}
-		}
-		return new float[]{0, 0, 0, 1, 1, 1};
+		Vec3i direction = facing.getDirectionVec();
+		return new float[]{
+				getMinBound(direction.getX()), getMinBound(direction.getY()), getMinBound(direction.getZ()),
+				getMaxBound(direction.getX()), getMaxBound(direction.getY()), getMaxBound(direction.getZ())
+		};
+	}
+
+	private static float getMinBound(int direction)
+	{
+		return direction > 0?0.5f: 0f;
+	}
+
+	private static float getMaxBound(int direction)
+	{
+		return direction < 0?0.5f: 1f;
 	}
 
 	@Override
 	public void update()
 	{
-		if(plannedPitch > pitch)
-			pitch += 45f/(ChemicalDispenser.rotateVTime/20f);
-		if(plannedPitch < pitch)
-			pitch -= 45f/(ChemicalDispenser.rotateVTime/20f);
+		//Move the nozzle to the commanded angles.
+		pitch = approachAngle(pitch, plannedPitch, ChemicalDispenser.rotateVTime);
+		yaw = approachAngle(yaw, plannedYaw, ChemicalDispenser.rotateHTime);
 
-		if(Math.abs(plannedPitch-pitch) < (45f/(ChemicalDispenser.rotateVTime/20f)))
-			pitch = plannedPitch;
-		pitch = MathHelper.clamp(pitch, -45, 45);
-
-		if(plannedYaw > yaw)
-			yaw += 45f/(ChemicalDispenser.rotateHTime/20f);
-		if(plannedYaw < yaw)
-			yaw -= 45f/(ChemicalDispenser.rotateHTime/20f);
-
-		if(Math.abs(plannedYaw-yaw) < (45f/(ChemicalDispenser.rotateHTime/20f)))
-			yaw = plannedYaw;
-		yaw = MathHelper.clamp(yaw, -45, 45);
-
+		//Refresh the data network once after the tile loads.
 		if(hasWorld()&&!world.isRemote&&!refreshWireNetwork)
 		{
 			refreshWireNetwork = true;
 			wireNetwork.removeFromNetwork(null);
 		}
 
-		if(world.isBlockPowered(this.getPos()))
+		//A redstone signal requests one standard chemthrower operation.
+		if(world.isBlockPowered(pos))
 			plannedAmount = 20;
 
-		if(!world.isRemote&&plannedAmount > 0&&tank.getFluid()!=null&&plannedYaw==yaw&&plannedPitch==pitch)
+		//Spray only on the server and only after the nozzle reaches its target.
+		if(world.isRemote||plannedAmount <= 0||tank.getFluid()==null||plannedYaw!=yaw||plannedPitch!=pitch)
+			return;
+
+		sprayFluid();
+	}
+
+	private static float approachAngle(float current, float target, int rotationTime)
+	{
+		float step = rotationTime <= 0?Float.MAX_VALUE: 900f/rotationTime;
+		return MathHelper.clamp(IIMath.progressValue(current, target, step, 1), -45f, 45f);
+	}
+
+	private void sprayFluid()
+	{
+		FluidStack fluidStack = tank.getFluid();
+		if(fluidStack==null||fluidStack.getFluid()==null)
+			return;
+
+		int consumed = Math.min(IEConfig.Tools.chemthrower_consumption, plannedAmount);
+		if(consumed > fluidStack.amount||energyStorage < ChemicalDispenser.energyUsage)
+			return;
+
+		//The scatter command changes the spray from a wide, short cone to a narrow, long stream.
+		float focus = MathHelper.clamp(scatter/100f, 0f, 1f);
+		boolean gas = fluidStack.getFluid().isGaseous(fluidStack)||ChemthrowerHandler.isGas(fluidStack.getFluid());
+		float baseScatter = gas?ChemicalDispenser.sprayScatterGas: ChemicalDispenser.sprayScatterFluid;
+		float baseRange = gas?ChemicalDispenser.sprayRangeGas: ChemicalDispenser.sprayRangeFluid;
+		float shotScatter = MathHelper.clamp(
+				(float)MathHelper.clampedLerp(baseScatter*3f, 0f, focus),
+				0.05f, 10f
+		);
+		float shotRange = MathHelper.clamp(
+				(float)MathHelper.clampedLerp(0f, baseRange*0.5f, focus),
+				0.25f, 10f
+		);
+
+		Vec3d direction = getSprayDirection();
+		Vec3d origin = new Vec3d(pos).addVector(0.5, 0.5, 0.5).add(direction.scale(0.5));
+
+		//Create the configured number of chemthrower shots for this operation.
+		for(int i = 0; i < ChemicalDispenser.sprayShotsPerTick; i++)
 		{
-			int consumed = IEConfig.Tools.chemthrower_consumption;
-			FluidStack fs = tank.getFluid();
-			if(energyStorage >= ChemicalDispenser.energyUsage&&Math.min(consumed, plannedAmount) <= fs.amount)
-			{
-				energyStorage -= ChemicalDispenser.energyUsage;
-				Vec3i vi = facing.getOpposite().getDirectionVec();
-				Vec3d v = new Vec3d(vi.getX(), vi.getY(), vi.getZ()).rotateYaw((float)Math.toRadians(yaw)*((facing.getAxisDirection()==AxisDirection.POSITIVE)?-1: 1));
+			Vec3d shotDirection = direction.addVector(
+					Utils.RAND.nextGaussian()*shotScatter,
+					Utils.RAND.nextGaussian()*shotScatter,
+					Utils.RAND.nextGaussian()*shotScatter
+			);
+			EntityIIChemthrowerShot shot = new EntityIIChemthrowerShot(world,
+					origin.x, origin.y, origin.z,
+					shotDirection.x*0.5, shotDirection.y*0.5, shotDirection.z*0.5,
+					fluidStack
+			).withMotion(shotDirection.scale(shotRange));
 
-				if(facing.getHorizontalIndex()!=-1)
-					v = v.addVector(0, Math.toRadians(pitch), 0);
-				else
-				{
-					v = new Vec3d(vi.getX(), vi.getY(), vi.getZ());
-					v = v.addVector(Math.toRadians(-pitch), 0, Math.toRadians(yaw));
-				}
-
-				int split = 8;
-				boolean isGas = fs.getFluid().isGaseous()||ChemthrowerHandler.isGas(fs.getFluid());
-
-				float scatter = isGas?.05f: .025f;
-				float range = isGas?1f: 1.25f;
-
-				scatter *= (1f-((float)this.scatter/100f))*3f;
-				range *= (((float)this.scatter/100f))*0.5;
-
-				scatter = MathHelper.clamp(scatter, 0.05f, 10f);
-				range = MathHelper.clamp(range, 0.25f, 10f);
-
-				for(int i = 0; i < split; i++)
-				{
-					Vec3d vecDir = v.addVector(Utils.RAND.nextGaussian()*scatter, Utils.RAND.nextGaussian()*scatter, Utils.RAND.nextGaussian()*scatter);
-					EntityIIChemthrowerShot chem = new EntityIIChemthrowerShot(world, (float)pos.getX()+0.5f+(v.x/2f), (float)pos.getY()+0.5f+(v.y/2f), (float)pos.getZ()+0.5f+(v.z/2f), vecDir.x*0.5, vecDir.y*0.5, vecDir.z*0.5, fs);
-
-					// Apply momentum from the player.
-					chem.motionX = vecDir.x*range;
-					chem.motionY = vecDir.y*range;
-					chem.motionZ = vecDir.z*range;
-
-					if(shouldIgnite)
-						chem.setFire(10);
-					world.spawnEntity(chem);
-				}
-				if(world.getTotalWorldTime()%4==0)
-					if(shouldIgnite)
-						world.playSound(null, pos.getX()+0.5f, pos.getY()-0.5f, pos.getZ()+0.5f, IESounds.sprayFire, SoundCategory.PLAYERS, .5f, 1.5f);
-					else
-						world.playSound(null, pos.getX()+0.5f, pos.getY()-0.5f, pos.getZ()+0.5f, IESounds.spray, SoundCategory.PLAYERS, .5f, .75f);
-			}
-			tank.drain(Math.min(plannedAmount, consumed), true);
-			plannedAmount -= consumed;
-			plannedAmount = Math.max(plannedAmount, 0);
+			if(shouldIgnite)
+				shot.setFire(10);
+			world.spawnEntity(shot);
 		}
+
+		//Play the spray loop at the same cadence as the handheld chemthrower.
+		if(world.getTotalWorldTime()%4==0)
+			world.playSound(null, pos.getX()+0.5f, pos.getY()-0.5f, pos.getZ()+0.5f,
+					shouldIgnite?IESounds.sprayFire: IESounds.spray,
+					SoundCategory.PLAYERS, 0.5f, shouldIgnite?1.5f: 0.75f);
+
+		energyStorage -= ChemicalDispenser.energyUsage;
+		tank.drain(consumed, true);
+		plannedAmount -= consumed;
+	}
+
+	private Vec3d getSprayDirection()
+	{
+		EnumFacing output = facing.getOpposite();
+		Vec3i direction = output.getDirectionVec();
+
+		if(output.getHorizontalIndex()!=-1)
+		{
+			float baseYaw = (float)Math.toDegrees(Math.atan2(-direction.getX(), direction.getZ()));
+			float yawDirection = facing.getAxisDirection()==AxisDirection.POSITIVE?1f: -1f;
+			return IIMath.offsetPosDirectionXZ(1, 0, baseYaw+yaw*yawDirection, pitch);
+		}
+
+		//For vertical placement, yaw and pitch are independent tilts on the horizontal plane.
+		Vec3d horizontal = IIMath.offsetPosDirectionXZ(
+				Math.tan(Math.toRadians(yaw)),
+				Math.tan(Math.toRadians(pitch)),
+				0, 0
+		);
+		return new Vec3d(horizontal.x, direction.getY(), horizontal.z).normalize();
 	}
 
 	@Override
@@ -519,11 +413,6 @@ public class TileEntityChemicalDispenser extends TileEntityImmersiveConnectable 
 		}
 	}
 
-	@Override
-	public World getConnectorWorld()
-	{
-		return getWorld();
-	}
 
 	@Override
 	public void onPacketReceive(DataPacket packet)
@@ -545,15 +434,7 @@ public class TileEntityChemicalDispenser extends TileEntityImmersiveConnectable 
 		if(packet.get('i') instanceof DataTypeBoolean)
 			this.shouldIgnite = ((DataTypeBoolean)packet.get('i')).value;
 
-		IIPacketHandler.sendToClient(this, new MessageIITileSync(this, EasyNBT.newNBT()
-				.withFloat("plannedPitch", plannedPitch)
-				.withFloat("pitch", pitch)
-				.withFloat("plannedYaw", plannedYaw)
-				.withFloat("yaw", yaw)
-				.withInt("plannedAmount", plannedAmount)
-				.withInt("scatter", scatter)
-				.withBoolean("shouldIgnite", shouldIgnite)
-		));
+		updateTileForEvent(SyncEvents.TILE_CUSTOM1);
 	}
 
 	@Override
@@ -563,49 +444,7 @@ public class TileEntityChemicalDispenser extends TileEntityImmersiveConnectable 
 	}
 
 	@Override
-	public boolean moveConnectionTo(Connection c, BlockPos newEnd)
-	{
-		return true;
-	}
-
-	@Override
-	public EnumFacing getFacing()
-	{
-		return facing;
-	}
-
-	@Override
-	public void setFacing(EnumFacing facing)
-	{
-		this.facing = facing;
-	}
-
-	@Override
-	public int getFacingLimitation()
-	{
-		return 0;
-	}
-
-	@Override
-	public boolean mirrorFacingOnPlacement(EntityLivingBase placer)
-	{
-		return true;
-	}
-
-	@Override
-	public boolean canHammerRotate(EnumFacing side, float hitX, float hitY, float hitZ, EntityLivingBase entity)
-	{
-		return false;
-	}
-
-	@Override
-	public boolean canRotate(EnumFacing axis)
-	{
-		return false;
-	}
-
-	@Override
-	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
+	public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing)
 	{
 		if(capability==CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY&&facing==this.facing)
 			return true;
@@ -613,46 +452,45 @@ public class TileEntityChemicalDispenser extends TileEntityImmersiveConnectable 
 	}
 
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
+	@SuppressWarnings("unchecked")
+	public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing)
 	{
 		if(capability==CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY&&facing==this.facing)
 			return (T)fluidHandler;
 		return super.getCapability(capability, facing);
 	}
 
-	static class SidedFluidHandler implements IFluidHandler
+	private static class SidedFluidHandler implements IFluidHandler
 	{
-		TileEntityChemicalDispenser tile;
-		EnumFacing facing;
+		private final TileEntityChemicalDispenser tile;
 
-		SidedFluidHandler(TileEntityChemicalDispenser tile, EnumFacing facing)
+		private SidedFluidHandler(TileEntityChemicalDispenser tile)
 		{
 			this.tile = tile;
-			this.facing = facing;
 		}
 
 		@Override
 		public int fill(FluidStack resource, boolean doFill)
 		{
 			int i = tile.tank.fill(resource, doFill);
-			if(i > 0)
-			{
-				tile.markDirty();
-				tile.markContainingBlockForUpdate(null);
-			}
+			if(doFill&&i > 0)
+				tile.updateTileForEvent(SyncEvents.TILE_CUSTOM2);
 			return i;
 		}
 
 		@Override
 		public FluidStack drain(FluidStack resource, boolean doDrain)
 		{
-			return tile.tank.drain(resource.amount, doDrain);
+			return drain(resource.amount, doDrain);
 		}
 
 		@Override
 		public FluidStack drain(int maxDrain, boolean doDrain)
 		{
-			return tile.tank.drain(maxDrain, doDrain);
+			FluidStack drained = tile.tank.drain(maxDrain, doDrain);
+			if(doDrain&&drained!=null&&drained.amount > 0)
+				tile.updateTileForEvent(SyncEvents.TILE_CUSTOM2);
+			return drained;
 		}
 
 		@Override
@@ -662,4 +500,14 @@ public class TileEntityChemicalDispenser extends TileEntityImmersiveConnectable 
 		}
 	}
 
+	//--- IAdvancedTextOverlay ---//
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public String[] getOverlayText(EntityPlayer player, RayTraceResult mop)
+	{
+		if(!Utils.isFluidRelatedItemStack(player.getHeldItem(EnumHand.MAIN_HAND)))
+			return new String[0];
+		return new String[]{IIUtils.getFluidNameOverlayText(tank.getFluid())};
+	}
 }

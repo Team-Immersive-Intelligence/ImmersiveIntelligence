@@ -34,8 +34,8 @@ public interface IDecoMapColorMapper extends ILocalizedEnum
 	 */
 	default int applyHeightShading(int color, int sampleY)
 	{
-		// Simple deterministic shading based on height
-		int shadeLevel = (sampleY%4+4)%4; // Ensure positive
+		//Simple deterministic shading based on height
+		int shadeLevel = (sampleY%4+4)%4; //Ensure positive
 		float shadeFactor = 0.8f+(shadeLevel*0.1f);
 		return applyShading(color, shadeFactor);
 	}

@@ -8,7 +8,6 @@ import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.Language;
 import net.minecraft.client.resources.Locale;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.io.IOUtils;
@@ -176,5 +175,10 @@ public class IIManualEntry extends ManualEntry
 	public void setFolder(IIManualPageFolder folder)
 	{
 		this.folder = folder;
+	}
+
+	public String getFullName()
+	{
+		return fullFilePath;
 	}
 }

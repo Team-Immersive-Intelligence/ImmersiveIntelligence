@@ -1,6 +1,13 @@
 {
   "hierarchy": {},
   "origins": {
-    "lid": [0, 8.5, 8]
+    "lid": [0, 8.5, 8],
+    "wrench": [7.5, 7.5, 8]
+  },
+  "properties": {
+    "wrench": {
+      "rotation": [-65.0, 45.0, 0.0],
+      "scale": [0.65, 0.65, 0.65]
+    }
   }
 }

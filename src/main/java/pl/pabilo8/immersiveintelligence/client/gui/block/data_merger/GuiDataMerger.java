@@ -10,7 +10,6 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoEntr
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoTaskList;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoTaskList.ListMode;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity.TileEntityDataMerger;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity.TileEntityDataMerger.DataMergeRule;
@@ -79,12 +78,12 @@ public class GuiDataMerger extends DecoTileGui<TileEntityDataMerger, ContainerDa
 				.withDisplayFunction(new DecoEntryPanelBuilder<DataMergeRule>()
 						.withBackground(DecoTextures.BG_PAPER)
 						.withBackgroundMask(DecoTextures.TEMPLATE_TICKET)
-						.withComponent("variable", new DecoButton(3, 2)
+						.withComponent("variable", p -> new DecoButton(3, 2)
 								.withSize(20, 16)
 								.withDisabled(true)
 								.withTextDisabledColor(IIColor.fromPackedRGB(0xafafaf))
 						)
-						.withLabel("route", new DecoLabel(fontRenderer, 26, 5)
+						.withLabel("route", p -> new DecoLabel(fontRenderer, 26, 5)
 								.withSize(116, 12)
 								.withAlign(DecoAlignment.LEFT)
 						)

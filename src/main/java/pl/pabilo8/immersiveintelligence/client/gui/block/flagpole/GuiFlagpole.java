@@ -9,25 +9,19 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.Dec
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoMapDisplay;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.map.DecoMapDefaultColorMapper;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.map.IDecoMapColorMapper;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.map.scanners.BlockTypeScanner;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiCategory;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTemplate;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityArtilleryHowitzer;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityFlagpole;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityRadar;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerFlagpole;
-import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyHandler;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 
 /**
+ * Displays the flagpole territory map.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 14.08.2026
  * @ii-approved 0.3.1
  * @since 27.12.2025
  */
@@ -60,6 +54,7 @@ public class GuiFlagpole extends DecoTileGui<TileEntityFlagpole, ContainerFlagpo
 
 		//Tabs
 		addLinkTab(IIGUI.FLAGPOLE, DecoTextures.ICON_MAP, "map_module");
+		addLinkTab(IIGUI.FLAGPOLE_CONFIG, DecoTextures.ICON_CONFIG, "configuration_module");
 		if(tile.getOwnerIdentity()!=DiplomacyHandler.NEUTRAL)
 			addLinkTab(IIGUI.FLAGPOLE_FACTION, DecoTextures.ICON_FACTION_CONFIG, "faction_module");
 
@@ -78,26 +73,11 @@ public class GuiFlagpole extends DecoTileGui<TileEntityFlagpole, ContainerFlagpo
 						.withColorMapper(DecoMapDefaultColorMapper.TERRAIN)
 						.withPanning(true)
 						.withZoomScrolling(1, 4)
-						.withScanner(new BlockTypeScanner("flagpoles")
-								.withMultiblockFilter(TileEntityFlagpole.class)
-								.withUpdateCondition(() -> this.filterFlagpoles)
-								.withMarkerStyle(DecoTextures.MAP_MARKER_FLAGPOLE, 4, IIColor.WHITE)
-						)
-						.withScanner(new BlockTypeScanner("emplacement")
-								.withMultiblockFilter(TileEntityEmplacement.class)
-								.withUpdateCondition(() -> this.filterWeapons)
-								.withMarkerStyle(DecoTextures.MAP_MARKER_EMPLACEMENT, 4, IIColor.WHITE)
-						)
-						.withScanner(new BlockTypeScanner("artillery_howitzer")
-								.withMultiblockFilter(TileEntityArtilleryHowitzer.class)
-								.withUpdateCondition(() -> this.filterWeapons)
-								.withMarkerStyle(DecoTextures.MAP_MARKER_EMPLACEMENT, 6, IIColor.WHITE)
-						)
-						.withScanner(new BlockTypeScanner("intelligence")
-								.withMultiblockFilter(TileEntityRadar.class)
-								.withUpdateCondition(() -> this.filterFlagpoles)
-								.withMarkerStyle(DecoTextures.MAP_MARKER_RADAR, 6, IIColor.WHITE)
-						),
+						.withScanner(DecoTemplates.getFlagpoleScanner(() -> this.filterFlagpoles))
+						.withScanner(DecoTemplates.getEmplacementScanner(() -> this.filterWeapons))
+						.withScanner(DecoTemplates.getArtilleryHowitzerScanner(() -> this.filterWeapons))
+						.withScanner(DecoTemplates.getRadarScanner(() -> this.filterIntelligence))
+						.withScanner(DecoTemplates.getRadioStationScanner(() -> this.filterIntelligence)),
 
 				new DecoCheckbox(152+4, 12)
 						.withSize(96-8, 12)

@@ -1,6 +1,8 @@
 package pl.pabilo8.immersiveintelligence.common.util.gun;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagFloat;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
@@ -18,14 +20,16 @@ import pl.pabilo8.immersiveintelligence.common.util.sound.AdvancedSounds;
  *
  * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
+ * @updated 16.08.2026
  * @since 15.05.2026
  */
-public class GunShootingHandler implements INBTSerializable<NBTTagFloat>
+public class GunShootingHandler implements INBTSerializable<NBTBase>
 {
 	private float shotDelay, maxShotDelay;
 	private GunRecoil recoil = null;
 	private AmmoFactory<? extends EntityAmmoProjectile> ammoFactory = null;
 	private GunAmmoProvider ammoProvider = null;
+	private NBTTagCompound pendingAmmoProviderNBT = null;
 	//Sounds
 	private AdvancedSounds.RangedSound sound = null;
 	private SoundEvent soundDryFire = null;
@@ -116,6 +120,11 @@ public class GunShootingHandler implements INBTSerializable<NBTTagFloat>
 	public GunShootingHandler withAmmoProvider(GunAmmoProvider provider)
 	{
 		this.ammoProvider = provider;
+		if(this.ammoProvider!=null&&pendingAmmoProviderNBT!=null)
+		{
+			this.ammoProvider.deserializeNBT(pendingAmmoProviderNBT);
+			pendingAmmoProviderNBT = null;
+		}
 		return this;
 	}
 
@@ -154,14 +163,39 @@ public class GunShootingHandler implements INBTSerializable<NBTTagFloat>
 	//--- NBT ---//
 
 	@Override
-	public NBTTagFloat serializeNBT()
+	public NBTBase serializeNBT()
 	{
-		return new NBTTagFloat(shotDelay);
+		NBTTagCompound nbt = new NBTTagCompound();
+		nbt.setFloat("shot_delay", shotDelay);
+		if(ammoProvider!=null)
+			nbt.setTag("ammo_provider", ammoProvider.serializeNBT());
+		return nbt;
 	}
 
 	@Override
-	public void deserializeNBT(NBTTagFloat nbt)
+	public void deserializeNBT(NBTBase nbt)
 	{
-		this.shotDelay = nbt.getFloat();
+		//Compatibility with the old scalar shot-delay format.
+		if(nbt instanceof NBTTagFloat)
+		{
+			this.shotDelay = ((NBTTagFloat)nbt).getFloat();
+			this.pendingAmmoProviderNBT = null;
+			return;
+		}
+		if(!(nbt instanceof NBTTagCompound))
+			return;
+
+		NBTTagCompound compound = (NBTTagCompound)nbt;
+		this.shotDelay = compound.getFloat("shot_delay");
+		if(compound.hasKey("ammo_provider"))
+		{
+			NBTTagCompound providerNBT = compound.getCompoundTag("ammo_provider");
+			if(ammoProvider!=null)
+				ammoProvider.deserializeNBT(providerNBT);
+			else
+				pendingAmmoProviderNBT = providerNBT.copy();
+		}
+		else
+			pendingAmmoProviderNBT = null;
 	}
 }

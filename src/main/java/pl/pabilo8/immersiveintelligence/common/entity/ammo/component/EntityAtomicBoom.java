@@ -9,19 +9,19 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.Optional.Interface;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.api.api.protection.RadiationHandler;
+import pl.pabilo8.immersiveintelligence.api.api.protection.capability.IRadiationEmitter;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
 
@@ -30,132 +30,81 @@ import pl.pabilo8.immersiveintelligence.common.IIPotions;
  * @since 19.12.2020
  */
 @Interface(iface = "com.elytradev.mirage.lighting.IEntityLightEventConsumer", modid = "mirage")
-public class EntityAtomicBoom extends Entity implements IEntityAdditionalSpawnData, IEntityLightEventConsumer
+public class EntityAtomicBoom extends Entity implements IEntityAdditionalSpawnData, IEntityLightEventConsumer, IRadiationEmitter
 {
-	public float size;
+	public float size = 0;
 	public int progress = 0;
+	private boolean falloutRegistered = false;
 
-	public EntityAtomicBoom(World worldIn)
+	public EntityAtomicBoom(World world)
 	{
-		super(worldIn);
+		super(world);
 	}
 
-	public EntityAtomicBoom(World worldIn, float size)
+	public EntityAtomicBoom(World world, float size)
 	{
-		this(worldIn);
+		this(world);
 		this.size = size;
-		this.ignoreFrustumCheck = true;
-		setRenderDistanceWeight(32.0);
 	}
 
 	@Override
 	public void onUpdate()
 	{
 		super.onUpdate();
-		progress++;
-		if(world.isRemote&&world.getTotalWorldTime()%4==0)
-		{
-			Vec3d pos = getPositionVector();
-			//TODO: 04.05.2024 reimplement
-			/*if(progress < 40)
-			{
-				ParticleRegistry.spawnShockwave(pos.addVector(0, 1.5*size, 0), 20f, 2.5f);
-			}
-			if(progress > 10&&progress < 360)
-			{
-				//ParticleUtils.spawnFog(posX, posY+(0.5*size), posZ, 12f, 0.85f, -0.125f);
-
-				if(progress < 30)
-					ParticleRegistry.spawnAtomicBoomCore(this, pos.addVector(0, 0.5*size, 0), 10f, 0, 0.5f);
-			}
-			if(progress > 20&&progress < 340)
-			{
-
-				if(progress < 320)
-					ParticleRegistry.spawnAtomicBoomCore(this, pos.addVector(0, 4+(3.5*size), 0), 20f, 0.05f, -0.25f);
-				ParticleRegistry.spawnAtomicBoomCore(this, pos.addVector(0, 4+(1.5*size), 0), 10f, 0, 0.5f);
-			}
-			if(progress > 20&&progress < 320)
-			{
-				//ParticleUtils.spawnFog(posX, posY+(0.5*size), posZ, 25f, 1, -0.25f);
-				ParticleRegistry.spawnAtomicBoomCore(this, pos.addVector(0, 4+(1.5*size), 0), 20f, -0.01f, 0.25f);
-				if(progress < 35)
-					ParticleRegistry.spawnAtomicBoomCore(this, pos.addVector(0, 4+(3.5*size), 0), 10f, 0, 0.5f);
-			}
-			if(progress > 25&&progress < 300)
-			{
-				//ParticleUtils.spawnFog(posX, posY+(6.5*size), posZ, 20f, 0.1f, -0.25f);
-				ParticleRegistry.spawnAtomicBoomCore(this, pos.addVector(0, 4+(6.5*size), 0), 20f, -0.01f, 0.25f);
-				if(progress < 40)
-					ParticleRegistry.spawnAtomicBoomCore(this, pos.addVector(0, 4+(6.5*size), 0), 10f, 0, 0.5f);
-			}
-			if(progress > 30&&progress < 280)
-			{
-				ParticleRegistry.spawnAtomicBoomCore(this, pos.addVector(0, 4+(12.5*size), 0), 15f, -0.01f, 0.125f);
-			}
-			if(progress > 40&&progress < 280)
-			{
-				ParticleRegistry.spawnAtomicBoomRing(this, pos.addVector(0, 4+(18.5*size), 0), 25f, 0.25f, -0.05f);
-			}*/
-			/*
-			if(progress > 20)
-				ParticleUtils.spawnFog(posX, posY+(0.5*size), posZ, 20f, 0.5f, -0.25f);
-			 */
+		if(world.isRemote)
 			return;
-		}
-		else if(!world.isRemote&&progress > 20&&progress < 60)
+
+		if(!falloutRegistered)
 		{
-			final int border = (int)((8*size*16)/40);
-			final int prog = (progress-20)*border;
-			final int heightDiff = (int)(70*size);
-			BlockPos position = getPosition();
+			//Create radioactive zone
+			RadiationHandler.INSTANCE.addOrIncreaseRadiationCenter(world, getPosition(), 72*size, Math.max(1f, size));
+			falloutRegistered = true;
+		}
 
-			for(int hh = position.getY()-heightDiff; hh <= position.getY()+heightDiff; hh++)
+		if(!world.isRemote)
+		{
+			//Apply nuclear heat server-side; radiation exposure is handled centrally.
+			if(progress%10==0)
 			{
-				for(int x = position.getX()-prog; x <= position.getX()+prog; x++)
-				{
-					for(int z = position.getZ()-prog; z <= position.getZ()-prog+border; z++)
-						destroyFoliage(x, hh, z, EnumFacing.SOUTH);
-					for(int z = position.getZ()+prog-border; z <= position.getZ()+prog; z++)
-						destroyFoliage(x, hh, z, EnumFacing.NORTH);
-				}
+				AxisAlignedBB aabb = new AxisAlignedBB(getPosition()).grow(40*size);
+				for(EntityLivingBase entity : world.getEntitiesWithinAABB(EntityLivingBase.class, aabb))
+					if(!entity.isPotionActive(IIPotions.nuclearHeat)) //Do not apply twice to not break the visual effect
+						entity.addPotionEffect(new PotionEffect(IIPotions.nuclearHeat, 400, 0, false, false));
+			}
+			//Destroy / burn blocks with nuclear heat
+			if(progress > 20&&progress < 60)
+			{
+				final int border = (int)((8*size*16)/40);
+				final int prog = (progress-20)*border;
+				final int heightDiff = (int)(70*size);
+				BlockPos position = getPosition();
 
-				for(int z = position.getZ()-prog; z <= position.getZ()+prog; z++)
+				for(int hh = position.getY()-heightDiff; hh <= position.getY()+heightDiff; hh++)
 				{
-					for(int x = position.getX()-prog; x <= position.getX()-prog+border; x++)
-						destroyFoliage(x, hh, z, EnumFacing.EAST);
-					for(int x = position.getX()+prog-border; x <= position.getX()+prog; x++)
-						destroyFoliage(x, hh, z, EnumFacing.WEST);
-				}
+					for(int x = position.getX()-prog; x <= position.getX()+prog; x++)
+					{
+						for(int z = position.getZ()-prog; z <= position.getZ()-prog+border; z++)
+							destroyFoliage(x, hh, z, EnumFacing.SOUTH);
+						for(int z = position.getZ()+prog-border; z <= position.getZ()+prog; z++)
+							destroyFoliage(x, hh, z, EnumFacing.NORTH);
+					}
 
+					for(int z = position.getZ()-prog; z <= position.getZ()+prog; z++)
+					{
+						for(int x = position.getX()-prog; x <= position.getX()-prog+border; x++)
+							destroyFoliage(x, hh, z, EnumFacing.EAST);
+						for(int x = position.getX()+prog-border; x <= position.getX()+prog; x++)
+							destroyFoliage(x, hh, z, EnumFacing.WEST);
+					}
+
+				}
 			}
 		}
+
+		progress++;
 
 		if(!world.isRemote&&progress > 400)
-		{
 			setDead();
-			return;
-		}
-
-		//apply half a second
-		if(world.getTotalWorldTime()%10==0)
-		{
-			AxisAlignedBB aabb = new AxisAlignedBB(getPosition()).grow(40*size);
-			EntityLivingBase[] entities = world.getEntitiesWithinAABB(EntityLivingBase.class, aabb).toArray(new EntityLivingBase[0]);
-			for(EntityLivingBase e : entities)
-			{
-				//if(e instanceof EntityPlayer&&((EntityPlayer)e).isCreative())
-				//	continue;
-				e.addPotionEffect(new PotionEffect(IIPotions.nuclearHeat, 400, 0, false, false));
-			}
-			entities = world.getEntitiesWithinAABB(EntityLivingBase.class, aabb.grow(20*size)).toArray(new EntityLivingBase[0]);
-			for(EntityLivingBase e : entities)
-			{
-				if(e instanceof EntityPlayer&&((EntityPlayer)e).isCreative())
-					continue;
-				e.addPotionEffect(new PotionEffect(IIPotions.radiation, 2000, 0, false, false));
-			}
-		}
 	}
 
 	private void destroyFoliage(int x, int y, int z, EnumFacing facing)
@@ -225,12 +174,16 @@ public class EntityAtomicBoom extends Entity implements IEntityAdditionalSpawnDa
 	protected void readEntityFromNBT(NBTTagCompound compound)
 	{
 		size = compound.getFloat("size");
+		progress = compound.getInteger("progress");
+		falloutRegistered = compound.getBoolean("falloutRegistered");
 	}
 
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound compound)
 	{
 		compound.setFloat("size", size);
+		compound.setInteger("progress", progress);
+		compound.setBoolean("falloutRegistered", falloutRegistered);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -238,6 +191,26 @@ public class EntityAtomicBoom extends Entity implements IEntityAdditionalSpawnDa
 	public boolean isInRangeToRenderDist(double distance)
 	{
 		return true;
+	}
+
+	//--- IRadiationEmitter ---//
+
+	@Override
+	public float getRadiationRadius()
+	{
+		return 60*size;
+	}
+
+	@Override
+	public float getRadiationStrength()
+	{
+		return Math.max(1f, size*4f);
+	}
+
+	@Override
+	public boolean isRadiationActive()
+	{
+		return !isDead&&progress <= 400;
 	}
 
 	@Override
@@ -252,7 +225,6 @@ public class EntityAtomicBoom extends Entity implements IEntityAdditionalSpawnDa
 	{
 		size = buffer.readFloat();
 		progress = buffer.readInt();
-
 	}
 
 	@Override

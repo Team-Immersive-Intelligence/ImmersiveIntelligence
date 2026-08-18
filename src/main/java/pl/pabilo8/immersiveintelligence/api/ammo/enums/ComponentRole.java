@@ -1,9 +1,11 @@
 package pl.pabilo8.immersiveintelligence.api.ammo.enums;
 
+import lombok.Getter;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ILocalizedEnum;
 
+@Getter
 public enum ComponentRole implements ILocalizedEnum
 {
 	GENERAL_PURPOSE(0xaaaaaa),
@@ -27,11 +29,6 @@ public enum ComponentRole implements ILocalizedEnum
 	ComponentRole(int color)
 	{
 		this.color = IIColor.fromPackedRGB(color);
-	}
-
-	public IIColor getColor()
-	{
-		return color;
 	}
 
 	@Override

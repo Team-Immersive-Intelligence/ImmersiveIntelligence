@@ -48,8 +48,7 @@ public class NetherBackportHelper extends IICompatModule
 		OreDictionary.registerOre("soul_lantern", new ItemStack(soulLantern));
 
 
-		addShrapnel("netherite", IIColor.fromPackedRGB(0x31292a),
-				RES_NB.with("netherite_block"), 8, 0.50f, 0f);
+		addShrapnel("netherite", IIColor.fromPackedRGB(0x31292a), 8, 0.50f, 0f);
 
 	}
 

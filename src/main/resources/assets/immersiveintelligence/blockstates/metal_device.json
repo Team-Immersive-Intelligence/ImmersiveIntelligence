@@ -37,6 +37,15 @@
           "all": "immersiveintelligence:blocks/metal_device/steel_crate"
         }
       },
+      "ammunition_crate": {
+        "model": "immersiveintelligence:smartmodel/conn_empty"
+      },
+      "medic_crate": {
+        "model": "immersiveintelligence:smartmodel/conn_empty"
+      },
+      "repair_crate": {
+        "model": "immersiveintelligence:smartmodel/conn_empty"
+      },
       "data_router": {
         "textures": {
           "all": "immersiveintelligence:blocks/metal_device/data_router"

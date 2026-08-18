@@ -21,7 +21,7 @@ public class AmmoComponentRDX extends AmmoComponent
 {
 	public AmmoComponentRDX()
 	{
-		super("rdx", 1.25f, ComponentRole.EXPLOSIVE, IIColor.fromPackedRGB(0xd2c294));
+		super("rdx", 1.25f, ComponentRole.EXPLOSIVE, IIColor.fromPackedRGB(0xd2c294), 2);
 	}
 
 	@Override

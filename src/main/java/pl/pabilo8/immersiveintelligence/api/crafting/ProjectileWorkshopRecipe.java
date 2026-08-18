@@ -18,6 +18,7 @@ import javax.annotation.Nullable;
 public class ProjectileWorkshopRecipe extends IIMultiblockRecipe
 {
 	public static final String FILLING_RECIPE_NAME = "core_filling";
+	public static final String CORE_PRODUCTION_RECIPE_PREFIX = "core_production_";
 	public static final ProjectileWorkshopRecipe CORE_FILLING = new ProjectileWorkshopRecipe();
 
 	@Nullable

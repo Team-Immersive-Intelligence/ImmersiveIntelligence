@@ -1,10 +1,12 @@
 package pl.pabilo8.immersiveintelligence.common.item.armor;
 
+import blusunrize.immersiveengineering.api.Lib;
 import blusunrize.immersiveengineering.api.tool.IElectricEquipment;
 import blusunrize.immersiveengineering.common.util.IEDamageSources.ElectricDamageSource;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import com.google.common.collect.Multimap;
 import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -14,10 +16,10 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.api.utils.armor.IGasmask;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
 import pl.pabilo8.immersiveintelligence.client.model.armor.ModelLightEngineerArmor;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.LightEngineerArmor;
@@ -36,7 +38,7 @@ import java.util.Map;
  * @since 13.09.2020
  */
 @IIItemProperties(category = IICategory.WARFARE)
-public class ItemIILightEngineerHelmet extends ItemIILightEngineerArmorBase implements IElectricEquipment, IGasmask
+public class ItemIILightEngineerHelmet extends ItemIILightEngineerArmorBase implements IElectricEquipment
 {
 	public ItemIILightEngineerHelmet()
 	{
@@ -56,6 +58,14 @@ public class ItemIILightEngineerHelmet extends ItemIILightEngineerArmorBase impl
 	public void addInformation(@Nonnull ItemStack stack, @Nullable World world, List<String> list, @Nonnull ITooltipFlag flag)
 	{
 		super.addInformation(stack, world, list, flag);
+		if (hasUpgrade(stack, "engineer_gear") || hasUpgrade(stack, "infiltrator_gear") || hasUpgrade(stack, "technician_gear")) {
+			int energy = getEnergyStored(stack);
+			int max = getMaxEnergyStored(stack);
+			if (max > 0) {
+				String stored = energy + "/" + max;
+				list.add(I18n.format(Lib.DESC + "info.energyStored", TextFormatting.GOLD + stored + TextFormatting.RESET));
+			}
+		}
 	}
 
 	@Override
@@ -128,7 +138,7 @@ public class ItemIILightEngineerHelmet extends ItemIILightEngineerArmorBase impl
 	}
 
 	@Override
-	public boolean protectsFromGasses(ItemStack stack)
+	protected boolean protectsFromGases(ItemStack stack)
 	{
 		return getUpgrades(stack).hasKey("gasmask");
 	}

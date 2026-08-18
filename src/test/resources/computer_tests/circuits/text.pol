@@ -1,10 +1,30 @@
 use TEXT
+use ARRAY
 
-type string_lowercase "sMoL_Letter TEXT"
-type string_uppercase "BiGLetter_text"
-type string_camel_case "snake_case Made into_Camel"
-type string_camel_case "snake_case Made into_Camel" false
-type string_camel_case "snake_case Made into_Camel" true
+type string_join "Immersive " "Intelligence"
+array a = string_split "alpha,beta,gamma" ","
+type array_get @a 1
+type string_length "signals"
+type string_char_at "signals" 2
+type string_substring "signals" 3
+type string_trim "trimmed text" 7
+type string_hexcol "warning" 16711935
+type string_format "plain" 99
+type string_contains "radar contact" "contact"
+type string_contains_count "aaaa" "aa"
+type string_replace_first "red red" "red" "blue"
+type string_replace_all "red red" "red" "blue"
+type string_lowercase "MiXeD"
+type string_uppercase "MiXeD"
 type string_snake_case "CamelCase Made into_snake"
+type string_camel_case "snake_case made_into_camel" true
+type string_reverse "abc123"
+
+; Parser regression cases.
+type string_join "semi;colon " "safe" ; comments start only outside strings
+type string_join "left ( " "right"
+type string_join "Engineer's " "test"
+type string_join "" "empty"
+type string_join "quote: \"" "ok"
 
 end

@@ -10,6 +10,7 @@ public class CommandFactionSet extends CommandTreeBase
 		addSubcommand(new CommandFactionSetName(this));
 		addSubcommand(new CommandFactionSetColor(this));
 		addSubcommand(new CommandFactionSetBanner(this));
+		addSubcommand(new CommandFactionSetLawForm(this));
 	}
 
 	@Override

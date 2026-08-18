@@ -1,0 +1,6 @@
+dependencies {
+	compileOnly "org.projectlombok:lombok:${mkxString('lombok_version')}"
+	annotationProcessor "org.projectlombok:lombok:${mkxString('lombok_version')}"
+	testCompileOnly "org.projectlombok:lombok:${mkxString('lombok_version')}"
+	testAnnotationProcessor "org.projectlombok:lombok:${mkxString('lombok_version')}"
+}

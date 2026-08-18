@@ -17,9 +17,7 @@ import pl.pabilo8.immersiveintelligence.common.block.data_device.BlockIIDataDevi
 import pl.pabilo8.immersiveintelligence.common.block.fortification.BlockIIMetalFortification1.IIBlockTypes_MetalFortification1;
 import pl.pabilo8.immersiveintelligence.common.block.fortification.BlockIISandbags.IIBlockTypes_Sandbags;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDevice.IIBlockTypes_MetalDevice;
-import pl.pabilo8.immersiveintelligence.common.block.mines.BlockIIMine;
 import pl.pabilo8.immersiveintelligence.common.block.mines.BlockIIMine.ItemBlockMineBase;
-import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing.Casing;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine.Magazines;
 import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIIArmorUpgrade.ArmorUpgrades;
@@ -164,7 +162,6 @@ public class IIManualCategoryWarfare extends IIManualCategory
 				.addSource("flippers", getSourceForItems(IIContent.itemArmorUpgrade.getStack(ArmorUpgrades.FLIPPERS)))
 				.addSource("snow_rackets", getSourceForItems(IIContent.itemArmorUpgrade.getStack(ArmorUpgrades.SNOW_RACKETS)))
 				.addSource("internal_springs", getSourceForItems(IIContent.itemArmorUpgrade.getStack(ArmorUpgrades.INTERNAL_SPRINGS)));
-		addEntry("armortools/flagpole");
 		addEntry("armortools/mine_detector")
 				.addSource("mine_detector", getSourceForItem(new ItemStack(IIContent.itemMineDetector)));
 		addEntry("armortools/trench_shovel")
@@ -187,5 +184,9 @@ public class IIManualCategoryWarfare extends IIManualCategory
 				.addSource("navalmine", getSourceForItem(IIContent.itemNavalMine.getAmmoStack(IIContent.ammoCoreLead, CoreType.CANISTER, FuseType.CONTACT)));
 		addEntry("staticdefense/explosive_mine_sign")
 				.addSource("mine_sign", getSourceForItem(new ItemStack(IIContent.blockMineSign)));
+
+		addEntry("terrain_control/owner_identity");
+		addEntry("terrain_control/properties");
+		addEntry("terrain_control/flagpole");
 	}
 }

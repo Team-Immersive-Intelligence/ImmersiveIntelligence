@@ -13,7 +13,6 @@ import crafttweaker.api.world.IVector3d;
 import crafttweaker.api.world.IWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
@@ -27,7 +26,6 @@ import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
-import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
@@ -42,15 +40,14 @@ import stanhebben.zenscript.annotations.ZenMethod;
 public class AmmoTweaker
 {
 	@ZenMethod
-	public static void addShrapnel(String name, int color, String texture, int damage, float mass, float brightness)
+	public static void addShrapnel(String name, int color, int damage, float mass, float brightness)
 	{
-		ShrapnelHandler.addShrapnel(name, IIColor.fromPackedRGB(color), ResLoc.of(new ResourceLocation(texture)), damage, mass, brightness);
 		CraftTweakerAPI.apply(new IAction()
 		{
 			@Override
 			public void apply()
 			{
-
+				ShrapnelHandler.addShrapnel(name, IIColor.fromPackedRGB(color), damage, mass, brightness);
 			}
 
 			@Override
@@ -59,6 +56,13 @@ public class AmmoTweaker
 				return "Added shrapnel for "+name;
 			}
 		});
+	}
+
+	@ZenMethod
+	@Deprecated
+	public static void addShrapnel(String name, int color, String texture, int damage, float mass, float brightness)
+	{
+		addShrapnel(name, color, damage, mass, brightness);
 	}
 
 	@ZenMethod
@@ -282,7 +286,7 @@ public class AmmoTweaker
 				final ComponentRole componentRole = IIUtils.enumValue(ComponentRole.class, component.role);
 
 				AmmoRegistry.registerComponent(
-						new AmmoComponent(component.name, component.density, componentRole, IIColor.fromPackedRGB(component.color))
+						new AmmoComponent(component.name, component.density, componentRole, IIColor.fromPackedRGB(component.color), 1)
 						{
 							private final IngredientStack stack = ApiUtils.createIngredientStack(component.stack);
 

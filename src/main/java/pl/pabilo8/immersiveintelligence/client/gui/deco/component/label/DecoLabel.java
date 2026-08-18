@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.client.gui.deco.component.label;
 
+import lombok.Getter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiLabel;
@@ -29,6 +30,7 @@ public class DecoLabel extends GuiLabel
 	private DecoAlignment textAlignment = DecoAlignment.LEFT;
 	private boolean forcedUnicode = false;
 	private boolean textShadow = false;
+	@Getter
 	private int totalHeight = 0;
 	private boolean hovered;
 	private boolean wrap = false;
@@ -138,6 +140,25 @@ public class DecoLabel extends GuiLabel
 		return this;
 	}
 
+	/**
+	 * Sets the label's size to the widest label in the collection.
+	 *
+	 * @return this
+	 */
+	public DecoLabel pack()
+	{
+		int minWidth = 0;
+		for(Object label : labels)
+		{
+			if(label instanceof String)
+				minWidth = Math.max(minWidth, fontRenderer.getStringWidth(((String)label)));
+			else
+				//noinspection unchecked
+				minWidth = Math.max(minWidth, fontRenderer.getStringWidth(((Supplier<String>)label).get()));
+		}
+		return withSize(minWidth, totalHeight);
+	}
+
 	//--- Text Setting ---//
 
 	public DecoLabel withText(String... text)
@@ -217,9 +238,14 @@ public class DecoLabel extends GuiLabel
 
 	//--- Getters ---//
 
-	public int getTotalHeight()
+	public int getWidth()
 	{
-		return totalHeight;
+		return width;
+	}
+
+	public int getHeight()
+	{
+		return height;
 	}
 
 	//--- Drawing ---//
@@ -233,7 +259,7 @@ public class DecoLabel extends GuiLabel
 			return;
 		//Draw a highlight background for the text
 		if(bgColor.alpha > 0)
-			IIDrawUtils.startColored().drawColorRect(x, y, x+width, y+height, bgColor).finish();
+			IIDrawUtils.startColored().drawColorRect(x, y, width, height, bgColor).finish();
 
 		int lineOffset = y;
 		boolean unicode = fontRenderer.getUnicodeFlag();
@@ -271,7 +297,7 @@ public class DecoLabel extends GuiLabel
 					fontRenderer.drawString(subLine, currentX, currentY, textColor.getPackedARGB(), textShadow);
 					stringHeight += fontRenderer.FONT_HEIGHT;
 
-					// Track the widest sub-line for hover detection
+					//Track the widest sub-line for hover detection
 					if(subLineWidth > stringWidth)
 						stringWidth = subLineWidth;
 				}

@@ -14,7 +14,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 @SideOnly(Side.CLIENT)
 public class EWRSpotlightTower extends EmplacementWeaponRenderer<EmplacementWeaponSpotlightTower>
 {
-	private IIAnimationCachedMap install, uninstall, rotateYaw, rotatePitch, fire;
+	private IIAnimationCachedMap install, rotateYaw, rotatePitch;
 
 	public EWRSpotlightTower()
 	{
@@ -32,10 +32,8 @@ public class EWRSpotlightTower extends EmplacementWeaponRenderer<EmplacementWeap
 	public void loadAnimations(AMTCachedModel<TileEntityEmplacement> model)
 	{
 		this.install = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("install"));
-		this.uninstall = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("uninstall"));
 		this.rotateYaw = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("rotate_yaw"));
 		this.rotatePitch = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("rotate_pitch"));
-		this.fire = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("fire"));
 	}
 
 	@Override
@@ -43,12 +41,11 @@ public class EWRSpotlightTower extends EmplacementWeaponRenderer<EmplacementWeap
 	{
 		assert weapon.setup!=null;
 		if(weapon.setup.getState())
-			this.uninstall.apply(weapon.setup.getProgress(partialTicks));
+			this.install.apply(1f-weapon.setup.getProgress(partialTicks));
 		else
 			this.install.apply(weapon.setup.getProgress(partialTicks));
 
 		this.rotateYaw.apply(weapon.aim.getYawNormalized(partialTicks));
 		this.rotatePitch.apply(weapon.aim.getPitchNormalized(partialTicks));
-		this.fire.apply(weapon.shootDelay);
 	}
 }

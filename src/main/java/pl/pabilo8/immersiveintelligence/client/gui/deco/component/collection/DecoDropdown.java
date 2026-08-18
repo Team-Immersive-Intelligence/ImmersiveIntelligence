@@ -47,9 +47,13 @@ public class DecoDropdown<T> extends DecoScrolledCollection<DecoDropdown<T>, T>
 				if(dropped&&!IIMath.isPointInRectangle(x, y, x+width, y+height, mouseX, mouseY))
 				{
 					//Click on scrollbar
-					if((shouldAlwaysHaveScrollbar()||maxScroll > 0)&&IIMath.isPointInRectangle(x+width-8, y, 8, height, mouseX, mouseY))
+					if((shouldAlwaysHaveScrollbar()||maxScroll > 0)&&IIMath.isPointInRectangle(
+							x+dropdownWidth-11, y+height,
+							x+dropdownWidth-1, y+height+getListHeight(),
+							mouseX, mouseY))
 					{
-						this.scroll = (int)MathHelper.clamp((float)(mouseY-y-7)/(float)(height-14)*(float)maxScroll, 0, maxScroll);
+						int slideHeight = Math.max(1, getListHeight()-14);
+						this.scroll = (int)MathHelper.clamp((float)(mouseY-y-height-7)/(float)slideHeight*(float)maxScroll, 0, maxScroll);
 						return true;
 					}
 
@@ -66,7 +70,7 @@ public class DecoDropdown<T> extends DecoScrolledCollection<DecoDropdown<T>, T>
 					}
 				}
 				dropped = !dropped;
-				pressed = false;
+				pressTime = 0;
 				return true;
 			}
 			return false;
@@ -291,7 +295,7 @@ public class DecoDropdown<T> extends DecoScrolledCollection<DecoDropdown<T>, T>
 		if(dropped&&!text.isEmpty())
 		{
 			String drawn = blinkTime > 20?(text+"_"): text;
-			fontRenderer.drawString(drawn, 0, 0, getTextColor(false).getPackedRGB());
+			fontRenderer.drawString(drawn, 2, 2, getTextColor(false).getPackedRGB());
 		}
 		else
 		{
@@ -305,6 +309,23 @@ public class DecoDropdown<T> extends DecoScrolledCollection<DecoDropdown<T>, T>
 	@Override
 	public void drawUpperLayer(int mouseX, int mouseY, float partialTicks)
 	{
+		T selected = getSelectedEntry();
+		if(selected!=null)
+		{
+			if(parentGui!=null)
+				parentGui.pushScissorOffset(x, y);
+			GlStateManager.pushMatrix();
+			try
+			{
+				GlStateManager.translate(x, y, 0);
+				display.drawElementUpperLayer(selected, width-12, fontRenderer, mouseX-x, mouseY-y, partialTicks);
+			} finally
+			{
+				GlStateManager.popMatrix();
+				if(parentGui!=null)
+					parentGui.popScissorOffset();
+			}
+		}
 		if(dropped)
 			drawList(x, y+height, dropdownWidth, mouseX, mouseY, partialTicks);
 	}
@@ -312,7 +333,7 @@ public class DecoDropdown<T> extends DecoScrolledCollection<DecoDropdown<T>, T>
 	@Override
 	public void cleanup()
 	{
-
+		display.cleanupDisplay();
 	}
 
 	@Nullable
@@ -359,7 +380,7 @@ public class DecoDropdown<T> extends DecoScrolledCollection<DecoDropdown<T>, T>
 		if(IIMath.isPointInRectangle(x, y, x+width, y+height, mouseX, mouseY))
 			return true;
 		if(dropped)
-			return IIMath.isPointInRectangle(x, y+height, x+dropdownWidth, y+height+maxPossibleDropHeight, mouseX, mouseY);
+			return IIMath.isPointInRectangle(x, y+height, x+dropdownWidth, y+height+getListHeight(), mouseX, mouseY);
 		return false;
 	}
 }

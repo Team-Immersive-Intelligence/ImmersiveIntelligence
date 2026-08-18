@@ -1,0 +1,11 @@
+use TYPE_CONVERSION
+
+type is_null null
+type is_same_type 1 2
+type to_integer 3.75
+type to_float 7
+type to_string false
+type to_boolean "TRUE"
+type to_null 123
+
+end

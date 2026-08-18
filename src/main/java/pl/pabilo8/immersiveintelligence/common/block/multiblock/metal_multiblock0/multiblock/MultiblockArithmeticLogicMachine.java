@@ -10,6 +10,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityArithmeticLogicMachine;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -31,6 +32,14 @@ public class MultiblockArithmeticLogicMachine extends MultiblockStuctureBase<Til
 		super(new ResourceLocation(ImmersiveIntelligence.MODID, "multiblocks/arithmetic_logic_machine"));
 		offset = new Vec3i(0, 1, 1);
 		INSTANCE = this;
+
+		//POI
+		addPOI(MultiblockPOI.ENERGY_INPUT, "energy");
+		addPOI(MultiblockPOI.DATA_INPUT, "data_in");
+		addPOI(MultiblockPOI.DATA_OUTPUT, "data_out");
+		addPOI(MultiblockPOI.MISC_CONTROL_PANEL, "front_panel");
+		addPOI(MultiblockPOI.MISC_CRATE, "crates");
+		addPOI(MultiblockPOI.MISC_DOOR, "door");
 
 		//Init Tech Tree
 		UpgradeTechTree.getTreeFor(TileEntityArithmeticLogicMachine.class)

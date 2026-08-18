@@ -9,7 +9,6 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBa
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoFluidTank;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage.ImageAnimationDirection;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityChemicalPainter;
@@ -31,7 +30,7 @@ public class GuiChemicalPainter extends DecoTileGui<TileEntityChemicalPainter, C
 {
 	@DecoResource
 	public static final ResourceLocation TEXTURE = IIReference.RES_II.with("gui/chemical_painter");
-	private DecoImage imageProgress1, imageProgress2;
+	private DecoImage imageProgress;
 
 	@SyncNBT(events = SyncEvents.TILE_CLIENT_MESSAGE)
 	public IIColor color;
@@ -78,16 +77,16 @@ public class GuiChemicalPainter extends DecoTileGui<TileEntityChemicalPainter, C
 						.withFluidTank(tile.tankBlack)
 						.withColorMarker(IIColor.fromPackedRGB(0x1a1a1a)),
 				//Production Progress
-				this.imageProgress1 = new DecoImage(131, 20)
+				new DecoImage(131, 20)
 						.withSize(12, 51)
 						.withImageLocation(TEXTURE, true)
 						.withUV(64, 0, 0, 12, 51),
-				this.imageProgress2 = new DecoImage(131+12, 20+13)
+				new DecoImage(131+12, 20+13)
 						.withSize(12, 17)
 						.withImageLocation(TEXTURE, true)
 						.withUV(64, 12, 14, 12+12, 29),
 
-				new DecoImage(131, 20)
+				this.imageProgress = new DecoImage(131, 20)
 						.withSize(24, 51)
 						.withImageLocation(TEXTURE, true)
 						.withUV(64, 24, 0, 48, 51)
@@ -107,7 +106,6 @@ public class GuiChemicalPainter extends DecoTileGui<TileEntityChemicalPainter, C
 	@Method(modid = "jei")
 	public void onInitJEICompat()
 	{
-		JEIHelper.addRecipesDecoGuiLink(this.imageProgress1, "ii.chemical_painter");
-		JEIHelper.addRecipesDecoGuiLink(this.imageProgress2, "ii.chemical_painter");
+		JEIHelper.addRecipesDecoGuiLink(this.imageProgress, "ii.painting");
 	}
 }

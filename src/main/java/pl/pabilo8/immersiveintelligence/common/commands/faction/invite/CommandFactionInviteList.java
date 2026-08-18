@@ -8,9 +8,11 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.server.command.CommandTreeBase;
 import pl.pabilo8.immersiveintelligence.common.util.CommandIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyHandler;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.OwnerIdentity;
 
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class CommandFactionInviteList extends CommandIIBase
 {
@@ -37,10 +39,13 @@ public class CommandFactionInviteList extends CommandIIBase
 		if(!(sender instanceof EntityPlayer)) throw new CommandException("Player only.");
 		UUID uuid = ((EntityPlayer)sender).getUniqueID();
 		DiplomacyHandler diplomacy = DiplomacyHandler.getInstance(false);
-		Set<String> invites = diplomacy.getPendingInvitationsForPlayer(uuid);
+		List<OwnerIdentity> invites = diplomacy.getPendingInvitationIdentitiesForPlayer(uuid);
 		if(invites.isEmpty())
 			sender.sendMessage(new TextComponentString("No pending invitations."));
 		else
-			sender.sendMessage(new TextComponentString("Pending invitations: "+String.join(", ", invites)));
+			sender.sendMessage(new TextComponentString(invites.stream()
+					.map(OwnerIdentity::getDisplayName)
+					.collect(Collectors.joining(", ", "Pending invitations: ", ""))
+			));
 	}
 }

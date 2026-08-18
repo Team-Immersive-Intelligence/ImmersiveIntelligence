@@ -1,0 +1,8 @@
+use CRYPTOGRAPHER
+
+encrypted a = encrypt_text "Immersive Intelligence" "key"
+type decrypt_text @a "key"
+encrypted b = encrypt_number 1942 "key"
+type decrypt_number @b "key"
+
+end

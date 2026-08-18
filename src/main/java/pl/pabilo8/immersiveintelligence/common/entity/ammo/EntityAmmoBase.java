@@ -4,6 +4,7 @@ import com.elytradev.mirage.event.GatherLightsEvent;
 import com.elytradev.mirage.lighting.IEntityLightEventConsumer;
 import com.elytradev.mirage.lighting.Light;
 import io.netty.buffer.ByteBuf;
+import lombok.Getter;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -46,35 +47,43 @@ public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extend
 	/**
 	 * The ammo type
 	 */
+	@Getter
 	protected IAmmoType<?, T> ammoType;
 	/**
 	 * The ammo core
 	 */
+	@Getter
 	protected AmmoCore core;
 	/**
 	 * The ammo core type
 	 */
+	@Getter
 	protected CoreType coreType;
 	/**
 	 * The fuse type
 	 */
+	@Getter
 	protected FuseType fuseType;
 	/**
 	 * The fuse parameter, for a timer fuse it's the fuse time in ticks, for a proximity fuse it's the fuse range in blocks<br>
 	 * Not used by impact fuses
 	 */
+	@Getter
 	protected int fuseParameter = 0;
 	/**
 	 * The paint color of the bullet, in rgbInt format
 	 */
+	@Getter
 	protected IIColor paintColor = null;
 	/**
 	 * List of component tuples, containing the component and its NBT (can be empty but not null)
 	 */
+	@Getter
 	protected List<Tuple<AmmoComponent, NBTTagCompound>> components;
 	/**
 	 * The owner of this bullet, used for statistics
 	 */
+	@Getter
 	protected Entity owner;
 	/**
 	 * Axis alligned bounding box of the bullet, because fuck minecraft's bloody AABB (de)sync wankfest.
@@ -125,7 +134,7 @@ public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extend
 
 	@ParametersAreNonnullByDefault
 	public void setFromParameters(IAmmoType<?, T> ammoType, AmmoCore core, CoreType coreType, FuseType fuseType, int fuseParameter,
-								  List<Tuple<AmmoComponent, NBTTagCompound>> components)
+	                              List<Tuple<AmmoComponent, NBTTagCompound>> components)
 	{
 		this.ammoType = ammoType;
 		this.core = core;
@@ -145,17 +154,17 @@ public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extend
 		this.posX = x;
 		this.posY = y;
 		this.posZ = z;
-		float fraction = this.width / 2.0F;
-		this.setEntityBoundingBox(new AxisAlignedBB(x - fraction, y - fraction, z - fraction, x + fraction, y + fraction, z + fraction));
+		float fraction = this.width/2.0F;
+		this.setEntityBoundingBox(new AxisAlignedBB(x-fraction, y-fraction, z-fraction, x+fraction, y+fraction, z+fraction));
 	}
 
 	@Override
 	public void resetPositionToBB()
 	{
 		AxisAlignedBB box = this.getEntityBoundingBox();
-		this.posX = (box.minX + box.maxX) / 2.0D;
-		this.posY = (box.minY + box.maxY) / 2.0D; // We use center instead of minY
-		this.posZ = (box.minZ + box.maxZ) / 2.0D;
+		this.posX = (box.minX+box.maxX)/2.0D;
+		this.posY = (box.minY+box.maxY)/2.0D; // We use center instead of minY
+		this.posZ = (box.minZ+box.maxZ)/2.0D;
 	}
 
 	@Override
@@ -288,47 +297,7 @@ public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extend
 
 	}
 
-	public IAmmoType<?, T> getAmmoType()
-	{
-		return ammoType;
-	}
-
-	//--- Getters ---//
-
-	public AmmoCore getCore()
-	{
-		return core;
-	}
-
-	public CoreType getCoreType()
-	{
-		return coreType;
-	}
-
-	public FuseType getFuseType()
-	{
-		return fuseType;
-	}
-
-	public int getFuseParameter()
-	{
-		return fuseParameter;
-	}
-
-	public List<Tuple<AmmoComponent, NBTTagCompound>> getComponents()
-	{
-		return components;
-	}
-
-	public IIColor getPaintColor()
-	{
-		return paintColor;
-	}
-
-	public Entity getOwner()
-	{
-		return owner;
-	}
+	//--- Setters ---//
 
 	/**
 	 * @param owner The owner of this bullet, used for statistics

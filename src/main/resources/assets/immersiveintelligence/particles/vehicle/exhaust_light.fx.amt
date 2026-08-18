@@ -3,6 +3,7 @@
   "textures": ["immersiveintelligence:particle/smoke/smoke"],
   "max_lifetime": 35,
   "draw_stage": "custom_smoke_noise_shader",
+  "color": "5cffffff",
   "aabb": 0.3,
   "color": "2a2a2a",
   "programs": [

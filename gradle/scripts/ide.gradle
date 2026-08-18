@@ -1,0 +1,41 @@
+tasks.register('mkxAfterSync') {
+	group = 'IDE'
+	description = 'Generates sources required immediately after an IntelliJ Gradle sync.'
+	dependsOn tasks.named('injectTags')
+}
+
+idea {
+	module {
+		inheritOutputDirs = true
+		downloadJavadoc = true
+		downloadSources = true
+	}
+	project {
+		settings {
+			compiler.javac {
+				afterEvaluate {
+					javacAdditionalOptions = '-encoding UTF-8'
+					moduleJavacAdditionalOptions = [
+							(project.name + '.main'): tasks.compileJava.options.compilerArgs.collect { '"' + it + '"' }.join(' ')
+					]
+				}
+			}
+			taskTriggers {
+				afterSync 'mkxAfterSync'
+			}
+		}
+	}
+}
+
+dependencies {
+	runtimeOnlyNonPublishable rfg.deobf("lumien:ResourceLoader:${mkxString('resourceloader_version')}")
+}
+
+tasks.named('processIdeaSettings').configure {
+	dependsOn tasks.named('mkxAfterSync')
+}
+
+tasks.named('runClient').configure {
+	extraArgs.add('--resourceLoaderAssets')
+	extraArgs.add(rootProject.file('src/main/resources/assets').absolutePath)
+}

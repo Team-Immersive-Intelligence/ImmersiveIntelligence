@@ -314,7 +314,7 @@ public class DecoBar extends DecoComponent<DecoBar>
 			return;
 		}
 
-		// Horizontal mode: draw icon on the right side of the bar, centered vertically
+		//Horizontal mode: draw icon on the right side of the bar, centered vertically
 		float iconCX = x+width-9;
 		float iconCY = y+(height*0.5f);
 

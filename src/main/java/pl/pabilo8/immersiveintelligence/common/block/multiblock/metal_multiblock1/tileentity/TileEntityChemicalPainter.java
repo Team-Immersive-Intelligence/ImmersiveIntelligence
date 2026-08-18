@@ -5,12 +5,14 @@ import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IPlayerIn
 import blusunrize.immersiveengineering.common.util.Utils;
 import com.elytradev.mirage.event.GatherLightsEvent;
 import com.elytradev.mirage.lighting.ILightEventConsumer;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidUtil;
@@ -36,6 +38,7 @@ import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.FilteredFluidTank;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionSingle;
@@ -118,28 +121,6 @@ public class TileEntityChemicalPainter extends TileEntityMultiblockProductionSin
 		//Handle item input
 		if(!world.isRemote)
 			attemptStackOutput(outputHandler, getDirection("item_output"), getPOI(MultiblockPOI.ITEM_OUTPUT));
-	}
-
-	@Override
-	protected int[] listAllPOI(MultiblockPOI poi)
-	{
-		switch(poi)
-		{
-			case FLUID_INPUT:
-				return getPOI("fluid_inputs");
-			case ENERGY_INPUT:
-				return getPOI("energy_input");
-			case DATA_INPUT:
-				return getPOI("data");
-			case ITEM_INPUT:
-				return getPOI("item_input");
-			case ITEM_OUTPUT:
-				return getPOI("item_output");
-			case REDSTONE_INPUT:
-				return getPOI("redstone");
-			default:
-				return new int[0];
-		}
 	}
 
 	@Override
@@ -332,13 +313,25 @@ public class TileEntityChemicalPainter extends TileEntityMultiblockProductionSin
 			return new String[0];
 
 		if(isPOI("tank_cyan"))
-			return new String[]{IIUtils.getFluidNameOverlayText(master.tankCyan.getFluid())};
+			return new String[]{
+					I18n.format(IIReference.DESCRIPTION_KEY+"chemical_painter.tank_cyan"),
+					TextFormatting.GRAY+IIUtils.getFluidNameOverlayText(master.tankCyan.getFluid())+TextFormatting.RESET
+			};
 		else if(isPOI("tank_magenta"))
-			return new String[]{IIUtils.getFluidNameOverlayText(master.tankMagenta.getFluid())};
+			return new String[]{
+					I18n.format(IIReference.DESCRIPTION_KEY+"chemical_painter.tank_magenta"),
+					TextFormatting.GRAY+IIUtils.getFluidNameOverlayText(master.tankMagenta.getFluid())+TextFormatting.RESET
+			};
 		else if(isPOI("tank_yellow"))
-			return new String[]{IIUtils.getFluidNameOverlayText(master.tankYellow.getFluid())};
+			return new String[]{
+					I18n.format(IIReference.DESCRIPTION_KEY+"chemical_painter.tank_yellow"),
+					TextFormatting.GRAY+IIUtils.getFluidNameOverlayText(master.tankYellow.getFluid())+TextFormatting.RESET
+			};
 		else if(isPOI("tank_black"))
-			return new String[]{IIUtils.getFluidNameOverlayText(master.tankBlack.getFluid())};
+			return new String[]{
+					I18n.format(IIReference.DESCRIPTION_KEY+"chemical_painter.tank_black"),
+					TextFormatting.GRAY+IIUtils.getFluidNameOverlayText(master.tankBlack.getFluid())+TextFormatting.RESET
+			};
 
 		return new String[0];
 	}

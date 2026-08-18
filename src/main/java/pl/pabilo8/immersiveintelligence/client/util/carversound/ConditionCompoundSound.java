@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.client.util.carversound;
 
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -31,6 +32,20 @@ public class ConditionCompoundSound<T> extends CompoundSound
 	}
 
 	public ConditionCompoundSound(MultiSound multiSound, Vec3d pos, T controller, Function<T, Boolean> shouldPlay)
+	{
+		this(multiSound, SoundCategory.BLOCKS, pos, 1f, 1f, controller, shouldPlay);
+		start();
+	}
+
+	public ConditionCompoundSound(SoundEvent event, SoundCategory category, Vec3d pos, float volume, float pitch, T controller, Function<T, Boolean> shouldPlay)
+	{
+		super(event, category, pos, volume, pitch);
+		this.playingVolume = volume;
+		this.controller = controller;
+		this.shouldPlay = shouldPlay;
+	}
+
+	public ConditionCompoundSound(SoundEvent multiSound, Vec3d pos, T controller, Function<T, Boolean> shouldPlay)
 	{
 		this(multiSound, SoundCategory.BLOCKS, pos, 1f, 1f, controller, shouldPlay);
 		start();

@@ -16,6 +16,8 @@ import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentRole;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoUtils;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
+import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageExplosion;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 /**
@@ -28,7 +30,7 @@ public class AmmoComponentTesla extends AmmoComponent
 {
 	public AmmoComponentTesla()
 	{
-		super("tesla", 1f, ComponentRole.EMP, IIColor.fromPackedARGB(0x6b778a));
+		super("tesla", 1f, ComponentRole.EMP, IIColor.fromPackedARGB(0x6b778a), 2);
 	}
 
 	@Override
@@ -40,10 +42,17 @@ public class AmmoComponentTesla extends AmmoComponent
 	@Override
 	public void onEffect(World world, Vec3d pos, Vec3d dir, ComponentEffectShape shape, NBTTagCompound tag, float size, float multiplier, Entity owner)
 	{
-		float radius = multiplier*10;
+		if(world.isRemote)
+			return;
 
-		world.playSound(null, new BlockPos(pos), IISounds.explosionFlare, SoundCategory.NEUTRAL, 1, 0.5f);
-		world.playSound(null, new BlockPos(pos), IESounds.tesla, SoundCategory.NEUTRAL, 1, 0.5f);
-		IIAmmoUtils.applyEMPEffect(world, new BlockPos(pos), radius, (int)(4000000*multiplier));
+		float radius = multiplier*10;
+		BlockPos blockPos = new BlockPos(pos);
+		world.playSound(null, blockPos, IISounds.explosionFlare, SoundCategory.NEUTRAL, 1, 0.5f);
+		world.playSound(null, blockPos, IESounds.tesla, SoundCategory.NEUTRAL, 1, 0.5f);
+
+		IIPacketHandler.sendToClient(MessageExplosion.createEMPMessage(
+				world, pos, radius,
+				IIAmmoUtils.applyEMPEffect(world, blockPos, radius, (int)(4000000*multiplier))
+		));
 	}
 }

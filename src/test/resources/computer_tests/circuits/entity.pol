@@ -1,0 +1,12 @@
+use ENTITY
+
+type entity_get_id @e
+type entity_get_type @e
+type entity_get_name @e
+type entity_get_dimension_id @e
+type entity_get_pos @e
+type entity_get_x @e
+type entity_get_y @e
+type entity_get_z @e
+
+end

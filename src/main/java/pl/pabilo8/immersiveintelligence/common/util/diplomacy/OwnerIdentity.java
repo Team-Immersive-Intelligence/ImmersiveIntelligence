@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common.util.diplomacy;
 
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemBanner;
@@ -30,7 +31,7 @@ import java.util.*;
  *
  * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
- * @updated 24.04.2026
+ * @updated 22.07.2026
  * @since 03.09.2025
  */
 public class OwnerIdentity implements INBTSerializable<NBTTagCompound>
@@ -44,6 +45,10 @@ public class OwnerIdentity implements INBTSerializable<NBTTagCompound>
 	private LawForm lawForm = LawForm.DEFAULT;
 	private IIColor color = IIColor.ALPHA;
 	private ItemStack banner = new ItemStack(Items.BANNER);
+	/**
+	 * Total world time at which this identity was founded; legacy identities use tick zero.
+	 */
+	private long foundingDate;
 	private boolean invalid;
 
 	//--- Diplomacy (agreements) ---//
@@ -58,23 +63,26 @@ public class OwnerIdentity implements INBTSerializable<NBTTagCompound>
 	//--- Constructors ---//
 	protected OwnerIdentity(@Nonnull UUID uuid)
 	{
-		this.uuid = uuid;
-		this.displayName = "placeholder";
-		this.invalid = true;
-		initAvailableRoles();
+		this(uuid, "placeholder", 0);
 	}
 
 	protected OwnerIdentity(@Nonnull UUID uuid, @Nonnull String displayName)
 	{
+		this(uuid, displayName, 0);
+	}
+
+	protected OwnerIdentity(@Nonnull UUID uuid, @Nonnull String displayName, long foundingDate)
+	{
 		this.uuid = uuid;
 		this.displayName = displayName;
+		this.foundingDate = Math.max(0, foundingDate);
 		this.invalid = true;
 		initAvailableRoles();
 	}
 
 	public OwnerIdentity(EntityLivingBase player)
 	{
-		this(UUID.randomUUID(), player.getName());
+		this(UUID.randomUUID(), player.getName(), player.world.getTotalWorldTime());
 		this.withMember(player.getUniqueID(), LawForm.DEFAULT.getOwnerRole());
 		this.color = IIColor.fromHSV(player.getRNG().nextFloat(), 0.35f, 0.85f);
 		this.banner = new ItemStack(Items.BANNER, 1, color.getDyeColor().getMetadata());
@@ -82,7 +90,12 @@ public class OwnerIdentity implements INBTSerializable<NBTTagCompound>
 
 	public OwnerIdentity(OwnerIdentity a, OwnerIdentity b)
 	{
-		this(UUID.randomUUID(), a.getDisplayName()+"-"+b.getDisplayName());
+		this(a, b, Math.max(a.foundingDate, b.foundingDate));
+	}
+
+	public OwnerIdentity(OwnerIdentity a, OwnerIdentity b, long foundingDate)
+	{
+		this(UUID.randomUUID(), a.getDisplayName()+"-"+b.getDisplayName(), foundingDate);
 		this.invalid = false;
 		//Mix colors and make a banner
 		this.color = a.color.mixedWith(b.color, 0.5f);
@@ -100,15 +113,17 @@ public class OwnerIdentity implements INBTSerializable<NBTTagCompound>
 
 	public OwnerIdentity(EasyNBT tag)
 	{
-		if(this.invalid = tag.hasKey("invalid")||!tag.hasKey("uuid"))
+		UUID loadedUUID = tag.getUUID("uuid");
+		if(this.invalid = tag.getBoolean("invalid")||loadedUUID==null)
 		{
-			this.uuid = UUID.randomUUID();
+			this.uuid = loadedUUID==null?UUID.randomUUID(): loadedUUID;
 			this.displayName = "invalid";
+			this.foundingDate = Math.max(0, tag.getLong("foundingDate"));
 			initAvailableRoles();
 		}
 		else
 		{
-			this.uuid = tag.getUUID("uuid");
+			this.uuid = loadedUUID;
 			this.displayName = tag.getString("displayName");
 			deserializeNBT(tag.unwrap());
 		}
@@ -144,9 +159,11 @@ public class OwnerIdentity implements INBTSerializable<NBTTagCompound>
 	 */
 	public OwnerIdentity withMember(UUID uuid, String roleId)
 	{
-		invalid = false;
 		if(availableRoles.containsKey(roleId))
+		{
 			memberRoles.put(uuid, roleId);
+			invalid = false;
+		}
 		return this;
 	}
 
@@ -161,6 +178,11 @@ public class OwnerIdentity implements INBTSerializable<NBTTagCompound>
 
 	private void disband()
 	{
+		disband(true);
+	}
+
+	private void disband(boolean sync)
+	{
 		this.invalid = true;
 		this.displayName = "invalid";
 
@@ -173,7 +195,18 @@ public class OwnerIdentity implements INBTSerializable<NBTTagCompound>
 		this.pendingIncomingProposals.clear();
 		this.invitedPlayers.clear();
 
-		IIPacketHandler.sendToAllClients(MessageDiplomacySync.removeIdentityMessage(this));
+		if(sync)
+			IIPacketHandler.sendToAllClients(MessageDiplomacySync.removeIdentityMessage(this));
+	}
+
+	boolean removeMemberForIntegrityCheck(UUID uuid)
+	{
+		return memberRoles.remove(uuid)!=null;
+	}
+
+	void invalidateForIntegrityCheck()
+	{
+		disband(false);
 	}
 
 	public OwnerIdentity withLawForm(LawForm lawForm)
@@ -211,6 +244,11 @@ public class OwnerIdentity implements INBTSerializable<NBTTagCompound>
 	public String getDisplayName()
 	{
 		return displayName;
+	}
+
+	public long getFoundingDate()
+	{
+		return foundingDate;
 	}
 
 	public Map<UUID, String> getMemberRolesMap()
@@ -367,6 +405,8 @@ public class OwnerIdentity implements INBTSerializable<NBTTagCompound>
 
 	public boolean isHostile(@Nonnull EntityLivingBase entity)
 	{
+		if(entity instanceof EntityMob)
+			return !getRelationTowards(entity).atLeast(DiplomaticStatus.ALLIED);
 		return getRelationTowards(entity)==DiplomaticStatus.ENEMY;
 	}
 
@@ -416,6 +456,7 @@ public class OwnerIdentity implements INBTSerializable<NBTTagCompound>
 			return EasyNBT.newNBT()
 					.withUUID("uuid", uuid)
 					.withString("displayName", displayName)
+					.withLong("foundingDate", foundingDate)
 					.withBoolean("invalid", true)
 					.unwrap();
 
@@ -433,12 +474,10 @@ public class OwnerIdentity implements INBTSerializable<NBTTagCompound>
 		EasyNBT outTag = saveAgreementMap(pendingOutgoingProposals);
 		EasyNBT inTag = saveAgreementMap(pendingIncomingProposals);
 
-		List<String> invitedList = new ArrayList<>();
-		invitedPlayers.forEach(uuid -> invitedList.add(uuid.toString()));
-
 		return EasyNBT.newNBT()
 				.withUUID("uuid", uuid)
 				.withString("displayName", displayName)
+				.withLong("foundingDate", foundingDate)
 				.withTag("memberRoles", rolesTag)
 				.withTag("availableRoles", availRolesTag)
 				.withEnum("lawForm", lawForm)
@@ -449,7 +488,7 @@ public class OwnerIdentity implements INBTSerializable<NBTTagCompound>
 				.withTag("activeTargetAgreements", targetTag)
 				.withTag("pendingOutgoing", outTag)
 				.withTag("pendingIncoming", inTag)
-				.withList("invitedPlayers", invitedList)
+				.withList("invitedPlayers", invitedPlayers.toArray())
 				.unwrap();
 	}
 
@@ -465,6 +504,7 @@ public class OwnerIdentity implements INBTSerializable<NBTTagCompound>
 		pendingOutgoingProposals.clear();
 		pendingIncomingProposals.clear();
 		invitedPlayers.clear();
+		foundingDate = Math.max(0, enbt.getLong("foundingDate"));
 
 		if(enbt.getBoolean("invalid"))
 		{

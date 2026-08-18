@@ -7,7 +7,6 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTileGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage.ImageAnimationDirection;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityPrecisionAssembler;
@@ -72,11 +71,11 @@ public class GuiPrecisionAssembler extends DecoTileGui<TileEntityPrecisionAssemb
 						.withSize(48, 25)
 						.withImageLocation(TEXTURE_PRE, true)
 						.withUV(128, 14, 0, 48+14, 25),
-				this.recipeLink = new DecoImage(48+16-1-4-10, 8+4+2+10+10)
+				new DecoImage(48+16-1-4-10, 8+4+2+10+10)
 						.withSize(85, 17-3)
 						.withImageLocation(TEXTURE_PRE, true)
 						.withUV(128, 0, 25, 85, 17+25-3),
-				new DecoImage(48+16-1-4-10, 8+4+2+10+10)
+				this.recipeLink = new DecoImage(48+16-1-4-10, 8+4+2+10+10)
 						.withSize(85, 17-3)
 						.withImageLocation(TEXTURE_PRE, true)
 						.withUV(128, 0, 42, 85, 17+42-3)

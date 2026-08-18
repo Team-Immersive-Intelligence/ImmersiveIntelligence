@@ -25,11 +25,11 @@ public abstract class AmmoComponent extends AmmoPart
 	private final ComponentRole role;
 	private final int slotsTaken;
 
-	public AmmoComponent(String name, float density, ComponentRole role, IIColor color)
+	public AmmoComponent(String name, float density, ComponentRole role, IIColor color, int slotsTaken)
 	{
 		super(name, density, color);
 		this.role = role;
-		this.slotsTaken = 1;
+		this.slotsTaken = slotsTaken;
 	}
 
 	//--- Properties ---//
@@ -98,5 +98,10 @@ public abstract class AmmoComponent extends AmmoPart
 	public int getSlotsTaken()
 	{
 		return slotsTaken;
+	}
+
+	public boolean isSpaciousComponent()
+	{
+		return slotsTaken >= 3;
 	}
 }

@@ -32,7 +32,7 @@ public class AmmoComponentBottledTaint extends AmmoComponent
 {
 	public AmmoComponentBottledTaint()
 	{
-		super("bottled_taint", 1f, ComponentRole.SPECIAL, IIColor.fromPackedARGB(0x1e0026));
+		super("bottled_taint", 1f, ComponentRole.SPECIAL, IIColor.fromPackedARGB(0x1e0026), 1);
 	}
 
 	@Override

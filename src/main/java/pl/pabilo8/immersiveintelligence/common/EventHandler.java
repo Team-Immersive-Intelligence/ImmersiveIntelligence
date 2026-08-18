@@ -13,7 +13,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.potion.PotionEffect;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSourceIndirect;
 import net.minecraft.util.EnumHand;
@@ -21,7 +21,6 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.GameRules.ValueType;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.GameRuleChangeEvent;
@@ -43,6 +42,7 @@ import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -51,6 +51,10 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.ammo.penetration.DamageBlockPos;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoUtils;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.PenetrationCache;
+import pl.pabilo8.immersiveintelligence.api.api.protection.RadiationHandler;
+import pl.pabilo8.immersiveintelligence.api.api.protection.capability.IRadiationEmitter;
+import pl.pabilo8.immersiveintelligence.api.api.protection.capability.ProtectionCapabilities;
+import pl.pabilo8.immersiveintelligence.api.api.protection.capability.ProtectionCapabilityProvider;
 import pl.pabilo8.immersiveintelligence.api.upgrade.IUpgradableDevice;
 import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedMultiblock;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Ammunition;
@@ -99,6 +103,8 @@ public class EventHandler
 	public static void onUnload(Unload event)
 	{
 		IISaveData.setDirty();
+		if(!event.getWorld().isRemote)
+			RadiationHandler.INSTANCE.clearEmitterIndex(event.getWorld());
 	}
 
 	@SubscribeEvent
@@ -183,6 +189,24 @@ public class EventHandler
 		}
 	}
 
+	@SubscribeEvent
+	public void attachEntityCapability(AttachCapabilitiesEvent<Entity> event)
+	{
+		if(event.getObject() instanceof IRadiationEmitter)
+			event.addCapability(ProtectionCapabilities.RADIATION_EMITTER_ID,
+					new ProtectionCapabilityProvider()
+							.with(ProtectionCapabilities.RADIATION_EMITTER, (IRadiationEmitter)event.getObject()));
+	}
+
+	@SubscribeEvent
+	public void attachTileEntityCapability(AttachCapabilitiesEvent<TileEntity> event)
+	{
+		if(event.getObject() instanceof IRadiationEmitter)
+			event.addCapability(ProtectionCapabilities.RADIATION_EMITTER_ID,
+					new ProtectionCapabilityProvider()
+							.with(ProtectionCapabilities.RADIATION_EMITTER, (IRadiationEmitter)event.getObject()));
+	}
+
 
 	private void initGamerule(String ruleName, GameRules rules, ValueType valueType, Object defaultValue)
 	{
@@ -231,6 +255,8 @@ public class EventHandler
 	public void onWorldTick(WorldTickEvent event)
 	{
 		pendingExplosions.removeIf(IIExplosion::explodeBlocks);
+		if(event.phase==Phase.END&&!event.world.isRemote)
+			RadiationHandler.INSTANCE.tick(event.world);
 	}
 
 	//--- Vehicle or Gun Mounts ---//
@@ -345,32 +371,18 @@ public class EventHandler
 		EntityLivingBase living = event.getEntityLiving();
 		World world = living.world;
 
-		if(!world.isRemote)
+		if(world.isRemote||!(living instanceof EntityPlayer))
 			return;
 
-		Biome biome = world.getBiome(living.getPosition());
-		if(living instanceof EntityPlayer)
+		EntityPlayer player = (EntityPlayer)living;
+		//Handle powerpack crafted with armor
+		if(!living.getItemStackFromSlot(EntityEquipmentSlot.CHEST).isEmpty()
+				&&ItemNBTHelper.hasKey(living.getItemStackFromSlot(EntityEquipmentSlot.CHEST), IIContent.NBT_AdvancedPowerpack))
 		{
-			EntityPlayer player = (EntityPlayer)living;
-
-			//Potion effects
-			//Apply radiation
-			if(world.getTotalWorldTime()%20==0)
-				if(!player.isCreative()&&biome==IIContent.biomeWasteland)
-					living.addPotionEffect(new PotionEffect(IIPotions.radiation, 2000, 0, false, false));
-
-			//Handle powerpack crafted with armor
-			if(!living.getItemStackFromSlot(EntityEquipmentSlot.CHEST).isEmpty()
-					&&ItemNBTHelper.hasKey(living.getItemStackFromSlot(EntityEquipmentSlot.CHEST), IIContent.NBT_AdvancedPowerpack))
-			{
-				ItemStack powerpack = ItemNBTHelper.getItemStack(living.getItemStackFromSlot(EntityEquipmentSlot.CHEST), IIContent.NBT_AdvancedPowerpack);
-				if(!powerpack.isEmpty())
-					powerpack.getItem().onArmorTick(living.getEntityWorld(), player, powerpack);
-			}
+			ItemStack powerpack = ItemNBTHelper.getItemStack(living.getItemStackFromSlot(EntityEquipmentSlot.CHEST), IIContent.NBT_AdvancedPowerpack);
+			if(!powerpack.isEmpty())
+				powerpack.getItem().onArmorTick(living.getEntityWorld(), player, powerpack);
 		}
-		else if(world.getTotalWorldTime()%20==0&&biome==IIContent.biomeWasteland)
-			living.addPotionEffect(new PotionEffect(IIPotions.radiation, 2000, 0, false, false));
-
 	}
 
 	//--- Armor ---//
@@ -442,18 +454,17 @@ public class EventHandler
 	@SubscribeEvent
 	public void onLivingFallEvent(LivingFallEvent event)
 	{
-		if(event.getEntityLiving() instanceof EntityPlayer)
-		{
-			EntityPlayer player = (EntityPlayer)event.getEntityLiving();
-			Iterable<ItemStack> armor = player.getArmorInventoryList();
+		if(!(event.getEntityLiving() instanceof EntityPlayer))
+			return;
 
-			for(ItemStack piece : armor)
-			{
-				if(!(piece.getItem() instanceof ItemIILightEngineerBoots)) continue;
-				ItemIILightEngineerBoots boots = (ItemIILightEngineerBoots)piece.getItem();
-				if(boots.hasUpgrade(piece, "internal_springs"))
-					event.setDistance(0);
-			}
+		EntityPlayer player = (EntityPlayer)event.getEntityLiving();
+		Iterable<ItemStack> armor = player.getArmorInventoryList();
+		for(ItemStack piece : armor)
+		{
+			if(!(piece.getItem() instanceof ItemIILightEngineerBoots)) continue;
+			ItemIILightEngineerBoots boots = (ItemIILightEngineerBoots)piece.getItem();
+			if(boots.hasUpgrade(piece, "internal_springs"))
+				event.setDistance(0);
 		}
 	}
 

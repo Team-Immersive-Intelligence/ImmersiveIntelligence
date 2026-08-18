@@ -80,9 +80,9 @@
     "item_in": 9,
     "item_out": 5,
     "redstone": 25,
-    "tool1": 11,
+    "tool1": 13,
     "tool2": 12,
-    "tool3": 13
+    "tool3": 11
   },
   "rotations": {
     "item_input": "counterclockwise_90",

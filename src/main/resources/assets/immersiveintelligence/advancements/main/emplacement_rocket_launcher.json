@@ -1,0 +1,28 @@
+{
+  "display": {
+    "icon": {
+      "item": "immersiveintelligence:placeholder_icon",
+      "data": 9
+    },
+    "title": {
+      "translate": "advancement.immersiveintelligence.emplacement_rocket_launcher"
+    },
+    "description": {
+      "translate": "advancement.immersiveintelligence.emplacement_rocket_launcher.desc"
+    }
+  },
+  "parent": "immersiveintelligence:main/emplacement",
+  "criteria": {
+    "install_upgrade": {
+      "trigger": "immersiveintelligence:upgrade_installed",
+      "conditions": {
+        "upgrade": "immersiveintelligence:emplacement/rocket_launcher"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "install_upgrade"
+    ]
+  ]
+}

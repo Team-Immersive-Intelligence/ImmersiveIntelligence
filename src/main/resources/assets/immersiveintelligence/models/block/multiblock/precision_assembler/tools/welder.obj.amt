@@ -2,10 +2,21 @@
   "origins": {
     "inserter": [8, 4, 8],
     "lower": [8, 8, 8],
-    "upper": [8, 21.5, 8]
+    "upper": [8, 21.5, 8],
+    "particle": [8, 38.5, 5.5]
   },
   "hierarchy": {
     "lower": "inserter",
-    "upper": "lower"
+    "upper": "lower",
+    "particle": "upper"
+  },
+  "properties": {
+    "particle": {
+      "particle": "machine/precision_assembler/welding",
+      "progress": 0.0,
+      "correct_rotation": true,
+      "visible": false,
+      "scale": [1.0, 1.0, 1.0]
+    }
   }
 }

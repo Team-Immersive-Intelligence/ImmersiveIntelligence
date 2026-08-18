@@ -1,12 +1,12 @@
 package pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.util;
 
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.DecoTextField;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.DecoTextInputBase;
 
 import java.util.List;
 import java.util.function.Predicate;
 
 /**
- * Represents a text caret used inside of a {@link DecoTextField}
+ * Represents a text caret used inside of a {@link DecoTextInputBase}
  *
  * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
@@ -23,6 +23,14 @@ public class TextCaret
 		this.pos = pos;
 		this.anchorLine = line;
 		this.anchorPos = pos;
+	}
+
+	public TextCaret copy()
+	{
+		TextCaret copy = new TextCaret(line, pos);
+		copy.anchorLine = anchorLine;
+		copy.anchorPos = anchorPos;
+		return copy;
 	}
 
 	public boolean hasSelection()

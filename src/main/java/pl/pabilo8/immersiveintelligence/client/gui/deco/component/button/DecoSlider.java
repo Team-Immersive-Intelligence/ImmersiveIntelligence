@@ -179,7 +179,7 @@ public class DecoSlider extends DecoTextBasedComponent<DecoSlider>
 					withValue(Float.parseFloat(text));
 				} catch(NumberFormatException e)
 				{
-					// Ignore invalid input
+					//Ignore invalid input
 				}
 			}
 			break;

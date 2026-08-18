@@ -4,10 +4,8 @@ import blusunrize.immersiveengineering.api.IEProperties;
 import blusunrize.immersiveengineering.api.TargetingInfo;
 import blusunrize.immersiveengineering.api.energy.wires.IImmersiveConnectable;
 import blusunrize.immersiveengineering.api.energy.wires.IWireCoil;
-import blusunrize.immersiveengineering.api.energy.wires.TileEntityImmersiveConnectable;
 import blusunrize.immersiveengineering.api.energy.wires.WireType;
 import blusunrize.immersiveengineering.client.models.IOBJModelCallback;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IDirectionalTile;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
@@ -23,10 +21,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.property.Properties;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.BlockIIDataDevice.IIBlockTypes_Connector;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity.*;
-import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.TileEntityAdvancedFluidInserter;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.TileEntityChemicalDispenser;
-import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.TileEntityFluidInserter;
+import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.inserter.TileEntityAdvancedFluidInserter;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.inserter.TileEntityAdvancedInserter;
+import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.inserter.TileEntityFluidInserter;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.inserter.TileEntityInserter;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIITileProvider;
@@ -35,6 +33,7 @@ import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBl
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IITileProviderEnum;
 import pl.pabilo8.immersiveintelligence.common.util.block.ItemBlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
+import pl.pabilo8.immersiveintelligence.common.util.tile.TileEntityIIDirectionalConnectable;
 
 import java.util.ArrayList;
 
@@ -47,7 +46,8 @@ public class BlockIIDataDevice extends BlockIITileProvider<IIBlockTypes_Connecto
 	public BlockIIDataDevice()
 	{
 		super("data_connector", Material.IRON, PropertyEnum.create("type", IIBlockTypes_Connector.class), ItemBlockIIBase::new,
-				IEProperties.FACING_ALL, IEProperties.BOOLEANS[0], IEProperties.CONNECTIONS, IEProperties.DYNAMICRENDER, IOBJModelCallback.PROPERTY, Properties.AnimationProperty);
+				IEProperties.FACING_ALL, IEProperties.BOOLEANS[0], IEProperties.CONNECTIONS,
+				IEProperties.DYNAMICRENDER, IOBJModelCallback.PROPERTY, Properties.AnimationProperty);
 		setHardness(3.0F);
 		setResistance(15.0F);
 		setLightOpacity(0);
@@ -83,8 +83,8 @@ public class BlockIIDataDevice extends BlockIITileProvider<IIBlockTypes_Connecto
 				if(te==null)
 					break;
 
-				TileEntityImmersiveConnectable connector = (TileEntityImmersiveConnectable & IDirectionalTile)te;
-				if(world.isAirBlock(pos.offset(((IDirectionalTile)connector).getFacing())))
+				TileEntityIIDirectionalConnectable connector = (TileEntityIIDirectionalConnectable)te;
+				if(world.isAirBlock(pos.offset(connector.getFacing())))
 				{
 					this.dropBlockAsItem(connector.getWorld(), pos, world.getBlockState(pos), 0);
 					connector.getWorld().setBlockToAir(pos);
@@ -122,7 +122,6 @@ public class BlockIIDataDevice extends BlockIITileProvider<IIBlockTypes_Connecto
 					ArrayList<ItemStack> applicableWires = new ArrayList<>();
 					NonNullList<ItemStack> pInventory = player.inventory.mainInventory;
 					for(ItemStack s : pInventory)
-					{
 						if(s.getItem() instanceof IWireCoil)
 						{
 							IWireCoil coilItem = (IWireCoil)s.getItem();
@@ -165,7 +164,6 @@ public class BlockIIDataDevice extends BlockIITileProvider<IIBlockTypes_Connecto
 									applicableWires.add(insertIndex, coil);
 							}
 						}
-					}
 					if(applicableWires.size() > 0)
 					{
 						ItemStack heldItem = pInventory.get(player.inventory.currentItem);

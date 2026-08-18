@@ -1,0 +1,6 @@
+# Made by Pabilo8 with Blockbench
+
+newmtl common_wooden_pier
+map_Kd immersiveintelligence:blocks/common/common_wooden_pier
+newmtl flooring
+map_Kd immersiveintelligence:blocks/harbor/absolutely_unconnected/flooring

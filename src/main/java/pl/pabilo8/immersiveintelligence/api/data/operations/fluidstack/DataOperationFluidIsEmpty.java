@@ -24,6 +24,6 @@ public class DataOperationFluidIsEmpty extends DataOperation
 	public DataType execute(DataPacket packet, DataTypeExpression data)
 	{
 		DataTypeFluidStack fs = packet.getVarInType(DataTypeFluidStack.class, data.getArgument(0));
-		return new DataTypeBoolean(fs.value!=null&&fs.value.amount > 0);
+		return new DataTypeBoolean(fs.value==null||fs.value.amount <= 0);
 	}
 }

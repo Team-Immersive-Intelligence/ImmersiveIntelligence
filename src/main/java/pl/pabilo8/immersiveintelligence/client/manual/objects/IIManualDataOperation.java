@@ -3,10 +3,13 @@ package pl.pabilo8.immersiveintelligence.client.manual.objects;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.client.gui.elements.GuiButtonState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
+import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataOperationUtils;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataTypeUtils;
@@ -17,6 +20,8 @@ import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType.IGenericDataType;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType.TypeMetaInfo;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.highlight.POLHighlighter;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.highlight.TextHighlighter.Segment;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualObject;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualPage;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
@@ -34,24 +39,34 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * @author Pabilo8 (pabilo@iiteam.net)
+ * Displays a data operation reference with parameters, result information, and a POL example.
+ *
+ * @author Pabilo8(pabilo@iiteam.net)
+ * @updated 10.08.2026
  * @since 02.11.2022
  */
 public class IIManualDataOperation extends IIManualObject
 {
-	private static final IIColor COLOR_CODE_PLAIN_TEXT = IIColor.fromPackedRGB(0xA9B7C6);
-	private static final IIColor COLOR_CODE_KEYWORD = IIColor.fromPackedRGB(0xCC7832);
-	private static final IIColor COLOR_CODE_VARIABLE = IIColor.fromPackedRGB(0x7e6b80);
-	private static final IIColor COLOR_CODE_STRING = IIColor.fromPackedRGB(0x6A8759);
-	private static final IIColor COLOR_CODE_COMMENT = IIColor.fromPackedRGB(0x49633f);
-	private static final IIColor COLOR_CODE_NUMBER = IIColor.fromPackedRGB(0x6897BB);
+	private static final IIColor COLOR_CODE_BACKGROUND = IIColor.fromPackedARGB(0xAA000000L);
+	private static final IIColor COLOR_SCROLLBAR_TRACK = IIColor.fromPackedARGB(0x663C3F41L);
+	private static final IIColor COLOR_SCROLLBAR_THUMB = IIColor.fromPackedARGB(0xAAA9B7C6L);
+	private static final POLHighlighter POL_HIGHLIGHTER = new POLHighlighter();
+
+	private static final int VARIABLE_TEXT_OFFSET = 18;
+	private static final int SCROLLBAR_HEIGHT = 4;
+	private static final int SCROLLBAR_GAP = 2;
+	private static final int SCROLLBAR_MIN_THUMB_WIDTH = 12;
 
 	private static boolean lastState = false;
 	private GuiButtonState codeSwitch;
 	private DataOperationMeta dataOperation;
-	private String[][] codeSnippets;
+	private List<List<Segment>>[] highlightedCodeCache;
 	private TypeMetaInfo<?>[][] parametersInfo;
 	private TypeMetaInfo<?>[] resultTypes;
+	private int codeWidth;
+	private int codeLineCount;
+	private int codeScrollbarY;
+	private int codeScroll;
 
 	//--- Setup ---//
 
@@ -69,21 +84,35 @@ public class IIManualDataOperation extends IIManualObject
 		if(dataOperation==null)
 			dataOperation = DataOperationNull.INSTANCE_META;
 
-		int yOffset = y+manual.fontRenderer.FONT_HEIGHT
-				+manual.fontRenderer.getWordWrappedHeight(I18n.format("datasystem.immersiveintelligence.function."+dataOperation.name()+".desc"), width)
-				-3;
-		codeSwitch = new GuiButtonState(0, x+width-16, yOffset, 16, 16, "",
-				lastState, IIReference.RES_TEXTURES_GUI.with("manual").withExtension(ResLoc.EXT_PNG).toString(),
-				30, 0, 0
-		);
-
 		this.resultTypes = getCompatibleTypes(dataOperation.expectedResult());
 		parametersInfo = new TypeMetaInfo[dataOperation.params().length][];
 		for(int i = 0; i < dataOperation.params().length; i++)
 			parametersInfo[i] = getCompatibleTypes(dataOperation.allowedTypes()[i]);
-		codeSnippets = new String[resultTypes.length][];
+		//noinspection unchecked
+		highlightedCodeCache = new List[resultTypes.length];
 		for(int i = 0; i < resultTypes.length; i++)
-			codeSnippets[i] = generateSnippet(resultTypes[i]);
+			highlightedCodeCache[i] = highlightSnippet(generateSnippet(resultTypes[i]));
+
+		boolean manualUnicode = manual.fontRenderer.getUnicodeFlag();
+		boolean codeUnicode = IIClientUtils.fontRegular.getUnicodeFlag();
+		manual.fontRenderer.setUnicodeFlag(true);
+		IIClientUtils.fontRegular.setUnicodeFlag(true);
+
+		codeWidth = getCodeWidth();
+		codeLineCount = Arrays.stream(highlightedCodeCache).mapToInt(List::size).max().orElse(0);
+
+		int headerHeight = getHeaderHeight();
+		codeSwitch = new GuiButtonState(0, x+width-16, y+headerHeight-3, 16, 16, "",
+				lastState, IIReference.RES_TEXTURES_GUI.with("manual").withExtension(ResLoc.EXT_PNG).toString(),
+				30, 0, 0
+		);
+
+		int codeTop = y+headerHeight+manual.fontRenderer.FONT_HEIGHT*2;
+		codeScrollbarY = codeTop+codeLineCount*IIClientUtils.fontRegular.FONT_HEIGHT+SCROLLBAR_GAP;
+		height = Math.max(height, Math.max(getDataHeight(headerHeight), getCodeHeight(headerHeight)));
+
+		manual.fontRenderer.setUnicodeFlag(manualUnicode);
+		IIClientUtils.fontRegular.setUnicodeFlag(codeUnicode);
 	}
 
 	@Override
@@ -93,6 +122,110 @@ public class IIManualDataOperation extends IIManualObject
 	}
 
 	//--- Content Preparation ---//
+
+	private int getHeaderHeight()
+	{
+		String description = I18n.format("datasystem.immersiveintelligence.function."+dataOperation.name()+".desc");
+		return manual.fontRenderer.FONT_HEIGHT+manual.fontRenderer.getWordWrappedHeight(description, width);
+	}
+
+	private int getDataHeight(int headerHeight)
+	{
+		int result = headerHeight;
+		int fontHeight = manual.fontRenderer.FONT_HEIGHT;
+
+		if(dataOperation.params().length > 0)
+		{
+			result += fontHeight+2;
+			for(String param : dataOperation.params())
+				result += getVariableHeight(I18n.format(
+						"datasystem.immersiveintelligence.function."+dataOperation.name()+".param."+param+".desc"
+				));
+		}
+
+		if(dataOperation.resultMatters())
+		{
+			result += fontHeight+2;
+			result += getVariableHeight(I18n.format(
+					"datasystem.immersiveintelligence.function."+dataOperation.name()+".result.desc"
+			));
+		}
+
+		return result;
+	}
+
+	private int getCodeHeight(int headerHeight)
+	{
+		int codeHeight = codeLineCount*IIClientUtils.fontRegular.FONT_HEIGHT+4;
+		if(hasHorizontalScroll())
+			codeHeight += SCROLLBAR_GAP+SCROLLBAR_HEIGHT;
+		return headerHeight+manual.fontRenderer.FONT_HEIGHT*2+codeHeight;
+	}
+
+	private int getVariableTextWidth()
+	{
+		return Math.max(1, width-VARIABLE_TEXT_OFFSET);
+	}
+
+	private int getVariableHeight(String description)
+	{
+		return Math.max(20, 8+manual.fontRenderer.getWordWrappedHeight(description, getVariableTextWidth()));
+	}
+
+	private int getCodeWidth()
+	{
+		return Arrays.stream(highlightedCodeCache)
+				.flatMap(List::stream)
+				.mapToInt(this::getHighlightedLineWidth)
+				.max()
+				.orElse(0);
+	}
+
+	private int getHighlightedLineWidth(List<Segment> line)
+	{
+		return line.stream()
+				.mapToInt(segment -> IIClientUtils.fontRegular.getStringWidth(getFormattedSegmentText(segment)))
+				.sum();
+	}
+
+	private boolean hasHorizontalScroll()
+	{
+		return codeWidth > width;
+	}
+
+	private int getMaxCodeScroll()
+	{
+		return Math.max(0, codeWidth-width);
+	}
+
+	private int getScrollbarThumbWidth()
+	{
+		if(!hasHorizontalScroll())
+			return width;
+		return Math.max(SCROLLBAR_MIN_THUMB_WIDTH, width*width/codeWidth);
+	}
+
+	private void updateCodeScroll(int mouseX)
+	{
+		int thumbWidth = getScrollbarThumbWidth();
+		int trackRange = width-thumbWidth;
+		if(trackRange <= 0)
+		{
+			codeScroll = 0;
+			return;
+		}
+
+		float progress = (mouseX-x-thumbWidth*0.5f)/trackRange;
+		progress = MathHelper.clamp(progress, 0, 1);
+		codeScroll = Math.round(progress*getMaxCodeScroll());
+	}
+
+	private boolean isMouseOverScrollbar(int mouseX, int mouseY)
+	{
+		return codeSwitch.state&&hasHorizontalScroll()
+				&&mouseX >= x&&mouseX < x+width
+				&&mouseY >= codeScrollbarY&&mouseY < codeScrollbarY+SCROLLBAR_HEIGHT;
+	}
 
 	private TypeMetaInfo<?>[] getCompatibleTypes(Class<? extends DataType> type)
 	{
@@ -119,7 +252,7 @@ public class IIManualDataOperation extends IIManualObject
 		ArrayList<String> code = new ArrayList<>();
 
 		//Comment about importing
-		code.add(COLOR_CODE_COMMENT.getHexCol(TextFormatting.ITALIC+";"+I18n.format("ie.manual.entry.data_operation.comment.import")));
+		code.add(";"+I18n.format("ie.manual.entry.data_operation.comment.import"));
 
 		//Operation Import
 		boolean importPresent = false;
@@ -127,16 +260,13 @@ public class IIManualDataOperation extends IIManualObject
 			if(Arrays.stream(value.getFunctions()).anyMatch(s -> s.equals(dataOperation.name())))
 			{
 				if(importPresent)
-					code.add(COLOR_CODE_COMMENT.getHexCol(TextFormatting.ITALIC+";"+I18n.format("ie.manual.entry.data_operation.comment.import_more")));
-				builder = new StringBuilder()
-						.append(COLOR_CODE_KEYWORD.getHexCol("use "))
-						.append(COLOR_CODE_VARIABLE.getHexCol(value.getName().toUpperCase()));
-				code.add(builder.toString());
+					code.add(";"+I18n.format("ie.manual.entry.data_operation.comment.import_more"));
+				code.add("use "+value.getName().toUpperCase());
 				importPresent = true;
 			}
 
 		//Comment about use cases
-		code.add(COLOR_CODE_COMMENT.getHexCol(TextFormatting.ITALIC+";"+I18n.format("ie.manual.entry.data_operation.comment.example")));
+		code.add(";"+I18n.format("ie.manual.entry.data_operation.comment.example"));
 
 		//If the result is saved to a variable (a), start from letter b
 		final int startFromLetter = dataOperation.resultMatters()?1: 0;
@@ -146,10 +276,8 @@ public class IIManualDataOperation extends IIManualObject
 		{
 			builder = new StringBuilder();
 			if(dataOperation.resultMatters())
-				builder.append(COLOR_CODE_KEYWORD.getHexCol(resultingType.name)).append(' ');
-			builder.append(COLOR_CODE_VARIABLE.getHexCol("a"))
-					.append(" = ");
-			builder.append(COLOR_CODE_PLAIN_TEXT.getHexCol(dataOperation.expression()));
+				builder.append(resultingType.name).append(" a = ");
+			builder.append(dataOperation.expression());
 			for(int i = 0; i < dataOperation.params().length; i++)
 				builder.append(" @").append(DataPacket.VARIABLE_NAMES[startFromLetter+i]);
 			code.add(builder.toString());
@@ -158,15 +286,30 @@ public class IIManualDataOperation extends IIManualObject
 		//Operation example using name
 		builder = new StringBuilder();
 		if(dataOperation.resultMatters())
-			builder.append(COLOR_CODE_KEYWORD.getHexCol(resultingType.name)).append(' ')
-					.append(COLOR_CODE_VARIABLE.getHexCol("a"))
-					.append(" = ");
-		builder.append(COLOR_CODE_PLAIN_TEXT.getHexCol(dataOperation.name()));
+			builder.append(resultingType.name).append(" a = ");
+		builder.append(dataOperation.name());
 		for(int i = 0; i < dataOperation.params().length; i++)
 			builder.append(" @").append(DataPacket.VARIABLE_NAMES[startFromLetter+i]);
 		code.add(builder.toString());
 
 		return code.toArray(new String[0]);
+	}
+
+	private List<List<Segment>> highlightSnippet(String[] snippet)
+	{
+		ArrayList<List<Segment>> highlighted = new ArrayList<>(snippet.length);
+		for(String line : snippet)
+			highlighted.add(Collections.unmodifiableList(POL_HIGHLIGHTER.highlight(line)));
+		return Collections.unmodifiableList(highlighted);
+	}
+
+	private String getFormattedSegmentText(Segment segment)
+	{
+		if(!segment.bold&&!segment.italic)
+			return segment.text;
+		if(segment.bold&&segment.italic)
+			return TextFormatting.BOLD.toString()+TextFormatting.ITALIC+segment.text;
+		return (segment.bold?TextFormatting.BOLD: TextFormatting.ITALIC)+segment.text;
 	}
 
 	<T> T getArrayElementForTime(T[] parameters)
@@ -195,13 +338,79 @@ public class IIManualDataOperation extends IIManualObject
 				.finish();
 
 		manual.fontRenderer.setUnicodeFlag(true);
-		manual.fontRenderer.drawString(TextFormatting.BOLD+paramName, x+18, yOffset-4, manual.getTextColour());
-		manual.fontRenderer.drawSplitString(paramDesc, x+18, yOffset+4, 110, manual.getTextColour());
+		manual.fontRenderer.drawString(TextFormatting.BOLD+paramName, x+VARIABLE_TEXT_OFFSET, yOffset-4, manual.getTextColour());
+		manual.fontRenderer.drawSplitString(paramDesc, x+VARIABLE_TEXT_OFFSET, yOffset+4, getVariableTextWidth(), manual.getTextColour());
 
-		return Math.max(20, 8+manual.fontRenderer.getWordWrappedHeight(paramDesc, width));
+		return getVariableHeight(paramDesc);
 	}
 
 	//--- Rendering, Reaction ---//
+
+	private void drawCodeSnippet(Minecraft mc, int yOffset)
+	{
+		List<List<Segment>> snippet = getArrayElementForTime(highlightedCodeCache);
+		int codeFontHeight = IIClientUtils.fontRegular.FONT_HEIGHT;
+		int codeTextHeight = codeLineCount*codeFontHeight;
+		int panelHeight = codeTextHeight+4+(hasHorizontalScroll()?SCROLLBAR_GAP+SCROLLBAR_HEIGHT: 0);
+
+		boolean codeFontUnicode = IIClientUtils.fontRegular.getUnicodeFlag();
+		IIClientUtils.fontRegular.setUnicodeFlag(true);
+		drawCodePanel(yOffset, panelHeight);
+
+		GL11.glPushAttrib(GL11.GL_SCISSOR_BIT);
+		GL11.glEnable(GL11.GL_SCISSOR_TEST);
+		ScaledResolution resolution = new ScaledResolution(mc);
+		int scale = resolution.getScaleFactor();
+		GL11.glScissor(
+				x*scale,
+				mc.displayHeight-(yOffset+codeTextHeight)*scale,
+				width*scale,
+				codeTextHeight*scale
+		);
+
+		int lineY = yOffset;
+		for(List<Segment> line : snippet)
+		{
+			drawHighlightedLine(line, x-codeScroll, lineY);
+			lineY += codeFontHeight;
+		}
+		GL11.glPopAttrib();
+
+		IIClientUtils.fontRegular.setUnicodeFlag(codeFontUnicode);
+	}
+
+	private void drawCodePanel(int yOffset, int panelHeight)
+	{
+		GlStateManager.disableTexture2D();
+		GlStateManager.enableBlend();
+		IIDrawUtils draw = IIDrawUtils.startColored()
+				.drawColorRect(x-2, yOffset-2, width+4, panelHeight, COLOR_CODE_BACKGROUND);
+
+		if(hasHorizontalScroll())
+		{
+			int thumbWidth = getScrollbarThumbWidth();
+			int thumbRange = width-thumbWidth;
+			int thumbX = x;
+			if(getMaxCodeScroll() > 0)
+				thumbX += Math.round(thumbRange*(codeScroll/(float)getMaxCodeScroll()));
+
+			draw.drawColorRect(x, codeScrollbarY, width, SCROLLBAR_HEIGHT, COLOR_SCROLLBAR_TRACK)
+					.drawColorRect(thumbX, codeScrollbarY, thumbWidth, SCROLLBAR_HEIGHT, COLOR_SCROLLBAR_THUMB);
+		}
+
+		draw.finish();
+		GlStateManager.enableTexture2D();
+	}
+
+	private void drawHighlightedLine(List<Segment> line, int xOffset, int yOffset)
+	{
+		for(Segment segment : line)
+		{
+			String text = getFormattedSegmentText(segment);
+			IIClientUtils.fontRegular.drawString(text, xOffset, yOffset, segment.color.getPackedRGB());
+			xOffset += IIClientUtils.fontRegular.getStringWidth(text);
+		}
+	}
 
 	@Override
 	public void drawButton(Minecraft mc, int mx, int my, float partialTicks)
@@ -209,11 +418,11 @@ public class IIManualDataOperation extends IIManualObject
 		super.drawButton(mc, mx, my, partialTicks);
 		codeSwitch.drawButton(mc, mx, my, partialTicks);
 
-		boolean unicode = mc.fontRenderer.getUnicodeFlag();
+		boolean unicode = manual.fontRenderer.getUnicodeFlag();
 		int fontHeight = manual.fontRenderer.FONT_HEIGHT;
 		int yOffset = y;
 
-		mc.fontRenderer.setUnicodeFlag(true);
+		manual.fontRenderer.setUnicodeFlag(true);
 		GlStateManager.pushMatrix();
 
 		String title = I18n.format("datasystem.immersiveintelligence.function."+dataOperation.name());
@@ -228,17 +437,9 @@ public class IIManualDataOperation extends IIManualObject
 			//POL code
 			String polCode = I18n.format("ie.manual.entry.data_operation.pol");
 			IIClientUtils.drawStringCentered(manual.fontRenderer, TextFormatting.BOLD+polCode, x, yOffset, width, 0, manual.getTextColour());
-			yOffset += (int)(fontHeight*2f);
+			yOffset += fontHeight*2;
 
-			boolean codeFontUnicode = IIClientUtils.fontRegular.getUnicodeFlag();
-			IIClientUtils.fontRegular.setUnicodeFlag(true);
-			ClientUtils.drawColouredRect(x-2, yOffset-2, width+4, manual.getGui().height-yOffset-80-12, 0xaa000000);
-			for(String codeSnippet : getArrayElementForTime(codeSnippets))
-			{
-				IIClientUtils.fontRegular.drawString(codeSnippet, x, yOffset, COLOR_CODE_PLAIN_TEXT.getPackedRGB());
-				yOffset += fontHeight;
-			}
-			IIClientUtils.fontRegular.setUnicodeFlag(codeFontUnicode);
+			drawCodeSnippet(mc, yOffset);
 		}
 		else
 		{
@@ -275,7 +476,7 @@ public class IIManualDataOperation extends IIManualObject
 		}
 
 		GlStateManager.popMatrix();
-		mc.fontRenderer.setUnicodeFlag(unicode);
+		manual.fontRenderer.setUnicodeFlag(unicode);
 	}
 
 
@@ -287,12 +488,19 @@ public class IIManualDataOperation extends IIManualObject
 			lastState = codeSwitch.state;
 			return true;
 		}
+		if(isMouseOverScrollbar(mouseX, mouseY))
+		{
+			updateCodeScroll(mouseX);
+			return true;
+		}
 		return false;
 	}
 
 	@Override
 	public void mouseDragged(int x, int y, int clickX, int clickY, int mx, int my, int lastX, int lastY, int button)
 	{
+		if(button==0&&isMouseOverScrollbar(x, y))
+			updateCodeScroll(x);
 	}
 
 	@Override
@@ -300,6 +508,6 @@ public class IIManualDataOperation extends IIManualObject
 	{
 		return codeSwitch.isMouseOver()?
 				Collections.singletonList(I18n.format(codeSwitch.state?"ie.manual.entry.data_operation.tooltip_data":
-						"ie.manual.entry.data_operation.tooltip_pol")): null;
+													  "ie.manual.entry.data_operation.tooltip_pol")): null;
 	}
 }

@@ -33,7 +33,7 @@ public class DecoDataEditorFloat extends DecoDataEditor<DataTypeFloat>
 	@Override
 	public DataTypeFloat outputType()
 	{
-		dataType.value = Float.parseFloat(valueEdit.getText());
+		dataType.value = TextFilter.FLOAT.parseFloat(valueEdit.getText(), dataType.value);
 		return dataType;
 	}
 }

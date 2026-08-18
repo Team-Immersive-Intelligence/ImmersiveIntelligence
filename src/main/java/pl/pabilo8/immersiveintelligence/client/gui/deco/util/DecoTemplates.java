@@ -11,16 +11,29 @@ import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent.DecoComponentTemplate;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoDropdown;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoElementDisplays.DecoElementSorter;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoEntryPanelBuilder;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar.BarTooltipFormat;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.map.scanners.BlockTypeScanner;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityArtilleryHowitzer;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityRadioStation;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityFlagpole;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityRadar;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IDamageResistantMultiblock;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIBase;
 
+import javax.annotation.Nonnull;
+import java.util.List;
 import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 /**
  * Templates to be applied to {@link pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent Deco Components}
@@ -65,6 +78,18 @@ public class DecoTemplates
 					.withBackgroundColor(DecoColors.ACTION_EDIT)
 					.withIcon(DecoTextures.ICON_ACTION_EDIT)
 					.withTranslatedTooltip(IIReference.GUI_TOOLTIP_KEY+"button.edit")
+	);
+	public static final DecoComponentTemplate<DecoButton> ACTION_BUTTON_ACCEPT = ACTION_BUTTON.and(
+			component -> component
+					.withBackgroundColor(DecoColors.ACTION_ACCEPT)
+					.withIcon(DecoTextures.ICON_ACTION_ACCEPT)
+					.withTranslatedTooltip(IIReference.GUI_TOOLTIP_KEY+"button.accept")
+	);
+	public static final DecoComponentTemplate<DecoButton> ACTION_BUTTON_REJECT = ACTION_BUTTON.and(
+			component -> component
+					.withBackgroundColor(DecoColors.ACTION_REJECT)
+					.withIcon(DecoTextures.ICON_ACTION_REJECT)
+					.withTranslatedTooltip(IIReference.GUI_TOOLTIP_KEY+"button.reject")
 	);
 
 	//--- Mechanical Torque Bar ---//
@@ -149,16 +174,15 @@ public class DecoTemplates
 			.withDisplayFunction(new DecoEntryPanelBuilder<EnumDyeColor>()
 					.withBackground(DecoTextures.BG_STEEL)
 					.withHeight(12)
-					.withComponent("icon", new DecoImage(2, 1)
+					.withComponent("icon", p -> new DecoImage(2, 1)
 							.withSize(8, 8)
 							.withImageLocation(DecoTextures.COMPONENT_COLOR, true)
 							.withUV(16, 4, 4, 12, 12)
 					)
-					.withLabel("label",
-							new DecoLabel(IIClientUtils.fontRegular, 12, 1)
-									.withSize(48, 12)
-									.withAlign(DecoAlignment.LEFT)
-									.withText("Core")
+					.withLabel("label", p -> new DecoLabel(IIClientUtils.fontRegular, 12, 1)
+							.withSize(48, 12)
+							.withAlign(DecoAlignment.LEFT)
+							.withText("Core")
 					)
 					.withElementApplyMethod((dye, builder) -> {
 						builder.component("icon", DecoImage.class).withColor(IIColor.fromDye(dye));
@@ -173,13 +197,12 @@ public class DecoTemplates
 				.withBackground(DecoTextures.BG_PAPER)
 				.withBackgroundMask(DecoTextures.TEMPLATE_PAPER)
 				//Type Icon, Label, and Letter
-				.withComponent("image", new DecoImage(3, 1)
+				.withComponent("image", p -> new DecoImage(3, 1)
 						.withSize(16, 16))
-				.withLabel("typeLabel",
-						new DecoLabel(IIClientUtils.fontRegular, 20, 1)
-								.withSize(48, 18)
-								.withAlign(DecoAlignment.LEFT)
-								.withText("Integer")
+				.withLabel("typeLabel", p -> new DecoLabel(IIClientUtils.fontRegular, 20, 1)
+						.withSize(48, 18)
+						.withAlign(DecoAlignment.LEFT)
+						.withText("Integer")
 				)
 				.withElementApplyMethod((typeMeta, panel) -> {
 					//type label (f.e. integer)
@@ -190,6 +213,81 @@ public class DecoTemplates
 					panel.component("image", DecoImage.class)
 							.withImageLocation(typeMeta.getTextureLocation(), true);
 				})
-				.withElementTooltip(typeMeta -> "a");
+				.withElementTooltip(TypeMetaInfo::getTranslatedName);
+	}
+
+	public static DecoElementSorter<TypeMetaInfo<?>> getDataTypeEntrySorter()
+	{
+		return new DecoElementSorter<TypeMetaInfo<?>>()
+		{
+			@Override
+			public List<TypeMetaInfo<?>> sort(List<TypeMetaInfo<?>> elements)
+			{
+				return elements;
+			}
+
+			@Nonnull
+			@Override
+			public List<TypeMetaInfo<?>> autocomplete(List<TypeMetaInfo<?>> elements, String input)
+			{
+				return elements.stream()
+						.filter(e -> e.getTranslatedName().toLowerCase().contains(input.toLowerCase()))
+						.collect(Collectors.toList());
+			}
+		};
+	}
+
+	public static <T extends TileEntityMultiblockIIBase<T>> BlockTypeScanner getScanner
+			(String name, Class<T> klass, ResLoc location, Supplier<Boolean> filter)
+	{
+		return (BlockTypeScanner)new BlockTypeScanner(name)
+				.withMultiblockFilter(klass)
+				.withUpdateCondition(filter)
+				.withMarkerStyle(location, 4, IIColor.WHITE);
+	}
+
+	/**
+	 * @param filter display filter, for whether to show the marker on the map
+	 * @return {@link BlockTypeScanner} for detecting flagpoles   .
+	 */
+	public static BlockTypeScanner getFlagpoleScanner(Supplier<Boolean> filter)
+	{
+		return getScanner("flagpoles", TileEntityFlagpole.class, DecoTextures.MAP_MARKER_FLAGPOLE, filter);
+	}
+
+	/**
+	 * @param filter display filter, for whether to show the marker on the map
+	 * @return {@link BlockTypeScanner} for detecting emplacements
+	 */
+	public static BlockTypeScanner getEmplacementScanner(Supplier<Boolean> filter)
+	{
+		return getScanner("emplacement", TileEntityEmplacement.class, DecoTextures.MAP_MARKER_EMPLACEMENT, filter);
+	}
+
+	/**
+	 * @param filter display filter, for whether to show the marker on the map
+	 * @return {@link BlockTypeScanner} for detecting emplacements
+	 */
+	public static BlockTypeScanner getArtilleryHowitzerScanner(Supplier<Boolean> filter)
+	{
+		return getScanner("artillery_howitzer", TileEntityArtilleryHowitzer.class, DecoTextures.MAP_MARKER_ARTILLERY_HOWITZER, filter);
+	}
+
+	/**
+	 * @param filter display filter, for whether to show the marker on the map
+	 * @return {@link BlockTypeScanner} for detecting radars
+	 */
+	public static BlockTypeScanner getRadarScanner(Supplier<Boolean> filter)
+	{
+		return getScanner("radar", TileEntityRadar.class, DecoTextures.MAP_MARKER_RADAR, filter);
+	}
+
+	/**
+	 * @param filter display filter, for whether to show the marker on the map
+	 * @return {@link BlockTypeScanner} for detecting radio stations
+	 */
+	public static BlockTypeScanner getRadioStationScanner(Supplier<Boolean> filter)
+	{
+		return getScanner("radio_station", TileEntityRadioStation.class, DecoTextures.MAP_MARKER_RADIO_STATION, filter);
 	}
 }

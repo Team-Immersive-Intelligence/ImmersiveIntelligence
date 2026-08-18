@@ -7,7 +7,6 @@ import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
-import pl.pabilo8.immersiveintelligence.api.data.types.generic.NumericDataType;
 import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 
 import javax.annotation.Nonnull;
@@ -20,7 +19,7 @@ import java.nio.charset.StandardCharsets;
  */
 @DataOperation.DataOperationMeta(name = "decrypt_number",
 		allowedTypes = {DataTypeEncrypted.class, DataTypeString.class}, params = {"encrypted", "password"},
-		expectedResult = NumericDataType.class)
+		expectedResult = DataTypeInteger.class)
 public class DataOperationDecryptNumber extends DataOperation
 {
 	@Nonnull

@@ -2,15 +2,16 @@ package pl.pabilo8.immersiveintelligence.client.gui.block;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.Optional.Method;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTileGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoFluidTank;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoItemStackDisplay;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityCoagulator;
+import pl.pabilo8.immersiveintelligence.common.compat.jei.JEIHelper;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerCoagulator;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
@@ -25,6 +26,7 @@ public class GuiCoagulator extends DecoTileGui<TileEntityCoagulator, ContainerCo
 {
 	@DecoResource
 	public static final ResourceLocation TEXTURE = IIReference.RES_II.with("gui/coagulator");
+	private DecoImage[] imageProgress = new DecoImage[4];
 
 	public GuiCoagulator(EntityPlayer player, TileEntityCoagulator tile)
 	{
@@ -52,20 +54,20 @@ public class GuiCoagulator extends DecoTileGui<TileEntityCoagulator, ContainerCo
 						.withHeight(76+20-4+2),
 
 				//Tank bottom
-				new DecoImage(0, 76-16-3)
+				this.imageProgress[0] = new DecoImage(0, 76-16-3)
 						.withSize(24, 16)
 						.withImageLocation(TEXTURE, true)
 						.withUV(32, 0, 0, 24, 16),
-				new DecoImage(24, 76-16-3)
+				this.imageProgress[1] = new DecoImage(24, 76-16-3)
 						.withSize(24, 16)
 						.withImageLocation(TEXTURE, true)
 						.withUV(32, 0, 16, 24, 32),
 
-				new DecoImage(176-64-32, 76-16-3)
+				this.imageProgress[2] = new DecoImage(176-64-32, 76-16-3)
 						.withSize(24, 16)
 						.withImageLocation(TEXTURE, true)
 						.withUV(32, 0, 0, 24, 16),
-				new DecoImage(176-64-32+24, 76-16-3)
+				this.imageProgress[3] = new DecoImage(176-64-32+24, 76-16-3)
 						.withSize(24, 16)
 						.withImageLocation(TEXTURE, true)
 						.withUV(32, 0, 16, 24, 32),
@@ -93,6 +95,14 @@ public class GuiCoagulator extends DecoTileGui<TileEntityCoagulator, ContainerCo
 		}
 
 
+	}
+
+	@Override
+	@Method(modid = "jei")
+	public void onInitJEICompat()
+	{
+		for(DecoImage image : this.imageProgress)
+			JEIHelper.addRecipesDecoGuiLink(image, "ii.coagulator");
 	}
 }
 

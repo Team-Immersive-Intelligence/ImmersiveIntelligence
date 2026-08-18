@@ -24,7 +24,7 @@ public class DataOperationMapContains extends DataOperation
 	public DataType execute(DataPacket packet, DataTypeExpression data)
 	{
 		DataTypeMap map = packet.getVarInType(DataTypeMap.class, data.getArgument(0));
-		DataType key = data.getArgument(1);
+		DataType key = packet.evaluateVariable(data.getArgument(1), false);
 		return new DataTypeBoolean(map.containsKey(key));
 	}
 }

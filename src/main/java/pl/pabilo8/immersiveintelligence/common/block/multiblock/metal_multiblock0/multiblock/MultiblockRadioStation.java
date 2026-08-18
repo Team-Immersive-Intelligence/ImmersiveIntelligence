@@ -9,6 +9,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityRadioStation;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -24,6 +25,10 @@ public class MultiblockRadioStation extends MultiblockStuctureBase<TileEntityRad
 		super(new ResourceLocation(ImmersiveIntelligence.MODID, "multiblocks/radio_station"));
 		offset = new Vec3i(0, 1, 0);
 		INSTANCE = this;
+
+		//POI
+		addPOI(MultiblockPOI.ENERGY_INPUT, "energy");
+		addPOI(MultiblockPOI.DATA, "data");
 	}
 
 	@Override

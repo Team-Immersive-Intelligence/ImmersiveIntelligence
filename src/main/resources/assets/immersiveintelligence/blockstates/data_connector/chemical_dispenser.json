@@ -32,7 +32,7 @@
         "transform": {
           "rotation": [
             {
-              "y": 90
+              "y": 0
             }
           ]
         }
@@ -41,7 +41,7 @@
         "transform": {
           "rotation": [
             {
-              "y": 90
+              "y": 0
             }, {
               "z": 180
             }
@@ -57,9 +57,14 @@
       },
       "south": {
         "transform": {
-          "rotation": {
-            "x": -90
-          }
+          "rotation": [
+            {
+              "x": -90
+            },
+            {
+              "y": -180
+            }
+          ]
         }
       },
       "west": {

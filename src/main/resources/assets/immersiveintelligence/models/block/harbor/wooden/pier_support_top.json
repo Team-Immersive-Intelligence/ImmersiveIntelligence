@@ -1,0 +1,48 @@
+{
+  "format_version": "1.9.0",
+  "credit": "Made by Pabilo8 with Blockbench",
+  "texture_size": [64, 64],
+  "textures": {
+    "0": "immersiveintelligence:blocks/common/common_wooden_pier",
+    "particle": "immersiveintelligence:blocks/common/common_wooden_pier"
+  },
+  "elements": [
+    {
+      "name": "post_top",
+      "from": [6, 16, 6],
+      "to": [10, 24, 10],
+      "rotation": {
+        "angle": 0,
+        "axis": "y",
+        "origin": [0, 20, 0]
+      },
+      "faces": {
+        "north": {
+          "uv": [0, 14, 2, 13],
+          "rotation": 90,
+          "texture": "#0"
+        },
+        "east": {
+          "uv": [0, 13, 2, 14],
+          "rotation": 90,
+          "texture": "#0"
+        },
+        "south": {
+          "uv": [0, 14, 2, 13],
+          "rotation": 90,
+          "texture": "#0"
+        },
+        "west": {
+          "uv": [0, 13, 2, 14],
+          "rotation": 90,
+          "texture": "#0"
+        },
+        "up": {
+          "uv": [12, 13, 13, 14],
+          "rotation": 90,
+          "texture": "#0"
+        }
+      }
+    }
+  ]
+}

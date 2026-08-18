@@ -1,0 +1,16 @@
+{
+  "type": "ParticleVanilla",
+  "max_lifetime": 12,
+  "size": 0.75,
+  "alpha": 0.25,
+  "draw_stage": "custom_smoke_noise_shader",
+  "textures": [
+    "immersiveintelligence:particle/smoke_trej/smoke3",
+    "immersiveintelligence:particle/smoke_trej/smoke4",
+    "immersiveintelligence:particle/smoke_trej/smoke5",
+    "immersiveintelligence:particle/smoke_trej/smoke6"
+  ],
+  "programs": [
+    "smoke_transition(0.35)"
+  ]
+}

@@ -128,6 +128,152 @@
           "transform": [0, 0, 0]
         }
       ]
+    },
+    "particle": {
+      "property": [
+        {
+          "time": 0,
+          "property": 0.0
+        },
+        {
+          "time": 0.025,
+          "property": 0.5
+        },
+        {
+          "time": 0.04167,
+          "property": 0.5
+        },
+        {
+          "time": 0.1,
+          "property": 0.0
+        },
+        {
+          "time": 0.125,
+          "property": 0.5
+        },
+        {
+          "time": 0.14167,
+          "property": 0.5
+        },
+        {
+          "time": 0.2,
+          "property": 0.0
+        },
+        {
+          "time": 0.225,
+          "property": 0.5
+        },
+        {
+          "time": 0.24167,
+          "property": 0.5
+        },
+        {
+          "time": 0.3,
+          "property": 0.0
+        },
+        {
+          "time": 0.325,
+          "property": 0.5
+        },
+        {
+          "time": 0.34167,
+          "property": 0.5
+        },
+        {
+          "time": 0.4,
+          "property": 0.0
+        },
+        {
+          "time": 0.425,
+          "property": 0.5
+        },
+        {
+          "time": 0.44167,
+          "property": 0.5
+        },
+        {
+          "time": 0.5,
+          "property": 0.0
+        },
+        {
+          "time": 0.525,
+          "property": 0.5
+        },
+        {
+          "time": 0.54167,
+          "property": 0.5
+        },
+        {
+          "time": 0.6,
+          "property": 0.0
+        },
+        {
+          "time": 0.625,
+          "property": 0.5
+        },
+        {
+          "time": 0.64167,
+          "property": 0.5
+        },
+        {
+          "time": 0.7,
+          "property": 0.0
+        },
+        {
+          "time": 0.725,
+          "property": 0.5
+        },
+        {
+          "time": 0.74167,
+          "property": 0.5
+        },
+        {
+          "time": 0.8,
+          "property": 0.0
+        },
+        {
+          "time": 0.825,
+          "property": 0.5
+        },
+        {
+          "time": 0.84167,
+          "property": 0.5
+        },
+        {
+          "time": 0.9,
+          "property": 0.0
+        },
+        {
+          "time": 0.925,
+          "property": 1.0
+        },
+        {
+          "time": 0.94167,
+          "property": 1.0
+        },
+        {
+          "time": 1,
+          "property": 0.0
+        }
+      ],
+      "visibility": [
+        {
+          "time": 0,
+          "visibility": false
+        },
+        {
+          "time": 0.1111,
+          "visibility": true
+        },
+        {
+          "time": 0.88889,
+          "visibility": false
+        },
+        {
+          "time": 1.0,
+          "visibility": false
+        }
+      ]
     }
   }
 }

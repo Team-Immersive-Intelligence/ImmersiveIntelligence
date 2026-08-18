@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.entity.ammo.types;
 
+import lombok.Getter;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -30,6 +31,7 @@ import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoUtils;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.PenetrationCache;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.util.IIDamageSources;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
@@ -98,6 +100,7 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 	/**
 	 * The velocity of the bullet, in blocks per tick
 	 */
+	@Getter
 	@SyncNBT(events = SyncEvents.ENTITY_COLLISION)
 	public float velocity;
 	/**
@@ -171,11 +174,6 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 
 	//--- Update ---//
 
-	public float getVelocity()
-	{
-		return velocity;
-	}
-
 	@Override
 	public void onUpdate()
 	{
@@ -212,10 +210,9 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 	 */
 	protected void doRotations()
 	{
-		Vec3d normalized = new Vec3d(motionX, motionY, motionZ).normalize();
-		float motionXZ = MathHelper.sqrt(normalized.x*normalized.x+normalized.z*normalized.z);
-		this.rotationYaw = (float)((Math.atan2(normalized.x, normalized.z)*180D)/Math.PI);
-		this.rotationPitch = -(float)((Math.atan2(normalized.y, motionXZ)*180D)/Math.PI);
+		float[] rotation = IIMath.getRotationFromVector(motionX, motionY, motionZ);
+		this.rotationYaw = rotation[0];
+		this.rotationPitch = -rotation[1];
 	}
 
 	/**
@@ -308,6 +305,7 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 			for(Tuple<AmmoComponent, NBTTagCompound> component : components)
 				component.getFirst().onEffect(world, pos, dir,
 						coreType.getEffectShape(), component.getSecond(), ammoType.getComponentSize(), multiplier, owner);
+			markedForDetonation = false;
 			setDead();
 		}
 	}
@@ -414,9 +412,9 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 		if(living!=null)
 		{
 			float armor = MathHelper.floor(living.getEntityAttribute(SharedMonsterAttributes.ARMOR).getAttributeValue())*ARMOR_FACTOR;
-			//Damage the other entity armour whether penetrated or not
+			//Damage the other entity armor whether penetrated or not
 			if(armor > 0)
-				IIAmmoUtils.breakArmour(other, (int)getDamage());
+				IIAmmoUtils.breakArmor(other, (int)getDamage());
 		}
 		//Ricochet off the entity
 		if(penHandler.getPenetrationHardness().compareTo(penetrationHardness) > 0)
@@ -538,6 +536,11 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 		this.baseMotion = dir.normalize();
 		this.velocity *= velocityModifier;
 		this.velocityModifier = velocityModifier;
+
+		float[] rotation = IIMath.getRotationFromVector(baseMotion);
+		this.rotationYaw = rotation[0];
+		this.rotationPitch = -rotation[1];
+
 		markVelocityChanged();
 	}
 
@@ -560,6 +563,8 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 		EasyNBT nbt = EasyNBT.wrapNBT(compound);
 
 		this.baseMotion = nbt.getVec3d("base_motion");
+		this.rotationYaw = nbt.getFloat("yaw");
+		this.rotationPitch = nbt.getFloat("pitch");
 		this.ignoredEntities = nbt.streamList(NBTTagInt.class, "ignored_entities", EasyNBT.TAG_INT)
 				.map(NBTTagInt::getInt)
 				.map(world::getEntityByID)
@@ -578,6 +583,8 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 		super.writeEntityToNBT(compound);
 		EasyNBT nbt = EasyNBT.wrapNBT(compound);
 		nbt.withVec3d("base_motion", baseMotion);
+		nbt.withFloat("yaw", rotationYaw);
+		nbt.withFloat("pitch", rotationPitch);
 		if(ignoredEntities!=null&&!ignoredEntities.isEmpty())
 			nbt.withList("ignored_entities", e -> new NBTTagInt(e.getEntityId()), ignoredEntities);
 		if(ignoredPositions!=null&&!ignoredPositions.isEmpty())

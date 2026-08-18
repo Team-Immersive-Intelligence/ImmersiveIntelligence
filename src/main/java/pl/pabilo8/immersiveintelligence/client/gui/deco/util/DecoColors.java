@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.client.gui.deco.util;
 
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 /**
  * Colors commonly used inside {@link pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui}.
@@ -11,6 +12,16 @@ import pl.pabilo8.immersiveintelligence.common.util.IIColor;
  */
 public class DecoColors
 {
+	public static final IIColor TEXT = IIColor.fromHex("afafaf");
+	public static final IIColor TEXT_HOVERED = IIColor.fromHex("cfcfcf");
+	public static final IIColor TEXT_PRESSED = IIReference.COLOR_IMMERSIVE_ORANGE;
+	public static final IIColor TEXT_DISABLED = IIColor.BLACK;
+
+	public static final IIColor BACKGROUND = IIColor.fromHex("efefef");
+	public static final IIColor BACKGROUND_HOVERED = IIColor.WHITE;
+	public static final IIColor BACKGROUND_PRESSED = IIColor.MC_GRAY;
+	public static final IIColor BACKGROUND_DISABLED = IIColor.MC_GRAY;
+
 	public static final IIColor H1 = IIColor.fromPackedRGB(0x0a0a0a);
 	public static final IIColor H2 = IIColor.fromPackedRGB(0x1a1a1a);
 
@@ -31,6 +42,8 @@ public class DecoColors
 	public static final IIColor ACTION_ADD = IIColor.fromPackedRGB(0x778a78);
 	public static final IIColor ACTION_REMOVE = IIColor.fromPackedRGB(0x8a6865);
 	public static final IIColor ACTION_EDIT = IIColor.fromPackedRGB(0x8a7d67);
+	public static final IIColor ACTION_ACCEPT = IIColor.fromPackedRGB(0x5e705f);
+	public static final IIColor ACTION_REJECT = IIColor.fromPackedRGB(0x775957);
 
 	public static final IIColor ARMOR_INTEGRITY_1 = IIColor.fromPackedRGB(0x6b6b6b);
 	public static final IIColor ARMOR_INTEGRITY_2 = IIColor.fromPackedRGB(0x3c3c3c);

@@ -2,7 +2,6 @@ package pl.pabilo8.immersiveintelligence.common.crafting;
 
 import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
-import net.minecraft.client.Minecraft;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
@@ -15,11 +14,12 @@ import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler.IISpecialSkin;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 18.07.2026
+ * @ii-approved 0.3.1
  * @since 07.08.2021
  */
 public class RecipeSkinCraftingHandler extends Impl<IRecipe> implements IRecipe
 {
-
 	@Override
 	public boolean matches(InventoryCrafting inv, World worldIn)
 	{
@@ -91,9 +91,7 @@ public class RecipeSkinCraftingHandler extends Impl<IRecipe> implements IRecipe
 			{
 				ItemStack stack = inv.getStackInSlot(i);
 				if(!stack.isEmpty())
-				{
 					if(stack.getItem()==IEContent.itemTool&&stack.getItemDamage()==3)
-					{
 						if(manual.isEmpty()&&ItemNBTHelper.hasKey(stack, "lastSkin"))
 						{
 							manual = stack;
@@ -101,7 +99,6 @@ public class RecipeSkinCraftingHandler extends Impl<IRecipe> implements IRecipe
 						}
 						else
 							return false;
-					}
 					else if(stack.getItem() instanceof ISkinnable)
 					{
 						if(item.isEmpty())
@@ -112,34 +109,20 @@ public class RecipeSkinCraftingHandler extends Impl<IRecipe> implements IRecipe
 					}
 					else
 						return false;
-				}
 			}
 
 			boolean result = !manual.isEmpty()&&skinnable!=null;
 			if(result)
 			{
-				String sessionID = Minecraft.getMinecraft().getSession().getSessionID(); // Result: token:FML:X where X is the UUID
-				String uuid = sessionID.substring(sessionID.lastIndexOf(':')+1), skinName = ItemNBTHelper.getString(manual, "lastSkin");
-				if(IISkinHandler.isValidSkin(skinName))
+				String[] info = ItemNBTHelper.getString(manual, "lastSkin").split(":");
+				if(info.length==2&&IISkinHandler.isValidSkin(info[1]))
 				{
-					IISpecialSkin skin = IISkinHandler.getSkin(skinName);
-					boolean eligible = false, doesApply = skin.doesApply(skinnable.getSkinnableName());
-
-					for(String id : skin.uuid)
-					{
-						if(id.replace("-", "").equals(uuid))
-						{
-							eligible = true;
-							break;
-						}
-					}
-
-					if(!eligible||!doesApply) return false;
+					IISpecialSkin skin = IISkinHandler.getSkin(info[1]);
+					assert skin!=null;
+					return skin.appliesToPlayer(info[0])&&skin.doesApply(skinnable.getSkinnableName());
 				}
 				else
-				{
 					return false;
-				}
 			}
 
 			return result;

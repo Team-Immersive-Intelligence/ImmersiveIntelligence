@@ -42,6 +42,18 @@ public interface IRotaryConnector
 	double getOutputSpeed();
 
 	/**
+	 * Returns the interpolated visual rotation progress.
+	 *
+	 * @param belt         whether the progress is intended for a connected motor belt
+	 * @param partialTicks partial tick time used for interpolation
+	 * @return normalized visual rotation progress
+	 */
+	default float getDisplayedRotationProgress(boolean belt, float partialTicks)
+	{
+		return 0;
+	}
+
+	/**
 	 * @return the rotational energy storage object
 	 */
 	RotaryStorage getRotaryStorage();

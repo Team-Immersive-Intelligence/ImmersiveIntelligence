@@ -1,0 +1,21 @@
+use MAP
+use ARRAY
+
+string k = "alpha"
+map m = map_create @k 1
+type map_get @m @k
+type map_contains @m @k
+array a = map_keys @m
+type array_get @a 0
+array b = map_values @m
+type array_get @b 0
+string k = "beta"
+integer v = 2
+type map_set @m @k @v
+type map_get @m @k
+type map_remove @m @k
+type map_contains @m @k
+map c = map_clear @m
+type map_contains @c "alpha"
+
+end

@@ -17,7 +17,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 @SideOnly(Side.CLIENT)
 public class EWRLightHowitzer extends EmplacementWeaponRenderer<EmplacementWeaponLightHowitzer>
 {
-	private IIAnimationCachedMap install, uninstall, rotateYaw, rotatePitch, fire;
+	private IIAnimationCachedMap rotateYaw, rotatePitch, fire, load, chill;
 
 	public EWRLightHowitzer()
 	{
@@ -27,18 +27,19 @@ public class EWRLightHowitzer extends EmplacementWeaponRenderer<EmplacementWeapo
 	@Override
 	public void loadAnimations(AMTCachedModel<TileEntityEmplacement> model)
 	{
-		this.install = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("install"));
-		this.uninstall = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("uninstall"));
-
+		this.rotateYaw = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("rotate_yaw"));
 		this.rotatePitch = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("rotate_pitch"));
+		this.fire = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("fire"));
+		this.load = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("load"));
+		this.chill = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("chill"));
 	}
 
 	@Override
 	public void apply(EmplacementWeaponLightHowitzer weapon, AMTCachedModel<TileEntityEmplacement> model, BufferBuilder buf, Tessellator tes, float partialTicks)
 	{
-		assert weapon.setup!=null;
-
-		//this.rotateYaw.apply(weapon.aim.getYawNormalized(partialTicks));
+		this.rotateYaw.apply(weapon.aim.getYawNormalized(partialTicks));
 		this.rotatePitch.apply(weapon.aim.getPitchNormalized(partialTicks));
+		this.load.apply(weapon.gunHandler.getLoadingProgress(partialTicks));
+		this.fire.apply(weapon.gunHandler.getShotDelay(partialTicks));
 	}
 }

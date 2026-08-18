@@ -211,5 +211,8 @@
     "energy": 7,
     "data": 9,
     "radio_center": 67
+  },
+  "rotations": {
+    "data": "clockwise_180"
   }
 }

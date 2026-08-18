@@ -27,7 +27,6 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionMulti;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 import javax.annotation.Nullable;
 
@@ -72,25 +71,6 @@ public class TileEntityAmmunitionAssembler extends TileEntityMultiblockProductio
 	{
 		super.onUpdate();
 		hatch.update();
-	}
-
-	@Override
-	protected int[] listAllPOI(MultiblockPOI poi)
-	{
-		switch(poi)
-		{
-			case ITEM_INPUT:
-				return getPOI("item_input");
-			case ITEM_OUTPUT:
-				return getPOI("item_output");
-			case REDSTONE_INPUT:
-				return getPOI("redstone_input");
-			case DATA_INPUT:
-				return getPOI("data_input");
-			case ENERGY_INPUT:
-				return getPOI("energy_input");
-		}
-		return new int[0];
 	}
 
 	@Override

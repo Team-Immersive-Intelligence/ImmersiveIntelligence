@@ -15,6 +15,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.api.crafting.VulcanizerRecipe;
 import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIMultiblockRecipe;
@@ -69,24 +70,6 @@ public class TileEntityVulcanizer extends TileEntityMultiblockProductionMulti<Ti
 	}
 
 	@Override
-	protected int[] listAllPOI(MultiblockPOI poi)
-	{
-		switch(poi)
-		{
-			case ENERGY_INPUT:
-				return getPOI("energy");
-			case REDSTONE_INPUT:
-				return getPOI("redstone");
-			case ITEM_INPUT:
-				return getPOI("inputs");
-			case ITEM_OUTPUT:
-				return getPOI("outputs");
-			default:
-				return new int[0];
-		}
-	}
-
-	@Override
 	public boolean isStackValid(int i, ItemStack itemStack)
 	{
 		switch(i)
@@ -107,7 +90,7 @@ public class TileEntityVulcanizer extends TileEntityMultiblockProductionMulti<Ti
 	@Override
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing)
 	{
-		if(master()!=null)
+		if(master()!=null&&capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
 		{
 			TileEntityVulcanizer master = master();
 			if(isPOI("input_sulfur"))

@@ -66,9 +66,39 @@
     "canFluidFlow": true
   },
   {
+    "blockId": "immersiveintelligence:wooden_fortification",
+    "canFluidFlow": true
+  },
+  {
+    "blockId": "immersiveintelligence:harbor",
+    "boxes": {
+      "min": 0,
+      "max": 12
+    },
+    "states": {
+      "type": "wooden_quay"
+    },
+    "canFluidFlow": false
+  },
+  {
+    "blockId": "immersiveintelligence:harbor",
+    "boxes": {
+      "min": 0,
+      "max": 12
+    },
+    "states": {
+      "type": "wooden_pier"
+    },
+    "canFluidFlow": true
+  },
+  {
+    "blockId": "immersiveintelligence:harbor_support",
+    "canFluidFlow": true
+  },
+  {
     "blockId": "immersiveintelligence:metal_device",
     "states": {
-      "type": "latex_collector"
+      "type": ["latex_collector", "ammunition_crate", "medic_crate", "repair_crate"]
     },
     "canFluidFlow": true
   },

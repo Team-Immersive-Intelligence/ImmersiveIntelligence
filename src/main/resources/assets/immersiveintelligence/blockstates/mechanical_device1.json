@@ -77,7 +77,11 @@
       }
     ],
     "type": {
-      "mechanical_pump": {}
+      "mechanical_pump": {
+        "textures": {
+          "name": "immersiveintelligence:blocks/mechanical_device/pump/pump"
+        }
+      }
     },
     "_0multiblockslave": {
       "false": {},

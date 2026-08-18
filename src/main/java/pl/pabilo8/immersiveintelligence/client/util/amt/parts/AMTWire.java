@@ -3,15 +3,15 @@ package pl.pabilo8.immersiveintelligence.client.util.amt.parts;
 import blusunrize.immersiveengineering.api.energy.wires.WireApi;
 import blusunrize.immersiveengineering.api.energy.wires.WireType;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
+import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.amt.AMTModelHeader;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
-
-import static pl.pabilo8.immersiveintelligence.client.IIClientUtils.bindTexture;
 
 /**
  * AMT type for drawing IE wiring, using AMTQuadsBuilder for geometry.
@@ -69,8 +69,12 @@ public class AMTWire extends AMT
 					.recolor(color);
 		}
 
-		bindTexture(new ResourceLocation("immersiveengineering:textures/blocks/wire.png"));
+		IIClientUtils.bindTexture(new ResourceLocation("immersiveengineering:textures/blocks/wire.png"));
+		GlStateManager.disableCull();
 		wireModel.draw(tes, buf);
+		GlStateManager.color(1f, 1f, 1f, 1f);
+		IIClientUtils.bindAtlas();
+		GlStateManager.enableCull();
 	}
 
 	@Override

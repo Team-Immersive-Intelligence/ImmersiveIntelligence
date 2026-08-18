@@ -12,7 +12,7 @@ import javax.annotation.Nonnull;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 05.07.2019
  */
-@DataOperation.DataOperationMeta(name = "to_null", allowedTypes = {DataType.class}, expression = "<null>", params = {}, expectedResult = DataTypeNull.class)
+@DataOperation.DataOperationMeta(name = "to_null", allowedTypes = {DataType.class}, expression = "<null>", params = {"casted"}, expectedResult = DataTypeNull.class)
 public class DataOperationToNull extends DataOperation
 {
 	@Nonnull

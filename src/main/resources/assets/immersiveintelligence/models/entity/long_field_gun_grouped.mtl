@@ -9,10 +9,10 @@ map_Kd immersiveintelligence:entity/vehicle/suspension/wheel_20_terrain
 newmtl hans
 map_Kd immersiveintelligence:entity/hans
 newmtl 6bcal_light_howitzer
-map_Kd immersiveintelligence:entity/vehicle/6bcal_light_howitzer
+map_Kd immersiveintelligence:entity/ammo/6bcal_light_artillery
 newmtl vehicle_interior
 map_Kd immersiveintelligence:entity/vehicle/vehicle_interior
 newmtl long_field_gun
-map_Kd immersiveintelligence:entity/vehicle/long_field_gun
+map_Kd immersiveintelligence:entity/vehicle/field_gun/long_field_gun
 newmtl common_copper_cable
 map_Kd immersiveintelligence:blocks/common/common_copper_cable

@@ -1,6 +1,9 @@
 package pl.pabilo8.immersiveintelligence.common.util.multiblock.util;
 
+import lombok.Getter;
+
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,6 +11,7 @@ import java.util.List;
  * Represents common multiblock Points-of-Interest types
  *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 09.08.2026
  * @since 26.10.2023
  */
 public enum MultiblockPOI
@@ -64,17 +68,23 @@ public enum MultiblockPOI
 	MISC_CRATE,
 	MISC_WEAPON;
 
+	@Getter
+	@Nullable
+	private final MultiblockPOI parent;
+	@Getter
 	private final List<MultiblockPOI> children;
 
 	MultiblockPOI()
 	{
-		children = new ArrayList<>();
+		this.parent = null;
+		this.children = new ArrayList<>();
 	}
 
 	@SuppressWarnings("IncompleteCopyConstructor")
 	MultiblockPOI(@Nonnull MultiblockPOI parent)
 	{
-		this();
+		this.parent = parent;
+		this.children = new ArrayList<>();
 		parent.children.add(this);
 	}
 
@@ -87,10 +97,31 @@ public enum MultiblockPOI
 	}
 
 	/**
-	 * @return all children of this Point-of-Interest
+	 * Checks if this Point-of-Interest is a parent of another type.
+	 *
+	 * @param poi type to check
+	 * @return true if this type is an ancestor of the specified type
 	 */
-	public List<MultiblockPOI> getChildren()
+	public boolean isParentOf(@Nonnull MultiblockPOI poi)
 	{
-		return children;
+		MultiblockPOI current = poi.parent;
+		while(current!=null)
+		{
+			if(current==this)
+				return true;
+			current = current.parent;
+		}
+		return false;
+	}
+
+	/**
+	 * Checks if a declared POI type can satisfy a query for another type.
+	 *
+	 * @param poi queried type
+	 * @return true if the types are equal or one is a parent of the other
+	 */
+	public boolean matches(@Nonnull MultiblockPOI poi)
+	{
+		return this==poi||isParentOf(poi)||poi.isParentOf(this);
 	}
 }

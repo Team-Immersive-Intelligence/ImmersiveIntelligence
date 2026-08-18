@@ -44,7 +44,7 @@ public class UpgradeTreeNodeRenderer extends AbstractTreeNodeRenderer<Upgrade>
 		else
 			bg = unavailableColor;
 
-		// background
+		//background
 		IIDrawUtils draw = IIDrawUtils.startColored();
 		draw.drawColorRect(x, y, NODE_WIDTH, NODE_HEIGHT, bg);
 		draw.finish();
@@ -76,7 +76,10 @@ public class UpgradeTreeNodeRenderer extends AbstractTreeNodeRenderer<Upgrade>
 		if(upgrade.isWorkInProgress())
 		{
 			tooltip.add(IIColor.MC_YELLOW.getHexCol(I18n.format("ie.manual.entry.wip_warning0")));
-			tooltip.add(IIColor.MC_YELLOW.getHexCol(I18n.format("ie.manual.entry.wip_warning.upgrade")));
+			List<String> lines = IIClientUtils.fontRegular.listFormattedStringToWidth(
+					I18n.format("ie.manual.entry.wip_warning.upgrade"), 200);
+			for(String line : lines)
+				tooltip.add(IIColor.MC_YELLOW.withBrightness(0.65f).getHexCol(line));
 		}
 
 		List<String> description = IIClientUtils.fontRegular.listFormattedStringToWidth(

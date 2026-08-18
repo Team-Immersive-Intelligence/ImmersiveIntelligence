@@ -16,8 +16,9 @@
 |[data_variable]{type:"string", direction:"in", letter:"m", name:"Output mode", description:"What type of page that will be printed", values:[["text","A page containing text"],["code","A page containing code written in the POL programming language"],["blueprint","A page containing a construction blueprint to be used manually or by a Logistics Drone"],["punchtape","A punchtape with variables of the received packet, except this one printed. Doesn't use any ink."],["orders","A page with step-by-step orders for a military or logistic unit"]]}|
 |[data_variable]{type:"integer", direction:"in", letter:"a", name:"Amount of copies", description:"How many pages will be printed"}|
 |[data_variable]{type:"string", direction:"in", letter:"t", name:"Text to print", description:"Text content that will be printed", requirements:{m:"text/code"} }|
-# data_inputs_upgrade
-[] дозволяє друкувати нові типи
+# punchtapes_upgrade
+Поліпшення [обробник перфострічки] дозволяє друкувати [перфострічки](punchtapes.md) з усіма змінними отриманих пакетів, крім «a», «m» та «t».
+**Замість порожньої сторінки надайте [порожню перфострічку].**
 |[data_variable]{type:"string", direction:"in", letter:"m", name:"Output mode", description:"What type of page that will be printed", values:[["text","A page containing text"],["code","A page containing code written in the POL programming language"],["blueprint","A page containing a construction blueprint to be used manually or by a Logistics Drone"],["punchtape","A punchtape with variables of the received packet, except this one printed. Doesn't use any ink."],["orders","A page with step-by-step orders for a military or logistic unit"]]}|
 # data_callback
 |[text]{text:"Data Callback",bold:1b}|

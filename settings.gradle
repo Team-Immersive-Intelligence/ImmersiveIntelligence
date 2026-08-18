@@ -1,0 +1,34 @@
+pluginManagement {
+	repositories {
+		maven {
+			name = 'GTNH Maven'
+			url = 'https://nexus.gtnewhorizons.com/repository/public/'
+			mavenContent {
+				includeGroup 'com.gtnewhorizons'
+				includeGroup 'com.gtnewhorizons.retrofuturagradle'
+			}
+		}
+		gradlePluginPortal()
+		mavenCentral()
+		mavenLocal()
+	}
+}
+
+plugins {
+	id 'org.gradle.toolchains.foojay-resolver-convention' version '1.0.0'
+}
+
+rootProject.name = 'ImmersiveIntelligence'
+
+gradle.ext.mkxScriptSwitches = [
+		'ii_script_repositories': 'gradle/scripts/repositories.gradle',
+		'ii_script_ide':          'gradle/scripts/ide.gradle',
+		'ii_script_lombok':       'gradle/scripts/lombok.gradle',
+		'ii_script_modworks':     'gradle/scripts/modworks.gradle',
+		'ii_script_junit':        'gradle/scripts/junit.gradle',
+		'ii_script_spotless':     'gradle/scripts/spotless.gradle',
+		'ii_script_dependencies':      'gradle/scripts/dependencies.gradle',
+		'ii_script_corejar':      'gradle/scripts/corejar.gradle',
+		'ii_script_signing':      'gradle/scripts/signing.gradle',
+		'ii_script_publishing':      'gradle/scripts/publishing.gradle'
+]

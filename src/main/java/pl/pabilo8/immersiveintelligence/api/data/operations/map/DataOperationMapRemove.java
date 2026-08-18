@@ -4,6 +4,7 @@ import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeMap;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeNull;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 
 import javax.annotation.Nonnull;
@@ -23,7 +24,8 @@ public class DataOperationMapRemove extends DataOperation
 	public DataType execute(DataPacket packet, DataTypeExpression data)
 	{
 		DataTypeMap map = packet.getVarInType(DataTypeMap.class, data.getArgument(0));
-		DataType key = data.getArgument(1);
-		return map.remove(key);
+		DataType key = packet.evaluateVariable(data.getArgument(1), false);
+		DataType removed = map.remove(key);
+		return removed==null?new DataTypeNull(): removed;
 	}
 }

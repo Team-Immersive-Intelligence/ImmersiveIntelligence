@@ -1,11 +1,15 @@
 package pl.pabilo8.immersiveintelligence.common.util.tile;
 
+import blusunrize.immersiveengineering.client.models.IOBJModelCallback;
 import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
+import pl.pabilo8.immersiveintelligence.common.util.IWorldPosProvider;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.NBTSerialisation;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 
@@ -17,7 +21,7 @@ import javax.annotation.Nonnull;
  * @since 28.06.2026
  */
 @SuppressWarnings({"unchecked", "unused"})
-public class TileEntityIIBase extends TileEntityIEBase
+public class TileEntityIIBase extends TileEntityIEBase implements IWorldPosProvider, IOBJModelCallback<IBlockState>
 {
 	//--- NBT ---//
 
@@ -43,12 +47,18 @@ public class TileEntityIIBase extends TileEntityIEBase
 	public void receiveMessageFromClient(@Nonnull NBTTagCompound message)
 	{
 		NBTSerialisation.synchroniseFor(this, (tag, entity) -> tag.deserializeAll(this, message, true));
+
+		if(!message.hasNoTags())
+		{
+			NBTSerialisation.synchroniseFor(this, (tag, tile) -> tag.deserializeAll(tile, message, true));
+			IIPacketHandler.sendToClient(new MessageIITileSync(this, message));
+		}
 	}
 
 
 	//--- Additional SyncNBT methods ---//
 
-	public void updateEntityForTime(int time)
+	public void updateTileForTime(int time)
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
 		NBTSerialisation.synchroniseFor(this, (tag, entity) -> tag.serializeForTime(entity, nbt, time));
@@ -56,18 +66,18 @@ public class TileEntityIIBase extends TileEntityIEBase
 	}
 
 	@SuppressWarnings({"unchecked"})
-	public void updateEntityForEvent(SyncNBT.SyncEvents event)
+	public void updateTileForEvent(SyncNBT.SyncEvents event)
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
 		NBTSerialisation.synchroniseFor(this, (tag, entity) -> tag.serializeForEvent(entity, nbt, event));
 		IIPacketHandler.sendToClient(new MessageIITileSync(this, nbt));
 	}
 
-	public void sendServerUpdateForEvent(SyncNBT.SyncEvents event)
+	public void updateTileForAll()
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
-		NBTSerialisation.synchroniseFor(this, (tag, entity) -> tag.serializeForEvent(entity, nbt, event));
-		IIPacketHandler.sendToServer(new MessageIITileSync(this, nbt));
+		NBTSerialisation.synchroniseFor(this, (tag, entity) -> tag.serializeAll(entity, nbt));
+		IIPacketHandler.sendToClient(new MessageIITileSync(this, nbt));
 	}
 
 	//--- Built-In ---//
@@ -76,5 +86,19 @@ public class TileEntityIIBase extends TileEntityIEBase
 	public void onEntityCollision(@Nonnull World world, @Nonnull Entity entity)
 	{
 		super.onEntityCollision(world, entity);
+	}
+
+	//--- IWorldPosProvider ---//
+
+	@Override
+	public BlockPos getIIPos()
+	{
+		return getPos();
+	}
+
+	@Override
+	public World getIIWorld()
+	{
+		return getWorld();
 	}
 }

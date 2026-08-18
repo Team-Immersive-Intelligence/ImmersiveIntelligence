@@ -9,6 +9,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityChemicalPainter;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 import java.util.function.Predicate;
 
@@ -27,6 +28,14 @@ public class MultiblockChemicalPainter extends MultiblockStuctureBase<TileEntity
 		super(new ResourceLocation(ImmersiveIntelligence.MODID, "multiblocks/chemical_painter"));
 		offset = new Vec3i(2, 0, 0);
 		INSTANCE = this;
+
+		//POI
+		addPOI(MultiblockPOI.FLUID_INPUT, "fluid_inputs");
+		addPOI(MultiblockPOI.ENERGY_INPUT, "energy_input");
+		addPOI(MultiblockPOI.DATA_INPUT, "data");
+		addPOI(MultiblockPOI.ITEM_INPUT, "item_input");
+		addPOI(MultiblockPOI.ITEM_OUTPUT, "item_output");
+		addPOI(MultiblockPOI.REDSTONE_INPUT, "redstone");
 	}
 
 	@Override

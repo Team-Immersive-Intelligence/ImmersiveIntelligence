@@ -36,6 +36,8 @@ public class BlockIIMetalMultiblock1 extends BlockIIMultiblock<MetalMultiblocks1
 
 		addToTESRMap(MetalMultiblocks1.VULCANIZER);
 		setBlockLayer(BlockRenderLayer.CUTOUT);
+		setSubBlockLayer(MetalMultiblocks1.REDSTONE_DATA_INTERFACE, BlockRenderLayer.SOLID, BlockRenderLayer.CUTOUT);
+		setSubBlockLayer(MetalMultiblocks1.FLAGPOLE, BlockRenderLayer.SOLID, BlockRenderLayer.CUTOUT);
 	}
 
 	@Deprecated

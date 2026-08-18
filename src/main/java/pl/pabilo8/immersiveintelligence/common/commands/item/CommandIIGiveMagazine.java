@@ -98,17 +98,11 @@ public class CommandIIGiveMagazine extends CommandBase
 	public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos)
 	{
 		if(args.length==1)
-		{
 			return getListOfStringsMatchingLastWord(args, server.getOnlinePlayerNames());
-		}
 		else if(args.length==2)
-		{
 			return getListOfStringsMatchingLastWord(args, IIContent.itemBulletMagazine.getSubNames());
-		}
 		else if(args.length==3)
-		{
 			return getListOfStringsMatchingLastWord(args, AmmoRegistry.getAllCores().stream().map(AmmoCore::getName).collect(Collectors.toList()));
-		}
 		else if(args.length==4)
 		{
 			if(!ArrayUtils.contains(IIContent.itemBulletMagazine.getSubNames(), args[1]))
@@ -121,9 +115,7 @@ public class CommandIIGiveMagazine extends CommandBase
 							.collect(Collectors.toList()));
 		}
 		else if(args.length > 4)
-		{
 			return getListOfStringsMatchingLastWord(args, AmmoRegistry.getAllComponents().stream().map(AmmoComponent::getName).collect(Collectors.toList()));
-		}
 		else
 			return Collections.emptyList();
 	}

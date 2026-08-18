@@ -1,0 +1,17 @@
+{
+  "forge_marker": 1,
+  "variants": {
+    "inventory,type=wooden_pier": [
+      {
+        "transform": "forge:default-block",
+        "model": "immersiveintelligence:harbor/wooden_pier_inv.obj",
+        "custom": {
+          "flip-v": true
+        },
+        "textures": {
+          "particle": "immersiveintelligence:blocks/common/common_wooden_pier"
+        }
+      }
+    ]
+  }
+}

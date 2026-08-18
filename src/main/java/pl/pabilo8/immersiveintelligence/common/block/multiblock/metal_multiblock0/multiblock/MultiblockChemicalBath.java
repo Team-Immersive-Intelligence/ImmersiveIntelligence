@@ -8,6 +8,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityChemicalBath;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -26,6 +27,13 @@ public class MultiblockChemicalBath extends MultiblockStuctureBase<TileEntityChe
 		super(new ResourceLocation(ImmersiveIntelligence.MODID, "multiblocks/chemical_bath"));
 		offset = new Vec3i(2, 1, 1);
 		INSTANCE = this;
+
+		//POI
+		addPOI(MultiblockPOI.ENERGY_INPUT, "energy");
+		addPOI(MultiblockPOI.REDSTONE, "redstone");
+		addPOI(MultiblockPOI.ITEM_INPUT, "item_in");
+		addPOI(MultiblockPOI.FLUID_INPUT, "fluid");
+		addPOI(MultiblockPOI.ITEM_OUTPUT, "item_out");
 	}
 
 	@Override

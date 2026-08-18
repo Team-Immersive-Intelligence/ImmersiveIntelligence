@@ -1,0 +1,24 @@
+{
+  "type": "ParticleVanilla",
+  "max_lifetime": 9,
+  "size": 0.75,
+  "draw_stage": "custom_smoke_noise_shader",
+  "textures": [
+    "immersiveintelligence:particle/smoke_trej/smoke3",
+    "immersiveintelligence:particle/smoke_trej/smoke4",
+    "immersiveintelligence:particle/smoke_trej/smoke5",
+    "immersiveintelligence:particle/smoke_trej/smoke6"
+  ],
+  "programs": [
+    "smoke_transition(0.35)"
+  ],
+  "scheduled": [
+    {
+      "amount": 1,
+      "time": 5,
+      "type": "chemthrower/fire",
+      "generator": "same",
+      "inherited_properties": ["size"]
+    }
+  ]
+}

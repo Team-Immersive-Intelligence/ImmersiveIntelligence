@@ -70,22 +70,6 @@ public class TileEntityFiller extends TileEntityMultiblockProductionMulti<TileEn
 		}
 	}
 
-	@Override
-	protected int[] listAllPOI(MultiblockPOI poi)
-	{
-		switch(poi)
-		{
-			case ITEM_INPUT:
-				return getPOI("inputs");
-			case ITEM_OUTPUT:
-				return getPOI("conveyor_out");
-			case ENERGY_INPUT:
-				return getPOI("energy");
-			case REDSTONE_INPUT:
-				return getPOI("redstone");
-		}
-		return new int[0];
-	}
 
 	private EnumFacing getOutFacing()
 	{
@@ -118,7 +102,6 @@ public class TileEntityFiller extends TileEntityMultiblockProductionMulti<TileEn
 	@Override
 	public boolean hasCapability(Capability<?> capability, EnumFacing facing)
 	{
-		//TODO: 24.12.2023 use positions instead
 		if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
 		{
 			TileEntityFiller master = master();

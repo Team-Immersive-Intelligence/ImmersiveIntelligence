@@ -24,7 +24,6 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionSingle;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 import static pl.pabilo8.immersiveintelligence.common.IIUtils.handleBucketTankInteraction;
 import static pl.pabilo8.immersiveintelligence.common.IIUtils.outputFluidToTank;
@@ -61,23 +60,6 @@ public class TileEntityElectrolyzer extends TileEntityMultiblockProductionSingle
 	{
 		super.dummyCleanup();
 		this.tankInput = tankOutput1 = tankOutput2 = null;
-	}
-
-	@Override
-	protected int[] listAllPOI(MultiblockPOI poi)
-	{
-		switch(poi)
-		{
-			case ENERGY_INPUT:
-				return getPOI("energy_input");
-			case REDSTONE_INPUT:
-				return getPOI("redstone_input");
-			case FLUID_INPUT:
-				return getPOI("fluid_input");
-			case FLUID_OUTPUT:
-				return getPOI("fluid_output");
-		}
-		return new int[0];
 	}
 
 	@Override

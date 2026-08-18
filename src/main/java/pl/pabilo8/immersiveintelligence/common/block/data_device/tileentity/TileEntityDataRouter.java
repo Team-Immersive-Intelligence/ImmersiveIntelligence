@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity;
 
-import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -19,8 +18,11 @@ import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ILocalizedEnum;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyCollection;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IIIGuiMultiblockTile;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IIIInventory;
+import pl.pabilo8.immersiveintelligence.common.util.tile.TileEntityIIBase;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -31,10 +33,12 @@ import java.util.Arrays;
  *
  * @author Pabilo8 (pabilo@iiteam.net)
  * @updated 02.06.2026
+ * @ii-approved 0.3.1
  * @since 17.05.2019
  */
-public class TileEntityDataRouter extends TileEntityIEBase implements IDataDevice, IIIGuiMultiblockTile, IIIInventory
+public class TileEntityDataRouter extends TileEntityIIBase implements IDataDevice, IIIGuiMultiblockTile, IIIInventory
 {
+	@SyncNBT(name = "rules", events = {SyncEvents.TILE_CLIENT_MESSAGE, SyncEvents.TILE_GUI_OPENED})
 	public EasyCollection<DataRoutingRule, NBTTagCompound> routingRules;
 
 	public TileEntityDataRouter()
@@ -47,29 +51,9 @@ public class TileEntityDataRouter extends TileEntityIEBase implements IDataDevic
 	@Override
 	public void readCustomNBT(NBTTagCompound nbt, boolean descPacket)
 	{
-		if(nbt.hasKey("rules"))
-			routingRules.deserializeNBT(nbt.getTagList("rules", 10));
-		else if(nbt.hasKey("variable"))
+		if(nbt.hasKey("variable"))
 			migrateLegacyVariableRouter(nbt.getString("variable"));
-	}
-
-	@Override
-	public void writeCustomNBT(NBTTagCompound nbt, boolean descPacket)
-	{
-		nbt.setTag("rules", routingRules.serializeNBT());
-	}
-
-	@Override
-	public void receiveMessageFromClient(@Nonnull NBTTagCompound message)
-	{
-		super.receiveMessageFromClient(message);
-		if(message.hasKey("rules"))
-		{
-			routingRules.deserializeNBT(message.getTagList("rules", 10));
-			markDirty();
-			if(world!=null)
-				world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
-		}
+		super.readCustomNBT(nbt, descPacket);
 	}
 
 	@Override
@@ -95,12 +79,7 @@ public class TileEntityDataRouter extends TileEntityIEBase implements IDataDevic
 		}
 
 		if(changed)
-		{
-			routingRules.removeIf(DataRoutingRule::isExpired);
-			markDirty();
-			if(world!=null)
-				world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
-		}
+			updateTileForEvent(SyncEvents.TILE_GUI_OPENED);
 	}
 
 	//--- IIIGuiMultiblockTile ---//
@@ -108,6 +87,7 @@ public class TileEntityDataRouter extends TileEntityIEBase implements IDataDevic
 	@Override
 	public boolean canOpenGui()
 	{
+		updateTileForEvent(SyncEvents.TILE_GUI_OPENED);
 		return true;
 	}
 

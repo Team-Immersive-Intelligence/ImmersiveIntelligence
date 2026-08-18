@@ -7,6 +7,7 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import pl.pabilo8.immersiveintelligence.api.ammo.penetration.DamageBlockPos;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.PenetrationCache;
+import pl.pabilo8.immersiveintelligence.api.api.protection.RadiationHandler;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyHandler;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
@@ -61,6 +62,7 @@ public class IISaveData extends WorldSavedData
 		}
 
 		DiplomacyHandler.getInstance(false).loadAllFromNBT(enbt.getEasyCompound("diplomacy"));
+		RadiationHandler.INSTANCE.deserializeNBT(enbt.getCompound("radiation"));
 	}
 
 	@Override
@@ -71,6 +73,7 @@ public class IISaveData extends WorldSavedData
 						e.getX(), e.getY(), e.getZ(), e.dimension, (int)(e.damage*16)
 				}), PenetrationCache.blockDamage)
 				.withTag("diplomacy", DiplomacyHandler.getInstance(false).saveAllToNBT())
+				.withTag("radiation", RadiationHandler.INSTANCE.serializeNBT())
 				.unwrap();
 	}
 

@@ -17,7 +17,6 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoEntr
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage.ImageAnimationDirection;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
@@ -122,26 +121,26 @@ public class GuiDataRedstoneInterface extends DecoTileGui<TileEntityRedstoneData
 						.withGuiSaveAction(gui -> this.scroll = gui.getScroll())
 						.withDisplayFunction(new DecoEntryPanelBuilder<ConversionSetting>()
 								.withHeight(32+16-6+2)
-								.withLabel("from", new DecoLabel(this.fontRenderer, 4, 4)
+								.withLabel("from", p -> new DecoLabel(this.fontRenderer, 4, 4)
 										.withText(IIReference.GUI_LABEL_KEY+"redstone_data_interface.from."+(redstoneToData?"redstone": "data"))
 										.withTranslatedTooltip(IIReference.GUI_LABEL_KEY+"redstone_data_interface.from."+(redstoneToData?"redstone": "data")+".tooltip")
 								)
-								.withLabel("to", new DecoLabel(this.fontRenderer, 4, 16+2)
+								.withLabel("to", p -> new DecoLabel(this.fontRenderer, 4, 16+2)
 										.withText(IIReference.GUI_LABEL_KEY+"redstone_data_interface.to."+(redstoneToData?"data": "redstone"))
 										.withTranslatedTooltip(IIReference.GUI_LABEL_KEY+"redstone_data_interface.to."+(redstoneToData?"data": "redstone")+".tooltip")
 								)
-								.withLabel("mode", new DecoLabel(this.fontRenderer, 4, 16+14+2-1)
+								.withLabel("mode", p -> new DecoLabel(this.fontRenderer, 4, 16+14+2-1)
 										.withText(IIReference.GUI_LABEL_KEY+"redstone_data_interface.mode")
 										.withTranslatedTooltip(IIReference.GUI_LABEL_KEY+"redstone_data_interface.mode.tooltip")
 								)
 
 								//Color
-								.withComponent("color_icon", new DecoImage(32+8+2+48-4+2+24+8, colorY)
+								.withComponent("color_icon", p -> new DecoImage(32+8+2+48-4+2+24+8, colorY)
 										.withSize(8, 8)
 										.withImageLocation(DecoTextures.COMPONENT_COLOR, true)
 										.withUV(16, 4, 4, 12, 12)
 								)
-								.withLabel("color_label",
+								.withLabel("color_label", p ->
 										new DecoLabel(IIClientUtils.fontRegular, 4, colorY-1)
 												.withSize(136-48-8+2+24+8, 12)
 												.withAlign(DecoAlignment.RIGHT)
@@ -156,7 +155,7 @@ public class GuiDataRedstoneInterface extends DecoTileGui<TileEntityRedstoneData
 										})
 								)
 								//Variable
-								.withLabel("variable_label",
+								.withLabel("variable_label", p ->
 										new DecoLabel(IIClientUtils.fontRegular, 4, variableY)
 												.withSize(136-48+4+1+24+8, 12)
 												.withAlign(DecoAlignment.RIGHT)
@@ -168,7 +167,7 @@ public class GuiDataRedstoneInterface extends DecoTileGui<TileEntityRedstoneData
 												.setVariable(IIUtils.cycleDataPacketChars(builder.getCurrentElement().getVariable(), arrow, false)))
 								)
 								//Mode
-								.withLabel("mode_label",
+								.withLabel("mode_label", p ->
 										new DecoLabel(IIClientUtils.fontRegular, 4, 16+14+1-1)
 												.withSize(136-48+4+1+24+8, 12)
 												.withAlign(DecoAlignment.RIGHT)

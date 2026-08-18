@@ -22,7 +22,7 @@ import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.EntityWhitePhosphorus;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.messages.MessageParticleEffect;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageExplosion;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 import javax.annotation.Nullable;
@@ -39,7 +39,7 @@ public class AmmoComponentWhitePhosphorus extends AmmoComponent
 {
 	public AmmoComponentWhitePhosphorus()
 	{
-		super("white_phosphorus", 1f, ComponentRole.SPECIAL, IIColor.fromPackedRGB(0x6b778a));
+		super("white_phosphorus", 1f, ComponentRole.INCENDIARY, IIColor.fromPackedRGB(0xb8afa3), 2);
 	}
 
 	@Override
@@ -51,11 +51,16 @@ public class AmmoComponentWhitePhosphorus extends AmmoComponent
 	@Override
 	public void onEffect(World world, Vec3d pos, Vec3d dir, ComponentEffectShape shape, NBTTagCompound tag, float size, float multiplier, @Nullable Entity owner)
 	{
+		if(world.isRemote)
+			return;
+
 		BlockPos blockPos = new BlockPos(pos);
 		if(size > 0.2)
 			IIPacketHandler.playRangedSound(world, pos, IISounds.explosionIncendiary, SoundCategory.NEUTRAL, (int)(40*multiplier), 1f, 1f);
 		else
 			world.playSound(null, blockPos, SoundEvents.BLOCK_LAVA_EXTINGUISH, SoundCategory.BLOCKS, 1f, 1f);
+
+		IIPacketHandler.sendToClient(MessageExplosion.createWhitePhosphorusMessage(world, pos, dir, shape, size));
 
 		//Spawn main phosphorus entity, shared between all modes
 		EntityWhitePhosphorus main = new EntityWhitePhosphorus(world, pos.x-dir.x, pos.y-dir.y, pos.z-dir.z, 0, 0, 0);
@@ -86,7 +91,6 @@ public class AmmoComponentWhitePhosphorus extends AmmoComponent
 			case ORB:
 			case STAR:
 			case CONE:
-				IIPacketHandler.sendToClient(new MessageParticleEffect("phosphorus/orb", world, pos, Vec3d.ZERO, 0, 0, null));
 				main.motionX = 0;
 				main.motionY = 0.4;
 				main.motionZ = 0;

@@ -19,9 +19,7 @@
 
 package pl.pabilo8.immersiveintelligence.api.rotary;
 
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nullable;
 
@@ -32,7 +30,7 @@ import javax.annotation.Nullable;
  * @ii-approved 0.1.0
  * @since 06.01.2020
  */
-public class RotaryStorage implements IRotaryEnergy, INBTSerializable<NBTTagCompound>
+public class RotaryStorage implements IRotaryEnergy
 {
 	protected float torque = 0, speed = 0;
 
@@ -81,19 +79,5 @@ public class RotaryStorage implements IRotaryEnergy, INBTSerializable<NBTTagComp
 	public RotationSide getSide(@Nullable EnumFacing facing)
 	{
 		return RotationSide.NONE;
-	}
-
-	//--- INBTSerializable ---//
-
-	@Override
-	public NBTTagCompound serializeNBT()
-	{
-		return toNBT();
-	}
-
-	@Override
-	public void deserializeNBT(NBTTagCompound nbt)
-	{
-		fromNBT(nbt);
 	}
 }

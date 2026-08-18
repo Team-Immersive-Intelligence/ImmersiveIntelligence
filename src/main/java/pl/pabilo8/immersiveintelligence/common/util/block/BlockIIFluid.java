@@ -19,7 +19,7 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.CorrosionHandler.IAcidProtectionEquipment;
+import pl.pabilo8.immersiveintelligence.api.api.protection.ProtectionHandler;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.EntityGasCloud;
 
@@ -103,20 +103,9 @@ public class BlockIIFluid extends BlockFluidClassic
 				if(effect!=null)
 					((EntityLivingBase)entity).addPotionEffect(new PotionEffect(effect));
 
-			if(isAcid)
-			{
-				for(ItemStack stack1 : entity.getArmorInventoryList())
-				{
-					if(!(stack1.getItem() instanceof IAcidProtectionEquipment)||
-							!((IAcidProtectionEquipment)stack1.getItem()).protectsFromAcid(stack1))
-					{
-						entity.attackEntityFrom(IEDamageSources.acid, 2);
-						break;
-					}
-				}
-			}
+			if(isAcid&&!ProtectionHandler.isProtectedFromAcid((EntityLivingBase)entity))
+				entity.attackEntityFrom(IEDamageSources.acid, 2);
 		}
-
 	}
 
 	public void addToChemthrower()
@@ -138,15 +127,8 @@ public class BlockIIFluid extends BlockFluidClassic
 		@Override
 		public void applyToEntity(EntityLivingBase target, @Nullable EntityPlayer shooter, ItemStack thrower, Fluid fluid)
 		{
-			for(ItemStack stack1 : target.getArmorInventoryList())
-			{
-				if(!(stack1.getItem() instanceof IAcidProtectionEquipment)||
-						!((IAcidProtectionEquipment)stack1.getItem()).protectsFromAcid(stack1))
-				{
-					super.applyToEntity(target, shooter, thrower, fluid);
-					return;
-				}
-			}
+			if(!ProtectionHandler.isProtectedFromAcid(target))
+				super.applyToEntity(target, shooter, thrower, fluid);
 		}
 	}
 

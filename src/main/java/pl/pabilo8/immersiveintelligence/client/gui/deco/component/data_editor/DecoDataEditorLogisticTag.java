@@ -92,16 +92,15 @@ public class DecoDataEditorLogisticTag extends DecoDataEditor<DataTypeLogisticTa
 				.withDisplayFunction(new DecoEntryPanelBuilder<EnumDyeColor>()
 						.withBackground(DecoTextures.BG_STEEL)
 						.withHeight(12)
-						.withComponent("icon", new DecoImage(2, 1)
+						.withComponent("icon", p -> new DecoImage(2, 1)
 								.withSize(8, 8)
 								.withImageLocation(DecoTextures.COMPONENT_COLOR, true)
 								.withUV(16, 4, 4, 12, 12)
 						)
-						.withLabel("label",
-								new DecoLabel(IIClientUtils.fontRegular, 12, 1)
-										.withSize(48, 12)
-										.withAlign(DecoAlignment.LEFT)
-										.withRawText("Color")
+						.withLabel("label", p -> new DecoLabel(IIClientUtils.fontRegular, 12, 1)
+								.withSize(48, 12)
+								.withAlign(DecoAlignment.LEFT)
+								.withRawText("Color")
 						)
 						.withElementApplyMethod((tf, builder) -> {
 							builder.component("icon", DecoImage.class).withColor(IIColor.fromDye(tf));

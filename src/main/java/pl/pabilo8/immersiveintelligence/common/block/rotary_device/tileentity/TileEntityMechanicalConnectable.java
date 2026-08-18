@@ -4,11 +4,9 @@ import blusunrize.immersiveengineering.api.TargetingInfo;
 import blusunrize.immersiveengineering.api.energy.wires.IImmersiveConnectable;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
-import blusunrize.immersiveengineering.api.energy.wires.TileEntityImmersiveConnectable;
 import blusunrize.immersiveengineering.api.energy.wires.WireType;
 import blusunrize.immersiveengineering.client.models.IOBJModelCallback;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IBlockBounds;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IDirectionalTile;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IHammerInteraction;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -17,29 +15,28 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
-import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.rotary.*;
-import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.messages.MessageRotaryPowerSync;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
+import pl.pabilo8.immersiveintelligence.common.util.tile.TileEntityIIDirectionalConnectable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Set;
 
-import static blusunrize.immersiveengineering.api.energy.wires.WireApi.canMix;
-
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 20.07.2026
+ * @ii-approved 0.3.1
  * @since 29.12.2019
  */
-public abstract class TileEntityMechanicalConnectable extends TileEntityImmersiveConnectable implements IRotaryConnector, ITickable, IDirectionalTile, IHammerInteraction, IBlockBounds, IOBJModelCallback<IBlockState>, IRotationalEnergyBlock
+public abstract class TileEntityMechanicalConnectable extends TileEntityIIDirectionalConnectable implements IRotaryConnector, ITickable,
+		IHammerInteraction, IBlockBounds, IOBJModelCallback<IBlockState>
 {
-	@Nonnull
-	protected MotorBeltNetwork beltNetwork = new MotorBeltNetwork().add(this);
+	@SyncNBT(events = SyncEvents.TILE_ENERGY_CHANGED)
 	public RotaryStorage energy = new RotaryStorage()
 	{
 		@Override
@@ -51,28 +48,96 @@ public abstract class TileEntityMechanicalConnectable extends TileEntityImmersiv
 		@Override
 		public float getOutputRotationSpeed()
 		{
-			return getNetwork()!=null?(float)getNetwork().getNetworkSpeed(): this.getRotationSpeed();
+			return (float)getNetwork().getNetworkSpeed();
 		}
 
 		@Override
 		public float getOutputTorque()
 		{
-			return getNetwork()!=null?(float)getNetwork().getNetworkTorque(): this.getTorque();
+			return (float)getNetwork().getNetworkTorque();
+		}
+
+		@Override
+		public NBTTagCompound serializeNBT()
+		{
+			NBTTagCompound nbt = super.serializeNBT();
+			nbt.setFloat("speed_network", (float)getNetwork().getNetworkSpeed());
+			nbt.setFloat("torque_network", (float)getNetwork().getNetworkTorque());
+			return nbt;
+		}
+
+		@Override
+		public void deserializeNBT(NBTTagCompound nbt)
+		{
+			super.deserializeNBT(nbt);
+			getNetwork().setValues(nbt.getFloat("speed_network"), nbt.getFloat("torque_network"));
 		}
 	};
+	@Nonnull
+	protected MotorBeltNetwork beltNetwork = new MotorBeltNetwork().add(this);
 	protected boolean refreshBeltNetwork = false;
+	protected double prevRotations, rotations;
 
 	@Override
-	public void updateRotationStorage(float speed, float torque, int partID)
+	public void update()
 	{
+		if(!hasWorld())
+			return;
+
 		if(world.isRemote)
-			if(partID==0)
+		{
+			prevRotations = rotations;
+			rotations += getOutputSpeed()/IIRotaryUtils.getMaxWorldRotationTicks();
+		}
+		else
+		{
+			if(world.getTotalWorldTime()%20==0)
+				getNetwork().updateValues();
+
+			if(world.getTileEntity(getPos().offset(getFacing()))!=null)
 			{
-				energy.setRotationSpeed(speed);
-				energy.setTorque(torque);
+				TileEntity te = world.getTileEntity(getPos().offset(getFacing()));
+				if(te.hasCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, getFacing().getOpposite()))
+				{
+					IRotaryEnergy other = te.getCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, getFacing().getOpposite());
+					if(energy.handleRotation(other, getFacing().getOpposite()))
+						getNetwork().updateValues();
+				}
 			}
-			else if(partID==1)
-				getNetwork().setClient(speed, torque);
+
+			if(!refreshBeltNetwork&&world.getTotalWorldTime()%10==0)
+			{
+				refreshBeltNetwork = true;
+				beltNetwork.removeFromNetwork(null);
+			}
+		}
+
+
+	}
+
+	@Nonnull
+	@Override
+	public MotorBeltNetwork getNetwork()
+	{
+		return beltNetwork;
+	}
+
+	@Override
+	public void setNetwork(@Nonnull MotorBeltNetwork net)
+	{
+		beltNetwork = net;
+	}
+
+	@Override
+	public void onChange()
+	{
+		updateTileForEvent(SyncEvents.TILE_ENERGY_CHANGED);
+	}
+
+	@Override
+	public boolean isRelay()
+	{
+		return false;
 	}
 
 	@Override
@@ -96,90 +161,9 @@ public abstract class TileEntityMechanicalConnectable extends TileEntityImmersiv
 	@Override
 	public boolean canConnectCable(WireType cableType, TargetingInfo target, Vec3i offset)
 	{
-		if(!IIRotaryUtils.isMotorBelt(cableType)||!canConnectBelt(((MotorBeltType)cableType)))
+		if(!IIRotaryUtils.isMotorBelt(cableType))
 			return false;
-		return limitType==null||(this.isRelay()&&canMix(limitType, cableType));
-	}
-
-	protected abstract boolean canConnectBelt(MotorBeltType cableType);
-
-	@Override
-	public void readCustomNBT(@Nonnull NBTTagCompound nbt, boolean descPacket)
-	{
-		super.readCustomNBT(nbt, descPacket);
-		if(nbt.hasKey("energy"))
-			energy.fromNBT(nbt.getCompoundTag("energy"));
-	}
-
-	@Override
-	public void writeCustomNBT(@Nonnull NBTTagCompound nbt, boolean descPacket)
-	{
-		super.writeCustomNBT(nbt, descPacket);
-		nbt.setTag("energy", energy.toNBT());
-	}
-
-	/**
-	 * Like the old updateEntity(), except more generic.
-	 */
-	@Override
-	public void update()
-	{
-		if(hasWorld()&&!world.isRemote)
-		{
-			if(world.getTotalWorldTime()%20==0)
-				getNetwork().updateValues();
-
-			if(world.getTileEntity(getPos().offset(getFacing()))!=null)
-			{
-				TileEntity te = world.getTileEntity(getPos().offset(getFacing()));
-				if(te.hasCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, getFacing().getOpposite()))
-				{
-					IRotaryEnergy other = te.getCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, getFacing().getOpposite());
-					if(energy.handleRotation(other, getFacing().getOpposite()))
-						getNetwork().updateValues();
-				}
-			}
-
-			if(!refreshBeltNetwork&&world.getTotalWorldTime()%10==0)
-			{
-				refreshBeltNetwork = true;
-				beltNetwork.removeFromNetwork(null);
-			}
-		}
-	}
-
-	@Nonnull
-	@Override
-	public MotorBeltNetwork getNetwork()
-	{
-		return beltNetwork;
-	}
-
-	@Override
-	public void setNetwork(@Nonnull MotorBeltNetwork net)
-	{
-		beltNetwork = net;
-	}
-
-	@Override
-	public void onChange()
-	{
-		markDirty();
-		IBlockState stateHere = world.getBlockState(pos);
-		markContainingBlockForUpdate(stateHere);
-		markBlockForUpdate(getConnectionPos(), stateHere);
-
-		//IIPacketHandler.sendToClient(new MessageRotaryPowerSync(energy, 0, getPos()), Utils.targetPointFromTile(this, 32));
-		IIPacketHandler.sendToClient(new MessageRotaryPowerSync(world, getPos(), 1, getNetwork().getEnergyStorage()));
-
-	}
-
-	public abstract BlockPos getConnectionPos();
-
-	@Override
-	public World getConnectorWorld()
-	{
-		return getWorld();
+		return super.canConnectCable(cableType, target, offset);
 	}
 
 	@Override
@@ -207,13 +191,7 @@ public abstract class TileEntityMechanicalConnectable extends TileEntityImmersiv
 	@Override
 	protected float getBaseDamage(Connection c)
 	{
-		return 1;
-	}
-
-	@Override
-	protected float getMaxDamage(Connection c)
-	{
-		return 20;
+		return 10;
 	}
 
 	@Override
@@ -222,6 +200,14 @@ public abstract class TileEntityMechanicalConnectable extends TileEntityImmersiv
 		super.removeCable(connection);
 		beltNetwork.removeFromNetwork(this);
 		ImmersiveIntelligence.proxy.onMechanicalConnectorRemoved(connection);
+	}
+
+	@Override
+	public float getDamageAmount(Entity e, Connection c)
+	{
+		if(c.cableType instanceof MotorBeltType)
+			return (float)beltNetwork.getNetworkTorque()/4f;
+		return super.getDamageAmount(e, c);
 	}
 
 	@Override
@@ -237,13 +223,5 @@ public abstract class TileEntityMechanicalConnectable extends TileEntityImmersiv
 	public RotaryStorage getRotaryStorage()
 	{
 		return energy;
-	}
-
-	@Override
-	public float getDamageAmount(Entity e, Connection c)
-	{
-		if(c.cableType instanceof MotorBeltType)
-			return (float)beltNetwork.getNetworkTorque()/4f;
-		return super.getDamageAmount(e, c);
 	}
 }

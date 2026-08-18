@@ -8,6 +8,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityBallisticComputer;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -22,6 +23,11 @@ public class MultiblockBallisticComputer extends MultiblockStuctureBase<TileEnti
 		super(new ResourceLocation(ImmersiveIntelligence.MODID, "multiblocks/ballistic_computer"));
 		offset = new Vec3i(0, 0, 0);
 		INSTANCE = this;
+
+		//POI
+		addPOI(MultiblockPOI.ENERGY_INPUT, "energy");
+		addPOI(MultiblockPOI.DATA_INPUT, "data_input");
+		addPOI(MultiblockPOI.DATA_OUTPUT, "data_output");
 	}
 
 	@Override

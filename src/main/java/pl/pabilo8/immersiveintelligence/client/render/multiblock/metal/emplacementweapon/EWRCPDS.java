@@ -59,7 +59,7 @@ public class EWRCPDS extends EmplacementWeaponRenderer<EmplacementWeaponCPDS>
 	{
 		this.rotateYaw.apply(weapon.aim.getYawNormalized(partialTicks));
 		this.rotatePitch.apply(weapon.aim.getPitchNormalized(partialTicks));
-
-		this.fire.apply(weapon.shootDelay);
+		this.load.apply(weapon.gunHandler.getLoadingProgress(partialTicks));
+		this.fire.apply(weapon.gunHandler.getShotDelay(partialTicks));
 	}
 }

@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common.util.easynbt;
 
 import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorage;
+import blusunrize.immersiveengineering.api.energy.wires.WireType;
 import blusunrize.immersiveengineering.common.util.inventory.MultiFluidTank;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.*;
@@ -13,9 +14,9 @@ import net.minecraftforge.fluids.FluidTank;
 import pl.pabilo8.immersiveintelligence.api.data.DataVariable;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataTypeUtils;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
-import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.TileEntityFluidInserter.InserterTaskFluid;
-import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.TileEntityFluidInserter.InserterTaskLatexCollectorDrain;
-import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.TileEntityFluidInserter.InserterTaskMilkCow;
+import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.inserter.TileEntityFluidInserter.InserterTaskFluid;
+import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.inserter.TileEntityFluidInserter.InserterTaskLatexCollectorDrain;
+import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.inserter.TileEntityFluidInserter.InserterTaskMilkCow;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.inserter.TileEntityInserter.InserterTaskFromMinecart;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.inserter.TileEntityInserter.InserterTaskIntoMinecart;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.inserter.TileEntityInserter.InserterTaskItem;
@@ -189,7 +190,7 @@ public class NBTSerialisation
 					TypeSerializationData data = nameToSerializers.get(nbtTagCompound.getString("type"));
 					if(data==null)
 						return null;
-					return data.deserialize(nbtTagCompound);
+					return data.deserialize(nbtTagCompound, type);
 				});
 
 		registerSerializer(
@@ -222,6 +223,14 @@ public class NBTSerialisation
 					char name = nbtTagCompound.getString("name").isEmpty()?'a': nbtTagCompound.getString("name").charAt(0);
 					NBTTagCompound valueTag = nbtTagCompound.getCompoundTag("value");
 					return new DataVariable(name, IIDataTypeUtils.getVarFromNBT(valueTag));
+				}
+		);
+
+		registerSerializer(WireType.class, NBTTagString.class,
+				wireType -> new NBTTagString(wireType==null?"": wireType.getUniqueName()),
+				nbt -> {
+					String string = nbt.getString();
+					return string.isEmpty()?null: WireType.getValue(string);
 				}
 		);
 
@@ -517,12 +526,10 @@ public class NBTSerialisation
 			try
 			{
 				if(from.hasKey(nbtName))
-				{
 					if(canBeNull&&from.getTag(nbtName).hasNoTags())
 						setter.invoke(obj, null);
 					else
 						setter.invoke(obj, fromNBT(obj, (NBT)from.getTag(nbtName)));
-				}
 				else
 				{
 					if(canSkip)
@@ -628,6 +635,15 @@ public class NBTSerialisation
 		@Nullable
 		public T deserialize(NBTTagCompound from)
 		{
+			return deserialize(from, null);
+		}
+
+		/**
+		 * Deserializes a polymorphic value and reuses the current instance when its subtype matches.
+		 */
+		@Nullable
+		public T deserialize(NBTTagCompound from, @Nullable T current)
+		{
 			String typeId = from.getString("type");
 			if(typeId.isEmpty()||"null".equals(typeId))
 				return null;
@@ -638,7 +654,9 @@ public class NBTSerialisation
 				return null;
 			}
 
-			T instance = supplier.get();
+			T instance = current;
+			if(instance==null||!typeId.equals(nameFromClass.get(instance.getClass())))
+				instance = supplier.get();
 			if(instance==null)
 			{
 				IILogger.error("Failed to instantiate ITypeNBTSerializable type \""+typeId+"\".");
@@ -652,7 +670,6 @@ public class NBTSerialisation
 			} catch(Exception e)
 			{
 				IILogger.error("Error deserializing ITypeNBTSerializable type \""+typeId+"\".", e);
-				return instance;
 			}
 			return instance;
 		}

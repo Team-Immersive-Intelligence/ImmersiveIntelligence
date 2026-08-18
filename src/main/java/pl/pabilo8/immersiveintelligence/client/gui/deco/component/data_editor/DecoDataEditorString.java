@@ -1,7 +1,7 @@
 package pl.pabilo8.immersiveintelligence.client.gui.deco.component.data_editor;
 
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.DecoTextField;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.DecoTextArea;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 /**
@@ -10,7 +10,7 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReference;
  */
 public class DecoDataEditorString extends DecoDataEditor<DataTypeString>
 {
-	private DecoTextField valueEdit;
+	private DecoTextArea valueEdit;
 
 	public DecoDataEditorString(int x, int y, DataTypeString dataType)
 	{
@@ -21,9 +21,8 @@ public class DecoDataEditorString extends DecoDataEditor<DataTypeString>
 	protected boolean initialize()
 	{
 		addLabel(IIReference.DESCRIPTION_KEY+"variable_value", 2, 2);
-		addComponent(this.valueEdit = new DecoTextField(2, 12)
+		addComponent(this.valueEdit = new DecoTextArea(2, 12)
 				.withSize(width-8, height-20)
-				.withMultiLine(true)
 				.withText(dataType.toString())
 		);
 		return super.initialize();

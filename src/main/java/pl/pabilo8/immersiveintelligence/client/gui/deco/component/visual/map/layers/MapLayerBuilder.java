@@ -49,6 +49,20 @@ public class MapLayerBuilder
 		return this;
 	}
 
+
+	/**
+	 * Adds a frame overlay consisting of 4 rectangles.
+	 */
+	public MapLayerBuilder addRectangleFrame(int fromX, int fromZ, int toX, int toZ, IIColor color, IIColor outline)
+	{
+		addRectangle(fromX, fromZ, toX, toZ, color);
+		addLine(fromX, fromZ, toX, fromZ, outline, 1);
+		addLine(toX, fromZ, toX, toZ, outline, 1);
+		addLine(toX, toZ, fromX, toZ, outline, 1);
+		addLine(fromX, toZ, fromX, fromZ, outline, 1);
+		return this;
+	}
+
 	/**
 	 * Adds a sprite overlay (direct texture) at world coordinates.
 	 * Uses UV 0..1 by default.
@@ -64,7 +78,7 @@ public class MapLayerBuilder
 	}
 
 	public MapLayerBuilder withSprite(ResLoc location, boolean usesBlockAtlas, int worldX, int worldZ,
-									  float sizePx, float textureSize, IIColor color, float rotationDeg)
+	                                  float sizePx, float textureSize, IIColor color, float rotationDeg)
 	{
 		float[] uv;
 		if(usesBlockAtlas)
@@ -110,7 +124,7 @@ public class MapLayerBuilder
 	 */
 	public MapLayerBuilder addDirectionalLine(int centerX, int centerZ, float angleDeg, float distance, IIColor color, float width)
 	{
-		// Convert polar coordinates (angle, distance) to cartesian
+		//Convert polar coordinates (angle, distance) to cartesian
 		double angleRad = Math.toRadians(angleDeg);
 		int toX = centerX+(int)(distance*Math.cos(angleRad));
 		int toZ = centerZ+(int)(distance*Math.sin(angleRad));

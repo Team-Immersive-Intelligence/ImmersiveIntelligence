@@ -3,6 +3,7 @@
   "models": ["smoke/smoke_trace.obj"],
   "max_lifetime": 25,
   "draw_stage": "custom_smoke_noise_shader",
+  "color": "5cffffff",
   "programs": [
     "smoke_transition"
   ],
@@ -17,7 +18,7 @@
     {
       "time": 20,
       "generator": "rand_xz",
-      "distance": 2.0,
+      "distance": 1.5,
       "amount": 4,
       "type": "phosphorus/smoke_main"
     }

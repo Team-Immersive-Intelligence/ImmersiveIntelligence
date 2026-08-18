@@ -48,20 +48,6 @@ public class TileEntityScanningConveyor extends TileEntityMultiblockIIGeneric<Ti
 			lastScanned.computeIfPresent(entityItem, (entityItem1, integer) -> integer >= 1?integer-1: null);
 	}
 
-	@Override
-	protected int[] listAllPOI(MultiblockPOI poi)
-	{
-		switch(poi)
-		{
-			case DATA_OUTPUT:
-				return getPOI("data");
-			case ENERGY_INPUT:
-				return getPOI("power");
-			case REDSTONE_INPUT:
-				return getPOI("redstone");
-		}
-		return new int[0];
-	}
 
 	@Override
 	public void onEntityCollision(World world, Entity entity)

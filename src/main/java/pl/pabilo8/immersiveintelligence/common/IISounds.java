@@ -75,15 +75,15 @@ public class IISounds
 	@ModSound(sounds = {"device/electric_motor/start"}, subtitle = "inserter")
 	public static SoundEvent inserterStart = registerSound("inserter_start");
 	@ModSound(sounds = {"device/electric_motor/forward"}, subtitle = "inserter")
-	public static SoundEvent inserterYaw = registerSound("inserter_forward");
+	public static SoundEvent inserterYaw = registerSound("inserter_yaw");
 	@ModSound(sounds = {"device/electric_motor/backward"}, subtitle = "inserter")
-	public static SoundEvent inserterPitch = registerSound("inserter_backward");
+	public static SoundEvent inserterPitch = registerSound("inserter_pitch");
 	@ModSound(sounds = {"device/electric_motor/end"}, subtitle = "inserter")
 	public static SoundEvent inserterEnd = registerSound("inserter_end");
-	public static MultiSound inserterYawM = new MultiSound("inserter_yaw_loop", inserterStart,
-			inserterYaw, inserterEnd);
-	public static MultiSound inserterPitchM = new MultiSound("inserter_pitch_loop", inserterEnd,
-			inserterPitch, inserterStart);
+	public static MultiSound inserterYawM = new MultiSound("inserter_yaw_loop",
+			inserterStart, inserterYaw, inserterEnd);
+	public static MultiSound inserterPitchM = new MultiSound("inserter_pitch_loop",
+			inserterEnd, inserterPitch, inserterStart);
 	//electric motor
 	@ModSound(sounds = {"device/electric_motor/start"})
 	public static SoundEvent electricMotorStart = registerSound("electric_motor_start");
@@ -93,10 +93,10 @@ public class IISounds
 	public static SoundEvent electricMotorForward = registerSound("electric_motor_forward");
 	@ModSound(sounds = {"device/electric_motor/backward"}, subtitle = "*")
 	public static SoundEvent electricMotorBackward = registerSound("electric_motor_backward");
-	public static MultiSound electricMotorForwardLoop = new MultiSound("electric_motor_forward_loop", electricMotorStart,
-			electricMotorForward, electricMotorBackward);
-	public static MultiSound electricMotorBackwardLoop = new MultiSound("electric_motor_backward_loop", electricMotorStart,
-			electricMotorEnd, electricMotorBackward);
+	public static MultiSound electricMotorForwardLoop = new MultiSound("electric_motor_forward_loop",
+			electricMotorStart, electricMotorForward, electricMotorBackward);
+	public static MultiSound electricMotorBackwardLoop = new MultiSound("electric_motor_backward_loop",
+			electricMotorStart, electricMotorEnd, electricMotorBackward);
 	//heavy electric motor
 	@ModSound(sounds = {"device/electric_motor_heavy/start"})
 	public static SoundEvent electricMotorHeavyStart = registerSound("electric_motor_heavy_start");

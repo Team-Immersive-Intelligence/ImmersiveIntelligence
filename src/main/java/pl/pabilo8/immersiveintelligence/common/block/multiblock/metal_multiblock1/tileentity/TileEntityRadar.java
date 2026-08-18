@@ -113,20 +113,6 @@ public class TileEntityRadar extends TileEntityMultiblockIIGeneric<TileEntityRad
 
 	}
 
-	@Override
-	protected int[] listAllPOI(MultiblockPOI poi)
-	{
-		switch(poi)
-		{
-			case DATA_OUTPUT:
-				return getPOI("data");
-			case REDSTONE_INPUT:
-				return getPOI("redstone");
-			case ENERGY_INPUT:
-				return getPOI("energy");
-		}
-		return new int[0];
-	}
 
 	@Override
 	public MultiblockConstructionManager getConstructionManager()
@@ -151,6 +137,13 @@ public class TileEntityRadar extends TileEntityMultiblockIIGeneric<TileEntityRad
 	public boolean isStackValid(int slot, ItemStack stack)
 	{
 		return false;
+	}
+
+	@Override
+	public void onGuiOpened(@Nullable EntityPlayer player, boolean clientside)
+	{
+		if(!clientside)
+			updateTileForEvent(SyncEvents.TILE_GUI_OPENED);
 	}
 
 	@Override

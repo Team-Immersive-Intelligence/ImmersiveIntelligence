@@ -1,6 +1,6 @@
 {
   "type": "ParticleModel",
-  "models": ["shockwave.obj"],
+  "models": ["ammo/shockwave.obj"],
   "max_lifetime": 5,
   "draw_stage": "custom_additive",
   "programs": [

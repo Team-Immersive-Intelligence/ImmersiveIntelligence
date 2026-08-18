@@ -28,6 +28,8 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.MechanicalDevices;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.rotary_device.tileentity.TileEntityMechanicalConnectable;
@@ -52,6 +54,7 @@ import static pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.M
  * @author GabrielV (gabriel@iiteam.net)
  * @updated 01.08.2024
  * @updated 10.10.2025
+ * @updated 20.07.2026
  * @ii-approved 0.3.1
  * @since 26.12.2019
  */
@@ -112,7 +115,7 @@ public class IIRotaryUtils
 	 * @return {@link EnumActionResult#SUCCESS} if the connection was successful, {@link EnumActionResult#FAIL} if the connection failed, {@link EnumActionResult#PASS} if the connection was not attempted
 	 */
 	public static EnumActionResult useCoil(IWireCoil coil, EntityPlayer player, World world, BlockPos pos,
-										   EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
+	                                       EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		TileEntity tileEntity = world.getTileEntity(pos);
 		//Tile entity is not a rotary device
@@ -287,11 +290,6 @@ public class IIRotaryUtils
 		return EnumActionResult.SUCCESS;
 	}
 
-	public static int getRPMMax()
-	{
-		return 1200;
-	}
-
 	/**
 	 * @param start start of the connection
 	 * @param end   end of the connection
@@ -375,21 +373,6 @@ public class IIRotaryUtils
 		return MathHelper.clamp(torque/inventory.size(), 0, 8);
 	}
 
-	public static float getDisplayRotation(TileEntity te, RotaryStorage rotaryStorage, float partialTicks)
-	{
-		double worldRPT = (te.getWorld().getTotalWorldTime()%getRPMMax()+partialTicks)/getRPMMax();
-		return (float)(worldRPT*rotaryStorage.getRotationSpeed())%1;
-	}
-
-	/**
-	 * @param facing the facing of the rotary connector
-	 * @return whether the rotary connector should rotate clockwise ({@link AxisDirection#POSITIVE}) or counter-clockwise ({@link AxisDirection#NEGATIVE})
-	 */
-	public static boolean shouldRotateClockwise(EnumFacing facing)
-	{
-		return facing.getAxisDirection()==AxisDirection.POSITIVE;
-	}
-
 	public static Collection<MotorBeltType> getAllMotorBelts()
 	{
 		return WireType.getValues().stream()
@@ -430,5 +413,37 @@ public class IIRotaryUtils
 		torque = output/speed;
 
 		return new float[]{speed, torque};
+	}
+
+	public static int getMaxWorldRotationTicks()
+	{
+		return 1200;
+	}
+
+	//--- Client Methods ---//
+
+	/**
+	 * @param te            rendered tile entity
+	 * @param rotaryStorage displayed rotary energy
+	 * @param partialTicks  partial ticks
+	 * @return an approximate rotation value from 0.0 to 1.0
+	 * @implNote it's based on the world time, but it's good enough for most rendering purposes
+	 * @implNote do not use on mechanical belts and wheels
+	 */
+	@SideOnly(Side.CLIENT)
+	public static float getDisplayRotation(TileEntity te, RotaryStorage rotaryStorage, float partialTicks)
+	{
+		double worldTime = (te.getWorld().getTotalWorldTime()%getMaxWorldRotationTicks()+partialTicks)/getMaxWorldRotationTicks();
+		return (float)((worldTime*rotaryStorage.getRotationSpeed())%1f);
+	}
+
+	/**
+	 * @param facing the facing of the rotary connector
+	 * @return whether the rotary connector should rotate clockwise ({@link AxisDirection#POSITIVE}) or counter-clockwise ({@link AxisDirection#NEGATIVE})
+	 */
+	@SideOnly(Side.CLIENT)
+	public static boolean shouldRotateClockwise(EnumFacing facing)
+	{
+		return facing.getAxisDirection()==AxisDirection.POSITIVE;
 	}
 }

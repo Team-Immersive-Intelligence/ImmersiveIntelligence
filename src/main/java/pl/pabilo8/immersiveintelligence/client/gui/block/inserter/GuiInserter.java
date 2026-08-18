@@ -1,16 +1,17 @@
 package pl.pabilo8.immersiveintelligence.client.gui.block.inserter;
 
-import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
+import pl.pabilo8.immersiveintelligence.api.crafting.IngredientReference;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTileGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoDropdown;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoElementDisplays;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoEntryPanelBuilder;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoIngredientStackPickerPanel;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoIngredientStackPickerPanel.PickerPanelMode;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPanel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoTaskList;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoTaskList.ListMode;
@@ -19,7 +20,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoIt
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.DecoTextField;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.util.TextFilter;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.inserter.TileEntityInserterBase;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.inserter.TileEntityInserterBase.InserterTask;
@@ -27,7 +28,6 @@ import pl.pabilo8.immersiveintelligence.common.gui.ContainerInserter;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyMultiTypeCollection;
-import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 
@@ -36,8 +36,12 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 /**
+ * Configures Inserter tasks and sends task changes to the server.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 12.08.2026
  * @ii-approved 0.3.1
+ * @updated 12.08.2026
  * @since 20.01.2026
  */
 @DecoTemplate(name = "inserter", category = DecoGuiCategory.DATA_TILE)
@@ -49,6 +53,8 @@ public class GuiInserter extends DecoTileGui<TileEntityInserterBase, ContainerIn
 	private DecoPanel panelDetails;
 	@SyncNBT(events = SyncEvents.TILE_CLIENT_MESSAGE)
 	public EasyMultiTypeCollection<InserterTask> tasks;
+	@SyncNBT(events = SyncEvents.TILE_CLIENT_MESSAGE)
+	public int taskRetryDelay = 0;
 	@Nullable
 	private InserterTask selected;
 
@@ -94,20 +100,20 @@ public class GuiInserter extends DecoTileGui<TileEntityInserterBase, ContainerIn
 				.withDisplayFunction(new DecoEntryPanelBuilder<InserterTask>()
 						.withBackground(DecoTextures.BG_PAPER)
 						.withBackgroundMask(DecoTextures.TEMPLATE_TICKET)
-						.withComponent("icon", new DecoItemStackDisplay(3, 2).withSize(16, 16))
-						.withLabel("wild", new DecoLabel(fontRenderer, 3, 2)
+						.withComponent("icon", p -> new DecoItemStackDisplay(3, 2).withSize(16, 16))
+						.withLabel("wild", p -> new DecoLabel(fontRenderer, 3, 2)
 								.withSize(16, 16)
 								.withAlign(DecoAlignment.CENTER)
 								.withRawText("*")
 								.withTextColor(IIReference.COLOR_IMMERSIVE_ORANGE)
 						)
-						.withLabel("type", new DecoLabel(fontRenderer, 3+16+4, 2)
+						.withLabel("type", p -> new DecoLabel(fontRenderer, 3+16+4, 2)
 								.withSize(96-3-16-6, 16)
 								.withAlign(DecoAlignment.LEFT)
 								.withRawText("task")
 						)
 						.withElementApplyMethod((task, panel) -> {
-							IngredientStack stack = task.stack;
+							IngredientReference stack = task.stack;
 							panel.label("type").withText(INSERTER_KEY+"tasks."+task.getName());
 
 							boolean wildcard = isWildcard(stack);
@@ -115,7 +121,9 @@ public class GuiInserter extends DecoTileGui<TileEntityInserterBase, ContainerIn
 
 							DecoItemStackDisplay icon = panel.component("icon", DecoItemStackDisplay.class);
 							icon.visible = icon.enabled = !wildcard;
-							icon.withStack(!wildcard?stack.getExampleStack(): ItemStack.EMPTY);
+							icon.withStack(stack.hasLogisticTag()?
+									IIContent.itemLogisticTag.getStack(stack.getLogisticTag(), 1):
+									(!wildcard?stack.getExampleStack(): ItemStack.EMPTY));
 						})
 				)
 		);
@@ -211,31 +219,22 @@ public class GuiInserter extends DecoTileGui<TileEntityInserterBase, ContainerIn
 						.withTranslatedTooltip(INSERTER_KEY+"items_per_step.tooltip")
 						.withDisabled(!thisTask.areDetailsEditable()),
 				new DecoIngredientStackPickerPanel(6-2, 34+18+18+18)
-						.withLogisticTagMode(true)
-						.withFluidMode(thisTask.getName().contains("fluid"))
+						.withMode(thisTask.getName().contains("fluid")?PickerPanelMode.FLUID: PickerPanelMode.ITEM_LOGISTIC_TAG)
 						.withOnStackChanged(stack -> {
 							thisTask.stack = stack;
-							//refreshDetails();
+							taskList.cleanup();
 						})
-						.withIngredientStack(thisTask.stack)
+						.withIngredientReference(thisTask.stack)
 						.withSize(panelDetails.width-6-2, 56)
 						.withDisabled(!thisTask.areDetailsEditable())
 		);
 
 	}
 
-	@Override
-	protected EasyNBT onSaveTileData()
-	{
-		return super.onSaveTileData()
-				.withSerializable("tasks", tasks);
-	}
-
 	//--- Task helpers ---
 
-	private static boolean isWildcard(IngredientStack ing)
+	private static boolean isWildcard(IngredientReference ing)
 	{
-		ItemStack ex = ing.getExampleStack();
-		return ex==null||ex.isEmpty();
+		return ing==null||ing.isWildcard()&&!ing.hasLogisticTag();
 	}
 }

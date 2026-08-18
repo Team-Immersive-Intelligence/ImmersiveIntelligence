@@ -58,11 +58,13 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IITileProviderEnum;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemUtils;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IConstructionRequiringDevice;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IDamageResistantMultiblock;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IExplosionResistantMultiblock;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.ILadderMultiblock;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIBase;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -79,8 +81,8 @@ public abstract class BlockIITileProvider<E extends Enum<E> & IITileProviderEnum
 	private boolean hasConnections = false;
 
 	public BlockIITileProvider(String name, Material material, PropertyEnum<E> mainProperty,
-							   Function<BlockIIBase<E>, ItemBlockIIBase> itemBlock,
-							   Object... additionalProperties)
+	                           Function<BlockIIBase<E>, ItemBlockIIBase> itemBlock,
+	                           Object... additionalProperties)
 	{
 		super(name, mainProperty, material, itemBlock, additionalProperties);
 
@@ -196,7 +198,7 @@ public abstract class BlockIITileProvider<E extends Enum<E> & IITileProviderEnum
 	{
 		if(tiles[type.ordinal()]!=null)
 			try {return tiles[type.ordinal()].newInstance();} catch(InstantiationException|
-																	IllegalAccessException ignored) {}
+			                                                        IllegalAccessException ignored) {}
 		return null;
 	}
 
@@ -292,10 +294,13 @@ public abstract class BlockIITileProvider<E extends Enum<E> & IITileProviderEnum
 			assert mb!=null;
 			//float damageDealt = explosion instanceof IIExplosion?(float)(((IIExplosion)explosion).getPower()/3f): explosion.size;
 			boolean dead = mb.damageHealth(Math.max(explosion.size-mb.getExplosionResistance(), 0));
+			if(!dead&&mb instanceof TileEntityMultiblockIIBase)
+				((TileEntityMultiblockIIBase<?>)mb).updateTileForEvent(SyncEvents.TILE_DAMAGED);
+
 			return dead?0: Float.MAX_VALUE;
 
 		}
-		if(te instanceof IExplosionResistantMultiblock)
+		else if(te instanceof IExplosionResistantMultiblock)
 		{
 			float v = ((IExplosionResistantMultiblock)te).getExplosionResistance();
 			if(v!=-1)
@@ -539,9 +544,12 @@ public abstract class BlockIITileProvider<E extends Enum<E> & IITileProviderEnum
 			TileEntity master = ((IGuiTile)tile).getGuiMaster();
 
 			if(!world.isRemote&&master!=null&&((IGuiTile)master).canOpenGui(player))
+			{
 				player.openGui(ImmersiveIntelligence.INSTANCE, ((IGuiTile)master).getGuiID(), master.getWorld(), master.getPos().getX(),
 						master.getPos().getY(), master.getPos().getZ());
-			return true;
+				return true;
+			}
+
 		}
 		return false;
 	}

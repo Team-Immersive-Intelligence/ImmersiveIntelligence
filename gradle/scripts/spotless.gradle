@@ -1,0 +1,25 @@
+apply plugin: 'com.diffplug.spotless'
+
+spotless {
+	encoding 'UTF-8'
+	format 'misc', {
+		target '.gitignore', '*.md', '*.properties', 'gradle/**/*.properties'
+		trimTrailingWhitespace()
+		indentWithTabs()
+		endWithNewline()
+	}
+	groovyGradle {
+		target '*.gradle', 'gradle/**/*.gradle'
+		trimTrailingWhitespace()
+		indentWithTabs()
+		endWithNewline()
+	}
+	java {
+		target 'src/main/java/**/*.java', 'src/test/java/**/*.java'
+		trimTrailingWhitespace()
+		removeUnusedImports()
+		importOrder('java', 'javax', 'net.minecraft', 'net.minecraftforge', 'blusunrize', 'net.iiteam', '')
+		indentWithTabs()
+		endWithNewline()
+	}
+}

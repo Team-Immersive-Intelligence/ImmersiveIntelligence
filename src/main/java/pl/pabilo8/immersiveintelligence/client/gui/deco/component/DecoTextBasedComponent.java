@@ -5,7 +5,6 @@ import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoColors;
 import pl.pabilo8.immersiveintelligence.client.util.font.IIFontRenderer;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
-import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
 /**
@@ -16,24 +15,19 @@ import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 @SuppressWarnings("unchecked")
 public abstract class DecoTextBasedComponent<TYPE extends DecoTextBasedComponent<? super TYPE>> extends DecoComponent<TYPE>
 {
-	protected static final IIColor BACKGROUND = IIColor.fromHex("efefef");
-	protected static final IIColor BACKGROUND_HOVERED = IIColor.WHITE;
-	protected static final IIColor BACKGROUND_PRESSED = IIColor.MC_GRAY;
-	protected static final IIColor BACKGROUND_DISABLED = IIColor.MC_GRAY;
-
-	protected IIColor backgroundColor = BACKGROUND;
-	protected IIColor backgroundColorHovered = BACKGROUND_HOVERED;
-	protected IIColor backgroundColorPressed = BACKGROUND_PRESSED;
-	protected IIColor backgroundColorDisabled = BACKGROUND_DISABLED;
+	protected IIColor backgroundColor = DecoColors.BACKGROUND;
+	protected IIColor backgroundColorHovered = DecoColors.BACKGROUND_HOVERED;
+	protected IIColor backgroundColorPressed = DecoColors.BACKGROUND_PRESSED;
+	protected IIColor backgroundColorDisabled = DecoColors.BACKGROUND_DISABLED;
 
 	protected ResLoc backgroundLocation;
 	protected String text = "";
 	protected IIFontRenderer fontRenderer = IIClientUtils.fontRegular;
 	protected IIColor textLabelColor = DecoColors.H1;
-	protected IIColor textBoxColor = IIColor.fromHex("afafaf");
-	protected IIColor textHoveredColor = IIColor.fromHex("cfcfcf");
-	protected IIColor textPressedColor = IIReference.COLOR_IMMERSIVE_ORANGE;
-	protected IIColor textDisabledColor = IIColor.BLACK;
+	protected IIColor textBoxColor = DecoColors.TEXT;
+	protected IIColor textHoveredColor = DecoColors.TEXT_HOVERED;
+	protected IIColor textPressedColor = DecoColors.TEXT_PRESSED;
+	protected IIColor textDisabledColor = DecoColors.TEXT_DISABLED;
 
 	public DecoTextBasedComponent(int x, int y)
 	{
@@ -103,13 +97,13 @@ public abstract class DecoTextBasedComponent<TYPE extends DecoTextBasedComponent
 
 	//--- Utilities ---//
 
-	protected final IIColor getBackgroundColor()
+	protected IIColor getBackgroundColor()
 	{
-		return enabled?(pressed?backgroundColorPressed: (hovered?backgroundColorHovered: backgroundColor)): backgroundColorDisabled;
+		return enabled?(pressTime > 0?backgroundColorPressed: (hovered?backgroundColorHovered: backgroundColor)): backgroundColorDisabled;
 	}
 
-	protected final IIColor getTextColor(boolean label)
+	protected IIColor getTextColor(boolean label)
 	{
-		return enabled?(pressed?textPressedColor: (hovered?textHoveredColor: (label?textLabelColor: textBoxColor))): textDisabledColor;
+		return enabled?(pressTime > 0?textPressedColor: (hovered?textHoveredColor: (label?textLabelColor: textBoxColor))): textDisabledColor;
 	}
 }

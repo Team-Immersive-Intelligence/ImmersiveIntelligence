@@ -1,21 +1,10 @@
 package pl.pabilo8.immersiveintelligence.common.block.fortification.tileentity;
 
-import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
-import net.minecraft.nbt.NBTTagCompound;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
+import pl.pabilo8.immersiveintelligence.common.util.tile.TileEntityIIBase;
 
-public class TileEntityChainFence extends TileEntityIEBase
+public class TileEntityChainFence extends TileEntityIIBase
 {
+	@SyncNBT
 	public boolean hasPost = false;
-
-	@Override
-	public void readCustomNBT(NBTTagCompound nbt, boolean descPacket)
-	{
-		nbt.setBoolean("hasPost", hasPost);
-	}
-
-	@Override
-	public void writeCustomNBT(NBTTagCompound nbt, boolean descPacket)
-	{
-		hasPost = nbt.getBoolean("hasPost");
-	}
 }

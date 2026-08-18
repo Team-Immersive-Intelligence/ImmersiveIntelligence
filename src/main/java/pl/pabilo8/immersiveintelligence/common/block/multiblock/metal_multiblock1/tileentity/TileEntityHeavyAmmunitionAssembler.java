@@ -24,7 +24,6 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionSingle;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 import javax.annotation.Nullable;
 
@@ -71,25 +70,6 @@ public class TileEntityHeavyAmmunitionAssembler extends TileEntityMultiblockProd
 	{
 		//Handle Tactile AMT on server side
 		tactileManager.defaultize();
-	}
-
-	@Override
-	protected int[] listAllPOI(MultiblockPOI poi)
-	{
-		switch(poi)
-		{
-			case ITEM_INPUT:
-				return getPOI("item_inputs");
-			case ITEM_OUTPUT:
-				return getPOI("item_out");
-			case FLUID_INPUT:
-				return getPOI("component_fluid_in");
-			case ENERGY_INPUT:
-				return getPOI("energy");
-			case REDSTONE_INPUT:
-				return getPOI("redstone");
-		}
-		return new int[0];
 	}
 
 	@Override

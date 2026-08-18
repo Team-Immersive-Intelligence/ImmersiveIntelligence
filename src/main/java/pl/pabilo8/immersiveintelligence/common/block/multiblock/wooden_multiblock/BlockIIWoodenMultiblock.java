@@ -38,6 +38,10 @@ public class BlockIIWoodenMultiblock extends BlockIIMultiblock<WoodenMultiblocks
 
 		this.addToTESRMap(WoodenMultiblocks.SKYCART_STATION, WoodenMultiblocks.SKYCRATE_STATION, WoodenMultiblocks.SKYCRATE_POST);
 		this.setBlockLayer(BlockRenderLayer.CUTOUT);
+
+		setSubBlockLayer(WoodenMultiblocks.SKYCART_STATION, BlockRenderLayer.SOLID);
+		setSubBlockLayer(WoodenMultiblocks.SKYCRATE_STATION, BlockRenderLayer.SOLID);
+		setSubBlockLayer(WoodenMultiblocks.SKYCRATE_POST, BlockRenderLayer.SOLID);
 	}
 
 	public enum WoodenMultiblocks implements IITileMultiblockEnum

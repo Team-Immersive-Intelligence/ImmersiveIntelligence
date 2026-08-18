@@ -4,6 +4,7 @@ import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvan
 import blusunrize.immersiveengineering.api.tool.ChemthrowerHandler;
 import blusunrize.immersiveengineering.api.tool.ChemthrowerHandler.ChemthrowerEffect;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IPlayerInteraction;
+import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -11,15 +12,19 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.api.crafting.BathingRecipe;
 import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIMultiblockRecipe;
+import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedTextOverlay;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.ChemicalBath;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
@@ -38,7 +43,8 @@ import javax.annotation.Nullable;
  * @ii-approved 0.3.1
  * @since 28.06.2019
  */
-public class TileEntityChemicalBath extends TileEntityMultiblockProductionSingle<TileEntityChemicalBath, BathingRecipe> implements IPlayerInteraction
+public class TileEntityChemicalBath extends TileEntityMultiblockProductionSingle<TileEntityChemicalBath, BathingRecipe>
+		implements IPlayerInteraction, IAdvancedTextOverlay
 {
 	@SyncNBT(events = {SyncEvents.TILE_CUSTOM1, SyncEvents.TILE_RECIPE_CHANGED})
 	public FluidTank tank;
@@ -142,30 +148,17 @@ public class TileEntityChemicalBath extends TileEntityMultiblockProductionSingle
 	}
 
 	@Override
-	protected int[] listAllPOI(MultiblockPOI poi)
+	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
 	{
-		switch(poi)
-		{
-			case ENERGY_INPUT:
-				return getPOI("energy");
-			case REDSTONE:
-				return getPOI("redstone");
-			case ITEM_INPUT:
-				return getPOI("item_in");
-			case FLUID_INPUT:
-				return getPOI("fluid");
-			case ITEM_OUTPUT:
-				return getPOI("item_out");
-
-			default:
-				return new int[0];
-		}
+		if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY&&isPOI("item_in"))
+			return true;
+		return super.hasCapability(capability, facing);
 	}
 
 	@Override
 	public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing)
 	{
-		if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+		if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY&&isPOI("item_in"))
 			//noinspection unchecked,DataFlowIssue
 			return (T)master().inputHandler;
 		return super.getCapability(capability, facing);
@@ -187,24 +180,19 @@ public class TileEntityChemicalBath extends TileEntityMultiblockProductionSingle
 	@Override
 	public boolean isStackValid(int slot, ItemStack stack)
 	{
-		switch(slot)
+		return switch(slot)
 		{
-			case MultiblockChemicalBath.ITEM_IN:
-				return IIMultiblockRecipe.streamRecipes(BathingRecipe.class)
-						.anyMatch(r -> r.itemInput.matchesItemStack(stack));
-			case MultiblockChemicalBath.BUCKET_IN:
-				return stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
-			case MultiblockChemicalBath.ITEM_OUT:
-			case MultiblockChemicalBath.BUCKET_OUT:
-				return true;
-			default:
-				return false;
-		}
+			case MultiblockChemicalBath.ITEM_IN -> IIMultiblockRecipe.streamRecipes(BathingRecipe.class)
+					.anyMatch(r -> r.itemInput.matchesItemStack(stack));
+			case MultiblockChemicalBath.BUCKET_IN -> stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
+			case MultiblockChemicalBath.ITEM_OUT, MultiblockChemicalBath.BUCKET_OUT -> true;
+			default -> false;
+		};
 	}
 
 	@Override
 	public boolean interact(@Nonnull EnumFacing side, @Nonnull EntityPlayer player, @Nonnull EnumHand hand,
-							@Nonnull ItemStack heldItem, float hitX, float hitY, float hitZ)
+	                        @Nonnull ItemStack heldItem, float hitX, float hitY, float hitZ)
 	{
 		if(!world.isRemote&&this.isPOI("tank_bucket"))
 		{
@@ -222,5 +210,22 @@ public class TileEntityChemicalBath extends TileEntityMultiblockProductionSingle
 		}
 
 		return false;
+	}
+
+
+	//--- IAdvancedTextOverlay ---//
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public String[] getOverlayText(EntityPlayer player, RayTraceResult mop)
+	{
+		if(!Utils.isFluidRelatedItemStack(player.getHeldItem(EnumHand.MAIN_HAND)))
+			return new String[0];
+
+		TileEntityChemicalBath master = master();
+		if(master!=null&&isPOI("tank_bucket"))
+			return new String[]{IIUtils.getFluidNameOverlayText(master.tank.getFluid())};
+
+		return new String[0];
 	}
 }

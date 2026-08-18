@@ -2,6 +2,7 @@ package pl.pabilo8.immersiveintelligence.api.ammo;
 
 import blusunrize.immersiveengineering.common.IEContent;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockLog;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -28,7 +29,7 @@ import java.util.function.Predicate;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 17.03.2024
+ * @updated 14.08.2026
  * @ii-approved 0.3.1
  * @since 05.03.2020
  */
@@ -72,7 +73,7 @@ public class PenetrationRegistry
 		//Bedrock
 		registerState(state -> state.getBlock().blockHardness==-1, new PenetrationHandlerInvulnerable(PenetrationHardness.BEDROCK, Integer.MAX_VALUE));
 		//Fluids
-		registerState(state -> state.getBlock().blockHardness==-1, new PenetrationHandlerInvulnerable(PenetrationHardness.FOLIAGE, 0f));
+		registerState(state -> state.getMaterial().isLiquid(), new PenetrationHandlerInvulnerable(PenetrationHardness.FOLIAGE, 0f));
 
 		//Fragile metals
 		registerMetalMaterial(PenetrationHandlerMetal.create("aluminum", PenetrationHardness.FRAGILE, 1.0f, 150f));
@@ -157,9 +158,17 @@ public class PenetrationRegistry
 				new PenetrationHandler(PenetrationHardness.WOOD, 0.8f, 100, PARTICLE_DEBRIS_PLANK, IISounds.hitWood));
 		registerOre("slabTreatedWood",
 				new PenetrationHandler(PenetrationHardness.WOOD, 0.8f, 100, PARTICLE_DEBRIS_PLANK, IISounds.hitWood));
-		//TODO: 03.01.2025 custom model for wooden logs
 		registerOre("logWood",
-				new PenetrationHandler(PenetrationHardness.WOOD, 1f, 250, PARTICLE_DEBRIS_BRICK, IISounds.hitWood));
+				new PenetrationHandler(PenetrationHardness.WOOD, 1f, 250, PARTICLE_DEBRIS_BRICK, IISounds.hitWood)
+						.withFlammableVariant(state -> {
+							if(state.getBlock()==IIContent.blockCharredLog)
+								return null;
+
+							IBlockState charred = IIContent.blockCharredLog.getDefaultState();
+							if(state.getPropertyKeys().contains(BlockLog.LOG_AXIS))
+								charred = charred.withProperty(BlockLog.LOG_AXIS, state.getValue(BlockLog.LOG_AXIS));
+							return charred;
+						}));
 
 		//Glass
 		registerOre("paneGlass", new PenetrationHandler(PenetrationHardness.FRAGILE, 0.125f, 20, PARTICLE_DEBRIS_GLASS, SoundEvents.BLOCK_GLASS_BREAK, null));

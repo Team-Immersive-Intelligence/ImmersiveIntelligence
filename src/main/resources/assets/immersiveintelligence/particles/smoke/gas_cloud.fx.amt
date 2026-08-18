@@ -3,10 +3,10 @@
   "textures": ["immersiveintelligence:particle/gas"],
   "max_lifetime": 55,
   "draw_stage": "custom_smoke_noise_shader",
+  "color": "5c474747",
   "aabb": 0.3,
-  "color": "474747",
   "programs": [
-    "smoke_transition",
+    "smoke_transition(0.75)",
     "gravity(1.0,-0.002)"
   ],
   "size": 1.0

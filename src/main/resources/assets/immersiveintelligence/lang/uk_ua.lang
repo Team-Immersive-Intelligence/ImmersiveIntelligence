@@ -1222,7 +1222,7 @@ desc.immersiveintelligence.variable_add_desc=Додати нову змінну
 desc.immersiveintelligence.variable_set=Установити
 desc.immersiveintelligence.variable_set_desc=Змінити значення змінної
 desc.immersiveintelligence.variable_send_packet=Надіслати пакет
-desc.immersiveintelligence.variable_send_packet_desc=Надсилає поточний пакет до мережі передачі даних
+desc.immersiveintelligence.variable_send_packet.tooltip=Надсилає поточний пакет до мережі передачі даних
 desc.immersiveintelligence.hide_manual_widget=Сховати бічний посібник
 desc.immersiveintelligence.show_manual_widget=Показати бічний посібник
 desc.immersiveintelligence.variable_remove=Видалити
@@ -1289,11 +1289,11 @@ desc.immersiveintelligence.data_merger.0=Обидва
 desc.immersiveintelligence.data_merger.1=Ліворуч
 desc.immersiveintelligence.data_merger.2=Правильно
 
-desc.immersiveintelligence.medical_crate.heal=Лікувати поранених істот
-desc.immersiveintelligence.medical_crate.boost=Застосувати ефекти до об'єктів
+ii.gui.medical_crate.heal=Лікувати поранених істот
+ii.gui.medical_crate.boost=Застосувати ефекти до об'єктів
 
-desc.immersiveintelligence.repair_crate.repair_armor=Відремонтувати зношену броню
-desc.immersiveintelligence.repair_crate.repair_vehicles=Ремонт транспортних засобів
+ii.gui.repair_crate.repair_armor=Відремонтувати зношену броню
+ii.gui.repair_crate.repair_vehicles=Ремонт транспортних засобів
 
 desc.immersiveintelligence.jei.washing_recipe=Хімічне промивання
 #Potion effects

@@ -1,0 +1,173 @@
+repositories {
+	maven {
+		name = 'CleanroomMC Maven'
+		url = 'https://maven.cleanroommc.com'
+	}
+	mavenCentral()
+}
+
+sourceSets {
+	main
+	test
+}
+
+// Register the sources task before withSourcesJar() so Gradle publishes this
+// implementation instead of creating its default allSource-based task.
+// Java sources remain raw source files; resources come exclusively from the
+// processResources output, after expansion, renaming and filtering.
+def mkxSourcesJar = null
+if (mkxBool('generate_sources_jar', true)) {
+	def processedResources = tasks.named('processResources')
+	mkxSourcesJar = tasks.register('sourcesJar', org.gradle.api.tasks.bundling.Jar) {
+		group = 'build'
+		description = 'Assembles Java sources and processed resources.'
+		archiveClassifier.set('sources')
+		dependsOn processedResources
+		from(sourceSets.main.allJava)
+		from(processedResources)
+	}
+}
+
+java {
+	toolchain {
+		languageVersion.set(JavaLanguageVersion.of(mkxBool('ii_use_modern_java_syntax') ? mkxInt('ii_modern_java_language', 16) : 8))
+		vendor.set(JvmVendorSpec.AZUL)
+	}
+	if (mkxBool('generate_sources_jar', true))
+		withSourcesJar()
+	if (mkxBool('generate_javadocs_jar', false))
+		withJavadocJar()
+}
+
+if (mkxSourcesJar != null) {
+	// withSourcesJar() reuses a pre-existing task but does not attach that task
+	// to assemble, so preserve the standard lifecycle relationship explicitly.
+	tasks.named('assemble').configure {
+		dependsOn mkxSourcesJar
+	}
+}
+
+configurations {
+	runtimeOnlyNonPublishable {
+		description = 'Runtime-only dependencies used in development but not published.'
+		canBeConsumed = false
+		canBeResolved = false
+	}
+	devOnlyNonPublishable {
+		description = 'Development dependencies that should not be published.'
+		canBeConsumed = false
+		canBeResolved = false
+	}
+	compileOnly.extendsFrom(devOnlyNonPublishable)
+	runtimeOnlyNonPublishable.extendsFrom(devOnlyNonPublishable)
+	runtimeClasspath.extendsFrom(runtimeOnlyNonPublishable)
+	testRuntimeClasspath.extendsFrom(runtimeOnlyNonPublishable)
+}
+
+minecraft {
+	mcVersion.set(mkxString('minecraft_version', '1.12.2'))
+	mcpMappingChannel.set(mkxString('mapping_channel', 'stable'))
+	mcpMappingVersion.set(mkxString('mapping_version', '39'))
+	useDependencyAccessTransformers.set(mkxBool('use_dependency_at_files', true))
+	username.set(mkxString('minecraft_username', 'Developer'))
+
+	injectedTags.put('MOD_ID', mkxString('mod_id'))
+	injectedTags.put('MOD_NAME', mkxString('mod_name'))
+	injectedTags.put('VERSION', project.version.toString())
+
+	extraRunJvmArguments.add('-ea:' + mkxString('mod_package'))
+}
+
+if (mkxBool('ii_use_modern_java_syntax', false)) {
+	dependencies {
+		annotationProcessor 'com.github.bsideup.jabel:jabel-javac-plugin:1.0.1'
+		compileOnly('com.github.bsideup.jabel:jabel-javac-plugin:1.0.1') { transitive = false }
+		annotationProcessor 'net.java.dev.jna:jna-platform:5.13.0'
+		testAnnotationProcessor 'com.github.bsideup.jabel:jabel-javac-plugin:1.0.1'
+		testCompileOnly('com.github.bsideup.jabel:jabel-javac-plugin:1.0.1') { transitive = false }
+		patchedMinecraft 'me.eigenraven.java8unsupported:java-8-unsupported-shim:1.0.0'
+	}
+}
+
+tasks.named('injectTags').configure {
+	outputClassName.set(mkxString('mod_package') + '.Tags')
+	onlyIf {
+		!tags.get().isEmpty()
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	options.encoding = 'UTF-8'
+	if (mkxBool('ii_use_modern_java_syntax', false) && !(name in ['compileMcLauncherJava', 'compilePatchedMcJava'])) {
+		sourceCompatibility = mkxString('ii_modern_java_language', '16')
+		options.release.set(8)
+		javaCompiler.set(javaToolchains.compilerFor {
+			languageVersion.set(JavaLanguageVersion.of(mkxInt('ii_modern_java_language', 16)))
+			vendor.set(JvmVendorSpec.AZUL)
+		})
+	} else {
+		sourceCompatibility = JavaVersion.VERSION_1_8
+		targetCompatibility = JavaVersion.VERSION_1_8
+	}
+}
+
+def mkxMcmodInfoValues = {
+	return [
+			mod_id_json: mkxJsonString(mkxString('mod_id')),
+			mod_name_json: mkxJsonString(mkxString('mod_name')),
+			mod_version_json: mkxJsonString(project.version.toString()),
+			minecraft_version_json: mkxJsonString(mkxString('minecraft_version')),
+			mod_description_json: mkxJsonString(mkxString('mod_description')),
+			mod_url_json: mkxJsonString(mkxString('mod_url')),
+			mod_update_json_json: mkxJsonString(mkxString('mod_update_json')),
+			mod_logo_path_json: mkxJsonString(mkxString('mod_logo_path')),
+			mod_authors_json: mkxJsonStringList('mod_authors'),
+			mod_credits_json: mkxJsonString(mkxString('mod_credits'))
+	]
+}
+
+def mkxPackMetadataValues = {
+	return [
+			pack_description_json: mkxJsonString(mkxString('mod_name') + ' resources')
+	]
+}
+
+processResources {
+	inputs.properties(mkxMcmodInfoValues())
+	inputs.properties(mkxPackMetadataValues())
+
+	filesMatching('mcmod.info') {
+		expand(mkxMcmodInfoValues())
+	}
+
+	filesMatching('pack.mcmeta') {
+		expand(mkxPackMetadataValues())
+	}
+
+	if (mkxBool('use_access_transformer', false))
+		rename '(.+_at.cfg)', 'META-INF/$1'
+
+	exclude '**/*.xcf', '**/*.bat', '**/*.sh', '**/*Template.png'
+	exclude '**/desktop.ini', '**/Thumbs.db', '**/.DS_Store'
+}
+
+if (mkxBool('use_access_transformer', false)) {
+	mkxList('access_transformer_locations').each { location ->
+		def atFile = file("src/main/resources/${location}")
+		if (!atFile.exists())
+			throw new GradleException("Access transformer file does not exist: ${atFile}")
+		tasks.deobfuscateMergedJarToSrg.accessTransformerFiles.from(atFile)
+		tasks.srgifyBinpatchedJar.accessTransformerFiles.from(atFile)
+	}
+}
+
+jar {
+	manifest {
+		def attributesMap = [
+				'Maven-Artifact': "${project.group}:${mkxString('mod_id')}:${project.version}"
+		]
+		if (mkxBool('use_access_transformer', false))
+			attributesMap['FMLAT'] = mkxList('access_transformer_locations').join(' ')
+		attributes(attributesMap)
+	}
+}

@@ -5,6 +5,7 @@ import blusunrize.immersiveengineering.api.crafting.CrusherRecipe;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.api.tool.ExcavatorHandler;
 import blusunrize.immersiveengineering.common.IEContent;
+import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -16,7 +17,7 @@ import pl.pabilo8.immersiveintelligence.api.crafting.BathingRecipe;
 import pl.pabilo8.immersiveintelligence.api.crafting.PrecisionAssemblerRecipe;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
-import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMaterialIngot.MaterialsIngot;
+import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMaterialNugget.MaterialsNugget;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
@@ -24,8 +25,11 @@ import static pl.pabilo8.immersiveintelligence.api.ShrapnelHandler.addShrapnel;
 
 /**
  * @author Carver (carver@iiteam.net)
- * @updated 16.04.2026
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 05.04.2026
+ * @updated 16.04.2026
+ * @updated 31.07.2026
+ * @ii-approved 0.3.1
  */
 
 public class DeeperDepthsHelper extends IICompatModule
@@ -42,12 +46,11 @@ public class DeeperDepthsHelper extends IICompatModule
 	@Override
 	public void preInit()
 	{
-		addShrapnel("amethyst", IIColor.fromPackedRGB(0xba73de),
-				RES_DD.with("amethyst_block"), 1, 0.08f, 0.1f);
+		addShrapnel("amethyst", IIColor.fromPackedRGB(0xba73de), 1, 0.08f, 0.1f);
 
 		//Register ores for recipes
 		OreDictionary.registerOre("blockBone", Blocks.BONE_BLOCK);
-		OreDictionary.registerOre("blockAmethyst", getModItem(RES_DD.with("amethyst_block")));
+		OreDictionary.registerOre("blockAmethyst", Block.REGISTRY.getObject(RES_DD.with("amethyst_block")));
 
 		//Wind charge ammo component registry
 		AmmoRegistry.registerComponent(ammoComponentWindCharge = new AmmoComponentWindCharge());
@@ -232,14 +235,14 @@ public class DeeperDepthsHelper extends IICompatModule
 		//--- Additional Crusher & Precision Assembler recipes ---
 
 		CrusherRecipe.addRecipe(new ItemStack(Blocks.SAND, 1), getModItem(RES_DD.with("amethyst_block"), 1), 524);
-		CrusherRecipe.addRecipe(new ItemStack(Blocks.SAND, 1), getModItem(RES_DD.with("amethyst_shard"), 4), 524);
+		CrusherRecipe.addRecipe(new ItemStack(Blocks.SAND, 1), getModItem(RES_DD.with("material"), 4, 1), 524);
 
 		new PrecisionAssemblerRecipe(
-				IIContent.itemMaterialIngot.getStack(MaterialsIngot.SILICON), ItemStack.EMPTY,
-				new IngredientStack[]{new IngredientStack("blockAmethyst")},
+				IIContent.itemMaterialNugget.getStack(MaterialsNugget.SILICON), ItemStack.EMPTY,
+				new IngredientStack[]{new IngredientStack(getModItem(RES_DD.with("material"), 1, 1))},
 				new String[]{"hammer"},
 				new String[]{"hammer work main", "hammer work main", "hammer work main"},
-				14000, 1f
+				8192, 0.75f
 		);
 
 		ExcavatorHandler.addMineral("Amethyst Crevasse", 15, .15f,

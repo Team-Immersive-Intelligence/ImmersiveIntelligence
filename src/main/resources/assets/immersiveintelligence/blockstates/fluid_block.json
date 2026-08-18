@@ -110,6 +110,13 @@
         }
       }
     ],
+    "milk": [
+      {
+        "custom": {
+          "fluid": "milk"
+        }
+      }
+    ],
     "carbon_dioxide": [
       {
         "custom": {
