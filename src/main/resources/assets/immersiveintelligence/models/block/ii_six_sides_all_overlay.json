@@ -1,11 +1,88 @@
 {
-  "parent": "immersiveengineering:block/ie_six_sides_overlay",
+  "elements": [
+    {
+      "__comment": "block",
+      "from": [0, 0, 0],
+      "to": [16, 16, 16],
+      "faces": {
+        "down": {
+          "uv": [0, 0, 16, 16],
+          "texture": "#block_down",
+          "cullface": "down"
+        },
+        "up": {
+          "uv": [0, 0, 16, 16],
+          "texture": "#block_up",
+          "cullface": "up"
+        },
+        "north": {
+          "uv": [0, 0, 16, 16],
+          "texture": "#block_north",
+          "cullface": "north"
+        },
+        "south": {
+          "uv": [0, 0, 16, 16],
+          "texture": "#block_south",
+          "cullface": "south"
+        },
+        "west": {
+          "uv": [0, 0, 16, 16],
+          "texture": "#block_west",
+          "cullface": "west"
+        },
+        "east": {
+          "uv": [0, 0, 16, 16],
+          "texture": "#block_east",
+          "cullface": "east"
+        }
+      }
+    },
+    {
+      "__comment": "overlay",
+      "from": [-0.005, -0.005, -0.005],
+      "to": [16.005, 16.005, 16.005],
+      "faces": {
+        "down": {
+          "uv": [0, 0, 16, 16],
+          "texture": "#overlay",
+          "cullface": "down"
+        },
+        "up": {
+          "uv": [0, 0, 16, 16],
+          "texture": "#overlay",
+          "cullface": "up"
+        },
+        "north": {
+          "uv": [0, 0, 16, 16],
+          "texture": "#overlay",
+          "cullface": "north"
+        },
+        "south": {
+          "uv": [0, 0, 16, 16],
+          "texture": "#overlay",
+          "cullface": "south"
+        },
+        "west": {
+          "uv": [0, 0, 16, 16],
+          "texture": "#overlay",
+          "cullface": "west"
+        },
+        "east": {
+          "uv": [0, 0, 16, 16],
+          "texture": "#overlay",
+          "cullface": "east"
+        }
+      }
+    }
+  ],
   "textures": {
-    "overlay_down": "#overlay",
-    "overlay_up": "#overlay",
-    "overlay_north": "#overlay",
-    "overlay_south": "#overlay",
-    "overlay_west": "#overlay",
-    "overlay_east": "#overlay"
+    "particle": "#block_particle",
+    "block_down": "#block_down",
+    "block_up": "#block_up",
+    "block_north": "#block_north",
+    "block_south": "#block_south",
+    "block_west": "#block_west",
+    "block_east": "#block_east",
+    "overlay": "#overlay"
   }
 }
