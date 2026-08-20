@@ -29,6 +29,7 @@ import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.amt.AMTModelHeader;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
 
@@ -180,7 +181,9 @@ public class ModelAmmo<T extends IAmmoType<T, E>, E extends EntityAmmoBase<? sup
 			//Simple model variant is optional
 			AMTQuads coreSimpleModel = (AMTQuads)amt.getPart("core_"+coreType.getName()+"_simple");
 
-			for(AmmoCore core : AmmoRegistry.getAllCores())
+			ArrayList<AmmoCore> allCores = new ArrayList<>(AmmoRegistry.getAllCores());
+			allCores.add(AmmoRegistry.MISSING_CORE);
+			for(AmmoCore core : allCores)
 			{
 				AMT quads;
 				if(coreModel instanceof AMTQuads)

@@ -1,7 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.item.ammo;
 
 import blusunrize.immersiveengineering.api.ApiUtils;
-import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.resources.I18n;
@@ -58,16 +57,6 @@ public abstract class ItemIIAmmoBase<E extends EntityAmmoBase<? super E>> extend
 		super(fullName, casing==null?64: casing.getStackSize(), AmmoParts.values());
 		this.NAME = name;
 		this.casing = casing;
-	}
-
-	public void makeDefault(ItemStack stack)
-	{
-		if(!ItemNBTHelper.hasKey(stack, NBT_CORE))
-			ItemNBTHelper.setString(stack, NBT_CORE, "core_brass");
-		if(!ItemNBTHelper.hasKey(stack, NBT_CORE_TYPE))
-			ItemNBTHelper.setString(stack, NBT_CORE_TYPE, getAllowedCoreTypes()[0].getName());
-		if(stackToSub(stack)==AmmoParts.BULLET&&!ItemNBTHelper.hasKey(stack, NBT_FUSE))
-			ItemNBTHelper.setString(stack, NBT_FUSE, getAllowedFuseTypes()[0].getName());
 	}
 
 	@Override

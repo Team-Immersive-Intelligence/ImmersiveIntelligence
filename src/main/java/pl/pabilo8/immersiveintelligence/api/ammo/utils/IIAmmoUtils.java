@@ -439,6 +439,11 @@ public class IIAmmoUtils
 	{
 		//add category tooltip
 		tooltip.add(getFormattedBulletTypeName(ammo, stack));
+
+		//Do not display info for bullet cores
+		if(ammo.isBulletCore(stack))
+			return;
+
 		//get common parameters
 		AmmoCore core = ammo.getCore(stack);
 		CoreType coreType = ammo.getCoreType(stack);
@@ -489,8 +494,7 @@ public class IIAmmoUtils
 
 		//Performance tab
 		IIAmmoProjectile annotation = IIUtils.getAnnotation(IIAmmoProjectile.class, ammo);
-		if(annotation!=null&&!ammo.isBulletCore(stack)
-				&&ItemTooltipHandler.addExpandableTooltip(Keyboard.KEY_LCONTROL, IIReference.DESC_BULLETS+"ballistics", tooltip))
+		if(annotation!=null&&ItemTooltipHandler.addExpandableTooltip(Keyboard.KEY_LCONTROL, IIReference.DESC_BULLETS+"ballistics", tooltip))
 		{
 			//Ballistics section
 			CachedBallisticStats stats = AmmoBallisticsCache.get(ammo, stack);
