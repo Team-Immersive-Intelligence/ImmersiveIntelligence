@@ -1,16 +1,18 @@
 {
   "origins": {
+    "projector_origin": [8.81761, -9, 23.9736],
     "projector": [8.81761, -9, 23.9736],
     "tray_upper": [-10.9736, -7.0357, 31.9247],
-    "rocket1": [-2.59353, -2.82614, 38.97403],
-    "rocket2": [-2.59353, -2.82614, 30.97403],
-    "rocket3": [-2.59353, -2.82614, 22.97403],
-    "rocket4": [-2.59353, -2.82614, 14.97403],
+    "rocket1": [-4.0, -2.82614, 35.5],
+    "rocket2": [4.0, -2.82614, 35.5],
+    "rocket3": [12.0, -2.82614, 35.5],
+    "rocket4": [20.0, -2.82614, 35.5],
     "tray_lower": [-6.50938, -19.38809, 26.97367],
-    "rocket5": [-2.59353, -13.82614, 38.97403],
-    "rocket6": [-2.59353, -13.82614, 30.97403],
-    "rocket7": [-2.59353, -13.82614, 22.97403],
-    "rocket8": [-2.59353, -13.82614, 14.97403],
+    "rocket5": [-4.0, -13.82614, 35.5],
+    "rocket6": [4.0, -13.82614, 35.5],
+    "rocket7": [12.0, -13.82614, 35.5],
+    "rocket8": [20.0, -13.82614, 35.5],
+    "turen_origin": [8, -30, 24],
     "turen": [8, -30, 24],
     "loader_crane": [4.15094, 4.72619, 26.9736],
     "loader_crane2": [-1.9681, 5.25, 26.9736],
@@ -20,7 +22,8 @@
     "base": [8.422, -33.84565, 25.3956]
   },
   "hierarchy": {
-    "projector": "turen",
+    "projector_origin": "turen",
+    "projector": "projector_origin",
     "tray_upper": "projector",
     "rocket1": "tray_upper",
     "rocket2": "tray_upper",
@@ -31,11 +34,54 @@
     "rocket6": "tray_lower",
     "rocket7": "tray_lower",
     "rocket8": "tray_lower",
-    "turen": "base",
+    "turen_origin": "base",
+    "turen": "turen_origin",
     "loader_crane": "projector",
     "loader_crane2": "loader_crane",
     "loader_winch1": "loader_crane2",
     "loader_rope_coil": "loader_crane2",
     "loader_winch2": "loader_crane"
+  },
+  "properties": {
+    "rocket1": {
+      "state": "bullet_unused",
+      "base_rotation": [90.0, 0.0, 0.0],
+      "visibility": true
+    },
+    "rocket2": {
+      "state": "bullet_unused",
+      "base_rotation": [90.0, 0.0, 0.0],
+      "visibility": true
+    },
+    "rocket3": {
+      "state": "bullet_unused",
+      "base_rotation": [90.0, 0.0, 0.0],
+      "visibility": true
+    },
+    "rocket4": {
+      "state": "bullet_unused",
+      "base_rotation": [90.0, 0.0, 0.0],
+      "visibility": true
+    },
+    "rocket5": {
+      "state": "bullet_unused",
+      "base_rotation": [90.0, 0.0, 0.0],
+      "visibility": true
+    },
+    "rocket6": {
+      "state": "bullet_unused",
+      "base_rotation": [90.0, 0.0, 0.0],
+      "visibility": true
+    },
+    "rocket7": {
+      "state": "bullet_unused",
+      "base_rotation": [90.0, 0.0, 0.0],
+      "visibility": true
+    },
+    "rocket8": {
+      "state": "bullet_unused",
+      "base_rotation": [90.0, 0.0, 0.0],
+      "visibility": true
+    }
   }
 }

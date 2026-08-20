@@ -6,11 +6,11 @@ import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoFactory;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPanel;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Emplacement;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement.EmplacementStateNeeds;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
@@ -31,12 +31,11 @@ import java.util.function.Predicate;
  * Implements Platform ammunition loading, casing storage, and Base servicing for Emplacement guns.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 17.08.2026
+ * @updated 18.08.2026
  * @since 04.09.2025
  */
 public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> extends EmplacementWeaponTurretBase
 {
-	private static final int ITEM_TRANSFER_INTERVAL = 15;
 
 	/**
 	 * Used to fire ammo for the weapon.
@@ -46,8 +45,17 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 	protected FilteredEmplacementInventoryHandler baseAmmoHandler, baseCasingHandler;
 	@Nullable
 	protected FilteredEmplacementInventoryHandler platformAmmoHandler, platformCasingHandler;
-	@Nullable
-	private IItemHandler baseItemHandler, platformItemHandler;
+	/**
+	 * Allows target tracking during a post-shot reload. Heavy weapons can disable this to hold the loading pose.
+	 */
+	protected boolean rotateAfterFiring = true;
+	@SyncNBT(time = 0, events = SyncEvents.WEAPON_RELOAD)
+	protected float lastFiringYaw = 0, lastFiringPitch = 0;
+	@SyncNBT(time = 0, events = SyncEvents.WEAPON_RELOAD)
+	protected boolean hasLastFiringAngles = false;
+	@SyncNBT(time = 0, events = SyncEvents.WEAPON_RELOAD)
+	private boolean reloadAfterFiring = false;
+	private boolean returnToLastFiringAngles = false;
 	private int itemTransferTicker = 0;
 
 	@SyncNBT(time = 0, events = SyncEvents.WEAPON_RELOAD)
@@ -73,41 +81,83 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 	}
 
 	@Override
-	public EmplacementStateNeeds onUpdate(TileEntityEmplacement te, EmplacementStateNeeds baseNeeds, TargetCoordinateReference currentTarget)
+	public void onPlatformUpdate(TileEntityEmplacement te)
 	{
-		if(!te.getWorld().isRemote&&te.getOwnerIdentity()!=null)
-			ammoFactory.setOwner(te.getOwnerIdentity().getFirstResponsibleMember(te.getWorld()));
-
 		ensureShootingComponents();
 		if(platformAmmoProvider!=null)
 		{
 			boolean wasReloading = platformAmmoProvider.isReloading();
 			int previousStage = platformAmmoProvider.getLoadStage();
-			boolean readyForLoading = te.door.getState()&&te.door.isFullyOpened()&&(setup==null||setup.isFullyOpened());
+			gunHandler.update();
+
+			boolean reloadFinished = wasReloading&&!platformAmmoProvider.isReloading();
+			if(reloadFinished&&reloadAfterFiring&&hasLastFiringAngles)
+				returnToLastFiringAngles = true;
+			if(reloadFinished)
+				reloadAfterFiring = false;
+			if(previousStage!=platformAmmoProvider.getLoadStage()||reloadFinished)
+				syncWithClient(te, SyncEvents.WEAPON_RELOAD);
+		}
+		else
+			gunHandler.update();
+
+		super.onPlatformUpdate(te);
+	}
+
+	@Override
+	public EmplacementStateNeeds onUpdate(TileEntityEmplacement te, EmplacementStateNeeds baseNeeds, TargetCoordinateReference currentTarget)
+	{
+		if(te.getOwnerIdentity()!=null)
+			ammoFactory.setOwner(te.getOwnerIdentity().getFirstResponsibleMember(te.getWorld()));
+
+		ensureShootingComponents();
+		if(currentTarget!=null)
+			returnToLastFiringAngles = false;
+
+		if(platformAmmoProvider!=null)
+		{
+			boolean readyForLoading = te.door.getState()&&te.door.isFullyOpened()&&(setup==null||setup.isFullyOpened())
+					&&(!reloadAfterFiring||gunHandler.getShotDelay(0)==0);
 			boolean wantsReload = platformAmmoProvider.isEmpty()&&platformAmmoProvider.hasAvailableAmmo();
 
-			if(readyForLoading&&(wantsReload||platformAmmoProvider.isReloading()))
+			if(readyForLoading&&(wantsReload||(platformAmmoProvider.isReloading()&&!rotateAfterFiring)))
 			{
 				Float loadingYaw = getLoadingYaw();
 				Float loadingPitch = getLoadingPitch();
 				setAimTargetAngles(te, loadingYaw, loadingPitch);
-				if(!te.getWorld().isRemote&&wantsReload&&isAtAngles(loadingYaw, loadingPitch, 1.5f))
+				if(wantsReload&&isAtAngles(loadingYaw, loadingPitch, 1.5f))
 				{
 					platformAmmoProvider.prepareReload();
 					if(gunHandler.startReloading())
 						syncWithClient(te, SyncEvents.WEAPON_RELOAD);
 				}
 			}
-
-			gunHandler.update();
-			if(!te.getWorld().isRemote&&(previousStage!=platformAmmoProvider.getLoadStage()
-					||(wasReloading&&!platformAmmoProvider.isReloading())))
-				syncWithClient(te, SyncEvents.WEAPON_RELOAD);
 		}
-		else
-			gunHandler.update();
+
+		if(returnToLastFiringAngles&&currentTarget==null)
+		{
+			setAimTargetAngles(te, lastFiringYaw, lastFiringPitch);
+			if(isAtAngles(lastFiringYaw, lastFiringPitch, 1.5f))
+				returnToLastFiringAngles = false;
+		}
 
 		return super.onUpdate(te, baseNeeds, currentTarget);
+	}
+
+	@Override
+	public void onClientUpdate(TileEntityEmplacement te)
+	{
+		ensureShootingComponents();
+		gunHandler.update();
+		super.onClientUpdate(te);
+	}
+
+	@Override
+	protected boolean canChill(TileEntityEmplacement te)
+	{
+		ensureShootingComponents();
+		return super.canChill(te)&&gunHandler.canShoot()&&!returnToLastFiringAngles&&aim.isAimed(1.5f)
+				&&(platformAmmoProvider==null||!platformAmmoProvider.isReloading());
 	}
 
 	protected void ensureShootingComponents()
@@ -147,7 +197,7 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 	@Nullable
 	protected Float getLoadingPitch()
 	{
-		return getHidingPitch();
+		return null;
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -161,7 +211,9 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 	protected boolean canTrackTarget(TileEntityEmplacement te)
 	{
 		ensureShootingComponents();
-		return platformAmmoProvider!=null&&platformAmmoProvider.isLoaded()&&!platformAmmoProvider.isReloading();
+		if(platformAmmoProvider==null||returnToLastFiringAngles)
+			return false;
+		return platformAmmoProvider.isLoaded()||(rotateAfterFiring&&reloadAfterFiring&&platformAmmoProvider.isReloading());
 	}
 
 	@Override
@@ -187,8 +239,15 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 				.setShooterAndGun(null, baseEntity)
 				.setIgnoredEntities(te.tactileHandler.getEntities());
 		boolean fired = gunHandler.fire();
-		if(fired&&storesSpentCasings()&&storeSpentCasing(firedAmmo))
-			te.updateTileForEvent(SyncEvents.TILE_RECIPE_CHANGED);
+		if(fired)
+		{
+			lastFiringYaw = aim.getRelativeYaw(0);
+			lastFiringPitch = aim.getPitch(0);
+			hasLastFiringAngles = true;
+			reloadAfterFiring = platformAmmoProvider.isEmpty();
+			if(storesSpentCasings()&&storeSpentCasing(firedAmmo))
+				te.updateTileForEvent(SyncEvents.TILE_RECIPE_CHANGED);
+		}
 		return fired;
 	}
 
@@ -240,7 +299,7 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 			itemTransferTicker = 0;
 
 		return updateResupplyState(te, this::requiresPlatformResupply, this::hasPendingBaseService, () -> {
-			if(++itemTransferTicker < ITEM_TRANSFER_INTERVAL)
+			if(++itemTransferTicker < Emplacement.itemTransferInterval)
 				return;
 			itemTransferTicker = 0;
 
@@ -282,7 +341,7 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 			return false;
 		for(int sourceSlot = 0; sourceSlot < source.getSlots(); sourceSlot++)
 		{
-			ItemStack candidate = source.extractItem(sourceSlot, 1, true);
+			ItemStack candidate = source.extractInternal(sourceSlot, 1, true);
 			if(candidate.isEmpty())
 				continue;
 			for(int targetSlot = 0; targetSlot < target.getSlots(); targetSlot++)
@@ -292,7 +351,7 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 				if(simulate)
 					return true;
 
-				ItemStack extracted = source.extractItem(sourceSlot, 1, false);
+				ItemStack extracted = source.extractInternal(sourceSlot, 1, false);
 				ItemStack remainder = target.insertInternal(targetSlot, extracted, false);
 				if(!remainder.isEmpty())
 					source.insertInternal(sourceSlot, remainder, false);
@@ -330,23 +389,7 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 	public NonNullList<ItemStack> getLoadedAmmo()
 	{
 		ensureShootingComponents();
-		return platformAmmoProvider==null?NonNullList.create(): platformAmmoProvider.getLoadedAmmoList();
-	}
-
-	/**
-	 * @return ammunition that must be rendered during loading or while loaded
-	 */
-	@Nonnull
-	public NonNullList<ItemStack> getRenderAmmo()
-	{
-		ensureShootingComponents();
-		return platformAmmoProvider==null?NonNullList.create(): platformAmmoProvider.getRenderAmmoList();
-	}
-
-	public int getLoadedRoundCount()
-	{
-		ensureShootingComponents();
-		return platformAmmoProvider==null?0: platformAmmoProvider.getLoadedRoundCount();
+		return platformAmmoProvider==null?NonNullList.create(): platformAmmoProvider.getAmmoList();
 	}
 
 	public int getReloadStage()
@@ -391,16 +434,16 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 
 	@Nullable
 	@Override
-	public IItemHandler getBaseItemHandler()
+	public IItemHandler getBaseItemHandler(boolean input)
 	{
-		return baseItemHandler;
+		return input?baseAmmoHandler: baseCasingHandler;
 	}
 
 	@Nullable
 	@Override
-	public IItemHandler getPlatformItemHandler()
+	public IItemHandler getPlatformItemHandler(boolean input)
 	{
-		return platformItemHandler;
+		return input?platformAmmoHandler: platformCasingHandler;
 	}
 
 	@Override
@@ -413,59 +456,48 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 	}
 
 	/**
-	 * Creates separate ammo and casing views while preserving two combined GUI inventories.
+	 * Creates separate ammo and casing views for Base and Platform storage.
 	 */
 	protected final void setupItemHandlers(TileEntityEmplacement te,
 	                                       int baseAmmoSlots, int baseCasingSlots, int platformAmmoSlots, int platformCasingSlots,
 	                                       Predicate<ItemStack> baseFilter, Predicate<ItemStack> platformFilter)
 	{
-		this.baseAmmoHandler = createHandler(te, baseAmmoSlots, 0, baseFilter, true);
-		this.baseCasingHandler = createHandler(te, baseCasingSlots, baseAmmoSlots, this::isSpentCasing, false);
+		this.baseAmmoHandler = createHandler(te, baseAmmoSlots, 0, baseFilter, true, false);
+		this.baseCasingHandler = createHandler(te, baseCasingSlots, baseAmmoSlots, this::isSpentCasing, false, true);
 
 		int baseSlots = baseAmmoSlots+baseCasingSlots;
-		this.platformAmmoHandler = createHandler(te, platformAmmoSlots, baseSlots, platformFilter, true);
-		this.platformCasingHandler = createHandler(te, platformCasingSlots, baseSlots+platformAmmoSlots, this::isSpentCasing, false);
+		this.platformAmmoHandler = createHandler(te, platformAmmoSlots, baseSlots, platformFilter, true, true);
+		this.platformCasingHandler = createHandler(te, platformCasingSlots, baseSlots+platformAmmoSlots, this::isSpentCasing, false, true);
 
-		this.baseItemHandler = combineHandlers(baseAmmoHandler, baseCasingHandler);
-		this.platformItemHandler = combineHandlers(platformAmmoHandler, platformCasingHandler);
 		this.platformAmmoProvider = null;
 		ensureShootingComponents();
 	}
 
 	@Nullable
 	private FilteredEmplacementInventoryHandler createHandler(TileEntityEmplacement te, int slots, int offset,
-	                                                          Predicate<ItemStack> filter, boolean externalInsert)
+	                                                          Predicate<ItemStack> filter, boolean externalInsert,
+	                                                          boolean externalExtract)
 	{
-		return slots > 0?new FilteredEmplacementInventoryHandler(slots, te, offset, filter, externalInsert): null;
-	}
-
-	@Nullable
-	private IItemHandler combineHandlers(@Nullable FilteredEmplacementInventoryHandler primary,
-	                                     @Nullable FilteredEmplacementInventoryHandler secondary)
-	{
-		if(primary==null)
-			return secondary;
-		if(secondary==null)
-			return primary;
-		return new CombinedInvWrapper(primary, secondary);
+		return slots > 0?new FilteredEmplacementInventoryHandler(slots, te, offset, filter, externalInsert, externalExtract): null;
 	}
 
 	/**
-	 * Adds weapon filters and controlled internal insertion to IE's tile inventory handler.
+	 * Adds weapon filters and separate external and internal access to IE's tile inventory handler.
 	 */
 	protected static class FilteredEmplacementInventoryHandler extends IEInventoryHandler
 	{
 		private final Predicate<ItemStack> filter;
 		private final int slotOffset;
-		private final boolean externalInsert;
+		private final boolean externalInsert, externalExtract;
 
 		public FilteredEmplacementInventoryHandler(int slots, TileEntityEmplacement inventory, int slotOffset,
-		                                           Predicate<ItemStack> filter, boolean externalInsert)
+		                                           Predicate<ItemStack> filter, boolean externalInsert, boolean externalExtract)
 		{
 			super(slots, inventory, slotOffset, true, true);
 			this.filter = filter==null?stack -> true: filter;
 			this.slotOffset = slotOffset;
 			this.externalInsert = externalInsert;
+			this.externalExtract = externalExtract;
 		}
 
 		@Override
@@ -474,6 +506,12 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 			if(!externalInsert||!accepts(stack))
 				return stack;
 			return super.insertItem(slot, stack, simulate);
+		}
+
+		@Override
+		public ItemStack extractItem(int slot, int amount, boolean simulate)
+		{
+			return externalExtract?super.extractItem(slot, amount, simulate): ItemStack.EMPTY;
 		}
 
 		@Override
@@ -487,6 +525,11 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 		public ItemStack insertInternal(int slot, ItemStack stack, boolean simulate)
 		{
 			return accepts(stack)?super.insertItem(slot, stack, simulate): stack;
+		}
+
+		public ItemStack extractInternal(int slot, int amount, boolean simulate)
+		{
+			return super.extractItem(slot, amount, simulate);
 		}
 
 		public boolean accepts(ItemStack stack)

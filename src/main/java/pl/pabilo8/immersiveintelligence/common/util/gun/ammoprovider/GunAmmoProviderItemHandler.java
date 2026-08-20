@@ -188,16 +188,7 @@ public class GunAmmoProviderItemHandler extends GunAmmoProvider
 	{
 		if(loadingState==GunLoadingState.LOAD)
 			return copyAmmoList(loadingAmmo, getCurrentStageCapacity());
-		return copyAmmoList(loadedAmmo);
-	}
-
-	/**
-	 * @return ammunition that is already committed to the gun's internal load.
-	 */
-	@Nonnull
-	public NonNullList<ItemStack> getLoadedAmmoList()
-	{
-		return copyAmmoList(loadedAmmo);
+		return copyAmmoList(loadedAmmo, loadedAmmo.size());
 	}
 
 	/**

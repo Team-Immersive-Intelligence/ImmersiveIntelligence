@@ -5,6 +5,8 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
 
+import javax.annotation.Nullable;
+
 /**
  * Implements the single-round Mortar Emplacement weapon without spent casings.
  *
@@ -14,6 +16,11 @@ import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProje
  */
 public class EmplacementWeaponMortar extends EmplacementWeaponGunBase<EntityAmmoProjectile>
 {
+	public EmplacementWeaponMortar()
+	{
+
+	}
+
 	@Override
 	protected void onInit(TileEntityEmplacement te)
 	{
@@ -21,9 +28,11 @@ public class EmplacementWeaponMortar extends EmplacementWeaponGunBase<EntityAmmo
 		this.ammoFactory.setAmmo(IIContent.itemAmmoMortar);
 		this.visionAABB = this.visionAABB.grow(Autocannon.detectionRadius);
 		this.attackAABB = this.attackAABB.grow(Autocannon.attackRadius);
-		setupItemHandlers(te, 12, 12, 4, 4, this.ammoFactory::isValidAmmo, this.ammoFactory::isValidAmmo);
-		this.aim.withAimSpeed(4f, 2.5f);
+		setupItemHandlers(te, 8, 0, 4, 0, this.ammoFactory::isValidAmmo, this.ammoFactory::isValidAmmo);
+		this.aim.withAimSpeed(4f, 2.5f)
+				.withPitchLimit(-89.5f, 45f);
 		this.ammoFactory.setUseArtilleryAngles(true);
+		this.rotateAfterFiring = false;
 	}
 
 	@Override
@@ -38,10 +47,31 @@ public class EmplacementWeaponMortar extends EmplacementWeaponGunBase<EntityAmmo
 		return false;
 	}
 
+	@Nullable
+	@Override
+	protected Float getLoadingYaw()
+	{
+		return 180f;
+	}
+
 	@Override
 	protected Float getLoadingPitch()
 	{
-		return 0f;
+		return -57f;
+	}
+
+	@Nullable
+	@Override
+	protected Float getHidingYaw()
+	{
+		return 180f;
+	}
+
+	@Nullable
+	@Override
+	protected Float getHidingPitch()
+	{
+		return -90f;
 	}
 
 	@Override

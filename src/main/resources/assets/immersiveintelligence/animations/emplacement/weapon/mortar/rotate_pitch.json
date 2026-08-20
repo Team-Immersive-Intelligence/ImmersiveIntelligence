@@ -1,0 +1,45 @@
+{
+  "comment": "Made by Pabilo8 with Blockbench",
+  "groups": {
+    "mortar_frame": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [-32, 0, 0]
+        },
+        {
+          "time": 0.31482,
+          "transform": [-5, 0, 0]
+        }
+      ]
+    },
+    "mortar_fastener": {
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, 4, 0]
+        },
+        {
+          "time": 0.31482,
+          "transform": [0, -4, 0]
+        }
+      ]
+    },
+    "mortar": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.31482,
+          "transform": [56.67, 0, 0]
+        },
+        {
+          "time": 1,
+          "transform": [180, 0, 0]
+        }
+      ]
+    }
+  }
+}

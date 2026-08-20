@@ -27,7 +27,7 @@ public class EmplacementWeaponMachinegun extends EmplacementWeaponGunBase<Entity
 		this.visionAABB = this.visionAABB.grow(Machinegun.detectionRadius);
 		this.attackAABB = this.attackAABB.grow(Machinegun.attackRadius);
 
-		setupItemHandlers(te, 12, 12, 4, 4,
+		setupItemHandlers(te, 8, 8, 4, 4,
 				this.ammoFactory::isValidAmmo, this.ammoFactory::isValidAmmo);
 		this.aim.withAimSpeed(Machinegun.yawRotateSpeed, Machinegun.pitchRotateSpeed)
 				.withPitchLimit(-35, 65);

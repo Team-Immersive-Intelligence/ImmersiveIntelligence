@@ -19,9 +19,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBa
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTemplates;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.TeslaCoil;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement.EmplacementStateNeeds;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
-import pl.pabilo8.immersiveintelligence.common.util.easynbt.TargetCoordinateReference;
 
 import java.util.ArrayList;
 
@@ -52,14 +50,14 @@ public class EmplacementWeaponTeslaCoil extends EmplacementWeapon
 	}
 
 	@Override
-	public EmplacementStateNeeds onUpdate(TileEntityEmplacement te, EmplacementStateNeeds baseNeeds, TargetCoordinateReference currentTarget)
+	public void onClientUpdate(TileEntityEmplacement te)
 	{
 		for(Integer targetedEntity : targetedEntities)
 			addEntityToAnimation(targetedEntity, te.getWorld(), new BlockPos(te.getWeaponCenter()));
 		targetedEntities.clear();
 		effects.removeIf(LightningAnimation::tick);
 
-		return super.onUpdate(te, baseNeeds, currentTarget);
+		super.onClientUpdate(te);
 	}
 
 	/*@Override

@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon;
 
+import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.Autocannon;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
@@ -25,8 +26,21 @@ public class EmplacementWeaponGuidedMissileLauncher extends EmplacementWeaponGun
 		this.ammoFactory.setAmmo(IIContent.itemAmmoGuidedMissile);
 		this.visionAABB = this.visionAABB.grow(Autocannon.detectionRadius);
 		this.attackAABB = this.attackAABB.grow(Autocannon.attackRadius);
-		setupItemHandlers(te, 12, 4, 4, 4, this.ammoFactory::isValidAmmo, this.ammoFactory::isValidAmmo);
+		setupItemHandlers(te, 8, 0, 4, 0,
+				this.ammoFactory::isValidAmmo, this.ammoFactory::isValidAmmo);
 		this.aim.withAimSpeed(2.5f, 5f);
+	}
+
+	@Override
+	protected boolean isSpentCasing(ItemStack stack)
+	{
+		return false;
+	}
+
+	@Override
+	protected boolean storesSpentCasings()
+	{
+		return false;
 	}
 
 	@Override

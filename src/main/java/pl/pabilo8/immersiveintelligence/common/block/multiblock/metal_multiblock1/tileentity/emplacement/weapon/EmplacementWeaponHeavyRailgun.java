@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon;
 
+import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.HeavyRailgun;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
@@ -28,8 +29,21 @@ public class EmplacementWeaponHeavyRailgun extends EmplacementWeaponGunBase<Enti
 		this.ammoFactory.setAmmo(IIContent.itemRailgunGrenade);
 		this.visionAABB = this.visionAABB.grow(HeavyRailgun.detectionRadius);
 		this.attackAABB = this.attackAABB.grow(HeavyRailgun.attackRadius);
-		setupItemHandlers(te, 3, 2, 8, 8, ItemIIRailgunOverride::isAmmo, ItemIIRailgunOverride::isAmmo);
+		setupItemHandlers(te, 3, 2, 8, 8,
+				ItemIIRailgunOverride::isAmmo, ItemIIRailgunOverride::isAmmo);
 		this.aim.withAimSpeed(HeavyRailgun.yawRotateSpeed, HeavyRailgun.pitchRotateSpeed);
+	}
+
+	@Override
+	protected boolean storesSpentCasings()
+	{
+		return false;
+	}
+
+	@Override
+	protected boolean isSpentCasing(ItemStack stack)
+	{
+		return false;
 	}
 
 	@Override

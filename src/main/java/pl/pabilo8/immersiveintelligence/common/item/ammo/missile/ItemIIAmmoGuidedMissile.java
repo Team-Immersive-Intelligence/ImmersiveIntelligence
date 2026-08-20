@@ -68,7 +68,7 @@ public class ItemIIAmmoGuidedMissile extends ItemIIAmmoBase<EntityAmmoGuidedMiss
 	@Override
 	public float getVelocity()
 	{
-		return 4f;
+		return 2.5f;
 	}
 
 	@Override

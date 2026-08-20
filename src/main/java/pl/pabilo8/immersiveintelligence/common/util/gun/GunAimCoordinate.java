@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.util.gun;
 
+import lombok.Getter;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -23,9 +24,8 @@ public class GunAimCoordinate implements INBTSerializable<NBTTagCompound>
 	private static final float MINIMAL = 0.05f;
 	protected float pitch = 0, yaw = 0;
 	//Target
-	protected float targetPitch = 0, targetYaw = 0;
-	protected float centerYaw = 0;
-
+	@Getter
+	protected float targetPitch = 0, targetYaw = 0, centerYaw = 0;
 	@Nonnull
 	protected AimCorrectionFunction aimCorrectionFunction = GunAimCoordinate::getTargetLead;
 	protected Vec3d target = Vec3d.ZERO;
@@ -374,21 +374,6 @@ public class GunAimCoordinate implements INBTSerializable<NBTTagCompound>
 		double yawRad = Math.toRadians(-getYaw(partialTicks));
 		double pitchRad = Math.toRadians(-getPitch(partialTicks));
 		return IIMath.offsetPosDirection(1, yawRad, pitchRad);
-	}
-
-	public float getCenterYaw()
-	{
-		return centerYaw;
-	}
-
-	public float getTargetYaw()
-	{
-		return targetYaw;
-	}
-
-	public float getTargetPitch()
-	{
-		return targetPitch;
 	}
 
 	@FunctionalInterface

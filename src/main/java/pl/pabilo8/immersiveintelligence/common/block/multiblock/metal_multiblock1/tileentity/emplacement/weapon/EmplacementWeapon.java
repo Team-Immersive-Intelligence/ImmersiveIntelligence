@@ -33,6 +33,7 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.NBTSerialisation;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.TargetCoordinateReference;
+import pl.pabilo8.immersiveintelligence.common.util.gun.ChillingState;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -42,7 +43,7 @@ import java.util.function.BooleanSupplier;
  * Defines common state, servicing, and lifecycle behavior for an Emplacement weapon.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 17.08.2026
+ * @updated 18.08.2026
  * @since 15.02.2024
  */
 public abstract class EmplacementWeapon implements ITypeNBTSerializable
@@ -53,6 +54,9 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable
 	public float health = getMaxHealth();
 	@SyncNBT(time = 0, events = SyncEvents.WEAPON_MISC)
 	protected boolean resupplying = false;
+	@Nullable
+	@SyncNBT(time = 0, events = SyncEvents.WEAPON_MISC, nullable = true)
+	public ChillingState chillingState = null;
 	protected AxisAlignedBB visionAABB, attackAABB;
 	protected boolean initialized = false;
 	protected boolean restoredFromNBT = false;
@@ -94,7 +98,7 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable
 	public abstract String getName();
 
 	/**
-	 * Updates the weapon while the platform can operate.
+	 * Updates authoritative weapon logic while the platform can operate.
 	 */
 	public EmplacementStateNeeds onUpdate(TileEntityEmplacement te, EmplacementStateNeeds baseNeeds, TargetCoordinateReference currentTarget)
 	{
@@ -104,11 +108,52 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable
 	}
 
 	/**
-	 * Updates state that must continue while the platform moves or stays hidden.
+	 * Updates authoritative state that must continue while the platform moves or stays hidden.
 	 */
 	public void onPlatformUpdate(TileEntityEmplacement te)
 	{
 
+	}
+
+	/**
+	 * Advances client-side interpolation only. This method must not make operating decisions.
+	 *
+	 * @param te owning Emplacement
+	 */
+	public void onClientUpdate(TileEntityEmplacement te)
+	{
+		if(chillingState!=null)
+			chillingState.updateClient();
+	}
+
+	/**
+	 * Updates optional idle-animation timing on the server.
+	 *
+	 * @param te            owning Emplacement
+	 * @param currentTarget active fire mission, if present
+	 * @param canOperate    true when the Emplacement has base operating power
+	 */
+	public void onServerTick(TileEntityEmplacement te, @Nullable TargetCoordinateReference currentTarget, boolean canOperate)
+	{
+		if(chillingState!=null&&chillingState.updateServer(currentTarget!=null, canOperate&&canChill(te)))
+			syncWithClient(te, SyncEvents.WEAPON_MISC);
+	}
+
+	/**
+	 * @return true when an idle animation may start
+	 */
+	protected boolean canChill(TileEntityEmplacement te)
+	{
+		return true;
+	}
+
+	/**
+	 * @param partialTicks partial render tick
+	 * @return idle animation progress in the 0.0-1.0 range, or 0 when unsupported/inactive
+	 */
+	public float getChillProgress(float partialTicks)
+	{
+		return chillingState==null?0f: chillingState.getProgress(partialTicks);
 	}
 
 	/**
@@ -120,9 +165,6 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable
 	public EmplacementStateNeeds getServiceNeeds(TileEntityEmplacement te, @Nullable TargetCoordinateReference currentTarget,
 	                                             float minimumRepairThreshold, float maximumRepairThreshold)
 	{
-		if(te.getWorld().isRemote)
-			return resupplying||te.weaponRepairing?EmplacementStateNeeds.MUST_HIDE: EmplacementStateNeeds.WANTS_SURFACE;
-
 		float minimum = MathHelper.clamp(minimumRepairThreshold, 0f, 1f);
 		float maximum = MathHelper.clamp(Math.max(maximumRepairThreshold, minimum), 0f, 1f);
 		boolean belowMinimum = isBelowHealthThreshold(minimum);
@@ -148,9 +190,6 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable
 	protected final boolean updateResupplyState(TileEntityEmplacement te, BooleanSupplier supplyRequired,
 	                                            BooleanSupplier servicePending, Runnable serviceAction)
 	{
-		if(te.getWorld().isRemote)
-			return resupplying;
-
 		if(supplyRequired.getAsBoolean())
 			setResupplying(te, true);
 
@@ -208,14 +247,26 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable
 
 	//--- Inventory ---//
 
+	/**
+	 * Gets the Base item view for external or GUI access.
+	 *
+	 * @param input true for supply input, false for spent-item output
+	 * @return item handler for the requested direction
+	 */
 	@Nullable
-	public IItemHandler getBaseItemHandler()
+	public IItemHandler getBaseItemHandler(boolean input)
 	{
 		return null;
 	}
 
+	/**
+	 * Gets the Platform item view for GUI access.
+	 *
+	 * @param input true for supply input, false for spent-item output
+	 * @return item handler for the requested direction
+	 */
 	@Nullable
-	public IItemHandler getPlatformItemHandler()
+	public IItemHandler getPlatformItemHandler(boolean input)
 	{
 		return null;
 	}

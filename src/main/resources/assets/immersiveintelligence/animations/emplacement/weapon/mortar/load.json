@@ -1,0 +1,175 @@
+{
+  "comment": "Made by Pabilo8 with Blockbench",
+  "groups": {
+    "mortar_frame": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [-5, 0, 0]
+        },
+        {
+          "time": 0.25,
+          "transform": [-7.5, 0, 0]
+        },
+        {
+          "time": 0.75,
+          "transform": [-7.5, 0, 0]
+        },
+        {
+          "time": 1,
+          "transform": [-5, 0, 0]
+        }
+      ]
+    },
+    "mortar_fastener": {
+      "position": [
+        {
+          "time": 0.25,
+          "transform": [0, -4, 0]
+        }
+      ]
+    },
+    "mortar": {
+      "rotation": [
+        {
+          "time": 0.25,
+          "transform": [57, 0, 0]
+        }
+      ]
+    },
+    "barrel": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.25,
+          "transform": [-57.5, 0, 0]
+        },
+        {
+          "time": 0.75,
+          "transform": [-57.5, 0, 0]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "sights": {
+      "rotation": [
+        {
+          "time": 0.25,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.64585,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.70835,
+          "transform": [-5, 0, 0]
+        },
+        {
+          "time": 0.75,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "shell_loaded": {
+      "rotation": [
+        {
+          "time": 0.25,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.75,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "position": [
+        {
+          "time": 0.25,
+          "transform": [0, -1, -0.6]
+        },
+        {
+          "time": 0.75,
+          "transform": [0, 29.4, -0.6]
+        }
+      ],
+      "scale": [
+        {
+          "time": 0.25,
+          "transform": [0.83, 0.83, 0.83]
+        },
+        {
+          "time": 0.70835,
+          "transform": [0.83, 0.83, 0.83]
+        },
+        {
+          "time": 0.75,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "piston": {
+      "position": [
+        {
+          "time": 0.25,
+          "transform": [0, -1, 0]
+        },
+        {
+          "time": 0.64585,
+          "transform": [0, 24, 0]
+        },
+        {
+          "time": 0.75,
+          "transform": [0, 30.1, 0]
+        },
+        {
+          "time": 1,
+          "transform": [0, -1, 0]
+        }
+      ],
+      "scale": [
+        {
+          "time": 0.25,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.27085,
+          "transform": [1, 1, 1]
+        },
+        {
+          "time": 0.64585,
+          "transform": [1, 1, 1]
+        },
+        {
+          "time": 0.75,
+          "transform": [1, 1, 1]
+        },
+        {
+          "time": 0.97915,
+          "transform": [1, 1, 1]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "shell": {
+      "scale": [
+        {
+          "time": 0.70835,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.75,
+          "transform": [0.83, 0.83, 0.83]
+        }
+      ]
+    }
+  }
+}

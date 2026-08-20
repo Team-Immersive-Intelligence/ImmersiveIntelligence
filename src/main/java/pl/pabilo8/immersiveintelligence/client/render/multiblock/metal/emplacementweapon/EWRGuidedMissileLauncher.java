@@ -3,7 +3,6 @@ package pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.emplacem
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
@@ -82,11 +81,7 @@ public class EWRGuidedMissileLauncher extends EmplacementWeaponRenderer<Emplacem
 	@Override
 	public void apply(EmplacementWeaponGuidedMissileLauncher weapon, AMTCachedModel<TileEntityEmplacement> model, BufferBuilder buf, Tessellator tes, float partialTicks)
 	{
-		List<ItemStack> renderAmmo = weapon.getRenderAmmo();
-		ItemStack ammo = renderAmmo.isEmpty()?ItemStack.EMPTY: renderAmmo.get(0);
-		this.rocket.get().setVisible(!ammo.isEmpty());
-		if(!ammo.isEmpty())
-			this.rocket.get().withStack(ammo, BulletState.BULLET_UNUSED);
+		this.applyAmmoItem(weapon, BulletState.BULLET_UNUSED, rocket);
 
 		this.rotateYaw.apply(weapon.aim.getYawNormalized(partialTicks));
 		float pitch = weapon.aim.getPitchNormalized(partialTicks);

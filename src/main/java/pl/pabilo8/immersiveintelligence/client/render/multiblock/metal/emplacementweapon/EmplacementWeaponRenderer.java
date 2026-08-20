@@ -4,6 +4,8 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.upgrade.Upgrade;
@@ -12,9 +14,13 @@ import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.EmplacementRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTLoader;
 import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTCachedModel;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTCrossVariantReference;
 import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTBullet;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTBullet.BulletState;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon.EmplacementWeapon;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon.EmplacementWeaponGunBase;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon.UpgradeEmplacementWeapon;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
@@ -100,5 +106,41 @@ public abstract class EmplacementWeaponRenderer<W extends EmplacementWeapon> imp
 	{
 		IReloadableModelContainer.super.registerSprites(map);
 		reloadSprites(map);
+	}
+
+	protected final void applyAmmoItem(EmplacementWeaponGunBase<?> weapon, BulletState state, AMTCrossVariantReference<AMTBullet> reference)
+	{
+		List<ItemStack> renderAmmo = weapon.getLoadedAmmo();
+		//noinspection SequencedCollectionMethodCanBeUsed
+		ItemStack ammoStack = renderAmmo.isEmpty()?ItemStack.EMPTY: renderAmmo.get(0);
+		if(!ammoStack.isEmpty())
+		{
+			AMTBullet amtBullet = reference.get();
+			if(amtBullet!=null)
+				amtBullet.withStack(ammoStack, state);
+		}
+	}
+
+	/**
+	 * Applies the ammo items to the bullets.
+	 *
+	 * @param weapon           emplacement weapon
+	 * @param state            state the bullets are in
+	 * @param bulletReferences model part references
+	 */
+	protected final void applyAmmoItems(EmplacementWeaponGunBase<?> weapon, BulletState state, List<AMTCrossVariantReference<AMTBullet>> bulletReferences)
+	{
+		final NonNullList<ItemStack> ammoList = weapon.getLoadedAmmo();
+		final int size = ammoList.size();
+		for(int i = 0; i < bulletReferences.size(); i++)
+		{
+			ItemStack ammoStack = (ammoList.isEmpty()||i >= size)?ItemStack.EMPTY: ammoList.get(i);
+			AMTBullet amtBullet = bulletReferences.get(i).get();
+			if(amtBullet!=null)
+			{
+				amtBullet.setVisible(true);
+				amtBullet.withStack(ammoStack, state);
+			}
+		}
 	}
 }

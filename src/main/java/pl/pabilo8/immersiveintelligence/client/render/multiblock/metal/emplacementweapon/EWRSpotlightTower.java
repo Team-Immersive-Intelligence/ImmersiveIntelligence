@@ -40,11 +40,8 @@ public class EWRSpotlightTower extends EmplacementWeaponRenderer<EmplacementWeap
 	public void apply(EmplacementWeaponSpotlightTower weapon, AMTCachedModel<TileEntityEmplacement> model, BufferBuilder buf, Tessellator tes, float partialTicks)
 	{
 		assert weapon.setup!=null;
-		if(weapon.setup.getState())
-			this.install.apply(1f-weapon.setup.getProgress(partialTicks));
-		else
-			this.install.apply(weapon.setup.getProgress(partialTicks));
-
+		this.install.apply(weapon.setup.getProgress(partialTicks));
+		
 		this.rotateYaw.apply(weapon.aim.getYawNormalized(partialTicks));
 		this.rotatePitch.apply(weapon.aim.getPitchNormalized(partialTicks));
 	}

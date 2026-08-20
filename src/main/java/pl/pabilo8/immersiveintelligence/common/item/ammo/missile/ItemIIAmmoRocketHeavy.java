@@ -68,7 +68,7 @@ public class ItemIIAmmoRocketHeavy extends ItemIIAmmoBase<EntityAmmoMissile>
 	@Override
 	public float getVelocity()
 	{
-		return 5f;
+		return 3.5f;
 	}
 
 	@Override

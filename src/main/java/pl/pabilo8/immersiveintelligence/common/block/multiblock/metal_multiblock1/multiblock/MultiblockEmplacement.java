@@ -39,11 +39,11 @@ public class MultiblockEmplacement extends MultiblockStuctureBase<TileEntityEmpl
 		addPOI(MultiblockPOI.MISC_WEAPON, "weapon");
 		addPOI(MultiblockPOI.MISC_HATCH, "hatch");
 
-		addPOI(MultiblockPOI.ITEM_INPUT, "input");
-		addPOI(MultiblockPOI.FLUID_INPUT, "input");
+//		addPOI(MultiblockPOI.ITEM_INPUT, "input");
+//		addPOI(MultiblockPOI.FLUID_INPUT, "input");
 
-		addPOI(MultiblockPOI.ITEM_OUTPUT, "output");
-		addPOI(MultiblockPOI.FLUID_OUTPUT, "output");
+//		addPOI(MultiblockPOI.ITEM_OUTPUT, "output");
+//		addPOI(MultiblockPOI.FLUID_OUTPUT, "output");
 
 		//Customzation
 		STYLE_CONSTRAINTS = new StyleConstraints("sandbags", PaintStyleConstraint.NOT_APPLICABLE,

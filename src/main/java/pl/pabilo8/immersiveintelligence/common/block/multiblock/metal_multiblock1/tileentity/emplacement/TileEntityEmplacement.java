@@ -72,7 +72,7 @@ import java.util.Optional;
  * Coordinates Emplacement platform movement, servicing, weapon operation, and external storage access.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 17.08.2026
+ * @updated 18.08.2026
  * @ii-approved 0.3.1
  * @since 27.10.2020
  */
@@ -113,14 +113,14 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CLIENT_MESSAGE})
 	public float weaponHideHealthThreshold = 0.25f, weaponRepairSatisfactoryThreshold = 0.85f;
 	private int weaponRepairTicker = 0;
-	@SyncNBT(events = SyncEvents.TILE_CUSTOM2)
+	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CUSTOM2, SyncEvents.WEAPON_MISC})
 	public MultiblockInteractablePart door;
 
 	public TileEntityEmplacement()
 	{
 		super(MultiblockEmplacement.INSTANCE);
 		this.energyStorage = new FluxStorageAdvanced(Emplacement.energyCapacity);
-		this.inventory = NonNullList.withSize(32, ItemStack.EMPTY);
+		this.inventory = NonNullList.withSize(64, ItemStack.EMPTY);
 		this.door = new MultiblockInteractablePart(Emplacement.lidTime);
 		this.upgradeManager = new UpgradeManager<>(this);
 		this.style = new StyleCustomization(MultiblockFlagpole.STYLE_CONSTRAINTS);
@@ -159,7 +159,22 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 		if(this.currentWeapon!=null)
 			this.currentWeapon.init(this);
 
-		if(energyStorage.extractEnergy(Emplacement.baseEnergyUsage, false)==Emplacement.baseEnergyUsage)
+		//The client only advances synchronized animation state. All operating decisions are server-owned.
+		if(world.isRemote)
+		{
+			door.update();
+			if(currentWeapon!=null)
+				currentWeapon.onClientUpdate(this);
+			return;
+		}
+
+		//Advance passive state before making this tick's server decisions.
+		door.update();
+		if(currentWeapon!=null)
+			currentWeapon.onPlatformUpdate(this);
+
+		boolean powered = energyStorage.extractEnergy(Emplacement.baseEnergyUsage, false)==Emplacement.baseEnergyUsage;
+		if(powered)
 		{
 			//Finish a completed or invalid mission.
 			if(currentTarget!=null&&!currentTarget.shouldBeExecuted(world))
@@ -188,16 +203,14 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 				weaponNeeds = currentWeapon.onUpdate(this, requestedNeeds, currentTarget);
 
 			setPlatformState(combineNeeds(requestedNeeds, weaponNeeds)==EmplacementStateNeeds.WANTS_SURFACE);
-			door.update();
-
-			if(currentWeapon!=null)
-				currentWeapon.onPlatformUpdate(this);
 
 			if(!door.getState()&&door.isFullyClosed())
 				repairWeaponInBase();
 		}
-		if(!this.world.isRemote)
-			this.tactileHandler.update(MultiblockEmplacement.animationPlatform, door.getProgress(0));
+
+		if(currentWeapon!=null)
+			currentWeapon.onServerTick(this, currentTarget, powered);
+		this.tactileHandler.update(MultiblockEmplacement.animationPlatform, door.getProgress(0));
 	}
 
 	private void setPlatformState(boolean surface)
@@ -253,36 +266,6 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 			updateTileForEvent(SyncEvents.TILE_ENERGY_CHANGED);
 		if(changed)
 			updateTileForEvent(SyncEvents.TILE_CUSTOM2);
-	}
-
-	/**
-	 * Sends an item through the Emplacement output port and drops any remainder outside it.
-	 */
-	public boolean outputItem(ItemStack stack)
-	{
-		if(stack.isEmpty()||world.isRemote)
-			return false;
-
-		BlockPos output = getPOIPos("output");
-		EnumFacing direction = getDirection("output");
-		BlockPos outside = direction==null?output: output.offset(direction);
-		TileEntity target = world.getTileEntity(outside);
-		ItemStack remainder = stack;
-
-		if(target!=null)
-		{
-			EnumFacing targetSide = direction==null?null: direction.getOpposite();
-			if(target.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, targetSide))
-			{
-				IItemHandler handler = target.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, targetSide);
-				if(handler!=null)
-					remainder = ItemHandlerHelper.insertItemStacked(handler, stack, false);
-			}
-		}
-
-		if(!remainder.isEmpty())
-			Utils.dropStackAtPos(world, outside, remainder);
-		return true;
 	}
 
 	@Override
@@ -466,27 +449,6 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 		return added;
 	}
 
-	private void dropWeaponStorage()
-	{
-		if(currentWeapon==null||world.isRemote)
-			return;
-
-		currentWeapon.clearFluids();
-		EnumFacing direction = getDirection("output");
-		BlockPos output = getPOIPos("output");
-		BlockPos dropPos = direction==null?output: output.offset(direction);
-		for(int slot = 0; slot < inventory.size(); slot++)
-		{
-			ItemStack stack = inventory.get(slot);
-			if(stack.isEmpty())
-				continue;
-			Utils.dropStackAtPos(world, dropPos, stack.copy());
-			inventory.set(slot, ItemStack.EMPTY);
-		}
-		weaponRepairTicker = 0;
-		setWeaponRepairing(false);
-	}
-
 	@Override
 	public boolean removeUpgrade(Upgrade upgrade)
 	{
@@ -557,9 +519,11 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 		TileEntityEmplacement master = master();
 		if(master!=null&&master.currentWeapon!=null)
 		{
-			if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY&&isPOI("input"))
-				return master.currentWeapon.getBaseItemHandler()!=null;
-			if(capability==CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY&&isPOI("input"))
+			boolean input = isPOI("input")&&facing==getDirection("input");
+			boolean output = isPOI("output")&&facing==getDirection("output");
+			if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY&&(input||output))
+				return master.currentWeapon.getBaseItemHandler(input)!=null;
+			if(capability==CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY&&input)
 				return master.currentWeapon.getBaseFluidHandler()!=null;
 		}
 		return super.hasCapability(capability, facing);
@@ -571,11 +535,17 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 	public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable net.minecraft.util.EnumFacing facing)
 	{
 		TileEntityEmplacement master = master();
-		if(master!=null&&master.currentWeapon!=null&&isPOI("input"))
+		if(master!=null&&master.currentWeapon!=null)
 		{
-			if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY&&master.currentWeapon.getBaseItemHandler()!=null)
-				return (T)master.currentWeapon.getBaseItemHandler();
-			if(capability==CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+			boolean input = isPOI("input")&&facing==getDirection("input");
+			boolean output = isPOI("output")&&facing==getDirection("output");
+			if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY&&(input||output))
+			{
+				IItemHandler handler = master.currentWeapon.getBaseItemHandler(input);
+				if(handler!=null)
+					return (T)handler;
+			}
+			if(capability==CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY&&input)
 			{
 				IFluidHandler handler = master.currentWeapon.getBaseFluidHandler();
 				if(handler!=null)
@@ -686,5 +656,60 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 		WANTS_SURFACE,
 		WANTS_HIDE,
 		MUST_HIDE;
+	}
+
+	//--- Item Dropping ---//
+
+	/**
+	 * Sends an item through the Emplacement output port and drops any remainder outside it.
+	 */
+	public boolean outputItem(ItemStack stack)
+	{
+		if(stack.isEmpty()||world.isRemote)
+			return false;
+
+		BlockPos output = getPOIPos("output");
+		EnumFacing direction = getDirection("output");
+		assert direction!=null;
+		BlockPos outside = output.offset(direction);
+		TileEntity target = world.getTileEntity(outside);
+		ItemStack remainder = stack;
+
+		if(target!=null)
+		{
+			EnumFacing targetSide = direction.getOpposite();
+			if(target.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, targetSide))
+			{
+				IItemHandler handler = target.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, targetSide);
+				if(handler!=null)
+					remainder = ItemHandlerHelper.insertItemStacked(handler, stack, false);
+			}
+		}
+
+		if(!remainder.isEmpty())
+			Utils.dropStackAtPos(world, outside, remainder);
+		return true;
+	}
+
+	private void dropWeaponStorage()
+	{
+		if(currentWeapon==null||world.isRemote)
+			return;
+
+		currentWeapon.clearFluids();
+		EnumFacing direction = getDirection("output");
+		BlockPos output = getPOIPos("output");
+		assert direction!=null;
+		BlockPos dropPos = output.offset(direction);
+		for(int slot = 0; slot < inventory.size(); slot++)
+		{
+			ItemStack stack = inventory.get(slot);
+			if(stack.isEmpty())
+				continue;
+			Utils.dropStackAtPos(world, dropPos, stack.copy());
+			inventory.set(slot, ItemStack.EMPTY);
+		}
+		weaponRepairTicker = 0;
+		setWeaponRepairing(false);
 	}
 }

@@ -1191,6 +1191,9 @@ public class IIConfigHandler
 
 			public static class Emplacement
 			{
+				@Comment({"Delay for the weapon between transferring items between base and platform inventory (in ticks)"})
+				public static int itemTransferInterval = 15;
+
 				@Comment({"Energy capacity of the emplacement (in IF)."})
 				public static int energyCapacity = 32000;
 

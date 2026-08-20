@@ -1,15 +1,15 @@
 {
   "comment": "Made by Pabilo8 with Blockbench",
   "groups": {
-    "projector": {
+    "turret": {
       "rotation": [
         {
           "time": 0,
-          "transform": [-90, 0, 0]
+          "transform": [0, 0, 0]
         },
         {
           "time": 1,
-          "transform": [90, 0, 0]
+          "transform": [0, -360, 0]
         }
       ]
     }

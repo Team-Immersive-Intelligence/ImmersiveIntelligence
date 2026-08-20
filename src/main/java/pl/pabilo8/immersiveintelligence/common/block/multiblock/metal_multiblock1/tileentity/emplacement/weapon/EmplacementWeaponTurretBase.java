@@ -20,7 +20,7 @@ import javax.annotation.Nullable;
  *
  * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
- * @updated 17.08.2026
+ * @updated 18.08.2026
  * @since 01.01.2026
  */
 public abstract class EmplacementWeaponTurretBase extends EmplacementWeapon
@@ -49,25 +49,21 @@ public abstract class EmplacementWeaponTurretBase extends EmplacementWeapon
 	@Override
 	public void onPlatformUpdate(TileEntityEmplacement te)
 	{
-		boolean remote = te.getWorld().isRemote;
 		boolean exposed = te.door.getState()&&te.door.isFullyOpened();
 		boolean setupChanged = false;
 		if(this.setup!=null)
 		{
-			if(!remote)
-				setupChanged = this.setup.setState(exposed);
+			setupChanged = this.setup.setState(exposed);
 			this.setup.update();
 		}
 
 		//Only platform movement and the hidden state force the weapon into its hiding pose.
 		if(!exposed)
-		{
 			setAimTargetAngles(te, getHidingYaw(), getHidingPitch());
-			updateAim(te);
-		}
+		updateAim(te);
 
 		//The Base casing storage is stationary, so it can continue emptying while the platform operates.
-		if(!remote&&++casingOutputTicker >= CASING_OUTPUT_INTERVAL)
+		if(++casingOutputTicker >= CASING_OUTPUT_INTERVAL)
 		{
 			casingOutputTicker = 0;
 			ItemStack casing = extractBaseCasing(1);
@@ -78,71 +74,66 @@ public abstract class EmplacementWeaponTurretBase extends EmplacementWeapon
 			}
 		}
 
-		if(!remote&&setupChanged)
+		if(setupChanged)
 			syncWithClient(te, SyncEvents.WEAPON_MISC);
+	}
+
+	@Override
+	public void onClientUpdate(TileEntityEmplacement te)
+	{
+		//The client only advances state received from the server.
+		if(this.setup!=null)
+			this.setup.update();
+		this.aim.update();
+		super.onClientUpdate(te);
+	}
+
+	@Override
+	protected boolean canChill(TileEntityEmplacement te)
+	{
+		return te.door.getState()&&te.door.isFullyOpened()&&(setup==null||setup.isFullyOpened());
 	}
 
 	@Override
 	public EmplacementStateNeeds onUpdate(TileEntityEmplacement te, EmplacementStateNeeds baseNeeds, TargetCoordinateReference currentTarget)
 	{
-		boolean remote = te.getWorld().isRemote;
-
-		//onPlatformUpdate owns the hiding pose during platform travel.
+		//onPlatformUpdate owns passive aim movement and the hiding pose.
 		if(!te.door.getState()||!te.door.isFullyOpened())
 			return EmplacementStateNeeds.WANTS_SURFACE;
 
 		//Keep the current aim until setup is complete.
 		if(setup!=null&&!setup.isFullyOpened())
-		{
-			updateAim(te);
 			return EmplacementStateNeeds.WANTS_SURFACE;
-		}
 
 		//Freeze an exposed idle weapon at its current angle. A gun can reserve the aim for loading.
 		if(currentTarget==null||!currentTarget.shouldBeExecuted(te.getWorld()))
 		{
 			if(canTrackTarget(te))
 				setAimTargetAngles(te, null, null);
-			updateAim(te);
 			return EmplacementStateNeeds.WANTS_SURFACE;
 		}
 		if(!canTrackTarget(te))
-		{
-			updateAim(te);
 			return EmplacementStateNeeds.WANTS_SURFACE;
-		}
 
 		boolean rotationChanged = false;
-		float previousYaw = this.aim.getYaw(0);
-		float previousPitch = this.aim.getPitch(0);
-		if(!remote)
+		Vec3d target = currentTarget.supplyCoordinates();
+		if(target!=null)
 		{
-			Vec3d target = currentTarget.supplyCoordinates();
-			if(target!=null)
-			{
-				float previousTargetYaw = this.aim.getTargetYaw();
-				float previousTargetPitch = this.aim.getTargetPitch();
-				if(this.aim.setTarget(te.getWeaponCenter(), Vec3d.ZERO, target, currentTarget.supplyMotion()))
-					rotationChanged = hasTargetAngleChanged(previousTargetYaw, previousTargetPitch);
-			}
+			float previousTargetYaw = this.aim.getTargetYaw();
+			float previousTargetPitch = this.aim.getTargetPitch();
+			if(this.aim.setTarget(te.getWeaponCenter(), Vec3d.ZERO, target, currentTarget.supplyMotion()))
+				rotationChanged = hasTargetAngleChanged(previousTargetYaw, previousTargetPitch);
 		}
 
-		this.aim.update();
-		if(!remote)
-			rotationChanged |= hasCurrentAngleChanged(previousYaw, previousPitch);
-
-		boolean fired = !remote&&te.door.isFullyOpened()&&(setup==null||setup.isFullyOpened())&&aim.isAimed(1.5f)&&canShoot(te)
+		boolean fired = te.door.isFullyOpened()&&(setup==null||setup.isFullyOpened())&&aim.isAimed(1.5f)&&canShoot(te)
 				&&shoot(te, currentTarget);
 		if(fired)
 			currentTarget.notifyAfterShot();
 
-		if(!remote)
-		{
-			if(rotationChanged)
-				syncWithClient(te, SyncEvents.WEAPON_ROTATION);
-			if(fired)
-				syncWithClient(te, SyncEvents.WEAPON_RELOAD);
-		}
+		if(rotationChanged)
+			syncWithClient(te, SyncEvents.WEAPON_ROTATION);
+		if(fired)
+			syncWithClient(te, SyncEvents.WEAPON_RELOAD);
 		return EmplacementStateNeeds.WANTS_SURFACE;
 	}
 
@@ -186,7 +177,7 @@ public abstract class EmplacementWeaponTurretBase extends EmplacementWeapon
 		float previousYaw = aim.getYaw(0);
 		float previousPitch = aim.getPitch(0);
 		aim.update();
-		if(!te.getWorld().isRemote&&hasCurrentAngleChanged(previousYaw, previousPitch))
+		if(hasCurrentAngleChanged(previousYaw, previousPitch))
 			syncWithClient(te, SyncEvents.WEAPON_ROTATION);
 	}
 
@@ -241,6 +232,6 @@ public abstract class EmplacementWeaponTurretBase extends EmplacementWeapon
 	@Nullable
 	protected Float getHidingPitch()
 	{
-		return aim.clampPitchToRange(90f);
+		return aim.clampPitchToRange(-90f);
 	}
 }
