@@ -7,7 +7,7 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import pl.pabilo8.immersiveintelligence.api.ammo.penetration.DamageBlockPos;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.PenetrationCache;
-import pl.pabilo8.immersiveintelligence.api.api.protection.RadiationHandler;
+import pl.pabilo8.immersiveintelligence.api.protection.protection.RadiationHandler;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyHandler;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 

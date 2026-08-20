@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.api.api.protection;
+package pl.pabilo8.immersiveintelligence.api.protection.protection;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -13,8 +13,8 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
-import pl.pabilo8.immersiveintelligence.api.api.protection.capability.IRadiationEmitter;
-import pl.pabilo8.immersiveintelligence.api.api.protection.capability.ProtectionCapabilities;
+import pl.pabilo8.immersiveintelligence.api.protection.protection.capability.IRadiationEmitter;
+import pl.pabilo8.immersiveintelligence.api.protection.protection.capability.ProtectionCapabilities;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
 import pl.pabilo8.immersiveintelligence.common.IISaveData;
 

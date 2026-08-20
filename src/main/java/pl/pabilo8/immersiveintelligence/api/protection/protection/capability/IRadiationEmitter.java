@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.api.api.protection.capability;
+package pl.pabilo8.immersiveintelligence.api.protection.protection.capability;
 
 /**
  * Capability exposed by entities and tile entities which emit radiation.

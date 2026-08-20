@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.api.api.protection.capability;
+package pl.pabilo8.immersiveintelligence.api.protection.protection.capability;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTBase;
@@ -12,7 +12,7 @@ import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.util.INBTSerializable;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.api.protection.RadiationEmitter;
+import pl.pabilo8.immersiveintelligence.api.protection.protection.RadiationEmitter;
 
 import javax.annotation.Nullable;
 

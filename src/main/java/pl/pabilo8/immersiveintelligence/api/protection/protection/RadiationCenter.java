@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.api.api.protection;
+package pl.pabilo8.immersiveintelligence.api.protection.protection;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;

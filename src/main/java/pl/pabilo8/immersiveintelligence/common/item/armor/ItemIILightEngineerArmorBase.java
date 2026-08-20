@@ -6,8 +6,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.api.protection.capability.ProtectionCapabilities;
-import pl.pabilo8.immersiveintelligence.api.api.protection.capability.ProtectionCapabilityProvider;
+import pl.pabilo8.immersiveintelligence.api.protection.protection.capability.ProtectionCapabilities;
+import pl.pabilo8.immersiveintelligence.api.protection.protection.capability.ProtectionCapabilityProvider;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradeableArmor;
 

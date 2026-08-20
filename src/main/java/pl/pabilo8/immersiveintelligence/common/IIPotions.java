@@ -16,8 +16,8 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.api.protection.CorrosionHandler;
-import pl.pabilo8.immersiveintelligence.api.api.protection.ProtectionHandler;
+import pl.pabilo8.immersiveintelligence.api.protection.protection.CorrosionHandler;
+import pl.pabilo8.immersiveintelligence.api.protection.protection.ProtectionHandler;
 import pl.pabilo8.immersiveintelligence.common.util.IIDamageSources;
 
 import java.util.ArrayList;

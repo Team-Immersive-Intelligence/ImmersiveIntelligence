@@ -1,8 +1,8 @@
-package pl.pabilo8.immersiveintelligence.api.api.protection;
+package pl.pabilo8.immersiveintelligence.api.protection.protection;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.INBTSerializable;
-import pl.pabilo8.immersiveintelligence.api.api.protection.capability.IRadiationEmitter;
+import pl.pabilo8.immersiveintelligence.api.protection.protection.capability.IRadiationEmitter;
 
 /**
  * Radiation emitter implementation for tile entities and entities.

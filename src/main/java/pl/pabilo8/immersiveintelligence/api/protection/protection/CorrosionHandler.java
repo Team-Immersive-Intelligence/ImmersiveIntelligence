@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.api.api.protection;
+package pl.pabilo8.immersiveintelligence.api.protection.protection;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.ItemHandlerHelper;

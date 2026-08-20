@@ -1,9 +1,9 @@
-package pl.pabilo8.immersiveintelligence.api.api.protection;
+package pl.pabilo8.immersiveintelligence.api.protection.protection;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
-import pl.pabilo8.immersiveintelligence.api.api.protection.capability.*;
+import pl.pabilo8.immersiveintelligence.api.protection.protection.capability.*;
 
 import javax.annotation.Nullable;
 import java.util.function.Predicate;
