@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagString;
@@ -48,6 +49,12 @@ public abstract class BlockIIMine extends BlockIITileProvider<IIBlockTypes_Mine>
 		//Register both MAIN and CORE for TEISR item rendering (Mines)
 		tesrList.add(IIBlockTypes_Mine.MAIN);
 		tesrList.add(IIBlockTypes_Mine.CORE);
+	}
+
+	@Override
+	public boolean canIEBlockBePlaced(World world, BlockPos pos, IBlockState newState, EnumFacing side, float hitX, float hitY, float hitZ, EntityPlayer player, ItemStack stack)
+	{
+		return stack.getItemDamage()==IIBlockTypes_Mine.MAIN.getMeta();
 	}
 
 	@Override
