@@ -97,12 +97,11 @@ public abstract class EntityMountedWeapon extends Entity implements ISyncNBTEnti
 		this.rotationPitch = aim.getPitch(0);
 	}
 
-	protected boolean checkSupportAndDrop()
+	protected final boolean checkSupportAndDrop()
 	{
-		BlockPos checkPos = getSupportCheckPos();
-		if(world.isRemote||ticksExisted%20!=0||checkPos==null)
+		if(world.isRemote||ticksExisted%20!=0)
 			return false;
-		if(!world.getBlockState(checkPos).isSideSolid(world, checkPos, EnumFacing.UP))
+		if(!hasSupport())
 		{
 			setDead();
 			entityDropItem(originStack, 0f);
@@ -111,10 +110,10 @@ public abstract class EntityMountedWeapon extends Entity implements ISyncNBTEnti
 		return false;
 	}
 
-	@Nullable
-	protected BlockPos getSupportCheckPos()
+	protected boolean hasSupport()
 	{
-		return getPosition().down();
+		BlockPos checkPos = getPosition().down();
+		return world.getBlockState(checkPos).isSideSolid(world, checkPos, EnumFacing.UP);
 	}
 
 	public boolean isSetupComplete()

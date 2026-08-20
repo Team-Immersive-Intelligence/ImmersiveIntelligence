@@ -2,11 +2,14 @@ package pl.pabilo8.immersiveintelligence.common.entity.mounted_weapon;
 
 import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorage;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
@@ -44,6 +47,7 @@ import pl.pabilo8.immersiveintelligence.common.util.gun.GunRecoil;
 import pl.pabilo8.immersiveintelligence.common.util.gun.GunShootingHandler;
 import pl.pabilo8.immersiveintelligence.common.util.gun.ammoprovider.GunAmmoProviderAmmoCrate;
 import pl.pabilo8.immersiveintelligence.common.util.gun.ammoprovider.GunAmmoProviderMagazine;
+import pl.pabilo8.immersiveintelligence.common.util.raytracer.AxisAlignedFacingBB;
 
 import javax.annotation.Nonnull;
 import java.util.EnumSet;
@@ -60,6 +64,8 @@ public class EntityMachinegun extends EntityMountedWeapon implements IAdvancedTe
 			IIReference.RES_TEXTURES_GUI.with("item/machinegun/scope.png"));
 	private final static ZoomSettings SCOPE_IR = new ZoomSettings(Machinegun.machinegunScopeZoom,
 			IIReference.RES_TEXTURES_GUI.with("item/machinegun/scope_infrared.png"));
+	private final static AxisAlignedFacingBB SANDBAG_AABB = new AxisAlignedFacingBB(new AxisAlignedBB(0, 0, 0, 1.0, 1.0, 0.5));
+
 	private final AmmoFactory<EntityAmmoProjectile> ammoFactory = new AmmoFactory<>(this);
 	public EnumSet<WeaponUpgrade> upgrades = EnumSet.noneOf(WeaponUpgrade.class);
 
@@ -103,7 +109,7 @@ public class EntityMachinegun extends EntityMountedWeapon implements IAdvancedTe
 	public EntityMachinegun(World world, BlockPos pos, float yaw, ItemStack stack)
 	{
 		this(world);
-		this.setPosition(pos.getX(), pos.getY(), pos.getZ());
+		this.setPosition(pos.getX()+0.5, pos.getY(), pos.getZ()+0.5);
 		this.aim.withCenterYaw(yaw).withCurrentAngles(yaw, 0);
 		setOriginStack(stack);
 		if(upgrades.contains(WeaponUpgrade.TRIPOD))
@@ -249,6 +255,21 @@ public class EntityMachinegun extends EntityMountedWeapon implements IAdvancedTe
 			this.aim.setTarget(aim.getTargetYaw(), aim.clampPitchToRange(-10f));
 			this.aim.update();
 		}
+	}
+
+	@Override
+	protected boolean hasSupport()
+	{
+		BlockPos checkPos = getPosition().down();
+		IBlockState state = world.getBlockState(checkPos);
+		EnumFacing facing = EnumFacing.fromAngle(aim.getCenterYaw());
+
+		if(state.getBlock().isAir(state, world, checkPos))
+			return false;
+
+		AxisAlignedBB blockBB = state.getCollisionBoundingBox(world, checkPos);
+		return IIMath.isAABBContained(SANDBAG_AABB.getFacing(facing, false),
+				blockBB==null?new AxisAlignedBB(0, 0, 0, 1, 1, 1): blockBB);
 	}
 
 	@Override

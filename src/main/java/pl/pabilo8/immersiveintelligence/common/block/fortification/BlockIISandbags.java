@@ -69,7 +69,7 @@ public class BlockIISandbags extends BlockIITileProvider<IIBlockTypes_Sandbags>
 	@Override
 	public BlockFaceShape getBlockFaceShape(IBlockAccess world, IBlockState state, BlockPos pos, EnumFacing side)
 	{
-		return side!=EnumFacing.UP&&side!=EnumFacing.DOWN?BlockFaceShape.MIDDLE_POLE: BlockFaceShape.CENTER;
+		return side!=EnumFacing.UP?BlockFaceShape.MIDDLE_POLE_THICK: BlockFaceShape.CENTER;
 	}
 
 	/**
