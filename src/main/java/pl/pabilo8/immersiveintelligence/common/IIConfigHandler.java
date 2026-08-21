@@ -320,6 +320,9 @@ public class IIConfigHandler
 
 			@Comment({"Determines what style should vanilla-styled GUIs, like faction invitation look like"})
 			public static DecoVanillaGUIStyle decoVanillaGUIStyle = DecoVanillaGUIStyle.VANILLA;
+
+			@Comment({"Distance from the player's view in which block damage effects will be drawn (in blocks)."})
+			public static double blockDamageDrawDistance = 20;
 		}
 
 		public static class Ores

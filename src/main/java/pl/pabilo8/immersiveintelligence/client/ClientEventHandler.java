@@ -185,9 +185,8 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	@SuppressWarnings("unused")
 	public static void handleBipedRotations(ModelBiped model, Entity entity)
 	{
-		if(!(entity instanceof EntityLivingBase))
+		if(!(entity instanceof EntityLivingBase living))
 			return;
-		EntityLivingBase living = (EntityLivingBase)entity;
 
 		//Concealed potion effect
 		if(((EntityLivingBase)entity).isPotionActive(IIPotions.concealed))
@@ -208,10 +207,9 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 			if(vehicle!=null)
 			{
 				Render<Entity> renderer = mc.getRenderManager().getEntityClassRenderObject(vehicle.getClass());
-				if(renderer instanceof IPassengerAnimationsRenderer)
+				if(renderer instanceof IPassengerAnimationsRenderer par)
 				{
 					//noinspection rawtypes
-					IPassengerAnimationsRenderer par = (IPassengerAnimationsRenderer)renderer;
 					//noinspection unchecked
 					if(par.handleBipedRotations(model, vehicle, living, mc.getRenderPartialTicks()))
 						return;
@@ -383,31 +381,35 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	public void renderAdditionalBlockBounds(DrawBlockHighlightEvent event)
 	{
 		WorldClient world = ClientUtils.mc().world;
-		if(world==null||world.provider==null)
+		if(world==null)
 			return;
+		Entity viewEntity = ClientUtils.mc().getRenderViewEntity();
+		if(viewEntity==null)
+			viewEntity = ClientUtils.mc().player;
 
 		//remove invalid positions
 		int dimension = world.provider.getDimension();
 		blockDamageClient.removeIf(d -> d.damage <= 0||d.dimension!=dimension);
 
-		//render valid positions
-		IIClientUtils.drawBlockBreak(world,
-				event.getPartialTicks(),
-				blockDamageClient.stream()
-						.filter(Objects::nonNull)
-						.filter(d -> d.dimension==world.provider.getDimension()&&world.isBlockLoaded(d))
-						.toArray(DamageBlockPos[]::new)
-		);
+		//Render valid positions.
+		final Entity finalViewEntity = viewEntity;
+		DamageBlockPos[] positions = blockDamageClient.stream()
+				.filter(Objects::nonNull)
+				.filter(world::isBlockLoaded)
+				.filter(d -> finalViewEntity.getDistance(d.getX()+0.5, d.getY()+0.5, d.getZ()+0.5) < Graphics.blockDamageDrawDistance)
+				.toArray(DamageBlockPos[]::new);
+
+		if(positions.length > 0)
+			IIClientUtils.drawBlockBreak(world, event.getPartialTicks(), positions);
 	}
 
 	@SubscribeEvent()
 	public void onFogUpdate(RenderFogEvent event)
 	{
 		Entity entity = event.getEntity();
-		if(!(entity instanceof EntityLivingBase))
+		if(!(entity instanceof EntityLivingBase living))
 			return;
 
-		EntityLivingBase living = (EntityLivingBase)entity;
 		//Suppression
 		if(living.getActivePotionEffect(IIPotions.suppression)!=null)
 		{
@@ -448,10 +450,8 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		Entity entity = event.getEntity();
 		World world = entity.getEntityWorld();
 
-		if(entity instanceof EntityLivingBase)
+		if(entity instanceof EntityLivingBase living)
 		{
-			EntityLivingBase living = (EntityLivingBase)entity;
-
 			//Nuke/Wasteland
 			float fogFactor = getRadiationFogFactor(living, event.getRenderPartialTicks());
 			PotionEffect nuclearHeat = living.getActivePotionEffect(IIPotions.nuclearHeat);
@@ -695,9 +695,8 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		Entity lowestRidden = ridden==null?null: ridden.getLowestRidingEntity();
 
 		//--- Camera Handling ---//
-		if(lowestRidden instanceof ICameraEntity)
+		if(lowestRidden instanceof ICameraEntity cameraEntity)
 		{
-			ICameraEntity cameraEntity = (ICameraEntity)lowestRidden;
 			if(!cameraEntity.isCameraEnabled(player))
 				CameraHandler.setEnabled(false);
 			else
@@ -785,15 +784,13 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		}
 
 		Entity ridingEntity = ClientUtils.mc().player.getRidingEntity();
-		if(ridingEntity instanceof EntityVehicleSeat)
+		if(ridingEntity instanceof EntityVehicleSeat riding)
 		{
-			EntityVehicleSeat riding = (EntityVehicleSeat)ridingEntity;
 			if(riding.info!=null&&riding.info.passMouseButtonEvent(event)&&event.isButtonstate())
 				event.setCanceled(true);
 		}
-		else if(ridingEntity instanceof EntityMountedWeapon)
+		else if(ridingEntity instanceof EntityMountedWeapon weapon)
 		{
-			EntityMountedWeapon weapon = (EntityMountedWeapon)ridingEntity;
 			if(weapon.controls!=null&&weapon.controls.passMouseButtonEvent(event)&&event.isButtonstate())
 				event.setCanceled(true);
 		}
@@ -866,10 +863,9 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 			//--- Gun Recoil Handling ---//
 
 			ItemStack stack = player.getHeldItemMainhand();
-			if(stack.getItem() instanceof ItemIIGunBase&&Graphics.cameraRecoil)
+			if(stack.getItem() instanceof ItemIIGunBase item&&Graphics.cameraRecoil)
 			{
 				//Prepare variables
-				ItemIIGunBase item = (ItemIIGunBase)stack.getItem();
 				EasyNBT upgrades = EasyNBT.wrapNBT(item.getUpgrades(stack));
 
 				boolean isAimed = ItemNBTHelper.getInt(stack, ItemIIGunBase.AIMING) > item.getAimingTime(stack, upgrades);
@@ -940,9 +936,8 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	{
 		if(event.getGui() instanceof GuiManual)
 			IISkinHandler.getManualPages();
-		else if(ClientEventHandler.lastGui instanceof GuiManual)
+		else if(ClientEventHandler.lastGui instanceof GuiManual gui)
 		{
-			GuiManual gui = (GuiManual)ClientEventHandler.lastGui;
 			String name = null;
 
 			ManualInstance inst = gui.getManual();
@@ -997,9 +992,8 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 			}
 		}
 		//Add creative menu subtabs
-		if(gui instanceof GuiContainerCreative&&IIConfig.australianCreativeTabs)
+		if(gui instanceof GuiContainerCreative creative&&IIConfig.australianCreativeTabs)
 		{
-			GuiContainerCreative creative = (GuiContainerCreative)gui;
 			if(Factions.enableFactions&&Factions.inventoryButtonPositionCreative[0]!=-1&&Factions.inventoryButtonPositionCreative[1]!=-1)
 				try
 				{
