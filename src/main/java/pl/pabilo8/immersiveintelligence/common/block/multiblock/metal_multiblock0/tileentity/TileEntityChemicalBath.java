@@ -100,6 +100,8 @@ public class TileEntityChemicalBath extends TileEntityMultiblockProductionSingle
 	@Override
 	protected IIMultiblockProcess<BathingRecipe> findNewProductionProcess()
 	{
+		if(getRedstoneAtPos(0))
+			return null;
 		if(this.tank.getFluidAmount()==0||this.inventory.get(MultiblockChemicalBath.ITEM_IN).isEmpty())
 			return null;
 
@@ -129,6 +131,8 @@ public class TileEntityChemicalBath extends TileEntityMultiblockProductionSingle
 	@Override
 	public float getProductionStep(IIMultiblockProcess<BathingRecipe> process, boolean simulate)
 	{
+		if(getRedstoneAtPos(0))
+			return 0f;
 		if(energyStorage.extractEnergy(process.recipe.getEnergyPerTick(), true) < process.recipe.getEnergyPerTick())
 			return 0;
 		energyStorage.extractEnergy(process.recipe.getEnergyPerTick(), simulate);
