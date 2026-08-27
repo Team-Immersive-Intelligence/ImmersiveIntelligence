@@ -4,6 +4,7 @@ import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Emplacement;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement.EmplacementStateNeeds;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
@@ -20,13 +21,11 @@ import javax.annotation.Nullable;
  *
  * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
- * @updated 18.08.2026
+ * @updated 20.08.2026
  * @since 01.01.2026
  */
 public abstract class EmplacementWeaponTurretBase extends EmplacementWeapon
 {
-	private static final int CASING_OUTPUT_INTERVAL = 15;
-
 	@SyncNBT(time = 0, events = SyncEvents.WEAPON_ROTATION)
 	public GunAimCoordinate aim = new GunAimCoordinate();
 	@Nullable
@@ -63,14 +62,15 @@ public abstract class EmplacementWeaponTurretBase extends EmplacementWeapon
 		updateAim(te);
 
 		//The Base casing storage is stationary, so it can continue emptying while the platform operates.
-		if(++casingOutputTicker >= CASING_OUTPUT_INTERVAL)
+		if(++casingOutputTicker >= Math.max(0, getItemTransferSpeed()))
 		{
 			casingOutputTicker = 0;
 			ItemStack casing = extractBaseCasing(1);
 			if(!casing.isEmpty())
 			{
 				te.outputItem(casing);
-				te.updateTileForEvent(SyncEvents.TILE_RECIPE_CHANGED);
+				if(getItemTransferSpeed() > 10||te.getWorld().getTotalWorldTime()%10==0)
+					te.updateTileForEvent(SyncEvents.TILE_RECIPE_CHANGED);
 			}
 		}
 
@@ -216,6 +216,14 @@ public abstract class EmplacementWeaponTurretBase extends EmplacementWeapon
 	public abstract int getShotDelay();
 
 	public abstract int getReloadDelay();
+
+	/**
+	 * @return interval in ticks between Base casing output attempts
+	 */
+	protected int getItemTransferSpeed()
+	{
+		return Emplacement.itemTransferInterval;
+	}
 
 	/**
 	 * @return local yaw used while the platform moves or stays hidden; null keeps the current yaw

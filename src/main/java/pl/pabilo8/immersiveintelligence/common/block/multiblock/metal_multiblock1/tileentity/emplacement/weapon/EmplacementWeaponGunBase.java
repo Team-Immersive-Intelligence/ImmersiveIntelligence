@@ -10,7 +10,6 @@ import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoFactory;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPanel;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Emplacement;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement.EmplacementStateNeeds;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
@@ -31,7 +30,7 @@ import java.util.function.Predicate;
  * Implements Platform ammunition loading, casing storage, and Base servicing for Emplacement guns.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 18.08.2026
+ * @updated 21.08.2026
  * @since 04.09.2025
  */
 public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> extends EmplacementWeaponTurretBase
@@ -50,13 +49,17 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 	 */
 	protected boolean rotateAfterFiring = true;
 	@SyncNBT(time = 0, events = SyncEvents.WEAPON_RELOAD)
-	protected float lastFiringYaw = 0, lastFiringPitch = 0;
+	public float lastFiringYaw = 0, lastFiringPitch = 0;
 	@SyncNBT(time = 0, events = SyncEvents.WEAPON_RELOAD)
-	protected boolean hasLastFiringAngles = false;
+	public boolean hasLastFiringAngles = false;
 	@SyncNBT(time = 0, events = SyncEvents.WEAPON_RELOAD)
-	private boolean reloadAfterFiring = false;
+	public boolean reloadAfterFiring = false;
+	@SyncNBT(time = 0, events = SyncEvents.WEAPON_RELOAD)
+	public int fireTimeCounter = 0;
 	private boolean returnToLastFiringAngles = false;
 	private int itemTransferTicker = 0;
+	private transient int clientFireTimeCounter = 0;
+	private transient boolean fireTimeCounterChanged = false;
 
 	@SyncNBT(time = 0, events = SyncEvents.WEAPON_RELOAD)
 	public GunShootingHandler gunHandler = new GunShootingHandler();
@@ -78,6 +81,8 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 			ammoFactory.setShooterAndGun(null, baseEntity)
 					.setIgnoredEntities(te.tactileHandler.getEntities());
 		this.aim.withAimCorrectionFunction(ammoFactory::getAnglePrediction);
+		if(te.getWorld().isRemote)
+			this.clientFireTimeCounter = this.fireTimeCounter;
 	}
 
 	@Override
@@ -87,6 +92,7 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 		if(platformAmmoProvider!=null)
 		{
 			boolean wasReloading = platformAmmoProvider.isReloading();
+			boolean wasUnloading = platformAmmoProvider.isUnloading();
 			int previousStage = platformAmmoProvider.getLoadStage();
 			gunHandler.update();
 
@@ -95,7 +101,8 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 				returnToLastFiringAngles = true;
 			if(reloadFinished)
 				reloadAfterFiring = false;
-			if(previousStage!=platformAmmoProvider.getLoadStage()||reloadFinished)
+			if(previousStage!=platformAmmoProvider.getLoadStage()
+					||wasUnloading!=platformAmmoProvider.isUnloading()||reloadFinished)
 				syncWithClient(te, SyncEvents.WEAPON_RELOAD);
 		}
 		else
@@ -147,6 +154,8 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 	@Override
 	public void onClientUpdate(TileEntityEmplacement te)
 	{
+		this.fireTimeCounterChanged = this.clientFireTimeCounter!=this.fireTimeCounter;
+		this.clientFireTimeCounter = this.fireTimeCounter;
 		ensureShootingComponents();
 		gunHandler.update();
 		super.onClientUpdate(te);
@@ -164,8 +173,7 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 	{
 		if(platformAmmoProvider==null&&platformAmmoHandler!=null)
 		{
-			platformAmmoProvider = new GunAmmoProviderItemHandler(null, () -> null, platformAmmoHandler,
-					ammoFactory::isValidAmmo, getReloadDelay()).withLoadStages(getReloadStages());
+			platformAmmoProvider = createPlatformAmmoProvider().withLoadStages(getReloadStages());
 			//noinspection unchecked
 			gunHandler.withAmmoProvider(platformAmmoProvider)
 					.withAmmoFactory((AmmoFactory<? extends EntityAmmoProjectile>)ammoFactory)
@@ -175,11 +183,38 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 	}
 
 	/**
+	 * Creates the ammunition provider used by the Platform inventory.
+	 *
+	 * @return ammunition provider
+	 */
+	protected GunAmmoProviderItemHandler createPlatformAmmoProvider()
+	{
+		return new GunAmmoProviderItemHandler(null, () -> null, platformAmmoHandler,
+				ammoFactory::isValidAmmo, getReloadDelay());
+	}
+
+	/**
 	 * @return round counts loaded by successive reload animation stages
 	 */
 	protected int[] getReloadStages()
 	{
 		return new int[]{Integer.MAX_VALUE};
+	}
+
+	/**
+	 * @return number of visual firing animation variants
+	 */
+	public int getFireAnimationVariants()
+	{
+		return 1;
+	}
+
+	/**
+	 * @return true when the synced fire counter changed during this client tick
+	 */
+	public boolean didFireAnimationAdvance()
+	{
+		return fireTimeCounterChanged;
 	}
 
 	/**
@@ -241,6 +276,7 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 		boolean fired = gunHandler.fire();
 		if(fired)
 		{
+			fireTimeCounter++;
 			lastFiringYaw = aim.getRelativeYaw(0);
 			lastFiringPitch = aim.getPitch(0);
 			hasLastFiringAngles = true;
@@ -262,11 +298,22 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 	private boolean storeSpentCasing(ItemStack firedAmmo)
 	{
 		ItemStack casing = getSpentCasing(firedAmmo);
-		if(casing.isEmpty())
-			return false;
-		for(int slot = 0; platformCasingHandler!=null&&slot < platformCasingHandler.getSlots()&&!casing.isEmpty(); slot++)
-			casing = platformCasingHandler.insertInternal(slot, casing, false);
-		return casing.isEmpty();
+		return !casing.isEmpty()&&storePlatformSpentItem(casing).isEmpty();
+	}
+
+	/**
+	 * Stores a spent item in the Platform output inventory.
+	 *
+	 * @param stack spent item
+	 * @return item that could not be stored
+	 */
+	@Nonnull
+	protected ItemStack storePlatformSpentItem(ItemStack stack)
+	{
+		ItemStack remainder = stack.copy();
+		for(int slot = 0; platformCasingHandler!=null&&slot < platformCasingHandler.getSlots()&&!remainder.isEmpty(); slot++)
+			remainder = platformCasingHandler.insertInternal(slot, remainder, false);
+		return remainder;
 	}
 
 	private boolean canStoreSpentCasing(ItemStack firedAmmo)
@@ -299,7 +346,7 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 			itemTransferTicker = 0;
 
 		return updateResupplyState(te, this::requiresPlatformResupply, this::hasPendingBaseService, () -> {
-			if(++itemTransferTicker < Emplacement.itemTransferInterval)
+			if(++itemTransferTicker < getItemTransferSpeed())
 				return;
 			itemTransferTicker = 0;
 
@@ -315,7 +362,8 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 	{
 		if(platformAmmoProvider==null)
 			return false;
-		return platformAmmoProvider.isEmpty()&&!platformAmmoProvider.hasAvailableAmmo()
+		return platformAmmoProvider.isUnloadBlocked()
+				||platformAmmoProvider.isEmpty()&&!platformAmmoProvider.hasAvailableAmmo()
 				||platformAmmoProvider.isLoaded()&&!canStoreSpentCasing(platformAmmoProvider.peekLoadedAmmo());
 	}
 
@@ -389,6 +437,16 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 	public NonNullList<ItemStack> getLoadedAmmo()
 	{
 		ensureShootingComponents();
+		return platformAmmoProvider==null?NonNullList.create(): platformAmmoProvider.getRenderAmmoList();
+	}
+
+	/**
+	 * @return ammunition present inside the weapon
+	 */
+	@Nonnull
+	public NonNullList<ItemStack> getAllAmmo()
+	{
+		ensureShootingComponents();
 		return platformAmmoProvider==null?NonNullList.create(): platformAmmoProvider.getAmmoList();
 	}
 
@@ -420,6 +478,24 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 	{
 		ensureShootingComponents();
 		return platformAmmoProvider==null?0: platformAmmoProvider.getLoadingProgress(partialTicks);
+	}
+
+	/**
+	 * @return true while the weapon unloads ammunition
+	 */
+	public boolean isUnloading()
+	{
+		ensureShootingComponents();
+		return platformAmmoProvider!=null&&platformAmmoProvider.isUnloading();
+	}
+
+	/**
+	 * @return forward 0-1 progress for the active load or unload animation
+	 */
+	public float getReloadAnimationProgress(float partialTicks)
+	{
+		float progress = getReloadProgress(partialTicks);
+		return isUnloading()?1f-progress: progress;
 	}
 
 	@Override

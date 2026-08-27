@@ -1,7 +1,7 @@
 {
   "comment": "Made by Pabilo8 with Blockbench",
   "groups": {
-    "flak": {
+    "base": {
       "rotation": [
         {
           "time": 0,
@@ -21,7 +21,7 @@
         }
       ]
     },
-    "gun": {
+    "gun_origin": {
       "rotation": [
         {
           "time": 0,

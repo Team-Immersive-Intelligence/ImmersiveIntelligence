@@ -7,8 +7,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
-import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine.Magazines;
+import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.common.util.gun.GunAmmoProvider;
 
 import javax.annotation.Nonnull;
@@ -17,16 +16,16 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 /**
- * Provides staged, logically loaded ammunition from an item handler.
+ * Provides staged direct ammunition from an item handler.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 17.08.2026
+ * @updated 21.08.2026
  * @since 03.06.2026
  */
 public class GunAmmoProviderItemHandler extends GunAmmoProvider
 {
-	private final IItemHandlerModifiable inventory;
-	private final Predicate<ItemStack> acceptedAmmo;
+	protected final IItemHandlerModifiable inventory;
+	protected final Predicate<ItemStack> acceptedAmmo;
 	private int[] loadStages = {Integer.MAX_VALUE};
 	private int loadStage;
 	private boolean finalBatch;
@@ -135,15 +134,7 @@ public class GunAmmoProviderItemHandler extends GunAmmoProvider
 		for(int i = 0; i < inventory.getSlots(); i++)
 		{
 			ItemStack stack = inventory.getStackInSlot(i);
-			if(stack.isEmpty())
-				continue;
-			if(isMagazine(stack))
-			{
-				for(ItemStack bullet : IIContent.itemBulletMagazine.readInventory(stack))
-					if(!bullet.isEmpty()&&acceptedAmmo.test(bullet))
-						count += bullet.getCount();
-			}
-			else if(acceptedAmmo.test(stack))
+			if(isDirectAmmo(stack))
 				count += stack.getCount();
 		}
 		return count;
@@ -177,7 +168,7 @@ public class GunAmmoProviderItemHandler extends GunAmmoProvider
 	@Override
 	public NonNullList<ItemStack> getAmmoList()
 	{
-		return getRenderAmmoList();
+		return copyAmmoList(loadedAmmo.isEmpty()?loadingAmmo: loadedAmmo);
 	}
 
 	/**
@@ -225,6 +216,22 @@ public class GunAmmoProviderItemHandler extends GunAmmoProvider
 		return finalBatch;
 	}
 
+	/**
+	 * @return true while this provider unloads ammunition
+	 */
+	public boolean isUnloading()
+	{
+		return loadingState==GunLoadingState.UNLOAD;
+	}
+
+	/**
+	 * @return true when unloading cannot move its spent item to the output
+	 */
+	public boolean isUnloadBlocked()
+	{
+		return false;
+	}
+
 	private boolean hasNextLoadStage()
 	{
 		return loadStage+1 < loadStages.length&&getAmmoCount(loadingAmmo) > getCurrentStageCapacity();
@@ -258,26 +265,10 @@ public class GunAmmoProviderItemHandler extends GunAmmoProvider
 	{
 		NonNullList<ItemStack> result = NonNullList.create();
 		int remaining = limit;
-
-		//Magazines are consumed before direct rounds. Keep the snapshot in the same order.
 		for(int i = 0; i < inventory.getSlots()&&remaining > 0; i++)
 		{
 			ItemStack stack = inventory.getStackInSlot(i);
-			if(!isMagazine(stack))
-				continue;
-			for(ItemStack bullet : IIContent.itemBulletMagazine.readInventory(stack))
-			{
-				if(remaining <= 0)
-					break;
-				if(!bullet.isEmpty()&&acceptedAmmo.test(bullet))
-					remaining -= addToSnapshot(result, bullet, remaining);
-			}
-		}
-
-		for(int i = 0; i < inventory.getSlots()&&remaining > 0; i++)
-		{
-			ItemStack stack = inventory.getStackInSlot(i);
-			if(!stack.isEmpty()&&!isMagazine(stack)&&acceptedAmmo.test(stack))
+			if(isDirectAmmo(stack))
 				remaining -= addToSnapshot(result, stack, remaining);
 		}
 		return result;
@@ -304,38 +295,16 @@ public class GunAmmoProviderItemHandler extends GunAmmoProvider
 
 		for(int slot = 0; slot < inventory.getSlots(); slot++)
 		{
-			ItemStack magazine = inventory.getStackInSlot(slot);
-			if(!isMagazine(magazine))
-				continue;
-
-			ItemStack updatedMagazine = magazine.copy();
-			NonNullList<ItemStack> bullets = IIContent.itemBulletMagazine.readInventory(updatedMagazine);
-			for(int bulletSlot = 0; bulletSlot < bullets.size(); bulletSlot++)
-			{
-				ItemStack bullet = bullets.get(bulletSlot);
-				if(bullet.isEmpty()||!acceptedAmmo.test(bullet)||!ItemHandlerHelper.canItemStacksStack(bullet, expected))
-					continue;
-
-				ItemStack provided = bullet.copy();
-				provided.setCount(1);
-				bullet.shrink(1);
-				if(bullet.getCount() <= 0)
-					bullets.set(bulletSlot, ItemStack.EMPTY);
-				IIContent.itemBulletMagazine.writeInventory(updatedMagazine, bullets);
-				inventory.setStackInSlot(slot,
-						IIContent.itemBulletMagazine.hasNoBullets(updatedMagazine)?ItemStack.EMPTY: updatedMagazine);
-				return provided;
-			}
-		}
-
-		for(int slot = 0; slot < inventory.getSlots(); slot++)
-		{
 			ItemStack stack = inventory.getStackInSlot(slot);
-			if(!stack.isEmpty()&&!isMagazine(stack)&&acceptedAmmo.test(stack)
-					&&ItemHandlerHelper.canItemStacksStack(stack, expected))
+			if(isDirectAmmo(stack)&&ItemHandlerHelper.canItemStacksStack(stack, expected))
 				return inventory.extractItem(slot, 1, false);
 		}
 		return ItemStack.EMPTY;
+	}
+
+	private boolean isDirectAmmo(ItemStack stack)
+	{
+		return !stack.isEmpty()&&AmmoRegistry.getAmmoItem(stack)!=null&&acceptedAmmo.test(stack);
 	}
 
 	private void removeLoadedRound(ItemStack fired)
@@ -363,13 +332,6 @@ public class GunAmmoProviderItemHandler extends GunAmmoProvider
 		this.finalBatch = false;
 	}
 
-	private boolean isMagazine(ItemStack stack)
-	{
-		if(stack.isEmpty()||stack.getItem()!=IIContent.itemBulletMagazine)
-			return false;
-		Magazines type = IIContent.itemBulletMagazine.stackToSub(stack);
-		return type!=null;
-	}
 
 	private NonNullList<ItemStack> copyAmmoList(NonNullList<ItemStack> source)
 	{

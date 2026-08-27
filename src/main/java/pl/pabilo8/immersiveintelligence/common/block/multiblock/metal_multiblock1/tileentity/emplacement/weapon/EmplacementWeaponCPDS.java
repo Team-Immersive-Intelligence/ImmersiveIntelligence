@@ -4,27 +4,21 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.CPDS;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine.Magazines;
+import pl.pabilo8.immersiveintelligence.common.util.gun.ammoprovider.GunAmmoProviderItemHandler;
+import pl.pabilo8.immersiveintelligence.common.util.gun.ammoprovider.GunAmmoProviderMagazineItemHandler;
+
+import javax.annotation.Nullable;
 
 /**
- * CPDS Q&A
- * <p>
- * Q: Is CPDS a real life thing?
- * A: Not really, it's based on CIWS, but in II it performs a counter-projectile role with anti-aircraft as secondary task
- * <p>
- * Q: What does CPDS stand for?
- * A: Counter-Projectile Defense System
- * <p>
- * Q: Why gatling?
- * A: It's the most high-tech II can get ^^ Historically, gatling guns were used since the US Civil War, so yes, they existed in interwar/ww2
- * Decided to choose it because of the unique design
- * <p>
- * Q: Isn't it OP? it's 8 barrels
- * A: Yes, but it costs a lot
+ * Implements the CPDS Emplacement weapon.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 21.08.2026
+ * @since 01.01.2026
  */
 public class EmplacementWeaponCPDS extends EmplacementWeaponGunBase<EntityAmmoProjectile>
 {
@@ -39,17 +33,48 @@ public class EmplacementWeaponCPDS extends EmplacementWeaponGunBase<EntityAmmoPr
 		this.ammoFactory.setAmmo(IIContent.itemAmmoMachinegun);
 		this.visionAABB = this.visionAABB.grow(CPDS.detectionRadius);
 		this.attackAABB = this.attackAABB.grow(CPDS.attackRadius);
-		setupItemHandlers(te, 8, 24, 3, 16, stack -> OreDictionary.itemMatches(stack,
-				IIContent.itemBulletMagazine.getMagazine(Magazines.CPDS_DRUM), false), stack -> OreDictionary.itemMatches(stack,
-				IIContent.itemBulletMagazine.getMagazine(Magazines.CPDS_DRUM), false));
+		setupItemHandlers(te, 8, 8, 3, 16, this::isMagazine, this::isMagazine);
 		this.aim.withAimSpeed(CPDS.yawRotateSpeed, CPDS.pitchRotateSpeed);
+
+		this.rotateAfterFiring = true;
+		this.gunHandler.withShootSound(IISounds.autocannonShot, 55)
+				.withDryFireSound(IISounds.machinegunShotDry);
+	}
+
+	@Override
+	protected GunAmmoProviderItemHandler createPlatformAmmoProvider()
+	{
+		return new GunAmmoProviderMagazineItemHandler(null, () -> null, platformAmmoHandler, this::isMagazine,
+				ammoFactory::isValidAmmo, this::storePlatformSpentItem, () -> ammoFactory.getWorld().isRemote, getReloadDelay());
+	}
+
+	@Override
+	protected int[] getReloadStages()
+	{
+		return new int[]{1};
+	}
+
+	@Override
+	public int getFireAnimationVariants()
+	{
+		return 8;
+	}
+
+	@Override
+	protected int getItemTransferSpeed()
+	{
+		return 3;
 	}
 
 	@Override
 	protected boolean isSpentCasing(ItemStack stack)
 	{
-		return super.storesSpentCasings()||OreDictionary.itemMatches(stack,
-				IIContent.itemBulletMagazine.getMagazine(Magazines.AUTOCANNON), false);
+		return super.isSpentCasing(stack)||isMagazine(stack);
+	}
+
+	private boolean isMagazine(ItemStack stack)
+	{
+		return OreDictionary.itemMatches(stack, IIContent.itemBulletMagazine.getMagazine(Magazines.CPDS_DRUM), false);
 	}
 
 	@Override
@@ -70,32 +95,6 @@ public class EmplacementWeaponCPDS extends EmplacementWeaponGunBase<EntityAmmoPr
 		return CPDS.reloadTime;
 	}
 
-	/*@Override
-	public EmplacementHitboxEntity[] getCollisionBoxes()
-	{
-		if(entity==null)
-			return new EmplacementHitboxEntity[0];
-
-		//new Vec3d(0,0,0)
-		ArrayList<EmplacementHitboxEntity> list = new ArrayList<>();
-		list.add(new EmplacementHitboxEntity(entity, "baseBox", 2f, 0.75f,
-				new Vec3d(0, 0.75, 0), Vec3d.ZERO, 12));
-		list.add(new EmplacementHitboxEntity(entity, "topBox", 1.75f, 0.75f+0.5f,
-				new Vec3d(0.25, 0.75+0.5, 0), Vec3d.ZERO, 12));
-		list.add(new EmplacementHitboxEntity(entity, "camera", 0.75f, 0.75f,
-				new Vec3d(-0.125, 2.25, -0.625), Vec3d.ZERO, 6));
-
-		list.add(new EmplacementHitboxEntity(entity, "barrel1", 0.5f, 0.5f,
-				new Vec3d(0, 1, 0), new Vec3d(-1.25, 0, -0.25), 20));
-		list.add(new EmplacementHitboxEntity(entity, "barrel2", 0.5f, 0.5f,
-				new Vec3d(0, 1, 0), new Vec3d(-1.75, 0, -0.25), 20));
-		list.add(new EmplacementHitboxEntity(entity, "barrel3", 0.5f, 0.5f,
-				new Vec3d(0, 1, 0), new Vec3d(-2.25, 0, -0.25), 20));
-
-
-		return list.toArray(new EmplacementHitboxEntity[0]);
-	}*/
-
 	@Override
 	public int getEnergyUpkeepCost()
 	{
@@ -108,4 +107,17 @@ public class EmplacementWeaponCPDS extends EmplacementWeaponGunBase<EntityAmmoPr
 		return CPDS.maxHealth;
 	}
 
+	@Nullable
+	@Override
+	protected Float getLoadingPitch()
+	{
+		return 0f;
+	}
+
+	@Nullable
+	@Override
+	protected Float getHidingPitch()
+	{
+		return -90f;
+	}
 }

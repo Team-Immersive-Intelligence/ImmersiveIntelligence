@@ -2,6 +2,7 @@ package pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.emplacem
 
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.upgrade.Upgrade;
@@ -9,6 +10,7 @@ import pl.pabilo8.immersiveintelligence.client.fx.IIParticles;
 import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIAnimationCachedMap;
 import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTCachedModel;
 import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTLocator;
 import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTParticle;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon.EmplacementWeaponCPDS;
@@ -18,7 +20,10 @@ import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
+ * Renders the eight-barrel rotary CPDS Emplacement weapon.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 21.08.2026
  * @ii-approved 0.3.1
  * @since 19.02.2026
  */
@@ -37,6 +42,8 @@ public class EWRCPDS extends EmplacementWeaponRenderer<EmplacementWeaponCPDS>
 	public AMTModel provideModel(AMTModelHeader header, String style, List<Upgrade> upgrades)
 	{
 		return new AMTModel(super.provideModel(header, style, upgrades),
+				new AMTLocator("base", header),
+				new AMTLocator("gun_origin", header),
 				new AMTParticle("fire", header)
 						.setParticle(IIParticles.PARTICLE_GUNFIRE)
 		);
@@ -59,7 +66,21 @@ public class EWRCPDS extends EmplacementWeaponRenderer<EmplacementWeaponCPDS>
 	{
 		this.rotateYaw.apply(weapon.aim.getYawNormalized(partialTicks));
 		this.rotatePitch.apply(weapon.aim.getPitchNormalized(partialTicks));
-		this.load.apply(weapon.gunHandler.getLoadingProgress(partialTicks));
-		this.fire.apply(weapon.gunHandler.getShotDelay(partialTicks));
+		if(weapon.isUnloading())
+			this.unload.apply(weapon.getReloadAnimationProgress(partialTicks));
+		else
+			this.load.apply(weapon.getReloadProgress(partialTicks));
+		this.fire.apply(getFireAnimationTime(weapon, partialTicks));
+	}
+
+	private float getFireAnimationTime(EmplacementWeaponCPDS weapon, float partialTicks)
+	{
+		int variants = Math.max(1, weapon.getFireAnimationVariants());
+		int current = Math.floorMod(weapon.fireTimeCounter, variants);
+		if(!weapon.didFireAnimationAdvance())
+			return current/(float)variants;
+
+		int previous = Math.floorMod(current-1, variants);
+		return (previous+MathHelper.clamp(partialTicks, 0f, 1f))/variants;
 	}
 }

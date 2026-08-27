@@ -1,8 +1,8 @@
 {
   "origins": {
-    "base": [-6, -37.93482, 24.25502],
-    "turen": [8.5, -30.3, 23.5],
-    "cannon": [10.39227, -28.85256, 22.54103],
+    "base": [-6, -37.9348, 24.255],
+    "turret": [8.5, -30.3, 23.5],
+    "cannon": [10.3923, -28.8526, 22.541],
     "gun2": [11.5, -29.125, 0.75],
     "water_cooling2": [14, -29, 3.5],
     "heavy_barrel2": [11.5, -29, 6.25],
@@ -18,28 +18,31 @@
     "pickerRight2": [7.5, 3, 30.5],
     "lid1": [18.5, -25, 25.5],
     "lid2": [-1.5, -25, 25.5],
-    "variant_bricks": [8.925, -37.93482, 23.84669],
-    "variant_sandbags": [8.925, -37.93482, 23.84669],
-    "variant_concrete": [8.925, -37.93482, 23.84669],
-    "variant_wooden": [-5, -44, 9],
-    "variant_steel": [-5, -44, 9],
-    "shell_r1": [1.905, -30.01, 28.10529],
-    "shell_r2": [1.905, -29.41, 28.10529],
-    "shell_r3": [1.905, -28.41, 28.10529],
-    "shell_r4": [1.905, -27.31, 28.10529],
-    "shell_r5": [1.905, -26.11, 28.10529],
-    "shell_l1": [15.095, -30.01, 28.10529],
-    "shell_l2": [15.095, -29.41, 28.10529],
-    "shell_l3": [15.095, -28.41, 28.10529],
-    "shell_l4": [15.095, -27.31, 28.10529],
-    "shell_l5": [15.095, -26.11, 28.10529],
+    "shell_l1": [15.3617, -28.0259, 30.9053],
+    "shell_l2": [15.3617, -25.9259, 30.9053],
+    "shell_l3": [15.3617, -23.9259, 30.9053],
+    "shell_l4": [15.3617, -22.026, 30.9053],
+    "shell_l5": [15.3617, -20.1259, 30.9053],
+    "belt": [14.195, -25.41, 28.9053],
+    "shell_l6": [15.3617, -18.1259, 30.9053],
+    "turret_origin": [8.5, -30.3, 23.5],
+    "cannon_origin": [10.3923, -28.8526, 22.541],
+    "belt2": [1.995, -24.21, 28.9053],
+    "shell_l7": [0.9029, -26.9652, 30.9053],
+    "shell_l8": [0.9029, -24.8652, 30.9053],
+    "shell_l9": [0.9029, -22.8652, 30.9053],
+    "shell_l10": [0.9029, -20.9652, 30.9053],
+    "shell_l11": [0.9029, -19.0652, 30.9053],
+    "shell_l12": [0.9029, -17.0652, 30.9053],
+    "lid1_origin": [18.5, -25, 25.5],
+    "lid2_origin": [-1.5, -25, 25.5],
     "style": [9, -25, 23],
     "fire1": [5.5, -29, -6.5],
     "fire2": [11.5, -29, -6.5]
   },
   "hierarchy": {
-    "turen": "base",
-    "cannon": "turen",
+    "turret": "turret_origin",
+    "cannon": "cannon_origin",
     "gun2": "cannon",
     "water_cooling2": "gun2",
     "heavy_barrel2": "gun2",
@@ -53,18 +56,26 @@
     "pickerLeft2": "pickerLeft",
     "pickerRight": "upper",
     "pickerRight2": "pickerRight",
-    "lid1": "cannon",
-    "lid2": "cannon",
-    "shell_r1": "turen",
-    "shell_r2": "shell_r1",
-    "shell_r3": "shell_r2",
-    "shell_r4": "shell_r3",
-    "shell_r5": "shell_r4",
-    "shell_l1": "turen",
+    "lid1": "lid1_origin",
+    "lid2": "lid2_origin",
+    "shell_l1": "belt",
     "shell_l2": "shell_l1",
     "shell_l3": "shell_l2",
-    "shell9": "shell_l3",
-    "shell10": "shell9",
+    "shell_l4": "shell_l3",
+    "shell_l5": "shell_l4",
+    "shell_l6": "shell_l5",
+    "belt": "cannon",
+    "turret_origin": "base",
+    "cannon_origin": "turret",
+    "belt2": "cannon",
+    "shell_l7": "belt2",
+    "shell_l8": "shell_l7",
+    "shell_l9": "shell_l8",
+    "shell_l10": "shell_l9",
+    "shell_l11": "shell_l10",
+    "shell_l12": "shell_l11",
+    "lid1_origin": "cannon",
+    "lid2_origin": "cannon",
     "style": "base",
     "fire1": "cannon",
     "fire2": "cannon"
@@ -72,36 +83,13 @@
   "properties": {
     "fire1": {
       "rotation": [180.0, 0.0, 0.0],
-      "position": [0.0, 0.0, -0.5]
+      "position": [0.0, 0.0, -0.5],
+      "particle": "ammo/gunfire"
     },
     "fire2": {
       "rotation": [180.0, 0.0, 0.0],
-      "position": [0.0, 0.0, -0.5]
-    },
-    "shell_r1": {
-      "state": "bullet_unused",
-      "base_rotation": [90.0, 0.0, 0.0],
-      "scale": [0.5, 0.5, 0.5]
-    },
-    "shell_r2": {
-      "state": "bullet_unused",
-      "base_rotation": [90.0, 0.0, 0.0],
-      "scale": [0.5, 0.5, 0.5]
-    },
-    "shell_r3": {
-      "state": "bullet_unused",
-      "base_rotation": [90.0, 0.0, 0.0],
-      "scale": [0.5, 0.5, 0.5]
-    },
-    "shell_r4": {
-      "state": "bullet_unused",
-      "base_rotation": [90.0, 0.0, 0.0],
-      "scale": [0.5, 0.5, 0.5]
-    },
-    "shell_r5": {
-      "state": "bullet_unused",
-      "base_rotation": [90.0, 0.0, 0.0],
-      "scale": [0.5, 0.5, 0.5]
+      "position": [0.0, 0.0, -0.5],
+      "particle": "ammo/gunfire"
     },
     "shell_l1": {
       "state": "bullet_unused",
@@ -110,23 +98,48 @@
     },
     "shell_l2": {
       "state": "bullet_unused",
-      "base_rotation": [90.0, 0.0, 0.0],
-      "scale": [0.5, 0.5, 0.5]
+      "base_rotation": [90.0, 0.0, 0.0]
     },
     "shell_l3": {
       "state": "bullet_unused",
-      "base_rotation": [90.0, 0.0, 0.0],
-      "scale": [0.5, 0.5, 0.5]
+      "base_rotation": [90.0, 0.0, 0.0]
     },
     "shell_l4": {
       "state": "bullet_unused",
-      "base_rotation": [90.0, 0.0, 0.0],
-      "scale": [0.5, 0.5, 0.5]
+      "base_rotation": [90.0, 0.0, 0.0]
     },
     "shell_l5": {
       "state": "bullet_unused",
+      "base_rotation": [90.0, 0.0, 0.0]
+    },
+    "shell_l6": {
+      "state": "bullet_unused",
+      "base_rotation": [90.0, 0.0, 0.0]
+    },
+    "shell_l7": {
+      "state": "bullet_unused",
       "base_rotation": [90.0, 0.0, 0.0],
       "scale": [0.5, 0.5, 0.5]
+    },
+    "shell_l8": {
+      "state": "bullet_unused",
+      "base_rotation": [90.0, 0.0, 0.0]
+    },
+    "shell_l9": {
+      "state": "bullet_unused",
+      "base_rotation": [90.0, 0.0, 0.0]
+    },
+    "shell_l10": {
+      "state": "bullet_unused",
+      "base_rotation": [90.0, 0.0, 0.0]
+    },
+    "shell_l11": {
+      "state": "bullet_unused",
+      "base_rotation": [90.0, 0.0, 0.0]
+    },
+    "shell_l12": {
+      "state": "bullet_unused",
+      "base_rotation": [90.0, 0.0, 0.0]
     }
   }
 }

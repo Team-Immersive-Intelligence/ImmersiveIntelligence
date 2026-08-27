@@ -4,10 +4,20 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.Autocannon;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine.Magazines;
+import pl.pabilo8.immersiveintelligence.common.util.gun.ammoprovider.GunAmmoProviderItemHandler;
+import pl.pabilo8.immersiveintelligence.common.util.gun.ammoprovider.GunAmmoProviderMagazineItemHandler;
 
+/**
+ * Implements the four-barrel Autocannon Emplacement weapon.
+ *
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 21.08.2026
+ * @since 01.01.2026
+ */
 public class EmplacementWeaponAutocannon extends EmplacementWeaponGunBase<EntityAmmoProjectile>
 {
 	public EmplacementWeaponAutocannon()
@@ -24,16 +34,47 @@ public class EmplacementWeaponAutocannon extends EmplacementWeaponGunBase<Entity
 		this.attackAABB = this.attackAABB.grow(Autocannon.attackRadius);
 		this.aim.withAimSpeed(Autocannon.yawRotateSpeed, Autocannon.pitchRotateSpeed);
 
-		setupItemHandlers(te, 16, 16, 8, 16, stack -> OreDictionary.itemMatches(stack,
-				IIContent.itemBulletMagazine.getMagazine(Magazines.AUTOCANNON), false), stack -> OreDictionary.itemMatches(stack,
-				IIContent.itemBulletMagazine.getMagazine(Magazines.AUTOCANNON), false));
+		setupItemHandlers(te, 8, 16, 8, 16, this::isMagazine, this::isMagazine);
+
+		this.rotateAfterFiring = true;
+		this.gunHandler.withShootSound(IISounds.autocannonShot, 55)
+				.withDryFireSound(IISounds.machinegunShotDry);
+	}
+
+	@Override
+	protected GunAmmoProviderItemHandler createPlatformAmmoProvider()
+	{
+		return new GunAmmoProviderMagazineItemHandler(null, () -> null, platformAmmoHandler, this::isMagazine,
+				ammoFactory::isValidAmmo, this::storePlatformSpentItem, () -> ammoFactory.getWorld().isRemote, getReloadDelay());
+	}
+
+	@Override
+	protected int[] getReloadStages()
+	{
+		return new int[]{1, 1, 1, 1};
+	}
+
+	@Override
+	public int getFireAnimationVariants()
+	{
+		return 4;
+	}
+
+	@Override
+	protected int getItemTransferSpeed()
+	{
+		return 2;
 	}
 
 	@Override
 	protected boolean isSpentCasing(ItemStack stack)
 	{
-		return super.storesSpentCasings()||OreDictionary.itemMatches(stack,
-				IIContent.itemBulletMagazine.getMagazine(Magazines.AUTOCANNON), false);
+		return super.isSpentCasing(stack)||isMagazine(stack);
+	}
+
+	private boolean isMagazine(ItemStack stack)
+	{
+		return OreDictionary.itemMatches(stack, IIContent.itemBulletMagazine.getMagazine(Magazines.AUTOCANNON), false);
 	}
 
 	@Override
@@ -54,37 +95,6 @@ public class EmplacementWeaponAutocannon extends EmplacementWeaponGunBase<Entity
 		return Autocannon.reloadTime;
 	}
 
-	/*@Override
-	public EmplacementHitboxEntity[] getCollisionBoxes()
-	{
-		if(entity==null)
-			return new EmplacementHitboxEntity[0];
-
-		//new Vec3d(0,0,0)
-		ArrayList<EmplacementHitboxEntity> list = new ArrayList<>();
-		list.add(new EmplacementHitboxEntity(entity, "baseBox", 1f, 1.5f,
-				new Vec3d(0, 1, 0), Vec3d.ZERO, 4));
-		list.add(new EmplacementHitboxEntity(entity, "ammoBox", 0.625f, 0.75f,
-				new Vec3d(1, 0.625, 0), Vec3d.ZERO, 2));
-
-		list.add(new EmplacementHitboxEntity(entity, "shieldRight", 0.75f, 2f,
-				new Vec3d(-0.5, 1, -0.625), Vec3d.ZERO, 12));
-		list.add(new EmplacementHitboxEntity(entity, "shieldLeft", 0.75f, 2f,
-				new Vec3d(-0.5, 1, 0.625), Vec3d.ZERO, 12));
-
-		list.add(new EmplacementHitboxEntity(entity, "barrelRight", 0.5f, 0.5f,
-				new Vec3d(-0.5, 1.125, -0.625), new Vec3d(-0.5, 0, 0), 12));
-		list.add(new EmplacementHitboxEntity(entity, "barrelRight", 0.5f, 0.5f,
-				new Vec3d(-0.5, 1.125, -0.625), new Vec3d(-1, 0, 0), 12));
-
-		list.add(new EmplacementHitboxEntity(entity, "barrelLeft", 0.5f, 0.5f,
-				new Vec3d(-0.5, 1, 0.625), new Vec3d(-0.5, 0, 0), 12));
-		list.add(new EmplacementHitboxEntity(entity, "barrelLeft", 0.5f, 0.5f,
-				new Vec3d(-0.5, 1, 0.625), new Vec3d(-1, 0, 0), 12));
-
-		return list.toArray(new EmplacementHitboxEntity[0]);
-	}*/
-
 	@Override
 	public int getEnergyUpkeepCost()
 	{
@@ -96,5 +106,6 @@ public class EmplacementWeaponAutocannon extends EmplacementWeaponGunBase<Entity
 	{
 		return Autocannon.maxHealth;
 	}
+
 
 }

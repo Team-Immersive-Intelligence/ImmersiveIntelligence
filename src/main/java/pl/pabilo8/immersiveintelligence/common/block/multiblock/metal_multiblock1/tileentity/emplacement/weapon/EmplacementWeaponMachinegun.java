@@ -32,6 +32,7 @@ public class EmplacementWeaponMachinegun extends EmplacementWeaponGunBase<Entity
 		this.aim.withAimSpeed(Machinegun.yawRotateSpeed, Machinegun.pitchRotateSpeed)
 				.withPitchLimit(-35, 65);
 
+		this.rotateAfterFiring = true;
 		this.gunHandler.withShootSound(IISounds.machinegunShot, 55)
 				.withDryFireSound(IISounds.machinegunShotDry);
 	}
@@ -51,7 +52,13 @@ public class EmplacementWeaponMachinegun extends EmplacementWeaponGunBase<Entity
 	@Override
 	public int getReloadDelay()
 	{
-		return Machinegun.reloadTime;
+		return 0;
+	}
+
+	@Override
+	protected int getItemTransferSpeed()
+	{
+		return 2;
 	}
 
 	@Override

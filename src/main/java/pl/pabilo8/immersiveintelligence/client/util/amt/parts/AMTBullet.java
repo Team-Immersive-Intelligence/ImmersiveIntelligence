@@ -61,6 +61,9 @@ public class AMTBullet extends AMT
 			GlStateManager.rotate((float)rot.z, 0, 0, 1);
 			GlStateManager.rotate((float)-rot.x, 1, 0, 0);
 		}
+
+		if(scale!=null)
+			GlStateManager.scale(scale.x, scale.y, scale.z);
 	}
 
 	@Override
@@ -68,8 +71,6 @@ public class AMTBullet extends AMT
 	{
 		GlStateManager.pushMatrix();
 
-		if(scale!=null)
-			GlStateManager.scale(scale.x, scale.y, scale.z);
 		if(baseRotation!=null)
 		{
 			GlStateManager.rotate((float)baseRotation.y, 0, 1, 0);

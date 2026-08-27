@@ -131,11 +131,32 @@ public abstract class EmplacementWeaponRenderer<W extends EmplacementWeapon> imp
 	protected final void applyAmmoItems(EmplacementWeaponGunBase<?> weapon, BulletState state, List<AMTCrossVariantReference<AMTBullet>> bulletReferences)
 	{
 		final NonNullList<ItemStack> ammoList = weapon.getLoadedAmmo();
+		applyAmmoItems(weapon, ammoList, state, bulletReferences);
+	}
+
+	/**
+	 * Applies the ammo items to the bullets.
+	 *
+	 * @param weapon           emplacement weapon
+	 * @param state            state the bullets are in
+	 * @param bulletReferences model part references
+	 */
+	protected final void applyAmmoItems(EmplacementWeaponGunBase<?> weapon, final NonNullList<ItemStack> ammoList, BulletState state, List<AMTCrossVariantReference<AMTBullet>> bulletReferences)
+	{
 		final int size = ammoList.size();
-		for(int i = 0; i < bulletReferences.size(); i++)
+		int slot = 0, bulletIndex = 0;
+		for(AMTCrossVariantReference<AMTBullet> bulletReference : bulletReferences)
 		{
-			ItemStack ammoStack = (ammoList.isEmpty()||i >= size)?ItemStack.EMPTY: ammoList.get(i);
-			AMTBullet amtBullet = bulletReferences.get(i).get();
+			ItemStack ammoStack = (ammoList.isEmpty()||slot >= size)?ItemStack.EMPTY: ammoList.get(slot);
+			if(bulletIndex+1 >= ammoStack.getCount())
+			{
+				slot += 1;
+				bulletIndex = 0;
+			}
+			else
+				bulletIndex++;
+
+			AMTBullet amtBullet = bulletReference.get();
 			if(amtBullet!=null)
 			{
 				amtBullet.setVisible(true);
