@@ -12,7 +12,10 @@ import pl.pabilo8.immersiveintelligence.common.util.CommandIIBase;
 import pl.pabilo8.immersiveintelligence.common.world.IIWorldGen;
 
 /**
+ * Creates a rubber tree at the sender's look position.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @ii-approved 0.3.1
  * @since 14.09.2025
  */
 public class CommandDevTree extends CommandIIBase

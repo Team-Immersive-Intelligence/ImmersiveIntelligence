@@ -16,7 +16,10 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.util.CommandIIBase;
 
 /**
+ * Creates a nuclear explosion at the sender's look position.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @ii-approved 0.3.1
  * @since 14.09.2025
  */
 public class CommandDevNuke extends CommandIIBase

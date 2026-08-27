@@ -20,7 +20,10 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
+ * Teleports the player to a dimension.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @ii-approved 0.3.1
  * @since 14.09.2025
  */
 public class CommandDevTpd extends CommandIIBase

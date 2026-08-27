@@ -8,6 +8,8 @@ import net.minecraftforge.server.command.CommandTreeBase;
 import pl.pabilo8.immersiveintelligence.common.commands.CommandIIHelp;
 
 /**
+ * Root command tree for all Immersive Intelligence developer util commands.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 14.09.2025
  */
@@ -17,8 +19,6 @@ public class CommandIIDev extends CommandTreeBase
 	{
 		addSubcommand(new CommandDevDeth(this));
 		addSubcommand(new CommandDevTree(this));
-		addSubcommand(new CommandDevSlowmo(this));
-		addSubcommand(new CommandDevDecayBullets(this));
 		addSubcommand(new CommandDevKillBullets(this));
 		addSubcommand(new CommandDevKillVehicles(this));
 		addSubcommand(new CommandDevKillItems(this));

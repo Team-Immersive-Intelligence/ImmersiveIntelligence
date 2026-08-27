@@ -10,7 +10,10 @@ import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
 import pl.pabilo8.immersiveintelligence.common.util.CommandIIBase;
 
 /**
+ * Kills all Hanses in 20 block radius from the sender.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @ii-approved 0.3.1
  * @since 14.09.2025
  */
 public class CommandDevKillHanses extends CommandIIBase

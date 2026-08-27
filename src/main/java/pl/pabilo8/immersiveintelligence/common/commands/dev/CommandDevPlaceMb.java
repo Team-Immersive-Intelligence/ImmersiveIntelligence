@@ -19,7 +19,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
+ * Places a multiblock at the sender's look position.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @ii-approved 0.3.1
  * @since 14.09.2025
  */
 public class CommandDevPlaceMb extends CommandIIBase

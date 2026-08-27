@@ -17,7 +17,10 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultibl
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 /**
+ * Gets information about a multiblock the sender is looking at
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @ii-approved 0.3.1
  * @since 14.09.2025
  */
 public class CommandDevGetMb extends CommandIIBase
@@ -52,25 +55,28 @@ public class CommandDevGetMb extends CommandIIBase
 			ITextComponent message = new TextComponentString(TextFormatting.GOLD+"ID: "+TextFormatting.RESET+mb.pos+" | ")
 					.appendSibling(new TextComponentString(TextFormatting.GOLD+"Mirrored: "+TextFormatting.RESET+mb.mirrored+" | "))
 					.appendSibling(new TextComponentString(TextFormatting.GOLD+"Facing: "+TextFormatting.RESET+mb.facing.name()));
+			senderEntity.sendMessage(message);
+
 			if(mb instanceof TileEntityMultiblockIIBase)
 			{
 				TileEntityMultiblockIIBase<?> iiMb = (TileEntityMultiblockIIBase<?>)mb;
-				message.appendSibling(new TextComponentString(" | POIs: "));
-				boolean first = true;
+				message = new TextComponentString(TextFormatting.GOLD+"POIs: "+TextFormatting.RESET);
+				boolean anyPOIs = true;
 				for(MultiblockPOI poi : MultiblockPOI.values())
 					if(iiMb.isPOI(poi))
 					{
-						message.appendSibling(new TextComponentString(((first)?"": ", ")+TextFormatting.GOLD+poi.name()+TextFormatting.RESET));
-						first = false;
+						message.appendSibling(new TextComponentString(((anyPOIs)?"": ", ")+poi.name()));
+						anyPOIs = false;
 					}
+				if(!anyPOIs)
+					senderEntity.sendMessage(message);
 			}
 			if(mb instanceof IOwnableProperty)
 			{
 				IOwnableProperty property = (IOwnableProperty)mb.master();
 				if(property!=null)
-					message.appendSibling(new TextComponentString(" | Owner: "+TextFormatting.GOLD+property.getOwnerIdentity()+TextFormatting.RESET));
+					senderEntity.sendMessage(new TextComponentString(TextFormatting.GOLD+"Owner: "+TextFormatting.RESET+property.getOwnerIdentity()));
 			}
-			senderEntity.sendMessage(message);
 		}
 	}
 }
