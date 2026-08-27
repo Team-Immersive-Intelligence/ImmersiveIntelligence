@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.api.ammo.parts;
 
+import lombok.Getter;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.PenetrationHardness;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
@@ -9,9 +10,20 @@ import pl.pabilo8.immersiveintelligence.common.util.IIColor;
  * @ii-approved 0.3.1
  * @since 13.09.2019
  */
+@Getter
 public abstract class AmmoCore extends AmmoPart
 {
-	protected float damageModifier, explosionModifier;
+	/**
+	 * The damage modifier of this ammo core (1.5 - normal+0.5, 1.0 - normal, 0.5 - half)
+	 */
+	protected float damageModifier;
+	/**
+	 * The explosion effect modifier of this ammo core (1 - full, 0.5 - half, 0 - no explosion)
+	 */
+	protected float explosionModifier;
+	/**
+	 * The hardness level this ammo core can penetrate
+	 */
 	protected PenetrationHardness penetrationHardness;
 
 	public AmmoCore(String name, float density, PenetrationHardness penetrationHardness, float explosionModifier, float damageModifier, IIColor color)
@@ -22,27 +34,4 @@ public abstract class AmmoCore extends AmmoPart
 		this.penetrationHardness = penetrationHardness;
 	}
 
-	/**
-	 * @return the damage modifier of this ammo core (1.5 - normal+0.5, 1.0 - normal, 0.5 - half)
-	 */
-	public float getDamageModifier()
-	{
-		return damageModifier;
-	}
-
-	/**
-	 * @return the explosion effect modifier of this ammo core (1 - full, 0.5 - half, 0 - no explosion)
-	 */
-	public float getExplosionModifier()
-	{
-		return explosionModifier;
-	}
-
-	/**
-	 * @return the hardness level this ammo core can penetrate (6-stone)
-	 */
-	public PenetrationHardness getPenetrationHardness()
-	{
-		return penetrationHardness;
-	}
 }

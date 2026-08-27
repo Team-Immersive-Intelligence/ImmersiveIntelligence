@@ -1,6 +1,9 @@
 package pl.pabilo8.immersiveintelligence.api.ammo.parts;
 
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 /**
@@ -8,10 +11,22 @@ import pl.pabilo8.immersiveintelligence.common.util.IIColor;
  * @ii-approved 0.3.1
  * @since 27.05.2024
  */
+@Getter
+@ToString
+@EqualsAndHashCode
 public abstract class AmmoPart
 {
+	/**
+	 * The name of the ammo ingredient
+	 */
 	protected final String name;
+	/**
+	 * The density of ammo ingredient (density * amount = mass)
+	 */
 	protected final float density;
+	/**
+	 * The color of the ammo ingredient
+	 */
 	protected final IIColor color;
 
 	public AmmoPart(String name, float density, IIColor color)
@@ -19,30 +34,6 @@ public abstract class AmmoPart
 		this.name = name;
 		this.density = density;
 		this.color = color;
-	}
-
-	/**
-	 * @return the name of the ammo ingredient
-	 */
-	public String getName()
-	{
-		return name;
-	}
-
-	/**
-	 * @return the density of ammo ingredient (density * amount = mass)
-	 */
-	public float getDensity()
-	{
-		return density;
-	}
-
-	/**
-	 * @return the color of the ammo ingredient
-	 */
-	public IIColor getColor()
-	{
-		return color;
 	}
 
 	/**

@@ -8,22 +8,27 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.CullFace;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.common.util.amt.AMTModelHeader;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
+
+import java.nio.DoubleBuffer;
 
 /**
  * AMT type for drawing items ({@link ItemStack}s)
  *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 22.08.2026
  * @since 26.07.2022
  */
 public class AMTItem extends AMT
 {
+	private static final DoubleBuffer CLIP_PLANE_BUFFER = BufferUtils.createDoubleBuffer(4);
+
 	private ItemStack stack, stackInto;
 	private boolean drawStacked = false;
 	private boolean drawSchematic = false;
@@ -57,6 +62,57 @@ public class AMTItem extends AMT
 		return this;
 	}
 
+	/**
+	 * Renders an item transition with a model-space horizontal clipping plane.
+	 *
+	 * @param stackFrom     item shown at transition start
+	 * @param stackInto     item shown at transition end
+	 * @param transformType item camera transform
+	 * @param transition    transition progress in the 0-1 range
+	 * @param fromBottom    whether stackInto replaces stackFrom from bottom to top
+	 */
+	public static void renderTransition(ItemStack stackFrom, ItemStack stackInto, TransformType transformType, float transition, boolean fromBottom)
+	{
+		float clamped = MathHelper.clamp(transition, 0f, 1f);
+		if(clamped <= 0f)
+		{
+			ClientUtils.mc().getRenderItem().renderItem(stackFrom, transformType);
+			return;
+		}
+		if(clamped >= 1f)
+		{
+			ClientUtils.mc().getRenderItem().renderItem(stackInto, transformType);
+			return;
+		}
+
+		double height = fromBottom?-0.5d+clamped: 0.5d-clamped;
+
+		GL11.glPushAttrib(GL11.GL_TRANSFORM_BIT);
+		try
+		{
+			GL11.glEnable(GL11.GL_CLIP_PLANE0);
+			setClipPlane(height, fromBottom);
+			ClientUtils.mc().getRenderItem().renderItem(stackFrom, transformType);
+
+			setClipPlane(height, !fromBottom);
+			ClientUtils.mc().getRenderItem().renderItem(stackInto, transformType);
+		} finally
+		{
+			GL11.glPopAttrib();
+		}
+	}
+
+	private static void setClipPlane(double height, boolean keepAbove)
+	{
+		CLIP_PLANE_BUFFER.clear();
+		CLIP_PLANE_BUFFER.put(0d);
+		CLIP_PLANE_BUFFER.put(keepAbove?1d: -1d);
+		CLIP_PLANE_BUFFER.put(0d);
+		CLIP_PLANE_BUFFER.put(keepAbove?-height: height);
+		CLIP_PLANE_BUFFER.flip();
+		GL11.glClipPlane(GL11.GL_CLIP_PLANE0, CLIP_PLANE_BUFFER);
+	}
+
 	@Override
 	protected void preDraw()
 	{
@@ -85,58 +141,8 @@ public class AMTItem extends AMT
 			return;
 		GlStateManager.pushMatrix();
 		CullFace cf = (GL11.glGetInteger(GL11.GL_CULL_FACE_MODE)==GL11.GL_FRONT)?CullFace.FRONT: CullFace.BACK;
-
 		if(stackInto!=null)
-		{
-			if(property==0)
-				ClientUtils.mc().getRenderItem().renderItem(stack, TransformType.FIXED);
-			else if(property==1)
-				ClientUtils.mc().getRenderItem().renderItem(stackInto, TransformType.FIXED);
-			else
-			{
-				GlStateManager.disableCull();
-				//Use stencil buffer to interpolate between stack and stackInto based on special property
-				GL11.glEnable(GL11.GL_STENCIL_TEST);
-
-				GlStateManager.colorMask(false, false, false, false);
-				GlStateManager.depthMask(false);
-
-				GL11.glStencilFunc(GL11.GL_NEVER, 1, 0xFF);
-				GL11.glStencilOp(GL11.GL_REPLACE, GL11.GL_KEEP, GL11.GL_KEEP);
-
-				GL11.glStencilMask(0xFF);
-				GlStateManager.clear(GL11.GL_STENCIL_BUFFER_BIT);
-
-				//Draw mask for interpolation
-				GlStateManager.rotate(ClientUtils.mc().getRenderManager().playerViewY, 0.0F, 1.0F, 0.0F);
-
-				GlStateManager.disableTexture2D();
-				buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
-				ClientUtils.renderBox(buf, -0.5, -0.5, -0.5, 0.5, 0.5-property, 0.5);
-				tes.draw();
-				GlStateManager.enableTexture2D();
-
-				GlStateManager.rotate(-(ClientUtils.mc().getRenderManager().playerViewY), 0.0F, 1.0F, 0.0F);
-
-				GL11.glColorMask(true, true, true, true);
-				GL11.glDepthMask(true);
-				GL11.glStencilMask(0x00);
-
-				//Draw stack where stencil == 1
-				GL11.glStencilFunc(GL11.GL_EQUAL, 1, 0xFF);
-				GL11.glStencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_KEEP);
-				ClientUtils.mc().getRenderItem().renderItem(stack, TransformType.FIXED);
-
-				//Draw stackInto where stencil == 0
-				GL11.glStencilFunc(GL11.GL_EQUAL, 0, 0xFF);
-				ClientUtils.mc().getRenderItem().renderItem(stackInto, TransformType.FIXED);
-
-				GL11.glDisable(GL11.GL_STENCIL_TEST);
-				GL11.glStencilMask(0xFF);
-				GlStateManager.clear(GL11.GL_STENCIL_BUFFER_BIT);
-				GlStateManager.enableCull();
-			}
-		}
+			renderTransition(stack, stackInto, TransformType.FIXED, property, false);
 		else
 		{
 
