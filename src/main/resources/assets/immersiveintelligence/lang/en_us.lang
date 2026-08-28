@@ -3062,6 +3062,7 @@ ie.manual.entry.traits.paintable=Paintable
 ie.manual.entry.wip_warning0=Warning! Work-in-Progress Content.
 ie.manual.entry.wip_warning1=The Engineering Department is working hard to bring it to the front!
 ie.manual.entry.wip_warning.upgrade=The feature may lack visuals or have no functionality, no not report this.
+ie.manual.entry.upgrade_notice=Upgrade applied using a wrench.
 
 ie.manual.entry.data_operation.inputs=Inputs
 ie.manual.entry.data_operation.output=Output
@@ -3705,7 +3706,7 @@ ii.gui_tooltip.widget.style.main=This %s does not allow customization.
 ii.gui_tooltip.widget.style.main.variants=This %s allows customization of style.
 ii.gui_tooltip.widget.style.main.color=This %s allows customization of color.
 ii.gui_tooltip.widget.style.main.variants.color=This %s allows customization of style and color.
-ii.gui_tooltip.widget.style.main.tile=nachine
+ii.gui_tooltip.widget.style.main.tile=machine
 ii.gui_tooltip.widget.style.main.multiblock=multiblock
 ii.gui_tooltip.widget.style.main.vehicle=vehicle
 ii.gui_tooltip.widget.style.main.entity=entity

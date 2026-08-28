@@ -53,19 +53,19 @@ The **Machinegun** Emplacement can also be [fortified] to increase survivability
 # tesla1
 Благодаря тому, что он работает на энергии, [ему не нужны боеприпасы] — только постоянный источник электроэнергии. Его недостатки — малая дальность атаки и высокое энергопотребление.
 # mortar
-**Mortar**
+**Миномёт**
 |[upgrade_display]{upgrade:"immersiveintelligence:emplacement/mortar"}|
-A beefed-up [Field Mortar](mortar.md), the [Mortar] emplacement provides powerful artillery coverage, and is especially effective at piercing through roofs.
+Усиленный [полевой миномет](mortar.md), [Миномёт] обеспечивает мощное артиллерийское прикрытие и особенно эффективна против крыш.
 # light_howitzer
-**Light Howitzer**
+**Легкая гаубица**
 |[upgrade_display]{upgrade:"immersiveintelligence:emplacement/light_howitzer"}|
-A scaled-down version of the [Artillery Howitzer](artillery_howitzer.md), the [Light Howitzer] provides medium-range support and its mobility allows for quick and precise barrage of enemy positions.
+Уменьшенная версия [артиллерийской гаубицы](artillery_howitzer.md), [Легкая гаубица] обеспечивает поддержку на средней дальности, а ее мобильность позволяет быстро и точно обстреливать позиции противника.
 # mlrs
-**Rocket Launcher (MLRS)**
+**Ракетная установка (РСЗО)**
 |[upgrade_display]{upgrade:"immersiveintelligence:emplacement/rocket_launcher"}|
-The [Multiple Launch Rocket System (MLRS)], or simply, the [Rocket Launcher], launches multiple unguided [rockets](bullet_production.md#heavy_ammuniton_assembler) at a specified target. Rockets are slow compared to bullets, so complex targeting in conjunction with the [Infrared Observer](#ir_observer0) may be required for maximum efficiency on moving targets.
+[Реактивная система залпового огня (РСЗО)], или просто [Ракетная установка], запускает несколько неуправляемых [ракет](bullet_production.md#heavy_ammuniton_assembler) по цели. Ракеты медленны по сравнению с пулями, поэтому при стрельбе по движущимся целям может потребоваться сложное наведение [инфракрасным наблюдателем](#ir_observer0).
 # guided_launcher0
-**Guided Rocket Launcher**
+**Пусковая установка для ракет с проводным наведением (ПТУР)**
 |[upgrade_display]{upgrade:"immersiveintelligence:emplacement/guided_missile_launcher"}|
 Instead of multiple dumbfire rockets, the [Guided Rocket Launcher] fires a single, smart rocket that is steered toward the target. It is easier to hit moving targets compared to the dumbfire MLRS.
 # ir_observer0

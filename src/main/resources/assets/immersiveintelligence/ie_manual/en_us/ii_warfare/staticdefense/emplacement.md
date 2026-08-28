@@ -8,7 +8,7 @@ Locked and Loaded!
 # 1
 An **Emplacement** can defend a vast amount of area depending on what [module](emplacement_weapons) that is installed.
 Emplacements do not have a weapon installed by default. Instead, the weapon is assembled on the emplacement using the [Wrench].
-The base emplacement structure can also recieve common upgrades that apply to all weapon modules. Refer to [Emplacement Upgrades](#upgrades).
+The base emplacement structure can also recieve common upgrades that apply to all weapon modules. Refer to [Emplacement Upgrades](#upgrades0).
 # 1_1
 When interacting with a wrench, you have a selection of modules to install, each requiring their own resources to be built. Upon selecting the weapon, you need to assemble it by interacting with the emplacement using the [Electric Wrench](electric_tools.md#wrench) and have all the items.
 # 2
