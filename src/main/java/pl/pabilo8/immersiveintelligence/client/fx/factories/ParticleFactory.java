@@ -160,6 +160,8 @@ public class ParticleFactory<T extends AbstractParticle>
 		int time = nbt.getInt("time");
 		String generatorType = nbt.getString("generator");
 		float distance = nbt.getFloat("distance");
+		float speed = nbt.hasKey("speed")?nbt.getFloat("speed"): distance;
+		float stretch = nbt.hasKey("stretch")?nbt.getFloat("stretch"): 0;
 		int amount = nbt.getInt("amount");
 		int minAmount = amount==0?nbt.getInt("min_amount"): amount;
 		int maxAmount = amount==0?nbt.getInt("max_amount"): amount;
@@ -176,7 +178,9 @@ public class ParticleFactory<T extends AbstractParticle>
 					.forEach(inheritedProperties::add);
 
 		PositionGenerator positionGenerator = PositionGenerator.valueOf(generatorType.toUpperCase());
-		ParticleOffspring<T> offspring = new ParticleOffspring<>(type, positionGenerator, distance, minAmount, maxAmount, inheritedProperties);
+		ParticleOffspring<T> offspring = new ParticleOffspring<>(
+				type, positionGenerator, distance, speed, stretch, minAmount, maxAmount, inheritedProperties
+		);
 		return new AbstractMap.SimpleEntry<>(time, offspring);
 	}
 

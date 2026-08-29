@@ -3,22 +3,20 @@ package pl.pabilo8.immersiveintelligence.api.ammo.penetration;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.PenetrationHardness;
 
 /**
- * For cases like bedrock and fluid blocks
+ * Defines penetration behavior for blocks that cannot be damaged, like Bedrock.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 24.08.2026
  * @ii-approved 0.3.1
  * @since 29.03.2024
  */
 public class PenetrationHandlerInvulnerable extends PenetrationHandler
 {
-	public PenetrationHandlerInvulnerable(PenetrationHardness hardness, float thickness)
+	public PenetrationHandlerInvulnerable()
 	{
-		super(hardness, thickness, 1f, null, null, null);
-	}
-
-	@Override
-	public boolean canBeDamaged()
-	{
-		return false;
+		super(PenetrationHardness.BEDROCK, Integer.MAX_VALUE, 1f,
+				null, null, null,
+				null, null,
+				null, false);
 	}
 }

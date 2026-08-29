@@ -37,15 +37,12 @@ public class ParticleAMTModel extends ParticleAbstractModel
 	@Override
 	public Object getProperty(ParticleProperties key)
 	{
-		switch(key)
+		return switch(key)
 		{
-			case TEXTURES:
-				return textures;
-			case TEXTURES_COUNT:
-				return textures.length;
-			default:
-				return super.getProperty(key);
-		}
+			case TEXTURES -> textures;
+			case TEXTURES_COUNT -> textures.length;
+			default -> super.getProperty(key);
+		};
 	}
 
 	@Override
@@ -53,19 +50,15 @@ public class ParticleAMTModel extends ParticleAbstractModel
 	{
 		switch(key)
 		{
-			case TEXTURES:
+			case TEXTURES ->
 			{
 				this.textures = (ResourceLocation[])value;
 				this.textureSprites = Arrays.stream(this.textures)
 						.map(ClientUtils::getSprite)
 						.toArray(TextureAtlasSprite[]::new);
 			}
-			break;
-			case TEXTURES_COUNT:
-				break;
-			default:
-				super.setProperty(key, value);
-				break;
+			case TEXTURES_COUNT -> {}
+			default -> super.setProperty(key, value);
 		}
 	}
 

@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.client.fx.particles;
 import blusunrize.immersiveengineering.common.util.chickenbones.Matrix4;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import lombok.Setter;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.nbt.NBTTagCompound;
@@ -93,6 +94,7 @@ public abstract class AbstractParticle implements INBTSerializable<NBTTagCompoun
 	/**
 	 * Programs executed by the particle
 	 */
+	@Setter
 	@Nonnull
 	protected Set<ParticleProgram> programs = DEFAULT_PROGRAMS;
 
@@ -258,14 +260,6 @@ public abstract class AbstractParticle implements INBTSerializable<NBTTagCompoun
 	}
 
 	/**
-	 * @param programs programs to be executed by this particle
-	 */
-	public void setPrograms(Set<ParticleProgram> programs)
-	{
-		this.programs = programs;
-	}
-
-	/**
 	 * @return at which stage of the rendering process should this particle be drawn
 	 */
 	@Nonnull
@@ -281,11 +275,7 @@ public abstract class AbstractParticle implements INBTSerializable<NBTTagCompoun
 	{
 		EasyNBT nbt = EasyNBT.newNBT();
 		for(ParticleProperties value : ParticleProperties.values())
-		{
-			Object property = getProperty(value);
-			if(property!=null)
-				value.setPropertyToNBT(nbt, property);
-		}
+			value.setPropertyToNBT(nbt, getProperty(value));
 
 		return nbt.unwrap();
 	}
@@ -306,38 +296,23 @@ public abstract class AbstractParticle implements INBTSerializable<NBTTagCompoun
 	@Nonnull
 	public Object getProperty(ParticleProperties key)
 	{
-		switch(key)
+		return switch(key)
 		{
-			case PREVIOUS_POSITION:
-				return prevPos;
-			case POSITION:
-				return pos;
-			case MOTION:
-				return motion;
-			case ROTATION:
-				return new Vector2f((float)rotationYaw, (float)rotationPitch);
-			case ROTATION_YAW:
-				return (float)rotationYaw;
-			case ROTATION_PITCH:
-				return (float)rotationPitch;
-
-			case LIFETIME:
-				return lifeTime;
-			case MAX_LIFETIME:
-				return maxLifeTime;
-			case IS_ALIVE:
-				return isAlive();
-			case ON_GROUND:
-				return onGround;
-			case PROGRESS:
-				return getProgress(0);
-
-			case DRAW_STAGE:
-				return drawStage;
-			case AABB:
-				return baseBoundingBox;
-		}
-		return key.getDefault();
+			case PREVIOUS_POSITION -> prevPos;
+			case POSITION -> pos;
+			case MOTION -> motion;
+			case ROTATION -> new Vector2f((float)rotationYaw, (float)rotationPitch);
+			case ROTATION_YAW -> (float)rotationYaw;
+			case ROTATION_PITCH -> (float)rotationPitch;
+			case LIFETIME -> lifeTime;
+			case MAX_LIFETIME -> maxLifeTime;
+			case IS_ALIVE -> isAlive();
+			case ON_GROUND -> onGround;
+			case PROGRESS -> getProgress(0);
+			case DRAW_STAGE -> drawStage;
+			case AABB -> baseBoundingBox;
+			default -> key.getDefault();
+		};
 	}
 
 	public final AbstractParticle withProperty(ParticleProperties key, Object value)

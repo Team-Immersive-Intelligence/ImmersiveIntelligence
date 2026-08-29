@@ -1,0 +1,23 @@
+{
+  "type": "ParticleVanilla",
+  "textures": [
+    "immersiveintelligence:particle/smoke_trej/smoke0",
+    "immersiveintelligence:particle/smoke_trej/smoke1",
+    "immersiveintelligence:particle/smoke_trej/smoke2",
+    "immersiveintelligence:particle/smoke_trej/smoke3",
+    "immersiveintelligence:particle/smoke_trej/smoke4",
+    "immersiveintelligence:particle/smoke_trej/smoke5",
+    "immersiveintelligence:particle/smoke_trej/smoke6"
+  ],
+  "color": "464646",
+  "max_lifetime": 6,
+  "draw_stage": "custom_additive",
+  "size": 0.5,
+  "programs": [
+    "lifetime_retexture",
+    "shockwave_transition(0.25)"
+  ],
+  "properties": {
+    "motion": [0.0, 0.0, 0.0]
+  }
+}

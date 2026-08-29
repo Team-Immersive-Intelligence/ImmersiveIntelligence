@@ -19,6 +19,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeEventFactory;
+import net.minecraftforge.fluids.IFluidBlock;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentEffectShape;
 import pl.pabilo8.immersiveintelligence.common.EventHandler;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
@@ -32,7 +33,7 @@ import java.util.stream.IntStream;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 03.04.2024
+ * @updated 23.08.2026
  * @ii-approved 0.3.1
  * @since 25.12.2020
  */
@@ -60,7 +61,8 @@ public class IIExplosion extends Explosion
 	private final Vec3d center, direction;
 	private final ComponentEffectShape shape;
 	private final float power;
-	private final boolean doDrops;
+	private final boolean doDrops, stoppedByFluid;
+	private final Set<BlockPos> affectedFluidPositions = new LinkedHashSet<>();
 	private int delay;
 
 	public IIExplosion(World world, @Nonnull Entity exploder,
@@ -69,12 +71,27 @@ public class IIExplosion extends Explosion
 	                   boolean flaming, boolean damagesTerrain, boolean doDrops
 	)
 	{
+		this(world, exploder, position, direction, size, power, shape, flaming, damagesTerrain, doDrops, false);
+	}
+
+	/**
+	 * Creates an explosion with optional fluid trace stopping.
+	 *
+	 * @param stoppedByFluid true to stop each explosion trace at its first fluid block
+	 */
+	public IIExplosion(World world, @Nonnull Entity exploder,
+	                   Vec3d position, @Nullable Vec3d direction,
+	                   float size, float power, ComponentEffectShape shape,
+	                   boolean flaming, boolean damagesTerrain, boolean doDrops, boolean stoppedByFluid
+	)
+	{
 		super(world, exploder, position.x, position.y, position.z, size, flaming, damagesTerrain);
 		this.center = new Vec3d(x, y, z);
 		this.direction = direction==null?Vec3d.ZERO: direction;
 		this.shape = shape;
 		this.power = power;
 		this.doDrops = doDrops;
+		this.stoppedByFluid = stoppedByFluid;
 		this.delay = 2;
 	}
 
@@ -173,6 +190,7 @@ public class IIExplosion extends Explosion
 	 */
 	public Set<BlockPos> generateAffectedBlockPositions()
 	{
+		affectedFluidPositions.clear();
 		switch(shape)
 		{
 			case LINE:
@@ -255,7 +273,7 @@ public class IIExplosion extends Explosion
 		for(int i = 0; i <= maxTraceSteps&&tracePower > 0; i++, tracePower -= LOSS)
 		{
 			ExposionTraceResult result = collector.tryAdd(MathHelper.floor(currentX), MathHelper.floor(currentY), MathHelper.floor(currentZ), tracePower);
-			if(result==ExposionTraceResult.BLOCKED)
+			if(result==ExposionTraceResult.BLOCKED||(stoppedByFluid&&result==ExposionTraceResult.FLUID))
 				break;
 
 			currentX += stepX;
@@ -374,7 +392,10 @@ public class IIExplosion extends Explosion
 		{
 			//Keep the old order: consume power before testing the block at the current step.
 			tracePower -= LOSS;
-			collector.tryAdd(MathHelper.floor(currentX), MathHelper.floor(currentY), MathHelper.floor(currentZ), tracePower);
+			ExposionTraceResult result = collector.tryAdd(
+					MathHelper.floor(currentX), MathHelper.floor(currentY), MathHelper.floor(currentZ), tracePower);
+			if(stoppedByFluid&&result==ExposionTraceResult.FLUID)
+				break;
 
 			currentX += stepX;
 			currentY += stepY;
@@ -411,12 +432,16 @@ public class IIExplosion extends Explosion
 				SoundCategory.NEUTRAL, (int)(80+8*size), 1f, pitch);
 
 		if(spawnParticles)
+		{
+			boolean fluidExplosion = isExplosionInsideFluid();
 			IIPacketHandler.sendToClient(MessageExplosion.createExplosionMessage(
 					this.world, this.causesFire, this.damagesTerrain, this.size, this.power,
 					center, direction, shape,
-					this.size > PARTICLE_SURFACE_SAMPLE_SIZE_THRESHOLD?
-							getParticleEffectBlocks(MAX_PARTICLE_SURFACE_SAMPLES): Collections.emptyList()
+					!fluidExplosion&&this.size > PARTICLE_SURFACE_SAMPLE_SIZE_THRESHOLD?
+							getParticleEffectBlocks(MAX_PARTICLE_SURFACE_SAMPLES): Collections.emptyList(),
+					fluidExplosion, fluidExplosion?new ArrayList<>(affectedFluidPositions): Collections.emptyList()
 			));
+		}
 
 		EventHandler.pendingExplosions.add(this);
 	}
@@ -514,7 +539,7 @@ public class IIExplosion extends Explosion
 
 	private boolean shouldUseParallelTracing(int rayCount)
 	{
-		return size > PARALLEL_TRACE_SIZE_THRESHOLD&&
+		return !stoppedByFluid&&size > PARALLEL_TRACE_SIZE_THRESHOLD&&
 				rayCount >= PARALLEL_TRACE_RAY_THRESHOLD&&
 				Runtime.getRuntime().availableProcessors() > 1;
 	}
@@ -546,11 +571,28 @@ public class IIExplosion extends Explosion
 
 			if(!world.isBlockLoaded(mutablePos))
 				continue;
+
+			IBlockState state = world.getBlockState(mutablePos);
+			if(isFluidBlock(state))
+			{
+				affectedFluidPositions.add(new BlockPos(mutablePos));
+				continue;
+			}
 			if(canDestroyBlock(mutablePos, entry.getValue()))
 				positions.add(new BlockPos(mutablePos.getX(), mutablePos.getY(), mutablePos.getZ()));
 		}
 
 		return positions;
+	}
+
+	private boolean isExplosionInsideFluid()
+	{
+		return affectedFluidPositions.size() > affectedBlockPositions.size()/3;
+	}
+
+	private static boolean isFluidBlock(IBlockState state)
+	{
+		return state.getBlock() instanceof IFluidBlock||state.getMaterial().isLiquid();
 	}
 
 	private static int getAxisValue(BlockPos pos, EnumFacing.Axis axis)
@@ -728,6 +770,16 @@ public class IIExplosion extends Explosion
 				return ExposionTraceResult.KNOWN;
 
 			long packed = packPos(x, y, z);
+			mutablePos.setPos(x, y, z);
+			if(!world.isBlockLoaded(mutablePos))
+				return ExposionTraceResult.UNLOADED;
+
+			if(isFluidBlock(world.getBlockState(mutablePos)))
+			{
+				affectedFluidPositions.add(new BlockPos(x, y, z));
+				return ExposionTraceResult.FLUID;
+			}
+
 			if(affectedBlocks.contains(packed))
 				return ExposionTraceResult.KNOWN;
 
@@ -736,10 +788,6 @@ public class IIExplosion extends Explosion
 				return ExposionTraceResult.KNOWN;
 
 			strongestTestedPower.put(packed, power);
-			mutablePos.setPos(x, y, z);
-
-			if(!world.isBlockLoaded(mutablePos))
-				return ExposionTraceResult.UNLOADED;
 
 			if(canDestroyBlock(mutablePos, power))
 			{
@@ -764,6 +812,7 @@ public class IIExplosion extends Explosion
 		KNOWN,
 		ADDED,
 		UNLOADED,
+		FLUID,
 		BLOCKED
 	}
 }

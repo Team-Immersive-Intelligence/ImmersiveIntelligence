@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.util;
 
+import lombok.Getter;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.util.ResourceLocation;
 
@@ -22,6 +23,10 @@ public class ResLoc extends ResourceLocation
 	public static final String EXT_AMT = ".amt";
 
 	//--- Instance Variables ---//
+	/**
+	 * file type extension of this {@link ResLoc}
+	 */
+	@Getter
 	private final String extension;
 	private final int extensionIndex;
 
@@ -79,14 +84,6 @@ public class ResLoc extends ResourceLocation
 	}
 
 	/**
-	 * @return file type extension of this {@link ResLoc}
-	 */
-	public String getExtension()
-	{
-		return extension;
-	}
-
-	/**
 	 * @param domain new domain
 	 * @return new {@link ResLoc} based on this, but with another domain
 	 */
@@ -127,6 +124,13 @@ public class ResLoc extends ResourceLocation
 	public ResLoc replace(String replace, String with)
 	{
 		return new ResLoc(resourceDomain, resourcePath.replace(replace, with));
+	}
+
+	public ResLoc prefix(String prefix, boolean checkStartsWith)
+	{
+		if(checkStartsWith&&resourcePath.startsWith(prefix))
+			return this;
+		return new ResLoc(resourceDomain, prefix+resourcePath);
 	}
 
 	public ModelResourceLocation getModelResLoc()

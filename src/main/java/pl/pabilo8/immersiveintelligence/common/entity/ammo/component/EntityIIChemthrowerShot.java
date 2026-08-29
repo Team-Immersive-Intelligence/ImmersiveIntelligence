@@ -483,13 +483,13 @@ public class EntityIIChemthrowerShot extends Entity implements ISyncNBTEntity<En
 		String particleName = gas?"gas": "fluid";
 		IIColor color = IIClientUtils.getFluidTextureColor(this.fluidStack);
 		if(ignited)
-			particleName = ticksExisted < 6?particleName+"_fire": (gas?"fire_gas": "fire");
+			particleName = ticksExisted < 3?particleName+"_fire": (gas?"fire_gas": "fire");
 
 		AbstractParticle particle = ParticleRegistry.spawnParticle("chemthrower/"+particleName, start, new Vec3d(motionX, motionY, motionZ), new Vector2f());
 		if(particle!=null)
 			particle.withProperty(ParticleProperties.STRETCH, new Vector3f((float)end.x, (float)end.y, (float)end.z))
 					.withProperty(ParticleProperties.COLOR, color)
-					.withProperty(ParticleProperties.SIZE, (gas?2.5f: 0.75f)*MathHelper.clamp(ticksExisted/10f, 0.35f, 1f));
+					.withProperty(ParticleProperties.SIZE, (gas?2.5f: 0.75f)*MathHelper.clamp(ticksExisted/6f, 0.35f, 1f));
 	}
 
 	@Override

@@ -26,7 +26,7 @@ import java.util.List;
  * Sends an explosion visual effect to nearby clients.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 06.08.2026
+ * @updated 23.08.2026
  * @ii-approved 0.3.1
  * @since 01.09.2022
  */
@@ -41,12 +41,13 @@ public class MessageExplosion extends IIMessage implements IPositionBoundMessage
 
 	private EffectType effectType = EffectType.EXPLOSION;
 	private World world;
-	private boolean flaming, damagesTerrain, fallsSlowly;
+	private boolean flaming, damagesTerrain, fallsSlowly, fluidExplosion;
 	private float radius, strength, size;
 	private Vec3d pos = Vec3d.ZERO, direction = Vec3d.ZERO;
 	private ComponentEffectShape shape = ComponentEffectShape.ORB;
 	private IIColor color = IIColor.WHITE;
 	private List<BlockPos> particleBlocks = Collections.emptyList();
+	private List<BlockPos> fluidBlocks = Collections.emptyList();
 	private List<Vec3d> effectTargets = Collections.emptyList();
 
 	private MessageExplosion(EffectType effectType, World world, Vec3d pos)
@@ -81,6 +82,18 @@ public class MessageExplosion extends IIMessage implements IPositionBoundMessage
 	                                                      float radius, float strength, Vec3d pos, Vec3d direction,
 	                                                      ComponentEffectShape shape, List<BlockPos> particleBlocks)
 	{
+		return createExplosionMessage(world, flaming, damagesTerrain, radius, strength, pos, direction, shape,
+				particleBlocks, false, Collections.emptyList());
+	}
+
+	/**
+	 * Creates a regular explosion effect message with optional fluid splash data.
+	 */
+	public static MessageExplosion createExplosionMessage(World world, boolean flaming, boolean damagesTerrain,
+	                                                      float radius, float strength, Vec3d pos, Vec3d direction,
+	                                                      ComponentEffectShape shape, List<BlockPos> particleBlocks,
+	                                                      boolean fluidExplosion, List<BlockPos> fluidBlocks)
+	{
 		MessageExplosion message = new MessageExplosion(EffectType.EXPLOSION, world, pos);
 		message.flaming = flaming;
 		message.damagesTerrain = damagesTerrain;
@@ -90,6 +103,9 @@ public class MessageExplosion extends IIMessage implements IPositionBoundMessage
 		message.shape = shape;
 		message.particleBlocks = particleBlocks==null||particleBlocks.isEmpty()?Collections.emptyList():
 				new ArrayList<>(particleBlocks);
+		message.fluidExplosion = fluidExplosion;
+		message.fluidBlocks = fluidBlocks==null||fluidBlocks.isEmpty()?Collections.emptyList():
+				new ArrayList<>(fluidBlocks);
 		return message;
 	}
 
@@ -186,7 +202,8 @@ public class MessageExplosion extends IIMessage implements IPositionBoundMessage
 			default ->
 			{
 				ClientEventHandler.addScreenshakeSource(pos, MathHelper.clamp(strength/4f, 0.25f, 3f), 4, 2);
-				ParticleRegistry.spawnExplosionBoomFX(world, pos, direction, radius, strength, shape, particleBlocks);
+				ParticleRegistry.spawnExplosionBoomFX(world, pos, direction, radius, strength, shape,
+						particleBlocks, fluidExplosion, fluidBlocks);
 			}
 		}
 	}
@@ -237,11 +254,17 @@ public class MessageExplosion extends IIMessage implements IPositionBoundMessage
 				this.strength = buf.readFloat();
 				this.direction = readVec3(buf);
 				this.shape = readEnum(buf, ComponentEffectShape.class);
+				this.fluidExplosion = buf.readBoolean();
 
 				int particleBlockCount = Math.min(buf.readUnsignedShort(), buf.readableBytes()/12);
 				this.particleBlocks = new ArrayList<>(particleBlockCount);
 				for(int i = 0; i < particleBlockCount; i++)
 					this.particleBlocks.add(readPos(buf));
+
+				int fluidBlockCount = Math.min(buf.readUnsignedShort(), buf.readableBytes()/12);
+				this.fluidBlocks = new ArrayList<>(fluidBlockCount);
+				for(int i = 0; i < fluidBlockCount; i++)
+					this.fluidBlocks.add(readPos(buf));
 			}
 		}
 	}
@@ -290,11 +313,17 @@ public class MessageExplosion extends IIMessage implements IPositionBoundMessage
 				buf.writeFloat(strength);
 				writeVec3(buf, direction);
 				writeEnum(buf, shape);
+				buf.writeBoolean(fluidExplosion);
 
 				int particleBlockCount = Math.min(0xFFFF, particleBlocks.size());
 				buf.writeShort(particleBlockCount);
 				for(int i = 0; i < particleBlockCount; i++)
 					writePos(buf, particleBlocks.get(i));
+
+				int fluidBlockCount = Math.min(0xFFFF, fluidBlocks.size());
+				buf.writeShort(fluidBlockCount);
+				for(int i = 0; i < fluidBlockCount; i++)
+					writePos(buf, fluidBlocks.get(i));
 			}
 		}
 	}

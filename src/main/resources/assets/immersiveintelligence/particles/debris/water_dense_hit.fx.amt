@@ -1,0 +1,30 @@
+{
+  "type": "ParticleModel",
+  "models": ["debris/water_hit.obj"],
+  "aabb": 0.125,
+  "size": 0.125,
+  "max_lifetime": 16,
+  "color": "1d4045",
+  "draw_stage": "custom_additive",
+  "programs": [
+    "fluid_color",
+    "shockwave_transition",
+    "set_rotation(0,0)"
+  ],
+  "scheduled": [
+    {
+      "time": 1,
+      "generator": "circle_xz",
+      "distance": 0.0625,
+      "min_amount": 4,
+      "max_amount": 6,
+      "speed": 0.0125,
+      "type": "debris/water_dense_splash",
+      "inherited_properties": [
+        "color"
+      ]
+    }
+  ],
+  "rotation_pitch": 0,
+  "rotation_yaw": 0
+}

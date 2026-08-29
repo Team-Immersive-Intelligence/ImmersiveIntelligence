@@ -42,27 +42,18 @@ public class ParticleGlow extends AbstractParticle
 	@Override
 	public Object getProperty(ParticleProperties key)
 	{
-		switch(key)
+		return switch(key)
 		{
-			case COLOR:
-				return color;
-			case COLOR_SECONDARY:
-				return edgeColor;
-			case RED:
-				return color.red;
-			case GREEN:
-				return color.green;
-			case BLUE:
-				return color.blue;
-			case ALPHA:
-				return color.alpha;
-			case SIZE:
-				return size;
-			case SCALE:
-				return scale;
-			default:
-				return super.getProperty(key);
-		}
+			case COLOR -> color;
+			case COLOR_SECONDARY -> edgeColor;
+			case RED -> color.red;
+			case GREEN -> color.green;
+			case BLUE -> color.blue;
+			case ALPHA -> color.alpha;
+			case SIZE -> size;
+			case SCALE -> scale;
+			default -> super.getProperty(key);
+		};
 	}
 
 	@Override

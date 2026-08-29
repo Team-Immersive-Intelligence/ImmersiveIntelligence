@@ -3,12 +3,14 @@ package pl.pabilo8.immersiveintelligence.common.util.raytracer;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.IFluidBlock;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -20,6 +22,7 @@ import java.util.function.Predicate;
  * A reusable raytracer class used by II in bullets to get all the entities and block a bullet penetrates.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 23.08.2026
  * @ii-approved 0.3.1
  * @since 08.06.2024
  */
@@ -33,6 +36,7 @@ public class FactoryTracer
 	private final AxisAlignedBB aabb;
 	private final double precision;
 	private boolean allowEntities = true;
+	private boolean allowFluidBlocks = false;
 	@Nonnull
 	private Set<Entity> entityFilter = Collections.emptySet();
 	@Nonnull
@@ -64,6 +68,15 @@ public class FactoryTracer
 	public FactoryTracer setAllowEntities(boolean allowEntities)
 	{
 		this.allowEntities = allowEntities;
+		return this;
+	}
+
+	/**
+	 * Sets whether fluid blocks can produce block trace results.
+	 */
+	public FactoryTracer setAllowFluidBlocks(boolean allowFluidBlocks)
+	{
+		this.allowFluidBlocks = allowFluidBlocks;
 		return this;
 	}
 
@@ -109,14 +122,14 @@ public class FactoryTracer
 		boolean skipPos = false;
 		//Step
 		Vector3d pDiff = new Vector3d(posEnd.x-posStart.x, posEnd.y-posStart.y, posEnd.z-posStart.z);
-		double totalDist = Math.sqrt(pDiff.x*pDiff.x + pDiff.y*pDiff.y + pDiff.z*pDiff.z);
+		double totalDist = Math.sqrt(pDiff.x*pDiff.x+pDiff.y*pDiff.y+pDiff.z*pDiff.z);
 		if(totalDist > 0)
 			pDiff.normalize();
 
 		//Expand the bounding box
 		AxisAlignedBB aabb;
 		int totalSteps = (int)Math.max(1, totalDist/precision);
-		pDiff.scale(totalDist / totalSteps);
+		pDiff.scale(totalDist/totalSteps);
 
 		//Cache entities
 		List<Entity> allEntities = allowEntities?listAllEntities(world, posStart, posEnd): null;
@@ -172,9 +185,10 @@ public class FactoryTracer
 			if(skipPos)
 				continue;
 
-			//Ignore empty bounding boxes
+			//Ignore empty bounding boxes unless fluid tracing is enabled.
 			IBlockState state = world.getBlockState(pos);
-			if(state.getCollisionBoundingBox(world, pos)==Block.NULL_AABB)
+			boolean fluidBlock = allowFluidBlocks&&(state.getBlock() instanceof IFluidBlock||state.getMaterial().isLiquid());
+			if(!fluidBlock&&state.getCollisionBoundingBox(world, pos)==Block.NULL_AABB)
 				continue;
 
 			//Skip excluded blocks
@@ -182,9 +196,12 @@ public class FactoryTracer
 				continue;
 
 			//Perform a precise raytrace on the block
-			Vec3d stepStart = new Vec3d(pX - pDiff.x, pY - pDiff.y, pZ - pDiff.z);
+			Vec3d stepStart = new Vec3d(pX-pDiff.x, pY-pDiff.y, pZ-pDiff.z);
 			Vec3d stepEnd = new Vec3d(pX, pY, pZ);
 			RayTraceResult trace = state.collisionRayTrace(world, pos, stepStart, stepEnd);
+			if(fluidBlock&&(trace==null||trace.typeOfHit==Type.MISS))
+				trace = new RayTraceResult(stepEnd,
+						EnumFacing.getFacingFromVector((float)pDiff.x, (float)pDiff.y, (float)pDiff.z).getOpposite(), pos);
 			//Avoid scanning the same position twice
 			if(trace!=null&&trace.typeOfHit!=Type.MISS)
 				skipPos = true;

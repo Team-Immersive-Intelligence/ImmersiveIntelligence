@@ -3,10 +3,10 @@
   "textures": [
     "minecraft:blocks/wool_colored_white"
   ],
-  "max_lifetime": 10,
-  "draw_stage": "custom",
-  "aabb": 0.0625,
-  "size": 0.0625,
+  "max_lifetime": 4,
+  "draw_stage": "custom_additive",
+  "aabb": 0.03125,
+  "size": 0.03125,
   "programs": [
     "dust_transition",
     "gravity(0.998,0.125)"

@@ -528,6 +528,9 @@ public class IIUtils
 		ArrayList<BlockPos> set = new ArrayList<>();
 		float diameter = radius*radius;
 
+		if(radius <= 0)
+			return (allowAir||!world.isAirBlock(centerPos))?Sets.newHashSet(centerPos): Sets.newHashSet();
+
 		//Iterate in a cube
 		for(float x = -radius; x < radius; x++)
 			for(float y = -radius; y < radius; y++)

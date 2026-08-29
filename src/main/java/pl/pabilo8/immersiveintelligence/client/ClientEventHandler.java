@@ -375,6 +375,8 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	{
 		if(resourcePredicate.test(VanillaResourceType.MODELS))
 			IIModelRegistry.INSTANCE.reloadRegisteredModels();
+		if(resourcePredicate.test(VanillaResourceType.TEXTURES))
+			IIClientUtils.reloadCachedColors();
 	}
 
 	@SubscribeEvent(priority = EventPriority.HIGH)

@@ -1,0 +1,17 @@
+{
+  "type": "ParticleVanilla",
+  "max_lifetime": 8,
+  "size": 0.385,
+  "draw_stage": "custom_additive",
+  "textures": [
+    "immersiveintelligence:particle/rough/smoke3",
+    "immersiveintelligence:particle/rough/smoke2",
+    "immersiveintelligence:particle/rough/smoke1",
+    "immersiveintelligence:particle/rough/smoke0"
+  ],
+  "programs": [
+    "dust_transition",
+    "lifetime_retexture",
+    "gravity(1.0,-0.0025)"
+  ]
+}

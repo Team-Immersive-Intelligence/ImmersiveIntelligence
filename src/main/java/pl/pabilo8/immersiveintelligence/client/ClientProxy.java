@@ -839,6 +839,7 @@ public class ClientProxy extends CommonProxy
 	{
 		super.reloadParticles();
 		ParticleSystem.reload();
+		IIClientUtils.reloadCachedColors();
 	}
 
 	//--- Stored GUI Data ---//
