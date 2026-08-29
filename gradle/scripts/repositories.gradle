@@ -31,6 +31,10 @@ repositories {
 		forRepository { maven { name = 'Modrinth'; url = 'https://api.modrinth.com/maven' } }
 		filter { includeGroup 'maven.modrinth' }
 	}
+	exclusiveContent {
+		forRepository { maven { name = 'JitPack'; url = 'https://jitpack.io' } }
+		filter { includeGroup 'com.github.jbredwards' }
+	}
 	maven { name = "ElytraDev Maven"; url = "https://repo.elytradev.com/" }
 	maven {name = "ComputerCraft Maven"; url = "https://maven.cil.li/" }
 	maven {name = "OpenComputers"; url = "https://squiddev.cc/maven/" }
