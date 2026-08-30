@@ -40,8 +40,16 @@
           "transform": [90, 0, 0]
         },
         {
+          "time": 0.53509,
+          "transform": [60.36, 0, 0]
+        },
+        {
           "time": 0.57017,
-          "transform": [32.5, 0, 0]
+          "transform": [30, 0, 0]
+        },
+        {
+          "time": 0.59648,
+          "transform": [20.71, 0, 0]
         },
         {
           "time": 0.63158,
@@ -102,12 +110,20 @@
           "transform": [0, 0, 0]
         },
         {
+          "time": 0.53509,
+          "transform": [38.21, 0, 0]
+        },
+        {
           "time": 0.57017,
           "transform": [60, 0, 0]
         },
         {
+          "time": 0.59648,
+          "transform": [91.07, 0, 0]
+        },
+        {
           "time": 0.63158,
-          "transform": [115, 0, 0]
+          "transform": [120, 0, 0]
         },
         {
           "time": 0.68421,
@@ -293,39 +309,39 @@
         },
         {
           "time": 0.21053,
-          "transform": [39.5, 0, 0]
+          "transform": [37, 0, 0]
         },
         {
           "time": 0.50878,
-          "transform": [39.5, 0, 0]
+          "transform": [37, 0, 0]
         },
         {
           "time": 0.57017,
-          "transform": [39.5, 11, 6]
+          "transform": [37, 11, 6]
         },
         {
           "time": 0.63158,
-          "transform": [38.5, 0, 15]
+          "transform": [37, 0, 15]
         },
         {
           "time": 0.68421,
-          "transform": [38.5, 0, 15]
+          "transform": [37, 0, 15]
         },
         {
           "time": 0.78947,
-          "transform": [55.5, 0, 15]
+          "transform": [53, 0, 15]
         },
         {
           "time": 0.85088,
-          "transform": [55.5, 0, 15]
+          "transform": [53, 0, 15]
         },
         {
           "time": 0.89474,
-          "transform": [55.5, 0, 15]
+          "transform": [53, 0, 15]
         },
         {
           "time": 1,
-          "transform": [95, 0, 15]
+          "transform": [90, 0, 15]
         }
       ]
     },
@@ -350,12 +366,16 @@
       ],
       "position": [
         {
-          "time": 0.10526,
+          "time": 0,
           "transform": [0, -1, 0]
         },
         {
-          "time": 0.15789,
-          "transform": [-9, -1, -16]
+          "time": 0.10526,
+          "transform": [4, -1, 0]
+        },
+        {
+          "time": 0.16667,
+          "transform": [-6, -1, -16]
         },
         {
           "time": 0.21053,
@@ -367,24 +387,48 @@
         },
         {
           "time": 0.32457,
-          "transform": [0, 6.43, -19.29]
+          "transform": [0, 7.43, -19.29]
         },
         {
           "time": 0.35088,
-          "transform": [0, 12, -20]
+          "transform": [0, 13, -20]
         },
         {
           "time": 0.40352,
-          "transform": [0, 6, -31]
+          "transform": [0, 7, -31]
         },
         {
           "time": 0.44737,
-          "transform": [0, 0, -31]
+          "transform": [0, 0, -31.5]
         }
       ]
     },
     "inserter1": {
       "rotation": [
+        {
+          "time": 0.21053,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.25438,
+          "transform": [0, -10, 0]
+        },
+        {
+          "time": 0.50878,
+          "transform": [0, -5.44, 0]
+        },
+        {
+          "time": 0.53509,
+          "transform": [-2.5, -6.0186, 0]
+        },
+        {
+          "time": 0.57017,
+          "transform": [0, -6.79, 0]
+        },
+        {
+          "time": 0.63158,
+          "transform": [0, -10.63, 0]
+        },
         {
           "time": 0.68421,
           "transform": [0, 0, 0]
@@ -398,16 +442,12 @@
           "transform": [0, 0, 0]
         },
         {
-          "time": 0.78947,
+          "time": 0.73684,
           "transform": [0, 0, 0]
         },
         {
-          "time": 0.81579,
-          "transform": [0, -10, 0]
-        },
-        {
-          "time": 0.85964,
-          "transform": [0, 8.06, 0]
+          "time": 0.84211,
+          "transform": [0, -20, 0]
         },
         {
           "time": 0.89474,
@@ -416,6 +456,24 @@
       ]
     },
     "case": {
+      "rotation": [
+        {
+          "time": 0.38596,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.40352,
+          "transform": [-6.43, 0, 0]
+        },
+        {
+          "time": 0.42105,
+          "transform": [-5.86, 0, 0]
+        },
+        {
+          "time": 0.44737,
+          "transform": [0, 0, 0]
+        }
+      ],
       "position": [
         {
           "time": 0,

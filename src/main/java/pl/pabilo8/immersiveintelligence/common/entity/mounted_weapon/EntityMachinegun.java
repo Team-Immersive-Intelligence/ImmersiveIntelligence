@@ -227,7 +227,7 @@ public class EntityMachinegun extends EntityMountedWeapon implements IAdvancedTe
 			this.aim.setTargetClamped(user.getRotationYawHead(), user.rotationPitch);
 			//Set shooter and gun info
 			this.ammoFactory.setShooterAndGun(user, this)
-					.setPositionAndVelocity(this.getPositionVector().addVector(0, 0.5f, 0), this.aim, 0.25f, 1f);
+					.setPositionAndVelocity(this.getPositionVector().addVector(0, upgrades.contains(WeaponUpgrade.TRIPOD)?1.25f: 0.5f, 0), this.aim, 0.25f, 1f);
 
 			//Drain energy from user
 			for(ItemStack equipmentStack : user.getEquipmentAndArmor())

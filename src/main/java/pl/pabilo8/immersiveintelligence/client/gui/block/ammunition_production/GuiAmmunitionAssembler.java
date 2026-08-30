@@ -65,6 +65,7 @@ public class GuiAmmunitionAssembler extends DecoTileGui<TileEntityAmmunitionAsse
 		//Set synced variables
 		this.fuseType = tile.fuseType;
 		this.fuseConfig = tile.fuseConfig;
+		syncAnimatedParts(tile.hatch, true);
 
 		DecoPanel configPanel;
 		addComponents(
@@ -146,4 +147,10 @@ public class GuiAmmunitionAssembler extends DecoTileGui<TileEntityAmmunitionAsse
 				.withImageLocation(ResLoc.of(IIReference.RES_II, "gui/deco/icons/icon_fuse_"+fuseType.getName()), true);
 	}
 
+	@Override
+	protected void onGuiClosedWithoutTransition()
+	{
+		super.onGuiClosedWithoutTransition();
+		syncAnimatedParts(tile.hatch, false);
+	}
 }

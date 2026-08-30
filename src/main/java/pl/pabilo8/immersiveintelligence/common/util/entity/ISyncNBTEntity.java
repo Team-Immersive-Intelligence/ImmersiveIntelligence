@@ -39,6 +39,8 @@ public interface ISyncNBTEntity<T extends Entity & ISyncNBTEntity<T>> extends IE
 	{
 		T tis = ((T)this);
 		NBTSerialisation.synchroniseFor(tis, (tag, entity) -> tag.deserializeAll(tis, compound, false));
+		if(!((Entity)this).world.isRemote)
+			doPostWorldLoadSetup(compound);
 	}
 
 	default void writeEntityToNBT(NBTTagCompound compound)

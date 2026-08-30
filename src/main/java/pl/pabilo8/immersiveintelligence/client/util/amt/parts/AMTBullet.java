@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.client.util.amt.parts;
 
+import lombok.Getter;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -25,13 +26,18 @@ import javax.annotation.Nullable;
  */
 public class AMTBullet extends AMT
 {
-	AmmoCore core = null;
-	CoreType coreType = null;
-	float gunpowderPercentage = 0;
+	@Getter
+	private AmmoCore core = null;
+	@Getter
+	private CoreType coreType = null;
+	@Getter
+	private float gunpowderPercentage = 0;
 	@Nullable
-	IIColor paintColor = null;
+	@Getter
+	private IIColor paintColor = null;
 	@Nullable
 	private IAmmoModel<?, ?> model;
+	@Getter
 	private BulletState state = BulletState.BULLET_UNUSED;
 	private Vec3d baseRotation = Vec3d.ZERO;
 
@@ -88,6 +94,9 @@ public class AMTBullet extends AMT
 				case CORE:
 					if(coreType!=null)
 						model.renderCore(core, coreType);
+					break;
+				case LID:
+					model.renderLid();
 					break;
 				case BULLET_USED:
 				case BULLET_UNUSED:
@@ -189,15 +198,11 @@ public class AMTBullet extends AMT
 		return this;
 	}
 
-	public BulletState getState()
-	{
-		return state;
-	}
-
 	public enum BulletState implements ISerializableEnum
 	{
 		CASING,
 		CORE,
+		LID,
 		BULLET_USED,
 		BULLET_UNUSED
 	}

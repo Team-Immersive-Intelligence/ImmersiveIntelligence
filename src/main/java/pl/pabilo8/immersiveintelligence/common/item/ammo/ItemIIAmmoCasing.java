@@ -58,11 +58,13 @@ public class ItemIIAmmoCasing extends ItemIISubItemsBase<Casing>
 		@IIItemProperties(stackSize = 48)
 		SMG_1BCAL,
 
-		@IIItemProperties(stackSize = 1)
+		@IIItemProperties(stackSize = 4)
 		NAVAL_MINE,
+		@IIItemProperties(stackSize = 4)
 		TRIPMINE,
+		@IIItemProperties(stackSize = 4)
 		TELLERMINE,
-		@IIItemProperties(stackSize = 1)
+		@IIItemProperties(stackSize = 4)
 		RADIO_EXPLOSIVES,
 
 		@IIItemProperties(stackSize = 1)

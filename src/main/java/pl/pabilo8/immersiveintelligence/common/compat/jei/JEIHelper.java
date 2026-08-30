@@ -123,6 +123,8 @@ public class JEIHelper implements IModPlugin
 				IIContent.blockMetalMultiblock1.getStack(MetalMultiblocks1.FILLER)));
 		categories.put(PaintingRecipe.class, new IIRecipeJEICategory<>(PaintingRecipe.class,
 				IIContent.blockMetalMultiblock1.getStack(MetalMultiblocks1.CHEMICAL_PAINTER)));
+		categories.put(AmmunitionAssemblerRecipe.class, new IIRecipeJEICategory<>(AmmunitionAssemblerRecipe.class,
+				IIContent.blockMetalMultiblock1.getStack(MetalMultiblocks1.AMMUNITION_ASSEMBLER)));
 
 		registry.addRecipeCategories(categories.values().toArray(new IRecipeCategory[0]));
 	}

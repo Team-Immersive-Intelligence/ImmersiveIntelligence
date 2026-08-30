@@ -56,6 +56,14 @@ public interface IAmmoModel<T extends IAmmoType<T, E>, E extends EntityAmmoBase<
 	void renderCasing(float gunpowderPercentage, @Nullable IIColor paintColor);
 
 	/**
+	 * Renders the optional separate lid part of the ammunition.
+	 */
+	default void renderLid()
+	{
+
+	}
+
+	/**
 	 * @param coreMaterial of the ammo, see {@link AmmoCore}
 	 * @param coreType     of the ammo, see {@link IAmmoType#getAllowedCoreTypes()}
 	 */

@@ -9,17 +9,17 @@ import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoType;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
 import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
 import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMT;
-import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.naval_mine.EntityNavalMine;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoMine;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
 import javax.annotation.Nullable;
 
-public class ModelAmmoNavalMine<T extends IAmmoType<T, E>, E extends EntityNavalMine> extends ModelAmmo<T, E>
+public class ModelAmmoLidExplosives<T extends IAmmoType<T, E>, E extends EntityAmmoMine> extends ModelAmmo<T, E>
 {
 	private AMT modelLid;
 
-	protected ModelAmmoNavalMine(T ammo, ResLoc modelLocation)
+	protected ModelAmmoLidExplosives(T ammo, ResLoc modelLocation)
 	{
 		super(ammo, modelLocation);
 	}
@@ -30,11 +30,11 @@ public class ModelAmmoNavalMine<T extends IAmmoType<T, E>, E extends EntityNaval
 	 * @param <E>  Ammo Entity
 	 * @return Reloadable AMT model container for a naval mine
 	 */
-	public static <T extends IAmmoType<T, E>, E extends EntityNavalMine> ModelAmmoNavalMine<T, E> createNavalMineModel(T ammo)
+	public static <T extends IAmmoType<T, E>, E extends EntityAmmoMine> ModelAmmoLidExplosives<T, E> createLidExplosivesModel(T ammo)
 	{
 		//Create model
 		String name = ammo.getName().toLowerCase();
-		ModelAmmoNavalMine<T, E> model = new ModelAmmoNavalMine<>(ammo, ResLoc.of(RES_ITEM_MODEL, name).withExtension(ResLoc.EXT_OBJ));
+		ModelAmmoLidExplosives<T, E> model = new ModelAmmoLidExplosives<>(ammo, ResLoc.of(RES_ITEM_MODEL, name).withExtension(ResLoc.EXT_OBJ));
 		model.reloadModels();
 		model.subscribeToList("ammo/explosives/"+name);
 		return model;
@@ -52,6 +52,16 @@ public class ModelAmmoNavalMine<T extends IAmmoType<T, E>, E extends EntityNaval
 	{
 		super.loadModels(amt);
 		modelLid = amt.getPart("casing_lid");
+	}
+
+	@Override
+	public void renderLid()
+	{
+		if(!loaded||modelLid==null)
+			return;
+		Tessellator tes = Tessellator.getInstance();
+		BufferBuilder buf = tes.getBuffer();
+		modelLid.render(tes, buf);
 	}
 
 	@Override

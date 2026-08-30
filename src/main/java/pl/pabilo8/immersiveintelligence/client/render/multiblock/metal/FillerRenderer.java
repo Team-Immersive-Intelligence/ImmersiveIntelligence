@@ -40,16 +40,19 @@ public class FillerRenderer extends IIMultiblockRenderer<TileEntityFiller>
 {
 	AMTModel model;
 	private IIBooleanAnimation active;
-	private IIAnimationCompiledMap work, work2;
+	private IIAnimationCompiledMap work, work2, fan;
 	private AMTFillerBullet item, itemOut;
 
 	@Override
 	public void drawAnimated(TileEntityFiller te, BufferBuilder buf, float partialTicks, Tessellator tes)
 	{
 		applyStandardMirroring(te, true);
-
 		model.defaultize();
-		active.apply(!te.getRedstoneAtPos(0));
+
+		//Active animation
+		boolean canBeActive = !te.getRedstoneAtPos(0)&&te.energyStorage.getEnergyStored() > 0;
+		active.apply(canBeActive);
+		fan.apply(canBeActive?AMTUtils.getDebugProgress(100, partialTicks): 0);
 
 		//Work animation
 		if(!te.processQueue.isEmpty())
@@ -108,6 +111,7 @@ public class FillerRenderer extends IIMultiblockRenderer<TileEntityFiller>
 				this.model.getPart("conveyor_on"),
 				this.model.getPart("conveyor_off")
 		);
+		fan = IIAnimationCompiledMap.create(this.model, ResLoc.of(IIReference.RES_II, "filler/fan"));
 		work = IIAnimationCompiledMap.create(this.model, ResLoc.of(IIReference.RES_II, "filler/work"));
 		work2 = IIAnimationCompiledMap.create(this.model, ResLoc.of(IIReference.RES_II, "filler/work2"));
 	}

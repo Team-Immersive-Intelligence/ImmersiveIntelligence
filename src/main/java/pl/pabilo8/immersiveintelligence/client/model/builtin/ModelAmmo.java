@@ -139,7 +139,7 @@ public class ModelAmmo<T extends IAmmoType<T, E>, E extends EntityAmmoBase<? sup
 		if(!used)
 		{
 			modelCasingSimple.render(tes, buf);
-			if(paintColor!=null)
+			if(paintColor!=null&&modelPaintBase!=null)
 				modelPaint.computeIfAbsent(paintColor, color -> ((AMTQuads)modelPaintBase).recolor(color)).render(tes, buf);
 		}
 

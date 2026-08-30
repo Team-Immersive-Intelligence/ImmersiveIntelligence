@@ -20,7 +20,7 @@ import javax.vecmath.Vector2f;
 public class EntityAmmoMissile extends EntityAmmoProjectile
 {
 	@SyncNBT
-	int fuelRemaining = 1000;
+	int fuelRemaining = 100;
 
 	public EntityAmmoMissile(World world)
 	{

@@ -4,43 +4,47 @@
     "inserter1": {
       "rotation": [
         {
-          "time": 0.23655,
+          "time": 0.19355,
           "transform": [0, 0, 0]
         },
         {
-          "time": 0.26345,
-          "transform": [0, -6.4, 0]
+          "time": 0.21506,
+          "transform": [0, -12, 0]
         },
         {
-          "time": 0.33333,
-          "transform": [0, -5.05, 0]
+          "time": 0.26881,
+          "transform": [0, -8.79, 0]
+        },
+        {
+          "time": 0.29032,
+          "transform": [0, -9.82, 0]
+        },
+        {
+          "time": 0.3172,
+          "transform": [0, -9.33, 0]
         },
         {
           "time": 0.35484,
-          "transform": [0, -7.5, 0]
-        },
-        {
-          "time": 0.40323,
-          "transform": [0, -7.5, 0]
+          "transform": [0, -9.25, 0]
         },
         {
           "time": 0.5,
-          "transform": [0, -8.5, 0]
+          "transform": [0, -8.21, 0]
+        },
+        {
+          "time": 0.55914,
+          "transform": [0, -12.47, 0]
         },
         {
           "time": 0.58065,
-          "transform": [0, -15.22, 0]
+          "transform": [0, -15.93, 0]
         },
         {
-          "time": 0.64516,
-          "transform": [0, -16.09, 0]
+          "time": 0.67742,
+          "transform": [0, -15, 0]
         },
         {
-          "time": 0.66129,
-          "transform": [0, -16.09, 0]
-        },
-        {
-          "time": 0.69355,
+          "time": 0.74194,
           "transform": [0, 0, 0]
         }
       ]
@@ -57,60 +61,68 @@
         },
         {
           "time": 0.22581,
-          "transform": [12.5, 0, 0]
+          "transform": [20, 0, 0]
         },
         {
-          "time": 0.26345,
-          "transform": [13.75, 0, 0]
+          "time": 0.2957,
+          "transform": [26.67, 0, 0]
         },
         {
-          "time": 0.30645,
-          "transform": [25, 0, 0]
+          "time": 0.3172,
+          "transform": [32.5, 0, 0]
         },
         {
           "time": 0.35484,
-          "transform": [57.5, 0, 0]
+          "transform": [40, 0, 0]
         },
         {
           "time": 0.40323,
-          "transform": [72.5, 0, 0]
-        },
-        {
-          "time": 0.43548,
-          "transform": [75, 0, 0]
-        },
-        {
-          "time": 0.47312,
-          "transform": [80, 0, 0]
+          "transform": [65, 0, 0]
         },
         {
           "time": 0.5,
-          "transform": [80, 0, 0]
+          "transform": [60, 0, 0]
+        },
+        {
+          "time": 0.55914,
+          "transform": [22.17, 0, 0]
         },
         {
           "time": 0.58065,
-          "transform": [26, 0, 0]
-        },
-        {
-          "time": 0.64516,
           "transform": [12.5, 0, 0]
         },
         {
-          "time": 0.66667,
+          "time": 0.60752,
+          "transform": [4.79, 0, 0]
+        },
+        {
+          "time": 0.64516,
+          "transform": [10, 0, 0]
+        },
+        {
+          "time": 0.6828,
           "transform": [15, 0, 0]
         }
       ],
       "position": [
         {
-          "time": 0.54301,
+          "time": 0.37635,
           "transform": [0, 0, 0]
         },
         {
-          "time": 0.58065,
-          "transform": [0, 0.90631, -0.42262]
+          "time": 0.40323,
+          "transform": [0, 0.84524, -1.81262]
         },
         {
-          "time": 0.60215,
+          "time": 0.5,
+          "transform": [0, 0.85, -1.81]
+        },
+        {
+          "time": 0.55914,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.70968,
           "transform": [0, 0, 0]
         }
       ]
@@ -130,32 +142,44 @@
           "transform": [117.5, 0, 0]
         },
         {
-          "time": 0.23655,
+          "time": 0.24194,
           "transform": [117.5, 0, 0]
         },
         {
-          "time": 0.26345,
-          "transform": [83.83, 0, 0]
+          "time": 0.2957,
+          "transform": [40.56, 0, 0]
         },
         {
-          "time": 0.27957,
-          "transform": [57.22, 0, 0]
-        },
-        {
-          "time": 0.30645,
-          "transform": [22.5, 0, 0]
+          "time": 0.3172,
+          "transform": [12.5, 0, 0]
         },
         {
           "time": 0.35484,
-          "transform": [5, 0, 0]
+          "transform": [32.5, 0, 0]
+        },
+        {
+          "time": 0.40323,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.5,
+          "transform": [32.5, 0, 0]
+        },
+        {
+          "time": 0.55914,
+          "transform": [62.62, 0, 0]
         },
         {
           "time": 0.58065,
-          "transform": [5, 0, 0]
+          "transform": [52.5, 0, 0]
+        },
+        {
+          "time": 0.60752,
+          "transform": [82.92, 0, 0]
         },
         {
           "time": 0.64516,
-          "transform": [115, 0, 0]
+          "transform": [105, 0, 0]
         },
         {
           "time": 0.6828,
@@ -174,7 +198,7 @@
           "transform": [0, 0, 25]
         },
         {
-          "time": 0.23655,
+          "time": 0.24194,
           "transform": [0, 0, 20]
         },
         {
@@ -183,7 +207,7 @@
         },
         {
           "time": 0.43548,
-          "transform": [0, 0, 52.5]
+          "transform": [0, 0, 40]
         },
         {
           "time": 0.47312,
@@ -191,11 +215,11 @@
         },
         {
           "time": 0.5,
-          "transform": [0, 0, 50]
+          "transform": [0, 0, 25]
         },
         {
           "time": 0.64516,
-          "transform": [0, 0, 50]
+          "transform": [0, 0, 25]
         },
         {
           "time": 0.70968,
@@ -210,7 +234,7 @@
           "transform": [0, 0, 0]
         },
         {
-          "time": 0.23655,
+          "time": 0.24194,
           "transform": [0, 0, -22.5]
         },
         {
@@ -227,11 +251,11 @@
         },
         {
           "time": 0.5,
-          "transform": [0, 0, -52.5]
+          "transform": [0, 0, -22.5]
         },
         {
           "time": 0.64516,
-          "transform": [0, 0, -52.5]
+          "transform": [0, 0, -22.5]
         },
         {
           "time": 0.70968,
@@ -250,7 +274,7 @@
           "transform": [0, 0, -25]
         },
         {
-          "time": 0.23655,
+          "time": 0.24194,
           "transform": [0, 0, -20]
         },
         {
@@ -259,7 +283,7 @@
         },
         {
           "time": 0.43548,
-          "transform": [0, 0, -52.5]
+          "transform": [0, 0, -37.5]
         },
         {
           "time": 0.47312,
@@ -267,11 +291,11 @@
         },
         {
           "time": 0.5,
-          "transform": [0, 0, -42.5]
+          "transform": [0, 0, -20]
         },
         {
           "time": 0.64516,
-          "transform": [0, 0, -42.5]
+          "transform": [0, 0, -20]
         },
         {
           "time": 0.70968,
@@ -286,7 +310,7 @@
           "transform": [0, 0, 0]
         },
         {
-          "time": 0.23655,
+          "time": 0.24194,
           "transform": [0, 0, 25]
         },
         {
@@ -303,11 +327,11 @@
         },
         {
           "time": 0.5,
-          "transform": [0, 0, 45]
+          "transform": [0, 0, 22.5]
         },
         {
           "time": 0.64516,
-          "transform": [0, 0, 45]
+          "transform": [0, 0, 22.5]
         },
         {
           "time": 0.70968,
@@ -322,20 +346,20 @@
           "transform": [0, 0, 0]
         },
         {
-          "time": 0.7957,
+          "time": 0.76345,
           "transform": [0, 0, 0]
         },
         {
           "time": 0.8172,
-          "transform": [0, 7.5, 0]
+          "transform": [0, -15, 0]
         },
         {
           "time": 0.86022,
-          "transform": [0, -10, 0]
+          "transform": [0, -20, 0]
         },
         {
           "time": 0.90323,
-          "transform": [0, -10, 0]
+          "transform": [0, -2.5, 0]
         },
         {
           "time": 0.96774,
@@ -350,24 +374,16 @@
           "transform": [15, 0, 0]
         },
         {
-          "time": 0.70968,
+          "time": 0.75806,
           "transform": [15, 0, 0]
         },
         {
-          "time": 0.77419,
-          "transform": [-37.5, 0, 0]
-        },
-        {
-          "time": 0.7957,
-          "transform": [-32.5, 0, 0]
-        },
-        {
-          "time": 0.86022,
+          "time": 0.82796,
           "transform": [-32.5, 0, 0]
         },
         {
           "time": 0.90323,
-          "transform": [-42.5, 0, 0]
+          "transform": [-35, 0, 0]
         },
         {
           "time": 0.96774,
@@ -382,8 +398,16 @@
           "transform": [137.5, 0, 0]
         },
         {
-          "time": 0.90323,
+          "time": 0.7957,
           "transform": [137.5, 0, 0]
+        },
+        {
+          "time": 0.83871,
+          "transform": [122.5, 0, 0]
+        },
+        {
+          "time": 0.90323,
+          "transform": [122.5, 0, 0]
         },
         {
           "time": 0.96774,
@@ -421,27 +445,15 @@
         },
         {
           "time": 0.52151,
-          "transform": [0, 6.74223, 1.36452]
+          "transform": [0, 3.54223, 2.06452]
         },
         {
           "time": 0.55914,
-          "transform": [0, 17.97728, 7.48409]
+          "transform": [0, 7.97728, 7.48409]
         },
         {
           "time": 0.58065,
-          "transform": [0, 24.12807, 11.53614]
-        },
-        {
-          "time": 0.59677,
-          "transform": [0, 18.3, 8.55]
-        },
-        {
-          "time": 0.6129,
-          "transform": [0, 12.47862, 8.55522]
-        },
-        {
-          "time": 0.62365,
-          "transform": [0, 8.36, 8.88]
+          "transform": [0, 14.05972, 9.74539]
         },
         {
           "time": 0.64516,
@@ -468,19 +480,23 @@
     "case": {
       "rotation": [
         {
-          "time": 0.34409,
+          "time": 0.32258,
           "transform": [0, 0, 0]
         },
         {
-          "time": 0.36559,
-          "transform": [-3, 0, 0]
+          "time": 0.34409,
+          "transform": [-11, 0, 0]
         },
         {
-          "time": 0.37635,
-          "transform": [1, 0, 0]
+          "time": 0.35484,
+          "transform": [-10, 0, 0]
         },
         {
-          "time": 0.38172,
+          "time": 0.3871,
+          "transform": [-5.25, 0, 0]
+        },
+        {
+          "time": 0.40323,
           "transform": [0, 0, 0]
         }
       ],
@@ -498,7 +514,7 @@
     "core": {
       "rotation": [
         {
-          "time": 0.30645,
+          "time": 0.3172,
           "transform": [0, 0, 0]
         },
         {
@@ -506,54 +522,50 @@
           "transform": [-27.5, 0, 0]
         },
         {
-          "time": 0.37635,
+          "time": 0.40323,
           "transform": [0, 0, 0]
         }
       ],
       "position": [
         {
           "time": 0,
-          "transform": [0, -3, 0]
+          "transform": [0, -10, 0]
         },
         {
           "time": 0.06452,
-          "transform": [20, -3, 0]
+          "transform": [20, -10, 0]
         },
         {
-          "time": 0.12903,
-          "transform": [20, -3, -15]
+          "time": 0.12365,
+          "transform": [20, -10, -15]
         },
         {
           "time": 0.19355,
-          "transform": [40, -3, -15]
+          "transform": [37, -10, -15]
         },
         {
           "time": 0.23655,
-          "transform": [40, -3, -15]
+          "transform": [37, -10, -15]
         },
         {
-          "time": 0.26345,
-          "transform": [38.05, 5.48, -17.64]
+          "time": 0.26881,
+          "transform": [37, -0.97, -19.85]
         },
         {
-          "time": 0.27957,
-          "transform": [38, 10.56, -19.22]
+          "time": 0.2957,
+          "transform": [37, 6.56, -20.22]
         },
         {
-          "time": 0.30645,
-          "transform": [38.5, 17, -18.3]
-        },
-        {
-          "time": 0.33333,
-          "transform": [38.24, 13.64, -25.69]
+          "time": 0.3172,
+          "transform": [37, 12, -19]
         },
         {
           "time": 0.35484,
-          "transform": [37, 12.14567, -29.31036]
+          "transform": [36.1, 6.14567, -31.61036]
         },
         {
-          "time": 0.39785,
-          "transform": [36, -0.05, -29.01]
+          "time": 0.40323,
+          "transform": [36, -0.07099, -29.06491]
         }
       ]
     }

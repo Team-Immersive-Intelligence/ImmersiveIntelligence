@@ -80,10 +80,10 @@ public class PaintingRecipe extends IIMultiblockRecipe
 	@Override
 	protected IIRecipeLayout initRecipeLayout()
 	{
-		return new IIRecipeLayoutBuilder(144, 68)
-				.withInputSlot(2, 26, itemInput)
-				.withOutputSlot(144-20, 26, new IngredientStack(getExampleColoredItems()))
-				.withMultiblockModel(32+8-4, -10)
+		return new IIRecipeLayoutBuilder(144, 64)
+				.withInputSlot(4, 26, itemInput)
+				.withOutputSlot(144-20-2, 26, new IngredientStack(getExampleColoredItems()))
+				.withMultiblockModel(10, -10-4-2, 120, 80, "default")
 				.withTimeInfo()
 				.withPowerInfo()
 				.build();

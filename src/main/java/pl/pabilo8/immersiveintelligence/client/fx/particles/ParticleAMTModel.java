@@ -68,7 +68,7 @@ public class ParticleAMTModel extends ParticleAbstractModel
 		if(model==null)
 			return;
 		super.preRender(partialTicks, x, xz, z, yz, xy);
-		matrix.scale(size*scale*stretch.x, size*scale*stretch.y, size*scale*stretch.z);
+		matrix.scale(size*scale, size*scale, size*scale);
 	}
 
 	@Override

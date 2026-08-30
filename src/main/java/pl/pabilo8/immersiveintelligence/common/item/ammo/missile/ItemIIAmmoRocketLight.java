@@ -32,7 +32,7 @@ public class ItemIIAmmoRocketLight extends ItemIIAmmoBase<EntityAmmoMissile>
 {
 	public ItemIIAmmoRocketLight()
 	{
-		super("rocket_6bCal", Casing.LIGHT_ARTILLERY_6BCAL);
+		super("rocket_6bCal", Casing.ROCKET_6BCAL);
 	}
 
 	@Override

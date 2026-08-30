@@ -8,7 +8,6 @@ import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
 import javax.annotation.Nonnull;
-import javax.vecmath.Vector3f;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -17,7 +16,6 @@ import javax.vecmath.Vector3f;
  */
 public abstract class ParticleAbstractModel extends AbstractParticle
 {
-	protected final Vector3f stretch;
 	protected float size, scale;
 	protected IIColor color = IIColor.WHITE;
 	int textureShift = 0;
@@ -25,36 +23,24 @@ public abstract class ParticleAbstractModel extends AbstractParticle
 	public ParticleAbstractModel(World world, Vec3d pos)
 	{
 		super(world, pos);
-		this.stretch = new Vector3f(1, 1, 1);
 	}
 
 	@Nonnull
 	@Override
 	public Object getProperty(ParticleProperties key)
 	{
-		switch(key)
+		return switch(key)
 		{
-			case SIZE:
-				return size;
-			case STRETCH:
-				return stretch;
-			case SCALE:
-				return scale;
-			case COLOR:
-				return color;
-			case RED:
-				return color.red;
-			case GREEN:
-				return color.green;
-			case BLUE:
-				return color.blue;
-			case ALPHA:
-				return color.alpha;
-			case TEXTURE_SHIFT:
-				return textureShift;
-			default:
-				return super.getProperty(key);
-		}
+			case SIZE -> size;
+			case SCALE -> scale;
+			case COLOR -> color;
+			case RED -> color.red;
+			case GREEN -> color.green;
+			case BLUE -> color.blue;
+			case ALPHA -> color.alpha;
+			case TEXTURE_SHIFT -> textureShift;
+			default -> super.getProperty(key);
+		};
 	}
 
 	@Override
@@ -67,9 +53,6 @@ public abstract class ParticleAbstractModel extends AbstractParticle
 				break;
 			case SCALE:
 				scale = (float)value;
-				break;
-			case STRETCH:
-				this.stretch.set((Vector3f)value);
 				break;
 
 			case COLOR:

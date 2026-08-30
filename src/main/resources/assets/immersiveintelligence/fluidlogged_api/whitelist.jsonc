@@ -1,4 +1,4 @@
-// DO NOT EDIT!
+//Whitelist file for Immersive Intelligence
 [
   {
     "blockId": [
@@ -76,9 +76,9 @@
       "max": 12
     },
     "states": {
-      "type": "wooden_quay"
+      "type": ["wooden_quay", "wooden_pier"]
     },
-    "canFluidFlow": false
+    "canFluidFlow": true
   },
   {
     "blockId": "immersiveintelligence:harbor",
@@ -87,9 +87,10 @@
       "max": 12
     },
     "states": {
-      "type": "wooden_pier"
+      "type": "wooden_quay",
+      "support": "center"
     },
-    "canFluidFlow": true
+    "canFluidFlow": false
   },
   {
     "blockId": "immersiveintelligence:harbor_support",
@@ -115,5 +116,13 @@
     "states": {
       "type": ["sandbags"]
     }
+  },
+  {
+    "blockId": "immersiveintelligence:mine_sign",
+    "canFluidFlow": true
+  },
+  {
+    "blockId": "immersiveintelligence:metal_fortification1",
+    "canFluidFlow": true
   }
 ]

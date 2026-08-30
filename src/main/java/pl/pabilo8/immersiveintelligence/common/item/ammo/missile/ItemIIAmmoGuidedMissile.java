@@ -32,7 +32,7 @@ public class ItemIIAmmoGuidedMissile extends ItemIIAmmoBase<EntityAmmoGuidedMiss
 {
 	public ItemIIAmmoGuidedMissile()
 	{
-		super("missile_guided_6bCal", Casing.LIGHT_ARTILLERY_6BCAL);
+		super("missile_guided_6bCal", Casing.GUIDED_MISSILE_6BCAL);
 	}
 
 	@Override
