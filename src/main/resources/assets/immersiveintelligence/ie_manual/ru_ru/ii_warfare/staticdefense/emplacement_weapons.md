@@ -80,8 +80,8 @@ Instead of multiple dumbfire rockets, the [Guided Rocket Launcher] fires a singl
 # spotlight0
 **Spotlight Tower**
 |[upgrade_display]{upgrade:"immersiveintelligence:emplacement/spotlight_tower"}|
-A rustic emplacement, the [Spotlight Tower] provides a covered vantage point with a built-in spotlight, similar to the Floodlight which can be used to track enemies in darkness. Shining the light on an enemy will expose them and cause them to freeze in fear!
+[Прожекторная башня] представляет собой укрытую наблюдательную точку со встроенным прожектором, который можно использовать для отслеживания врагов в темноте. Направив свет на врага, вы обнаружите его и заставите замереть от страха!
 # searchlight0
 **Searchlight**
 |[upgrade_display]{upgrade:"immersiveintelligence:emplacement/searchlight"}|
-Similar to the Spotlight Tower, the [Searchlight] removes the vantage point and permits a larger light installation for greater vertical coverage, as well as increasing accuracy of allied fire. Works best when connected to a [Radar](radar.md). Note that horizontal range is reduced compared to the Tower.
+Подобно прожекторной башне, [Прожектор] позволяет установить более крупную зону освещения по вертикали, а также для повышения точности стрельбы союзников. Лучше всего работает при подключении к [радару](radar.md). Обратите внимание, что горизонтальный радиус действия меньше чем у башни.

@@ -23,7 +23,7 @@
 **Data Inputs:**
 |[data_variable]{type:"string", direction:"вход", letter:"m", name:"Тип документа", description:"Тип документа, который будет напечатан", values:[["text","Страница, содержащая текст"],["code","Страница, содержащая код, написанный на языке программирования POL"],["blueprint","Страница, содержащая план строительства, который будет использоваться вручную или с помощью логистического дрона"],["logi_tag","Логистическая метка, используемая для маркировки контейнеров и товаров"]]}|
 |[data_variable]{type:"integer", direction:"вход", letter:"a", name:"Кол-во копий", description:"Сколько страниц будет напечатано"}|
-|[data_variable]{type:"string", direction:"вход", letter:"t", name:"Text to print", description:"Текстовое содержимое, которое будет напечатано", requirements:{m:"text/code"}}|
+|[data_variable]{type:"string", direction:"вход", letter:"t", name:"Текст", description:"Текстовое содержимое, которое будет напечатано", requirements:{m:"text/code"}}|
 Печать [логистического манифеста](../ii_logistics/task_system.md#logitags) требует другого набора переменных и описана на [специальной странице](../ii_logistics/task_system.md#logitag_printing).
 
 # punchtapes_upgrade
