@@ -21,22 +21,29 @@
 
 # data_inputs
 **Data Inputs:**
-|[data_variable]{type:"string", direction:"in", letter:"m", name:"Output mode", description:"The type of document that will be printed", values:[["text","A page containing text"],["code","A page containing code written in the POL programming language"],["blueprint","A page containing a construction blueprint to be used manually or by a Logistics Drone"],["logi_tag","A logistics tag used to mark containers and items"]]}|
-|[data_variable]{type:"integer", direction:"in", letter:"a", name:"Amount of copies", description:"How many pages will be printed"}|
-|[data_variable]{type:"string", direction:"in", letter:"t", name:"Text to print", description:"Text content that will be printed", requirements:{m:"text/code"}}|
+|[data_variable]{type:"string", direction:"вход", letter:"m", name:"Тип документа", description:"Тип документа, который будет напечатан", values:[["text","Страница, содержащая текст"],["code","Страница, содержащая код, написанный на языке программирования POL"],["blueprint","Страница, содержащая план строительства, который будет использоваться вручную или с помощью логистического дрона"],["logi_tag","Логистическая метка, используемая для маркировки контейнеров и товаров"]]}|
+|[data_variable]{type:"integer", direction:"вход", letter:"a", name:"Кол-во копий", description:"Сколько страниц будет напечатано"}|
+|[data_variable]{type:"string", direction:"вход", letter:"t", name:"Текст", description:"Текстовое содержимое, которое будет напечатано", requirements:{m:"text/code"}}|
+Печать [логистического манифеста](../ii_logistics/task_system.md#logitags) требует другого набора переменных и описана на [специальной странице](../ii_logistics/task_system.md#logitag_printing).
 
 # punchtapes_upgrade
 |[upgrade_display]{upgrade:"immersiveintelligence:printing_press/punchtapes"}|
 Улучшение [обработчик перфоленты] позволяет печатать [перфоленты](punchtapes.md) со всеми переменными полученных пакетов, кроме «a», «m» и «t».
 **Вместо пустой страницы предоставьте [пустую перфоленту].**
-|[data_variable]{type:"string", direction:"in", letter:"m", name:"Output mode", description:"The type of document that will be printed", values:[["punchtape","A punchtape with variables of the received packet, except 'a', 'm' and 't' printed. Doesn't use any ink."]]}|
-
+|[data_variable]{type:"string", direction:"вход", letter:"m", name:"Тип документа", description:"Тип документа, который будет напечатан", values:[["punchtape","Перфолента с напечатанными параметрами полученного пакета, за исключением "a", "m" и "t". Не затрачивает чернил."]]}|
+# enveloper
+|[upgrade_display]{upgrade:"immersiveintelligence:printing_press/enveloper"}|
+Сворачиватель позволяет печатать [Письма в конвертах](envelopes.md), которые будут адресованы и отправлены другим игрокам.
+|[wip_notice]|
+# batching
+|[upgrade_display]{upgrade:"immersiveintelligence:printing_press/batching"}|
+Улучшение [Механизм дозирования] позволяет печатать несколько страниц текста одновременно, что позволяет печатному станку создавать газеты и книги.
+|[wip_notice]|
 # data_callback
-|[text]{text:"Data Callback",bold:1b}|
-
-|[data_callback]{type:"integer", name:"get_ink", label:"Чернила(Ч)", returns:"Кол-во чёрных чернил (mB)"}|
-|[data_callback]{type:"integer", name:"get_ink_cyan", label:"Чернила(Б)", returns:"Кол-во бирюзовых чернил (mB)"}|
-|[data_callback]{type:"integer", name:"get_ink_yellow", label:"Чернила(Ж)", returns:"Кол-во жёлтых чернил (mB)"}|
-|[data_callback]{type:"integer", name:"get_ink_magenta", label:"Чернила(П)", returns:"Кол-во пурпурных чернил (mB)"}|
+**Data Callback:**
+|[data_callback]{type:"integer", name:"get_ink", label:"Чернила (Ч)", returns:"Кол-во чёрных чернил (mB)"}|
+|[data_callback]{type:"integer", name:"get_ink_cyan", label:"Чернила (Б)", returns:"Кол-во бирюзовых чернил (mB)"}|
+|[data_callback]{type:"integer", name:"get_ink_yellow", label:"Чернила (Ж)", returns:"Кол-во жёлтых чернил (mB)"}|
+|[data_callback]{type:"integer", name:"get_ink_magenta", label:"Чернила (П)", returns:"Кол-во пурпурных чернил (mB)"}|
 |[data_callback]{type:"integer", name:"get_energy", label:"Запасённая энергия", returns:"Кол-во запасённой энергии (IF)"}|
 |[data_callback]{type:"integer", name:"get_paper", label:"Бумага", returns:"Кол-во листов бумаги"}|
