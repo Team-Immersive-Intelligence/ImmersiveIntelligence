@@ -1,8 +1,11 @@
 package pl.pabilo8.immersiveintelligence.common.util.item;
 
 import blusunrize.immersiveengineering.common.util.EnergyHelper;
+import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
+import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
@@ -53,6 +56,12 @@ public class IIArmorItemStackHandler extends ItemStackHandler implements ICapabi
 		super.onContentsChanged(slot);
 		if(onChange!=null)
 			onChange.run();
+		//set inventory to the itemstack so it survives being removed from the workbench
+		if(this.stack!=null && !this.stack.isEmpty())
+		{
+			NBTTagList list = Utils.writeInventory(this.stacks);
+			ItemNBTHelper.getTag(this.stack).setTag("Inv", list);
+		}
 	}
 
 	@Override
@@ -69,10 +78,20 @@ public class IIArmorItemStackHandler extends ItemStackHandler implements ICapabi
 		{
 			int idealSize = ((ItemIIUpgradeableArmor)stack.getItem()).getSlotCount();
 			NonNullList<ItemStack> newList = NonNullList.withSize(idealSize, ItemStack.EMPTY);
-			for(int i = 0; i < Math.min(stacks.size(), idealSize); i++)
-				newList.set(i, stacks.get(i));
+			//If itemstack already had a saved inventory, load it. Otherwise keep items as is
+			if(ItemNBTHelper.hasKey(this.stack, "Inv"))
+			{
+				NBTTagList list = ItemNBTHelper.getTag(this.stack).getTagList("Inv", 10);
+				NonNullList<ItemStack> inv = Utils.readInventory(list, idealSize);
+				for(int i = 0; i < Math.min(inv.size(), idealSize); i++)
+					newList.set(i, inv.get(i));
+			}
+			else
+			{
+				for(int i = 0; i < Math.min(stacks.size(), idealSize); i++)
+					newList.set(i, stacks.get(i));
+			}
 			stacks = newList;
-			stack = ItemStack.EMPTY;
 			first = false;
 		}
 		if(capability==CapabilityEnergy.ENERGY)
