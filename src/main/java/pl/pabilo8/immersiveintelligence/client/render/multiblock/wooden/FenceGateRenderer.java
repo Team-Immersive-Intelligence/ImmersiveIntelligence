@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.client.render.multiblock.wooden;
 
 import blusunrize.immersiveengineering.api.IEProperties;
+import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -16,6 +17,7 @@ import net.minecraftforge.client.model.obj.OBJModel;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeTechTree;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTLoader;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
 import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIAnimationCompiledMap;
 import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
@@ -28,11 +30,17 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
 /**
+ * Renders fence gate multiblocks.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 30.08.2026
  * @since 21.06.2019
  */
 public class FenceGateRenderer<T extends TileEntityGateBase<T>> extends IIMultiblockRenderer<T>
 {
+	private static final ResourceLocation WOODEN_GATE_TEXTURE = new ResourceLocation(ImmersiveIntelligence.MODID, "blocks/multiblock/wooden_gate");
+	private static final ResourceLocation WOODEN_CHAIN_FENCE_TEXTURE = new ResourceLocation(ImmersiveIntelligence.MODID, "blocks/fortification/wooden_chain_fence");
+
 	AMTUpgradeModel redstoneUpgrade, razorUpgrade;
 	private AMTModel model;
 	private IIAnimationCompiledMap open, redstone, razor;
@@ -137,12 +145,32 @@ public class FenceGateRenderer<T extends TileEntityGateBase<T>> extends IIMultib
 		razorUpgrade = new AMTUpgradeModel(IIContent.UPGRADE_RAZOR_WIRE, modelUpgrades,
 				new ResourceLocation(ImmersiveIntelligence.MODID, "gate/upgrade_razor"));
 
+		AMTModel upgradeBaseModel = new AMTModel(DefaultVertexFormats.ITEM, model, AMTLoader.loadHeader(model), null,
+				texture -> ClientUtils.getSprite(getUpgradePreviewTexture(model, texture)));
+		IIAnimationCompiledMap.create(upgradeBaseModel, ResLoc.of(IIReference.RES_II, "gate/open")).apply(0);
+		IIAnimationCompiledMap.create(upgradeBaseModel, ResLoc.of(IIReference.RES_II, "gate/redstone")).apply(0);
+		IIAnimationCompiledMap.create(upgradeBaseModel, ResLoc.of(IIReference.RES_II, "gate/razor")).apply(0);
+
 		UpgradeTechTree.getTreeFor(klass)
-				.withBaseModelLocation(IIReference.RES_II.with("models/block/multiblock/fence_gate_preview.obj"))
+				.withBaseModel(upgradeBaseModel)
 				.withUpgradeModelLocation(IIContent.UPGRADE_RAZOR_WIRE,
 						IIReference.RES_II.with("models/block/multiblock/fence_gate_upgrade_razor_wire.obj"))
 				.withUpgradeModelLocation(IIContent.UPGRADE_REDSTONE_ACTIVATION,
 						IIReference.RES_II.with("models/block/multiblock/fence_gate_upgrade_redstone.obj"));
+	}
+
+	private static ResourceLocation getUpgradePreviewTexture(OBJModel model, ResourceLocation texture)
+	{
+		String materialName;
+		if(WOODEN_GATE_TEXTURE.equals(texture))
+			materialName = "wooden_gate";
+		else if(WOODEN_CHAIN_FENCE_TEXTURE.equals(texture))
+			materialName = "wooden_chain_fence";
+		else
+			return texture;
+
+		OBJModel.Material material = model.getMatLib().getMaterial(materialName);
+		return material==null?texture: material.getTexture().getTextureLocation();
 	}
 
 	@Override

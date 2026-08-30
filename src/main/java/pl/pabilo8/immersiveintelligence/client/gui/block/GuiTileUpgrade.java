@@ -43,6 +43,8 @@ import java.util.List;
 import java.util.Objects;
 
 /**
+ * GUI for showing upgrade information and installing/removing upgrades for {@link TileEntityIEBase tile entities.}.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 10.07.2019
  */
@@ -229,9 +231,9 @@ public class GuiTileUpgrade<T extends TileEntityIEBase & IIEInventory & IUpgrada
 		ArrayList<AMTModel> builder = new ArrayList<>();
 
 		//Add base model
-		ResLoc baseRes = techTree.getModelLocation();
-		if(baseRes!=null)
-			builder.add(new AMTModel(DefaultVertexFormats.ITEM, baseRes));
+		AMTModel baseModel = techTree.getModel();
+		if(baseModel!=null)
+			builder.add(baseModel);
 
 		//Collect all installed upgrades
 		ArrayList<Upgrade> upgrades = new ArrayList<>(tile.getAllInstalledUpgrades());

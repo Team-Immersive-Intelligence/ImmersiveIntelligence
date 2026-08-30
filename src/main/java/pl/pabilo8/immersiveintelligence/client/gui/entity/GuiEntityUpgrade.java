@@ -43,6 +43,8 @@ import java.util.List;
 import java.util.Objects;
 
 /**
+ * GUI for showing upgrade information and installing/removing upgrades for {@link Entity entities}.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 10.07.2019
  */
@@ -142,13 +144,13 @@ public class GuiEntityUpgrade<T extends Entity & IIEInventory & IUpgradableDevic
 				.withSize(contentWidth, contentHeight)
 				.withBackground(DecoSprite.atlasSprite(DecoTextures.BG_DARK, 64)));
 
-		infoTab = (DecoTab)new DecoTab()
+		infoTab = new DecoTab()
 				.withText(IIReference.DESCRIPTION_KEY+"upgrade_gui.info");
 		contentTabs = addComponent(new DecoTabGroup(contentX, 16-8-4+14-14+8)
 				.withSize(contentWidth, 14)
 				.withHorizontalAlignment(true)
 				.withTabWidth(contentWidth/2)
-				.withTab((DecoTab)new DecoTab()
+				.withTab(new DecoTab()
 								.withText(IIReference.DESCRIPTION_KEY+"upgrade_gui.tech_tree"), techTreePanel,
 						() -> refreshModelPreview(null))
 				.withTab(infoTab, panelInfo, () -> {
@@ -229,9 +231,9 @@ public class GuiEntityUpgrade<T extends Entity & IIEInventory & IUpgradableDevic
 		ArrayList<AMTModel> builder = new ArrayList<>();
 
 		//Add base model
-		ResLoc baseRes = techTree.getModelLocation();
-		if(baseRes!=null)
-			builder.add(new AMTModel(DefaultVertexFormats.ITEM, baseRes));
+		AMTModel baseModel = techTree.getModel();
+		if(baseModel!=null)
+			builder.add(baseModel);
 
 		//Collect all installed upgrades
 		ArrayList<Upgrade> upgrades = new ArrayList<>(entity.getAllInstalledUpgrades());

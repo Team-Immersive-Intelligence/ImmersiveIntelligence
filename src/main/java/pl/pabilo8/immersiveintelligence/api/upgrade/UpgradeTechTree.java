@@ -1,9 +1,11 @@
 package pl.pabilo8.immersiveintelligence.api.upgrade;
 
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.UpgradePurpose;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.UpgradeTier;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
@@ -13,6 +15,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
+ * Stores upgrade relationships and preview models for an upgradable device.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
  * @since 29.08.2025
@@ -23,7 +27,8 @@ public class UpgradeTechTree
 	private final List<UpgradeTreeNode> nodes = new ArrayList<>();
 
 	@Nullable
-	private ResLoc modelLocation = null;
+	@SideOnly(Side.CLIENT)
+	private AMTModel model;
 
 	public static UpgradeTechTree getTreeFor(IUpgradableDevice machine)
 	{
@@ -97,10 +102,31 @@ public class UpgradeTechTree
 		return this;
 	}
 
+	/**
+	 * Sets the base model for the upgrade preview.
+	 *
+	 * @param model base preview model
+	 * @return this tech tree
+	 */
+	@SideOnly(Side.CLIENT)
+	public UpgradeTechTree withBaseModel(@Nonnull AMTModel model)
+	{
+		if(this.model!=null&&this.model!=model)
+			this.model.disposeOf();
+		this.model = model;
+		return this;
+	}
+
+	/**
+	 * Creates and sets the base model for the upgrade preview.
+	 *
+	 * @param modelLocation base preview model location
+	 * @return this tech tree
+	 */
+	@SideOnly(Side.CLIENT)
 	public UpgradeTechTree withBaseModelLocation(@Nonnull ResLoc modelLocation)
 	{
-		this.modelLocation = modelLocation;
-		return this;
+		return withBaseModel(new AMTModel(DefaultVertexFormats.ITEM, modelLocation));
 	}
 
 	public UpgradeTechTree withUpgradeModelLocation(@Nonnull Upgrade upgrade, @Nonnull ResLoc modelLocation)
@@ -214,13 +240,13 @@ public class UpgradeTechTree
 	}
 
 	/**
-	 * @return the 3D model location to render in the upgrade GUI, or null for no model
+	 * @return the 3D model to render in the upgrade GUI, or null for no model
 	 */
 	@Nullable
 	@SideOnly(Side.CLIENT)
-	public ResLoc getModelLocation()
+	public AMTModel getModel()
 	{
-		return modelLocation;
+		return model;
 	}
 
 	/**
