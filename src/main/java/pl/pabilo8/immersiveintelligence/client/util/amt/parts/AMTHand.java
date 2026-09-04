@@ -12,10 +12,13 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumHandSide;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.common.util.amt.AMTModelHeader;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
+
+import javax.annotation.Nonnull;
 
 /**
  * AMT type for drawing the player's hand in first person mode
@@ -131,6 +134,13 @@ public class AMTHand extends AMT
 			else if(s.equals("main_hand"))
 				withHand(EnumHand.MAIN_HAND);
 		});
+	}
+
+	@Override
+	@Nonnull
+	public AxisAlignedBB getBoundingBox()
+	{
+		return new AxisAlignedBB(originPos, originPos);
 	}
 
 	@Override

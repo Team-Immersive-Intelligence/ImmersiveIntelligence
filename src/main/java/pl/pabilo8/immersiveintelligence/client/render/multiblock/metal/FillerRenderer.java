@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.model.obj.OBJModel;
 import org.lwjgl.opengl.GL11;
@@ -26,6 +27,8 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.amt.AMTModelHeader;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionBase.IIMultiblockProcess;
+
+import javax.annotation.Nonnull;
 
 /**
  * Renders the Filler multiblock and its filling process.
@@ -200,6 +203,13 @@ public class FillerRenderer extends IIMultiblockRenderer<TileEntityFiller>
 		public void disposeOf()
 		{
 			AMTUtils.disposeOf(bullet);
+		}
+
+		@Override
+		@Nonnull
+		public AxisAlignedBB getBoundingBox()
+		{
+			return new AxisAlignedBB(originPos, originPos);
 		}
 	}
 }

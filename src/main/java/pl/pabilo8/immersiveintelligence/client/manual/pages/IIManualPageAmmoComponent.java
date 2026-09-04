@@ -21,7 +21,7 @@ import java.util.Locale;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 07.08.2021
  */
-public class IIManualPageBulletComponent extends IIManualPages
+public class IIManualPageAmmoComponent extends IIManualPages
 {
 	protected String name;
 	protected String localizedName;
@@ -32,13 +32,13 @@ public class IIManualPageBulletComponent extends IIManualPages
 	float density;
 	AmmoComponent component;
 
-	public IIManualPageBulletComponent(ManualInstance manual, AmmoComponent component)
+	public IIManualPageAmmoComponent(ManualInstance manual, AmmoComponent component)
 	{
 		this(manual, component.getName(), component.getMaterial().getExampleStack(), component.getRole(), component.getDensity());
 		this.component = component;
 	}
 
-	public IIManualPageBulletComponent(ManualInstance manual, String name, ItemStack stack, ComponentRole type, float density)
+	public IIManualPageAmmoComponent(ManualInstance manual, String name, ItemStack stack, ComponentRole type, float density)
 	{
 		super(manual, name);
 		this.name = name;

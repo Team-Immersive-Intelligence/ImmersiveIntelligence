@@ -10,8 +10,8 @@ import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseType;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualCategory;
-import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageBulletComponent;
-import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageBulletCore;
+import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageAmmoComponent;
+import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageAmmoCore;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.BlockIIDataDevice.IIBlockTypes_Connector;
 import pl.pabilo8.immersiveintelligence.common.block.fortification.BlockIIMetalFortification1.IIBlockTypes_MetalFortification1;
@@ -76,12 +76,12 @@ public class IIManualCategoryWarfare extends IIManualCategory
 		ArrayList<ManualPages> bullet_cores = new ArrayList<>();
 		for(AmmoCore entry : AmmoRegistry.getAllCores())
 			if(!entry.getMaterial().getExampleStack().isEmpty())
-				bullet_cores.add(new IIManualPageBulletCore(ManualHelper.getManual(), entry));
+				bullet_cores.add(new IIManualPageAmmoCore(ManualHelper.getManual(), entry));
 
 		ArrayList<ManualPages> bullet_components = new ArrayList<>();
 		for(AmmoComponent entry : AmmoRegistry.getAllComponents())
 			if(entry.showInManual()&&!entry.getMaterial().getExampleStack().isEmpty())
-				bullet_components.add(new IIManualPageBulletComponent(ManualHelper.getManual(), entry));
+				bullet_components.add(new IIManualPageAmmoComponent(ManualHelper.getManual(), entry));
 
 		ManualHelper.addEntry("bullet_cores", getCategory(),
 				bullet_cores.toArray(new ManualPages[]{})

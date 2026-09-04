@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.client.model.builtin;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
@@ -10,6 +11,7 @@ import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -77,4 +79,7 @@ public interface IAmmoModel<T extends IAmmoType<T, E>, E extends EntityAmmoBase<
 		IAmmoTypeItem<T, E> ammo = (IAmmoTypeItem<T, E>)stack.getItem();
 		renderCore(ammo.getCore(stack), ammo.getCoreType(stack));
 	}
+
+	@Nonnull
+	AxisAlignedBB getBoundingBox();
 }

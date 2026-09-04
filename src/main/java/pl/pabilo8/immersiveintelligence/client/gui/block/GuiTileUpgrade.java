@@ -6,7 +6,6 @@ import blusunrize.immersiveengineering.common.util.inventory.IIEInventory;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextFormatting;
 import pl.pabilo8.immersiveintelligence.api.upgrade.IUpgradableDevice;
 import pl.pabilo8.immersiveintelligence.api.upgrade.Upgrade;
@@ -253,14 +252,9 @@ public class GuiTileUpgrade<T extends TileEntityIEBase & IIEInventory & IUpgrada
 				.forEach(builder::add);
 
 		//Build
-		AMTModel built = new AMTModel(builder.toArray(new AMTModel[0]));
-		Vec3d center = built.findActualModelCenter();
-		Vec3d size = built.findModelSize();
-		float maxEdge = (float)Math.max(size.x, Math.max(size.y, size.z));
 
-		scenario.withModel(false, built);
-		scenario.withOrigin(center.x, center.y, center.z);
-		scenario.withTranslation(-center.x, -center.y, -center.z);
-		scenario.withScale(Math.min(maxEdge==0?0.125f: (0.125f/(maxEdge/6f)), 0.325f));
+		AMTModel built = new AMTModel(builder.toArray(new AMTModel[0]));
+		scenario.withModel(false, built)
+				.withCentering(built.getBoundingBox(), 6f, 0.125f, 0.325f);
 	}
 }

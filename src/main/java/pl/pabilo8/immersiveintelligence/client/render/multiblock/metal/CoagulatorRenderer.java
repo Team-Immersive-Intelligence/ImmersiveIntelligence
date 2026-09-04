@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.client.render.multiblock.metal;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.model.obj.OBJModel;
 import net.minecraftforge.fluids.FluidStack;
@@ -23,6 +24,8 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.amt.AMTModelHeader;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -200,6 +203,13 @@ public class CoagulatorRenderer extends IIMultiblockRenderer<TileEntityCoagulato
 		public AMTFluidSolidifying(String name, AMTModelHeader header)
 		{
 			super(name, header);
+		}
+
+		@Override
+		@Nonnull
+		public AxisAlignedBB getBoundingBox()
+		{
+			return null;
 		}
 	}
 }

@@ -3588,6 +3588,7 @@ ii.gui.redstone_data_interface.mode.float=Float 0-1
 ii.gui.redstone_data_interface.mode.string=String
 
 ii.gui.projectile_workshop.component_info=Component Info
+ii.gui.projectile_workshop.tooltip.units=%s Units
 ii.gui.projectile_workshop.component.role=Role: %s
 ii.gui.projectile_workshop.component.density=Density: %s
 ii.gui.projectile_workshop.component.slots_taken=Slots Taken: %s
@@ -3601,22 +3602,32 @@ ii.gui.projectile_workshop.material_preview=Material Preview
 ii.gui.projectile_workshop.section.core=Core
 ii.gui.projectile_workshop.section.ballistics=Ballistics
 ii.gui.projectile_workshop.tooltip.component_slots=Component Slots
+ii.gui.projectile_workshop.tooltip.component_slots.tooltip=Space available for filling with Ammunition Components.
 ii.gui.projectile_workshop.tooltip.component_effect_shape=Component Effect Shape
+ii.gui.projectile_workshop.tooltip.component_effect_shape.tooltip=Shape used by component effects, i.e. explosives upon detonation. Depends on core type.
 ii.gui.projectile_workshop.tooltip.component_efficiency=Component Efficiency Modifier
-ii.gui.projectile_workshop.tooltip.component_efficiency.line1=Determines potency.
-ii.gui.projectile_workshop.tooltip.component_efficiency.line2=Responsible for explosive power, chemical gas concentration.
+ii.gui.projectile_workshop.tooltip.component_efficiency.tooltip=Determines component potency. Responsible for explosive power, chemical gas concentration.
 ii.gui.projectile_workshop.tooltip.component_size=Component Size Multiplier
-ii.gui.projectile_workshop.tooltip.component_size.line1=Determines component volume, responsible for explosion radius, gas spread range multiplier.
+ii.gui.projectile_workshop.tooltip.component_size.tooltip=Determines component volume, responsible for explosion radius, gas spread range multiplier.
 ii.gui.projectile_workshop.tooltip.core_mass=Core Mass
+ii.gui.projectile_workshop.tooltip.core_mass.tooltip=Mass of the projectile core for selected material.
 ii.gui.projectile_workshop.tooltip.damage_dealt=Damage Dealt
+ii.gui.projectile_workshop.tooltip.damage_dealt.tooltip=Direct damage dealt when the projectile hits a target.
 ii.gui.projectile_workshop.tooltip.velocity=Velocity
+ii.gui.projectile_workshop.tooltip.velocity.tooltip=Projectile speed in blocks per tick.
 ii.gui.projectile_workshop.tooltip.available_fuzes=Available Fuzes
+ii.gui.projectile_workshop.tooltip.available_fuzes.tooltip=Fuze types that can be used with this projectile.
 ii.gui.projectile_workshop.tooltip.penetration_hardness=Penetration Hardness
+ii.gui.projectile_workshop.tooltip.penetration_hardness.tooltip=The toughest material that the projectile will be able to penetrate.
+ii.gui.projectile_workshop.tooltip.penetration_depth=Penetration Depth
+ii.gui.projectile_workshop.tooltip.penetration_depth.tooltip=The maximum depth the projectile will be able to penetrate its toughest material at.
 ii.gui.projectile_workshop.tooltip.flat_trajectory_range=Flat-Trajectory Range
+ii.gui.projectile_workshop.tooltip.flat_trajectory_range.tooltip=Distance travelled by a projectile that is fired at a 0 degree angle, until it falls down by a full block of height.
 ii.gui.projectile_workshop.tooltip.max_artillery_range=Max. Artillery Range
+ii.gui.projectile_workshop.tooltip.max_artillery_range.tooltip=Horizontal distance travelled by a projectile fired at 45 degrees, until it fall.
 ii.gui.projectile_workshop.unit.blocks=%s b
 ii.gui.projectile_workshop.unit.blocks_per_tick=%s b/t
-ii.gui.projectile_workshop.value.penetration_hardness=%s b %s
+ii.gui.projectile_workshop.value.penetration_hardness=%s @ %s
 ii.gui.projectile_workshop.unit.multiplier=%sx
 
 ii.gui.ammunition_assembler.fuse_config.timed=Time:
@@ -3800,14 +3811,14 @@ ie.manual.entry.bullet_component.bottled_taint=Bottled Taint
 ie.manual.entry.bullet_component.bottled_taint.lore=Ruinous power
 ie.manual.entry.bullet_component.bottled_taint.desc=Moving the contents of the bottle into a shell allows to deliver the corruptive Taint at much longer distances than it is possible to throw the bottle manually. Spread forth magical corruption, now at long distances!
 
-ie.manual.entry.bullet_core.core_thaumium=Thaumium
+item.immersiveintelligence.bullet.component.core_thaumium.name=Thaumium
 ie.manual.entry.bullet_core.core_thaumium=Thaumium Core
 ie.manual.entry.bullet_core.core_thaumium.lore=Thaumaturgicallymtallurgic
 ie.manual.entry.bullet_core.core_thaumium.desc=A result of infusing iron with raw magical energy. Harder and better than base iron, it is a good candidate for massproduced shells.
 
 
 # Void metal is Disturbingly slick and warm to the touch, easy to work like gold, becoming as hard as tungsten and harder when struck 
-ie.manual.entry.bullet_core.core_voidmetal=Void Metal
+item.immersiveintelligence.bullet.component.core_voidmetal=Void Metal
 ie.manual.entry.bullet_core.core_voidmetal=Void Metal Core
 ie.manual.entry.bullet_core.core_voidmetal.lore=Magical-military-industrial-complex
 ie.manual.entry.bullet_core.core_voidmetal.desc=Void Metal is an excellent choice for bullets. However, properties of the metal make it somewhat difficult for conventional explosives to detonate with proper force.

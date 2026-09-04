@@ -16,6 +16,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoTitl
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoFrame;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoUtils;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
@@ -27,14 +28,17 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
+ * Displays a panel with an optional masked background, frame, labels, and child components.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
+ * @updated 04.09.2026
  * @since 10.02.2025
  **/
 public class DecoPanel extends DecoComponent<DecoPanel>
 {
 	protected final List<DecoLabel> labels = new ArrayList<>();
-	int vbo = -1;
+	int vbo = -1, frameVbo = -1;
 	@Nullable
 	private DecoFrame frame = null;
 	private ResLoc background = DecoTextures.BG_STEEL;
@@ -167,9 +171,24 @@ public class DecoPanel extends DecoComponent<DecoPanel>
 	@Override
 	protected boolean initialize()
 	{
-		if(background==null||backgroundMask==null)
-			return true;
 		bindAtlas();
+		if(background!=null&&backgroundMask!=null&&!initializeBackground())
+			return false;
+
+		if(frame!=null&&!initializeFrame())
+		{
+			if(vbo > 0)
+			{
+				GlStateManager.glDeleteLists(vbo, 1);
+				vbo = -1;
+			}
+			return false;
+		}
+		return true;
+	}
+
+	private boolean initializeBackground()
+	{
 		TextureAtlasSprite maskSprite = ClientUtils.getSprite(backgroundMask);
 
 		//Start
@@ -214,7 +233,21 @@ public class DecoPanel extends DecoComponent<DecoPanel>
 		GlStateManager.disableBlend();
 		GlStateManager.glEndList();
 
-		return vbo > 0;
+		return true;
+	}
+
+	private boolean initializeFrame()
+	{
+		frameVbo = GlStateManager.glGenLists(1);
+		if(frameVbo <= 0)
+			return false;
+		GlStateManager.glNewList(frameVbo, GL11.GL_COMPILE);
+
+		IIDrawUtils draw = IIDrawUtils.startTexturedColored();
+		DecoUtils.drawFrame(draw, x, y, width, height, frame);
+		draw.finish();
+		GlStateManager.glEndList();
+		return true;
 	}
 
 	@Override
@@ -225,7 +258,15 @@ public class DecoPanel extends DecoComponent<DecoPanel>
 
 		GlStateManager.pushMatrix();
 		GlStateManager.enableBlend();
-		GlStateManager.callList(vbo);
+		if(vbo > 0)
+			GlStateManager.callList(vbo);
+		if(frameVbo > 0)
+		{
+			GlStateManager.color(1f, 1f, 1f, 1f);
+			GlStateManager.enableBlend();
+			GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
+			GlStateManager.callList(frameVbo);
+		}
 		GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA,
 				GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
 		GlStateManager.enableAlpha();
@@ -246,6 +287,11 @@ public class DecoPanel extends DecoComponent<DecoPanel>
 		{
 			GlStateManager.glDeleteLists(vbo, 1);
 			vbo = -1;
+		}
+		if(frameVbo > 0)
+		{
+			GlStateManager.glDeleteLists(frameVbo, 1);
+			frameVbo = -1;
 		}
 	}
 

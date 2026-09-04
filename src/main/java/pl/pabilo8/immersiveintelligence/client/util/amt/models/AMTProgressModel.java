@@ -4,6 +4,7 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil.Shaders;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTLoader;
@@ -15,6 +16,7 @@ import pl.pabilo8.immersiveintelligence.common.util.amt.IIAnimation.IIAnimationG
 import pl.pabilo8.immersiveintelligence.common.util.amt.IIAnimation.IIShaderLine;
 import pl.pabilo8.immersiveintelligence.common.util.amt.IIAnimation.IIVectorLine;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Arrays;
@@ -94,6 +96,12 @@ public abstract class AMTProgressModel<DEVICE, STAGE> implements AMTRenderable
 		AMTUtils.disposeOf(model);
 	}
 
+	@Override
+	@Nonnull
+	public AxisAlignedBB getBoundingBox()
+	{
+		return model.getBoundingBox();
+	}
 
 	@Override
 	public void defaultize()

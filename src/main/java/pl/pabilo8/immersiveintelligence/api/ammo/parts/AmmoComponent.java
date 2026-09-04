@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.api.ammo.parts;
 
+import lombok.Getter;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
@@ -20,6 +21,7 @@ import javax.annotation.Nullable;
  * @ii-approved 0.3.1
  * @since 30.08.2019
  */
+@Getter
 public abstract class AmmoComponent extends AmmoPart
 {
 	private final ComponentRole role;
@@ -57,14 +59,6 @@ public abstract class AmmoComponent extends AmmoPart
 	 */
 	public abstract void onEffect(World world, Vec3d pos, Vec3d dir, ComponentEffectShape shape, NBTTagCompound tag, float size, float multiplier, @Nullable Entity owner);
 
-	/**
-	 * @return the component role
-	 */
-	public ComponentRole getRole()
-	{
-		return role;
-	}
-
 
 	//--- Defaults ---//
 
@@ -93,11 +87,6 @@ public abstract class AmmoComponent extends AmmoPart
 	public boolean matchesBullet(IAmmoTypeItem<?, ?> bullet)
 	{
 		return true;
-	}
-
-	public int getSlotsTaken()
-	{
-		return slotsTaken;
 	}
 
 	public boolean isSpaciousComponent()

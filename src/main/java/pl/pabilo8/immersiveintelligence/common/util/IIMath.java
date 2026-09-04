@@ -191,6 +191,15 @@ public class IIMath extends MathHelper
 		return new Vec3d(aabb.minX+(aabb.maxX-aabb.minX)*0.5D, aabb.minY+(aabb.maxY-aabb.minY)*0.5D, aabb.minZ+(aabb.maxZ-aabb.minZ)*0.5D);
 	}
 
+	public static Vec3d getAABBSize(AxisAlignedBB aabb)
+	{
+		return new Vec3d(
+				Math.abs(aabb.maxX-aabb.minX),
+				Math.abs(aabb.maxY-aabb.minY),
+				Math.abs(aabb.maxZ-aabb.minZ)
+		);
+	}
+
 	/**
 	 * Creates a Vec3 using the pitch and yaw of the entities rotation.
 	 */

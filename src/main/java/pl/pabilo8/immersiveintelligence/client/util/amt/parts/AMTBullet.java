@@ -5,6 +5,7 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
@@ -16,6 +17,7 @@ import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
 import pl.pabilo8.immersiveintelligence.common.util.amt.AMTModelHeader;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -134,6 +136,13 @@ public class AMTBullet extends AMT
 		nbt.checkSetEnum("state", BulletState.class, this::withState);
 		nbt.checkSetVec3D("base_rotation", this::withBaseRotation);
 
+	}
+
+	@Override
+	@Nonnull
+	public AxisAlignedBB getBoundingBox()
+	{
+		return model==null?new AxisAlignedBB(originPos, originPos): model.getBoundingBox();
 	}
 
 	@Override

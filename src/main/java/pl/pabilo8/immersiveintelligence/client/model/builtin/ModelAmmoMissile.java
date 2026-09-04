@@ -4,6 +4,7 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.DestFactor;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.util.math.AxisAlignedBB;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
@@ -14,6 +15,8 @@ import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMT;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoMissile;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -89,5 +92,17 @@ public class ModelAmmoMissile<T extends IAmmoType<T, E>, E extends EntityAmmoMis
 	{
 		super.loadModels(amt);
 		modelJet = amt.getPart("jet_flame");
+	}
+
+	@Nonnull
+	@Override
+	public AxisAlignedBB getBoundingBox()
+	{
+		if(modelJet!=null)
+		{
+			AxisAlignedBB aabb = modelJet.getBoundingBox();
+			return super.getBoundingBox().contract(0, -Math.abs(aabb.maxY-aabb.minY), 0);
+		}
+		return super.getBoundingBox();
 	}
 }

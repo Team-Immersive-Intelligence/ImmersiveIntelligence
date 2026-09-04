@@ -5,6 +5,7 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.client.model.obj.OBJModel;
@@ -63,7 +64,8 @@ public class ModelAmmo<T extends IAmmoType<T, E>, E extends EntityAmmoBase<? sup
 	 * Casing models, generally casings shouldn't change
 	 */
 	protected AMT modelCasing, modelCasingSimple, modelPaintBase;
-
+	@Nonnull
+	protected AxisAlignedBB boundingBox;
 
 	protected ModelAmmo(T ammo, ResLoc modelLocation)
 	{
@@ -162,6 +164,8 @@ public class ModelAmmo<T extends IAmmoType<T, E>, E extends EntityAmmoBase<? sup
 
 		//Load new models
 		AMTModel amt = new AMTModel(DefaultVertexFormats.BLOCK, modelLocation, this::getExtraModelParts);
+		this.boundingBox = amt.getBoundingBox();
+
 		//Either a proper model or no model at all
 		if(!(loaded = !amt.isEmpty()))
 			return;
@@ -237,5 +241,12 @@ public class ModelAmmo<T extends IAmmoType<T, E>, E extends EntityAmmoBase<? sup
 			MaterialLibrary matLib = objModel.getMatLib();
 			matLib.getMaterialNames().forEach(s -> ApiUtils.getRegisterSprite(map, matLib.getMaterial(s).getTexture().getTextureLocation()));
 		} catch(Exception ignored) {}
+	}
+
+	@Nonnull
+	@Override
+	public AxisAlignedBB getBoundingBox()
+	{
+		return boundingBox;
 	}
 }

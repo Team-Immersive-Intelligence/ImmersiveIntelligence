@@ -4,6 +4,7 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.nbt.NBTTagFloat;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil;
 import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil.Shaders;
@@ -347,4 +348,10 @@ public abstract class AMT implements AMTRenderable, Cloneable
 	}
 
 	protected abstract AMT renamedCopy(String newName);
+
+	//--- Size ---//
+
+	@Nonnull
+	@Override
+	public abstract AxisAlignedBB getBoundingBox();
 }

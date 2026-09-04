@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.GlStateManager.CullFace;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import org.lwjgl.BufferUtils;
@@ -16,6 +17,7 @@ import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.common.util.amt.AMTModelHeader;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
+import javax.annotation.Nonnull;
 import java.nio.DoubleBuffer;
 
 /**
@@ -189,6 +191,13 @@ public class AMTItem extends AMT
 		nbt.checkSetItemStack("stackInto", stackInto -> this.stackInto = stackInto);
 		nbt.checkSetBoolean("drawStacked", drawStacked -> this.drawStacked = drawStacked);
 		nbt.checkSetBoolean("schematic", drawSchematic -> this.drawSchematic = drawSchematic);
+	}
+
+	@Override
+	@Nonnull
+	public AxisAlignedBB getBoundingBox()
+	{
+		return new AxisAlignedBB(originPos, originPos);
 	}
 
 

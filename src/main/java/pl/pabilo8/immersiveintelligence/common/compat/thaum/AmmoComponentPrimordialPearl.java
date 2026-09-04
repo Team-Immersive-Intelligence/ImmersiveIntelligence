@@ -39,7 +39,7 @@ public class AmmoComponentPrimordialPearl extends AmmoComponent
 {
 	public AmmoComponentPrimordialPearl()
 	{
-		super("primordial_pearl", 1f, ComponentRole.SPECIAL, IIColor.fromPackedARGB(0xff3dae), 3);
+		super("primordial_pearl", 1f, ComponentRole.SPECIAL, IIColor.fromPackedRGB(0xff3dae), 3);
 	}
 
 	@Override

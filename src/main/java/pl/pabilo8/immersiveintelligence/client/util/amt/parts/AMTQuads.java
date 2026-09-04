@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 import org.lwjgl.opengl.GL11;
@@ -14,6 +15,7 @@ import pl.pabilo8.immersiveintelligence.client.model.IIModelRegistry;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
+import javax.annotation.Nonnull;
 import java.util.Arrays;
 
 /**
@@ -202,5 +204,39 @@ public class AMTQuads extends AMT
 	public void setLighting(boolean hasLighting)
 	{
 		this.hasLighting = hasLighting;
+	}
+
+	//--- Utils ---//
+
+	@Override
+	@Nonnull
+	public AxisAlignedBB getBoundingBox()
+	{
+		Vec3d min = new Vec3d(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+		Vec3d max = new Vec3d(-Double.MAX_VALUE, -Double.MAX_VALUE, -Double.MAX_VALUE);
+
+		for(BakedQuad quad : quads)
+			for(int i = 0; i < 4; i++)
+			{
+				//Extract vertex position from quad data
+				int vertexIndex = i*DefaultVertexFormats.BLOCK.getIntegerSize();
+				int[] vertexData = quad.getVertexData();
+				double x = Float.intBitsToFloat(vertexData[vertexIndex]);
+				double y = Float.intBitsToFloat(vertexData[vertexIndex+1]);
+				double z = Float.intBitsToFloat(vertexData[vertexIndex+2]);
+
+				min = new Vec3d(
+						Math.min(min.x, x),
+						Math.min(min.y, y),
+						Math.min(min.z, z)
+				);
+				max = new Vec3d(
+						Math.max(max.x, x),
+						Math.max(max.y, y),
+						Math.max(max.z, z)
+				);
+			}
+
+		return new AxisAlignedBB(min, max);
 	}
 }

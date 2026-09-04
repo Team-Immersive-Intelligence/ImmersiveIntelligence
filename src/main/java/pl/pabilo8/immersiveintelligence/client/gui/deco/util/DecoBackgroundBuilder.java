@@ -38,9 +38,11 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
+ * Builds layered backgrounds, frames, slots, and title labels for a Deco GUI.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
- * @updated 23.07.2026
+ * @updated 04.09.2026
  * @since 07.01.2025
  **/
 public class DecoBackgroundBuilder<T, C extends Container>
@@ -478,10 +480,7 @@ public class DecoBackgroundBuilder<T, C extends Container>
 	{
 		DecoFrame frame = backgroundFrame.frame;
 		assert frame!=null;
-		if(frame.cornersOnly)
-			drawFrameCorners(draw, backgroundFrame.x, backgroundFrame.y, backgroundFrame.width, backgroundFrame.height, frame.style, frame.color, frame.sides);
-		else
-			drawFrame(draw, backgroundFrame.x, backgroundFrame.y, backgroundFrame.width, backgroundFrame.height, frame.style, frame.color, frame.sides, frame.frameThickness);
+		DecoUtils.drawFrame(draw, backgroundFrame.x, backgroundFrame.y, backgroundFrame.width, backgroundFrame.height, frame);
 	}
 
 	@Nonnull
@@ -652,78 +651,6 @@ public class DecoBackgroundBuilder<T, C extends Container>
 		}
 
 		return draw;
-	}
-
-	private void drawFrameCorners(IIDrawUtils draw, int x, int y, int width, int height, ResLoc style, IIColor color, boolean[] sides)
-	{
-		TextureAtlasSprite sprite = ClientUtils.getSprite(style);
-		int cornerSize = 16;
-
-		//Top-left corner
-		if(sides[0]&&sides[3])
-			draw.drawTexColorRect(x, y, cornerSize, cornerSize, color,
-					sprite.getMinU(), sprite.getInterpolatedU(8), sprite.getMinV(), sprite.getInterpolatedV(8));
-		//Top-right corner
-		if(sides[0]&&sides[1])
-			draw.drawTexColorRect(x+width-cornerSize, y, cornerSize, cornerSize, color,
-					sprite.getInterpolatedU(16-8), sprite.getInterpolatedU(16), sprite.getMinV(), sprite.getInterpolatedV(8));
-		//Bottom-left corner
-		if(sides[2]&&sides[3])
-			draw.drawTexColorRect(x, y+height-cornerSize, cornerSize, cornerSize, color,
-					sprite.getMinU(), sprite.getInterpolatedU(8), sprite.getInterpolatedV(16-8), sprite.getInterpolatedV(16));
-		//Bottom-right corner
-		if(sides[2]&&sides[1])
-			draw.drawTexColorRect(x+width-cornerSize, y+height-cornerSize, cornerSize, cornerSize, color,
-					sprite.getInterpolatedU(16-8), sprite.getInterpolatedU(16), sprite.getInterpolatedV(16-8), sprite.getInterpolatedV(16));
-	}
-
-	private void drawFrame(IIDrawUtils draw, int x, int y, int width, int height, ResLoc style, IIColor color, boolean[] sides, int frameThickness)
-	{
-		TextureAtlasSprite sprite = ClientUtils.getSprite(style);
-
-		//Top-Left mappings
-		float minU = sprite.getMinU();
-		float minUU = sprite.getInterpolatedU(frameThickness/2f);
-		float minV = sprite.getMinV();
-		float minVV = sprite.getInterpolatedV(frameThickness/2f);
-		//Bottom-Right mappings
-		float maxU = sprite.getInterpolatedU(16-frameThickness/2f);
-		float maxUU = sprite.getInterpolatedU(16);
-		float maxV = sprite.getInterpolatedV(16-frameThickness/2f);
-		float maxVV = sprite.getInterpolatedV(16);
-
-		//Draw main frame
-
-		//Top
-		if(sides[0])
-			draw.drawRepeatedTexColorRect(x+frameThickness, y, width-frameThickness*2, frameThickness, color,
-					32-2*frameThickness, frameThickness, minUU, maxU, minV, minVV);
-		//Bottom
-		if(sides[1])
-			draw.drawRepeatedTexColorRect(x+frameThickness, y+height-frameThickness, width-frameThickness*2, frameThickness, color,
-					32-2*frameThickness, frameThickness, minUU, maxU, maxV, maxVV);
-		//Left
-		if(sides[2])
-			draw.drawRepeatedTexColorRect(x, y+frameThickness, frameThickness, height-frameThickness*2, color,
-					frameThickness, 32-2*frameThickness, minU, minUU, minVV, maxV);
-		//Right
-		if(sides[3])
-			draw.drawRepeatedTexColorRect(x+width-frameThickness, y+frameThickness, frameThickness, height-frameThickness*2, color,
-					frameThickness, 32-2*frameThickness, maxU, maxUU, minVV, maxV);
-
-		//Draw squares on frame edges
-		if(sides[0]||sides[3])
-			draw.drawTexColorRect(x, y, frameThickness, frameThickness, color,
-					minU, minUU, minV, minVV);
-		if(sides[0]||sides[1])
-			draw.drawTexColorRect(x+width-frameThickness, y, frameThickness, frameThickness, color,
-					maxU, maxUU, minV, minVV);
-		if(sides[2]||sides[3])
-			draw.drawTexColorRect(x, y+height-frameThickness, frameThickness, frameThickness, color,
-					minU, minUU, maxV, maxVV);
-		if(sides[2]||sides[1])
-			draw.drawTexColorRect(x+width-frameThickness, y+height-frameThickness, frameThickness, frameThickness, color,
-					maxU, maxUU, maxV, maxVV);
 	}
 
 	//--- Utility Classes ---//

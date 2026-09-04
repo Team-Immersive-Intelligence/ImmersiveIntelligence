@@ -15,6 +15,8 @@ import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIITileBase;
  */
 public class ContainerProjectileWorkshop extends ContainerIITileBase<TileEntityProjectileWorkshop>
 {
+	private static final int CORE_PLAYER_INVENTORY_X = 76;
+
 	public Slot inputSlot, componentInputSlot;
 
 	public ContainerProjectileWorkshop(EntityPlayer player, TileEntityProjectileWorkshop tile)
@@ -24,13 +26,13 @@ public class ContainerProjectileWorkshop extends ContainerIITileBase<TileEntityP
 		if(tile.isUpgradeInstalled(IIContent.UPGRADE_CORE_FILLER))
 		{
 			inputSlot = addSlot(8+2+2, 45-8, MultiblockProjectileWorkshop.SLOT_INPUT);
-			componentInputSlot = addSlot(176/2-9, 12, MultiblockProjectileWorkshop.SLOT_COMPONENT_INPUT);
+			componentInputSlot = addSlot(176/2-9-1, 12+4, MultiblockProjectileWorkshop.SLOT_COMPONENT_INPUT);
 			addPlayerInventory(player.inventory, 8+32+8+4-44, 141+8);
 		}
 		else
 		{
 			inputSlot = addSlot(8, 8+2, MultiblockProjectileWorkshop.SLOT_INPUT);
-			addPlayerInventory(player.inventory, 8+32+8+4, 141+8);
+			addPlayerInventory(player.inventory, CORE_PLAYER_INVENTORY_X, 141+8);
 		}
 
 	}

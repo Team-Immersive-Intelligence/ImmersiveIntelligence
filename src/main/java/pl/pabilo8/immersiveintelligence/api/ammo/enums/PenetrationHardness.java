@@ -1,13 +1,14 @@
 package pl.pabilo8.immersiveintelligence.api.ammo.enums;
 
-import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.ILocalizedEnum;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
  * @since 27.03.2024
  */
-public enum PenetrationHardness implements ISerializableEnum
+public enum PenetrationHardness implements ILocalizedEnum
 {
 	FOLIAGE(false),
 	//Copper
@@ -43,5 +44,11 @@ public enum PenetrationHardness implements ISerializableEnum
 	public boolean canRicochet()
 	{
 		return canRicochet;
+	}
+
+	@Override
+	public String geLocaleKey()
+	{
+		return IIReference.DESCRIPTION_KEY+"penetration_hardness.";
 	}
 }

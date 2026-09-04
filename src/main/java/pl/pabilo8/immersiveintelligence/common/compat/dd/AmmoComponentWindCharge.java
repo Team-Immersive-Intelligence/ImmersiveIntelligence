@@ -32,7 +32,7 @@ public class AmmoComponentWindCharge extends AmmoComponent
 {
 	public AmmoComponentWindCharge()
 	{
-		super("windcharge", 1f, ComponentRole.SPECIAL, IIColor.fromPackedARGB(0xc8dbfa), 2);
+		super("windcharge", 1f, ComponentRole.SPECIAL, IIColor.fromPackedRGB(0xc8dbfa), 2);
 	}
 
 	@Override

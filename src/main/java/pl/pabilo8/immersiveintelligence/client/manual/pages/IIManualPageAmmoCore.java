@@ -12,11 +12,11 @@ import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 07.08.2021
  */
-public class IIManualPageBulletCore extends IIManualPageBulletComponent
+public class IIManualPageAmmoCore extends IIManualPageAmmoComponent
 {
 	private final AmmoCore core;
 
-	public IIManualPageBulletCore(ManualInstance manual, AmmoCore ammoCore)
+	public IIManualPageAmmoCore(ManualInstance manual, AmmoCore ammoCore)
 	{
 		super(manual, ammoCore.getName(), ammoCore.getMaterial().getExampleStack(), ComponentRole.GENERAL_PURPOSE, ammoCore.getDensity());
 		core = ammoCore;

@@ -5,6 +5,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.amt.AMTModelHeader;
@@ -81,6 +82,20 @@ public class AMTText extends AMT
 		nbt.checkSetString("text", text -> this.text = text);
 		nbt.checkSetColor("color", color -> this.color = color);
 		nbt.checkSetFloat("fontSize", fontSize -> this.fontSize = fontSize);
+	}
+
+	@Override
+	@Nonnull
+	public AxisAlignedBB getBoundingBox()
+	{
+		if(this.text==null||this.text.isEmpty())
+			return new AxisAlignedBB(originPos, originPos);
+
+		return new AxisAlignedBB(originPos, originPos.addVector(
+				this.fontRenderer.getStringWidth(this.text)*fontSize,
+				this.fontRenderer.FONT_HEIGHT*fontSize,
+				0)
+		);
 	}
 
 	@Override

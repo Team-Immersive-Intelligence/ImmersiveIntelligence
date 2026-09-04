@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import org.lwjgl.opengl.GL11;
@@ -13,6 +14,7 @@ import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
 import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
 import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMT;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 
 import javax.annotation.Nullable;
 
@@ -240,6 +242,17 @@ public class DecoScenarioDisplay extends DecoComponent<DecoScenarioDisplay>
 		GlStateManager.disableRescaleNormal();
 		GlStateManager.disableDepth();
 		GlStateManager.popMatrix();
+	}
+
+	public DecoScenarioDisplay withCentering(AxisAlignedBB aabb, float maxSize, float minScale, float maxScale)
+	{
+		Vec3d center = aabb.getCenter();
+		Vec3d size = IIMath.getAABBSize(aabb);
+		float maxEdge = (float)Math.max(size.x, Math.max(size.y, size.z));
+		withOrigin(center.x, center.y, center.z);
+		withTranslation(-center.x, -center.y, -center.z);
+		withScale(Math.min(maxEdge==0?minScale: (minScale/(maxEdge/maxSize)), maxScale));
+		return this;
 	}
 
 	private boolean handleMouseScroll(DecoScenarioDisplay gui, int mouseScroll, int mouseX, int mouseY)

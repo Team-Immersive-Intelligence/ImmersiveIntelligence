@@ -6,12 +6,15 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.amt.AMTModelHeader;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
+
+import javax.annotation.Nonnull;
 
 /**
  * AMT type for drawing IE wiring, using AMTQuadsBuilder for geometry.
@@ -101,6 +104,15 @@ public class AMTWire extends AMT
 		Vec3d end = nbt.getVec3d("end");
 		if(start!=null&&end!=null)
 			setConnection(start.scale(0.0625f), end.scale(0.0625f));
+	}
+
+	@Override
+	@Nonnull
+	public AxisAlignedBB getBoundingBox()
+	{
+		return new AxisAlignedBB(start, end)
+				.grow(diameter)
+				.expand(0, -slack, 0);
 	}
 
 	@Override

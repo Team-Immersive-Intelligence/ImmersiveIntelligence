@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -296,6 +297,18 @@ public class AMTFluid extends AMT
 					withFluidLayer(layer.getDoubleAt(0), layer.getDoubleAt(1), layer.getDoubleAt(2),
 							layer.getDoubleAt(3), layer.getDoubleAt(4)));
 		}
+	}
+
+	@Override
+	@Nonnull
+	public AxisAlignedBB getBoundingBox()
+	{
+		AxisAlignedBB bb = new AxisAlignedBB(originPos.x, originPos.y, originPos.z, originPos.x, originPos.y, originPos.z);
+		for(FluidLayer layer : layers)
+			bb = bb.union(new AxisAlignedBB(
+					originPos.x+layer.xMin(), originPos.y+layer.yLevel, originPos.z+layer.zMin(),
+					originPos.x+layer.xMax(), originPos.y+layer.yLevel, originPos.z+layer.zMax()));
+		return bb;
 	}
 
 
