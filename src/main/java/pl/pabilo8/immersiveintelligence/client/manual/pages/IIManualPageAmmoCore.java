@@ -1,38 +1,46 @@
 package pl.pabilo8.immersiveintelligence.client.manual.pages;
 
 import blusunrize.lib.manual.ManualInstance;
-import blusunrize.lib.manual.ManualUtils;
-import blusunrize.lib.manual.gui.GuiManual;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.util.text.TextFormatting;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentRole;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
+ * Displays an {@link AmmoCore} and its properties in the Engineer's Manual.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 05.09.2026
  * @since 07.08.2021
  */
-public class IIManualPageAmmoCore extends IIManualPageAmmoComponent
+public class IIManualPageAmmoCore extends IIManualPageAmmoPart<AmmoCore>
 {
-	private final AmmoCore core;
-
-	public IIManualPageAmmoCore(ManualInstance manual, AmmoCore ammoCore)
+	public IIManualPageAmmoCore(ManualInstance manual, AmmoCore core)
 	{
-		super(manual, ammoCore.getName(), ammoCore.getMaterial().getExampleStack(), ComponentRole.GENERAL_PURPOSE, ammoCore.getDensity());
-		core = ammoCore;
-		this.text = "bullet_core."+name;
+		super(manual, core, "bullet_core");
 	}
 
 	@Override
-	int renderInfo(GuiManual gui, int x, int y)
+	protected String getLocalizedPartName()
 	{
-		//TODO: 27.05.2024 reimplement
-//		ManualUtils.drawSplitString(manual.fontRenderer, TextFormatting.BOLD+I18n.format("ie.manual.entry.bullet_components.dmg_mod", damageMod), x-12, y+20, 140, manual.getTextColour());
-//		ManualUtils.drawSplitString(manual.fontRenderer, TextFormatting.BOLD+I18n.format("ie.manual.entry.bullet_components.pen_mod", penMod), x-12, y+30, 140, manual.getTextColour());
-//		ManualUtils.drawSplitString(manual.fontRenderer, TextFormatting.BOLD+I18n.format("ie.manual.entry.bullet_components.blast_mod", blastMod), x-12, y+40, 140, manual.getTextColour());
+		return manual.formatText(text);
+	}
 
-		ManualUtils.drawSplitString(manual.fontRenderer, TextFormatting.BOLD+I18n.format("ie.manual.entry.bullet_components.density", density), x, y, 120, manual.getTextColour());
+	@Override
+	protected List<String> getInfoLines()
+	{
+		return Arrays.asList(
+				I18n.format("ie.manual.entry.bullet_components.density", part.getDensity()),
+				I18n.format("ie.manual.entry.bullet_components.damage_modifier", part.getDamageModifier()),
+				I18n.format("ie.manual.entry.bullet_components.component_efficiency_modifier", part.getExplosionModifier()),
+				I18n.format("ie.manual.entry.bullet_components.penetration_hardness", part.getPenetrationHardness().getLocalizedName())
+		);
+	}
 
-		return 50;
+	@Override
+	protected int getMinimumDescriptionY()
+	{
+		return 100;
 	}
 }

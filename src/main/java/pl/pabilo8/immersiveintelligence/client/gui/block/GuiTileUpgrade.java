@@ -240,7 +240,7 @@ public class GuiTileUpgrade<T extends TileEntityIEBase & IIEInventory & IUpgrada
 		if(upgrade!=null)
 		{
 			upgrades.removeAll(techTree.getAllIncompatibleUpgrades(upgrade));
-			upgrades.addAll(techTree.getAllRequiredUpgrades(upgrade.getPurpose()));
+			upgrades.addAll(techTree.getAllParents(upgrade));
 			upgrades.add(upgrade);
 		}
 

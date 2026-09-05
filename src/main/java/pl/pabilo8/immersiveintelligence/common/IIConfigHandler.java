@@ -176,6 +176,9 @@ public class IIConfigHandler
 			@RequiresMcRestart
 			public static boolean enableDecoOverride = false;
 
+			@Comment({"If disabled, II will not replace the IE font in the Engineer's Manual."})
+			public static boolean enableFontOverride = true;
+
 			@SubConfig
 			@LangKey("item.immersiveengineering.railgun.name")
 			@Comment("Config for the Railgun, allows for the toggling of II related features, such as recoil and penetration")

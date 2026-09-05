@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.api.upgrade;
 
+import lombok.Getter;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -213,13 +214,23 @@ public class UpgradeTechTree
 	 * @param upgrade upgrade to check for
 	 * @return all upgrades required to install the given upgrade
 	 */
-	public List<Upgrade> getAllRequiredUpgrades(UpgradePurpose upgrade)
+	public List<Upgrade> getAllParents(@Nonnull Upgrade upgrade)
 	{
+		UpgradeTreeNode node = getUpgradeNodeFor(upgrade);
+		return node.getDependenciesRecursive(new ArrayList<>());
+	}
+
+	/**
+	 *
+	 * @param upgrade upgrade to check for
+	 * @return all upgrades that can be installed after the given upgrade is installed
+	 */
+	public List<Upgrade> getAllChildren(@Nonnull Upgrade upgrade)
+	{
+		final UpgradeTreeNode node = getUpgradeNodeFor(upgrade);
 		return nodes.stream()
-				.filter(n -> n.upgrade.getPurpose()==upgrade)
-				.flatMap(n -> n.dependencies.stream())
+				.filter(n -> getAllUpgrades().contains(node))
 				.map(n -> n.upgrade)
-				.distinct()
 				.collect(Collectors.toList());
 	}
 
@@ -267,9 +278,13 @@ public class UpgradeTechTree
 	 */
 	public static class UpgradeTreeNode
 	{
+		@Getter
 		private final Upgrade upgrade;
+		@Getter
 		private final UpgradeTier tier;
+		@Getter
 		private final Set<UpgradeTreeNode> dependencies = new HashSet<>();
+		@Getter
 		private final Set<UpgradeTreeNode> locksOut = new HashSet<>();
 		@Nullable
 		private ResLoc modelLocation = null;
@@ -286,24 +301,14 @@ public class UpgradeTechTree
 			return this;
 		}
 
-		public Upgrade getUpgrade()
+		private List<Upgrade> getDependenciesRecursive(ArrayList<Upgrade> list)
 		{
-			return upgrade;
-		}
-
-		public UpgradeTier getTier()
-		{
-			return tier;
-		}
-
-		public Set<UpgradeTreeNode> getDependencies()
-		{
-			return dependencies;
-		}
-
-		public Set<UpgradeTreeNode> getLocksOut()
-		{
-			return locksOut;
+			for(UpgradeTreeNode dependency : dependencies)
+			{
+				list.add(dependency.upgrade);
+				dependency.getDependenciesRecursive(list);
+			}
+			return list;
 		}
 
 		/**
@@ -315,6 +320,8 @@ public class UpgradeTechTree
 		{
 			return modelLocation;
 		}
+
+
 	}
 }
 

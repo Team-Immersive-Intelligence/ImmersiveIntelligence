@@ -240,7 +240,7 @@ public class GuiEntityUpgrade<T extends Entity & IIEInventory & IUpgradableDevic
 		if(upgrade!=null)
 		{
 			upgrades.removeAll(techTree.getAllIncompatibleUpgrades(upgrade));
-			upgrades.addAll(techTree.getAllRequiredUpgrades(upgrade.getPurpose()));
+			upgrades.addAll(techTree.getAllParents(upgrade));
 			upgrades.add(upgrade);
 		}
 

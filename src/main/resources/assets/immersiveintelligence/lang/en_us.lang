@@ -3123,7 +3123,7 @@ ie.manual.entry.bullet_core.core_brass.desc=Brass is a heavy metal with bad pene
 
 ie.manual.entry.bullet_core.core_copper=Copper Core
 ie.manual.entry.bullet_core.core_copper.lore=Every Penny Counts
-ie.manual.entry.bullet_core.core_copper.desc=Copper is a cheap material for bullets, its penetration ability is worse than one of brass, but its component effect.
+ie.manual.entry.bullet_core.core_copper.desc=Copper is a cheap material for bullets. Its penetration ability is worse than one of brass, but its component effect is slightly better.
 
 ie.manual.entry.bullet_core.core_lead=Lead Core
 ie.manual.entry.bullet_core.core_lead.lore=Good, bad, and ugly
@@ -3151,11 +3151,12 @@ ie.manual.entry.bullet_core.core_rubber.desc=Rubber cores are less lethal than t
 
 ie.manual.entry.bullet_components.name=Bullet Components
 ie.manual.entry.bullet_components.subtext=Load APCRHEFSPTSD B-Capped!
-ie.manual.entry.bullet_components.dmg_mod=Damage: %sx
-ie.manual.entry.bullet_components.pen_mod=Penetration: %s vBH
-ie.manual.entry.bullet_components.blast_mod=Blast Radius: %sx
 ie.manual.entry.bullet_components.density=Density: %s
+ie.manual.entry.bullet_components.damage_modifier=Damage Modifier: %sx
+ie.manual.entry.bullet_components.component_efficiency_modifier=Component Efficiency Modifier: %sx
+ie.manual.entry.bullet_components.penetration_hardness=Penetration Hardness: %s
 ie.manual.entry.bullet_components.type=Type: %s
+ie.manual.entry.bullet_components.slots_taken=Slots Taken: %s
 
 #A quote from World in Conflict
 ie.manual.entry.bullet_component.firework=Fireworks
@@ -3190,7 +3191,7 @@ ie.manual.entry.bullet_component.tnt.desc=TNT is an explosive material with medi
 #CoH2 Reference
 ie.manual.entry.bullet_component.rdx=RDX
 ie.manual.entry.bullet_component.rdx.lore=Things go up, things go down!
-ie.manual.entry.bullet_component.rdx.desc=RDX, also known as the §shexogen§r is a powerful high-explosive material. Being twice as powerful as TNT and it's able to destroy even the heaviest emplacements.
+ie.manual.entry.bullet_component.rdx.desc=RDX, also known as the §lhexogen§r is a powerful high-explosive material. Being twice as powerful as TNT and it's able to destroy even the heaviest emplacements.
 
 #There are many variants of HMX's full name, one of them is Her Majesty's Explosive
 ie.manual.entry.bullet_component.hmx=HMX
@@ -3247,7 +3248,7 @@ ie.manual.entry.bullet_component.shrapnel_electrum.desc=Electrum excels at condu
 
 #Reference to a post-ww2 poster for inter-country help in Western Europe
 ie.manual.entry.bullet_component.shrapnel_constantan=Constantan Shrapnel
-ie.manual.entry.bullet_component.shrapnel_constantan.lore=<br>Whatever the weather, we kill enemies together.
+ie.manual.entry.bullet_component.shrapnel_constantan.lore=Whatever the weather, we kill enemies together.
 ie.manual.entry.bullet_component.shrapnel_constantan.desc=Constantan is well known for its heat conductive properties, enemies hit will be prone to fire damage for some time.
 
 #Reference to words by Otto von Bismarck
@@ -3805,7 +3806,7 @@ item.immersiveintelligence.bullet.component.alumentum.name=Alumentum
 ie.manual.entry.bullet_component.alumentum=Alumentum
 ie.manual.entry.bullet_component.alumentum.lore=Alchemist's explosives
 ie.manual.entry.bullet_component.alumentum.desc=A very volatile fiery substance, Alumentum is smaller in radius compared to TNT, but contains more concentrated power.
- 
+
 item.immersiveintelligence.bullet.component.bottled_taint.name=Bottled Taint
 ie.manual.entry.bullet_component.bottled_taint=Bottled Taint
 ie.manual.entry.bullet_component.bottled_taint.lore=Ruinous power

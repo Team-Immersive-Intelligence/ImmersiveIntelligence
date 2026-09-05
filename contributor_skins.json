@@ -42,9 +42,7 @@
       "22153f9b-4950-4028-911a-7d39a2c80101"
     ],
     "appliesTo": [
-      "machinegun",
-      "submachinegun",
-      "howitzer"
+      "submachinegun"
     ],
     "mods": [
       "rarity=Epic"
@@ -53,9 +51,6 @@
   {
     "name": "old_glory",
     "uuid": [
-      "22153f9b-4950-4028-911a-7d39a2c80101",
-      "fa45bba4-6684-49ee-8e9b-689f1f39ca7f",
-      "bebe0117-4cfb-4d7d-844d-31823575368b"
     ],
     "appliesTo": [
       "howitzer",
@@ -69,8 +64,6 @@
   {
     "name": "stormwind",
     "uuid": [
-      "22153f9b-4950-4028-911a-7d39a2c80101",
-      "fa45bba4-6684-49ee-8e9b-689f1f39ca7f"
     ],
     "appliesTo": [
       "howitzer",
@@ -361,7 +354,8 @@
       "ad64fa36-e39d-4cc3-9da4-7bfc002a1692",
       "26c4caf6-ea28-4631-a108-94dcc635fed6",
       "9dd4c816-65b6-46f4-85f2-1e35ca5a4ac4",
-      "31ac78f5-359d-48a2-9055-9843ce34dc4f"
+      "31ac78f5-359d-48a2-9055-9843ce34dc4f",
+      "ac1c93ed-cc71-43b5-befb-6c104ae3e076"
     ],
     "appliesTo": [
       "submachinegun"

@@ -69,9 +69,11 @@ public class RecipeSkinCraftingHandler extends Impl<IRecipe> implements IRecipe
 			{
 				remaining = NonNullList.withSize(inv.getSizeInventory(), ItemStack.EMPTY);
 				remaining.set(manualStack, manual.copy());
-				String last = ItemNBTHelper.getString(manual, "lastSkin");
+				String[] info = ItemNBTHelper.getString(manual, "lastSkin").split(":");
+				IISpecialSkin skin = IISkinHandler.getSkin(info[1]);
 				ItemStack op = item.copy();
-				skinnable.applySkinnableSkin(op, last);
+				if(skin!=null)
+					skinnable.applySkinnableSkin(op, skin.name);
 				output = op;
 			}
 			else
