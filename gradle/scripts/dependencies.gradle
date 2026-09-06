@@ -34,6 +34,6 @@ dependencies {
 		testImplementation rfg.deobf("blusunrize:ImmersiveEngineering:${mkxString('immersive_engineering_version')}")
 		testImplementation rfg.deobf("org.squiddev:cc-tweaked-1.12.2:${mkxString('cc_tweaked_version')}")
 		testImplementation rfg.deobf("li.cil.oc:OpenComputers:${mkxString('opencomputers_version')}")
-		testRuntimeOnly rfg.deobf("com.elytradev:mirage:${mkxString('mirage_version')}")
+		testImplementation rfg.deobf("com.elytradev:mirage:${mkxString('mirage_version')}")
 	}
 }

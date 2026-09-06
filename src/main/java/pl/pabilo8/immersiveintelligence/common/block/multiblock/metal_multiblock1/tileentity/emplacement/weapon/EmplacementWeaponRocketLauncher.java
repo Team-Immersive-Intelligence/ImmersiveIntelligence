@@ -1,7 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon;
 
 import net.minecraft.item.ItemStack;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.Autocannon;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
@@ -23,9 +22,9 @@ public class EmplacementWeaponRocketLauncher extends EmplacementWeaponGunBase<En
 		if(this.chillingState==null)
 			this.chillingState = new ChillingState(240, 320, 80);
 		this.ammoFactory.setAmmo(IIContent.itemAmmoRocketLight);
-		this.visionAABB = this.visionAABB.grow(Autocannon.detectionRadius);
-		this.attackAABB = this.attackAABB.grow(Autocannon.attackRadius);
-		setupItemHandlers(te, 16, 0, 16, 0,
+		this.visionAABB = this.visionAABB.grow(0);
+		this.attackAABB = this.attackAABB.grow(240);
+		setupItemHandlers(te, 24, 0, 16, 0,
 				this.ammoFactory::isValidAmmo, this.ammoFactory::isValidAmmo);
 		this.aim.withAimSpeed(2f, 1f);
 		this.aim.withPitchLimit(-90, 90);

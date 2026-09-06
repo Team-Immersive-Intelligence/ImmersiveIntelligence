@@ -1803,7 +1803,7 @@ public class IIConfigHandler
 				@Comment({"Bullet capacity of the Machinegun magazine."})
 				public static int machinegunCapacity = 48;
 				@Comment({"Time required to load a single bullet into the Machinegun magazine (in ticks)."})
-				public static int machinegunReloadTime = 20;
+				public static int machinegunReloadTime = 24;
 
 				@Comment({"Bullet capacity of the Submachinegun magazine."})
 				public static int submachinegunCapacity = 24;
@@ -1826,9 +1826,9 @@ public class IIConfigHandler
 				public static int assaultRifleReloadTime = 20;
 
 				@Comment({"Bullet capacity of the Autocannon magazine."})
-				public static int autocannonCapacity = 16;
+				public static int autocannonCapacity = 24;
 				@Comment({"Time required to load a single shell into the Autocannon (in ticks)."})
-				public static int autocannonReloadTime = 20;
+				public static int autocannonReloadTime = 32;
 
 				@Comment({"Bullet capacity of the CPDS drum magazine."})
 				public static int cpdsDrumCapacity = 128;

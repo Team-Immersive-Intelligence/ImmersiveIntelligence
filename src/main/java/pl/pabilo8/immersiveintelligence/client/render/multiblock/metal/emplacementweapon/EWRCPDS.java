@@ -68,7 +68,7 @@ public class EWRCPDS extends EmplacementWeaponRenderer<EmplacementWeaponCPDS>
 		this.rotatePitch.apply(weapon.aim.getPitchNormalized(partialTicks));
 		if(weapon.isUnloading())
 			this.unload.apply(weapon.getReloadAnimationProgress(partialTicks));
-		else
+		else if(weapon.isReloading())
 			this.load.apply(weapon.getReloadProgress(partialTicks));
 		this.fire.apply(getFireAnimationTime(weapon, partialTicks));
 	}

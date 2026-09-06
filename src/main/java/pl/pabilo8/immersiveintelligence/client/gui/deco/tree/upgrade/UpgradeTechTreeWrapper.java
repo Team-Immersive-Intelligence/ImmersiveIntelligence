@@ -1,5 +1,7 @@
 package pl.pabilo8.immersiveintelligence.client.gui.deco.tree.upgrade;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import pl.pabilo8.immersiveintelligence.api.upgrade.IUpgradableDevice;
 import pl.pabilo8.immersiveintelligence.api.upgrade.Upgrade;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeTechTree;
@@ -10,72 +12,70 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.tree.IDecoTreeNode;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeTechTree.UpgradeTreeNode;
 
 /**
- * Wraps the server-side UpgradeTechTree for display in DecoTreeDisplay.
+ * Wraps an UpgradeTechTree for Deco tree rendering without rebuilding node collections each frame.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 24.08.2026
  * @since 09.12.2025
  */
 public abstract class UpgradeTechTreeWrapper implements IDecoTree<Upgrade>
 {
-	private final UpgradeTechTree techTree;
 	private final IUpgradableDevice device;
-	private final Map<UpgradeTreeNode, UpgradeTreeNodeWrapper> wrapperMap = new HashMap<>();
+	private final Map<UpgradeTreeNode, UpgradeTreeNodeWrapper> wrapperMap = new LinkedHashMap<>();
+	private final List<IDecoTreeNode<Upgrade>> allNodes;
+	private final List<IDecoTreeNode<Upgrade>> rootNodes;
 	@Nullable
-	private UpgradeTreeNodeWrapper hoveredNode = null;
+	private UpgradeTreeNodeWrapper hoveredNode;
 
 	public UpgradeTechTreeWrapper(@Nonnull UpgradeTechTree techTree, @Nonnull IUpgradableDevice device)
 	{
-		this.techTree = techTree;
 		this.device = device;
-
-		//Create wrapper for each node
 		for(UpgradeTreeNode node : techTree.getAllUpgrades())
 			wrapperMap.put(node, new UpgradeTreeNodeWrapper(node));
 
-		//Setup dependencies and lockouts in wrappers
 		for(Map.Entry<UpgradeTreeNode, UpgradeTreeNodeWrapper> entry : wrapperMap.entrySet())
 		{
-			UpgradeTreeNode original = entry.getKey();
-			UpgradeTreeNodeWrapper wrapper = entry.getValue();
-			//Convert dependencies
-			for(UpgradeTreeNode dep : original.getDependencies())
-				wrapper.dependencies.add(wrapperMap.get(dep));
-			//Convert lockouts
-			for(UpgradeTreeNode lock : original.getLocksOut())
-				wrapper.lockOuts.add(wrapperMap.get(lock));
+			for(UpgradeTreeNode dependency : entry.getKey().getDependencies())
+				entry.getValue().dependencies.add(wrapperMap.get(dependency));
+			for(UpgradeTreeNode lockOut : entry.getKey().getLocksOut())
+				entry.getValue().lockOuts.add(wrapperMap.get(lockOut));
 		}
+
+		allNodes = Collections.unmodifiableList(new ArrayList<>(wrapperMap.values()));
+		List<IDecoTreeNode<Upgrade>> roots = new ArrayList<>();
+		for(Map.Entry<UpgradeTreeNode, UpgradeTreeNodeWrapper> entry : wrapperMap.entrySet())
+			if(entry.getKey().getDependencies().isEmpty())
+				roots.add(entry.getValue());
+		rootNodes = Collections.unmodifiableList(roots);
 	}
 
 	@Nonnull
 	@Override
 	public Collection<IDecoTreeNode<Upgrade>> getAllNodes()
 	{
-		return new ArrayList<>(wrapperMap.values());
+		return allNodes;
 	}
 
 	@Nonnull
 	@Override
 	public Collection<IDecoTreeNode<Upgrade>> getRootNodes()
 	{
-		return wrapperMap.entrySet().stream()
-				.filter(entry -> entry.getKey().getDependencies().isEmpty())
-				.map(Map.Entry::getValue).collect(Collectors.toList());
+		return rootNodes;
 	}
 
 	@Nonnull
 	@Override
 	public Collection<IDecoTreeNode<Upgrade>> getActiveNodes()
 	{
-		List<Upgrade> installedUpgrades = device.getAllInstalledUpgrades();
-		return wrapperMap.entrySet().stream()
-				.filter(entry -> installedUpgrades.contains(entry.getKey().getUpgrade()))
-				.map(Map.Entry::getValue)
-				.collect(Collectors.toList());
+		List<IDecoTreeNode<Upgrade>> active = new ArrayList<>();
+		for(IDecoTreeNode<Upgrade> node : allNodes)
+			if(node.isActive())
+				active.add(node);
+		return active;
 	}
 
 	@Nullable
@@ -88,53 +88,27 @@ public abstract class UpgradeTechTreeWrapper implements IDecoTree<Upgrade>
 	@Override
 	public void setHoveredNode(@Nullable IDecoTreeNode<Upgrade> node)
 	{
-		this.hoveredNode = (UpgradeTreeNodeWrapper)node;
+		hoveredNode = (UpgradeTreeNodeWrapper)node;
 	}
 
+	@RequiredArgsConstructor
 	private class UpgradeTreeNodeWrapper implements IDecoTreeNode<Upgrade>
 	{
 		private final UpgradeTreeNode original;
-		final Set<IDecoTreeNode<Upgrade>> dependencies = new HashSet<>();
-		final Set<IDecoTreeNode<Upgrade>> lockOuts = new HashSet<>();
-		private int x = 0;
-		private int y = 0;
-
-		public UpgradeTreeNodeWrapper(UpgradeTreeNode original)
-		{
-			this.original = original;
-		}
+		@Getter
+		private final Set<IDecoTreeNode<Upgrade>> dependencies = new LinkedHashSet<>();
+		@Getter
+		private final Set<IDecoTreeNode<Upgrade>> lockOuts = new LinkedHashSet<>();
+		@Getter
+		private int x;
+		@Getter
+		private int y;
 
 		@Nonnull
 		@Override
 		public String getId()
 		{
 			return original.getUpgrade().getName();
-		}
-
-		@Nonnull
-		@Override
-		public Set<IDecoTreeNode<Upgrade>> getDependencies()
-		{
-			return dependencies;
-		}
-
-		@Nonnull
-		@Override
-		public Set<IDecoTreeNode<Upgrade>> getLockOuts()
-		{
-			return lockOuts;
-		}
-
-		@Override
-		public int getX()
-		{
-			return x;
-		}
-
-		@Override
-		public int getY()
-		{
-			return y;
 		}
 
 		@Override
@@ -159,22 +133,18 @@ public abstract class UpgradeTechTreeWrapper implements IDecoTree<Upgrade>
 		@Override
 		public boolean isActive()
 		{
-			return device.getAllInstalledUpgrades().contains(original.getUpgrade()); //Fixed method name
+			return device.isUpgradeInstalled(original.getUpgrade());
 		}
 
 		@Override
 		public boolean isAvailable(@Nonnull Collection<IDecoTreeNode<Upgrade>> activeNodes)
 		{
-			//Check if all dependencies are active
-			for(IDecoTreeNode<Upgrade> dep : dependencies)
-				if(!activeNodes.contains(dep))
+			for(IDecoTreeNode<Upgrade> dependency : dependencies)
+				if(!activeNodes.contains(dependency))
 					return false;
-
-			//Check if no lockouts are active
-			for(IDecoTreeNode<Upgrade> lock : lockOuts)
-				if(activeNodes.contains(lock))
+			for(IDecoTreeNode<Upgrade> lockOut : lockOuts)
+				if(activeNodes.contains(lockOut))
 					return false;
-
 			return true;
 		}
 

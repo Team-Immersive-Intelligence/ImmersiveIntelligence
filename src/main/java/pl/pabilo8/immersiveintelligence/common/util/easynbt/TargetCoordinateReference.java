@@ -17,6 +17,7 @@ import java.util.function.Supplier;
  * Also stores optional shot limits for request-style fire missions.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 30.08.2026
  * @ii-approved 0.3.1
  * @since 22.02.2026
  */
@@ -39,7 +40,8 @@ public class TargetCoordinateReference implements INBTSerializable<NBTTagCompoun
 
 	public TargetCoordinateReference withWorldSupplier(Supplier<World> worldSupplier)
 	{
-		this.worldSupplier = worldSupplier;
+		this.worldSupplier = worldSupplier==null?() -> null: worldSupplier;
+		this.entityReference.withWorldSupplier(this.worldSupplier);
 		return this;
 	}
 
@@ -47,6 +49,16 @@ public class TargetCoordinateReference implements INBTSerializable<NBTTagCompoun
 	{
 		this.position = null;
 		this.entityReference.set(entity);
+		return this;
+	}
+
+	/**
+	 * Clears the target without changing shot-limit state.
+	 */
+	public TargetCoordinateReference clearTarget()
+	{
+		this.position = null;
+		this.entityReference.set(null);
 		return this;
 	}
 
@@ -103,8 +115,8 @@ public class TargetCoordinateReference implements INBTSerializable<NBTTagCompoun
 			//Unloaded chunks are inconclusive, not a completed mission.
 			if(world==null||(!world.isRemote&&!(world.isBlockLoaded(position))))
 				return true;
-			//Either the mission requires destroying a block or firing an amount of shots
-			return !world.isAirBlock(position)^shotsAreFinite;
+			//A finite mission ends by shot count. An unlimited mission ends when its block target is gone.
+			return shotsAreFinite||!world.isAirBlock(position);
 		}
 
 		return false;
@@ -115,7 +127,7 @@ public class TargetCoordinateReference implements INBTSerializable<NBTTagCompoun
 	{
 		Entity entity = this.entityReference.get();
 		if(entity!=null)
-			return new Vec3d(entity.posX, entity.posY+entity.height*0.5, entity.posZ);
+			return new Vec3d(entity.posX, entity.posY+(entity.height*0.5), entity.posZ);
 		return position!=null?new Vec3d(position).addVector(0.5, 0.5, 0.5): null;
 	}
 
@@ -155,6 +167,16 @@ public class TargetCoordinateReference implements INBTSerializable<NBTTagCompoun
 		return shotsRemaining;
 	}
 
+	public boolean isEntityTarget()
+	{
+		return getEntityID()!=0;
+	}
+
+	public boolean isPositionTarget()
+	{
+		return position!=null;
+	}
+
 	/**
 	 * Called by the weapon after a shot has been made to lower the counter.
 	 */
@@ -183,15 +205,15 @@ public class TargetCoordinateReference implements INBTSerializable<NBTTagCompoun
 	{
 		EasyNBT enbt = EasyNBT.wrapNBT(nbt);
 		this.shotsAreFinite = enbt.getBoolean("shotsAreFinite");
-		this.shotsRemaining = enbt.getInt("shotsRemaining");
+		this.shotsRemaining = Math.max(0, enbt.getInt("shotsRemaining"));
 
-		if(nbt.hasKey("entity"))
+		if(nbt.hasKey("entity", EasyNBT.TAG_INT))
 			entityReference.deserializeNBT((NBTTagInt)nbt.getTag("entity"));
 		else
 			entityReference.set(null);
 
 		position = null;
-		if(enbt.hasKey("pos"))
+		if(nbt.hasKey("pos", EasyNBT.TAG_INT_ARRAY)&&nbt.getIntArray("pos").length==3)
 			position = enbt.getPos("pos");
 	}
 }

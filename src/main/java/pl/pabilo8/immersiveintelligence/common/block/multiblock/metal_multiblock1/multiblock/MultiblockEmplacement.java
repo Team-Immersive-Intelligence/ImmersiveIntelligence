@@ -9,7 +9,9 @@ import pl.pabilo8.immersiveintelligence.api.style.StyleConstraints.PaintStyleCon
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeTechTree;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.UpgradePurpose;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.UpgradeTier;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Emplacement;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.BlockIIMetalMultiblock1.MetalMultiblocks1;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
@@ -17,6 +19,7 @@ import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
+import pl.pabilo8.immersiveintelligence.common.util.sound.IISoundAnimation;
 
 import java.util.Collections;
 
@@ -25,6 +28,8 @@ public class MultiblockEmplacement extends MultiblockStuctureBase<TileEntityEmpl
 	public static MultiblockEmplacement INSTANCE;
 	public static StyleConstraints STYLE_CONSTRAINTS;
 	public static ResLoc animationPlatform;
+	public final IISoundAnimation openingSoundAnimation;
+	public final IISoundAnimation closingSoundAnimation;
 
 	public MultiblockEmplacement()
 	{
@@ -53,6 +58,22 @@ public class MultiblockEmplacement extends MultiblockStuctureBase<TileEntityEmpl
 
 		//Tactile AMT
 		animationPlatform = ResLoc.of(IIReference.RES_II, "emplacement/open");
+
+		//Sound timing follows the moving ranges in emplacement/open.json.
+		double firstTick = 1d/Math.max(1, Emplacement.lidTime);
+		openingSoundAnimation = new IISoundAnimation(1d)
+				.withRepeatedSound(0.03241, 0.19908, IISounds.slidingDoorOpenLoop)
+				.withRepeatedSound(firstTick, 0.61111, IISounds.platformRaiseLoop)
+				.withRepeatedSound(0.62500, 0.75000, IISounds.slidingDoorCloseLoop)
+				.withRepeatedSound(0.70370, 0.86111, IISounds.platformLowerLoop)
+				.compile(Emplacement.lidTime);
+		closingSoundAnimation = new IISoundAnimation(1d)
+				//Reverse traversal of the same tactile keyframes.
+				.withRepeatedSound(0.13889, 0.29630, IISounds.platformRaiseLoop)
+				.withRepeatedSound(0.25000, 0.37500, IISounds.slidingDoorOpenLoop)
+				.withRepeatedSound(0.38889, 1.00000, IISounds.platformLowerLoop)
+				.withRepeatedSound(0.80092, 0.96759, IISounds.slidingDoorCloseLoop)
+				.compile(Emplacement.lidTime);
 
 		//Upgrades
 		UpgradeTechTree.getTreeFor(TileEntityEmplacement.class)

@@ -6,6 +6,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPane
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.Autocannon;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.CPDS;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.TargetCoordinateReference;
 
 public class EmplacementWeaponSearchlight extends EmplacementWeaponTurretBase
 {
@@ -25,6 +26,12 @@ public class EmplacementWeaponSearchlight extends EmplacementWeaponTurretBase
 
 	@Override
 	public boolean canShoot(TileEntityEmplacement te)
+	{
+		return false;
+	}
+
+	@Override
+	public boolean canExecuteFireMission(TargetCoordinateReference target)
 	{
 		return false;
 	}

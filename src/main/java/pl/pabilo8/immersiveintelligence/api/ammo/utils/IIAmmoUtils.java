@@ -416,10 +416,14 @@ public class IIAmmoUtils
 
 	public static float[] getInterceptionAngles(Vec3d shooterPos, Vec3d shooterVel, Vec3d targetPos, Vec3d targetVel, double projectileSpeed, double mass)
 	{
+		Vec3d toTarget = shooterPos.subtract(targetPos);
 		Vec3d vv = shooterPos.subtract(shooterVel).subtract(targetPos).add(targetVel).normalize();
 		float yy = (float)((Math.atan2(vv.x, vv.z)*180D)/Math.PI);
-		float pp = (float)Math.toDegrees((Math.atan2(vv.y, vv.distanceTo(new Vec3d(0, vv.y, 0)))))
-				+getDirectFireAngle(projectileSpeed, mass, shooterPos.subtract(targetPos));
+		float leadPitch = (float)Math.toDegrees(Math.atan2(vv.y, Math.hypot(vv.x, vv.z)));
+		float directPitch = (float)Math.toDegrees(Math.atan2(toTarget.y, Math.hypot(toTarget.x, toTarget.z)));
+		float ballisticPitch = getDirectFireAngle(projectileSpeed, mass, toTarget);
+		//getDirectFireAngle returns an absolute compensated pitch. Add only its delta to the lead angle.
+		float pp = leadPitch+(ballisticPitch-directPitch);
 
 		return new float[]{yy, pp};
 	}

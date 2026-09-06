@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multibloc
 import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandler;
@@ -30,7 +31,7 @@ import java.util.function.Predicate;
  * Implements Platform ammunition loading, casing storage, and Base servicing for Emplacement guns.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 21.08.2026
+ * @updated 31.08.2026
  * @since 04.09.2025
  */
 public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> extends EmplacementWeaponTurretBase
@@ -218,6 +219,22 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 	}
 
 	/**
+	 * Gets the world-space offset added to the Emplacement weapon centre for aiming and firing.
+	 *
+	 * @return weapon origin offset
+	 */
+	public Vec3d getWeaponOffset()
+	{
+		return Vec3d.ZERO;
+	}
+
+	@Override
+	protected Vec3d getAimOrigin(TileEntityEmplacement te)
+	{
+		return te.getWeaponCenter().add(getWeaponOffset());
+	}
+
+	/**
 	 * @return required local yaw for loading, or null when any yaw is valid
 	 */
 	@Nullable
@@ -270,7 +287,7 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 		if(baseEntity!=null)
 			blusunrize.immersiveengineering.common.util.Utils.attractEnemies(baseEntity, 24);
 
-		ammoFactory.setPositionAndVelocity(te.getWeaponCenter(), this.aim, 0.25f, 1f)
+		ammoFactory.setPositionAndVelocity(getAimOrigin(te), this.aim, 0.25f, 1f)
 				.setShooterAndGun(null, baseEntity)
 				.setIgnoredEntities(te.tactileHandler.getEntities());
 		boolean fired = gunHandler.fire();

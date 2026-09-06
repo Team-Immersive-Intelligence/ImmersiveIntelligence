@@ -43,7 +43,7 @@ import java.util.function.BooleanSupplier;
  * Defines common state, servicing, and lifecycle behavior for an Emplacement weapon.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 18.08.2026
+ * @updated 31.08.2026
  * @since 15.02.2024
  */
 public abstract class EmplacementWeapon implements ITypeNBTSerializable
@@ -169,9 +169,15 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable
 		float maximum = MathHelper.clamp(Math.max(maximumRepairThreshold, minimum), 0f, 1f);
 		boolean belowMinimum = isBelowHealthThreshold(minimum);
 		boolean routineRepair = currentTarget==null&&!isRepairedTo(maximum);
+		boolean forcedRepair = te.isWeaponRepairForced();
+		if(forcedRepair&&isRepairedTo(1f))
+		{
+			te.setWeaponRepairForced(false);
+			forcedRepair = false;
+		}
 
-		te.setWeaponRepairing(belowMinimum||routineRepair);
-		if(handleSupplyService(te)||belowMinimum||routineRepair)
+		te.setWeaponRepairing(belowMinimum||routineRepair||forcedRepair);
+		if(handleSupplyService(te)||belowMinimum||routineRepair||forcedRepair)
 			return EmplacementStateNeeds.MUST_HIDE;
 		return EmplacementStateNeeds.WANTS_SURFACE;
 	}
@@ -202,6 +208,14 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable
 		boolean keepHidden = supplyRequired.getAsBoolean()||servicePending.getAsBoolean();
 		setResupplying(te, keepHidden);
 		return keepHidden;
+	}
+
+	/**
+	 * @return true while this weapon is in a latched Base resupply cycle
+	 */
+	public boolean isResupplying()
+	{
+		return resupplying;
 	}
 
 	private void setResupplying(TileEntityEmplacement te, boolean resupplying)
@@ -388,6 +402,30 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable
 	public boolean canSeeEntity(Entity entity)
 	{
 		return !entity.isInvisible();
+	}
+
+	/**
+	 * Checks cheap common visibility rules before target-tree evaluation.
+	 */
+	public boolean isVisibleTarget(Entity entity)
+	{
+		return entity!=null&&!entity.isDead&&entity!=baseEntity&&!(entity instanceof EntityAMTTactile)&&canSeeEntity(entity);
+	}
+
+	/**
+	 * Checks whether an autonomous entity target can be engaged by this weapon.
+	 */
+	public boolean canSelectAutonomousTarget(Entity entity)
+	{
+		return false;
+	}
+
+	/**
+	 * Checks whether a Fire Mission can execute without removing it when unavailable.
+	 */
+	public boolean canExecuteFireMission(TargetCoordinateReference target)
+	{
+		return false;
 	}
 
 	//--- Graphics ---//

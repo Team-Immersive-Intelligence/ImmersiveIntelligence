@@ -33,7 +33,7 @@ public class EmplacementWeaponCPDS extends EmplacementWeaponGunBase<EntityAmmoPr
 		this.ammoFactory.setAmmo(IIContent.itemAmmoMachinegun);
 		this.visionAABB = this.visionAABB.grow(CPDS.detectionRadius);
 		this.attackAABB = this.attackAABB.grow(CPDS.attackRadius);
-		setupItemHandlers(te, 8, 8, 3, 16, this::isMagazine, this::isMagazine);
+		setupItemHandlers(te, 8, 4, 4, 4+22, this::isMagazine, this::isMagazine);
 		this.aim.withAimSpeed(CPDS.yawRotateSpeed, CPDS.pitchRotateSpeed);
 
 		this.rotateAfterFiring = true;

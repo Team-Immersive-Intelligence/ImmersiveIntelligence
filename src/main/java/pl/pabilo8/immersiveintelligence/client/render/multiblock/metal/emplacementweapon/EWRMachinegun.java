@@ -152,9 +152,6 @@ public class EWRMachinegun extends EmplacementWeaponRenderer<EmplacementWeaponMa
 	{
 		assert weapon.setup!=null;
 		NonNullList<ItemStack> allAmmo = weapon.getAllAmmo();
-		if(allAmmo.isEmpty())
-			allAmmo.add(weapon.getPlatformItemHandler(true).extractItem(0, 6, true));
-
 		applyAmmoItems(weapon, allAmmo, BulletState.BULLET_UNUSED, bulletsRight);
 		applyAmmoItems(weapon, allAmmo, BulletState.BULLET_UNUSED, bulletsLeft);
 

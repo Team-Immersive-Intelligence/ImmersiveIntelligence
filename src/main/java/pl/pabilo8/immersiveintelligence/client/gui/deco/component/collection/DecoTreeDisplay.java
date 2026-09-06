@@ -9,37 +9,43 @@ import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 import javax.annotation.Nullable;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.*;
 
 import static pl.pabilo8.immersiveintelligence.client.gui.deco.tree.TreeLayout.NodeLayoutInfo;
 import static pl.pabilo8.immersiveintelligence.client.gui.deco.tree.TreeLayout.Orientation;
 
 /**
+ * Displays a pannable and zoomable Deco tree without storing layout state in the logical tree.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 24.08.2026
  * @ii-approved 0.3.1
  * @since 08.09.2025
  */
 public class DecoTreeDisplay<T> extends DecoComponent<DecoTreeDisplay<T>>
 {
+	private static final int MARGIN = 20;
+	private static final float MIN_ZOOM = 0.5f;
+	private static final float MAX_ZOOM = 2f;
+	private static final float ZOOM_FACTOR = 1.1f;
+
 	@Nullable
 	private IDecoTree<T> tree;
-	@SuppressWarnings("unchecked")
-	private IDecoTreeNodeRenderer<T> nodeRenderer = (IDecoTreeNodeRenderer<T>)new DefaultTreeNodeRenderer();
-	private TreeLayout treeLayout;
+	private IDecoTreeNodeRenderer<T> nodeRenderer = defaultRenderer();
+	@Nullable
+	private TreeLayout<T> treeLayout;
 	private Orientation layoutOrientation = Orientation.HORIZONTAL_LEFT_TO_RIGHT;
 	protected DecoSprite background = DecoSprite.atlasSprite(DecoTextures.BG_DARK, 64, true);
+	private boolean virtualRoot = true;
 
-	private float zoom = 1.0f;
-	private int offsetX = 0;
-	private int offsetY = 0;
-	private boolean isDragging = false;
-	private int dragStartX, dragStartY;
-	private int offsetXStart, offsetYStart;
-
-	private static final int MARGIN = 20;
-
+	@Nullable
+	private IDecoTreeNode<T> hoveredNode;
+	private float zoom = 1f;
+	private int offsetX, offsetY;
+	private boolean dragging;
+	private int dragStartX, dragStartY, offsetXStart, offsetYStart;
 	private int dragMinX, dragMaxX, dragMinY, dragMaxY;
+	private boolean resetView = true;
 
 	public DecoTreeDisplay(int x, int y)
 	{
@@ -52,47 +58,59 @@ public class DecoTreeDisplay<T> extends DecoComponent<DecoTreeDisplay<T>>
 		withOnReleased(this::handleMouseRelease);
 	}
 
+	@SuppressWarnings("unchecked")
+	private static <T> IDecoTreeNodeRenderer<T> defaultRenderer()
+	{
+		return (IDecoTreeNodeRenderer<T>)new DefaultTreeNodeRenderer();
+	}
+
 	/**
-	 * Sets the tree to be displayed.
-	 *
-	 * @param tree The tree structure
-	 * @return this
+	 * Sets the tree and resets the view on the next layout.
 	 */
 	public DecoTreeDisplay<T> withTree(@Nullable IDecoTree<T> tree)
 	{
 		this.tree = tree;
-		this.initialized = false;
+		this.hoveredNode = null;
+		invalidateLayout(true);
 		return this;
 	}
 
 	/**
-	 * Sets the node renderer.
-	 *
-	 * @param renderer The node renderer
-	 * @return this
+	 * Sets the renderer that also defines the layout node size.
 	 */
 	public DecoTreeDisplay<T> withNodeRenderer(IDecoTreeNodeRenderer<T> renderer)
 	{
-		this.nodeRenderer = renderer;
-		this.initialized = false;
+		this.nodeRenderer = Objects.requireNonNull(renderer, "renderer");
+		invalidateLayout(true);
 		return this;
 	}
 
 	/**
-	 * Sets the layout orientation.
-	 *
-	 * @param orientation The layout orientation
-	 * @return this
+	 * Sets the tree orientation.
 	 */
 	public DecoTreeDisplay<T> withLayoutOrientation(Orientation orientation)
 	{
-		this.layoutOrientation = orientation;
-		this.initialized = false;
+		this.layoutOrientation = orientation==null?Orientation.HORIZONTAL_LEFT_TO_RIGHT: orientation;
+		invalidateLayout(true);
 		return this;
 	}
 
 	/**
-	 * Sets a background texture for the scenario display
+	 * Sets whether the synthetic root connector is visible.
+	 */
+	public DecoTreeDisplay<T> withVirtualRoot(boolean virtualRoot)
+	{
+		this.virtualRoot = virtualRoot;
+		if(initialized)
+		{
+			updateDragBounds();
+			clampOffsets();
+		}
+		return this;
+	}
+
+	/**
+	 * Sets the display background.
 	 */
 	public DecoTreeDisplay<T> withBackground(@Nullable DecoSprite background)
 	{
@@ -100,18 +118,97 @@ public class DecoTreeDisplay<T> extends DecoComponent<DecoTreeDisplay<T>>
 		return this;
 	}
 
+	/**
+	 * Recalculates positions after a structural tree edit and preserves pan and zoom.
+	 */
+	public DecoTreeDisplay<T> refreshLayout()
+	{
+		treeLayout = null;
+		hoveredNode = null;
+		if(tree!=null&&initialized)
+		{
+			layoutTree();
+			updateDragBounds();
+			clampOffsets();
+		}
+		else
+			initialized = false;
+		return this;
+	}
+
+	@Override
+	public DecoTreeDisplay<T> withSize(int width, int height)
+	{
+		super.withSize(width, height);
+		invalidateLayout(false);
+		return this;
+	}
+
+	@Override
+	public DecoTreeDisplay<T> withWidth(int width)
+	{
+		super.withWidth(width);
+		invalidateLayout(false);
+		return this;
+	}
+
+	@Override
+	public DecoTreeDisplay<T> withHeight(int height)
+	{
+		super.withHeight(height);
+		invalidateLayout(false);
+		return this;
+	}
+
+	private void invalidateLayout(boolean resetView)
+	{
+		treeLayout = null;
+		this.resetView |= resetView;
+		initialized = false;
+	}
 
 	private void layoutTree()
 	{
 		if(tree==null)
 			return;
+		treeLayout = new TreeLayout<>(tree)
+				.withOrientation(layoutOrientation)
+				.withNodeSize(nodeRenderer.getNodeWidth(), nodeRenderer.getNodeHeight());
+		treeLayout.calculateLayout(Math.max(1, width-MARGIN*2), Math.max(1, height-MARGIN*2));
+	}
 
-		if(treeLayout==null||treeLayout.tree!=this.tree)
-			this.treeLayout = new TreeLayout<>(tree)
-					.withOrientation(layoutOrientation)
-					.withNodeSize(DefaultTreeNodeRenderer.NODE_WIDTH, DefaultTreeNodeRenderer.NODE_HEIGHT);
+	private TreeLayout.LayoutBounds getDisplayedBounds()
+	{
+		if(treeLayout==null)
+			return new TreeLayout.LayoutBounds(0, 0, 0, 0);
+		if(virtualRoot)
+			return treeLayout.getBounds();
 
-		this.treeLayout.calculateLayout(this.width-8, this.height-8);
+		Collection<NodeLayoutInfo> infos = treeLayout.getAllNodeInfo();
+		if(infos.isEmpty())
+			return new TreeLayout.LayoutBounds(0, 0, 0, 0);
+		int minX = Integer.MAX_VALUE, minY = Integer.MAX_VALUE;
+		int maxX = Integer.MIN_VALUE, maxY = Integer.MIN_VALUE;
+		for(NodeLayoutInfo info : infos)
+		{
+			minX = Math.min(minX, info.x);
+			minY = Math.min(minY, info.y);
+			maxX = Math.max(maxX, info.getRight());
+			maxY = Math.max(maxY, info.getBottom());
+		}
+		return new TreeLayout.LayoutBounds(minX, minY, maxX, maxY);
+	}
+
+	private void resetView()
+	{
+		TreeLayout.LayoutBounds bounds = getDisplayedBounds();
+		int viewW = Math.max(1, width-MARGIN*2);
+		int viewH = Math.max(1, height-MARGIN*2);
+		int contentW = Math.max(1, bounds.getWidth());
+		int contentH = Math.max(1, bounds.getHeight());
+		zoom = Math.max(MIN_ZOOM, Math.min(1f, Math.min(viewW/(float)contentW, viewH/(float)contentH)));
+		offsetX = Math.round((viewW-(bounds.minX+bounds.maxX)*zoom)/2f);
+		offsetY = Math.round((viewH-(bounds.minY+bounds.maxY)*zoom)/2f);
 		updateDragBounds();
 		clampOffsets();
 	}
@@ -120,40 +217,27 @@ public class DecoTreeDisplay<T> extends DecoComponent<DecoTreeDisplay<T>>
 	{
 		if(treeLayout==null)
 			return;
-
-		TreeLayout.LayoutBounds bounds = treeLayout.getBounds();
+		TreeLayout.LayoutBounds bounds = getDisplayedBounds();
 		int viewW = Math.max(1, width-MARGIN*2);
 		int viewH = Math.max(1, height-MARGIN*2);
+		float scaledW = bounds.getWidth()*zoom;
+		float scaledH = bounds.getHeight()*zoom;
 
-		float minX = bounds.minX;
-		float maxX = bounds.maxX;
-		float minY = bounds.minY;
-		float maxY = bounds.maxY;
-
-		float scaledContentW = treeLayout.getContentWidth()*zoom;
-		float scaledContentH = treeLayout.getContentHeight()*zoom;
-
-		if(scaledContentW >= viewW)
+		if(scaledW > viewW)
 		{
-			dragMinX = (int)Math.floor(viewW-maxX*zoom);
-			dragMaxX = (int)Math.ceil(-minX*zoom);
+			dragMinX = (int)Math.floor(viewW-bounds.maxX*zoom);
+			dragMaxX = (int)Math.ceil(-bounds.minX*zoom);
 		}
 		else
-		{
-			dragMinX = (int)Math.floor(-minX*zoom);
-			dragMaxX = (int)Math.ceil(viewW-maxX*zoom);
-		}
+			dragMinX = dragMaxX = Math.round((viewW-(bounds.minX+bounds.maxX)*zoom)/2f);
 
-		if(scaledContentH >= viewH)
+		if(scaledH > viewH)
 		{
-			dragMinY = (int)Math.floor(viewH-maxY*zoom);
-			dragMaxY = (int)Math.ceil(-minY*zoom);
+			dragMinY = (int)Math.floor(viewH-bounds.maxY*zoom);
+			dragMaxY = (int)Math.ceil(-bounds.minY*zoom);
 		}
 		else
-		{
-			dragMinY = (int)Math.floor(-minY*zoom);
-			dragMaxY = (int)Math.ceil(viewH-maxY*zoom);
-		}
+			dragMinY = dragMaxY = Math.round((viewH-(bounds.minY+bounds.maxY)*zoom)/2f);
 	}
 
 	private void clampOffsets()
@@ -164,184 +248,165 @@ public class DecoTreeDisplay<T> extends DecoComponent<DecoTreeDisplay<T>>
 
 	private boolean handleScrolling(DecoTreeDisplay<T> gui, int mouseScroll, int mouseX, int mouseY)
 	{
-		float zoomFactor = 1.1f;
-		if(mouseScroll > 0)
-			zoom *= zoomFactor;
-		else if(mouseScroll < 0)
-			zoom /= zoomFactor;
-		zoom = Math.max(0.5f, Math.min(2.0f, zoom));
+		if(mouseScroll==0||treeLayout==null)
+			return false;
+
+		float oldZoom = zoom;
+		float worldX = (mouseX-x-MARGIN-offsetX)/oldZoom;
+		float worldY = (mouseY-y-MARGIN-offsetY)/oldZoom;
+		zoom = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, mouseScroll > 0?zoom*ZOOM_FACTOR: zoom/ZOOM_FACTOR));
+		if(zoom==oldZoom)
+			return true;
+
+		offsetX = Math.round(mouseX-x-MARGIN-worldX*zoom);
+		offsetY = Math.round(mouseY-y-MARGIN-worldY*zoom);
 		updateDragBounds();
 		clampOffsets();
 		return true;
 	}
 
-	private boolean handleMousePress(DecoTreeDisplay<T> gui, MouseButton mb, int mouseX, int mouseY)
+	private boolean handleMousePress(DecoTreeDisplay<T> gui, MouseButton button, int mouseX, int mouseY)
 	{
-		if(mb==MouseButton.LEFT)
+		if(button!=MouseButton.LEFT)
+			return false;
+		updateHoveredNode(mouseX, mouseY);
+		if(tree!=null&&hoveredNode!=null)
 		{
-			if(tree!=null)
-			{
-				//Handle node click
-				IDecoTreeNode<T> hovered = tree.getHoveredNode();
-				if(hovered!=null)
-				{
-					tree.onNodeClicked(hovered);
-					return true;
-				}
-			}
-			isDragging = true;
-			dragStartX = mouseX;
-			dragStartY = mouseY;
-			offsetXStart = offsetX;
-			offsetYStart = offsetY;
+			tree.onNodeClicked(hoveredNode);
 			return true;
 		}
-		return false;
+
+		dragging = true;
+		dragStartX = mouseX;
+		dragStartY = mouseY;
+		offsetXStart = offsetX;
+		offsetYStart = offsetY;
+		return true;
 	}
 
-	private boolean handleMouseDrag(DecoTreeDisplay<T> gui, MouseButton mb, int mouseX, int mouseY)
+	private boolean handleMouseDrag(DecoTreeDisplay<T> gui, MouseButton button, int mouseX, int mouseY)
 	{
-		if(isDragging&&mb==MouseButton.LEFT)
-		{
-			offsetX = offsetXStart+(mouseX-dragStartX);
-			offsetY = offsetYStart+(mouseY-dragStartY);
-			clampOffsets();
-			return true;
-		}
-		return false;
+		if(!dragging||button!=MouseButton.LEFT)
+			return false;
+		offsetX = offsetXStart+mouseX-dragStartX;
+		offsetY = offsetYStart+mouseY-dragStartY;
+		clampOffsets();
+		return true;
 	}
 
-	private boolean handleMouseRelease(DecoTreeDisplay<T> gui, MouseButton mb, int mouseX, int mouseY)
+	private boolean handleMouseRelease(DecoTreeDisplay<T> gui, MouseButton button, int mouseX, int mouseY)
 	{
-		if(mb==MouseButton.LEFT)
-		{
-			isDragging = false;
-			return true;
-		}
-		return false;
+		if(button!=MouseButton.LEFT)
+			return false;
+		dragging = false;
+		return true;
 	}
 
 	private void updateHoveredNode(int mouseX, int mouseY)
 	{
-		if(tree==null||treeLayout==null) return;
+		hoveredNode = null;
+		if(tree==null||treeLayout==null||mouseX < x||mouseX > x+width||mouseY < y||mouseY > y+height)
+		{
+			if(tree!=null)
+				tree.setHoveredNode(null);
+			return;
+		}
 
-		//Transform mouse coordinates to component-relative coordinates
 		float transformedX = (mouseX-x-MARGIN-offsetX)/zoom;
 		float transformedY = (mouseY-y-MARGIN-offsetY)/zoom;
-
-		IDecoTreeNode<T> hovered = null;
 		for(IDecoTreeNode<T> node : tree.getAllNodes())
 		{
 			NodeLayoutInfo info = treeLayout.getNodeInfo(node);
-			if(info==null) continue;
-
-			if(transformedX >= info.x&&transformedX <= info.x+info.width&&
-					transformedY >= info.y&&transformedY <= info.y+info.height)
+			if(info!=null&&transformedX >= info.x&&transformedX <= info.getRight()
+					&&transformedY >= info.y&&transformedY <= info.getBottom())
 			{
-				hovered = node;
+				hoveredNode = node;
 				break;
 			}
 		}
-
-		tree.setHoveredNode(hovered);
+		tree.setHoveredNode(hoveredNode);
 	}
 
 	private Collection<String> getTreeTooltip(DecoTreeDisplay<T> gui)
 	{
-		if(tree==null) return Collections.emptyList();
-
-		IDecoTreeNode<T> hovered = tree.getHoveredNode();
-		return hovered!=null?nodeRenderer.getTooltip(hovered): Collections.emptyList();
+		return hoveredNode==null?Collections.emptyList(): nodeRenderer.getTooltip(hoveredNode);
 	}
 
 	@Override
 	protected boolean initialize()
 	{
 		layoutTree();
-		this.offsetX = -width/2-8;
-		this.offsetY -= 16;
-		updateDragBounds();
-		clampOffsets();
+		if(treeLayout!=null)
+		{
+			if(resetView)
+				resetView();
+			else
+			{
+				updateDragBounds();
+				clampOffsets();
+			}
+		}
+		resetView = false;
 		return true;
 	}
 
 	@Override
 	protected void draw(int mouseX, int mouseY, float partialTicks)
 	{
-		assert tree!=null;
-
-		//Update hovered node
-		updateHoveredNode(mouseX, mouseY);
-
 		bindAtlas();
 		if(background!=null)
-		{
-			IIDrawUtils draw = IIDrawUtils.startTexturedColored();
-			draw.drawConnectedTexColorRect(x, y, width, height, IIColor.WHITE,
-					background.getSizeX(), background.getSizeY(), background.getSizeX()/4, background.getSizeY()/4,
-					background.getMapUV());
-			draw.finish();
-		}
-		GlStateManager.disableTexture2D();
+			IIDrawUtils.startTexturedColored()
+					.drawConnectedTexColorRect(x, y, width, height, IIColor.WHITE,
+							background.getSizeX(), background.getSizeY(), background.getSizeX()/4, background.getSizeY()/4,
+							background.getMapUV())
+					.finish();
+
+		if(tree==null||treeLayout==null)
+			return;
+		updateHoveredNode(mouseX, mouseY);
+
+		List<IDecoTreeNode<T>> nodes = new ArrayList<>(tree.getAllNodes());
+		Collection<IDecoTreeNode<T>> activeNodes = new HashSet<>(tree.getActiveNodes());
+		NodeLayoutInfo rootInfo = treeLayout.getRootNodeInfo();
 
 		if(parentGui!=null)
 			parentGui.scissorStart(x, y, width, height);
-		//Apply component-relative transformations
 		GlStateManager.pushMatrix();
-		GlStateManager.translate(x+MARGIN, y+MARGIN, 0); //Apply margin
+		GlStateManager.translate(x+MARGIN+offsetX, y+MARGIN+offsetY, 0);
+		GlStateManager.scale(zoom, zoom, 1f);
+		GlStateManager.disableTexture2D();
 
-		//Apply zoom and pan transformations
-		GlStateManager.translate(offsetX, offsetY, 0);
-		GlStateManager.scale(zoom, zoom, 1.0f);
+		if(virtualRoot)
+			for(IDecoTreeNode<T> root : tree.getRootNodes())
+			{
+				NodeLayoutInfo info = treeLayout.getNodeInfo(root);
+				if(info!=null)
+					nodeRenderer.renderConnection(rootInfo, info, layoutOrientation, true);
+			}
 
-		Collection<IDecoTreeNode<T>> activeNodes = tree.getActiveNodes();
-
-		//Get virtual root position
-		NodeLayoutInfo rootInfo = treeLayout.getRootNodeInfo();
-
-		//Draw connections from virtual root to root nodes
-		for(IDecoTreeNode<T> baseNode : tree.getRootNodes())
-		{
-			NodeLayoutInfo baseInfo = treeLayout.getNodeInfo(baseNode);
-			if(baseInfo==null)
-				continue;
-			nodeRenderer.renderConnection(rootInfo, baseInfo, layoutOrientation, true);
-		}
-
-		//Draw connections between dependent nodes
-		for(IDecoTreeNode<T> node : tree.getAllNodes())
+		for(IDecoTreeNode<T> node : nodes)
 		{
 			NodeLayoutInfo nodeInfo = treeLayout.getNodeInfo(node);
 			if(nodeInfo==null)
 				continue;
-
 			for(IDecoTreeNode<T> dependency : node.getDependencies())
 			{
-				NodeLayoutInfo depInfo = treeLayout.getNodeInfo(dependency);
-				if(depInfo==null)
-					continue;
-
-				boolean connectionActive = node.isActive()||dependency.isActive();
-				nodeRenderer.renderConnection(depInfo, nodeInfo, layoutOrientation, connectionActive);
+				NodeLayoutInfo dependencyInfo = treeLayout.getNodeInfo(dependency);
+				if(dependencyInfo!=null)
+					nodeRenderer.renderConnection(dependencyInfo, nodeInfo, layoutOrientation,
+							node.isActive()&&dependency.isActive());
 			}
 		}
 		GlStateManager.enableTexture2D();
 
-		//Draw nodes
-		for(IDecoTreeNode<T> node : tree.getAllNodes())
+		for(IDecoTreeNode<T> node : nodes)
 		{
 			NodeLayoutInfo info = treeLayout.getNodeInfo(node);
-			if(info==null) continue;
-
-			boolean isHovered = tree.getHoveredNode()==node;
-			boolean isActive = node.isActive();
-			boolean isAvailable = node.isAvailable(activeNodes);
-
-			nodeRenderer.renderNode(node, info.x, info.y, isHovered, isActive, isAvailable);
+			if(info!=null)
+				nodeRenderer.renderNode(node, info.x, info.y, hoveredNode==node, node.isActive(), node.isAvailable(activeNodes));
 		}
-
-		//Draw virtual root
-		nodeRenderer.renderRootNode(rootInfo.x, rootInfo.y);
+		if(virtualRoot)
+			nodeRenderer.renderRootNode(rootInfo.x, rootInfo.y);
 
 		GlStateManager.popMatrix();
 		if(parentGui!=null)
@@ -351,10 +416,16 @@ public class DecoTreeDisplay<T> extends DecoComponent<DecoTreeDisplay<T>>
 	@Override
 	public void cleanup()
 	{
+		if(tree!=null)
+			tree.setHoveredNode(null);
 		tree = null;
-		@SuppressWarnings("unchecked")
-		IDecoTreeNodeRenderer<T> def = (IDecoTreeNodeRenderer<T>)new DefaultTreeNodeRenderer();
-		nodeRenderer = def;
+		nodeRenderer = defaultRenderer();
 		treeLayout = null;
+		hoveredNode = null;
+		dragging = false;
+		zoom = 1f;
+		offsetX = offsetY = 0;
+		resetView = true;
+		initialized = false;
 	}
 }

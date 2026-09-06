@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon;
 
 import blusunrize.immersiveengineering.common.util.Utils;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -21,7 +22,7 @@ import javax.annotation.Nullable;
  *
  * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
- * @updated 20.08.2026
+ * @updated 31.08.2026
  * @since 01.01.2026
  */
 public abstract class EmplacementWeaponTurretBase extends EmplacementWeapon
@@ -121,14 +122,14 @@ public abstract class EmplacementWeaponTurretBase extends EmplacementWeapon
 		{
 			float previousTargetYaw = this.aim.getTargetYaw();
 			float previousTargetPitch = this.aim.getTargetPitch();
-			if(this.aim.setTarget(te.getWeaponCenter(), Vec3d.ZERO, target, currentTarget.supplyMotion()))
+			if(this.aim.setTarget(getAimOrigin(te), Vec3d.ZERO, target, currentTarget.supplyMotion()))
 				rotationChanged = hasTargetAngleChanged(previousTargetYaw, previousTargetPitch);
 		}
 
 		boolean fired = te.door.isFullyOpened()&&(setup==null||setup.isFullyOpened())&&aim.isAimed(1.5f)&&canShoot(te)
 				&&shoot(te, currentTarget);
-		if(fired)
-			currentTarget.notifyAfterShot();
+		if(fired&&te.taskManager.notifyAfterShot(currentTarget))
+			te.markDirty();
 
 		if(rotationChanged)
 			syncWithClient(te, SyncEvents.WEAPON_ROTATION);
@@ -170,6 +171,30 @@ public abstract class EmplacementWeaponTurretBase extends EmplacementWeapon
 	protected boolean canTrackTarget(TileEntityEmplacement te)
 	{
 		return true;
+	}
+
+	/**
+	 * @return world-space point used as the origin for aiming calculations
+	 */
+	protected Vec3d getAimOrigin(TileEntityEmplacement te)
+	{
+		return te.getWeaponCenter();
+	}
+
+	@Override
+	public boolean canSelectAutonomousTarget(Entity entity)
+	{
+		return entity!=null&&!entity.isDead&&attackAABB!=null&&attackAABB.intersects(entity.getEntityBoundingBox());
+	}
+
+	@Override
+	public boolean canExecuteFireMission(TargetCoordinateReference target)
+	{
+		Entity entity = target.getEntity();
+		if(entity!=null)
+			return isVisibleTarget(entity)&&canSelectAutonomousTarget(entity);
+		Vec3d coordinates = target.supplyCoordinates();
+		return coordinates!=null&&attackAABB!=null&&attackAABB.contains(coordinates);
 	}
 
 	private void updateAim(TileEntityEmplacement te)

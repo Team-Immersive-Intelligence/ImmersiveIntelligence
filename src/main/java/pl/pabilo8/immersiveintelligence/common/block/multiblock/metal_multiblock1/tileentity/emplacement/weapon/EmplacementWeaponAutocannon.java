@@ -34,7 +34,7 @@ public class EmplacementWeaponAutocannon extends EmplacementWeaponGunBase<Entity
 		this.attackAABB = this.attackAABB.grow(Autocannon.attackRadius);
 		this.aim.withAimSpeed(Autocannon.yawRotateSpeed, Autocannon.pitchRotateSpeed);
 
-		setupItemHandlers(te, 8, 16, 8, 16, this::isMagazine, this::isMagazine);
+		setupItemHandlers(te, 8, 4, 8, 16, this::isMagazine, this::isMagazine);
 
 		this.rotateAfterFiring = true;
 		this.gunHandler.withShootSound(IISounds.autocannonShot, 55)

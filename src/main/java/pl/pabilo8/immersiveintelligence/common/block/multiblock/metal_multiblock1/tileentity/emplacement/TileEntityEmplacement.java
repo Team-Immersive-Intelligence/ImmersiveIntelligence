@@ -7,6 +7,7 @@ import com.elytradev.mirage.lighting.ILightEventConsumer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
@@ -36,9 +37,11 @@ import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeManager;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.MachineStyle;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.UpgradeOperation;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
+import pl.pabilo8.immersiveintelligence.client.util.carversound.ConditionCompoundSound;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Emplacement;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
+import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockEmplacement;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockFlagpole;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.task.EmplacementTargetManager;
@@ -53,6 +56,7 @@ import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyHandler;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.OwnerIdentity;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.property.IOwnableProperty;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.TargetCoordinateReference;
@@ -62,17 +66,17 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInter
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIGeneric;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
+import pl.pabilo8.immersiveintelligence.common.util.sound.SoundHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Arrays;
 import java.util.Optional;
 
 /**
  * Coordinates Emplacement platform movement, servicing, weapon operation, and external storage access.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 18.08.2026
+ * @updated 31.08.2026
  * @ii-approved 0.3.1
  * @since 27.10.2020
  */
@@ -110,11 +114,18 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 	public boolean redstoneControlEnabled = true, dataControlEnabled = true;
 	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CLIENT_MESSAGE, SyncEvents.TILE_CUSTOM2})
 	public boolean weaponRepairing = false;
+	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CUSTOM2})
+	public boolean weaponRepairForced = false;
 	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CLIENT_MESSAGE})
 	public float weaponHideHealthThreshold = 0.25f, weaponRepairSatisfactoryThreshold = 0.85f;
 	private int weaponRepairTicker = 0;
 	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CUSTOM2, SyncEvents.WEAPON_MISC})
 	public MultiblockInteractablePart door;
+
+	@SideOnly(Side.CLIENT)
+	private ConditionCompoundSound<TileEntityEmplacement> repairSound, resupplySound;
+	@SideOnly(Side.CLIENT)
+	private SoundHandler sounds;
 
 	public TileEntityEmplacement()
 	{
@@ -148,7 +159,9 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 	public void onBeforeFirstTick()
 	{
 		super.onBeforeFirstTick();
-		if(!world.isRemote)
+		if(world.isRemote)
+			this.sounds = new SoundHandler(this);
+		else
 			this.tactileHandler = new TactileManager(this.multiblock, this);
 	}
 
@@ -165,6 +178,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 			door.update();
 			if(currentWeapon!=null)
 				currentWeapon.onClientUpdate(this);
+			handleSounds();
 			return;
 		}
 
@@ -176,16 +190,10 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 		boolean powered = energyStorage.extractEnergy(Emplacement.baseEnergyUsage, false)==Emplacement.baseEnergyUsage;
 		if(powered)
 		{
-			//Finish a completed or invalid mission.
-			if(currentTarget!=null&&!currentTarget.shouldBeExecuted(world))
-			{
-				currentTarget = null;
-				taskManager.pruneFinishedMissions();
+			TargetCoordinateReference previousTarget = currentTarget;
+			currentTarget = taskManager.updateAndGetTarget(this, currentTarget);
+			if(previousTarget!=currentTarget)
 				updateTileForEvent(SyncEvents.TILE_CUSTOM1);
-			}
-
-			if(currentTarget==null)
-				currentTarget = taskManager.provideNextTask();
 
 			EmplacementStateNeeds baseNeeds = redstoneControlEnabled?
 					(getRedstoneAtPos(0)?EmplacementStateNeeds.WANTS_SURFACE: EmplacementStateNeeds.MUST_HIDE):
@@ -229,6 +237,26 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 		return EmplacementStateNeeds.WANTS_HIDE;
 	}
 
+	public boolean isWeaponRepairForced()
+	{
+		return weaponRepairForced;
+	}
+
+	public void setWeaponRepairForced(boolean forced)
+	{
+		boolean requested = forced&&currentWeapon!=null&&!currentWeapon.isRepairedTo(1f);
+		if(weaponRepairForced==requested)
+			return;
+		weaponRepairForced = requested;
+		if(!requested)
+			weaponRepairTicker = 0;
+		if(!world.isRemote)
+		{
+			markDirty();
+			updateTileForEvent(SyncEvents.TILE_CUSTOM2);
+		}
+	}
+
 	public void setWeaponRepairing(boolean repairing)
 	{
 		if(weaponRepairing==repairing)
@@ -242,6 +270,18 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 	{
 		if(currentWeapon==null||world.isRemote)
 			return;
+		if(!weaponRepairing)
+		{
+			weaponRepairTicker = 0;
+			return;
+		}
+		if(currentWeapon.isRepairedTo(1f))
+		{
+			weaponRepairTicker = 0;
+			setWeaponRepairForced(false);
+			setWeaponRepairing(false);
+			return;
+		}
 
 		boolean changed = false;
 		boolean energyChanged = false;
@@ -265,7 +305,11 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 		if(energyChanged)
 			updateTileForEvent(SyncEvents.TILE_ENERGY_CHANGED);
 		if(changed)
+		{
+			if(currentWeapon.isRepairedTo(1f))
+				setWeaponRepairForced(false);
 			updateTileForEvent(SyncEvents.TILE_CUSTOM2);
+		}
 	}
 
 	@Override
@@ -302,6 +346,12 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 						return new DataTypeBoolean(door.isFullyOpened());
 					case "energy":
 						return new DataTypeInteger(energyStorage.getEnergyStored());
+					case "repairing":
+						return new DataTypeBoolean(weaponRepairing);
+					case "repair_forced":
+						return new DataTypeBoolean(weaponRepairForced);
+					case "resupplying":
+						return new DataTypeBoolean(currentWeapon!=null&&currentWeapon.isResupplying());
 					case "data_control":
 						return new DataTypeBoolean(dataControlEnabled);
 					default:
@@ -334,18 +384,24 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 				case "reload" ->
 				{
 				}
-				case "stop" -> this.taskManager.stopTask(true);
-				case "resume" -> this.taskManager.resumeTask(false);
+				case "stop" ->
+				{
+					this.taskManager.stopTask(true);
+					markDirty();
+				}
+				case "resume" ->
+				{
+					this.taskManager.resumeTask(false);
+					markDirty();
+				}
 				case "clear" ->
 				{
 					this.taskManager.stopTask(true);
-					this.taskManager.fireMissions.clear();
+					this.taskManager.clearFireMissions();
 					this.taskManager.resumeTask(true);
+					markDirty();
 				}
-				case "repair" ->
-				{
-					//TODO: 01.01.2026 repairing
-				}
+				case "repair" -> setWeaponRepairForced(IIDataHandlingUtils.optionalBoolean('b', packet).orElse(true));
 				case "target", "targetreset" ->
 				{
 					//Set the default task id
@@ -353,6 +409,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 						this.taskManager.skipTask(IIDataHandlingUtils.optionalInt('i', packet).orElse(0));
 					//Reset the current task to the default task
 					this.taskManager.resumeTask(true);
+					markDirty();
 					updateTileForEvent(SyncEvents.TILE_CUSTOM1);
 				}
 				case "fire" ->
@@ -384,10 +441,29 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 								});
 					}
 					//Synchronize the task
+					markDirty();
 					updateTileForEvent(SyncEvents.TILE_CUSTOM1);
 				}
 			}
 		});
+	}
+
+	@Override
+	public void receiveMessageFromClient(@Nonnull NBTTagCompound message)
+	{
+		NBTTagCompound sanitized = message.copy();
+		boolean tasksChanged = false;
+		if(taskManager!=null&&sanitized.hasKey("tasks", EasyNBT.TAG_COMPOUND))
+		{
+			tasksChanged = taskManager.applyClientUpdate(sanitized.getCompoundTag("tasks"));
+			sanitized.removeTag("tasks");
+		}
+		super.receiveMessageFromClient(sanitized);
+		if(tasksChanged)
+		{
+			markDirty();
+			updateTileForEvent(SyncEvents.TILE_CUSTOM1);
+		}
 	}
 
 	/**
@@ -397,11 +473,13 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 	 */
 	public void handleSendingEnemyPos(Entity[] spottedEntity)
 	{
+		if(!dataControlEnabled)
+			return;
 		DataPacket packet = new DataPacket();
 		final BlockPos center = getPOIPos("weapon");
-		DataTypeEntity[] entities = Arrays.stream(spottedEntity)
-				.map(entity -> new DataTypeEntity(entity, center))
-				.toArray(DataTypeEntity[]::new);
+		DataTypeEntity[] entities = new DataTypeEntity[spottedEntity.length];
+		for(int i = 0; i < spottedEntity.length; i++)
+			entities[i] = new DataTypeEntity(spottedEntity[i], center);
 
 		packet.set('e', new DataTypeArray(entities));
 		IIDataHandlingUtils.sendPacketAdjacently(packet, world, getPOIPos(MultiblockPOI.DATA), facing.rotateYCCW());
@@ -444,6 +522,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 			this.currentWeapon.init(this);
 			this.weaponRepairTicker = 0;
 			this.weaponRepairing = false;
+			this.weaponRepairForced = false;
 			updateTileForEvent(SyncEvents.TILE_CUSTOM2);
 		}
 		return added;
@@ -462,6 +541,8 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 				this.currentWeapon.setDead();
 			}
 			this.currentWeapon = null;
+			this.weaponRepairing = false;
+			this.weaponRepairForced = false;
 			if(this.tactileHandler!=null) this.tactileHandler.setAdditionalModel("weapon", null);
 			updateTileForEvent(SyncEvents.TILE_CUSTOM2);
 		}
@@ -656,6 +737,30 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 		WANTS_SURFACE,
 		WANTS_HIDE,
 		MUST_HIDE;
+	}
+
+	@SideOnly(Side.CLIENT)
+	private void handleSounds()
+	{
+		if(sounds==null)
+			sounds = new SoundHandler(this);
+		if(!door.isFullyClosed()&&!door.isFullyOpened())
+		{
+			float progress = door.getProgress(0);
+			int animationTime = Math.round((door.getState()?progress: 1f-progress)*Emplacement.lidTime);
+			if(door.getState())
+				MultiblockEmplacement.INSTANCE.openingSoundAnimation.handleSounds(sounds, animationTime, 0.75f);
+			else
+				MultiblockEmplacement.INSTANCE.closingSoundAnimation.handleSounds(sounds, animationTime, 0.75f);
+		}
+
+		if(repairSound==null)
+			repairSound = new ConditionCompoundSound<>(IISounds.weldingLoop, getWeaponCenter(), this,
+					te -> !te.isInvalid()&&te.currentWeapon!=null&&te.weaponRepairing&&te.door.isFullyClosed()
+							&&te.currentWeapon.getHealth() < te.currentWeapon.getMaxHealth());
+		if(resupplySound==null)
+			resupplySound = new ConditionCompoundSound<>(IISounds.rollingLoop, getWeaponCenter(), this,
+					te -> !te.isInvalid()&&te.currentWeapon!=null&&te.currentWeapon.isResupplying()&&te.door.isFullyClosed());
 	}
 
 	//--- Item Dropping ---//

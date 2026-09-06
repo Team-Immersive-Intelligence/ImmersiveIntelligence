@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon;
 
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.Autocannon;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
@@ -28,15 +27,15 @@ public class EmplacementWeaponLightHowitzer extends EmplacementWeaponGunBase<Ent
 		if(this.chillingState==null)
 			this.chillingState = new ChillingState(160, 120, 80);
 		this.ammoFactory.setAmmo(IIContent.itemAmmoLightArtillery);
-		this.visionAABB = this.visionAABB.grow(Autocannon.detectionRadius);
-		this.attackAABB = this.attackAABB.grow(Autocannon.attackRadius);
+		this.visionAABB = this.visionAABB.grow(0);
+		this.attackAABB = this.attackAABB.grow(240);
 
 		setupItemHandlers(te, 8, 8, 4, 4,
 				this.ammoFactory::isValidAmmo, this.ammoFactory::isValidAmmo);
 		this.aim.withAimSpeed(3.5f, 3.5f);
 //				.withPitchLimit(-89.5f, 22.5f);
 		this.gunHandler.withShootSound(IISounds.howitzerShot, 55);
-		this.ammoFactory.setUseArtilleryAngles(false);
+		this.ammoFactory.setUseArtilleryAngles(true);
 		this.rotateAfterFiring = false;
 	}
 
