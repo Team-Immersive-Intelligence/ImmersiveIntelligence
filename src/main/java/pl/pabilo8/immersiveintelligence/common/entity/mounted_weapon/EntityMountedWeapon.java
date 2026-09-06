@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common.entity.mounted_weapon;
 
 import blusunrize.immersiveengineering.api.tool.ZoomHandler;
+import lombok.Getter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
@@ -32,6 +33,7 @@ import java.util.List;
  * Common class for mounted weapons
  *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 06.09.2026
  * @ii-approved 0.3.1
  * @since 15.05.2026
  */
@@ -44,10 +46,13 @@ public abstract class EntityMountedWeapon extends Entity implements ISyncNBTEnti
 	@SyncNBT(events = SyncEvents.ENTITY_CUSTOM1)
 	public int setupTime = 0, maxSetupTime = 1;
 	//DO NOT modify directly outside of here, it's only public because of SyncNBT limitations
+	@Getter
 	@SyncNBT(events = SyncEvents.ENTITY_INTERACT)
 	public ItemStack originStack = ItemStack.EMPTY;
 
 	private AxisAlignedBB baseAabb;
+	private ItemStack authoritativeOriginStack = ItemStack.EMPTY;
+	private boolean originStackAuthoritative;
 
 	public EntityMountedWeapon(World world)
 	{
@@ -140,13 +145,17 @@ public abstract class EntityMountedWeapon extends Entity implements ISyncNBTEnti
 	protected void setOriginStack(ItemStack stack)
 	{
 		this.originStack = stack.copy();
-		if(!world.isRemote)
-			updateEntityForEvent(SyncEvents.ENTITY_CUSTOM1);
+		if(originStackAuthoritative)
+			this.authoritativeOriginStack = this.originStack.copy();
 	}
 
-	public ItemStack getOriginStack()
+	/**
+	 * Marks the current origin stack as authoritative for this entity instance.
+	 */
+	protected final void markOriginStackAuthoritative()
 	{
-		return originStack;
+		this.authoritativeOriginStack = this.originStack.copy();
+		this.originStackAuthoritative = true;
 	}
 
 	//--- Collisions ---//
@@ -221,9 +230,71 @@ public abstract class EntityMountedWeapon extends Entity implements ISyncNBTEnti
 		}
 		else
 			updateEntityForEvent(SyncEvents.ENTITY_PASSENGER);
-		Vec3d pos = getPositionVector().add(getPassengerPosition(passenger));
-		passenger.setPosition(pos.x, pos.y, pos.z);
+
+		Vec3d pos = findDismountPosition(passenger);
 		super.removePassenger(passenger);
+		passenger.setPosition(pos.x, pos.y, pos.z);
+	}
+
+	@Nonnull
+	private Vec3d findDismountPosition(Entity passenger)
+	{
+		final double DISMOUNT_MARGIN = 0.2d;
+		final double[] DISMOUNT_ANGLES = {0d, 45d, -45d, 90d, -90d, 135d, -135d, 180d};
+		final int[] DISMOUNT_HEIGHTS = {0, -1, 1};
+
+		Vec3d mounted = getPassengerPosition(passenger);
+		double directionX = mounted.x;
+		double directionZ = mounted.z;
+		double length = Math.sqrt(directionX*directionX+directionZ*directionZ);
+		if(length < 1.0e-4d)
+		{
+			double yaw = Math.toRadians(aim.getYaw(0));
+			directionX = -Math.sin(yaw);
+			directionZ = Math.cos(yaw);
+			length = 1d;
+		}
+
+		double minimumRadius = width*0.5d+passenger.width*0.5d+DISMOUNT_MARGIN;
+		double radius = Math.max(length, minimumRadius);
+		directionX = directionX/length*radius;
+		directionZ = directionZ/length*radius;
+		double baseY = Math.floor(posY);
+
+		for(double angle : DISMOUNT_ANGLES)
+		{
+			double radians = Math.toRadians(angle);
+			double sin = Math.sin(radians);
+			double cos = Math.cos(radians);
+			double offsetX = directionX*cos-directionZ*sin;
+			double offsetZ = directionX*sin+directionZ*cos;
+
+			for(int height : DISMOUNT_HEIGHTS)
+			{
+				Vec3d candidate = new Vec3d(posX+offsetX, baseY+height, posZ+offsetZ);
+				if(canDismountAt(passenger, candidate))
+					return candidate;
+			}
+		}
+
+		return new Vec3d(posX+directionX, baseY, posZ+directionZ);
+	}
+
+	private boolean canDismountAt(Entity passenger, Vec3d pos)
+	{
+		double halfWidth = passenger.width*0.5d;
+		AxisAlignedBB passengerBox = new AxisAlignedBB(
+				pos.x-halfWidth, pos.y, pos.z-halfWidth,
+				pos.x+halfWidth, pos.y+passenger.height, pos.z+halfWidth
+		);
+		if(passengerBox.intersects(getEntityBoundingBox())||!world.getCollisionBoxes(passenger, passengerBox).isEmpty())
+			return false;
+
+		AxisAlignedBB supportBox = new AxisAlignedBB(
+				pos.x-halfWidth, pos.y-0.125d, pos.z-halfWidth,
+				pos.x+halfWidth, pos.y, pos.z+halfWidth
+		);
+		return !world.getCollisionBoxes(passenger, supportBox).isEmpty();
 	}
 
 	@Override
@@ -267,7 +338,15 @@ public abstract class EntityMountedWeapon extends Entity implements ISyncNBTEnti
 	@Override
 	public void doPostWorldLoadSetup(NBTTagCompound tag)
 	{
+		//A placed weapon already has authoritative item state. Do not replace it with a later stale NBT snapshot.
+		if(originStackAuthoritative)
+		{
+			this.originStack = this.authoritativeOriginStack.copy();
+			return;
+		}
+
 		setOriginStack(this.originStack);
+		markOriginStackAuthoritative();
 	}
 
 	@Override

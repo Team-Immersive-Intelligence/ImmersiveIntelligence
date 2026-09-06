@@ -20,7 +20,7 @@ import stanhebben.zenscript.annotations.ZenMethod;
 public class MachinegunTweaker
 {
 	@ZenMethod
-	public static void addCoolant(ILiquidStack fuelEntry, int amountPerUse)
+	public static void addCoolant(ILiquidStack fuelEntry, float amountPerUse)
 	{
 		Fluid mcFluid;
 		FluidStack mcFluidStack;
@@ -37,20 +37,9 @@ public class MachinegunTweaker
 	}
 
 	@ZenMethod
-	public static void setCoolAmount(ILiquidStack fuelEntry, int amountPerUse)
+	public static void setCoolAmount(ILiquidStack fuelEntry, float amountPerUse)
 	{
-		Fluid mcFluid;
-		FluidStack mcFluidStack;
-		if(fuelEntry==null)
-		{
-			CraftTweakerAPI.logError("Found null FluidStack in MG coolant entry");
-		}
-		else
-		{
-			mcFluidStack = CraftTweakerMC.getLiquidStack(fuelEntry);
-			mcFluid = mcFluidStack.getFluid();
-			MachinegunCoolantHandler.setCoolAmount(mcFluid, amountPerUse);
-		}
+		addCoolant(fuelEntry, amountPerUse);
 	}
 
 	@ZenMethod

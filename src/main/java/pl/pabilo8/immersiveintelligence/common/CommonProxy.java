@@ -364,7 +364,7 @@ public class CommonProxy implements IGuiHandler
 		LighterFuelHandler.addFuel(FluidRegistry.getFluid("diesel"), 10);
 		LighterFuelHandler.addFuel(FluidRegistry.getFluid("biodiesel"), 10);
 
-		MachinegunCoolantHandler.addCoolant(FluidRegistry.WATER, 1);
+		MachinegunCoolantHandler.addCoolant(FluidRegistry.WATER, 2);
 
 		CrusherRecipe.addRecipe(IIContent.itemMaterialDust.getStack(MaterialsDust.SILICON, 1),
 				new IngredientStack("plateSilicon"), 12000);

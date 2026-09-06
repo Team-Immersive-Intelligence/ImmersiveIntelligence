@@ -1,9 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common.entity.vehicle;
 
-import blusunrize.immersiveengineering.api.Lib;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.util.Utils;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -20,6 +18,7 @@ import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeTechTree;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Vehicles.Motorbike;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleBlueprint;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleControls;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleFuelTank;
@@ -320,12 +319,7 @@ public class EntityTrackedMotorbike extends EntityVehicleBase<EntityTrackedMotor
 	{
 		if(!isPassenger(player)&&(part==partEngine||part==partFuelTank))
 			if(Utils.isFluidRelatedItemStack(player.getHeldItem(EnumHand.MAIN_HAND)))
-			{
-				FluidStack fluidStack = fuelTank.getFluid();
-				if(fluidStack==null||fluidStack.amount==0)
-					return new String[]{I18n.format(Lib.GUI+"empty")};
-				return new String[]{fluidStack.getLocalizedName()+": "+fluidStack.amount+"mB"};
-			}
+				return new String[]{IIUtils.getFluidNameOverlayText(fuelTank.getFluid())};
 		return null;
 	}
 

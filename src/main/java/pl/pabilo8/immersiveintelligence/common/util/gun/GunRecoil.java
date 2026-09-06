@@ -1,7 +1,9 @@
 package pl.pabilo8.immersiveintelligence.common.util.gun;
 
 import blusunrize.immersiveengineering.common.util.Utils;
+import lombok.Getter;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
@@ -27,9 +29,10 @@ public class GunRecoil implements INBTSerializable<NBTTagCompound>
 	private float recoilStrengthVertical = 0.7f, recoilStrengthHorizontal = 0.3f, recoilDamping = 0.97f, recoilRandomness = 0.05f;
 
 	//--- Overheating ---//
+	@Getter
 	private boolean isOverheated = false;
 	private float overheat = 0;
-	private float maxOverheat = 0, overheatDecrease = 1;
+	private float maxOverheat = 0, overheatDecrease = 1, overheatStep = 0.5f;
 	@Nullable
 	private Supplier<FluidTank> coolantTank = null;
 	private int coolantPerTick = 10;
@@ -52,13 +55,18 @@ public class GunRecoil implements INBTSerializable<NBTTagCompound>
 
 		//Decrease overheat
 		if(overheat > 0)
-			overheat -= overheatDecrease;
-		if(coolantTank!=null&&MachinegunCoolantHandler.isValidCoolant(coolantTank.get().getFluid()))
 		{
-			FluidStack drained = coolantTank.get().drain(coolantPerTick, true);
-			assert drained!=null;
-			overheat -= MachinegunCoolantHandler.getCoolAmount(coolantTank.get().getFluid())*((float)drained.amount/coolantPerTick);
+			overheat -= overheatDecrease;
+			if(coolantTank!=null&&MachinegunCoolantHandler.isValidCoolant(coolantTank.get().getFluid()))
+			{
+				FluidStack drained = coolantTank.get().drain(coolantPerTick, true);
+				assert drained!=null;
+				overheat -= MachinegunCoolantHandler.getCoolAmount(coolantTank.get().getFluid())*((float)drained.amount/coolantPerTick);
+			}
 		}
+
+		this.overheat = Math.max(0, overheat);
+		this.isOverheated = (overheat!=0)&&(isOverheated||overheat > maxOverheat);
 	}
 
 	//--- With ---//
@@ -79,10 +87,11 @@ public class GunRecoil implements INBTSerializable<NBTTagCompound>
 		return this;
 	}
 
-	public GunRecoil withOverheating(float maxOverheat, float overheatDecrease)
+	public GunRecoil withOverheating(float maxOverheat, float overheatDecrease, float overheatStep)
 	{
 		this.maxOverheat = maxOverheat;
 		this.overheatDecrease = overheatDecrease;
+		this.overheatStep = overheatStep;
 		return this;
 	}
 
@@ -97,13 +106,15 @@ public class GunRecoil implements INBTSerializable<NBTTagCompound>
 
 	public void addRecoil()
 	{
-		//Add recoil strength to current recoil
-		this.recoilPitch += recoilStrengthVertical*(1f+recoilRandomness*(float)(Utils.RAND.nextGaussian()*2-1));
-		this.recoilYaw += recoilStrengthHorizontal*(1f+recoilRandomness*(float)(Utils.RAND.nextGaussian()*2-1));
+		//Add recoil strength to current recoil and clamp the value
+		this.recoilPitch = MathHelper.clamp(recoilPitch+recoilStrengthVertical*(1f+recoilRandomness*(float)(Utils.RAND.nextGaussian()*2-1)),
+				-maxRecoilPitch, maxRecoilPitch);
+		this.recoilYaw = MathHelper.clamp(recoilYaw+recoilStrengthHorizontal*(1f+recoilRandomness*(float)(Utils.RAND.nextGaussian()*2-1)),
+				-maxRecoilYaw, maxRecoilYaw);
 
-		//Clamp recoil to max values
-		this.recoilPitch = Math.max(-maxRecoilPitch, Math.min(maxRecoilPitch, recoilPitch));
-		this.recoilYaw = Math.max(-maxRecoilYaw, Math.min(maxRecoilYaw, recoilYaw));
+		//Add overheat
+		this.overheat = Math.min(maxOverheat, overheat+4f);
+		this.isOverheated = overheat==maxOverheat;
 	}
 
 	//--- Getters ---//
@@ -120,7 +131,7 @@ public class GunRecoil implements INBTSerializable<NBTTagCompound>
 
 	public float getOverheat(float partialTicks)
 	{
-		return Math.max(0, Math.min(1, (overheat+(isOverheated?0.5f: 0))/maxOverheat));
+		return MathHelper.clamp((overheat+(isOverheated?0.5f: 0))/maxOverheat, 0, 1);
 	}
 
 	@Override

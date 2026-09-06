@@ -13,6 +13,7 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import pl.pabilo8.immersiveintelligence.api.MachinegunCoolantHandler;
 import pl.pabilo8.immersiveintelligence.api.crafting.BathingRecipe;
 import pl.pabilo8.immersiveintelligence.api.crafting.ElectrolyzerRecipe;
 import pl.pabilo8.immersiveintelligence.api.crafting.SawmillRecipe;
@@ -116,6 +117,7 @@ public class TerrafirmaHelper extends IICompatModule
 			new BathingRecipe(new ItemStack(Items.BED, 1, outputColor),
 					new ItemStack(Items.BED, 1, 0), new FluidStack(fluid, 125), 1024, 160, false);
 		}
+		MachinegunCoolantHandler.addCoolant(FluidRegistry.getFluid("fresh_water"), 2);
 	}
 
 	@Override

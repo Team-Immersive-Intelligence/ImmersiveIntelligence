@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.util.gun;
 
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -88,7 +89,11 @@ public class GunShootingHandler implements INBTSerializable<NBTBase>
 		this.shotDelay = maxShotDelay;
 		//Add recoil and gun overheat
 		if(recoil!=null)
+		{
 			recoil.addRecoil();
+			if(recoil.isOverheated()&&!world.isRemote)
+				world.playSound(null, new BlockPos(ammoFactory.getPos()), SoundEvents.BLOCK_LAVA_EXTINGUISH, SoundCategory.BLOCKS, 1f, 1f);
+		}
 		return true;
 	}
 
@@ -150,7 +155,7 @@ public class GunShootingHandler implements INBTSerializable<NBTBase>
 
 	public boolean canShoot()
 	{
-		return shotDelay <= 0;
+		return shotDelay <= 0&&(recoil==null||!recoil.isOverheated());
 	}
 
 	public float getLoadingProgress(float partialTicks)

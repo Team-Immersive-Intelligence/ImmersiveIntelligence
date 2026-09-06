@@ -1989,8 +1989,8 @@ public class IIConfigHandler
 				@Comment({"Time required to set up the MG (in ticks)."})
 				public static int setupTime = 50;
 
-				@Comment({"Max scatter of heat, higher values will force the player to wait until the gun cools down."})
-				public static int maxOverheat = 250;
+				@Comment({"Max barrel heat, higher values will force the player to wait until the gun cools down."})
+				public static int maxOverheat = 64;
 
 				@Comment({"Amount of horizontal recoil after taking a shot."})
 				public static float recoilHorizontal = 2.5f;

@@ -238,7 +238,13 @@ public class AmmoFactory<E extends EntityAmmoBase<? super E>>
 	public AmmoFactory<E> setShooterAndGun(Entity shooter, @Nullable Entity gun)
 	{
 		this.owner = shooter;
-		this.ignoredEntities = gun==null?Collections.emptyList(): new ArrayList<>(gun.getRecursivePassengers());
+		if(gun==null)
+			this.ignoredEntities = Collections.emptyList();
+		else
+		{
+			this.ignoredEntities = new ArrayList<>(gun.getRecursivePassengers());
+			this.ignoredEntities.add(gun);
+		}
 		return this;
 	}
 

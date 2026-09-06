@@ -36,7 +36,7 @@ public class GuiOverlayMachinegun extends GuiOverlayGunBase
 
 		//Draw loaded ammo
 		if(mg.upgrades.contains(WeaponUpgrade.BELT_FED_LOADER))
-			drawMagazine(mg.loadingCrate, width, height);
+			drawMagazine(mg.loadingCrate, width, height, 32);
 		else
 		{
 			if(mg.upgrades.contains(WeaponUpgrade.SECOND_MAGAZINE))

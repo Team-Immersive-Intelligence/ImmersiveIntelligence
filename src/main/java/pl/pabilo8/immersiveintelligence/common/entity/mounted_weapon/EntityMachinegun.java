@@ -2,10 +2,12 @@ package pl.pabilo8.immersiveintelligence.common.entity.mounted_weapon;
 
 import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorage;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
+import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -31,6 +33,7 @@ import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate.TileEntityAmmunitionCrate;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleControls;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleControls.MouseBinding;
@@ -54,7 +57,7 @@ import java.util.EnumSet;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 15.05.2026
+ * @updated 06.09.2026
  * @ii-approved 0.3.1
  * @since 01.11.2019
  */
@@ -112,6 +115,7 @@ public class EntityMachinegun extends EntityMountedWeapon implements IAdvancedTe
 		this.setPosition(pos.getX()+0.5, pos.getY(), pos.getZ()+0.5);
 		this.aim.withCenterYaw(yaw).withCurrentAngles(yaw, 0);
 		setOriginStack(stack);
+		markOriginStackAuthoritative();
 		if(upgrades.contains(WeaponUpgrade.TRIPOD))
 			this.posY += 0.385f;
 	}
@@ -130,7 +134,7 @@ public class EntityMachinegun extends EntityMountedWeapon implements IAdvancedTe
 				.withAimSpeed(3.5f, 3f);
 		this.recoil.withRecoilLimits(22.5f, 22.5f)
 				.withRecoilStrength(Machinegun.recoilVertical, Machinegun.recoilHorizontal, 0.5f, 0.05f)
-				.withOverheating(Machinegun.maxOverheat, 0.75f)
+				.withOverheating(Machinegun.maxOverheat, 0.75f, 4f)
 				.withCoolantTank(() -> tank, Integer.MAX_VALUE);
 		this.gunHandler.withMaxShotDelay(Machinegun.fireDelay)
 				.withRecoilHandler(recoil)
@@ -142,6 +146,7 @@ public class EntityMachinegun extends EntityMountedWeapon implements IAdvancedTe
 		this.loadingMagazine2.withSounds(IISounds.machinegunReload, IISounds.machinegunUnload);
 		this.loadingCrate.withSounds(IISounds.machinegunReload, IISounds.machinegunUnload);
 		this.infraredFluxStorage.setCapacity(0);
+		this.tank.setCapacity(0);
 		this.setSize(0.77f, 0.65f);
 
 		this.loadingMagazine1.setLoadedStack(ItemNBTHelper.getItemStack(stack, "magazine1"));
@@ -152,44 +157,41 @@ public class EntityMachinegun extends EntityMountedWeapon implements IAdvancedTe
 		for(WeaponUpgrade upgrade : upgrades)
 			switch(upgrade)
 			{
-				case HEAVY_BARREL:
+				case HEAVY_BARREL ->
+				{
 					this.gunHandler.withMaxShotDelay(Machinegun.heavyBarrelFireDelay)
 							.withShootSound(IISounds.machinegunShotHeavyBarrel, 70);
 					this.recoil.withRecoilStrength(Machinegun.recoilHBVertical, Machinegun.recoilHBHorizontal, 0.5f, 0.05f);
-					break;
-				case WATER_COOLING:
+				}
+				case WATER_COOLING ->
+				{
 					this.gunHandler.withShootSound(IISounds.machinegunShotWaterCooled, 70);
 					this.recoil.withCoolantTank(() -> tank, Machinegun.waterCoolingFluidUsage);
-					break;
-				case SECOND_MAGAZINE:
+					this.tank.setCapacity(Machinegun.waterCoolingTankCapacity);
+				}
+				case SECOND_MAGAZINE ->
+				{
 					this.gunHandler.withAmmoProvider(loadingMagazine2);
 					this.loadingMagazine2.setLoadedStack(ItemNBTHelper.getItemStack(stack, "magazine2"));
-					break;
-				case HASTY_BIPOD:
-					this.maxSetupTime = (int)(this.maxSetupTime*Machinegun.hastyBipodSetupTimeMultiplier);
-					break;
-				case PRECISE_BIPOD:
-					this.maxSetupTime = (int)(this.maxSetupTime*Machinegun.preciseBipodSetupTimeMultiplier);
-					break;
-				case SHIELD:
-					this.maxSetupTime = (int)(this.maxSetupTime*Machinegun.shieldSetupTimeMultiplier);
-					break;
-				case BELT_FED_LOADER:
+				}
+				case HASTY_BIPOD -> this.maxSetupTime = (int)(this.maxSetupTime*Machinegun.hastyBipodSetupTimeMultiplier);
+				case PRECISE_BIPOD -> this.maxSetupTime = (int)(this.maxSetupTime*Machinegun.preciseBipodSetupTimeMultiplier);
+				case SHIELD -> this.maxSetupTime = (int)(this.maxSetupTime*Machinegun.shieldSetupTimeMultiplier);
+				case BELT_FED_LOADER ->
+				{
 					this.gunHandler.withAmmoProvider(loadingCrate);
 					this.maxSetupTime = (int)(this.maxSetupTime*Machinegun.beltFedLoaderSetupTimeMultiplier);
-					break;
-				case TRIPOD:
+				}
+				case TRIPOD ->
+				{
 					this.maxSetupTime = (int)(this.maxSetupTime*Machinegun.tripodSetupTimeMultiplier);
 					this.aim.withYawLimit(-180, 180f);
 					this.setSize(0.77f, 1.65f);
-					break;
-				case SCOPE:
-					break;
-				case INFRARED_SCOPE:
-					this.infraredFluxStorage.setCapacity(16000);
-					break;
-				default:
-					break;
+				}
+				case INFRARED_SCOPE -> this.infraredFluxStorage.setCapacity(16000);
+				default ->
+				{
+				}
 			}
 	}
 
@@ -227,7 +229,7 @@ public class EntityMachinegun extends EntityMountedWeapon implements IAdvancedTe
 			this.aim.setTargetClamped(user.getRotationYawHead(), user.rotationPitch);
 			//Set shooter and gun info
 			this.ammoFactory.setShooterAndGun(user, this)
-					.setPositionAndVelocity(this.getPositionVector().addVector(0, upgrades.contains(WeaponUpgrade.TRIPOD)?1.25f: 0.5f, 0), this.aim, 0.25f, 1f);
+					.setPositionAndVelocity(this.getPositionVector().addVector(0, upgrades.contains(WeaponUpgrade.TRIPOD)?1.25f: 0.5f, 0), this.aim, 0f, 1f);
 
 			//Drain energy from user
 			for(ItemStack equipmentStack : user.getEquipmentAndArmor())
@@ -243,11 +245,15 @@ public class EntityMachinegun extends EntityMountedWeapon implements IAdvancedTe
 			if(controls.getKey("aim")&&infraredFluxStorage.extractEnergy(Machinegun.infraredScopeEnergyUsage, false)==Machinegun.infraredScopeEnergyUsage)
 				IIUtils.applyInfraredVision(user, 10);
 
+			//Automatically load from an ammunition crate in belt-fed mode
+			if(loadingCrate!=null&&!loadingCrate.isLoaded())
+				loadingCrate.startReloading();
+
 			//Check for buttons pressed
-			if(controls.getKey("reload"))
-				this.gunHandler.startReloading();
-			else if(controls.getKey("fire"))
+			if(controls.getKey("fire"))
 				this.gunHandler.fire();
+			else if(loadingCrate==null&&controls.getKey("reload"))
+				this.gunHandler.startReloading();
 		}
 		else
 		{
@@ -263,7 +269,11 @@ public class EntityMachinegun extends EntityMountedWeapon implements IAdvancedTe
 		BlockPos checkPos = getPosition().down();
 		IBlockState state = world.getBlockState(checkPos);
 		EnumFacing facing = EnumFacing.fromAngle(aim.getCenterYaw());
+		TileEntity tile = world.getTileEntity(checkPos);
 
+		//An ammunition crate is a valid mounting surface despite its lower collision box.
+		if(tile instanceof TileEntityAmmunitionCrate)
+			return true;
 		if(state.getBlock().isAir(state, world, checkPos))
 			return false;
 
@@ -276,7 +286,7 @@ public class EntityMachinegun extends EntityMountedWeapon implements IAdvancedTe
 	public boolean processInitialInteract(EntityPlayer player, EnumHand hand)
 	{
 		//Try filling coolant tank
-		if(FluidUtil.interactWithFluidHandler(player, hand, tank))
+		if(upgrades.contains(WeaponUpgrade.WATER_COOLING)&&FluidUtil.interactWithFluidHandler(player, hand, tank))
 		{
 			if(!world.isRemote)
 				updateEntityForEvent(SyncEvents.ENTITY_INTERACT);
@@ -341,6 +351,9 @@ public class EntityMachinegun extends EntityMountedWeapon implements IAdvancedTe
 	@Override
 	public String[] getOverlayText(EntityPlayer player, RayTraceResult mop)
 	{
+		if(upgrades.contains(WeaponUpgrade.WATER_COOLING)&&Utils.isFluidRelatedItemStack(player.getHeldItem(EnumHand.MAIN_HAND)))
+			return new String[]{IIUtils.getFluidNameOverlayText(tank.getFluid())};
+
 		return new String[0];
 	}
 

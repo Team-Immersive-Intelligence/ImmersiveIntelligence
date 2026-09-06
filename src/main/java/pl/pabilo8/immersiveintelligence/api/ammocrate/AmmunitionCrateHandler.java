@@ -14,6 +14,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -21,6 +22,7 @@ import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate.TileEntityAmmunitionCrate;
 import pl.pabilo8.immersiveintelligence.common.entity.mounted_weapon.EntityMachinegun;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerAmmunitionCrate;
@@ -48,7 +50,6 @@ import java.util.function.Predicate;
  * Defines ammunition-crate modes and weapon reload handlers.
  *
  * @author Pabilo8(pabilo@iiteam.net)
- * @updated 11.08.2026
  * @since 10.08.2026
  */
 public class AmmunitionCrateHandler
@@ -335,29 +336,70 @@ public class AmmunitionCrateHandler
 	}
 
 	/**
-	 * Extracts one belt-fed machinegun round from an adjacent crate.
+	 * Finds a nearby Ammunition Crate for a belt-fed machinegun.
+	 */
+	@Nullable
+	public static TileEntityAmmunitionCrate findMountedBeltFedCrate(Entity gun)
+	{
+		return getMountedCrate(gun, AmmunitionCrateMode.MACHINEGUN_BELT_FED, false);
+	}
+
+	/**
+	 * Tests whether a cached crate is still a valid belt-feed source.
+	 */
+	public static boolean isMountedBeltFedCrateValid(Entity gun, @Nullable TileEntityAmmunitionCrate crate)
+	{
+		return gun!=null&&crate!=null&&crate.getWorld()==gun.world
+				&&!crate.isInvalid()
+				&&crate.getPos().distanceSq(gun.getPosition()) <= 3
+				&&isMountedBeltFedCrateUsable(crate);
+	}
+
+	/**
+	 * Extracts one belt-fed machinegun round from a nearby crate.
 	 */
 	public static ItemStack extractMountedBullet(Entity gun)
 	{
-		TileEntityAmmunitionCrate crate = getMountedCrate(gun, AmmunitionCrateMode.MACHINEGUN_BELT_FED, false);
+		return extractMountedBulletFrom(findMountedBeltFedCrate(gun));
+	}
+
+	/**
+	 * Extracts one belt-fed machinegun round from a crate.
+	 */
+	public static ItemStack extractMountedBulletFrom(@Nullable TileEntityAmmunitionCrate crate)
+	{
 		return crate==null?ItemStack.EMPTY: crate.extractAmmunition(AmmunitionCrateHandler::isMachinegunRound);
 	}
 
 	/**
-	 * Tests whether an adjacent belt-fed crate has ammunition.
+	 * Tests whether a nearby belt-fed crate has ammunition.
 	 */
 	public static boolean hasMountedBullet(Entity gun)
 	{
-		TileEntityAmmunitionCrate crate = getMountedCrate(gun, AmmunitionCrateMode.MACHINEGUN_BELT_FED, false);
+		return hasMountedBulletIn(findMountedBeltFedCrate(gun));
+	}
+
+	/**
+	 * Tests whether a belt-fed crate has ammunition.
+	 */
+	public static boolean hasMountedBulletIn(@Nullable TileEntityAmmunitionCrate crate)
+	{
 		return crate!=null&&crate.hasAmmunition(AmmunitionCrateHandler::isMachinegunRound);
+	}
+
+	/**
+	 * Gets nearby belt-fed ammunition for rendering.
+	 */
+	public static NonNullList<ItemStack> getMountedAmmunition(Entity gun)
+	{
+		return getMountedAmmunitionFrom(findMountedBeltFedCrate(gun));
 	}
 
 	/**
 	 * Gets belt-fed ammunition for rendering.
 	 */
-	public static NonNullList<ItemStack> getMountedAmmunition(Entity gun)
+	public static NonNullList<ItemStack> getMountedAmmunitionFrom(@Nullable TileEntityAmmunitionCrate crate)
 	{
-		TileEntityAmmunitionCrate crate = getMountedCrate(gun, AmmunitionCrateMode.MACHINEGUN_BELT_FED, false);
 		return crate==null?NonNullList.create(): crate.getAmmunitionStacks();
 	}
 
@@ -577,15 +619,47 @@ public class AmmunitionCrateHandler
 			}
 		}
 
+		if(mode==AmmunitionCrateMode.MACHINEGUN_BELT_FED)
+			return findNearbyBeltFedCrate(machinegun);
+
 		EnumFacing rear = EnumFacing.fromAngle(machinegun.aim.getCenterYaw()).getOpposite();
 		TileEntity tile = gun.world.getTileEntity(gun.getPosition().offset(rear).down());
 		if(!(tile instanceof TileEntityAmmunitionCrate crate)||crate.mode!=mode||!crate.lid.isFullyOpened())
 			return null;
-
-		//The inserter occupies the direct belt feed path.
-		if(mode==AmmunitionCrateMode.MACHINEGUN_BELT_FED&&crate.isUpgradeInstalled(IIContent.UPGRADE_INSERTER))
-			return null;
 		return crate;
+	}
+
+	@Nullable
+	private static TileEntityAmmunitionCrate findNearbyBeltFedCrate(EntityMachinegun machinegun)
+	{
+		BlockPos gunPos = machinegun.getPosition();
+		TileEntityAmmunitionCrate nearest = null;
+		double nearestDistance = Double.MAX_VALUE;
+
+		//Radius 2 includes the surrounding integer block positions. Distance keeps the scan symmetric.
+		for(BlockPos pos : IIUtils.getBlocksInCube(machinegun.world, gunPos, 2))
+		{
+			double distance = pos.distanceSq(gunPos);
+			if(distance > 3f||distance >= nearestDistance)
+				continue;
+
+			TileEntity tile = machinegun.world.getTileEntity(pos);
+			if(!(tile instanceof TileEntityAmmunitionCrate crate)
+					||!isMountedBeltFedCrateUsable(crate)
+					||!hasMountedBulletIn(crate))
+				continue;
+
+			nearest = crate;
+			nearestDistance = distance;
+		}
+		return nearest;
+	}
+
+	private static boolean isMountedBeltFedCrateUsable(TileEntityAmmunitionCrate crate)
+	{
+		return crate.mode==AmmunitionCrateMode.MACHINEGUN_BELT_FED
+				&&crate.lid.isFullyOpened()
+				&&!crate.isUpgradeInstalled(IIContent.UPGRADE_INSERTER);
 	}
 
 	static void finishMountedLoadSource(Entity gun)

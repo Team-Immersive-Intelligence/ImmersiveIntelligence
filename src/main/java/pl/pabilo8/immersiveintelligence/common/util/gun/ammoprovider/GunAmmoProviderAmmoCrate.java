@@ -13,7 +13,6 @@ import java.util.function.Supplier;
  * Supplies a belt-fed mounted weapon directly from an Ammunition Crate.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 10.08.2026
  * @ii-approved 0.3.1
  * @since 26.05.2026
  */
