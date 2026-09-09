@@ -6,7 +6,7 @@ dependencies {
 	compileOnly rfg.deobf("mezz.jei:jei_1.12.2:${mkxString('jei_version')}:api")
 	runtimeOnlyNonPublishable rfg.deobf("mezz.jei:jei_1.12.2:${mkxString('jei_version')}")
 	compileOnly rfg.deobf("CraftTweaker2:CraftTweaker2-MC1120-Main:${mkxString('crafttweaker_version')}")
-	compileOnly 'com.google.code.findbugs:jsr305:3.0.1'
+	compileOnly 'com.google.code.findbugs:jsr305:3.0.2'
 
 	compileOnly rfg.deobf("com.elytradev:mirage:${mkxString('mirage_version')}")
 	compileOnly rfg.deobf("curse.maven:baubles-227083:${mkxString('baubles_version')}")

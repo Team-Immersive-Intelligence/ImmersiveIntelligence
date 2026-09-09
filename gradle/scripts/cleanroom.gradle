@@ -82,7 +82,7 @@ if (mkxBool('ii_use_modern_java_syntax', false)) {
 	dependencies {
 		annotationProcessor 'com.github.bsideup.jabel:jabel-javac-plugin:1.0.1'
 		compileOnly('com.github.bsideup.jabel:jabel-javac-plugin:1.0.1') { transitive = false }
-		annotationProcessor 'net.java.dev.jna:jna-platform:5.13.0'
+		annotationProcessor 'net.java.dev.jna:jna-platform:5.19.1'
 		testAnnotationProcessor 'com.github.bsideup.jabel:jabel-javac-plugin:1.0.1'
 		testCompileOnly('com.github.bsideup.jabel:jabel-javac-plugin:1.0.1') { transitive = false }
 		patchedMinecraft 'me.eigenraven.java8unsupported:java-8-unsupported-shim:1.0.0'
