@@ -51,7 +51,7 @@ import java.util.stream.Collectors;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 23.08.2026
+ * @updated 08.09.2026
  * @ii-approved 0.3.1
  * @since 02.02.2024
  */
@@ -258,9 +258,9 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 			if(traceResult!=null)
 			{
 				Vec3d motionInterrupt = traceResult.hitVec.subtract(posX, posY, posZ);
-				motionX = motionInterrupt.x-Math.signum(motionInterrupt.x)*width;
-				motionY = motionInterrupt.y-Math.signum(motionInterrupt.y)*height;
-				motionZ = motionInterrupt.z-Math.signum(motionInterrupt.z)*width;
+				motionX = motionInterrupt.x;
+				motionY = motionInterrupt.y;
+				motionZ = motionInterrupt.z;
 			}
 		}
 
@@ -375,13 +375,15 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 				return true;
 			}
 
-			if(world.isRemote)
-				return false;
-
 			//don't damage fluids
-			if(!state.getMaterial().isLiquid())
+			if(!world.isRemote&&!state.getMaterial().isLiquid())
 				PenetrationCache.dealBlockDamage(world, getDirection(), getDamage(), pos, penHandler);
 
+		}
+		if(penetrationDepth <= 0)
+		{
+			detonate();
+			return true;
 		}
 		return false;
 	}
@@ -434,7 +436,7 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 		boolean attackSuccessful = other.attackEntityFrom(IIDamageSources.causeBulletDamage(this, other), getDamage());
 		other.hurtResistantTime = 0;
 
-		if(!attackSuccessful)
+		if(!attackSuccessful||penetrationDepth <= 0)
 		{
 			detonate();
 			return true;
