@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.entity.ammo.types;
 
+import blusunrize.immersiveengineering.client.ClientUtils;
 import lombok.Getter;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -29,6 +30,7 @@ import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoType;
 import pl.pabilo8.immersiveintelligence.api.ammo.penetration.IPenetrationHandler;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoUtils;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.PenetrationCache;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Graphics;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageParticleEffect;
@@ -329,6 +331,8 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 	@SideOnly(Side.CLIENT)
 	protected void spawnTrailParticles()
 	{
+		if(!Graphics.renderCloseBullets&&ClientUtils.mc().player.getDistance(this) < 1)
+			return;
 		for(Tuple<AmmoComponent, NBTTagCompound> component : components)
 			component.getFirst().spawnParticleTrail(this, component.getSecond());
 	}

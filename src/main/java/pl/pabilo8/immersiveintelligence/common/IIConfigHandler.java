@@ -263,6 +263,9 @@ public class IIConfigHandler
 			@Comment({"Enable vehicle debug overlay, showing hitboxes, motion vector arrows and individual part names."})
 			public static boolean vehicleDebugOverlay = false;
 
+			@Comment({"Enable drawing of II ammo system's projectiles very close to the player."})
+			public static boolean renderCloseBullets = false;
+
 			@Comment({"Enable Tactile AMT - dynamic collision boxes for multiblocks that use animations for positioning them."})
 			public static boolean tactileAMT = true;
 
@@ -2392,34 +2395,34 @@ public class IIConfigHandler
 			public static boolean blockDamage = true;
 
 			@Comment({"Default velocity of a mortar shell."})
-			public static float mortarVelocity = 8f*0.7f;
+			public static float mortarVelocity = 5.5f;
 
 			@Comment({"Default velocity of a light howitzer shell."})
-			public static float lightHowiVelocity = 10f*0.7f;
+			public static float lightHowiVelocity = 8f;
 
 			@Comment({"Default velocity of an artillery howitzer shell."})
-			public static float artilleryHowiVelocity = 70f*0.7f;
+			public static float artilleryHowiVelocity = 64f;
 
 			@Comment({"Default velocity of a railgun grenade."})
-			public static float railgunGrenadeVelocity = 5f*0.7f;
+			public static float railgunGrenadeVelocity = 5f;
 
 			@Comment({"Default velocity of a thrown grenade."})
 			public static float grenadeVelocity = 1f;
 
 			@Comment({"Default velocity of a machinegun bullet."})
-			public static float autocannonVelocity = 6f*0.7f;
+			public static float autocannonVelocity = 8f;
 
 			@Comment({"Default velocity of a machinegun bullet."})
-			public static float mgVelocity = 6.5f*0.7f;
+			public static float mgVelocity = 12f;
 
 			@Comment({"Default velocity of a submachinegun bullet."})
-			public static float smgVelocity = 5f*0.7f;
+			public static float smgVelocity = 10f;
 
 			@Comment({"Default velocity of an assault rifle bullet."})
-			public static float stgVelocity = 6.5f*0.7f;
+			public static float stgVelocity = 10.5f;
 
 			@Comment({"Default velocity of a revolver cartridge."})
-			public static float revolverVelocity = 6f*0.7f;
+			public static float revolverVelocity = 9f;
 		}
 
 		public static class Wires

@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.client.model.builtin.IAmmoModel;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Graphics;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
 
 /**
@@ -26,6 +27,8 @@ public class ProjectileAmmoRenderer extends Render<EntityAmmoProjectile>
 	@Override
 	public void doRender(EntityAmmoProjectile entity, double x, double y, double z, float entityYaw, float partialTicks)
 	{
+		if(!Graphics.renderCloseBullets&&(Math.abs(x*z) < 0.125f))
+			return;
 		IAmmoModel<?, EntityAmmoProjectile> model = AmmoRegistry.getModel(entity.getAmmoType());
 		if(model==null)
 			return;
