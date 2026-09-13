@@ -258,7 +258,7 @@ public class EntityMachinegun extends EntityMountedWeapon implements IAdvancedTe
 		else
 		{
 			this.ammoFactory.setOwner(null);
-			this.aim.setTarget(aim.getTargetYaw(), aim.clampPitchToRange(-10f));
+			this.aim.setTarget(aim.getYaw(0), aim.clampPitchToRange(-10f));
 			this.aim.update();
 		}
 	}
