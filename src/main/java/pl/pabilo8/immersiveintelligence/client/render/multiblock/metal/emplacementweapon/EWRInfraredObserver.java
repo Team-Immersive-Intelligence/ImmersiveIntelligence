@@ -51,6 +51,6 @@ public class EWRInfraredObserver extends EmplacementWeaponRenderer<EmplacementWe
 			this.uninstall.apply(weapon.setup.getProgress(partialTicks));
 		else
 			this.install.apply(weapon.setup.getProgress(partialTicks));
-		this.rotatePitch.apply(weapon.aim.getPitchNormalized(partialTicks));
+		this.rotatePitch.apply(weapon.aim.getPitchNormalized(-90, 90, partialTicks));
 	}
 }

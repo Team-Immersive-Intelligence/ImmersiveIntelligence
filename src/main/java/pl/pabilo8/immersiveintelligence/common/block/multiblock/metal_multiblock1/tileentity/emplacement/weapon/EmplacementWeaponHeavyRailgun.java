@@ -65,6 +65,12 @@ public class EmplacementWeaponHeavyRailgun extends EmplacementWeaponGunBase<Enti
 	}
 
 	@Override
+	public boolean isArtilleryWeapon()
+	{
+		return true;
+	}
+
+	@Override
 	public int getShotDelay()
 	{
 		return HeavyRailgun.shotFireTime;

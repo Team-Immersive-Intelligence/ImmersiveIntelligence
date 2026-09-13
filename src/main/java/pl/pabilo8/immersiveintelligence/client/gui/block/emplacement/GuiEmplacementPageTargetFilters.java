@@ -5,11 +5,14 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoCheckbox;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoSwitch;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoDropdown;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoElementDisplays;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoElementDisplays.DecoElementSorter;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoTreeDisplay;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoEntryPanelBuilder;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPanel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.DecoTextField;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.util.TextFilter;
@@ -30,10 +33,10 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 /**
- * Edits saved Emplacement target-tree presets without changing live server state before Save.
+ * Edits Emplacement target-tree presets and synchronizes each valid change.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 30.08.2026
+ * @updated 08.09.2026
  * @since 16.07.2021
  */
 @DecoTemplate(name = "emplacement_target_filters", category = DecoGuiCategory.TERRITORY_CONTROL_TILE)
@@ -57,8 +60,7 @@ public class GuiEmplacementPageTargetFilters extends GuiEmplacement
 	private TargetDecisionTreeWrapper treeWrapper;
 	private DecoTreeDisplay<TargetDecisionTreeNode> treeDisplay;
 	private DecoPanel topBar, treePanel, editorPanel;
-	private DecoSwitch currentTaskSwitch;
-	private DecoButton saveButton;
+	private DecoCheckbox currentTaskCheckbox;
 
 	public GuiEmplacementPageTargetFilters(EntityPlayer player, TileEntityEmplacement tile)
 	{
@@ -107,55 +109,54 @@ public class GuiEmplacementPageTargetFilters extends GuiEmplacement
 			return;
 		topBar.cleanup();
 		DecoDropdown<TargetDecisionTreePreset> presets = new DecoDropdown<TargetDecisionTreePreset>(2, 2)
-				.withSize(58, 14)
-				.withDropdownWidth(100)
+				.withSize(140, 16)
+				.withDropdownWidth(140)
 				.withMaxDisplayedEntries(8)
 				.withSortFunction(createPresetSorter())
 				.withEntries(configuration.getPresets())
-				.withDisplayFunction(DecoElementDisplays.getSimpleTextDisplay(this::getPresetDisplayName))
+				.withDisplayFunction(createPresetDisplay())
+				.withCreateLaterAction(this::addPreset)
 				.withSelectedEntry(selectedPreset)
 				.withOnSelectedEntry((oldPreset, newPreset) -> selectPreset(newPreset));
 
-		DecoButton duplicate = new DecoButton(74, 2)
-				.withTemplate(DecoTemplates.ACTION_BUTTON_DUPLICATE)
-				.withTranslatedTooltip(PRESET_KEY+"duplicate.tooltip")
-				.withOnLMBPressed(this::duplicateSelectedPreset)
-				.withDisabled(selectedPreset==null||configuration.getPresets().size() >= TargetingLimits.MAX_PRESETS);
-		DecoButton remove = new DecoButton(88, 2)
-				.withTemplate(DecoTemplates.ACTION_BUTTON_REMOVE)
-				.withTranslatedTooltip(PRESET_KEY+"remove.tooltip")
-				.withOnLMBPressed(this::removeSelectedPreset)
-				.withDisabled(selectedPreset==null);
-
 		topBar.addComponents(
 				presets,
-				new DecoButton(60, 2)
-						.withTemplate(DecoTemplates.ACTION_BUTTON_ADD)
-						.withTranslatedTooltip(PRESET_KEY+"add.tooltip")
-						.withOnLMBPressed(this::addPreset)
-						.withDisabled(configuration.getPresets().size() >= TargetingLimits.MAX_PRESETS),
-				duplicate,
-				remove,
-				new DecoButton(102, 2)
+				new DecoButton(144, 2)
 						.withSize(31, 14)
 						.withText(PRESET_KEY+"reset")
 						.withTranslatedTooltip(PRESET_KEY+"reset.tooltip")
 						.withOnLMBPressed(this::resetSelectedPreset)
 						.withDisabled(selectedPreset==null),
-				saveButton = new DecoButton(134, 2)
-						.withSize(27, 14)
-						.withText(PRESET_KEY+"save")
-						.withTranslatedTooltip(PRESET_KEY+"save.tooltip")
-						.withOnLMBPressed(this::saveTargetConfiguration),
-				currentTaskSwitch = new DecoSwitch(162, 4)
+				currentTaskCheckbox = new DecoCheckbox(178, 4)
 						.withRawText(I18n.format(PRESET_KEY+"current"))
-						.withSize(81, 11)
+						.withSize(64, 11)
 						.withTranslatedTooltip(PRESET_KEY+"current.tooltip")
-						.withCurrentState(isSelectedPresetActive())
+						.withChecked(isSelectedPresetActive())
 						.withOnToggle(this::setSelectedPresetActive)
 						.withDisabled(selectedPreset==null)
 		);
-		updateSaveState();
+	}
+
+	private DecoEntryPanelBuilder<TargetDecisionTreePreset> createPresetDisplay()
+	{
+		return new DecoEntryPanelBuilder<TargetDecisionTreePreset>()
+				.withHeight(16)
+				.withBackground(DecoTextures.BG_PAPER)
+				.withBackgroundMask(DecoTextures.TEMPLATE_TICKET)
+				.withLabel("name", panel -> new DecoLabel(fontRenderer, 3, 3)
+						.withSize(panel.width-37, 10)
+						.withAlign(DecoAlignment.LEFT))
+				.withComponent(panel -> new DecoButton(panel.width-31, 1)
+						.withTemplate(DecoTemplates.ACTION_BUTTON_DUPLICATE)
+						.withTranslatedTooltip(PRESET_KEY+"duplicate.tooltip")
+						.withOnLMBPressed(() -> duplicatePreset(panel.getCurrentElement()))
+						.withDisabled(configuration.getPresets().size() >= TargetingLimits.MAX_PRESETS))
+				.withComponent(panel -> new DecoButton(panel.width-16, 1)
+						.withTemplate(DecoTemplates.ACTION_BUTTON_REMOVE)
+						.withTranslatedTooltip(PRESET_KEY+"remove.tooltip")
+						.withOnLMBPressed(() -> removePreset(panel.getCurrentElement())))
+				.withElementApplyMethod((preset, panel) -> panel.label("name")
+						.withRawText(getPresetDisplayName(preset)));
 	}
 
 	private DecoElementSorter<TargetDecisionTreePreset> createPresetSorter()
@@ -186,8 +187,8 @@ public class GuiEmplacementPageTargetFilters extends GuiEmplacement
 	{
 		selectedPreset = preset;
 		selectedNode = preset==null?null: preset.getTree().getRoot();
-		if(currentTaskSwitch!=null)
-			currentTaskSwitch.withCurrentState(isSelectedPresetActive());
+		if(currentTaskCheckbox!=null)
+			currentTaskCheckbox.withChecked(isSelectedPresetActive());
 		refreshTreeDisplay();
 		refreshEditor();
 	}
@@ -230,7 +231,7 @@ public class GuiEmplacementPageTargetFilters extends GuiEmplacement
 					.withText(selectedPreset.getName())
 					.withOnTextChanged(text -> {
 						selectedPreset.setName(text);
-						updateSaveState();
+						saveTargetConfiguration();
 					}));
 			y += 17;
 		}
@@ -246,8 +247,10 @@ public class GuiEmplacementPageTargetFilters extends GuiEmplacement
 				.withFilter(TextFilter.DECIMAL)
 				.withText(selectedNode.getWeight())
 				.withTranslatedTooltip(TREE_KEY+"weight.tooltip")
-				.withOnTextChanged(text -> selectedNode.setWeight(
-						TextFilter.DECIMAL.parseInt(text, selectedNode.getWeight()))));
+				.withOnTextChanged(text -> {
+					selectedNode.setWeight(TextFilter.DECIMAL.parseInt(text, selectedNode.getWeight()));
+					saveTargetConfiguration();
+				}));
 		y += 17;
 
 		editorPanel.addLabel(TREE_KEY+"filter", 4, y).withSize(44, 14).withAlign(DecoAlignment.LEFT);
@@ -263,6 +266,7 @@ public class GuiEmplacementPageTargetFilters extends GuiEmplacement
 					if(newType!=null&&newType!=selectedNode.getFilter().getType())
 					{
 						selectedNode.setFilter(newType.createDefault());
+						saveTargetConfiguration();
 						refreshEditor();
 					}
 				}));
@@ -319,7 +323,10 @@ public class GuiEmplacementPageTargetFilters extends GuiEmplacement
 						.withSelectedEntry(typeFilter.getTargetType())
 						.withOnSelectedEntry((oldValue, newValue) -> {
 							if(newValue!=null)
+							{
 								typeFilter.setTargetType(newValue);
+								saveTargetConfiguration();
+							}
 						}));
 			}
 			break;
@@ -331,12 +338,16 @@ public class GuiEmplacementPageTargetFilters extends GuiEmplacement
 						.withSize(editorPanel.width-52, 14)
 						.withMaxStringLength(TargetingLimits.MAX_STRING_LENGTH)
 						.withText(nameFilter.getName())
-						.withOnTextChanged(nameFilter::setName));
+						.withOnTextChanged(value -> {
+							nameFilter.setName(value);
+							saveTargetConfiguration();
+						}));
 			}
 			break;
 			case HEALTH:
 			case MAX_HEALTH:
 			case DISTANCE:
+			case HORIZONTAL_DISTANCE:
 				addNumericEditor(y, (NumericTargetFilter)filter);
 				break;
 			case ON_GROUND:
@@ -349,7 +360,10 @@ public class GuiEmplacementPageTargetFilters extends GuiEmplacement
 						.withRawText(I18n.format(TREE_KEY+"expected_state"))
 						.withSize(editorPanel.width-52, 11)
 						.withCurrentState(booleanFilter.isExpected())
-						.withOnToggle(booleanFilter::setExpected));
+						.withOnToggle(value -> {
+							booleanFilter.setExpected(value);
+							saveTargetConfiguration();
+						}));
 			}
 			break;
 			case FACTION_RELATIONSHIP:
@@ -364,7 +378,10 @@ public class GuiEmplacementPageTargetFilters extends GuiEmplacement
 						.withSelectedEntry(relationFilter.getRelationship())
 						.withOnSelectedEntry((oldValue, newValue) -> {
 							if(newValue!=null)
+							{
 								relationFilter.setRelationship(newValue);
+								saveTargetConfiguration();
+							}
 						}));
 			}
 			break;
@@ -388,7 +405,10 @@ public class GuiEmplacementPageTargetFilters extends GuiEmplacement
 				.withSelectedEntry(selected)
 				.withOnSelectedEntry((oldValue, newValue) -> {
 					if(newValue!=null)
+					{
 						onSelected.accept(newValue);
+						saveTargetConfiguration();
+					}
 				}));
 	}
 
@@ -427,13 +447,19 @@ public class GuiEmplacementPageTargetFilters extends GuiEmplacement
 				.withSelectedEntry(numeric.getComparison())
 				.withOnSelectedEntry((oldValue, newValue) -> {
 					if(newValue!=null)
+					{
 						numeric.setComparison(newValue);
+						saveTargetConfiguration();
+					}
 				}));
 		editorPanel.addComponent(new DecoTextField(73, y)
 				.withSize(editorPanel.width-77, 14)
 				.withFilter(TextFilter.FLOAT)
 				.withText(numeric.getValue())
-				.withOnTextChanged(text -> numeric.setValue(parseDouble(text, numeric.getValue()))));
+				.withOnTextChanged(text -> {
+					numeric.setValue(parseDouble(text, numeric.getValue()));
+					saveTargetConfiguration();
+				}));
 	}
 
 	private void addChildNode()
@@ -443,6 +469,7 @@ public class GuiEmplacementPageTargetFilters extends GuiEmplacement
 		try
 		{
 			TargetDecisionTreeNode child = selectedPreset.getTree().addChild(selectedNode, new AnyTargetFilter(), 0);
+			saveTargetConfiguration();
 			treeWrapper.refreshStructure();
 			treeDisplay.refreshLayout();
 			treeWrapper.select(child);
@@ -459,6 +486,7 @@ public class GuiEmplacementPageTargetFilters extends GuiEmplacement
 		TargetDecisionTreeNode parent = selectedNode.getParent();
 		if(selectedPreset.getTree().removeSubtree(selectedNode))
 		{
+			saveTargetConfiguration();
 			treeWrapper.refreshStructure();
 			treeDisplay.refreshLayout();
 			treeWrapper.select(parent);
@@ -473,34 +501,38 @@ public class GuiEmplacementPageTargetFilters extends GuiEmplacement
 		if(configuration.addPreset(created))
 		{
 			selectedPreset = created;
+			saveTargetConfiguration();
 			refreshTopBar();
 			selectPreset(created);
 		}
 	}
 
-	private void duplicateSelectedPreset()
+	private void duplicatePreset(@Nullable TargetDecisionTreePreset preset)
 	{
-		if(selectedPreset==null||configuration.getPresets().size() >= TargetingLimits.MAX_PRESETS)
+		if(preset==null||configuration.getPresets().size() >= TargetingLimits.MAX_PRESETS)
 			return;
-		String name = I18n.format(PRESET_KEY+"copy_name", getPresetDisplayName(selectedPreset));
-		TargetDecisionTreePreset duplicate = selectedPreset.duplicate(TargetingLimits.clampString(name));
+		String name = I18n.format(PRESET_KEY+"copy_name", getPresetDisplayName(preset));
+		TargetDecisionTreePreset duplicate = preset.duplicate(TargetingLimits.clampString(name));
 		if(configuration.addPreset(duplicate))
 		{
 			selectedPreset = duplicate;
+			saveTargetConfiguration();
 			refreshTopBar();
 			selectPreset(duplicate);
 		}
 	}
 
-	private void removeSelectedPreset()
+	private void removePreset(@Nullable TargetDecisionTreePreset preset)
 	{
-		if(selectedPreset==null)
+		if(preset==null)
 			return;
-		int index = configuration.getPresets().indexOf(selectedPreset);
-		if(configuration.removePreset(selectedPreset.getId()))
+		int index = configuration.getPresets().indexOf(preset);
+		if(configuration.removePreset(preset.getId()))
 		{
-			selectedPreset = configuration.getPresets().isEmpty()?null:
-					configuration.getPresets().get(Math.min(index, configuration.getPresets().size()-1));
+			if(preset==selectedPreset)
+				selectedPreset = configuration.getPresets().isEmpty()?null:
+						configuration.getPresets().get(Math.min(index, configuration.getPresets().size()-1));
+			saveTargetConfiguration();
 			refreshTopBar();
 			selectPreset(selectedPreset);
 		}
@@ -525,13 +557,18 @@ public class GuiEmplacementPageTargetFilters extends GuiEmplacement
 		int index = configuration.getPresets().indexOf(selectedPreset);
 		configuration.getPresets().set(index, replacement);
 		selectedPreset = replacement;
+		saveTargetConfiguration();
 		refreshTopBar();
 		selectPreset(replacement);
 	}
 
 	private void setSelectedPresetActive(boolean active)
 	{
-		configuration.setActivePresetId(active&&selectedPreset!=null?selectedPreset.getId(): "");
+		String activeId = active&&selectedPreset!=null?selectedPreset.getId(): "";
+		if(activeId.equals(configuration.getActivePresetId()))
+			return;
+		configuration.setActivePresetId(activeId);
+		saveTargetConfiguration();
 	}
 
 	private boolean isSelectedPresetActive()
@@ -545,19 +582,12 @@ public class GuiEmplacementPageTargetFilters extends GuiEmplacement
 			return;
 		IIPacketHandler.sendToServer(new MessageIITileSync(tile, EasyNBT.newNBT()
 				.withTag("tasks", tile.taskManager.createTargetConfigurationUpdate(configuration))));
-		openedConfiguration = configuration.copy();
-	}
-
-	private void updateSaveState()
-	{
-		if(saveButton!=null)
-			saveButton.enabled = configuration.isValid();
 	}
 
 	@Override
 	protected EasyNBT onSaveTileData()
 	{
-		//Target configuration is sent only by the explicit Save button.
+		//Each valid target configuration change is sent immediately.
 		return EasyNBT.newNBT();
 	}
 

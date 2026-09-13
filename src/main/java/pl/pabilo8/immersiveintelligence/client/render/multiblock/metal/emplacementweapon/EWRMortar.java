@@ -62,7 +62,7 @@ public class EWRMortar extends EmplacementWeaponRenderer<EmplacementWeaponMortar
 		float chillProgress = weapon.getChillProgress(partialTicks);
 
 		this.rotateYaw.apply(weapon.aim.getYawNormalized(partialTicks));
-		this.rotatePitch.apply(weapon.aim.getPitchNormalized(partialTicks));
+		this.rotatePitch.apply(weapon.aim.getPitchNormalized(-90, 90, partialTicks));
 
 		if(chillProgress > 0)
 			this.chill.apply(chillProgress);

@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon;
 
 import net.minecraft.item.ItemStack;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.RocketLauncher;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
@@ -10,7 +11,7 @@ import pl.pabilo8.immersiveintelligence.common.util.gun.ChillingState;
  * Implements the two-stage, six-round Rocket Launcher Emplacement weapon.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 17.08.2026
+ * @updated 08.09.2026
  * @since 01.01.2026
  */
 public class EmplacementWeaponRocketLauncher extends EmplacementWeaponGunBase<EntityAmmoProjectile>
@@ -20,15 +21,15 @@ public class EmplacementWeaponRocketLauncher extends EmplacementWeaponGunBase<En
 	{
 		super.onInit(te);
 		if(this.chillingState==null)
-			this.chillingState = new ChillingState(240, 320, 80);
+			this.chillingState = new ChillingState(RocketLauncher.minimumIdleTime,
+					RocketLauncher.idleAnimationInterval, RocketLauncher.idleAnimationDuration);
 		this.ammoFactory.setAmmo(IIContent.itemAmmoRocketLight);
-		this.visionAABB = this.visionAABB.grow(0);
-		this.attackAABB = this.attackAABB.grow(240);
+		this.visionAABB = this.visionAABB.grow(RocketLauncher.detectionRadius);
+		this.attackAABB = this.attackAABB.grow(RocketLauncher.attackRadius);
 		setupItemHandlers(te, 24, 0, 16, 0,
 				this.ammoFactory::isValidAmmo, this.ammoFactory::isValidAmmo);
-		this.aim.withAimSpeed(2f, 1f);
-		this.aim.withPitchLimit(-90, 90);
-		this.ammoFactory.setUseArtilleryAngles(true);
+		this.aim.withAimSpeed(RocketLauncher.yawRotateSpeed, RocketLauncher.pitchRotateSpeed)
+				.withPitchLimit(RocketLauncher.minPitch, RocketLauncher.maxPitch);
 		this.rotateAfterFiring = false;
 	}
 
@@ -81,26 +82,38 @@ public class EmplacementWeaponRocketLauncher extends EmplacementWeaponGunBase<En
 	}
 
 	@Override
+	public boolean isArtilleryWeapon()
+	{
+		return true;
+	}
+
+	@Override
+	public boolean usesBallisticFireByDefault()
+	{
+		return true;
+	}
+
+	@Override
 	public int getShotDelay()
 	{
-		return 20;
+		return RocketLauncher.shotFireTime;
 	}
 
 	@Override
 	public int getReloadDelay()
 	{
-		return 280;
+		return RocketLauncher.reloadTime;
 	}
 
 	@Override
 	public int getEnergyUpkeepCost()
 	{
-		return 1024;
+		return RocketLauncher.energyUpkeepCost;
 	}
 
 	@Override
 	public int getMaxHealth()
 	{
-		return 300;
+		return RocketLauncher.maxHealth;
 	}
 }

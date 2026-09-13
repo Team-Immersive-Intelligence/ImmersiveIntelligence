@@ -1,0 +1,61 @@
+{
+  "comment": "Made by Pabilo8 with Blockbench",
+  "groups": {
+    "turret_origin": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.25,
+          "transform": [0, -7.5, 0]
+        },
+        {
+          "time": 0.33333,
+          "transform": [0, -7.5, 0]
+        },
+        {
+          "time": 0.66667,
+          "transform": [0, 7.5, 0]
+        },
+        {
+          "time": 0.75,
+          "transform": [0, 7.5, 0]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "gun_origin": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.25,
+          "transform": [-2.5, 0, 0]
+        },
+        {
+          "time": 0.33333,
+          "transform": [-2.5, 0, 0]
+        },
+        {
+          "time": 0.66667,
+          "transform": [2.5, 0, 0]
+        },
+        {
+          "time": 0.75,
+          "transform": [2.5, 0, 0]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, 0]
+        }
+      ]
+    }
+  }
+}

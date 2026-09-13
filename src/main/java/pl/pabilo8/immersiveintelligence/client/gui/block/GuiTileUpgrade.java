@@ -255,6 +255,6 @@ public class GuiTileUpgrade<T extends TileEntityIEBase & IIEInventory & IUpgrada
 
 		AMTModel built = new AMTModel(builder.toArray(new AMTModel[0]));
 		scenario.withModel(false, built)
-				.withCentering(built.getBoundingBox(), 6f, 0.125f, 0.325f);
+				.withCentering(built.getBoundingBox(), 3.5f, 0.125f, 1f);
 	}
 }

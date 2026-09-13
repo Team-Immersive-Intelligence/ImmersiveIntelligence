@@ -5,9 +5,13 @@ import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeFloat;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeNull;
+import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Emplacement;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.EmplacementStateNeeds;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement.EmplacementStateNeeds;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.TargetCoordinateReference;
@@ -22,7 +26,7 @@ import javax.annotation.Nullable;
  *
  * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
- * @updated 31.08.2026
+ * @updated 08.09.2026
  * @since 01.01.2026
  */
 public abstract class EmplacementWeaponTurretBase extends EmplacementWeapon
@@ -43,12 +47,17 @@ public abstract class EmplacementWeaponTurretBase extends EmplacementWeapon
 		super.onInit(te);
 		this.aim.withCenterYaw(te.facing.getHorizontalAngle());
 		if(!restoredFromNBT)
-			this.aim.withCurrentAngles(this.aim.getCenterYaw(), this.aim.clampPitchToRange(90f));
+		{
+			Float hidingYaw = getHidingYaw();
+			Float hidingPitch = getHidingPitch();
+			this.aim.withCurrentAngles(hidingYaw==null?this.aim.getCenterYaw(): hidingYaw, hidingPitch==null?this.aim.clampPitchToRange(0f): hidingPitch);
+		}
 	}
 
 	@Override
 	public void onPlatformUpdate(TileEntityEmplacement te)
 	{
+		applyRotationUpgrade(te);
 		boolean exposed = te.door.getState()&&te.door.isFullyOpened();
 		boolean setupChanged = false;
 		if(this.setup!=null)
@@ -83,6 +92,7 @@ public abstract class EmplacementWeaponTurretBase extends EmplacementWeapon
 	public void onClientUpdate(TileEntityEmplacement te)
 	{
 		//The client only advances state received from the server.
+		applyRotationUpgrade(te);
 		if(this.setup!=null)
 			this.setup.update();
 		this.aim.update();
@@ -111,22 +121,33 @@ public abstract class EmplacementWeaponTurretBase extends EmplacementWeapon
 		{
 			if(canTrackTarget(te))
 				setAimTargetAngles(te, null, null);
+			onIdleUpdate(te);
 			return EmplacementStateNeeds.WANTS_SURFACE;
 		}
 		if(!canTrackTarget(te))
 			return EmplacementStateNeeds.WANTS_SURFACE;
 
 		boolean rotationChanged = false;
+		boolean targetAccepted = false;
 		Vec3d target = currentTarget.supplyCoordinates();
 		if(target!=null)
 		{
 			float previousTargetYaw = this.aim.getTargetYaw();
 			float previousTargetPitch = this.aim.getTargetPitch();
-			if(this.aim.setTarget(getAimOrigin(te), Vec3d.ZERO, target, currentTarget.supplyMotion()))
+			targetAccepted = this.aim.setTarget(getAimOrigin(te), Vec3d.ZERO, target, currentTarget.supplyMotion());
+			if(targetAccepted)
 				rotationChanged = hasTargetAngleChanged(previousTargetYaw, previousTargetPitch);
 		}
 
-		boolean fired = te.door.isFullyOpened()&&(setup==null||setup.isFullyOpened())&&aim.isAimed(1.5f)&&canShoot(te)
+		if(currentTarget.isAimingOnly()&&targetAccepted&&aim.isAimed(1.5f)
+				&&te.taskManager.completeAimMission(currentTarget))
+		{
+			te.markDirty();
+			te.updateTileForEvent(SyncEvents.TILE_CUSTOM1);
+		}
+
+		boolean fired = !currentTarget.isAimingOnly()
+				&&te.door.isFullyOpened()&&(setup==null||setup.isFullyOpened())&&aim.isAimed(1.5f)&&canShoot(te)
 				&&shoot(te, currentTarget);
 		if(fired&&te.taskManager.notifyAfterShot(currentTarget))
 			te.markDirty();
@@ -136,6 +157,14 @@ public abstract class EmplacementWeaponTurretBase extends EmplacementWeapon
 		if(fired)
 			syncWithClient(te, SyncEvents.WEAPON_RELOAD);
 		return EmplacementStateNeeds.WANTS_SURFACE;
+	}
+
+	/**
+	 * Updates an exposed weapon when it has no active target.
+	 */
+	protected void onIdleUpdate(TileEntityEmplacement te)
+	{
+
 	}
 
 	/**
@@ -181,10 +210,26 @@ public abstract class EmplacementWeaponTurretBase extends EmplacementWeapon
 		return te.getWeaponCenter();
 	}
 
+	@Nonnull
+	@Override
+	public DataType getDataCallback(String string)
+	{
+		return switch(string)
+		{
+			case "weapon_yaw" -> new DataTypeFloat(aim.getYaw(0));
+			case "weapon_pitch" -> new DataTypeFloat(aim.getPitch(0));
+			case "weapon_target_yaw" -> new DataTypeFloat(aim.getTargetYaw());
+			case "weapon_target_pitch" -> new DataTypeFloat(aim.getTargetPitch());
+			case "weapon_setup", "weapon_setup_progress" -> setup==null?
+					new DataTypeNull(): new DataTypeFloat(setup.getProgress(0));
+			default -> super.getDataCallback(string);
+		};
+	}
+
 	@Override
 	public boolean canSelectAutonomousTarget(Entity entity)
 	{
-		return entity!=null&&!entity.isDead&&attackAABB!=null&&attackAABB.intersects(entity.getEntityBoundingBox());
+		return entity!=null&&entity.isEntityAlive()&&attackAABB!=null&&attackAABB.intersects(entity.getEntityBoundingBox());
 	}
 
 	@Override
@@ -204,6 +249,13 @@ public abstract class EmplacementWeaponTurretBase extends EmplacementWeapon
 		aim.update();
 		if(hasCurrentAngleChanged(previousYaw, previousPitch))
 			syncWithClient(te, SyncEvents.WEAPON_ROTATION);
+	}
+
+	private void applyRotationUpgrade(TileEntityEmplacement te)
+	{
+		float multiplier = te.isUpgradeInstalled(IIContent.UPGRADE_EMPLACEMENT_STURDY_BEARINGS)?
+				Emplacement.sturdyBearingsRotationMultiplier: 1f;
+		aim.withAimSpeedMultiplier(multiplier);
 	}
 
 	/**

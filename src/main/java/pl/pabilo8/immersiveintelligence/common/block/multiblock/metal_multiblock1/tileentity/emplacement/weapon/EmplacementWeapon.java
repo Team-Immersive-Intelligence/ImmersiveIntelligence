@@ -13,18 +13,24 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeFloat;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeNull;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPanel;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Emplacement;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.EmplacementStateNeeds;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement.EmplacementStateNeeds;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.EntityGasCloud;
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.EntityAMTTactile;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
@@ -43,7 +49,7 @@ import java.util.function.BooleanSupplier;
  * Defines common state, servicing, and lifecycle behavior for an Emplacement weapon.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 31.08.2026
+ * @updated 08.09.2026
  * @since 15.02.2024
  */
 public abstract class EmplacementWeapon implements ITypeNBTSerializable
@@ -65,12 +71,15 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable
 	private transient SyncEvents partialSyncEvent = null;
 	@Nullable
 	protected EntityLivingBase baseEntity;
+	@Nullable
+	private transient TileEntityEmplacement emplacement;
 
 	/**
 	 * Called after the weapon is installed or loaded from NBT.
 	 */
 	protected void onInit(TileEntityEmplacement te)
 	{
+		this.emplacement = te;
 		this.initialized = true;
 		this.visionAABB = new AxisAlignedBB(new BlockPos(te.getWeaponCenter()));
 		this.attackAABB = new AxisAlignedBB(new BlockPos(te.getWeaponCenter()));
@@ -163,7 +172,7 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable
 	 * @param maximumRepairThreshold health ratio required before routine repair ends
 	 */
 	public EmplacementStateNeeds getServiceNeeds(TileEntityEmplacement te, @Nullable TargetCoordinateReference currentTarget,
-	                                             float minimumRepairThreshold, float maximumRepairThreshold)
+												 float minimumRepairThreshold, float maximumRepairThreshold)
 	{
 		float minimum = MathHelper.clamp(minimumRepairThreshold, 0f, 1f);
 		float maximum = MathHelper.clamp(Math.max(maximumRepairThreshold, minimum), 0f, 1f);
@@ -194,7 +203,7 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable
 	 * Runs a latched supply cycle shared by item- and fluid-based weapons.
 	 */
 	protected final boolean updateResupplyState(TileEntityEmplacement te, BooleanSupplier supplyRequired,
-	                                            BooleanSupplier servicePending, Runnable serviceAction)
+												BooleanSupplier servicePending, Runnable serviceAction)
 	{
 		if(supplyRequired.getAsBoolean())
 			setResupplying(te, true);
@@ -256,7 +265,12 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable
 	@Nonnull
 	public DataType getDataCallback(String string)
 	{
-		return new DataTypeNull();
+		return switch(string)
+		{
+			case "weapon_name" -> new DataTypeString(getName());
+			case "weapon_health" -> new DataTypeFloat(getHealth());
+			default -> new DataTypeNull();
+		};
 	}
 
 	//--- Inventory ---//
@@ -308,7 +322,7 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable
 	/**
 	 * Voids fluid owned by the weapon when it is uninstalled.
 	 */
-	public void clearFluids()
+	public void onUninstall()
 	{
 
 	}
@@ -382,9 +396,32 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable
 			return true;
 		}
 
+		float previousHealth = this.health;
 		this.health -= amount-armor;
+		if(previousHealth > 0&&this.health <= 0)
+			deployEmergencySmoke();
 		tactile.world.playSound(null, tactile.getPosition(), IISounds.hitMetal.getImpactSound(), SoundCategory.BLOCKS, 1.5f, 0.95f);
 		return false;
+	}
+
+	/**
+	 * Releases the Emergency Smoke upgrade when damage destroys the weapon.
+	 */
+	private void deployEmergencySmoke()
+	{
+		if(emplacement==null||emplacement.getWorld()==null||emplacement.getWorld().isRemote
+				||!emplacement.isUpgradeInstalled(IIContent.UPGRADE_EMPLACEMENT_FALLBACK_GRENADES)
+				||IIContent.gasOxygen==null)
+			return;
+
+		Vec3d center = emplacement.getWeaponCenter();
+		int amount = Math.max(1, Emplacement.emergencySmokeFluidAmount);
+		double cornerOffset = Math.max(0, Emplacement.emergencySmokeDistance)/Math.sqrt(2d);
+		for(int xSign = -1; xSign <= 1; xSign += 2)
+			for(int zSign = -1; zSign <= 1; zSign += 2)
+				emplacement.getWorld().spawnEntity(new EntityGasCloud(emplacement.getWorld(),
+						center.x+xSign*cornerOffset, center.y, center.z+zSign*cornerOffset,
+						new FluidStack(IIContent.gasOxygen, amount)));
 	}
 
 	//--- Range ---//
@@ -409,7 +446,7 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable
 	 */
 	public boolean isVisibleTarget(Entity entity)
 	{
-		return entity!=null&&!entity.isDead&&entity!=baseEntity&&!(entity instanceof EntityAMTTactile)&&canSeeEntity(entity);
+		return entity!=null&&entity.isEntityAlive()&&entity!=baseEntity&&!(entity instanceof EntityAMTTactile)&&canSeeEntity(entity);
 	}
 
 	/**
@@ -424,6 +461,22 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable
 	 * Checks whether a Fire Mission can execute without removing it when unavailable.
 	 */
 	public boolean canExecuteFireMission(TargetCoordinateReference target)
+	{
+		return false;
+	}
+
+	/**
+	 * @return whether the weapon supports selectable direct and ballistic fire modes
+	 */
+	public boolean isArtilleryWeapon()
+	{
+		return false;
+	}
+
+	/**
+	 * @return initial fire mode selected when this weapon is installed
+	 */
+	public boolean usesBallisticFireByDefault()
 	{
 		return false;
 	}

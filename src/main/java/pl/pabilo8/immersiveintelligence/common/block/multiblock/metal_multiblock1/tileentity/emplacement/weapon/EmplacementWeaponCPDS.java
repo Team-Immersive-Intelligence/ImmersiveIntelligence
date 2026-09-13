@@ -17,7 +17,7 @@ import javax.annotation.Nullable;
  * Implements the CPDS Emplacement weapon.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 21.08.2026
+ * @updated 08.09.2026
  * @since 01.01.2026
  */
 public class EmplacementWeaponCPDS extends EmplacementWeaponGunBase<EntityAmmoProjectile>
@@ -34,7 +34,8 @@ public class EmplacementWeaponCPDS extends EmplacementWeaponGunBase<EntityAmmoPr
 		this.visionAABB = this.visionAABB.grow(CPDS.detectionRadius);
 		this.attackAABB = this.attackAABB.grow(CPDS.attackRadius);
 		setupItemHandlers(te, 8, 4, 4, 4+22, this::isMagazine, this::isMagazine);
-		this.aim.withAimSpeed(CPDS.yawRotateSpeed, CPDS.pitchRotateSpeed);
+		this.aim.withAimSpeed(CPDS.yawRotateSpeed, CPDS.pitchRotateSpeed)
+				.withPitchLimit(-90, 68.5f);
 
 		this.rotateAfterFiring = true;
 		this.gunHandler.withShootSound(IISounds.autocannonShot, 55)
@@ -63,7 +64,7 @@ public class EmplacementWeaponCPDS extends EmplacementWeaponGunBase<EntityAmmoPr
 	@Override
 	protected int getItemTransferSpeed()
 	{
-		return 3;
+		return CPDS.itemTransferInterval;
 	}
 
 	@Override
@@ -86,7 +87,7 @@ public class EmplacementWeaponCPDS extends EmplacementWeaponGunBase<EntityAmmoPr
 	@Override
 	public int getShotDelay()
 	{
-		return 0;
+		return CPDS.bulletFireTime;
 	}
 
 	@Override

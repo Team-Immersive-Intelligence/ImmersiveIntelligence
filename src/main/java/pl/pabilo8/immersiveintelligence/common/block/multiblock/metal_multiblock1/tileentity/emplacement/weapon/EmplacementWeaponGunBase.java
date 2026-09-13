@@ -10,9 +10,11 @@ import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoFactory;
+import pl.pabilo8.immersiveintelligence.api.data.types.*;
+import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPanel;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.EmplacementStateNeeds;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement.EmplacementStateNeeds;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
@@ -31,12 +33,11 @@ import java.util.function.Predicate;
  * Implements Platform ammunition loading, casing storage, and Base servicing for Emplacement guns.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 31.08.2026
+ * @updated 08.09.2026
  * @since 04.09.2025
  */
 public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> extends EmplacementWeaponTurretBase
 {
-
 	/**
 	 * Used to fire ammo for the weapon.
 	 */
@@ -115,6 +116,7 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 	@Override
 	public EmplacementStateNeeds onUpdate(TileEntityEmplacement te, EmplacementStateNeeds baseNeeds, TargetCoordinateReference currentTarget)
 	{
+		this.ammoFactory.setUseArtilleryAngles(te.shouldUseBallisticFire(currentTarget));
 		if(te.getOwnerIdentity()!=null)
 			ammoFactory.setOwner(te.getOwnerIdentity().getFirstResponsibleMember(te.getWorld()));
 
@@ -400,7 +402,7 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 	}
 
 	private boolean transferOneItem(@Nullable FilteredEmplacementInventoryHandler source,
-	                                @Nullable FilteredEmplacementInventoryHandler target, boolean simulate)
+									@Nullable FilteredEmplacementInventoryHandler target, boolean simulate)
 	{
 		if(source==null||target==null)
 			return false;
@@ -515,6 +517,25 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 		return isUnloading()?1f-progress: progress;
 	}
 
+	@Nonnull
+	@Override
+	public DataType getDataCallback(String string)
+	{
+		ensureShootingComponents();
+		return switch(string)
+		{
+			case "weapon_ammo", "weapon_ammo_remaining", "weapon_ammunition_remaining" -> new DataTypeInteger(
+					platformAmmoProvider==null?0: platformAmmoProvider.getLoadedRoundCount());
+			case "weapon_reloading" -> new DataTypeBoolean(isReloading());
+			case "weapon_recoil" -> new DataTypeVector(recoil.getRecoilYaw(0), recoil.getRecoilPitch(0), 0);
+			case "weapon_recoil_yaw" -> new DataTypeFloat(recoil.getRecoilYaw(0));
+			case "weapon_recoil_pitch" -> new DataTypeFloat(recoil.getRecoilPitch(0));
+			case "weapon_loaded_ammo", "weapon_loaded_ammunition", "weapon_loaded_ammunition_stack" -> new DataTypeItemStack(
+					platformAmmoProvider==null?ItemStack.EMPTY: platformAmmoProvider.peekLoadedAmmo());
+			default -> super.getDataCallback(string);
+		};
+	}
+
 	@Override
 	public void setDead()
 	{
@@ -552,8 +573,8 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 	 * Creates separate ammo and casing views for Base and Platform storage.
 	 */
 	protected final void setupItemHandlers(TileEntityEmplacement te,
-	                                       int baseAmmoSlots, int baseCasingSlots, int platformAmmoSlots, int platformCasingSlots,
-	                                       Predicate<ItemStack> baseFilter, Predicate<ItemStack> platformFilter)
+										   int baseAmmoSlots, int baseCasingSlots, int platformAmmoSlots, int platformCasingSlots,
+										   Predicate<ItemStack> baseFilter, Predicate<ItemStack> platformFilter)
 	{
 		this.baseAmmoHandler = createHandler(te, baseAmmoSlots, 0, baseFilter, true, false);
 		this.baseCasingHandler = createHandler(te, baseCasingSlots, baseAmmoSlots, this::isSpentCasing, false, true);
@@ -568,8 +589,8 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 
 	@Nullable
 	private FilteredEmplacementInventoryHandler createHandler(TileEntityEmplacement te, int slots, int offset,
-	                                                          Predicate<ItemStack> filter, boolean externalInsert,
-	                                                          boolean externalExtract)
+															  Predicate<ItemStack> filter, boolean externalInsert,
+															  boolean externalExtract)
 	{
 		return slots > 0?new FilteredEmplacementInventoryHandler(slots, te, offset, filter, externalInsert, externalExtract): null;
 	}
@@ -584,7 +605,7 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 		private final boolean externalInsert, externalExtract;
 
 		public FilteredEmplacementInventoryHandler(int slots, TileEntityEmplacement inventory, int slotOffset,
-		                                           Predicate<ItemStack> filter, boolean externalInsert, boolean externalExtract)
+												   Predicate<ItemStack> filter, boolean externalInsert, boolean externalExtract)
 		{
 			super(slots, inventory, slotOffset, true, true);
 			this.filter = filter==null?stack -> true: filter;

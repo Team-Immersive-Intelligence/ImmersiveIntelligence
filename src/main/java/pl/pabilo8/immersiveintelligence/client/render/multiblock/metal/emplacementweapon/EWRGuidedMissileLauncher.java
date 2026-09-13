@@ -84,7 +84,7 @@ public class EWRGuidedMissileLauncher extends EmplacementWeaponRenderer<Emplacem
 		this.applyAmmoItem(weapon, BulletState.BULLET_UNUSED, rocket);
 
 		this.rotateYaw.apply(weapon.aim.getYawNormalized(partialTicks));
-		float pitch = weapon.aim.getPitchNormalized(partialTicks);
+		float pitch = weapon.aim.getPitchNormalized(-90, 90, partialTicks);
 		this.rotatePitch.apply(pitch);
 		this.trackerPitch.apply(pitch);
 		this.load.apply(weapon.gunHandler.getLoadingProgress(partialTicks));

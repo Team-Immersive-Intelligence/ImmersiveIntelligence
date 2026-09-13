@@ -41,7 +41,7 @@ public class EWRHeavyRailgun extends EmplacementWeaponRenderer<EmplacementWeapon
 	public void apply(EmplacementWeaponHeavyRailgun weapon, AMTCachedModel<TileEntityEmplacement> model, BufferBuilder buf, Tessellator tes, float partialTicks)
 	{
 		this.rotateYaw.apply(weapon.aim.getYawNormalized(partialTicks));
-		this.rotatePitch.apply(weapon.aim.getPitchNormalized(partialTicks));
+		this.rotatePitch.apply(weapon.aim.getPitchNormalized(-90, 90, partialTicks));
 
 		float loading = weapon.getReloadProgress(partialTicks);
 		if(weapon.isFinalReloadBatch())

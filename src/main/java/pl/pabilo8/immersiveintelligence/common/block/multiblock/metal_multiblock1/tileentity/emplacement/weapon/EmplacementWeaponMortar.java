@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon;
 
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.Mortar;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
@@ -10,7 +11,7 @@ import javax.annotation.Nullable;
  * Implements the single-round Mortar Emplacement weapon without spent casings.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 17.08.2026
+ * @updated 08.09.2026
  * @since 01.01.2026
  */
 public class EmplacementWeaponMortar extends EmplacementWeaponGunBase<EntityAmmoProjectile>
@@ -25,12 +26,11 @@ public class EmplacementWeaponMortar extends EmplacementWeaponGunBase<EntityAmmo
 	{
 		super.onInit(te);
 		this.ammoFactory.setAmmo(IIContent.itemAmmoMortar);
-		this.visionAABB = this.visionAABB.grow(0);
-		this.attackAABB = this.attackAABB.grow(160);
+		this.visionAABB = this.visionAABB.grow(Mortar.detectionRadius);
+		this.attackAABB = this.attackAABB.grow(Mortar.attackRadius);
 		setupItemHandlers(te, 12, 0, 4, 0, this.ammoFactory::isValidAmmo, this.ammoFactory::isValidAmmo);
-		this.aim.withAimSpeed(4f, 2.5f)
-				.withPitchLimit(-89.5f, 45f);
-		this.ammoFactory.setUseArtilleryAngles(true);
+		this.aim.withAimSpeed(Mortar.yawRotateSpeed, Mortar.pitchRotateSpeed)
+				.withPitchLimit(Mortar.minPitch, Mortar.maxPitch);
 		this.rotateAfterFiring = false;
 	}
 
@@ -80,26 +80,38 @@ public class EmplacementWeaponMortar extends EmplacementWeaponGunBase<EntityAmmo
 	}
 
 	@Override
+	public boolean isArtilleryWeapon()
+	{
+		return true;
+	}
+
+	@Override
+	public boolean usesBallisticFireByDefault()
+	{
+		return true;
+	}
+
+	@Override
 	public int getShotDelay()
 	{
-		return 25;
+		return Mortar.shotFireTime;
 	}
 
 	@Override
 	public int getReloadDelay()
 	{
-		return 120;
+		return Mortar.reloadTime;
 	}
 
 	@Override
 	public int getEnergyUpkeepCost()
 	{
-		return 512;
+		return Mortar.energyUpkeepCost;
 	}
 
 	@Override
 	public int getMaxHealth()
 	{
-		return 350;
+		return Mortar.maxHealth;
 	}
 }

@@ -65,7 +65,7 @@ public class EWRCPDS extends EmplacementWeaponRenderer<EmplacementWeaponCPDS>
 	public void apply(EmplacementWeaponCPDS weapon, AMTCachedModel<TileEntityEmplacement> model, BufferBuilder buf, Tessellator tes, float partialTicks)
 	{
 		this.rotateYaw.apply(weapon.aim.getYawNormalized(partialTicks));
-		this.rotatePitch.apply(weapon.aim.getPitchNormalized(partialTicks));
+		this.rotatePitch.apply(weapon.aim.getPitchNormalized(-90, 90, partialTicks));
 		if(weapon.isUnloading())
 			this.unload.apply(weapon.getReloadAnimationProgress(partialTicks));
 		else if(weapon.isReloading())

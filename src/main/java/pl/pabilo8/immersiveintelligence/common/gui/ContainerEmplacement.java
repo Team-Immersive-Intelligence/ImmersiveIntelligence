@@ -12,12 +12,12 @@ import javax.annotation.Nonnull;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 18.08.2026
+ * @updated 08.09.2026
  * @since 16.07.2021
  */
 public class ContainerEmplacement extends ContainerIITileBase<TileEntityEmplacement>
 {
-	public Slot[] slotsBaseAmmo = new Slot[0], slotsBaseCasings = new Slot[0];
+	public Slot[] slotsBaseAmmo = new Slot[0];
 	public Slot[] slotsPlatformAmmo = new Slot[0], slotsPlatformCasings = new Slot[0];
 
 	public ContainerEmplacement(EntityPlayer player, TileEntityEmplacement tile)
@@ -44,11 +44,10 @@ public class ContainerEmplacement extends ContainerIITileBase<TileEntityEmplacem
 			container.slotsPlatformAmmo = container.addWeaponSlots(tile.currentWeapon.getPlatformItemHandler(true), 26, true);
 			container.slotsPlatformCasings = container.addWeaponSlots(tile.currentWeapon.getPlatformItemHandler(false), 46, true);
 			container.slotsBaseAmmo = container.addWeaponSlots(tile.currentWeapon.getBaseItemHandler(true), 98, false);
-			container.slotsBaseCasings = container.addWeaponSlots(tile.currentWeapon.getBaseItemHandler(false), 118, false);
 		}
 
 		container.slotCount = container.slotsPlatformAmmo.length+container.slotsPlatformCasings.length
-				+container.slotsBaseAmmo.length+container.slotsBaseCasings.length;
+				+container.slotsBaseAmmo.length;
 		container.addPlayerInventory(player.inventory, 8+32, 86+64+16+8);
 		return container;
 	}
@@ -58,7 +57,7 @@ public class ContainerEmplacement extends ContainerIITileBase<TileEntityEmplacem
 		if(handler==null)
 			return new Slot[0];
 
-		return addSlotArray(8+4, y, 0, handler.getSlots(), 10,
+		return addSlotArray(8+4, y, 0, handler.getSlots(), 8,
 				(container, inventory, id, x, slotY) -> new SlotItemHandler(handler, id, x, slotY)
 				{
 					@Override

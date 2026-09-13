@@ -400,6 +400,8 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 		if(hit.entityHit==this) //can't touch this
 			return false;
 		Entity other = hit.entityHit;
+		if(other.isDead)
+			return false;
 
 		//Shoot down another bullet
 		if(other instanceof EntityAmmoBase)
@@ -421,6 +423,8 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 		//Damage entity armor
 		if(living!=null)
 		{
+			if(!living.isEntityAlive())
+				return false;
 			float armor = MathHelper.floor(living.getEntityAttribute(SharedMonsterAttributes.ARMOR).getAttributeValue())*ARMOR_FACTOR;
 			//Damage the other entity armor whether penetrated or not
 			if(armor > 0)

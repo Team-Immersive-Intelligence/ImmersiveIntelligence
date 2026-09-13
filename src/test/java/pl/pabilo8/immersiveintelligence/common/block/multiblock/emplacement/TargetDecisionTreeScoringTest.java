@@ -129,6 +129,19 @@ class TargetDecisionTreeScoringTest extends GameTestWorld
 	}
 
 	@Test
+	void comparesHorizontalDistanceWithoutIncludingHeight()
+	{
+		Entity entity = namedEntity("target");
+		entity.posX = 3;
+		entity.posY = 12-entity.height*0.5;
+		entity.posZ = 4;
+		TargetEvaluationContext context = context(entity);
+		assertTrue(new HorizontalDistanceTargetFilter(NumericComparison.EQUAL, 5).matches(context));
+		assertFalse(new DistanceTargetFilter(NumericComparison.LESS_OR_EQUAL, 5).matches(context));
+		assertTrue(new DistanceTargetFilter(NumericComparison.EQUAL, 13).matches(context));
+	}
+
+	@Test
 	void matchesBothBooleanStates()
 	{
 		Entity entity = namedEntity("target");

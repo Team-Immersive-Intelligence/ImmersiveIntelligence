@@ -29,7 +29,7 @@ import java.util.Map;
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @author Avalon (avalon@iiteam.net)
- * @updated 3.07.2025
+ * @updated 08.09.2026
  * @since 12.05.2019
  */
 @Mod.EventBusSubscriber
@@ -1197,6 +1197,18 @@ public class IIConfigHandler
 
 			public static class Emplacement
 			{
+				@Comment({"Rotation speed multiplier provided by the Sturdy Bearings upgrade."})
+				@RangeDouble(min = 0)
+				public static float sturdyBearingsRotationMultiplier = 1.5f;
+
+				@Comment({"Oxygen released by each Emergency Smoke gas cloud (in millibuckets)."})
+				@RangeInt(min = 1)
+				public static int emergencySmokeFluidAmount = 1000;
+
+				@Comment({"Distance from the weapon centre at which Emergency Smoke clouds are released (in blocks)."})
+				@RangeDouble(min = 0)
+				public static double emergencySmokeDistance = 2.5d;
+
 				@Comment({"Delay for the weapon between transferring items between base and platform inventory (in ticks)"})
 				public static int itemTransferInterval = 15;
 
@@ -1562,6 +1574,30 @@ public class IIConfigHandler
 				@LangKey("machineupgrade.immersiveintelligence.heavy_railgun")
 				@Comment("Config for the Heavy Railgun Emplacement, allows for changes to fire rate, energy consumption, movement speed, health and detection radius")
 				public static HeavyRailgun heavyRailgun;
+				@SubConfig
+				@LangKey("machineupgrade.immersiveintelligence.guided_missile_launcher")
+				@Comment("Config for the Guided Missile Launcher Emplacement.")
+				public static GuidedMissileLauncher guidedMissileLauncher;
+				@SubConfig
+				@LangKey("machineupgrade.immersiveintelligence.light_howitzer")
+				@Comment("Config for the Light Howitzer Emplacement.")
+				public static LightHowitzer lightHowitzer;
+				@SubConfig
+				@LangKey("machineupgrade.immersiveintelligence.mortar")
+				@Comment("Config for the Mortar Emplacement.")
+				public static Mortar mortar;
+				@SubConfig
+				@LangKey("machineupgrade.immersiveintelligence.rocket_launcher")
+				@Comment("Config for the Rocket Launcher Emplacement.")
+				public static RocketLauncher rocketLauncher;
+				@SubConfig
+				@LangKey("machineupgrade.immersiveintelligence.searchlight")
+				@Comment("Config for the Searchlight Emplacement.")
+				public static Searchlight searchlight;
+				@SubConfig
+				@LangKey("machineupgrade.immersiveintelligence.spotlight_tower")
+				@Comment("Config for the Spotlight Tower Emplacement.")
+				public static SpotlightTower spotlightTower;
 
 
 				public static class Autocannon
@@ -1577,6 +1613,9 @@ public class IIConfigHandler
 
 					@Comment({"Time required to fire a single bullet."})
 					public static int bulletFireTime = 3;
+
+					@Comment({"Interval between ammunition transfers to the platform (in ticks)."})
+					public static int itemTransferInterval = 2;
 
 					@Comment({"Starting/max health of the turret (in half-hearts)"})
 					public static int maxHealth = 200;
@@ -1605,8 +1644,45 @@ public class IIConfigHandler
 					@Comment({"Time required to fire a single bullet."})
 					public static int bulletFireTime = 2;
 
+					@Comment({"Time required to fire a single bullet with the Heavy Barrel upgrade."})
+					@RangeInt(min = 0)
+					public static int heavyBarrelFireTime = 1;
+
+					@Comment({"Maximum heat before the Machinegun stops firing."})
+					@RangeDouble(min = 1)
+					public static float maxOverheat = 64f;
+
+					@Comment({"Maximum heat before the Machinegun with Heavy Barrel upgrade stops firing."})
+					@RangeDouble(min = 1)
+					public static float heavyBarrelOverheat = 128f;
+
+					@Comment({"Heat removed naturally each tick."})
+					@RangeDouble(min = 0)
+					public static float passiveCooling = 0.75f;
+
+					@Comment({"Heat added by firing one round."})
+					@RangeDouble(min = 0)
+					public static float heatPerShot = 4f;
+
+					@Comment({"Coolant consumed per tick by the Water-Cooled Barrel upgrade (in millibuckets)."})
+					@RangeInt(min = 1)
+					public static int waterCoolingFluidUsage = 10;
+
+					@Comment({"Coolant capacity of the Water-Cooled Barrel upgrade (in millibuckets)."})
+					@RangeInt(min = 0)
+					public static int waterCoolingTankCapacity = 4000;
+
 					@Comment({"Time required for machinegun nest setup (barrel attachment animation) (in ticks)"})
 					public static int setupTime = 150;
+
+					@Comment({"Minimum pitch angle (in degrees)."})
+					public static float minPitch = -35f;
+
+					@Comment({"Maximum pitch angle (in degrees)."})
+					public static float maxPitch = 65f;
+
+					@Comment({"Interval between ammunition transfers to the platform (in ticks)."})
+					public static int itemTransferInterval = 2;
 
 					@Comment({"Starting/max health of the turret (in half-hearts)"})
 					public static int maxHealth = 150;
@@ -1623,8 +1699,16 @@ public class IIConfigHandler
 
 				public static class TeslaCoil
 				{
+					@Comment({"Time required to charge before the Tesla Coil can attack (in ticks)."})
+					@RangeInt(min = 0)
+					public static int chargeTime = 20;
+
+					@Comment({"Time without a target before the Tesla Coil starts charging down (in ticks)."})
+					@RangeInt(min = 0)
+					public static int chargeDownDelay = 20;
+
 					@Comment({" \"reload\" time after dealing damage (in ticks)."})
-					public static int damageDelay = 10;
+					public static int damageDelay = 2;
 
 					@Comment({"Damage dealt to enemies (in half-hearts)."})
 					public static int damage = 10;
@@ -1650,6 +1734,9 @@ public class IIConfigHandler
 
 				public static class InfraredObserver
 				{
+					@Comment({"Yaw snap speed used by the fixed-facing observer (degrees/tick)."})
+					public static float yawRotateSpeed = 360f;
+
 					@Comment({"Pitch rotation speed (degrees/tick)"})
 					public static float pitchRotateSpeed = 2;
 
@@ -1661,7 +1748,7 @@ public class IIConfigHandler
 
 					//3.5 chunks
 					@Comment({"Enemy detection range (in blocks)"})
-					public static float detectionRadius = 56;
+					public static float detectionRadius = 64;
 
 					@Comment({"Base energy usage per tick (in IF)."})
 					public static int energyUpkeepCost = 1024;
@@ -1682,13 +1769,19 @@ public class IIConfigHandler
 					public static float detectionRadius = 24;
 
 					@Comment({"Enemy attack range (in blocks)"})
-					public static float attackRadius = 48;
+					public static float attackRadius = 64;
 
 					@Comment({"Base energy usage per tick (in IF)."})
 					public static int energyUpkeepCost = 4096;
 
 					@Comment({"Time required to reload the magazine."})
 					public static int reloadTime = 120;
+
+					@Comment({"Time between shots (in ticks)."})
+					public static int bulletFireTime = 0;
+
+					@Comment({"Interval between ammunition transfers to the platform (in ticks)."})
+					public static int itemTransferInterval = 3;
 				}
 
 				public static class HeavyChemthrower
@@ -1698,6 +1791,12 @@ public class IIConfigHandler
 
 					@Comment({"Fluid tank capacity of the heavy chemthrower (in mB)."})
 					public static int tankCapacity = 8000;
+
+					@Comment({"Maximum fluid transferred to the platform tank per tick (in mB)."})
+					public static int fluidTransferRate = 80;
+
+					@Comment({"Fluid used by one discharge (in mB)."})
+					public static int fluidConsumption = 10;
 
 					@Comment({"Yaw rotation speed (degrees/tick)"})
 					public static float yawRotateSpeed = 2;
@@ -1710,6 +1809,21 @@ public class IIConfigHandler
 
 					@Comment({"Time required to fire a single chemthrower particle (in ticks)."})
 					public static int sprayTime = 0;
+
+					@Comment({"Shot entities created by one discharge."})
+					public static int shotsPerDischarge = 4;
+
+					@Comment({"Scatter for non-gaseous fluids."})
+					public static float scatterFluid = 0.075f;
+
+					@Comment({"Scatter for gases."})
+					public static float scatterGas = 0.125f;
+
+					@Comment({"Range multiplier for non-gaseous fluids."})
+					public static float rangeFluid = 1.25f;
+
+					@Comment({"Range multiplier for gases."})
+					public static float rangeGas = 0.55f;
 
 					@Comment({"Enemy detection range (in blocks)"})
 					public static float detectionRadius = 16;
@@ -1748,6 +1862,222 @@ public class IIConfigHandler
 					public static float attackRadius = 64;
 
 					@Comment({"Base energy usage per tick (in IF)."})
+					public static int energyUpkeepCost = 2048;
+				}
+
+				public static class GuidedMissileLauncher
+				{
+					@Comment({"Yaw rotation speed (degrees/tick)."})
+					public static float yawRotateSpeed = 2.5f;
+
+					@Comment({"Pitch rotation speed (degrees/tick)."})
+					public static float pitchRotateSpeed = 5f;
+
+					@Comment({"Time between shots (in ticks)."})
+					public static int shotFireTime = 10;
+
+					@Comment({"Time required to load one missile (in ticks)."})
+					public static int reloadTime = 160;
+
+					@Comment({"Starting and maximum weapon health (in half-hearts)."})
+					public static int maxHealth = 250;
+
+					@Comment({"Enemy detection range (in blocks)."})
+					public static float detectionRadius = 32;
+
+					@Comment({"Enemy attack range (in blocks)."})
+					public static float attackRadius = 128;
+
+					@Comment({"Base energy use per tick (in IF)."})
+					public static int energyUpkeepCost = 1024;
+
+					@Comment({"Minimum pitch angle (in degrees)."})
+					public static float minPitch = -45f;
+
+					@Comment({"Maximum pitch angle (in degrees)."})
+					public static float maxPitch = 55f;
+				}
+
+				public static class LightHowitzer
+				{
+					@Comment({"Yaw rotation speed (degrees/tick)."})
+					public static float yawRotateSpeed = 3.5f;
+
+					@Comment({"Pitch rotation speed (degrees/tick)."})
+					public static float pitchRotateSpeed = 3.5f;
+
+					@Comment({"Time between shots (in ticks)."})
+					public static int shotFireTime = 30;
+
+					@Comment({"Time required to load one shell (in ticks)."})
+					public static int reloadTime = 56;
+
+					@Comment({"Starting and maximum weapon health (in half-hearts)."})
+					public static int maxHealth = 350;
+
+					@Comment({"Enemy detection range (in blocks)."})
+					public static float detectionRadius = 0;
+
+					@Comment({"Enemy attack range (in blocks)."})
+					public static float attackRadius = 240;
+
+					@Comment({"Base energy use per tick (in IF)."})
+					public static int energyUpkeepCost = 512;
+
+					@Comment({"Idle time before the first idle animation (in ticks)."})
+					public static int minimumIdleTime = 160;
+
+					@Comment({"Minimum interval between idle animations (in ticks)."})
+					public static int idleAnimationInterval = 120;
+
+					@Comment({"Idle animation duration (in ticks)."})
+					public static int idleAnimationDuration = 80;
+				}
+
+				public static class Mortar
+				{
+					@Comment({"Yaw rotation speed (degrees/tick)."})
+					public static float yawRotateSpeed = 4f;
+
+					@Comment({"Pitch rotation speed (degrees/tick)."})
+					public static float pitchRotateSpeed = 2.5f;
+
+					@Comment({"Minimum pitch angle (in degrees)."})
+					public static float minPitch = -89.5f;
+
+					@Comment({"Maximum pitch angle (in degrees)."})
+					public static float maxPitch = 45f;
+
+					@Comment({"Time between shots (in ticks)."})
+					public static int shotFireTime = 25;
+
+					@Comment({"Time required to load one shell (in ticks)."})
+					public static int reloadTime = 120;
+
+					@Comment({"Starting and maximum weapon health (in half-hearts)."})
+					public static int maxHealth = 350;
+
+					@Comment({"Enemy detection range (in blocks)."})
+					public static float detectionRadius = 0;
+
+					@Comment({"Enemy attack range (in blocks)."})
+					public static float attackRadius = 160;
+
+					@Comment({"Base energy use per tick (in IF)."})
+					public static int energyUpkeepCost = 512;
+				}
+
+				public static class RocketLauncher
+				{
+					@Comment({"Yaw rotation speed (degrees/tick)."})
+					public static float yawRotateSpeed = 2f;
+
+					@Comment({"Pitch rotation speed (degrees/tick)."})
+					public static float pitchRotateSpeed = 1f;
+
+					@Comment({"Minimum pitch angle (in degrees)."})
+					public static float minPitch = -90f;
+
+					@Comment({"Maximum pitch angle (in degrees)."})
+					public static float maxPitch = 90f;
+
+					@Comment({"Time between shots (in ticks)."})
+					public static int shotFireTime = 20;
+
+					@Comment({"Time required to reload the launcher (in ticks)."})
+					public static int reloadTime = 280;
+
+					@Comment({"Starting and maximum weapon health (in half-hearts)."})
+					public static int maxHealth = 300;
+
+					@Comment({"Enemy detection range (in blocks)."})
+					public static float detectionRadius = 0;
+
+					@Comment({"Enemy attack range (in blocks)."})
+					public static float attackRadius = 240;
+
+					@Comment({"Base energy use per tick (in IF)."})
+					public static int energyUpkeepCost = 1024;
+
+					@Comment({"Idle time before the first idle animation (in ticks)."})
+					public static int minimumIdleTime = 240;
+
+					@Comment({"Minimum interval between idle animations (in ticks)."})
+					public static int idleAnimationInterval = 320;
+
+					@Comment({"Idle animation duration (in ticks)."})
+					public static int idleAnimationDuration = 80;
+				}
+
+				public static class Searchlight
+				{
+					@Comment({"Yaw rotation speed (degrees/tick)."})
+					public static float yawRotateSpeed = 8f;
+
+					@Comment({"Pitch rotation speed (degrees/tick)."})
+					public static float pitchRotateSpeed = 8f;
+
+					@Comment({"Nominal shot delay required by the common turret interface (in ticks)."})
+					public static int shotFireTime = 0;
+
+					@Comment({"Nominal reload delay required by the common turret interface (in ticks)."})
+					public static int reloadTime = 0;
+
+					@Comment({"Starting and maximum weapon health (in half-hearts)."})
+					public static int maxHealth = 200;
+
+					@Comment({"Enemy detection range (in blocks)."})
+					public static float detectionRadius = 32;
+
+					@Comment({"Light and attack range (in blocks)."})
+					public static float attackRadius = 40;
+
+					@Comment({"Radius of the exposed effect around the illuminated point (in blocks)."})
+					public static float exposureRadius = 3f;
+
+					@Comment({"Duration of the exposed effect (in ticks)."})
+					public static int exposureDuration = 5;
+
+					@Comment({"Maximum downward speed applied to airborne targets (blocks/tick)."})
+					public static float pullDownSpeed = 0.25f;
+
+					@Comment({"Base energy use per tick (in IF)."})
+					public static int energyUpkeepCost = 2048;
+				}
+
+				public static class SpotlightTower
+				{
+					@Comment({"Time required to set up the tower (in ticks)."})
+					public static int setupTime = 300;
+
+					@Comment({"Yaw rotation speed (degrees/tick)."})
+					public static float yawRotateSpeed = 3.5f;
+
+					@Comment({"Pitch rotation speed (degrees/tick)."})
+					public static float pitchRotateSpeed = 2.5f;
+
+					@Comment({"Nominal shot delay required by the common turret interface (in ticks)."})
+					public static int shotFireTime = 0;
+
+					@Comment({"Nominal reload delay required by the common turret interface (in ticks)."})
+					public static int reloadTime = 0;
+
+					@Comment({"Starting and maximum weapon health (in half-hearts)."})
+					public static int maxHealth = 200;
+
+					@Comment({"Enemy detection range (in blocks)."})
+					public static float detectionRadius = 32;
+
+					@Comment({"Light and attack range (in blocks)."})
+					public static float attackRadius = 40;
+
+					@Comment({"Radius of the exposed effect around the illuminated point (in blocks)."})
+					public static float exposureRadius = 3f;
+
+					@Comment({"Duration of the exposed effect (in ticks)."})
+					public static int exposureDuration = 5;
+
+					@Comment({"Base energy use per tick (in IF)."})
 					public static int energyUpkeepCost = 2048;
 				}
 			}

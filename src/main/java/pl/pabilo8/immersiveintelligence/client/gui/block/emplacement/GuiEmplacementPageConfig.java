@@ -4,6 +4,8 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoGauge;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoSlider;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoSwitch;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPanel;
@@ -15,13 +17,19 @@ import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityArtilleryHowitzer;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityFlagpole;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon.EmplacementWeaponTurretBase;
+import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 08.09.2026
  * @since 16.07.2021
  */
 @DecoTemplate(name = "emplacement_config", category = DecoGuiCategory.TERRITORY_CONTROL_TILE)
@@ -29,9 +37,12 @@ public class GuiEmplacementPageConfig extends GuiEmplacement
 {
 	private static final String KEY = IIReference.GUI_LABEL_KEY+"emplacement.config.";
 	@SyncNBT(events = {SyncEvents.TILE_CLIENT_MESSAGE})
-	public boolean redstoneControlEnabled, dataControlEnabled;
+	public boolean redstoneControlEnabled, dataControlEnabled, dataOutputEnabled, ballisticFireMode;
 	@SyncNBT(events = {SyncEvents.TILE_CLIENT_MESSAGE})
 	public float weaponHideHealthThreshold, weaponRepairSatisfactoryThreshold;
+	private float weaponYaw, weaponPitch;
+	private double weaponAimDistance;
+	private BlockPos lastAimMissionPosition;
 
 	public GuiEmplacementPageConfig(EntityPlayer player, TileEntityEmplacement tile)
 	{
@@ -50,6 +61,9 @@ public class GuiEmplacementPageConfig extends GuiEmplacement
 			sightRange = tile.currentWeapon.getDetectionRangeBB();
 			fireRange = tile.currentWeapon.getAttackRangeBB();
 		}
+		boolean angleAdjustable = tile.currentWeapon instanceof EmplacementWeaponTurretBase;
+		boolean artilleryWeapon = tile.currentWeapon!=null&&tile.currentWeapon.isArtilleryWeapon();
+		this.ballisticFireMode = tile.ballisticFireMode;
 
 		addComponents(
 				new DecoPanel(0, 8)
@@ -97,25 +111,31 @@ public class GuiEmplacementPageConfig extends GuiEmplacement
 						.withBackgroundMask(DecoTextures.TEMPLATE_PAPER)
 		);
 
-		addLabel(I18n.format(KEY+"vision_range", calculateRange(sightRange, pos)), 4, 132+8-1)
+		addLabel(I18n.format(KEY+"vision_range", calculateRange(sightRange, pos)), 4+8, 132+8-1)
 				.withSize(120, 10)
 				.withAlign(DecoAlignment.LEFT);
-		addLabel(I18n.format(KEY+"attack_range", calculateRange(fireRange, pos)), 4, 142+8-1)
+		addLabel(I18n.format(KEY+"attack_range", calculateRange(fireRange, pos)), 4+8, 142+8-1)
 				.withSize(120, 10)
 				.withAlign(DecoAlignment.LEFT);
 
-		addComponent(new DecoSwitch(136-4-2, 16-2)
+		addComponent(new DecoSwitch(136-4-2, 14-4)
 				.withText(KEY+"reacts_redstone")
 				.withSize(22, 14)
 				.withCurrentState(this.redstoneControlEnabled = tile.redstoneControlEnabled)
 				.withOnToggle(value -> this.redstoneControlEnabled = value)
 				.withTranslatedTooltip(KEY+"reacts_redstone.tooltip"));
-		addComponent(new DecoSwitch(136-4-2, 34-2-8+2)
+		addComponent(new DecoSwitch(136-4-2, 26-4)
 				.withText(KEY+"reacts_data")
 				.withSize(22, 14)
 				.withCurrentState(this.dataControlEnabled = tile.dataControlEnabled)
 				.withOnToggle(value -> this.dataControlEnabled = value)
 				.withTranslatedTooltip(KEY+"reacts_data.tooltip"));
+		addComponent(new DecoSwitch(136-4-2, 38-4)
+				.withText(KEY+"data_output")
+				.withSize(110, 11)
+				.withCurrentState(this.dataOutputEnabled = tile.dataOutputEnabled)
+				.withOnToggle(value -> this.dataOutputEnabled = value)
+				.withTranslatedTooltip(KEY+"data_output.tooltip"));
 
 		addLabel(KEY+"hide_health", 136-4-2, 60-20-2)
 				.withSize(110, 24)
@@ -137,10 +157,73 @@ public class GuiEmplacementPageConfig extends GuiEmplacement
 				.withSize(110, 12)
 				.withRange(0f, 1f)
 				.withValue(this.weaponRepairSatisfactoryThreshold = tile.weaponRepairSatisfactoryThreshold)
-				.withOnValueChanged(value -> this.weaponRepairSatisfactoryThreshold = Math.max(tile.weaponHideHealthThreshold, value))
+				.withOnValueChanged(value -> this.weaponRepairSatisfactoryThreshold = Math.max(this.weaponHideHealthThreshold, value))
 				.withBarColors(DecoColors.ARMOR_INTEGRITY_1, DecoColors.ARMOR_INTEGRITY_2)
 				.withTranslatedTooltip(KEY+"resurface_health.tooltip"));
 
+
+		if(angleAdjustable)
+		{
+			EmplacementWeaponTurretBase weapon = (EmplacementWeaponTurretBase)tile.currentWeapon;
+			weaponYaw = weapon.aim.getYaw(0f);
+			weaponPitch = weapon.aim.getPitch(0f);
+			weaponAimDistance = calculateAimDistance(fireRange, tile.getWeaponCenter());
+			lastAimMissionPosition = null;
+			addComponents(
+					new DecoGauge(132+8, 72-20+8+32+4+8)
+							.withSize(36, 36)
+							.withText(KEY+"yaw")
+							.withRange(-180f, 180f)
+							.withAngle(weaponYaw)
+							.withDisplayValues(false)
+							.withValueListener(() -> weaponYaw)
+							.withOnValueChanged(value -> {
+								weaponYaw = value;
+								sendAimMission();
+							}),
+					new DecoGauge(188, 72-20+8+32+4+8)
+							.withSize(36, 36)
+							.withText(KEY+"pitch")
+							.withRange(-90f, 90f)
+							.withAngle(weaponPitch)
+							.withDisplayValues(false)
+							.withValueListener(() -> weaponPitch)
+							.withOnValueChanged(value -> {
+								weaponPitch = value;
+								sendAimMission();
+							})
+			);
+		}
+		if(artilleryWeapon)
+			addComponent(new DecoSwitch(136-4-2, 143)
+					.withText(KEY+"ballistic_fire")
+					.withSize(110, 11)
+					.withCurrentState(ballisticFireMode)
+					.withOnToggle(value -> ballisticFireMode = value)
+					.withTranslatedTooltip(KEY+"ballistic_fire.tooltip"));
+	}
+
+	private void sendAimMission()
+	{
+		Vec3d origin = tile.getWeaponCenter();
+		Vec3d direction = IIMath.offsetPosDirection(weaponAimDistance,
+				Math.toRadians(-weaponYaw), Math.toRadians(-weaponPitch));
+		BlockPos target = new BlockPos(origin.add(direction));
+		if(target.equals(lastAimMissionPosition))
+			return;
+		lastAimMissionPosition = target;
+		IIPacketHandler.sendToServer(new MessageIITileSync(tile, EasyNBT.newNBT()
+				.withTag("tasks", tile.taskManager.createAimMissionUpdate(target))));
+	}
+
+	private double calculateAimDistance(AxisAlignedBB range, Vec3d center)
+	{
+		double distance = Math.min(
+				Math.min(Math.min(center.x-range.minX, range.maxX-center.x),
+						Math.min(center.y-range.minY, range.maxY-center.y)),
+				Math.min(center.z-range.minZ, range.maxZ-center.z)
+		);
+		return Math.max(0.25d, distance-0.75d);
 	}
 
 	private String calculateRange(AxisAlignedBB range, BlockPos center)

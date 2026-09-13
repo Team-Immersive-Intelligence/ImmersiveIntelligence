@@ -1,15 +1,18 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon;
 
 import net.minecraft.item.ItemStack;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.GuidedMissileLauncher;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
+
+import javax.annotation.Nullable;
 
 /**
  * Implements the single-round Guided Missile Launcher Emplacement weapon.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 17.08.2026
+ * @updated 08.09.2026
  * @since 01.01.2026
  */
 public class EmplacementWeaponGuidedMissileLauncher extends EmplacementWeaponGunBase<EntityAmmoProjectile>
@@ -22,12 +25,13 @@ public class EmplacementWeaponGuidedMissileLauncher extends EmplacementWeaponGun
 	protected void onInit(TileEntityEmplacement te)
 	{
 		super.onInit(te);
-		this.ammoFactory.setAmmo(IIContent.itemAmmoGuidedMissile);
-		this.visionAABB = this.visionAABB.grow(32);
-		this.attackAABB = this.attackAABB.grow(128);
+		this.ammoFactory.setAmmo(IIContent.itemAmmoGuidedMissile).setUseArtilleryAngles(false);
+		this.visionAABB = this.visionAABB.grow(GuidedMissileLauncher.detectionRadius);
+		this.attackAABB = this.attackAABB.grow(GuidedMissileLauncher.attackRadius);
 		setupItemHandlers(te, 8, 0, 4, 0,
 				this.ammoFactory::isValidAmmo, this.ammoFactory::isValidAmmo);
-		this.aim.withAimSpeed(2.5f, 5f);
+		this.aim.withAimSpeed(GuidedMissileLauncher.yawRotateSpeed, GuidedMissileLauncher.pitchRotateSpeed)
+				.withPitchLimit(GuidedMissileLauncher.minPitch, GuidedMissileLauncher.maxPitch);
 	}
 
 	@Override
@@ -57,24 +61,38 @@ public class EmplacementWeaponGuidedMissileLauncher extends EmplacementWeaponGun
 	@Override
 	public int getShotDelay()
 	{
-		return 10;
+		return GuidedMissileLauncher.shotFireTime;
 	}
 
 	@Override
 	public int getReloadDelay()
 	{
-		return 160;
+		return GuidedMissileLauncher.reloadTime;
 	}
 
 	@Override
 	public int getEnergyUpkeepCost()
 	{
-		return 1024;
+		return GuidedMissileLauncher.energyUpkeepCost;
 	}
 
 	@Override
 	public int getMaxHealth()
 	{
-		return 250;
+		return GuidedMissileLauncher.maxHealth;
+	}
+
+	@Nullable
+	@Override
+	protected Float getHidingPitch()
+	{
+		return 0f;
+	}
+
+	@Nullable
+	@Override
+	protected Float getLoadingPitch()
+	{
+		return 0f;
 	}
 }

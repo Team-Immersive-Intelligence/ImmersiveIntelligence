@@ -32,6 +32,6 @@ public class EWRSearchlight extends EmplacementWeaponRenderer<EmplacementWeaponS
 		assert weapon.setup!=null;
 
 		this.rotateYaw.apply(weapon.aim.getYawNormalized(partialTicks));
-		this.rotatePitch.apply(weapon.aim.getPitchNormalized(partialTicks));
+		this.rotatePitch.apply(weapon.aim.getPitchNormalized(-90, 90, partialTicks));
 	}
 }

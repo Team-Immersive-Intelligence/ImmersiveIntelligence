@@ -28,6 +28,7 @@ import static org.mockito.Mockito.*;
  * Verifies manager section isolation and Request-before-Job scheduling.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 08.09.2026
  * @since 30.08.2026
  */
 class EmplacementTargetManagerTest
@@ -38,6 +39,7 @@ class EmplacementTargetManagerTest
 		EmplacementTargetManager manager = new EmplacementTargetManager();
 		manager.getTargetConfiguration().setActivePresetId(TargetPresetDefaults.EVERYONE);
 		manager.addPositionMission(new BlockPos(4, 5, 6), 3);
+		assertFalse(manager.getFireMissions().get(0).serializeNBT().hasKey("name"));
 
 		EmplacementTargetManager copy = new EmplacementTargetManager();
 		copy.deserializeNBT(manager.serializeNBT());
@@ -82,6 +84,42 @@ class EmplacementTargetManagerTest
 		assertTrue(manager.applyClientUpdate(edit.serializeNBT()));
 		assertEquals(TargetPresetDefaults.SHELLS, manager.getTargetConfiguration().getActivePresetId());
 		assertEquals(1, manager.getFireMissions().size());
+	}
+
+	@Test
+	void aimMissionUpdateReplacesOnlyThePreviousAimMission()
+	{
+		EmplacementTargetManager client = new EmplacementTargetManager();
+		EmplacementTargetManager server = new EmplacementTargetManager();
+		BlockPos fireTarget = new BlockPos(1, 2, 3);
+		BlockPos firstAim = new BlockPos(4, 5, 6);
+		BlockPos secondAim = new BlockPos(7, 8, 9);
+		server.addPositionMission(fireTarget, 2);
+
+		assertTrue(server.applyClientUpdate(client.createAimMissionUpdate(firstAim)));
+		assertEquals(2, server.getFireMissions().size());
+		assertTrue(server.getFireMissions().get(0).isAimingOnly());
+		assertEquals(firstAim, server.getFireMissions().get(0).target.getPosition());
+
+		assertTrue(server.applyClientUpdate(client.createAimMissionUpdate(secondAim)));
+		assertEquals(2, server.getFireMissions().size());
+		assertEquals(1, server.getFireMissions().stream().filter(EmplacementFireMission::isAimingOnly).count());
+		assertEquals(secondAim, server.getFireMissions().get(0).target.getPosition());
+		assertEquals(fireTarget, server.getFireMissions().get(1).target.getPosition());
+	}
+
+	@Test
+	void completedAimMissionIsRemovedWithoutTouchingFireMissions()
+	{
+		EmplacementTargetManager manager = new EmplacementTargetManager();
+		manager.addPositionMission(new BlockPos(1, 2, 3), 2);
+		assertTrue(manager.setAimPositionMission(new BlockPos(4, 5, 6)));
+		TargetCoordinateReference aim = manager.getFireMissions().get(0).target;
+
+		assertTrue(manager.completeAimMission(aim));
+		assertEquals(1, manager.getFireMissions().size());
+		assertEquals(new BlockPos(1, 2, 3), manager.getFireMissions().get(0).target.getPosition());
+		assertFalse(manager.completeAimMission(aim));
 	}
 
 	@Test
@@ -232,7 +270,8 @@ class EmplacementTargetManagerTest
 		}
 
 		emplacement.currentWeapon = weapon;
-		emplacement.dataControlEnabled = true;
+		emplacement.dataControlEnabled = false;
+		emplacement.dataOutputEnabled = true;
 		when(emplacement.getWorld()).thenReturn(world);
 		when(emplacement.getWeaponCenter()).thenReturn(Vec3d.ZERO);
 		when(emplacement.getPos()).thenReturn(BlockPos.ORIGIN);

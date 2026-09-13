@@ -32,6 +32,7 @@ public class TargetEvaluationContext
 	private static final int IN_WATER = 1<<7;
 	private static final int ON_FIRE = 1<<8;
 	private static final int DIPLOMACY = 1<<9;
+	private static final int HORIZONTAL_DISTANCE = 1<<10;
 
 	@Nullable
 	private World world;
@@ -46,7 +47,7 @@ public class TargetEvaluationContext
 	private ResourceLocation registryId;
 	private int entityTypeMask;
 	private String name;
-	private double health, maxHealth, distanceSq;
+	private double health, maxHealth, distanceSq, horizontalDistanceSq;
 	private boolean onGround, inWater, onFire;
 	private DiplomaticStatus diplomaticStatus;
 
@@ -159,6 +160,18 @@ public class TargetEvaluationContext
 			distanceSq = dx*dx+dy*dy+dz*dz;
 		}
 		return distanceSq;
+	}
+
+	public double getHorizontalDistanceSq()
+	{
+		if((computed&HORIZONTAL_DISTANCE)==0)
+		{
+			computed |= HORIZONTAL_DISTANCE;
+			double dx = entity.posX-origin.x;
+			double dz = entity.posZ-origin.z;
+			horizontalDistanceSq = dx*dx+dz*dz;
+		}
+		return horizontalDistanceSq;
 	}
 
 	public boolean isOnGround()

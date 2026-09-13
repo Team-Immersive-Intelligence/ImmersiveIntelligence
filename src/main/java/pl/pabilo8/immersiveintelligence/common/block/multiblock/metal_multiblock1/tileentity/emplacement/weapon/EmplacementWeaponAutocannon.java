@@ -32,7 +32,8 @@ public class EmplacementWeaponAutocannon extends EmplacementWeaponGunBase<Entity
 		this.ammoFactory.setAmmo(IIContent.itemAmmoAutocannon);
 		this.visionAABB = this.visionAABB.grow(Autocannon.detectionRadius);
 		this.attackAABB = this.attackAABB.grow(Autocannon.attackRadius);
-		this.aim.withAimSpeed(Autocannon.yawRotateSpeed, Autocannon.pitchRotateSpeed);
+		this.aim.withAimSpeed(Autocannon.yawRotateSpeed, Autocannon.pitchRotateSpeed)
+				.withPitchLimit(-90, 55);
 
 		setupItemHandlers(te, 8, 4, 8, 16, this::isMagazine, this::isMagazine);
 
@@ -63,7 +64,7 @@ public class EmplacementWeaponAutocannon extends EmplacementWeaponGunBase<Entity
 	@Override
 	protected int getItemTransferSpeed()
 	{
-		return 2;
+		return Autocannon.itemTransferInterval;
 	}
 
 	@Override

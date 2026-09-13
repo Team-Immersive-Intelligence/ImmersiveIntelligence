@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
  * Edits revision-checked Emplacement Fire Mission Requests.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 31.08.2026
+ * @updated 08.09.2026
  * @since 16.07.2021
  */
 @DecoTemplate(name = "emplacement_fire_missions", category = DecoGuiCategory.TERRITORY_CONTROL_TILE)
@@ -64,8 +64,9 @@ public class GuiEmplacementPageFireMissions extends GuiEmplacement
 				.withIsJobPredicate(EmplacementFireMission::isJob)
 				.withCanModifyPredicate(EmplacementFireMission::isPositionMission)
 				.withBlankTaskSupplier(() -> missionEdit.getMissions().size() >= TargetingLimits.MAX_FIRE_MISSIONS?null:
-						new EmplacementFireMission(() -> tile.getWorld()).withPosition(tile.getPos()))
-				.withDuplicateFunction(mission -> !mission.isPositionMission()||missionEdit.getMissions().size() >= TargetingLimits.MAX_FIRE_MISSIONS?null:
+						new EmplacementFireMission(tile::getWorld).withPosition(tile.getPos()))
+				.withDuplicateFunction(mission -> !mission.isPositionMission()||mission.isAimingOnly()
+						||missionEdit.getMissions().size() >= TargetingLimits.MAX_FIRE_MISSIONS?null:
 						mission.copyWithNewId())
 				.withOnEntriesChanged(this::markDirty)
 				.withOnSelectedChanged(mission -> {
@@ -87,14 +88,10 @@ public class GuiEmplacementPageFireMissions extends GuiEmplacement
 				.withHeight(26)
 				.withBackground(DecoTextures.BG_PAPER)
 				.withBackgroundMask(DecoTextures.TEMPLATE_TICKET)
-				.withLabel("name", () -> new DecoLabel(fontRenderer, 3, 2)
-						.withSize(86, 10)
-						.withAlign(DecoAlignment.LEFT))
-				.withLabel("target", () -> new DecoLabel(fontRenderer, 3, 13)
+				.withLabel("target", () -> new DecoLabel(fontRenderer, 3, 8)
 						.withSize(86, 10)
 						.withAlign(DecoAlignment.LEFT))
 				.withElementApplyMethod((mission, panel) -> {
-					panel.label("name").withRawText(getMissionDisplayName(mission));
 					panel.label("target").withRawText(getMissionTargetText(mission));
 				})
 				.withRefreshInterval(1);
@@ -120,20 +117,16 @@ public class GuiEmplacementPageFireMissions extends GuiEmplacement
 			return;
 		}
 
-		detailsPanel.addLabel(FIRE_KEY+"name", 4, 18).withSize(42, 14).withAlign(DecoAlignment.LEFT);
-		detailsPanel.addComponent(new DecoTextField(48, 18)
-				.withSize(detailsPanel.width-52, 14)
-				.withMaxStringLength(TargetingLimits.MAX_STRING_LENGTH)
-				.withText(mission.name)
-				.withTranslatedTooltip(FIRE_KEY+"name.tooltip")
-				.withOnTextChanged(text -> {
-					mission.withName(text);
-					markDirty();
-				}));
+		addPositionTargetEditor(mission, 18);
+		if(mission.isAimingOnly())
+		{
+			detailsPanel.addLabel(FIRE_KEY+"aim_only", 4, 67)
+					.withSize(detailsPanel.width-8, 10)
+					.withAlign(DecoAlignment.CENTER);
+			return;
+		}
 
-		addPositionTargetEditor(mission, 36);
-
-		detailsPanel.addComponent(new DecoSwitch(4, 85)
+		detailsPanel.addComponent(new DecoSwitch(4, 67)
 				.withRawText(I18n.format(FIRE_KEY+"finite_shots"))
 				.withSize(detailsPanel.width-8, 11)
 				.withTranslatedTooltip(FIRE_KEY+"finite_shots.tooltip")
@@ -147,8 +140,8 @@ public class GuiEmplacementPageFireMissions extends GuiEmplacement
 					refreshDetails();
 				}));
 
-		detailsPanel.addLabel(FIRE_KEY+"shots", 4, 102).withSize(42, 14).withAlign(DecoAlignment.LEFT);
-		detailsPanel.addComponent(new DecoTextField(48, 102)
+		detailsPanel.addLabel(FIRE_KEY+"shots", 4, 84).withSize(42, 14).withAlign(DecoAlignment.LEFT);
+		detailsPanel.addComponent(new DecoTextField(48, 84)
 				.withSize(detailsPanel.width-52, 14)
 				.withFilter(TextFilter.DECIMAL)
 				.withText(mission.target.hasFiniteShots()?mission.target.getShotsRemaining(): 0)
@@ -159,6 +152,17 @@ public class GuiEmplacementPageFireMissions extends GuiEmplacement
 					mission.withShotLimit(Math.max(1, Math.min(TargetingLimits.MAX_SHOTS, shots)));
 					markDirty();
 				}));
+
+		if(tile.currentWeapon!=null&&tile.currentWeapon.isArtilleryWeapon())
+			detailsPanel.addComponent(new DecoSwitch(4, 105)
+					.withRawText(I18n.format(FIRE_KEY+"ballistic_fire"))
+					.withSize(detailsPanel.width-8, 11)
+					.withCurrentState(mission.target.isBallisticFire(tile.ballisticFireMode))
+					.withOnToggle(ballistic -> {
+						mission.target.withBallisticFire(ballistic);
+						markDirty();
+					})
+					.withTranslatedTooltip(FIRE_KEY+"ballistic_fire.tooltip"));
 	}
 
 	private void addPositionTargetEditor(EmplacementFireMission mission, int y)
@@ -166,6 +170,7 @@ public class GuiEmplacementPageFireMissions extends GuiEmplacement
 		BlockPos position = mission.target.getPosition();
 		if(position==null)
 			position = tile.getPos();
+		position = position.subtract(tile.getPos());
 		detailsPanel.addLabel(FIRE_KEY+"position", 4, y).withSize(detailsPanel.width-8, 10).withAlign(DecoAlignment.LEFT);
 		addCoordinateField(mission, 4, y+12, position.getX(), 'x');
 		addCoordinateField(mission, 49, y+12, position.getY(), 'y');
@@ -188,16 +193,12 @@ public class GuiEmplacementPageFireMissions extends GuiEmplacement
 		BlockPos old = mission.target.getPosition();
 		if(old==null)
 			old = tile.getPos();
+		old = old.subtract(tile.getPos());
 		int x = axis=='x'?value: old.getX();
 		int y = axis=='y'?value: old.getY();
 		int z = axis=='z'?value: old.getZ();
-		mission.withPosition(new BlockPos(x, y, z));
+		mission.withPosition(tile.getPos().add(x, y, z));
 		markDirty();
-	}
-
-	private String getMissionDisplayName(EmplacementFireMission mission)
-	{
-		return mission.name==null||mission.name.isEmpty()?I18n.format(FIRE_KEY+"unnamed"): mission.name;
 	}
 
 	private String getMissionTargetText(EmplacementFireMission mission)
@@ -208,10 +209,13 @@ public class GuiEmplacementPageFireMissions extends GuiEmplacement
 		else
 		{
 			BlockPos pos = mission.target.getPosition();
+			if(pos!=null)
+				pos = pos.subtract(tile.getPos());
 			target = pos==null?I18n.format(FIRE_KEY+"position_unset"):
 					I18n.format(FIRE_KEY+"position_value", pos.getX(), pos.getY(), pos.getZ());
 		}
-		String shots = mission.target.hasFiniteShots()?I18n.format(FIRE_KEY+"shots_left", mission.target.getShotsRemaining()):
+		String shots = mission.isAimingOnly()?I18n.format(FIRE_KEY+"aim_only"):
+				mission.target.hasFiniteShots()?I18n.format(FIRE_KEY+"shots_left", mission.target.getShotsRemaining()):
 				I18n.format(FIRE_KEY+"until_done");
 		return target+" - "+shots;
 	}

@@ -86,7 +86,7 @@ public class EWRRocketLauncher extends EmplacementWeaponRenderer<EmplacementWeap
 	public void apply(EmplacementWeaponRocketLauncher weapon, AMTCachedModel<TileEntityEmplacement> model, BufferBuilder buf, Tessellator tes, float partialTicks)
 	{
 		this.rotateYaw.apply(weapon.aim.getYawNormalized(partialTicks));
-		this.rotatePitch.apply(weapon.aim.getPitchNormalized(partialTicks));
+		this.rotatePitch.apply(weapon.aim.getPitchNormalized(-90, 90, partialTicks));
 		this.applyAmmoItems(weapon, BulletState.BULLET_UNUSED, rockets);
 
 		float loading = weapon.getReloadProgress(partialTicks);

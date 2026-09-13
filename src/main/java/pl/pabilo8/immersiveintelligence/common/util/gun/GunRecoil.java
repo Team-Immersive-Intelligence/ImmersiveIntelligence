@@ -57,11 +57,12 @@ public class GunRecoil implements INBTSerializable<NBTTagCompound>
 		if(overheat > 0)
 		{
 			overheat -= overheatDecrease;
-			if(coolantTank!=null&&MachinegunCoolantHandler.isValidCoolant(coolantTank.get().getFluid()))
+			if(overheat > 0&&coolantTank!=null&&MachinegunCoolantHandler.isValidCoolant(coolantTank.get().getFluid()))
 			{
+				float cooling = MachinegunCoolantHandler.getCoolAmount(coolantTank.get().getFluid());
 				FluidStack drained = coolantTank.get().drain(coolantPerTick, true);
-				assert drained!=null;
-				overheat -= MachinegunCoolantHandler.getCoolAmount(coolantTank.get().getFluid())*((float)drained.amount/coolantPerTick);
+				if(drained!=null&&drained.amount > 0)
+					overheat -= cooling*((float)drained.amount/coolantPerTick);
 			}
 		}
 
@@ -113,8 +114,11 @@ public class GunRecoil implements INBTSerializable<NBTTagCompound>
 				-maxRecoilYaw, maxRecoilYaw);
 
 		//Add overheat
-		this.overheat = Math.min(maxOverheat, overheat+4f);
-		this.isOverheated = overheat==maxOverheat;
+		if(maxOverheat > 0)
+		{
+			this.overheat = Math.min(maxOverheat, overheat+overheatStep);
+			this.isOverheated = overheat==maxOverheat;
+		}
 	}
 
 	//--- Getters ---//
@@ -131,6 +135,8 @@ public class GunRecoil implements INBTSerializable<NBTTagCompound>
 
 	public float getOverheat(float partialTicks)
 	{
+		if(maxOverheat <= 0)
+			return 0;
 		return MathHelper.clamp((overheat+(isOverheated?0.5f: 0))/maxOverheat, 0, 1);
 	}
 

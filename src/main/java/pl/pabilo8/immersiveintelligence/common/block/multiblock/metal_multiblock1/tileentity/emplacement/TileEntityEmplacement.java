@@ -46,6 +46,8 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockFlagpole;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.task.EmplacementTargetManager;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon.EmplacementWeapon;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon.EmplacementWeaponSpotlightTower;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon.EmplacementWeaponTurretBase;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon.UpgradeEmplacementWeapon;
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.EntityAMTTactile;
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileManager;
@@ -76,7 +78,7 @@ import java.util.Optional;
  * Coordinates Emplacement platform movement, servicing, weapon operation, and external storage access.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 31.08.2026
+ * @updated 08.09.2026
  * @ii-approved 0.3.1
  * @since 27.10.2020
  */
@@ -99,6 +101,8 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 	@SyncNBT(name = "tasks", events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CUSTOM1})
 	public EmplacementTargetManager taskManager = new EmplacementTargetManager();
 	public TargetCoordinateReference currentTarget;
+	@SyncNBT(events = SyncEvents.TILE_CUSTOM1)
+	public boolean weaponHasTarget;
 
 	@SyncNBT(nullable = true, events = {
 			SyncEvents.TILE_CUSTOM2,
@@ -111,7 +115,11 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 	public MultiblockHealth baseHealth;
 
 	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CLIENT_MESSAGE})
-	public boolean redstoneControlEnabled = true, dataControlEnabled = true;
+	public boolean redstoneControlEnabled = true, dataControlEnabled = true, dataOutputEnabled = true;
+	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CLIENT_MESSAGE, SyncEvents.TILE_CUSTOM2})
+	public boolean ballisticFireMode = false;
+	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CLIENT_MESSAGE})
+	private boolean ballisticFireModeInitialized = false;
 	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CLIENT_MESSAGE, SyncEvents.TILE_CUSTOM2})
 	public boolean weaponRepairing = false;
 	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CUSTOM2})
@@ -123,7 +131,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 	public MultiblockInteractablePart door;
 
 	@SideOnly(Side.CLIENT)
-	private ConditionCompoundSound<TileEntityEmplacement> repairSound, resupplySound;
+	private ConditionCompoundSound<TileEntityEmplacement> repairSound, resupplySound, spotlightAlarmSound;
 	@SideOnly(Side.CLIENT)
 	private SoundHandler sounds;
 
@@ -170,7 +178,15 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 	{
 		//Initialize the weapon even when the Emplacement does not have operating power.
 		if(this.currentWeapon!=null)
+		{
 			this.currentWeapon.init(this);
+			if(!world.isRemote&&!ballisticFireModeInitialized)
+			{
+				ballisticFireMode = currentWeapon.usesBallisticFireByDefault();
+				ballisticFireModeInitialized = true;
+				markDirty();
+			}
+		}
 
 		//The client only advances synchronized animation state. All operating decisions are server-owned.
 		if(world.isRemote)
@@ -192,7 +208,9 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 		{
 			TargetCoordinateReference previousTarget = currentTarget;
 			currentTarget = taskManager.updateAndGetTarget(this, currentTarget);
-			if(previousTarget!=currentTarget)
+			boolean previousHasTarget = weaponHasTarget;
+			weaponHasTarget = currentTarget!=null&&currentTarget.shouldBeExecuted(world);
+			if(previousTarget!=currentTarget||previousHasTarget!=weaponHasTarget)
 				updateTileForEvent(SyncEvents.TILE_CUSTOM1);
 
 			EmplacementStateNeeds baseNeeds = redstoneControlEnabled?
@@ -235,6 +253,15 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 		if(base==EmplacementStateNeeds.WANTS_SURFACE||weapon==EmplacementStateNeeds.WANTS_SURFACE)
 			return EmplacementStateNeeds.WANTS_SURFACE;
 		return EmplacementStateNeeds.WANTS_HIDE;
+	}
+
+	/**
+	 * Resolves a mission-specific fire-mode override against the configured Emplacement default.
+	 */
+	public boolean shouldUseBallisticFire(@Nullable TargetCoordinateReference target)
+	{
+		return currentWeapon!=null&&currentWeapon.isArtilleryWeapon()&&target!=null&&!target.isAimingOnly()
+				&&target.isBallisticFire(ballisticFireMode);
 	}
 
 	public boolean isWeaponRepairForced()
@@ -330,33 +357,27 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 		//Let the weapon handle the data packet too
 		if(this.currentWeapon!=null)
 			if(this.currentWeapon.handleDataCommand(packet.clone()))
+			{
+				markDirty();
+				updateTileForEvent(SyncEvents.WEAPON_MISC);
 				return;
+			}
 
 		//Handle callback
 		if(IIDataHandlingUtils.isCallbackPacket(packet))
 		{
-			DataPacket callbackPacket = IIDataHandlingUtils.handleCallback(packet, string -> {
-				switch(string)
-				{
-					case "door":
-						return new DataTypeBoolean(door.getState());
-					case "door_closed":
-						return new DataTypeBoolean(door.isFullyClosed());
-					case "door_open":
-						return new DataTypeBoolean(door.isFullyOpened());
-					case "energy":
-						return new DataTypeInteger(energyStorage.getEnergyStored());
-					case "repairing":
-						return new DataTypeBoolean(weaponRepairing);
-					case "repair_forced":
-						return new DataTypeBoolean(weaponRepairForced);
-					case "resupplying":
-						return new DataTypeBoolean(currentWeapon!=null&&currentWeapon.isResupplying());
-					case "data_control":
-						return new DataTypeBoolean(dataControlEnabled);
-					default:
-						return (currentWeapon!=null)?currentWeapon.getDataCallback(string): new DataTypeNull();
-				}
+			DataPacket callbackPacket = IIDataHandlingUtils.handleCallback(packet, string -> switch(string)
+			{
+				case "door" -> new DataTypeBoolean(door.getState());
+				case "door_closed" -> new DataTypeBoolean(door.isFullyClosed());
+				case "door_open" -> new DataTypeBoolean(door.isFullyOpened());
+				case "energy" -> new DataTypeInteger(energyStorage.getEnergyStored());
+				case "repairing" -> new DataTypeBoolean(weaponRepairing);
+				case "repair_forced" -> new DataTypeBoolean(weaponRepairForced);
+				case "resupplying" -> new DataTypeBoolean(currentWeapon!=null&&currentWeapon.isResupplying());
+				case "data_control" -> new DataTypeBoolean(dataControlEnabled);
+				case "data_output" -> new DataTypeBoolean(dataOutputEnabled);
+				default -> (currentWeapon!=null)?currentWeapon.getDataCallback(string): new DataTypeNull();
 			});
 			if(callbackPacket!=null)
 				sendData(callbackPacket, getDirection("data"), pos);
@@ -375,11 +396,8 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 					if(IIDataHandlingUtils.asBoolean('b', packet))
 						IIPacketHandler.sendToClient(new MessageBooleanAnimatedPartsSync(0, door.setState(true), this));
 				}
-
 				//Settings
 				case "rscontrol" -> IIDataHandlingUtils.optionalBoolean('b', packet).ifPresent(b -> this.redstoneControlEnabled = b);
-
-
 				//Gun Action
 				case "reload" ->
 				{
@@ -412,58 +430,79 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 					markDirty();
 					updateTileForEvent(SyncEvents.TILE_CUSTOM1);
 				}
-				case "fire" ->
-				{
-					Optional<DataTypeEntity> e = IIDataHandlingUtils.optionalEntity('e', packet);
-
-					if(e.isPresent())
-					{
-						Entity entityByID = world.getEntityByID(e.get().entityID);
-						if(entityByID!=null)
-							this.taskManager.addEntityMission(entityByID, IIDataHandlingUtils.optionalInt('a', packet).orElse(1));
-						updateTileForEvent(SyncEvents.TILE_CUSTOM1);
-					}
-					else
-					{
-						int amount = IIDataHandlingUtils.optionalInt('a', packet).orElse(1);
-						IIDataHandlingUtils.expectingVectorParam(packet, vec -> {
-									//Block/Vector based
-									this.taskManager.addPositionMission(new BlockPos(vec).add(getPOIPos("weapon")), amount);
-								},
-								angle -> {
-									//Yaw+Pitch based
-									double true_angle = Math.toRadians(-angle.x);
-									double true_angle2 = Math.toRadians(angle.y);
-									int distance = IIDataHandlingUtils.optionalInt('d', packet).orElse(40);
-
-									this.taskManager.addPositionMission(new BlockPos(IIMath.offsetPosDirection(distance,
-											true_angle, true_angle2)).add(getPOIPos("weapon")), amount);
-								});
-					}
-					//Synchronize the task
-					markDirty();
-					updateTileForEvent(SyncEvents.TILE_CUSTOM1);
-				}
+				case "fire", "aim" -> addTargetMission(packet, "aim".equals(command));
 			}
 		});
+	}
+
+	/**
+	 * Parses the shared entity, relative vector, or yaw/pitch target syntax used by fire and aim commands.
+	 */
+	private void addTargetMission(DataPacket packet, boolean aimingOnly)
+	{
+		Optional<DataTypeEntity> entity = IIDataHandlingUtils.optionalEntity('e', packet);
+		if(entity.isPresent())
+		{
+			Entity target = world.getEntityByID(entity.get().entityID);
+			if(target==null)
+				return;
+			if(aimingOnly)
+				taskManager.setAimEntityMission(target);
+			else
+				taskManager.addEntityMission(target, IIDataHandlingUtils.optionalInt('a', packet).orElse(1));
+		}
+		else
+		{
+			int amount = IIDataHandlingUtils.optionalInt('a', packet).orElse(1);
+			if(!IIDataHandlingUtils.expectingVectorParam(packet, vec -> {
+				BlockPos target = new BlockPos(vec).add(getPOIPos("weapon"));
+				if(aimingOnly)
+					taskManager.setAimPositionMission(target);
+				else
+					taskManager.addPositionMission(target, amount);
+			}, angle -> {
+				double yaw = Math.toRadians(-angle.x);
+				double pitch = Math.toRadians(angle.y);
+				int distance = IIDataHandlingUtils.optionalInt('d', packet).orElse(40);
+				BlockPos target = new BlockPos(IIMath.offsetPosDirection(distance, yaw, pitch))
+						.add(getPOIPos("weapon"));
+				if(aimingOnly)
+					taskManager.setAimPositionMission(target);
+				else
+					taskManager.addPositionMission(target, amount);
+			}))
+				return;
+		}
+
+		markDirty();
+		updateTileForEvent(SyncEvents.TILE_CUSTOM1);
 	}
 
 	@Override
 	public void receiveMessageFromClient(@Nonnull NBTTagCompound message)
 	{
-		NBTTagCompound sanitized = message.copy();
-		boolean tasksChanged = false;
-		if(taskManager!=null&&sanitized.hasKey("tasks", EasyNBT.TAG_COMPOUND))
+		boolean changed = false;
+		//Manual yaw and pitch setting
+		if(message.hasKey("weapon_manual_yaw")&&message.hasKey("weapon_manual_yaw"))
 		{
-			tasksChanged = taskManager.applyClientUpdate(sanitized.getCompoundTag("tasks"));
-			sanitized.removeTag("tasks");
+			float manualYaw = message.getFloat("weapon_manual_yaw");
+			float manualPitch = message.getFloat("weapon_manual_pitch");
+			if(currentWeapon instanceof EmplacementWeaponTurretBase)
+			{
+				((EmplacementWeaponTurretBase)currentWeapon).aim.setTarget(manualYaw, manualPitch);
+				changed = true;
+			}
 		}
-		super.receiveMessageFromClient(sanitized);
-		if(tasksChanged)
+		//Update selected tasks
+		if(taskManager!=null&&message.hasKey("tasks", EasyNBT.TAG_COMPOUND))
 		{
-			markDirty();
+			changed = taskManager.applyClientUpdate(message.getCompoundTag("tasks"));
+			message.removeTag("tasks");
+		}
+		//Parse NBT with EasyNBT
+		super.receiveMessageFromClient(message);
+		if(changed)
 			updateTileForEvent(SyncEvents.TILE_CUSTOM1);
-		}
 	}
 
 	/**
@@ -473,7 +512,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 	 */
 	public void handleSendingEnemyPos(Entity[] spottedEntity)
 	{
-		if(!dataControlEnabled)
+		if(!dataOutputEnabled)
 			return;
 		DataPacket packet = new DataPacket();
 		final BlockPos center = getPOIPos("weapon");
@@ -495,20 +534,15 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 	@Override
 	public MachineStyle getUpgradableMachineStyle()
 	{
-		switch(style.getStyle())
+		return switch(style.getStyle())
 		{
-			case "sandbags":
-				return MachineStyle.SANDBAGS;
-			case "wooden":
-				return MachineStyle.WOODEN;
-			case "steel":
-				return MachineStyle.STEEL;
-			case "bricks":
-				return MachineStyle.BRICKS;
-			case "concrete":
-				return MachineStyle.CONCRETE;
-		}
-		return MachineStyle.STEEL;
+			case "sandbags" -> MachineStyle.SANDBAGS;
+			case "wooden" -> MachineStyle.WOODEN;
+			case "steel" -> MachineStyle.STEEL;
+			case "bricks" -> MachineStyle.BRICKS;
+			case "concrete" -> MachineStyle.CONCRETE;
+			default -> MachineStyle.STEEL;
+		};
 	}
 
 	@Override
@@ -523,6 +557,8 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 			this.weaponRepairTicker = 0;
 			this.weaponRepairing = false;
 			this.weaponRepairForced = false;
+			this.ballisticFireMode = currentWeapon.usesBallisticFireByDefault();
+			this.ballisticFireModeInitialized = true;
 			updateTileForEvent(SyncEvents.TILE_CUSTOM2);
 		}
 		return added;
@@ -543,6 +579,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 			this.currentWeapon = null;
 			this.weaponRepairing = false;
 			this.weaponRepairForced = false;
+			this.ballisticFireModeInitialized = false;
 			if(this.tactileHandler!=null) this.tactileHandler.setAdditionalModel("weapon", null);
 			updateTileForEvent(SyncEvents.TILE_CUSTOM2);
 		}
@@ -732,18 +769,12 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 		return ITactileListener.super.onTactileDamage(tactile, source, amount);
 	}
 
-	public enum EmplacementStateNeeds
-	{
-		WANTS_SURFACE,
-		WANTS_HIDE,
-		MUST_HIDE;
-	}
-
 	@SideOnly(Side.CLIENT)
 	private void handleSounds()
 	{
 		if(sounds==null)
 			sounds = new SoundHandler(this);
+		//Play door
 		if(!door.isFullyClosed()&&!door.isFullyOpened())
 		{
 			float progress = door.getProgress(0);
@@ -754,13 +785,21 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 				MultiblockEmplacement.INSTANCE.closingSoundAnimation.handleSounds(sounds, animationTime, 0.75f);
 		}
 
+		if(currentWeapon==null)
+			return;
+		//Repairing (welding) sound
 		if(repairSound==null)
 			repairSound = new ConditionCompoundSound<>(IISounds.weldingLoop, getWeaponCenter(), this,
 					te -> !te.isInvalid()&&te.currentWeapon!=null&&te.weaponRepairing&&te.door.isFullyClosed()
 							&&te.currentWeapon.getHealth() < te.currentWeapon.getMaxHealth());
+		//Ammunition resupply (heavy ATM machine) sound
 		if(resupplySound==null)
 			resupplySound = new ConditionCompoundSound<>(IISounds.rollingLoop, getWeaponCenter(), this,
 					te -> !te.isInvalid()&&te.currentWeapon!=null&&te.currentWeapon.isResupplying()&&te.door.isFullyClosed());
+		//Spotlight target alarm
+		if(spotlightAlarmSound==null)
+			spotlightAlarmSound = new ConditionCompoundSound<>(IISounds.siren, getWeaponCenter(), this,
+					te -> !te.isInvalid()&&te.currentWeapon instanceof EmplacementWeaponSpotlightTower&&te.weaponHasTarget);
 	}
 
 	//--- Item Dropping ---//
@@ -778,8 +817,8 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 		assert direction!=null;
 		BlockPos outside = output.offset(direction);
 		TileEntity target = world.getTileEntity(outside);
-		ItemStack remainder = stack;
 
+		ItemStack remainder = stack;
 		if(target!=null)
 		{
 			EnumFacing targetSide = direction.getOpposite();
@@ -791,6 +830,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 			}
 		}
 
+		//Drop item if it didn't fit
 		if(!remainder.isEmpty())
 			Utils.dropStackAtPos(world, outside, remainder);
 		return true;
@@ -800,8 +840,10 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 	{
 		if(currentWeapon==null||world.isRemote)
 			return;
+		//Uninstall weapon, remove fluids
+		currentWeapon.onUninstall();
 
-		currentWeapon.clearFluids();
+		//Drop weapon storage
 		EnumFacing direction = getDirection("output");
 		BlockPos output = getPOIPos("output");
 		assert direction!=null;
@@ -814,6 +856,8 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 			Utils.dropStackAtPos(world, dropPos, stack.copy());
 			inventory.set(slot, ItemStack.EMPTY);
 		}
+
+		//Reset weapon repair ticker
 		weaponRepairTicker = 0;
 		setWeaponRepairing(false);
 	}

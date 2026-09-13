@@ -42,6 +42,7 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.entity.ISyncNBTEntity;
 import pl.pabilo8.immersiveintelligence.common.util.raytracer.FactoryTracer;
 
+import javax.annotation.Nullable;
 import javax.vecmath.Vector2f;
 import javax.vecmath.Vector3f;
 import java.util.*;
@@ -58,6 +59,7 @@ import java.util.*;
 @Interface(iface = "com.elytradev.mirage.lighting.IEntityLightEventConsumer", modid = "mirage")
 public class EntityIIChemthrowerShot extends Entity implements ISyncNBTEntity<EntityIIChemthrowerShot>, IEntityLightEventConsumer
 {
+	private static final float MOTION_DECAY = 0.99f;
 	private final Set<Entity> ignoredEntities = new HashSet<>();
 	private final Set<BlockPos> ignoredPositions = new HashSet<>();
 	private final FactoryTracer flightTracer = FactoryTracer.create(
@@ -333,7 +335,7 @@ public class EntityIIChemthrowerShot extends Entity implements ISyncNBTEntity<En
 		posZ += motionZ;
 		updateRotation();
 
-		float decay = 0.99f;
+		float decay = MOTION_DECAY;
 		if(isInWater())
 			decay *= 0.8f;
 		motionX *= decay;
@@ -382,12 +384,22 @@ public class EntityIIChemthrowerShot extends Entity implements ISyncNBTEntity<En
 	 */
 	public double getGravity()
 	{
+		return getGravity(fluidStack);
+	}
+
+	public static double getGravity(@Nullable FluidStack fluidStack)
+	{
 		if(fluidStack==null||fluidStack.getFluid()==null)
 			return 0.05f;
 
 		Fluid fluid = fluidStack.getFluid();
 		boolean gas = fluid.isGaseous(fluidStack)||ChemthrowerHandler.isGas(fluid);
 		return (gas?0.025f: 0.05f)*(fluid.getDensity(fluidStack) < 0?-1: 1);
+	}
+
+	public static float getMotionDecay()
+	{
+		return MOTION_DECAY;
 	}
 
 	/**

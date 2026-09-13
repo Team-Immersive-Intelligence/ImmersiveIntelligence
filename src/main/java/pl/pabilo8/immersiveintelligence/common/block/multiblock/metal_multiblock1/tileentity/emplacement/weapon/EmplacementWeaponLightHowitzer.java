@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon;
 
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.LightHowitzer;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
@@ -10,7 +11,7 @@ import pl.pabilo8.immersiveintelligence.common.util.gun.ChillingState;
  * Implements the single-round Light Howitzer Emplacement weapon.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 18.08.2026
+ * @updated 08.09.2026
  * @since 01.01.2026
  */
 public class EmplacementWeaponLightHowitzer extends EmplacementWeaponGunBase<EntityAmmoProjectile>
@@ -25,17 +26,17 @@ public class EmplacementWeaponLightHowitzer extends EmplacementWeaponGunBase<Ent
 	{
 		super.onInit(te);
 		if(this.chillingState==null)
-			this.chillingState = new ChillingState(160, 120, 80);
+			this.chillingState = new ChillingState(LightHowitzer.minimumIdleTime,
+					LightHowitzer.idleAnimationInterval, LightHowitzer.idleAnimationDuration);
 		this.ammoFactory.setAmmo(IIContent.itemAmmoLightArtillery);
-		this.visionAABB = this.visionAABB.grow(0);
-		this.attackAABB = this.attackAABB.grow(240);
+		this.visionAABB = this.visionAABB.grow(LightHowitzer.detectionRadius);
+		this.attackAABB = this.attackAABB.grow(LightHowitzer.attackRadius);
 
 		setupItemHandlers(te, 8, 8, 4, 4,
 				this.ammoFactory::isValidAmmo, this.ammoFactory::isValidAmmo);
-		this.aim.withAimSpeed(3.5f, 3.5f);
-//				.withPitchLimit(-89.5f, 22.5f);
+		this.aim.withAimSpeed(LightHowitzer.yawRotateSpeed, LightHowitzer.pitchRotateSpeed)
+				.withPitchLimit(-90f, 22.5f);
 		this.gunHandler.withShootSound(IISounds.howitzerShot, 55);
-		this.ammoFactory.setUseArtilleryAngles(true);
 		this.rotateAfterFiring = false;
 	}
 
@@ -64,26 +65,38 @@ public class EmplacementWeaponLightHowitzer extends EmplacementWeaponGunBase<Ent
 	}
 
 	@Override
+	public boolean isArtilleryWeapon()
+	{
+		return true;
+	}
+
+	@Override
+	public boolean usesBallisticFireByDefault()
+	{
+		return true;
+	}
+
+	@Override
 	public int getShotDelay()
 	{
-		return 30;
+		return LightHowitzer.shotFireTime;
 	}
 
 	@Override
 	public int getReloadDelay()
 	{
-		return 56;
+		return LightHowitzer.reloadTime;
 	}
 
 	@Override
 	public int getEnergyUpkeepCost()
 	{
-		return 512;
+		return LightHowitzer.energyUpkeepCost;
 	}
 
 	@Override
 	public int getMaxHealth()
 	{
-		return 350;
+		return LightHowitzer.maxHealth;
 	}
 }

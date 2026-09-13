@@ -31,6 +31,7 @@ public class GunAimCoordinate implements INBTSerializable<NBTTagCompound>
 	protected Vec3d target = Vec3d.ZERO;
 	//Rotation speeds
 	protected float aimSpeedPitch = 1, aimSpeedYaw = 1;
+	protected float aimSpeedMultiplier = 1;
 	//Angle limits relative to centerYaw
 	protected float yawLimitMin = -180, yawLimitMax = 180;
 	protected float pitchLimitMin = -90, pitchLimitMax = 90;
@@ -41,6 +42,15 @@ public class GunAimCoordinate implements INBTSerializable<NBTTagCompound>
 	{
 		this.aimSpeedYaw = Math.max(0, aimSpeedYaw);
 		this.aimSpeedPitch = Math.max(0, aimSpeedPitch);
+		return this;
+	}
+
+	/**
+	 * Applies a runtime multiplier to both configured rotation speeds.
+	 */
+	public GunAimCoordinate withAimSpeedMultiplier(float aimSpeedMultiplier)
+	{
+		this.aimSpeedMultiplier = Math.max(0, aimSpeedMultiplier);
 		return this;
 	}
 
@@ -208,7 +218,7 @@ public class GunAimCoordinate implements INBTSerializable<NBTTagCompound>
 		if(partialTicks==0)
 			return yaw;
 
-		float newYaw = moveYawTowards(yaw, targetYaw, aimSpeedYaw*partialTicks);
+		float newYaw = moveYawTowards(yaw, targetYaw, aimSpeedYaw*aimSpeedMultiplier*partialTicks);
 		if(getYawDistance(newYaw, targetYaw) <= MINIMAL)
 			return targetYaw;
 		return clampYawToRange(newYaw);
@@ -304,7 +314,7 @@ public class GunAimCoordinate implements INBTSerializable<NBTTagCompound>
 			return pitch;
 		if(Math.abs(pitch-targetPitch) <= MINIMAL)
 			return targetPitch;
-		float speed = Math.min(aimSpeedPitch, Math.abs(pitch-targetPitch));
+		float speed = Math.min(aimSpeedPitch*aimSpeedMultiplier, Math.abs(pitch-targetPitch));
 		float newPitch = pitch+(partialTicks*speed*Math.signum(targetPitch-pitch));
 		newPitch = MathHelper.clamp(newPitch, pitchLimitMin, pitchLimitMax);
 		if(Math.abs(newPitch-targetPitch) <= MINIMAL)
@@ -312,11 +322,16 @@ public class GunAimCoordinate implements INBTSerializable<NBTTagCompound>
 		return newPitch;
 	}
 
-	public float getPitchNormalized(float partialTicks)
+	public float getPitchNormalized(float pitchLimitMin, float pitchLimitMax, float partialTicks)
 	{
 		if(pitchLimitMin==pitchLimitMax)
 			return 0.5f;
 		return (getPitch(partialTicks)-pitchLimitMin)/(pitchLimitMax-pitchLimitMin);
+	}
+
+	public float getPitchNormalized(float partialTicks)
+	{
+		return getPitchNormalized(pitchLimitMin, pitchLimitMax, partialTicks);
 	}
 
 	public boolean isAimed()

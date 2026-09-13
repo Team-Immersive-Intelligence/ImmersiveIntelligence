@@ -1,7 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.task;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -14,12 +13,12 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.task.target.filter.TargetEntityProperties;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon.EmplacementWeapon;
 import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
+import pl.pabilo8.immersiveintelligence.common.util.TerrainVisibilityMatrix;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.OwnerIdentity;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyCollection;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.TargetCoordinateReference;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Supplier;
@@ -28,7 +27,7 @@ import java.util.function.Supplier;
  * Schedules Fire Mission Requests and one autonomous target-tree Job.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 31.08.2026
+ * @updated 08.09.2026
  * @ii-approved 0.3.1
  * @since 14.09.2025
  */
@@ -40,8 +39,11 @@ public class EmplacementTargetManager implements INBTSerializable<NBTTagCompound
 	private static final String KEY_POSITION_MISSION_REVISION = "position_mission_revision";
 	private static final String KEY_TARGET_CONFIG_EDIT = "target_config_edit";
 	private static final String KEY_FIRE_MISSION_EDIT = "fire_mission_edit";
+	private static final String KEY_AIM_MISSION_EDIT = "aim_mission_edit";
+	private static final String KEY_AIM_MISSION = "aim_mission";
 	private static final String KEY_BASE_REVISION = "base_revision";
 	private static final int AUTONOMOUS_SCAN_INTERVAL = 8;
+	private static final int TERRAIN_VISIBILITY_UPDATE_INTERVAL = 200;
 	private static final int SHARED_TARGET_HEARTBEAT = 40;
 	private static final int MAX_SHARED_TARGETS = 32;
 
@@ -53,6 +55,7 @@ public class EmplacementTargetManager implements INBTSerializable<NBTTagCompound
 	private int positionMissionRevision;
 
 	private final TargetEvaluationContext evaluationContext = new TargetEvaluationContext();
+	private final TerrainVisibilityMatrix terrainVisibility = new TerrainVisibilityMatrix();
 	private final Set<Entity> normalizedCandidates = Collections.newSetFromMap(new IdentityHashMap<>());
 	private final ArrayList<Entity> sharedTargets = new ArrayList<>();
 	private TargetCoordinateReference autonomousTarget = new TargetCoordinateReference(worldSupplier).withInfiniteShots();
@@ -60,6 +63,7 @@ public class EmplacementTargetManager implements INBTSerializable<NBTTagCompound
 	private int[] lastSharedEntityIds = new int[0];
 	private long lastSharedSendTick;
 	private boolean sharedSnapshotSent;
+	private long lastTerrainVisibilityUpdate = Long.MIN_VALUE;
 
 	public EmplacementTargetManager()
 	{
@@ -111,6 +115,20 @@ public class EmplacementTargetManager implements INBTSerializable<NBTTagCompound
 		return new FireMissionEdit(worldSupplier, positionMissionRevision, fireMissions.serializeNBT());
 	}
 
+	/**
+	 * Creates a last-write-wins GUI request for one aiming-only position mission.
+	 */
+	public NBTTagCompound createAimMissionUpdate(BlockPos position)
+	{
+		EmplacementFireMission mission = new EmplacementFireMission(worldSupplier)
+				.withPosition(position)
+				.withAimingOnly();
+		return EasyNBT.newNBT()
+				.withBoolean(KEY_AIM_MISSION_EDIT, true)
+				.withTag(KEY_AIM_MISSION, mission.serializeNBT())
+				.unwrap();
+	}
+
 	public void addEntityMission(Entity entity, int shots)
 	{
 		if(entity==null||fireMissions.size() >= TargetingLimits.MAX_FIRE_MISSIONS)
@@ -130,6 +148,52 @@ public class EmplacementTargetManager implements INBTSerializable<NBTTagCompound
 		fireMissions.add(mission);
 		fireMissionRevision++;
 		positionMissionRevision++;
+	}
+
+	public boolean setAimEntityMission(Entity entity)
+	{
+		if(entity==null||!entity.isEntityAlive())
+			return false;
+		return replaceAimMission(new EmplacementFireMission(worldSupplier)
+				.withEntity(entity)
+				.withAimingOnly());
+	}
+
+	public boolean setAimPositionMission(BlockPos position)
+	{
+		if(position==null)
+			return false;
+		return replaceAimMission(new EmplacementFireMission(worldSupplier)
+				.withPosition(position)
+				.withAimingOnly());
+	}
+
+	private boolean replaceAimMission(EmplacementFireMission replacement)
+	{
+		if(replacement==null||!replacement.isValid()||!replacement.isAimingOnly())
+			return false;
+
+		int aimingMissions = (int)fireMissions.stream().filter(EmplacementFireMission::isAimingOnly).count();
+		if(fireMissions.size()-aimingMissions >= TargetingLimits.MAX_FIRE_MISSIONS)
+			return false;
+
+		boolean positionMissionChanged = replacement.isPositionMission();
+		for(Iterator<EmplacementFireMission> iterator = fireMissions.iterator(); iterator.hasNext(); )
+		{
+			EmplacementFireMission mission = iterator.next();
+			if(!mission.isAimingOnly())
+				continue;
+			positionMissionChanged |= mission.isPositionMission();
+			iterator.remove();
+		}
+
+		replacement.setWorldSupplier(worldSupplier);
+		fireMissions.add(0, replacement);
+		fireMissionRevision++;
+		if(positionMissionChanged)
+			positionMissionRevision++;
+		forceAutonomousScan = true;
+		return true;
 	}
 
 	private void setMissionShots(EmplacementFireMission mission, int shots)
@@ -176,6 +240,30 @@ public class EmplacementTargetManager implements INBTSerializable<NBTTagCompound
 		return false;
 	}
 
+	/**
+	 * Removes an aiming-only mission after its weapon reaches the requested orientation.
+	 *
+	 * @return true if persistent Fire Mission state changed
+	 */
+	public boolean completeAimMission(@Nullable TargetCoordinateReference target)
+	{
+		if(target==null||!target.isAimingOnly())
+			return false;
+		for(Iterator<EmplacementFireMission> iterator = fireMissions.iterator(); iterator.hasNext(); )
+		{
+			EmplacementFireMission mission = iterator.next();
+			if(mission.target!=target||!mission.isAimingOnly())
+				continue;
+			iterator.remove();
+			fireMissionRevision++;
+			if(mission.isPositionMission())
+				positionMissionRevision++;
+			forceAutonomousScan = true;
+			return true;
+		}
+		return false;
+	}
+
 	public void skipTask(int taskID)
 	{
 		paused = false;
@@ -209,7 +297,9 @@ public class EmplacementTargetManager implements INBTSerializable<NBTTagCompound
 			return false;
 		boolean targetConfigurationEdit = update.getBoolean(KEY_TARGET_CONFIG_EDIT);
 		boolean fireMissionEdit = update.getBoolean(KEY_FIRE_MISSION_EDIT);
-		if(targetConfigurationEdit==fireMissionEdit)
+		boolean aimMissionEdit = update.getBoolean(KEY_AIM_MISSION_EDIT);
+		int editTypes = (targetConfigurationEdit?1: 0)+(fireMissionEdit?1: 0)+(aimMissionEdit?1: 0);
+		if(editTypes!=1)
 			return false;
 		if(targetConfigurationEdit)
 		{
@@ -240,7 +330,13 @@ public class EmplacementTargetManager implements INBTSerializable<NBTTagCompound
 			forceAutonomousScan = true;
 			return true;
 		}
-		return false;
+		if(!update.hasKey(KEY_AIM_MISSION, EasyNBT.TAG_COMPOUND))
+			return false;
+		EmplacementFireMission mission = new EmplacementFireMission(worldSupplier);
+		mission.deserializeNBT(update.getCompoundTag(KEY_AIM_MISSION));
+		if(!mission.isValid()||!mission.isPositionMission()||!mission.isAimingOnly())
+			return false;
+		return replaceAimMission(mission);
 	}
 
 	/**
@@ -248,13 +344,13 @@ public class EmplacementTargetManager implements INBTSerializable<NBTTagCompound
 	 */
 	@Nullable
 	public TargetCoordinateReference updateAndGetTarget(TileEntityEmplacement emplacement,
-	                                                    @Nullable TargetCoordinateReference previousTarget)
+														@Nullable TargetCoordinateReference previousTarget)
 	{
-		if(!emplacement.dataControlEnabled)
+		if(!emplacement.dataOutputEnabled)
 			sharedSnapshotSent = false;
 		if(paused)
 		{
-			if(emplacement.dataControlEnabled)
+			if(emplacement.dataOutputEnabled)
 				publishSharedTargets(emplacement, Collections.emptyList());
 			return null;
 		}
@@ -289,7 +385,7 @@ public class EmplacementTargetManager implements INBTSerializable<NBTTagCompound
 
 		if(executable!=null)
 		{
-			if(emplacement.dataControlEnabled&&isScanTick(emplacement))
+			if(emplacement.dataOutputEnabled&&isScanTick(emplacement))
 				scanAutonomousTargets(emplacement);
 			return executable.target;
 		}
@@ -329,11 +425,12 @@ public class EmplacementTargetManager implements INBTSerializable<NBTTagCompound
 		if(active==null||weapon==null||!active.getTree().isValid())
 		{
 			clearAutonomousTarget();
-			if(emplacement.dataControlEnabled)
+			if(emplacement.dataOutputEnabled)
 				publishSharedTargets(emplacement, Collections.emptyList());
 			return null;
 		}
 
+		updateTerrainVisibility(emplacement, weapon);
 		boolean cachedValid = isAutonomousTargetValid(weapon);
 		if(immediate||forceAutonomousScan||!cachedValid||isScanTick(emplacement))
 			scanAutonomousTargets(emplacement);
@@ -352,9 +449,8 @@ public class EmplacementTargetManager implements INBTSerializable<NBTTagCompound
 	{
 		Entity entity = autonomousTarget.getEntity();
 		AxisAlignedBB detection = weapon.getDetectionRangeBB();
-		return entity!=null&&!entity.isDead&&detection!=null&&detection.intersects(entity.getEntityBoundingBox())
-				&&(!(entity instanceof EntityLivingBase livingBase)||livingBase.getHealth() > 0)
-				&&weapon.isVisibleTarget(entity)&&weapon.canSelectAutonomousTarget(entity);
+		return entity!=null&&entity.isEntityAlive()&&detection!=null&&detection.intersects(entity.getEntityBoundingBox())
+				&&weapon.isVisibleTarget(entity)&&isTerrainVisible(entity)&&weapon.canSelectAutonomousTarget(entity);
 	}
 
 	private void scanAutonomousTargets(TileEntityEmplacement emplacement)
@@ -366,12 +462,13 @@ public class EmplacementTargetManager implements INBTSerializable<NBTTagCompound
 		if(active==null||weapon==null||detection==null)
 		{
 			clearAutonomousTarget();
-			if(emplacement.dataControlEnabled)
+			if(emplacement.dataOutputEnabled)
 				publishSharedTargets(emplacement, Collections.emptyList());
 			return;
 		}
 
 		World world = emplacement.getWorld();
+		updateTerrainVisibility(emplacement, weapon);
 		List<Entity> candidates = world.getEntitiesWithinAABB(Entity.class, detection);
 		OwnerIdentity ownerIdentity = emplacement.getOwnerIdentity();
 		Vec3d targetingOrigin = emplacement.getWeaponCenter();
@@ -386,7 +483,8 @@ public class EmplacementTargetManager implements INBTSerializable<NBTTagCompound
 		{
 			Entity rawCandidate = candidates.get(i);
 			Entity candidate = TargetEntityProperties.normalize(rawCandidate);
-			if(candidate==null||!normalizedCandidates.add(candidate)||!weapon.isVisibleTarget(candidate))
+			if(candidate==null||!normalizedCandidates.add(candidate)||!weapon.isVisibleTarget(candidate)
+					||!isTerrainVisible(candidate))
 				continue;
 			evaluationContext.resetNormalized(world, ownerIdentity, targetingOrigin, rawCandidate, candidate);
 			long score = tree.score(evaluationContext);
@@ -410,8 +508,27 @@ public class EmplacementTargetManager implements INBTSerializable<NBTTagCompound
 			autonomousTarget.withEntity(best).withInfiniteShots();
 			moveSelectedTargetFirst(best);
 		}
-		if(emplacement.dataControlEnabled)
+		if(emplacement.dataOutputEnabled)
 			publishSharedTargets(emplacement, sharedTargets);
+	}
+
+	private void updateTerrainVisibility(TileEntityEmplacement emplacement, EmplacementWeapon weapon)
+	{
+		World world = emplacement.getWorld();
+		Vec3d origin = emplacement.getWeaponCenter();
+		AxisAlignedBB bounds = weapon.getDetectionRangeBB();
+		long worldTime = world.getTotalWorldTime();
+		if(!terrainVisibility.isConfiguredFor(world, origin, bounds)||worldTime < lastTerrainVisibilityUpdate
+				||worldTime-lastTerrainVisibilityUpdate >= TERRAIN_VISIBILITY_UPDATE_INTERVAL)
+		{
+			terrainVisibility.update(world, origin, bounds);
+			lastTerrainVisibilityUpdate = worldTime;
+		}
+	}
+
+	private boolean isTerrainVisible(Entity entity)
+	{
+		return terrainVisibility.isVisible(new Vec3d(entity.posX, entity.posY+entity.height*0.5d, entity.posZ));
 	}
 
 	private void moveSelectedTargetFirst(Entity selected)
@@ -462,6 +579,8 @@ public class EmplacementTargetManager implements INBTSerializable<NBTTagCompound
 		forceAutonomousScan = true;
 		sharedSnapshotSent = false;
 		lastSharedEntityIds = new int[0];
+		terrainVisibility.invalidate();
+		lastTerrainVisibilityUpdate = Long.MIN_VALUE;
 	}
 
 	@Override
@@ -562,7 +681,6 @@ public class EmplacementTargetManager implements INBTSerializable<NBTTagCompound
 	{
 		private String id = UUID.randomUUID().toString();
 		public FireMissionTargetType type = FireMissionTargetType.POSITION;
-		public String name = "";
 		public TargetCoordinateReference target;
 		private Supplier<World> worldSupplier;
 		private boolean valid = true;
@@ -594,12 +712,6 @@ public class EmplacementTargetManager implements INBTSerializable<NBTTagCompound
 		{
 			this.worldSupplier = worldSupplier==null?() -> null: worldSupplier;
 			this.target.withWorldSupplier(this.worldSupplier);
-			return this;
-		}
-
-		public EmplacementFireMission withName(String name)
-		{
-			this.name = TargetingLimits.clampString(name);
 			return this;
 		}
 
@@ -641,6 +753,17 @@ public class EmplacementTargetManager implements INBTSerializable<NBTTagCompound
 			return this;
 		}
 
+		public EmplacementFireMission withAimingOnly()
+		{
+			this.target.withAimingOnly(true);
+			return this;
+		}
+
+		public boolean isAimingOnly()
+		{
+			return target.isAimingOnly();
+		}
+
 		public boolean isJob()
 		{
 			return false;
@@ -659,19 +782,12 @@ public class EmplacementTargetManager implements INBTSerializable<NBTTagCompound
 			return copy;
 		}
 
-		@Nonnull
-		public String getDisplayName()
-		{
-			return name==null?"": name;
-		}
-
 		@Override
 		public NBTTagCompound serializeNBT()
 		{
 			return EasyNBT.newNBT()
 					.withString("id", id)
 					.withEnum("type", type)
-					.withString("name", name==null?"": name)
 					.withSerializable("target", target)
 					.unwrap();
 		}
@@ -681,10 +797,9 @@ public class EmplacementTargetManager implements INBTSerializable<NBTTagCompound
 		{
 			this.valid = false;
 			String readId = nbt.getString("id");
-			String readName = nbt.getString("name");
 			FireMissionTargetType readType = FireMissionTargetType.fromName(nbt.getString("type"));
 			if(readId.isEmpty()||readId.length() > TargetingLimits.MAX_STRING_LENGTH
-					||readName.length() > TargetingLimits.MAX_STRING_LENGTH||readType==null
+					||readType==null
 					||!nbt.hasKey("target", EasyNBT.TAG_COMPOUND))
 				return;
 
@@ -695,7 +810,6 @@ public class EmplacementTargetManager implements INBTSerializable<NBTTagCompound
 					||(readType==FireMissionTargetType.POSITION&&!readTarget.isPositionTarget()))
 				return;
 			this.id = readId;
-			this.name = readName;
 			this.type = readType;
 			this.target = readTarget;
 			this.valid = true;

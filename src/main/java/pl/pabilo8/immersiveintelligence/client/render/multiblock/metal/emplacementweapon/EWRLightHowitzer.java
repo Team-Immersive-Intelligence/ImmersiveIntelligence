@@ -75,7 +75,7 @@ public class EWRLightHowitzer extends EmplacementWeaponRenderer<EmplacementWeapo
 
 		this.applyAmmoItem(weapon, BulletState.BULLET_UNUSED, shell);
 		this.rotateYaw.apply(weapon.aim.getYawNormalized(partialTicks));
-		this.rotatePitch.apply(weapon.aim.getPitchNormalized(partialTicks));
+		this.rotatePitch.apply(weapon.aim.getPitchNormalized(-90, 90, partialTicks));
 		this.work.apply(AMTUtils.getDebugProgress(60, partialTicks));
 
 		if(chillProgress > 0)

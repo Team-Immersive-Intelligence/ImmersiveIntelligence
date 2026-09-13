@@ -30,6 +30,9 @@ public class TargetCoordinateReference implements INBTSerializable<NBTTagCompoun
 
 	private boolean shotsAreFinite = false;
 	private int shotsRemaining = 0;
+	private boolean aimingOnly = false;
+	@Nullable
+	private Boolean ballisticFire = null;
 
 	public TargetCoordinateReference(Supplier<World> worldSupplier)
 	{
@@ -91,6 +94,32 @@ public class TargetCoordinateReference implements INBTSerializable<NBTTagCompoun
 	}
 
 	/**
+	 * Marks this reference as a tracking-only target which must not be attacked.
+	 */
+	public TargetCoordinateReference withAimingOnly(boolean aimingOnly)
+	{
+		this.aimingOnly = aimingOnly;
+		if(aimingOnly)
+			withInfiniteShots();
+		return this;
+	}
+
+	/**
+	 * Overrides the Emplacement's default fire mode for this mission.
+	 */
+	public TargetCoordinateReference withBallisticFire(boolean ballisticFire)
+	{
+		this.ballisticFire = ballisticFire;
+		return this;
+	}
+
+	public TargetCoordinateReference withDefaultFireMode()
+	{
+		this.ballisticFire = null;
+		return this;
+	}
+
+	/**
 	 * @return whether the task should be executed or removed from memory
 	 */
 	public boolean shouldBeExecuted()
@@ -108,7 +137,7 @@ public class TargetCoordinateReference implements INBTSerializable<NBTTagCompoun
 
 		Entity entity = this.entityReference.get();
 		if(entity!=null)
-			return !entity.isDead;
+			return entity.isEntityAlive();
 
 		if(position!=null)
 		{
@@ -116,7 +145,7 @@ public class TargetCoordinateReference implements INBTSerializable<NBTTagCompoun
 			if(world==null||(!world.isRemote&&!(world.isBlockLoaded(position))))
 				return true;
 			//A finite mission ends by shot count. An unlimited mission ends when its block target is gone.
-			return shotsAreFinite||!world.isAirBlock(position);
+			return aimingOnly||shotsAreFinite||!world.isAirBlock(position);
 		}
 
 		return false;
@@ -167,6 +196,21 @@ public class TargetCoordinateReference implements INBTSerializable<NBTTagCompoun
 		return shotsRemaining;
 	}
 
+	public boolean isAimingOnly()
+	{
+		return aimingOnly;
+	}
+
+	public boolean hasFireModeOverride()
+	{
+		return ballisticFire!=null;
+	}
+
+	public boolean isBallisticFire(boolean defaultValue)
+	{
+		return ballisticFire==null?defaultValue: ballisticFire;
+	}
+
 	public boolean isEntityTarget()
 	{
 		return getEntityID()!=0;
@@ -191,7 +235,9 @@ public class TargetCoordinateReference implements INBTSerializable<NBTTagCompoun
 	{
 		EasyNBT nbt = EasyNBT.newNBT()
 				.withBoolean("shotsAreFinite", shotsAreFinite)
-				.withInt("shotsRemaining", shotsRemaining);
+				.withInt("shotsRemaining", shotsRemaining)
+				.withBoolean("aimingOnly", aimingOnly)
+				.conditionally(ballisticFire!=null, e -> e.withBoolean("ballisticFire", ballisticFire));
 
 		if(entityReference.get()!=null||getEntityID()!=0)
 			nbt.withSerializable("entity", entityReference);
@@ -206,6 +252,10 @@ public class TargetCoordinateReference implements INBTSerializable<NBTTagCompoun
 		EasyNBT enbt = EasyNBT.wrapNBT(nbt);
 		this.shotsAreFinite = enbt.getBoolean("shotsAreFinite");
 		this.shotsRemaining = Math.max(0, enbt.getInt("shotsRemaining"));
+		this.aimingOnly = enbt.getBoolean("aimingOnly");
+		this.ballisticFire = nbt.hasKey("ballisticFire", EasyNBT.TAG_BYTE)?enbt.getBoolean("ballisticFire"): null;
+		if(aimingOnly)
+			withInfiniteShots();
 
 		if(nbt.hasKey("entity", EasyNBT.TAG_INT))
 			entityReference.deserializeNBT((NBTTagInt)nbt.getTag("entity"));
