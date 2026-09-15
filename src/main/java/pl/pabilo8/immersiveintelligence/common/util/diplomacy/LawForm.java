@@ -113,7 +113,7 @@ public enum LawForm implements ISerializableEnum
 	 * A commissariat is an administrative structure ruled by appointed officials, often backed by ideology or military power.<br>
 	 * Rank is assigned by the central authority, not by consent.
 	 */
-	COMMISARIAT("citizen", "citizen",
+	COMMISARIAT(
 			new PermissionRole("supreme_commissar", "Supreme Commissar", true)
 					.withAllPermissions(true),
 
@@ -139,6 +139,7 @@ public enum LawForm implements ISerializableEnum
 			new PermissionRole("citizen", "Citizen")
 					.withAllPermissions(false)
 					.withPermission(PermissionCategory.MILITARY_AID, true)
+					.withPermission(PermissionCategory.TRANSIT, true)
 					.withPermission(PermissionCategory.CONTAINER_ACCESS, true),
 
 			new PermissionRole("sub_citizen", "Second-Class Citizen")

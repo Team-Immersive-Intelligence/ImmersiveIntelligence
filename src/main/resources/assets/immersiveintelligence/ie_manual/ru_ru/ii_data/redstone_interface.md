@@ -4,7 +4,7 @@
 # intro
 @hammer;level_circuits
 |[multiblock]{mb:"II:RedstoneDataInterface"}|
-**Редстоун интерфейс** — это устройство, соединяющее устаревшые, но всё ещё используемые [редстоун провода](redstoneWires) с [системой данных](data_main.md).
+**Редстоун интерфейс** — это устройство, соединяющее устаревшие, но всё ещё используемые [редстоун провода](redstoneWires) с [системой данных](data_main.md).
 |[text]{mb:"II:RedstoneDataInterface"}|
 # details
 Машина состоит из нескольких частей, но ключевыми являются [порт ввода данных], с [коннектором данных](data_wiring.md#connector) на нём и [разъем выхода редстоуна](redstoneWires#1), к которому можно подключить [редстоун провод](wiring#redstoneWires).
