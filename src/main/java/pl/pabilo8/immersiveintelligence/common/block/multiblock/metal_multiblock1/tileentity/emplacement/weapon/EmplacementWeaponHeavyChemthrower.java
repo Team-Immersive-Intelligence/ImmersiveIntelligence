@@ -11,7 +11,9 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoUtils;
+import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoBallistics;
+import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoBallisticsCache;
+import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoBallisticsCache.BallisticSolution;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataHandlingUtils;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeBoolean;
@@ -32,6 +34,7 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockIn
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Arrays;
 
 /**
  * Implements direct Platform-fluid firing and Base-to-Platform supply for the Heavy Chemthrower.
@@ -96,19 +99,24 @@ public class EmplacementWeaponHeavyChemthrower extends EmplacementWeaponTurretBa
 		float yaw = (float)Math.toDegrees(Math.atan2(-direction.x, direction.z));
 		float directPitch = (float)-Math.toDegrees(Math.atan2(direction.y, horizontalDistance));
 		FluidStack fluid = platformTank.getFluid();
-		if(!useBallisticAngles||fluid==null||fluid.getFluid()==null)
+		if(fluid==null||fluid.getFluid()==null)
 			return new float[]{yaw, directPitch};
 
 		boolean gas = fluid.getFluid().isGaseous(fluid)||ChemthrowerHandler.isGas(fluid.getFluid());
 		float force = gas?HeavyChemthrower.rangeGas: HeavyChemthrower.rangeFluid;
 		double gravity = EntityIIChemthrowerShot.getGravity(fluid);
-		double height = -direction.y;
-		float angle = IIAmmoUtils.calculateBallisticAngle(horizontalDistance, gravity < 0?-height: height,
-				force, Math.abs(gravity), EntityIIChemthrowerShot.getMotionDecay(), 0.01d);
-		if(!Float.isFinite(angle))
+		AmmoBallistics model = AmmoBallistics.dragAfterMove(
+				Arrays.asList("chemthrower", gravity, EntityIIChemthrowerShot.getMotionDecay()),
+				force, gravity, EntityIIChemthrowerShot.getMotionDecay(),
+				EntityIIChemthrowerShot.getDefaultTickLimit()
+		);
+		AmmoBallisticsCache.CachedBallisticStats stats = AmmoBallisticsCache.get(model);
+		BallisticSolution solution = useBallisticAngles?
+				stats.getArtillerySolution(horizontalDistance, direction.y):
+				stats.getDirectSolution(horizontalDistance, direction.y);
+		if(!solution.isValid())
 			return new float[]{yaw, directPitch};
-		float pitch = gravity < 0?90f-angle: angle-90f;
-		return new float[]{MathHelper.wrapDegrees(yaw), pitch};
+		return new float[]{MathHelper.wrapDegrees(yaw), -(float)solution.getElevation()};
 	}
 
 	@Override

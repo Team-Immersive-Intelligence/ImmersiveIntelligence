@@ -16,7 +16,10 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
-import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoUtils;
+import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoBallistics;
+import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoBallisticsCache;
+import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoBallisticsCache.BallisticSolution;
+import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoBallisticsCache.CachedBallisticStats;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataHandlingUtils;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeFloat;
@@ -31,6 +34,8 @@ import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIGeneric;
+
+import java.util.Arrays;
 
 /**
  * Machine that converts 3D coordinates into artillery angles. Also makes good cocoa.
@@ -102,24 +107,13 @@ public class TileEntityBallisticComputer extends TileEntityMultiblockIIGeneric<T
 			return null;
 
 		double distance = Math.hypot(target.x, target.z);
-		double gravity = EntityAmmoProjectile.GRAVITY*parameters.mass;
 		float yaw = (float)((Math.toDegrees(Math.atan2(-target.x, target.z))+360D)%360D);
 		boolean direct = IIDataHandlingUtils.optionalBoolean('d', packet).orElse(false);
-		float pitch;
-		int impactTime;
-
-		if(direct)
-		{
-			pitch = 90-IIAmmoUtils.getDirectFireAngle(parameters.velocity, parameters.mass, target);
-			impactTime = IIAmmoUtils.calculateDirectImpactTime(distance, pitch, parameters.velocity);
-		}
-		else
-		{
-			pitch = IIAmmoUtils.calculateBallisticAngle(distance, target.y, (float)parameters.velocity,
-					gravity, 1D-EntityAmmoProjectile.DRAG, 0.002D);
-			impactTime = IIAmmoUtils.calculateBallisticImpactTime(target.y, pitch,
-					(float)parameters.velocity, gravity, 1D-EntityAmmoProjectile.DRAG);
-		}
+		BallisticSolution solution = direct?
+				parameters.ballistics.getDirectSolution(distance, target.y):
+				parameters.ballistics.getArtillerySolution(distance, target.y);
+		float pitch = 90F-(float)solution.getElevation();
+		int impactTime = solution.getImpactTicks();
 
 		return impactTime >= 0&&IIMath.isNumberFinite(yaw, pitch)?
 				new BallisticResult(yaw, pitch, impactTime): null;
@@ -132,7 +126,7 @@ public class TileEntityBallisticComputer extends TileEntityMultiblockIIGeneric<T
 		{
 			ItemStack stack = ((DataTypeItemStack)packet.get('s')).value;
 			if(!stack.isEmpty()&&stack.getItem() instanceof IAmmoTypeItem<?, ?> bullet)
-				return validateParameters(bullet.getMass(stack), bullet.getVelocity());
+				return new BallisticParameters(AmmoBallisticsCache.get(bullet, stack));
 		}
 
 		//Use mass and velocity (force)
@@ -145,23 +139,30 @@ public class TileEntityBallisticComputer extends TileEntityMultiblockIIGeneric<T
 
 		//Use ammo type to get velocity
 		String ammoType = IIDataHandlingUtils.optionalString('t', packet).orElse(null);
+		IAmmoTypeItem<?, ?> bullet = null;
 		if(ammoType!=null)
 		{
-			IAmmoTypeItem<?, ?> bullet = AmmoRegistry.getAmmoItem(ammoType);
+			bullet = AmmoRegistry.getAmmoItem(ammoType);
 			if(bullet!=null)
 				force = bullet.getVelocity();
 		}
 
-		return validateParameters(mass, force);
+		return validateParameters(mass, force, bullet);
 	}
 
-	private BallisticParameters validateParameters(double mass, double velocity)
+	private BallisticParameters validateParameters(double mass, double velocity, IAmmoTypeItem<?, ?> ammo)
 	{
 		//Give to Carver what is Carver's
 		if(!IIMath.isNumberFinite(mass, velocity)||mass <= 0||velocity <= 0)
 			return null;
 		//and to the computer what won't explode the maths
-		return new BallisticParameters(mass, velocity);
+		AmmoBallistics ballistics = ammo==null?
+				AmmoBallistics.projectile(
+						Arrays.asList("ballistic_computer", mass), velocity,
+						EntityAmmoProjectile.GRAVITY*mass, 1D-EntityAmmoProjectile.DRAG,
+						EntityAmmoProjectile.MAX_TICKS
+				): ammo.getBallistics(mass, velocity);
+		return new BallisticParameters(AmmoBallisticsCache.get(ballistics));
 	}
 
 	@Override
@@ -227,12 +228,11 @@ public class TileEntityBallisticComputer extends TileEntityMultiblockIIGeneric<T
 	}
 
 	/**
-	 * Inner value class to store mass and velocity.
+	 * Inner value class to store cached ballistics.
 	 */
 	@Value
 	private static class BallisticParameters
 	{
-		double mass;
-		double velocity;
+		CachedBallisticStats ballistics;
 	}
 }

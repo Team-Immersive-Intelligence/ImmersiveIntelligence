@@ -402,6 +402,11 @@ public class EntityIIChemthrowerShot extends Entity implements ISyncNBTEntity<En
 		return MOTION_DECAY;
 	}
 
+	public static int getDefaultTickLimit()
+	{
+		return Chemthrower.chemthrowerShotLifetime;
+	}
+
 	/**
 	 * Checks if the projectile fluid can ignite.
 	 */

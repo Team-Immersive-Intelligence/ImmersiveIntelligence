@@ -16,6 +16,9 @@ import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessagePlayIISound;
 import pl.pabilo8.immersiveintelligence.common.util.sound.AdvancedSounds;
 
+import javax.annotation.Nullable;
+import java.util.function.Consumer;
+
 /**
  * Used to store and calculate gun recoil and overheating.
  *
@@ -54,6 +57,17 @@ public class GunShootingHandler implements INBTSerializable<NBTBase>
 
 	public boolean fire()
 	{
+		return fire(null);
+	}
+
+	/**
+	 * Fires a round and optionally configures the created projectile before it is spawned.
+	 *
+	 * @param projectileAction action applied to the projectile, or null
+	 * @return whether a round was fired
+	 */
+	public boolean fire(@Nullable Consumer<EntityAmmoProjectile> projectileAction)
+	{
 		//Check basic conditions
 		if(!canShoot()||ammoProvider==null||ammoFactory==null)
 			return false;
@@ -71,7 +85,7 @@ public class GunShootingHandler implements INBTSerializable<NBTBase>
 			if(!firedStack.isEmpty())
 			{
 				ammoFactory.setStack(firedStack);
-				EntityAmmoProjectile projectile = ammoFactory.create();
+				EntityAmmoProjectile projectile = ammoFactory.create(projectileAction);
 				fired = projectile!=null;
 				if(fired&&sound!=null)
 					IIPacketHandler.sendToAllClients(new MessagePlayIISound(sound, SoundCategory.BLOCKS, shootSoundRange, ammoFactory.getPos(), 1f, 1f));

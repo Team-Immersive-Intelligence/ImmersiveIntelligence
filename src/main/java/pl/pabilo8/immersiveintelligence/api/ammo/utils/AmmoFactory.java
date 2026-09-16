@@ -5,7 +5,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentEffectShape;
@@ -298,7 +297,7 @@ public class AmmoFactory<E extends EntityAmmoBase<? super E>>
 	 * @return The ammo entity
 	 */
 	@Nullable
-	public E create(@Nullable Consumer<E> action)
+	public E create(@Nullable Consumer<? super E> action)
 	{
 		//Invalid ammo type
 		if(ammo==null||stack==null||stack.isEmpty())
@@ -359,23 +358,12 @@ public class AmmoFactory<E extends EntityAmmoBase<? super E>>
 		if(ammo==null)
 			return new float[]{0, 0};
 
-		if(useArtilleryAngles)
-		{
-			Vec3d dist = shooterPos.subtract(targetPos.add(targetMotion));
-			Vec3d norm = dist.normalize();
-
-			float yy = (float)((Math.atan2(norm.x, norm.z)*180D)/3.1415927410125732D);
-			float pp = IIAmmoUtils.calculateBallisticAngle(
-					shooterPos.add(shooterMotion), targetPos.add(targetMotion), stack, 0.01f
-			);
-			return new float[]{MathHelper.wrapDegrees(180-yy), pp-90};
-		}
-
-		float[] angles = IIAmmoUtils.getInterceptionAngles(
-				shooterPos, shooterMotion, targetPos, targetMotion, ammo.getVelocity(), ammo.getMass(stack)
-		);
-		angles[0] = MathHelper.wrapDegrees(180-angles[0]);
-		return angles;
+		AmmoBallisticsCache.CachedBallisticStats ballistics =
+				AmmoBallisticsCache.get(ammo, stack, velocityModifier);
+		return IIAmmoUtils.getInterceptionAngles(shooterPos, shooterMotion, targetPos, targetMotion,
+				ballistics, useArtilleryAngles?
+						AmmoBallisticsCache.BallisticFireMode.ARTILLERY:
+						AmmoBallisticsCache.BallisticFireMode.DIRECT);
 	}
 
 	/**

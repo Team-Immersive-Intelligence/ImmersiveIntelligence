@@ -657,7 +657,10 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 		if(ignoredBlocks!=null)
 			this.ignoredPositions.addAll(ignoredBlocks);
 		if(ignoredEntities!=null)
+		{
 			this.ignoredEntities.addAll(ignoredEntities);
+			this.ignoredEntities.add(this);
+		}
 	}
 
 }

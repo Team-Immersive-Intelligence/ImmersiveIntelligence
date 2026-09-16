@@ -8,6 +8,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MultiPartEntityPart;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.util.FakePlayer;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.EntityShrapnel;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
@@ -58,8 +59,11 @@ public class IIDamageSources
 			//skip blacklisted entities
 			ResourceLocation key = EntityList.getKey(attacked instanceof MultiPartEntityPart?(Entity)((MultiPartEntityPart)attacked).parent: attacked);
 			if(key!=null&&Arrays.asList(IIConfig.bulletFakeplayerWhitelist).contains(key.toString()))
-				//owner is a FakePlayer
-				return new IEDamageSource_Indirect("iiBulletNoShooter", shot, FakePlayerUtil.getFakePlayer(shot.getEntityWorld())).setProjectile().setDamageBypassesArmor();
+			//owner is a FakePlayer
+			{
+				FakePlayer fakePlayer = FakePlayerUtil.getAnyFakePlayer();
+				return new IEDamageSource_Indirect("iiBulletNoShooter", shot, fakePlayer).setProjectile().setDamageBypassesArmor();
+			}
 		}
 		//owner (shooter) is a normal player or undefined
 		return new IEDamageSource_Indirect(shooter!=null?"iiBullet": "iiBulletNoShooter", shot, shooter).setProjectile().setDamageBypassesArmor();
@@ -71,7 +75,10 @@ public class IIDamageSources
 		{
 			ResourceLocation key = EntityList.getKey(attacked instanceof MultiPartEntityPart?(Entity)((MultiPartEntityPart)attacked).parent: attacked);
 			if(key!=null&&Arrays.asList(IIConfig.bulletFakeplayerWhitelist).contains(key.toString()))
-				return new IEDamageSource_Indirect("iiShrapnelNoShooter", shot, FakePlayerUtil.getFakePlayer(shot.getEntityWorld())).setProjectile().setDamageBypassesArmor();
+			{
+				FakePlayer fakePlayer = FakePlayerUtil.getAnyFakePlayer();
+				return new IEDamageSource_Indirect("iiShrapnelNoShooter", shot, fakePlayer).setProjectile().setDamageBypassesArmor();
+			}
 		}
 		return new IEDamageSource_Indirect(shooter!=null?"iiShrapnel": "iiShrapnelNoShooter", shot, shooter).setProjectile().setDamageBypassesArmor();
 	}

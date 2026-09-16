@@ -88,7 +88,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 {
 	private static final int WEAPON_REPAIR_INTERVAL = 20;
 	private static final int WEAPON_REPAIR_ENERGY_COST = 80;
-	private static final float WEAPON_REPAIR_AMOUNT = 1.0f;
+	private static final float WEAPON_REPAIR_AMOUNT = 8f;
 
 	@SyncNBT(events = SyncEvents.TILE_OWNERSHIP_MODIFIED)
 	public OwnerIdentity ownerIdentity;
@@ -521,7 +521,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 			entities[i] = new DataTypeEntity(spottedEntity[i], center);
 
 		packet.set('e', new DataTypeArray(entities));
-		IIDataHandlingUtils.sendPacketAdjacently(packet, world, getPOIPos(MultiblockPOI.DATA), facing.rotateYCCW());
+		sendData(packet, getDirection("data"), getPOI(MultiblockPOI.DATA_OUTPUT)[0]);
 	}
 
 	@Nonnull

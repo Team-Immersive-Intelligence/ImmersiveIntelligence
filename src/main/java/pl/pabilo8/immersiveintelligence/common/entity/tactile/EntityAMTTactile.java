@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common.entity.tactile;
 
 import io.netty.buffer.ByteBuf;
+import lombok.Setter;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
@@ -10,6 +11,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
@@ -29,6 +31,8 @@ public class EntityAMTTactile extends Entity implements IEntityAdditionalSpawnDa
 	 * Name of this part
 	 */
 	public String name;
+	@Setter
+	public String customName;
 	/**
 	 * Offset from center of parent or block
 	 */
@@ -244,6 +248,16 @@ public class EntityAMTTactile extends Entity implements IEntityAdditionalSpawnDa
 	{
 		this.translation = this.rotation = this.scale = Vec3d.ZERO;
 		this.visibility = true;
+	}
+
+	@Override
+	public String getName()
+	{
+		if(customName!=null)
+			return I18n.translateToLocal(customName);
+		if(name!=null)
+			return name;
+		return super.getName();
 	}
 
 	@Override

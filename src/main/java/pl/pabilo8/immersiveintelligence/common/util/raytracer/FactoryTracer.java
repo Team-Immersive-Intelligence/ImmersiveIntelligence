@@ -232,7 +232,7 @@ public class FactoryTracer
 				new AxisAlignedBB(posStart.x, posStart.y, posStart.z, posEnd.x, posEnd.y, posEnd.z)
 						.expand(aabb.minX, aabb.minY, aabb.minZ)
 						.expand(aabb.maxX, aabb.maxY, aabb.maxZ),
-				entity -> entity.canBeCollidedWith()&&!entity.noClip
+				entity -> entity.getParts()!=null||(entity.canBeCollidedWith()&&!entity.noClip)
 		);
 		entities.removeAll(entityFilter);
 		return entities;

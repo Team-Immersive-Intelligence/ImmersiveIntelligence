@@ -578,7 +578,7 @@ public class GuiProjectileWorkshop extends DecoTileGui<TileEntityProjectileWorks
 					"ii.gui.projectile_workshop.tooltip.damage_dealt.tooltip"
 			));
 			information.add(createInformationEntry(VELOCITY,
-					I18n.format("ii.gui.projectile_workshop.unit.blocks_per_tick", ammoType.getVelocity()),
+					I18n.format("ii.gui.projectile_workshop.unit.blocks_per_tick", stats.getVelocity()),
 					"ii.gui.projectile_workshop.tooltip.velocity",
 					"ii.gui.projectile_workshop.tooltip.velocity.tooltip"
 			));
@@ -607,7 +607,7 @@ public class GuiProjectileWorkshop extends DecoTileGui<TileEntityProjectileWorks
 			));
 			information.add(createInformationEntry(ARTILLERY_RANGE,
 					projectileInfo.artillery()?
-							I18n.format("ii.gui.projectile_workshop.unit.blocks", Utils.formatDouble(stats.getGetMaxArtilleryRange(), "0.##")): "-",
+							I18n.format("ii.gui.projectile_workshop.unit.blocks", Utils.formatDouble(stats.getMaxArtilleryRange(), "0.##")): "-",
 					"ii.gui.projectile_workshop.tooltip.max_artillery_range",
 					"ii.gui.projectile_workshop.tooltip.max_artillery_range.tooltip"
 			));

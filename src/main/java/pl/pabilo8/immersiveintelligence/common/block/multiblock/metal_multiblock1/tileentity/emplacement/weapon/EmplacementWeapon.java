@@ -54,12 +54,10 @@ import java.util.function.BooleanSupplier;
  */
 public abstract class EmplacementWeapon implements ITypeNBTSerializable
 {
-	private static final String NBT_PARTIAL_SYNC = "_partial_sync";
-
 	@SyncNBT(time = 0, events = SyncEvents.WEAPON_MISC)
 	public float health = getMaxHealth();
 	@SyncNBT(time = 0, events = SyncEvents.WEAPON_MISC)
-	protected boolean resupplying = false;
+	public boolean resupplying = false;
 	@Nullable
 	@SyncNBT(time = 0, events = SyncEvents.WEAPON_MISC, nullable = true)
 	public ChillingState chillingState = null;
@@ -510,14 +508,14 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable
 				serializer.serializeAll(weapon, nbt);
 		});
 		if(partialSync&&event!=null)
-			nbt.setBoolean(NBT_PARTIAL_SYNC, true);
+			nbt.setBoolean("_partial_sync", true);
 		return nbt;
 	}
 
 	@Override
 	public void deserializeNBT(NBTTagCompound nbt)
 	{
-		boolean canSkip = nbt.getBoolean(NBT_PARTIAL_SYNC);
+		boolean canSkip = nbt.getBoolean("_partial_sync");
 		NBTSerialisation.synchroniseFor(this, (serializer, weapon) -> serializer.deserializeAll(weapon, nbt, canSkip));
 		restoredFromNBT = !initialized;
 	}

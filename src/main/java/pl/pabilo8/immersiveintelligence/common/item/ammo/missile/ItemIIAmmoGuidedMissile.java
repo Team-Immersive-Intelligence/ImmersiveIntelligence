@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.item.ammo.missile;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -7,9 +8,11 @@ import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseType;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.PropellantType;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem.IIAmmoProjectile;
+import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoBallistics;
 import pl.pabilo8.immersiveintelligence.client.model.builtin.IAmmoModel;
 import pl.pabilo8.immersiveintelligence.client.model.builtin.ModelAmmoMissile;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoGuidedMissile;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoMissile;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase.AmmoParts;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing.Casing;
@@ -69,6 +72,18 @@ public class ItemIIAmmoGuidedMissile extends ItemIIAmmoBase<EntityAmmoGuidedMiss
 	public float getVelocity()
 	{
 		return 2.5f;
+	}
+
+	@Override
+	public AmmoBallistics getBallistics(ItemStack stack, double velocityModifier)
+	{
+		return AmmoBallistics.forMissile(this, stack, velocityModifier, EntityAmmoMissile.BOOSTER_TIME);
+	}
+
+	@Override
+	public AmmoBallistics getBallistics(double mass, double velocity)
+	{
+		return AmmoBallistics.forMissile(this, mass, velocity, EntityAmmoMissile.BOOSTER_TIME);
 	}
 
 	@Override

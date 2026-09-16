@@ -43,7 +43,7 @@ public class EmplacementTargetManager implements INBTSerializable<NBTTagCompound
 	private static final String KEY_AIM_MISSION = "aim_mission";
 	private static final String KEY_BASE_REVISION = "base_revision";
 	private static final int AUTONOMOUS_SCAN_INTERVAL = 8;
-	private static final int TERRAIN_VISIBILITY_UPDATE_INTERVAL = 200;
+	private static final int TERRAIN_VISIBILITY_UPDATE_INTERVAL = 100;
 	private static final int SHARED_TARGET_HEARTBEAT = 40;
 	private static final int MAX_SHARED_TARGETS = 32;
 
