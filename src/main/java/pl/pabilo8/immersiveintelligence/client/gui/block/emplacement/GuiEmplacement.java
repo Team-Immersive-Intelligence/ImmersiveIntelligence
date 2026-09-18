@@ -30,7 +30,7 @@ public abstract class GuiEmplacement extends DecoTileGui<TileEntityEmplacement, 
 				.withTitleBar(tile)
 				.withNextLayer()
 				//Bad practicle, I know, but it was a must
-				.conditionally(this instanceof GuiEmplacementPageStorage, builder -> builder
+				.conditionally(this instanceof GuiEmplacementStorage, builder -> builder
 						.withBox(DecoTextures.BG_STEEL, DecoTextures.TEMPLATE_SQUARE, 4, 8+8, 152+96-8, 76-8-8)
 						.withTitleBar(IIReference.GUI_LABEL_KEY+"emplacement.platform_inventory", DecoAlignment.TOP_LEFT)
 						.withInventorySlots(SlotStyle.VANILLA, container.slotsPlatformAmmo)

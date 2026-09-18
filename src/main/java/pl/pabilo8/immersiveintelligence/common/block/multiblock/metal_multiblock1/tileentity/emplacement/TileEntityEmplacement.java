@@ -78,7 +78,7 @@ import java.util.Optional;
  * Coordinates Emplacement platform movement, servicing, weapon operation, and external storage access.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 08.09.2026
+ * @updated 16.09.2026
  * @ii-approved 0.3.1
  * @since 27.10.2020
  */
@@ -178,14 +178,14 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 	{
 		//Initialize the weapon even when the Emplacement does not have operating power.
 		if(this.currentWeapon!=null)
-		{
 			this.currentWeapon.init(this);
-			if(!world.isRemote&&!ballisticFireModeInitialized)
-			{
-				ballisticFireMode = currentWeapon.usesBallisticFireByDefault();
-				ballisticFireModeInitialized = true;
-				markDirty();
-			}
+		if(!world.isRemote&&this.currentWeapon!=null&&this.currentWeapon.isDead())
+			removeDestroyedWeapon();
+		if(!world.isRemote&&this.currentWeapon!=null&&!ballisticFireModeInitialized)
+		{
+			ballisticFireMode = currentWeapon.usesBallisticFireByDefault();
+			ballisticFireModeInitialized = true;
+			markDirty();
 		}
 
 		//The client only advances synchronized animation state. All operating decisions are server-owned.
@@ -449,7 +449,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 			if(aimingOnly)
 				taskManager.setAimEntityMission(target);
 			else
-				taskManager.addEntityMission(target, IIDataHandlingUtils.optionalInt('a', packet).orElse(1));
+				taskManager.addEntityMission(target, IIDataHandlingUtils.optionalInt('a', packet).orElse(0));
 		}
 		else
 		{
@@ -576,14 +576,47 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 				dropWeaponStorage();
 				this.currentWeapon.setDead();
 			}
-			this.currentWeapon = null;
-			this.weaponRepairing = false;
-			this.weaponRepairForced = false;
-			this.ballisticFireModeInitialized = false;
+			clearWeaponState();
 			if(this.tactileHandler!=null) this.tactileHandler.setAdditionalModel("weapon", null);
 			updateTileForEvent(SyncEvents.TILE_CUSTOM2);
 		}
 		return removed;
+	}
+
+	private void removeDestroyedWeapon()
+	{
+		if(world.isRemote||currentWeapon==null||!currentWeapon.isDead())
+			return;
+		Upgrade weaponUpgrade = upgradeManager.getAllInstalled().stream()
+				.filter(UpgradeEmplacementWeapon.class::isInstance)
+				.findFirst()
+				.orElse(null);
+		if(weaponUpgrade!=null)
+		{
+			removeUpgrade(weaponUpgrade);
+			return;
+		}
+
+		//Recover a weapon whose upgrade state was already lost or corrupted.
+		dropWeaponStorage();
+		currentWeapon.setDead();
+		clearWeaponState();
+		if(tactileHandler!=null)
+			tactileHandler.setAdditionalModel("weapon", null);
+		updateTileForEvent(SyncEvents.TILE_CUSTOM2);
+	}
+
+	private void clearWeaponState()
+	{
+		currentWeapon = null;
+		currentTarget = null;
+		weaponHasTarget = false;
+		weaponRepairing = false;
+		weaponRepairForced = false;
+		ballisticFireModeInitialized = false;
+		weaponRepairTicker = 0;
+		if(!world.isRemote)
+			updateTileForEvent(SyncEvents.TILE_CUSTOM1);
 	}
 
 	@Override
@@ -762,7 +795,12 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 			float previousHealth = currentWeapon.getHealth();
 			boolean result = currentWeapon.applyDamage(tactile, source, amount);
 			if(!world.isRemote&&Float.compare(previousHealth, currentWeapon.getHealth())!=0)
-				updateTileForEvent(SyncEvents.TILE_CUSTOM2);
+			{
+				if(currentWeapon.isDead())
+					removeDestroyedWeapon();
+				else
+					updateTileForEvent(SyncEvents.TILE_CUSTOM2);
+			}
 			return result;
 		}
 

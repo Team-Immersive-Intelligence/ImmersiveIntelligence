@@ -33,7 +33,7 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
  * @since 16.07.2021
  */
 @DecoTemplate(name = "emplacement_config", category = DecoGuiCategory.TERRITORY_CONTROL_TILE)
-public class GuiEmplacementPageConfig extends GuiEmplacement
+public class GuiEmplacementConfig extends GuiEmplacement
 {
 	private static final String KEY = IIReference.GUI_LABEL_KEY+"emplacement.config.";
 	@SyncNBT(events = {SyncEvents.TILE_CLIENT_MESSAGE})
@@ -44,7 +44,7 @@ public class GuiEmplacementPageConfig extends GuiEmplacement
 	private double weaponAimDistance;
 	private BlockPos lastAimMissionPosition;
 
-	public GuiEmplacementPageConfig(EntityPlayer player, TileEntityEmplacement tile)
+	public GuiEmplacementConfig(EntityPlayer player, TileEntityEmplacement tile)
 	{
 		super(player, tile, IIGUI.EMPLACEMENT_CONFIG);
 	}

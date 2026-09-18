@@ -111,7 +111,7 @@ public class AMTModel implements Iterable<AMT>, AMTRenderable
 	}
 
 	public AMTModel(@Nullable IBlockState state, OBJModel model, @Nullable AMTModelHeader header, @Nullable Function<AMTModelHeader, AMT[]> custom,
-	                @Nullable Function<ResourceLocation, TextureAtlasSprite> textureRemapper)
+					@Nullable Function<ResourceLocation, TextureAtlasSprite> textureRemapper)
 	{
 		this(getModel(state, model, header, custom, DefaultVertexFormats.BLOCK, textureRemapper));
 	}
@@ -134,7 +134,7 @@ public class AMTModel implements Iterable<AMT>, AMTRenderable
 	}
 
 	public AMTModel(VertexFormat format, OBJModel modelLocation, @Nullable AMTModelHeader header, @Nullable Function<AMTModelHeader, AMT[]> custom,
-	                @Nullable Function<ResourceLocation, TextureAtlasSprite> textureRemapper)
+					@Nullable Function<ResourceLocation, TextureAtlasSprite> textureRemapper)
 	{
 		this(getModel(null, modelLocation, header, custom, format, textureRemapper));
 	}
@@ -157,7 +157,7 @@ public class AMTModel implements Iterable<AMT>, AMTRenderable
 	}
 
 	public AMTModel(VertexFormat format, ResourceLocation modelLocation, @Nullable AMTModelHeader header, @Nullable Function<AMTModelHeader, AMT[]> custom,
-	                @Nullable Function<ResourceLocation, TextureAtlasSprite> textureRemapper)
+					@Nullable Function<ResourceLocation, TextureAtlasSprite> textureRemapper)
 	{
 		this(getModel(null, modelLocation, header, custom, textureRemapper, format));
 	}
@@ -165,8 +165,8 @@ public class AMTModel implements Iterable<AMT>, AMTRenderable
 	//--- Base Model Method ---//
 
 	private static AMT[] getModel(@Nullable IBlockState state, ResourceLocation modelLocation, @Nullable AMTModelHeader header,
-	                              @Nullable Function<AMTModelHeader, AMT[]> customPartsProvider, @Nullable Function<ResourceLocation, TextureAtlasSprite> textureRemapper,
-	                              VertexFormat format)
+								  @Nullable Function<AMTModelHeader, AMT[]> customPartsProvider, @Nullable Function<ResourceLocation, TextureAtlasSprite> textureRemapper,
+								  VertexFormat format)
 	{
 		try
 		{
@@ -180,8 +180,8 @@ public class AMTModel implements Iterable<AMT>, AMTRenderable
 	}
 
 	private static AMT[] getModel(@Nullable IBlockState state, OBJModel model, @Nullable AMTModelHeader header,
-	                              @Nullable Function<AMTModelHeader, AMT[]> customPartProvider, VertexFormat format,
-	                              @Nullable Function<ResourceLocation, TextureAtlasSprite> textureRemapper)
+								  @Nullable Function<AMTModelHeader, AMT[]> customPartProvider, VertexFormat format,
+								  @Nullable Function<ResourceLocation, TextureAtlasSprite> textureRemapper)
 	{
 		//get group list from the unbaked model
 		Map<String, Group> groups = model.getMatLib().getGroups();
@@ -403,7 +403,7 @@ public class AMTModel implements Iterable<AMT>, AMTRenderable
 		if(model.length==0)
 			return new AxisAlignedBB(0, 0, 0, 0, 0, 0);
 		AxisAlignedBB aabb = model[0].getBoundingBox();
-		for(AMT amt : model)
+		for(AMT amt : getChildrenRecursive())
 			aabb = aabb.union(amt.getBoundingBox());
 		return aabb;
 	}

@@ -17,7 +17,6 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
-import pl.pabilo8.immersiveintelligence.common.entity.tactile.EntityAMTTactile;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.TargetCoordinateReference;
@@ -27,7 +26,6 @@ import pl.pabilo8.immersiveintelligence.common.util.gun.ammoprovider.GunAmmoProv
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.function.Predicate;
 
@@ -83,14 +81,11 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 		this.ammoFactory = new AmmoFactory<A>(te.getWorld()).setIgnoredBlocks(te.getMultiblockBlocks());
 		if(!te.getWorld().isRemote&&te.tactileHandler!=null)
 		{
-			ArrayList<EntityAMTTactile> tactiles = te.tactileHandler.getEntities();
-			if(!tactiles.isEmpty())
-			{
-				EntityAMTTactile gun = tactiles.get(0);
-				gun.setCustomName("machineupgrade.immersiveintelligence.emplacement."+this.getName());
-				ammoFactory.setShooterAndGun(te.ownerIdentity.getFirstResponsibleMember(te.getWorld()), gun)
-						.setIgnoredEntities(tactiles);
-			}
+			te.tactileHandler.setLivingEntityPosition(getAimOrigin(te));
+			this.baseEntity = te.tactileHandler.getOrCreateLivingEntity(te.getOwnerIdentity(),
+					"machineupgrade.immersiveintelligence.emplacement."+getName());
+			ammoFactory.setShooterAndGun(baseEntity, baseEntity)
+					.setIgnoredEntities(te.tactileHandler.getEntities());
 		}
 		this.aim.withAimCorrectionFunction(ammoFactory::getAnglePrediction);
 		if(te.getWorld().isRemote)
@@ -100,6 +95,11 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 	@Override
 	public void onPlatformUpdate(TileEntityEmplacement te)
 	{
+		if(baseEntity!=null)
+		{
+			baseEntity.setOwnerIdentity(te.getOwnerIdentity());
+			te.tactileHandler.setLivingEntityPosition(getAimOrigin(te));
+		}
 		ensureShootingComponents();
 		if(platformAmmoProvider!=null)
 		{
@@ -127,8 +127,8 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 	public EmplacementStateNeeds onUpdate(TileEntityEmplacement te, EmplacementStateNeeds baseNeeds, TargetCoordinateReference currentTarget)
 	{
 		this.ammoFactory.setUseArtilleryAngles(te.shouldUseBallisticFire(currentTarget));
-		if(te.getOwnerIdentity()!=null)
-			ammoFactory.setOwner(te.getOwnerIdentity().getFirstResponsibleMember(te.getWorld()));
+//		if(te.getOwnerIdentity()!=null)
+//			ammoFactory.setOwner(te.getOwnerIdentity().getFirstResponsibleMember(te.getWorld()));
 
 		ensureShootingComponents();
 		if(currentTarget!=null)
@@ -300,7 +300,7 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 			blusunrize.immersiveengineering.common.util.Utils.attractEnemies(baseEntity, 24);
 
 		ammoFactory.setPositionAndVelocity(getAimOrigin(te), this.aim, 0.25f, 1f)
-				.setShooterAndGun(null, baseEntity)
+				.setShooterAndGun(baseEntity, baseEntity)
 				.setIgnoredEntities(te.tactileHandler.getEntities());
 		boolean fired = gunHandler.fire(projectile -> configureProjectile(projectile, target));
 		if(fired)
@@ -562,6 +562,8 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 			this.ammoFactory
 					.setShooterAndGun(null, null)
 					.setIgnoredEntities(Collections.emptyList());
+		if(this.baseEntity!=null)
+			this.baseEntity.setDead();
 	}
 
 	@Nullable

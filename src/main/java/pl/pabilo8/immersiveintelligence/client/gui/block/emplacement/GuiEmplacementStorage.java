@@ -16,11 +16,11 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReference;
  * @since 16.07.2021
  */
 @DecoTemplate(name = "emplacement_storage", category = DecoGuiCategory.TERRITORY_CONTROL_TILE)
-public class GuiEmplacementPageStorage extends GuiEmplacement
+public class GuiEmplacementStorage extends GuiEmplacement
 {
 	private static final String KEY = IIReference.GUI_LABEL_KEY+"emplacement.";
 
-	public GuiEmplacementPageStorage(EntityPlayer player, TileEntityEmplacement tile)
+	public GuiEmplacementStorage(EntityPlayer player, TileEntityEmplacement tile)
 	{
 		super(player, tile, IIGUI.EMPLACEMENT_STORAGE);
 	}

@@ -465,7 +465,7 @@ public class IIUtils
 	 * @return enum value with name, case insensitive
 	 */
 	@Nonnull
-	public static <T extends Enum<T> & ISerializableEnum> T enumValue(Class<T> en, String name)
+	public static <T extends Enum<T>> T enumValue(Class<T> en, String name)
 	{
 		try
 		{

@@ -1,0 +1,135 @@
+{
+  "comment": "Made by Pabilo8 with Blockbench",
+  "groups": {
+    "progress0": {
+      "scale": [
+        {
+          "time": 0,
+          "transform": [0.85, 0.85, 0.85]
+        },
+        {
+          "time": 0.16667,
+          "transform": [0.95, 0.95, 0.95]
+        }
+      ],
+      "energy": [
+        {
+          "time": 0.0,
+          "energy": [0.0, 0.0]
+        },
+        {
+          "time": 0.16667,
+          "energy": [1.0, 1.0]
+        },
+        {
+          "time": 1.0,
+          "energy": [1.0, 0.0]
+        }
+      ]
+    },
+    "progress1": {
+      "scale": [
+        {
+          "time": 0.16667,
+          "transform": [0.85, 0.85, 0.85]
+        },
+        {
+          "time": 0.33333,
+          "transform": [1, 1, 1]
+        }
+      ],
+      "energy": [
+        {
+          "time": 0.16667,
+          "energy": [0.0, 0.0]
+        },
+        {
+          "time": 0.33333,
+          "energy": [1.0, 1.0]
+        },
+        {
+          "time": 1.0,
+          "energy": [1.0, 0.0]
+        }
+      ]
+    },
+    "progress2": {
+      "scale": [
+        {
+          "time": 0.3,
+          "transform": [0.85, 0.85, 0.85]
+        },
+        {
+          "time": 0.46667,
+          "transform": [1, 1, 1]
+        }
+      ],
+      "energy": [
+        {
+          "time": 0.3,
+          "energy": [0.0, 0.0]
+        },
+        {
+          "time": 0.46667,
+          "energy": [1.0, 1.0]
+        },
+        {
+          "time": 1.0,
+          "energy": [1.0, 0.0]
+        }
+      ]
+    },
+    "progress3": {
+      "scale": [
+        {
+          "time": 0.45,
+          "transform": [0.85, 0.85, 0.85]
+        },
+        {
+          "time": 0.61667,
+          "transform": [1, 1, 1]
+        }
+      ],
+      "energy": [
+        {
+          "time": 0.45,
+          "energy": [0.0, 0.0]
+        },
+        {
+          "time": 0.61667,
+          "energy": [1.0, 1.0]
+        },
+        {
+          "time": 1.0,
+          "energy": [1.0, 0.0]
+        }
+      ]
+    },
+    "progress4": {
+      "scale": [
+        {
+          "time": 0.58333,
+          "transform": [0.85, 0.85, 0.85]
+        },
+        {
+          "time": 0.85,
+          "transform": [0.95, 0.95, 0.95]
+        }
+      ],
+      "energy": [
+        {
+          "time": 0.58333,
+          "energy": [0.0, 0.0]
+        },
+        {
+          "time": 0.85,
+          "energy": [1.0, 1.0]
+        },
+        {
+          "time": 1.0,
+          "energy": [1.0, 0.0]
+        }
+      ]
+    }
+  }
+}

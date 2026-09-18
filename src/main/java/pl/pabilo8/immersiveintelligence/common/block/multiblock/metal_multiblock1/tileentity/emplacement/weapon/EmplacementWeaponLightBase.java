@@ -12,6 +12,7 @@ import pl.pabilo8.immersiveintelligence.common.util.diplomacy.OwnerIdentity;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.TargetCoordinateReference;
 
 import javax.annotation.Nullable;
+import javax.vecmath.Vector3f;
 
 /**
  * Applies hostile-only exposure around the point illuminated by an Emplacement light.
@@ -21,6 +22,8 @@ import javax.annotation.Nullable;
  */
 public abstract class EmplacementWeaponLightBase extends EmplacementWeaponTurretBase
 {
+	public final transient Vector3f targetPosition = new Vector3f();
+
 	@Override
 	public final boolean canShoot(TileEntityEmplacement te)
 	{
@@ -49,15 +52,38 @@ public abstract class EmplacementWeaponLightBase extends EmplacementWeaponTurret
 		applyExposure(te, hit==null||hit.hitVec==null?end: hit.hitVec);
 	}
 
+	@Override
+	public void onClientUpdate(TileEntityEmplacement te)
+	{
+		super.onClientUpdate(te);
+
+		if(this.setup!=null&&this.setup.isFullyOpened())
+		{
+			//Calculate where the spotlight falls
+			Vec3d origin = getAimOrigin(te);
+			Vec3d end = origin.add(aim.getTarget(0).scale(getIlluminationRange()));
+			RayTraceResult hit = te.getWorld().rayTraceBlocks(origin, end, true, false, false);
+			end = (hit==null||hit.hitVec==null?end: hit.hitVec).subtract(origin);
+			//Spoltight renderer applies animations for yaw and pitch, so the light vector faces "forward"
+			//What's only needed is the length
+			this.targetPosition.z = (float)end.lengthVector();
+		}
+		else
+			this.targetPosition.z = 0;
+	}
+
 	private void applyExposure(TileEntityEmplacement te, Vec3d targetPosition)
 	{
 		OwnerIdentity owner = te.getOwnerIdentity();
 		double radius = Math.max(0d, getExposureRadius());
 		double radiusSq = radius*radius;
 		AxisAlignedBB area = new AxisAlignedBB(targetPosition, targetPosition).grow(radius);
+
+		//Select all around the targeted position
 		for(EntityLivingBase entity : te.getWorld().getEntitiesWithinAABB(EntityLivingBase.class, area,
 				candidate -> candidate.isEntityAlive()&&owner.isHostile(candidate)
 						&&candidate.getDistanceSq(targetPosition.x, targetPosition.y, targetPosition.z) <= radiusSq))
+			//Apply the Exposed effect
 			entity.addPotionEffect(new PotionEffect(IIPotions.exposed, Math.max(1, getExposureDuration()),
 					getExposureAmplifier(te, entity), false, true));
 	}

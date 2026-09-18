@@ -115,6 +115,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.mounted_weapon.EntityMachi
 import pl.pabilo8.immersiveintelligence.common.entity.mounted_weapon.EntityMortar;
 import pl.pabilo8.immersiveintelligence.common.entity.mounted_weapon.EntityTripodPeriscope;
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.EntityAMTTactile;
+import pl.pabilo8.immersiveintelligence.common.entity.tactile.EntityTactileLivingBase;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityDrone;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityMotorbike;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityTrackedMotorbike;
@@ -776,7 +777,8 @@ public class CommonProxy implements IGuiHandler
 		registerEntity(i++, EntityDrone.class, "drone", 64, 1, true);
 
 		registerEntity(i++, EntityIIChemthrowerShot.class, "chemthrower_shot", 64, 1, true);
-		registerEntity(i, EntityAMTTactile.class, "tactile", 64, 1, true);
+		registerEntity(i++, EntityAMTTactile.class, "tactile", 64, 1, true);
+		registerEntity(i, EntityTactileLivingBase.class, "tactile_living", 64, 1, true);
 
 		for(IMultiblock mb : IIContent.MULTIBLOCKS)
 			if(mb instanceof MultiblockStuctureBase)

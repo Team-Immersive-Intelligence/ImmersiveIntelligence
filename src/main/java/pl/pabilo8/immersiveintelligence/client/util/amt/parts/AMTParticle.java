@@ -94,6 +94,12 @@ public class AMTParticle extends AMT
 		return this;
 	}
 
+	public AMTParticle setParticleProperty(ParticleProperties property, Object value)
+	{
+		particle.setProperty(property, value);
+		return this;
+	}
+
 	@Override
 	protected void draw(Tessellator tes, BufferBuilder buf)
 	{

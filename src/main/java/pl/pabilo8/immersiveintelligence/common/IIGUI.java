@@ -27,10 +27,10 @@ import pl.pabilo8.immersiveintelligence.client.gui.block.data_merger.GuiDataMerg
 import pl.pabilo8.immersiveintelligence.client.gui.block.data_merger.GuiDataMergerEdit;
 import pl.pabilo8.immersiveintelligence.client.gui.block.data_router.GuiDataRouter;
 import pl.pabilo8.immersiveintelligence.client.gui.block.data_router.GuiDataRouterEdit;
-import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageConfig;
-import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageFireMissions;
-import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageStorage;
-import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageTargetFilters;
+import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementConfig;
+import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementFireMissions;
+import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementStorage;
+import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementTargets;
 import pl.pabilo8.immersiveintelligence.client.gui.block.flagpole.GuiFlagpole;
 import pl.pabilo8.immersiveintelligence.client.gui.block.flagpole.GuiFlagpoleConfig;
 import pl.pabilo8.immersiveintelligence.client.gui.block.flagpole.GuiFlagpoleFaction;
@@ -344,10 +344,10 @@ public enum IIGUI implements ISerializableEnum
 		IIGUI.FLAGPOLE.setClientTileGui(GuiFlagpole::new);
 		IIGUI.FLAGPOLE_CONFIG.setClientTileGui(GuiFlagpoleConfig::new);
 		IIGUI.FLAGPOLE_FACTION.setClientTileGui(GuiFlagpoleFaction::new);
-		IIGUI.EMPLACEMENT_STORAGE.setClientTileGui(GuiEmplacementPageStorage::new);
-		IIGUI.EMPLACEMENT_CONFIG.setClientTileGui(GuiEmplacementPageConfig::new);
-		IIGUI.EMPLACEMENT_TARGET_FILTERS.setClientTileGui(GuiEmplacementPageTargetFilters::new);
-		IIGUI.EMPLACEMENT_FIRE_MISSIONS.setClientTileGui(GuiEmplacementPageFireMissions::new);
+		IIGUI.EMPLACEMENT_STORAGE.setClientTileGui(GuiEmplacementStorage::new);
+		IIGUI.EMPLACEMENT_CONFIG.setClientTileGui(GuiEmplacementConfig::new);
+		IIGUI.EMPLACEMENT_TARGET_FILTERS.setClientTileGui(GuiEmplacementTargets::new);
+		IIGUI.EMPLACEMENT_FIRE_MISSIONS.setClientTileGui(GuiEmplacementFireMissions::new);
 
 		IIGUI.FILLER.setClientTileGui(GuiFiller::new);
 		IIGUI.CHEMICAL_PAINTER.setClientTileGui(GuiChemicalPainter::new);

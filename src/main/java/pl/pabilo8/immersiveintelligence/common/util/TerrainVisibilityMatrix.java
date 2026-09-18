@@ -8,7 +8,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
-import java.util.BitSet;
+import java.util.*;
 
 /**
  * Caches terrain line-of-sight results for voxels inside a bounded three-dimensional region.
@@ -19,12 +19,14 @@ import java.util.BitSet;
  * of them contain possible targets.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 16.09.2026
  * @since 12.09.2026
  */
 public class TerrainVisibilityMatrix
 {
 	private final BitSet resolved = new BitSet();
 	private final BitSet visible = new BitSet();
+	private Set<BlockPos> ignoredPositions = Collections.emptySet();
 	@Nullable
 	private World world;
 	private Vec3d origin = Vec3d.ZERO;
@@ -40,6 +42,21 @@ public class TerrainVisibilityMatrix
 	 * @param bounds region represented by the matrix
 	 */
 	public void update(@Nullable World world, @Nullable Vec3d origin, @Nullable AxisAlignedBB bounds)
+	{
+		update(world, origin, bounds, Collections.emptySet());
+	}
+
+	/**
+	 * Starts a new visibility generation while treating selected world positions as transparent.
+	 * Supplied positions are copied, so mutable position objects can safely be reused by the caller.
+	 *
+	 * @param world            world containing the terrain
+	 * @param origin           observer position
+	 * @param bounds           region represented by the matrix
+	 * @param ignoredPositions positions which cannot obstruct visibility
+	 */
+	public void update(@Nullable World world, @Nullable Vec3d origin, @Nullable AxisAlignedBB bounds,
+					   @Nullable Collection<? extends BlockPos> ignoredPositions)
 	{
 		invalidate();
 		if(world==null||origin==null||bounds==null)
@@ -66,6 +83,7 @@ public class TerrainVisibilityMatrix
 		this.sizeX = (int)width;
 		this.sizeY = (int)height;
 		this.sizeZ = (int)depth;
+		this.ignoredPositions = copyPositions(ignoredPositions);
 		this.valid = true;
 	}
 
@@ -83,6 +101,16 @@ public class TerrainVisibilityMatrix
 				&&minX+sizeX-1==MathHelper.floor(bounds.maxX)
 				&&minY+sizeY-1==MathHelper.floor(bounds.maxY)
 				&&minZ+sizeZ-1==MathHelper.floor(bounds.maxZ);
+	}
+
+	/**
+	 * @return whether this generation also uses exactly the supplied transparent positions
+	 */
+	public boolean isConfiguredFor(@Nullable World world, @Nullable Vec3d origin, @Nullable AxisAlignedBB bounds,
+								   @Nullable Collection<? extends BlockPos> ignoredPositions)
+	{
+		return isConfiguredFor(world, origin, bounds)
+				&&this.ignoredPositions.equals(copyPositions(ignoredPositions));
 	}
 
 	/**
@@ -114,6 +142,7 @@ public class TerrainVisibilityMatrix
 		visible.clear();
 		world = null;
 		origin = Vec3d.ZERO;
+		ignoredPositions = Collections.emptySet();
 		sizeX = sizeY = sizeZ = 0;
 		valid = false;
 	}
@@ -184,6 +213,8 @@ public class TerrainVisibilityMatrix
 				return true;
 
 			BlockPos pos = new BlockPos(x, y, z);
+			if(ignoredPositions.contains(pos))
+				continue;
 			if(!world.isBlockLoaded(pos))
 				return false;
 			IBlockState state = world.getBlockState(pos);
@@ -191,5 +222,16 @@ public class TerrainVisibilityMatrix
 				return false;
 		}
 		return true;
+	}
+
+	private static Set<BlockPos> copyPositions(@Nullable Collection<? extends BlockPos> positions)
+	{
+		if(positions==null||positions.isEmpty())
+			return Collections.emptySet();
+		Set<BlockPos> copy = new HashSet<>(positions.size());
+		for(BlockPos position : positions)
+			if(position!=null)
+				copy.add(new BlockPos(position));
+		return copy;
 	}
 }

@@ -1714,7 +1714,7 @@ public class IIConfigHandler
 					public static int damageDelay = 2;
 
 					@Comment({"Damage dealt to enemies (in half-hearts)."})
-					public static int damage = 10;
+					public static int damage = 20;
 
 					@Comment({"Base energy usage per tick (in IF)."})
 					public static int energyUpkeepCost = 3096;
@@ -1749,9 +1749,9 @@ public class IIConfigHandler
 					@Comment({"Time required for observer setup (lens attachment animation) (in ticks)."})
 					public static int setupTime = 300;
 
-					//3.5 chunks
+					//5 chunks
 					@Comment({"Enemy detection range (in blocks)"})
-					public static float detectionRadius = 64;
+					public static float detectionRadius = 76;
 
 					@Comment({"Base energy usage per tick (in IF)."})
 					public static int energyUpkeepCost = 1024;
@@ -1841,13 +1841,10 @@ public class IIConfigHandler
 				public static class HeavyRailgun
 				{
 					@Comment({"Time required to fire a single shot."})
-					public static int shotFireTime = 40;
+					public static int shotFireTime = 20;
 
-					@Comment({"Time required for loading a single projectile."})
-					public static int reloadTime = 20;
-
-					@Comment({"Time required for setting up the emplacement."})
-					public static int setupTime = 100;
+					@Comment({"Time required for loading a clip of four projectiles."})
+					public static int reloadTime = 144;
 
 					@Comment({"Starting/max health of the turret (in half-hearts)"})
 					public static int maxHealth = 350;
@@ -1859,7 +1856,7 @@ public class IIConfigHandler
 					public static float pitchRotateSpeed = 0.65f;
 
 					@Comment({"Enemy detection range (in blocks)"})
-					public static float detectionRadius = 16;
+					public static float detectionRadius = 24;
 
 					@Comment({"Enemy attack range (in blocks)"})
 					public static float attackRadius = 64;
@@ -2069,10 +2066,10 @@ public class IIConfigHandler
 					public static int maxHealth = 200;
 
 					@Comment({"Enemy detection range (in blocks)."})
-					public static float detectionRadius = 32;
+					public static float detectionRadius = 52;
 
 					@Comment({"Light and attack range (in blocks)."})
-					public static float attackRadius = 40;
+					public static float attackRadius = 52;
 
 					@Comment({"Radius of the exposed effect around the illuminated point (in blocks)."})
 					public static float exposureRadius = 3f;

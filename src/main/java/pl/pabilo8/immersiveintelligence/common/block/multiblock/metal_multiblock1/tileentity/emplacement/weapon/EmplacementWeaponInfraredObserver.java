@@ -17,6 +17,8 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPane
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.InfraredObserver;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.EmplacementStateNeeds;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.TargetCoordinateReference;
@@ -35,6 +37,8 @@ import java.util.Locale;
  */
 public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 {
+	private static final ResLoc ROTATE_PITCH = ResLoc.of(IIReference.RES_II,
+			"emplacement/weapon/infrared_observer/rotate_pitch");
 	@Nonnull
 	@SyncNBT(events = SyncEvents.WEAPON_MISC)
 	public EnumFacing facing, plannedFacing;
@@ -47,7 +51,7 @@ public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 	{
 		this.facing = this.plannedFacing = EnumFacing.NORTH;
 		this.setup = new MultiblockInteractablePart(InfraredObserver.setupTime);
-		this.aim.withPitchLimit(-90, 22.5f);
+		this.aim.withPitchLimit(-90, 45.5f);
 	}
 
 	@Override
@@ -115,6 +119,9 @@ public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 		}
 		else if(!remote&&setupChanged)
 			syncWithClient(te, SyncEvents.WEAPON_MISC);
+
+		if(!remote&&te.tactileHandler!=null)
+			te.tactileHandler.update(ROTATE_PITCH, aim.getPitchNormalized(-90, 90, 0));
 	}
 
 	@Override

@@ -3,11 +3,19 @@
     "base": [24, -36, 8],
     "stage2": [24, -117, 8],
     "stage3lamp": [8.5, 16.5506, 23.4993],
-    "lamp": [13.5, 5.5, 23.5]
+    "lamp": [13.5, 5.5, 23.5],
+    "ray": [8.5, 6.5506, 18.5]
   },
   "hierarchy": {
     "stage2": "base",
     "stage3lamp": "stage2",
-    "lamp": "stage3lamp"
+    "lamp": "stage3lamp",
+    "ray": "lamp"
+  },
+  "properties": {
+    "ray": {
+      "particle": "light/spotlight_tower",
+      "rotation": [180.0, 0.0, 0.0]
+    }
   }
 }

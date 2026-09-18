@@ -12,6 +12,8 @@ import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.EmplacementStateNeeds;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.TargetCoordinateReference;
@@ -37,6 +39,7 @@ public abstract class EmplacementWeaponTurretBase extends EmplacementWeapon
 	@SyncNBT(time = 0, events = SyncEvents.WEAPON_MISC, nullable = true)
 	public MultiblockInteractablePart setup = null;
 	private int casingOutputTicker = 0;
+	private transient ResLoc rotateYawAnimation, rotatePitchAnimation;
 
 	/**
 	 * Initializes the weapon with the Emplacement facing as its local yaw center.
@@ -45,6 +48,8 @@ public abstract class EmplacementWeaponTurretBase extends EmplacementWeapon
 	protected void onInit(TileEntityEmplacement te)
 	{
 		super.onInit(te);
+		this.rotateYawAnimation = ResLoc.of(IIReference.RES_II, "emplacement/weapon/", getName(), "/rotate_yaw");
+		this.rotatePitchAnimation = ResLoc.of(IIReference.RES_II, "emplacement/weapon/", getName(), "/rotate_pitch");
 		this.aim.withCenterYaw(te.facing.getHorizontalAngle());
 		if(!restoredFromNBT)
 		{
@@ -70,6 +75,9 @@ public abstract class EmplacementWeaponTurretBase extends EmplacementWeapon
 		if(!exposed)
 			setAimTargetAngles(te, getHidingYaw(), getHidingPitch());
 		updateAim(te);
+		if(te.tactileHandler!=null)
+			te.tactileHandler.update(rotateYawAnimation, aim.getYawNormalized(0),
+					rotatePitchAnimation, aim.getPitchNormalized(-90, 90, 0));
 
 		//The Base casing storage is stationary, so it can continue emptying while the platform operates.
 		if(++casingOutputTicker >= Math.max(0, getItemTransferSpeed()))

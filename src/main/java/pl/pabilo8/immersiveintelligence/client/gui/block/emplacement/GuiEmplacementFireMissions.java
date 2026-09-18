@@ -16,7 +16,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTemplate;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.task.EmplacementTargetManager.EmplacementFireMission;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.task.EmplacementFireMission;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.task.EmplacementTargetManager.FireMissionEdit;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.task.EmplacementTargetManager.FireMissionTargetType;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.task.target.TargetingLimits;
@@ -32,7 +32,7 @@ import javax.annotation.Nullable;
  * @since 16.07.2021
  */
 @DecoTemplate(name = "emplacement_fire_missions", category = DecoGuiCategory.TERRITORY_CONTROL_TILE)
-public class GuiEmplacementPageFireMissions extends GuiEmplacement
+public class GuiEmplacementFireMissions extends GuiEmplacement
 {
 	private static final String FIRE_KEY = "ii.gui.emplacement.fire_mission.";
 
@@ -43,7 +43,7 @@ public class GuiEmplacementPageFireMissions extends GuiEmplacement
 	private EmplacementFireMission selected;
 	private boolean dirty;
 
-	public GuiEmplacementPageFireMissions(EntityPlayer player, TileEntityEmplacement tile)
+	public GuiEmplacementFireMissions(EntityPlayer player, TileEntityEmplacement tile)
 	{
 		super(player, tile, IIGUI.EMPLACEMENT_FIRE_MISSIONS);
 		if(tile!=null)
@@ -216,7 +216,7 @@ public class GuiEmplacementPageFireMissions extends GuiEmplacement
 		}
 		String shots = mission.isAimingOnly()?I18n.format(FIRE_KEY+"aim_only"):
 				mission.target.hasFiniteShots()?I18n.format(FIRE_KEY+"shots_left", mission.target.getShotsRemaining()):
-				I18n.format(FIRE_KEY+"until_done");
+						I18n.format(FIRE_KEY+"until_done");
 		return target+" - "+shots;
 	}
 

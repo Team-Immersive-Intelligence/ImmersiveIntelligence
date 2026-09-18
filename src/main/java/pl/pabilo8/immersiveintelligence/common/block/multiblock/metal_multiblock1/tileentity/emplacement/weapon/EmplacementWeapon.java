@@ -4,7 +4,6 @@ import blusunrize.immersiveengineering.common.util.IEDamageSources;
 import blusunrize.immersiveengineering.common.util.IEDamageSources.ElectricDamageSource;
 import com.elytradev.mirage.event.GatherLightsEvent;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
@@ -32,6 +31,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.EntityGasCloud;
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.EntityAMTTactile;
+import pl.pabilo8.immersiveintelligence.common.entity.tactile.EntityTactileLivingBase;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.ITypeNBTSerializable;
@@ -68,7 +68,7 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable
 	@Nullable
 	private transient SyncEvents partialSyncEvent = null;
 	@Nullable
-	protected EntityLivingBase baseEntity;
+	protected EntityTactileLivingBase baseEntity;
 	@Nullable
 	private transient TileEntityEmplacement emplacement;
 

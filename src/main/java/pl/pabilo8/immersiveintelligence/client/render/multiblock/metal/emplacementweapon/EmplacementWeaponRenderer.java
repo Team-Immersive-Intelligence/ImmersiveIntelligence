@@ -113,12 +113,9 @@ public abstract class EmplacementWeaponRenderer<W extends EmplacementWeapon> imp
 		List<ItemStack> renderAmmo = weapon.getLoadedAmmo();
 		//noinspection SequencedCollectionMethodCanBeUsed
 		ItemStack ammoStack = renderAmmo.isEmpty()?ItemStack.EMPTY: renderAmmo.get(0);
-		if(!ammoStack.isEmpty())
-		{
-			AMTBullet amtBullet = reference.get();
-			if(amtBullet!=null)
-				amtBullet.withStack(ammoStack, state);
-		}
+		AMTBullet amtBullet = reference.get();
+		if(amtBullet!=null)
+			amtBullet.withStack(ammoStack, state);
 	}
 
 	/**

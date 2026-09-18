@@ -114,6 +114,7 @@ public abstract class AMT implements AMTRenderable, Cloneable
 			for(AMT child : children)
 				child.render(tes, buf);
 
+		postDraw();
 		GlStateManager.popMatrix();
 	}
 
@@ -155,6 +156,14 @@ public abstract class AMT implements AMTRenderable, Cloneable
 			GlStateManager.scale(scale.x, scale.y, scale.z);
 
 		GlStateManager.translate(-originPos.x, -originPos.y, -originPos.z);
+	}
+
+	/**
+	 * Called after drawing this AMT, use for cleanup
+	 */
+	protected void postDraw()
+	{
+
 	}
 
 	protected abstract void draw(Tessellator tes, BufferBuilder buf);

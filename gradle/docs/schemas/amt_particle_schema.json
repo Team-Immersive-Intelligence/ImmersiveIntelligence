@@ -93,7 +93,7 @@
     "type": {
       "type": "string",
       "description": "Particle class name",
-      "enum": ["ParticleVanilla", "ParticleModel", "ParticleBasicGravity", "ParticleDebris"]
+      "enum": ["ParticleVanilla", "ParticleModel", "ParticleRibbon", "ParticleBeam", "ParticleGlow", "ParticleLightning"]
     },
     "models": {
       "type": "array",

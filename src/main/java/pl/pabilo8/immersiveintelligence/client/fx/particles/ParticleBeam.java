@@ -17,14 +17,17 @@ import javax.vecmath.Vector3f;
 /**
  * Draws a four-sided beam between POSITION and STRETCH.
  * SIZE controls the start diameter and SCALE controls the end diameter.
+ * COLOR fades to COLOR_SECONDARY along the beam.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 16.09.2026
  * @since 09.09.2026
  */
 public class ParticleBeam extends ParticleVanilla
 {
 	private Vector3f endPoint = new Vector3f(1, 1, 1);
 	private TextureAtlasSprite[] beamSprites = new TextureAtlasSprite[0];
+	private IIColor secondaryColor = IIColor.ALPHA;
 
 	public ParticleBeam(World world, Vec3d pos)
 	{
@@ -49,6 +52,8 @@ public class ParticleBeam extends ParticleVanilla
 	{
 		if(key==ParticleProperties.STRETCH)
 			return endPoint;
+		if(key==ParticleProperties.COLOR_SECONDARY)
+			return secondaryColor;
 		return super.getProperty(key);
 	}
 
@@ -57,6 +62,8 @@ public class ParticleBeam extends ParticleVanilla
 	{
 		if(key==ParticleProperties.STRETCH)
 			endPoint = new Vector3f((Vector3f)value);
+		else if(key==ParticleProperties.COLOR_SECONDARY)
+			secondaryColor = (IIColor)value;
 		else
 			super.setProperty(key, value);
 	}
@@ -113,10 +120,12 @@ public class ParticleBeam extends ParticleVanilla
 			double endRadius = MathHelper.clampedLerp(startDiameter, endDiameter, endProgress)*0.5d;
 			Vec3d[] startCorners = getCorners(segmentStart, side1, side2, startRadius);
 			Vec3d[] endCorners = getCorners(segmentEnd, side1, side2, endRadius);
+			IIColor startColor = color.mixedWith(secondaryColor, (float)startProgress);
+			IIColor endColor = color.mixedWith(secondaryColor, (float)endProgress);
 
 			for(int face = 0; face < 4; face++)
 				addFace(buffer, startCorners[face], endCorners[face], endCorners[(face+1)%4],
-						startCorners[(face+1)%4], texture, color, lightU, lightV);
+						startCorners[(face+1)%4], texture, startColor, endColor, lightU, lightV);
 		}
 	}
 
@@ -133,12 +142,13 @@ public class ParticleBeam extends ParticleVanilla
 	}
 
 	private void addFace(BufferBuilder buffer, Vec3d a, Vec3d b, Vec3d c, Vec3d d,
-						 TextureAtlasSprite texture, IIColor color, int lightU, int lightV)
+						 TextureAtlasSprite texture, IIColor startColor, IIColor endColor,
+						 int lightU, int lightV)
 	{
-		addVertex(buffer, a, texture.getMinU(), texture.getMinV(), color, lightU, lightV);
-		addVertex(buffer, b, texture.getMinU(), texture.getMaxV(), color, lightU, lightV);
-		addVertex(buffer, c, texture.getMaxU(), texture.getMaxV(), color, lightU, lightV);
-		addVertex(buffer, d, texture.getMaxU(), texture.getMinV(), color, lightU, lightV);
+		addVertex(buffer, a, texture.getMinU(), texture.getMinV(), startColor, lightU, lightV);
+		addVertex(buffer, b, texture.getMinU(), texture.getMaxV(), endColor, lightU, lightV);
+		addVertex(buffer, c, texture.getMaxU(), texture.getMaxV(), endColor, lightU, lightV);
+		addVertex(buffer, d, texture.getMaxU(), texture.getMinV(), startColor, lightU, lightV);
 	}
 
 	private void addVertex(BufferBuilder buffer, Vec3d point, float u, float v, IIColor color, int lightU, int lightV)

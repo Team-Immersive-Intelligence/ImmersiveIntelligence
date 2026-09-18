@@ -3462,6 +3462,10 @@ ii.gui.flagpole.faction=Faction Management
 ii.gui.radar.map=Radar Display
 ii.gui.radar.configuration=Configuration
 ii.gui.radar.targets=Targets
+ii.gui.radar.config.reacts_redstone=React to Redstone
+ii.gui.radar.config.reacts_redstone.tooltip=When enabled, the Radar operates only while it receives redstone.
+ii.gui.radar.config.data_output=Data Output
+ii.gui.radar.config.data_output.tooltip=Send filtered visible contacts through the Radar data port.
 
 ii.gui.emplacement.platform_inventory=Platform Inventory
 ii.gui.emplacement.base_inventory=Base Inventory

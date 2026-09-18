@@ -1,9 +1,12 @@
-package pl.pabilo8.immersiveintelligence.client.gui.block.emplacement;
+package pl.pabilo8.immersiveintelligence.client.gui.deco.tree.target;
 
+import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
+import blusunrize.immersiveengineering.common.util.inventory.IIEInventory;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTileGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoCheckbox;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoSwitch;
@@ -17,30 +20,28 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPane
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.DecoTextField;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.util.TextFilter;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.tree.TreeLayout.Orientation;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.tree.target.TargetDecisionTreeNodeRenderer;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.tree.target.TargetDecisionTreeWrapper;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTemplates;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.task.target.*;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.task.target.filter.*;
-import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomaticStatus;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
+import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIITileBase;
 
 import javax.annotation.Nullable;
 import java.util.*;
 
 /**
- * Edits Emplacement target-tree presets and synchronizes each valid change.
+ * Provides a shared target decision-tree editor for target-detecting devices.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 08.09.2026
- * @since 16.07.2021
+ * @since 16.09.2026
  */
-@DecoTemplate(name = "emplacement_target_filters", category = DecoGuiCategory.TERRITORY_CONTROL_TILE)
-public class GuiEmplacementPageTargetFilters extends GuiEmplacement
+public abstract class GuiTargetDecisionTree<T extends TileEntityIEBase & IIEInventory, C extends ContainerIITileBase<T>>
+		extends DecoTileGui<T, C>
 {
 	private static final String TREE_KEY = "ii.gui.emplacement.target_tree.";
 	private static final String PRESET_KEY = "ii.gui.emplacement.target_preset.";
@@ -62,21 +63,19 @@ public class GuiEmplacementPageTargetFilters extends GuiEmplacement
 	private DecoPanel topBar, treePanel, editorPanel;
 	private DecoCheckbox currentTaskCheckbox;
 
-	public GuiEmplacementPageTargetFilters(EntityPlayer player, TileEntityEmplacement tile)
+	protected GuiTargetDecisionTree(EntityPlayer player, T tile, IIGUI gui,
+									@Nullable TargetConfiguration initialConfiguration)
 	{
-		super(player, tile, IIGUI.EMPLACEMENT_TARGET_FILTERS);
-		if(tile!=null)
-		{
-			configuration = tile.taskManager.copyTargetConfiguration();
-			openedConfiguration = configuration.copy();
-			selectedPreset = preferredPreset(configuration);
-		}
+		super(player, tile, gui);
+		configuration = initialConfiguration==null?TargetConfiguration.createDefault(): initialConfiguration.copy();
+		openedConfiguration = configuration.copy();
+		selectedPreset = preferredPreset(configuration);
 	}
 
 	@Override
 	public void onInit()
 	{
-		super.onInit();
+		initTargetEditorGui();
 		if(configuration==null)
 		{
 			configuration = TargetConfiguration.createDefault();
@@ -393,7 +392,7 @@ public class GuiEmplacementPageTargetFilters extends GuiEmplacement
 	}
 
 	private void addStringDropdown(int y, String labelKey, List<String> entries, String selected,
-	                               java.util.function.Consumer<String> onSelected)
+								   java.util.function.Consumer<String> onSelected)
 	{
 		editorPanel.addLabel(labelKey, 4, y).withSize(44, 14).withAlign(DecoAlignment.LEFT);
 		editorPanel.addComponent(new DecoDropdown<String>(48, y)
@@ -457,7 +456,7 @@ public class GuiEmplacementPageTargetFilters extends GuiEmplacement
 				.withFilter(TextFilter.FLOAT)
 				.withText(numeric.getValue())
 				.withOnTextChanged(text -> {
-					numeric.setValue(parseDouble(text, numeric.getValue()));
+					numeric.setValue(IIMath.getDouble(text, numeric.getValue()));
 					saveTargetConfiguration();
 				}));
 	}
@@ -580,8 +579,7 @@ public class GuiEmplacementPageTargetFilters extends GuiEmplacement
 	{
 		if(!configuration.isValid())
 			return;
-		IIPacketHandler.sendToServer(new MessageIITileSync(tile, EasyNBT.newNBT()
-				.withTag("tasks", tile.taskManager.createTargetConfigurationUpdate(configuration))));
+		sendTargetConfigurationUpdate(configuration);
 	}
 
 	@Override
@@ -637,24 +635,14 @@ public class GuiEmplacementPageTargetFilters extends GuiEmplacement
 		return new ArrayList<>(namespaces);
 	}
 
+	protected abstract void initTargetEditorGui();
+
+	protected abstract void sendTargetConfigurationUpdate(TargetConfiguration configuration);
+
 	@Nullable
 	private static TargetDecisionTreePreset preferredPreset(TargetConfiguration configuration)
 	{
 		TargetDecisionTreePreset active = configuration.getActivePreset();
 		return active!=null?active: configuration.getPresets().isEmpty()?null: configuration.getPresets().get(0);
-	}
-
-	private static double parseDouble(String text, double fallback)
-	{
-		if(!TextFilter.FLOAT.isValid(text))
-			return fallback;
-		try
-		{
-			double value = Double.parseDouble(text);
-			return Double.isNaN(value)||Double.isInfinite(value)?fallback: value;
-		} catch(NumberFormatException ignored)
-		{
-			return fallback;
-		}
 	}
 }

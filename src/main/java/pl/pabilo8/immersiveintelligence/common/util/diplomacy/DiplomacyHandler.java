@@ -40,6 +40,7 @@ import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Factions
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
 import pl.pabilo8.immersiveintelligence.common.IISaveData;
+import pl.pabilo8.immersiveintelligence.common.entity.tactile.EntityTactileLivingBase;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageDiplomacySync;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIIChunkClaimData;
@@ -509,6 +510,9 @@ public class DiplomacyHandler
 	@Nonnull
 	public OwnerIdentity getOwnerIdentityForEntity(EntityLivingBase player)
 	{
+		if(player instanceof EntityTactileLivingBase)
+			return ((EntityTactileLivingBase)player).getOwnerIdentity();
+
 		if(!isRemote&&player instanceof EntityPlayer&&!playerInfos.containsKey(player.getUniqueID()))
 			updatePlayerInfo(new PlayerInfo(player));
 

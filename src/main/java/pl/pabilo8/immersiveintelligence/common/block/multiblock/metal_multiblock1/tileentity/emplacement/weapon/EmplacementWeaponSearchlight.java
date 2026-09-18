@@ -2,11 +2,13 @@ package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multibloc
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPanel;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.Searchlight;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
 
 import java.util.Map;
 import java.util.WeakHashMap;
@@ -24,7 +26,8 @@ public class EmplacementWeaponSearchlight extends EmplacementWeaponLightBase
 
 	public EmplacementWeaponSearchlight()
 	{
-
+		super();
+		this.setup = new MultiblockInteractablePart(20);
 	}
 
 	@Override
@@ -119,5 +122,10 @@ public class EmplacementWeaponSearchlight extends EmplacementWeaponLightBase
 	{
 		private long tick = Long.MIN_VALUE;
 		private int count;
+	}
+
+	protected Vec3d getAimOrigin(TileEntityEmplacement te)
+	{
+		return super.getAimOrigin(te).addVector(0, 1.4375, 0);
 	}
 }

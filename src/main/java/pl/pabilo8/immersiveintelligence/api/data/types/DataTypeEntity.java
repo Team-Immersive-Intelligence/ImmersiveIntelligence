@@ -121,6 +121,6 @@ public class DataTypeEntity extends DataType
 	@Override
 	public String toString()
 	{
-		return actualValueToNBT(new NBTTagCompound()).toString();
+		return "Entity("+entityClass+")";
 	}
 }

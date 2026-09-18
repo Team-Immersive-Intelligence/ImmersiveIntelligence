@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon;
 
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPanel;
@@ -105,5 +106,10 @@ public class EmplacementWeaponSpotlightTower extends EmplacementWeaponLightBase
 	protected boolean canTrackTarget(TileEntityEmplacement te)
 	{
 		return true;
+	}
+
+	protected Vec3d getAimOrigin(TileEntityEmplacement te)
+	{
+		return super.getAimOrigin(te).addVector(0, 7.125, 0);
 	}
 }

@@ -783,6 +783,86 @@
         }
       ]
     },
+    "magazine4": {
+      "scale": [
+        {
+          "time": 0,
+          "transform": [1, 1, 1]
+        },
+        {
+          "time": 0.08757,
+          "transform": [1, 1, 1]
+        },
+        {
+          "time": 0.09887,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "magazine3": {
+      "scale": [
+        {
+          "time": 0,
+          "transform": [1, 1, 1]
+        },
+        {
+          "time": 0.24294,
+          "transform": [1, 1, 1]
+        },
+        {
+          "time": 0.25424,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "magazine2": {
+      "scale": [
+        {
+          "time": 0,
+          "transform": [1, 1, 1]
+        },
+        {
+          "time": 0.44068,
+          "transform": [1, 1, 1]
+        },
+        {
+          "time": 0.45763,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "magazine1": {
+      "scale": [
+        {
+          "time": 0,
+          "transform": [1, 1, 1]
+        },
+        {
+          "time": 0.68644,
+          "transform": [1, 1, 1]
+        },
+        {
+          "time": 0.71186,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
     "magazine5": {
       "rotation": [
         {

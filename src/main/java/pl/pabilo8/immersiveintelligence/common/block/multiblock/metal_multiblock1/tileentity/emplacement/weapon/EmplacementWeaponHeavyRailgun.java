@@ -6,7 +6,6 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIRailgunOverride;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
 
 /**
  * Implements the four-round Heavy Railgun Emplacement weapon.
@@ -19,7 +18,7 @@ public class EmplacementWeaponHeavyRailgun extends EmplacementWeaponGunBase<Enti
 {
 	public EmplacementWeaponHeavyRailgun()
 	{
-		this.setup = new MultiblockInteractablePart(HeavyRailgun.setupTime);
+
 	}
 
 	@Override

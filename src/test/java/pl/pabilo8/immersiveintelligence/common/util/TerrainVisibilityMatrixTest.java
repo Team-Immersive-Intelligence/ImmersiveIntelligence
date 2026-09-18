@@ -7,14 +7,14 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Verifies lazy terrain line-of-sight caching.
@@ -46,5 +46,28 @@ class TerrainVisibilityMatrixTest
 		matrix.update(world, origin, bounds);
 		assertFalse(matrix.isVisible(target));
 		assertTrue(matrix.isVisible(new Vec3d(2.25d, 0.5d, 0.5d)));
+	}
+
+	@Test
+	void ignoredPositionsRemainTransparentAndFormPartOfTheConfiguration()
+	{
+		World world = mock(World.class);
+		IBlockState opaque = mock(IBlockState.class);
+		when(world.isBlockLoaded(any(BlockPos.class))).thenReturn(true);
+		when(world.getBlockState(any(BlockPos.class))).thenReturn(opaque);
+		when(opaque.isOpaqueCube()).thenReturn(true);
+
+		TerrainVisibilityMatrix matrix = new TerrainVisibilityMatrix();
+		Vec3d origin = new Vec3d(0.5d, 0.5d, 0.5d);
+		AxisAlignedBB bounds = new AxisAlignedBB(-8, -8, -8, 8, 8, 8);
+		BlockPos ignored = new BlockPos(1, 0, 0);
+		matrix.update(world, origin, bounds, Collections.singleton(ignored));
+
+		assertTrue(matrix.isVisible(new Vec3d(2.25d, 0.5d, 0.5d)));
+		assertFalse(matrix.isVisible(new Vec3d(3.25d, 0.5d, 0.5d)),
+				"opaque positions outside the ignore set must still block visibility");
+		assertTrue(matrix.isConfiguredFor(world, origin, bounds, Collections.singleton(ignored)));
+		assertFalse(matrix.isConfiguredFor(world, origin, bounds, Collections.emptySet()));
+		verify(world, never()).getBlockState(ignored);
 	}
 }
