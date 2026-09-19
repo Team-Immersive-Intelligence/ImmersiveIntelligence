@@ -20,6 +20,7 @@ dependencies {
 	compileOnly rfg.deobf("curse.maven:mysticalmechanics-300742:${mkxString('mysticalmechanics_version')}")
 	compileOnly rfg.deobf("curse.maven:bwm-suite-246760:${mkxString('bwm_suite_version')}")
 	compileOnly rfg.deobf("com.github.jbredwards:fluidlogged-api:${mkxString('fluidlogged_api_version')}")
+	compileOnly rfg.deobf("curse.maven:scape-and-run-parasites-348025:8787918")
 
 	//IE addons
 	implementation rfg.deobf("curse.maven:immersive-petroleum-268250:${mkxString('immersive_petroleum_version')}")

@@ -50,6 +50,11 @@ public class IIConfigHandler
 		}
 	}
 
+	public static void onOtherConfigChanged(ConfigChangedEvent.PostConfigChangedEvent event)
+	{
+		IICompatModule.doModulesOnConfigChange(event.getModID(), event.getConfigID(), event.isRequiresMcRestart(), event.isWorldRunning());
+	}
+
 	public static void onConfigUpdate()
 	{
 		ItemIIMineDetector.detectableBlocks.clear();
