@@ -22,9 +22,13 @@ import net.minecraft.client.model.ModelBiped.ArmPose;
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.GlStateManager.DestFactor;
 import net.minecraft.client.renderer.GlStateManager.FogMode;
+import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.entity.Entity;
@@ -37,6 +41,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumHandSide;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
@@ -123,6 +128,7 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradeableArmor;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IAdvancedBounds;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -403,6 +409,39 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 
 		if(positions.length > 0)
 			IIClientUtils.drawBlockBreak(world, event.getPartialTicks(), positions);
+
+		//Draw selection boxes for IAdvancedBounds
+		if(event.getSubID()==0&&event.getTarget().typeOfHit==Type.BLOCK)
+		{
+			float f1 = 0.002F;
+			double px = -TileEntityRendererDispatcher.staticPlayerX;
+			double py = -TileEntityRendererDispatcher.staticPlayerY;
+			double pz = -TileEntityRendererDispatcher.staticPlayerZ;
+			TileEntity tile = event.getPlayer().world.getTileEntity(event.getTarget().getBlockPos());
+			ItemStack stack = event.getPlayer().getHeldItem(EnumHand.MAIN_HAND);
+			if(tile instanceof IAdvancedBounds iasb)
+			{
+				List<AxisAlignedBB> boxes = iasb.getSelectionBounds();
+				if(boxes!=null&&!boxes.isEmpty())
+				{
+					GlStateManager.enableBlend();
+					GlStateManager.tryBlendFuncSeparate(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ONE, DestFactor.ZERO);
+					GlStateManager.glLineWidth(2.0F);
+					GlStateManager.disableTexture2D();
+					GlStateManager.depthMask(false);
+
+					//Draw the boxes
+					for(AxisAlignedBB aabb : boxes)
+						RenderGlobal.drawSelectionBoundingBox(aabb.grow(f1).offset(px, py, pz), 0, 0, 0, 0.4f);
+
+					GlStateManager.depthMask(true);
+					GlStateManager.enableTexture2D();
+					GlStateManager.disableBlend();
+					event.setCanceled(true);
+				}
+			}
+
+		}
 	}
 
 	@SubscribeEvent()

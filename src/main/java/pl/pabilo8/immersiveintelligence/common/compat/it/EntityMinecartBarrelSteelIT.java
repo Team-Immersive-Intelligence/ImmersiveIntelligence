@@ -1,6 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.compat.it;
 
-import mctmods.immersivetechnology.common.Config.ITConfig.Barrels;
+import mctmods.immersivetechnology.common.Config.ITConfig.Blocks;
 import mctmods.immersivetechnology.common.ITContent;
 import mctmods.immersivetechnology.common.blocks.metal.types.BlockType_MetalBarrel;
 import net.minecraft.block.Block;
@@ -52,7 +52,7 @@ public class EntityMinecartBarrelSteelIT extends EntityMinecartFluidContainer im
 	@Override
 	public int getTankCapacity()
 	{
-		return Barrels.barrel_steel_tankSize;
+		return Blocks.barrels.barrel_steel_tankSize;
 	}
 
 

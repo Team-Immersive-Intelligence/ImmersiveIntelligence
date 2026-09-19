@@ -60,10 +60,7 @@ import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IITileProviderEnum;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemUtils;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IConstructionRequiringDevice;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IDamageResistantMultiblock;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IExplosionResistantMultiblock;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.ILadderMultiblock;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.*;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIBase;
 
 import javax.annotation.Nullable;
@@ -81,8 +78,8 @@ public abstract class BlockIITileProvider<E extends Enum<E> & IITileProviderEnum
 	private boolean hasConnections = false;
 
 	public BlockIITileProvider(String name, Material material, PropertyEnum<E> mainProperty,
-	                           Function<BlockIIBase<E>, ItemBlockIIBase> itemBlock,
-	                           Object... additionalProperties)
+							   Function<BlockIIBase<E>, ItemBlockIIBase> itemBlock,
+							   Object... additionalProperties)
 	{
 		super(name, mainProperty, material, itemBlock, additionalProperties);
 
@@ -198,7 +195,7 @@ public abstract class BlockIITileProvider<E extends Enum<E> & IITileProviderEnum
 	{
 		if(tiles[type.ordinal()]!=null)
 			try {return tiles[type.ordinal()].newInstance();} catch(InstantiationException|
-			                                                        IllegalAccessException ignored) {}
+																	IllegalAccessException ignored) {}
 		return null;
 	}
 
@@ -671,9 +668,9 @@ public abstract class BlockIITileProvider<E extends Enum<E> & IITileProviderEnum
 	public void addCollisionBoxToList(IBlockState state, World world, BlockPos pos, AxisAlignedBB mask, List<AxisAlignedBB> list, @Nullable Entity ent, boolean isActualState)
 	{
 		TileEntity te = world.getTileEntity(pos);
-		if(te instanceof IAdvancedCollisionBounds)
+		if(te instanceof IAdvancedBounds)
 		{
-			List<AxisAlignedBB> bounds = ((IAdvancedCollisionBounds)te).getAdvancedColisionBounds();
+			List<AxisAlignedBB> bounds = ((IAdvancedBounds)te).getColisionBounds();
 			if(bounds!=null&&!bounds.isEmpty())
 			{
 				for(AxisAlignedBB aabb : bounds)
@@ -692,9 +689,9 @@ public abstract class BlockIITileProvider<E extends Enum<E> & IITileProviderEnum
 	public RayTraceResult collisionRayTrace(IBlockState state, World world, BlockPos pos, Vec3d start, Vec3d end)
 	{
 		TileEntity te = world.getTileEntity(pos);
-		if(te instanceof IAdvancedSelectionBounds)
+		if(te instanceof IAdvancedBounds)
 		{
-			List<AxisAlignedBB> list = ((IAdvancedSelectionBounds)te).getAdvancedSelectionBounds();
+			List<AxisAlignedBB> list = ((IAdvancedBounds)te).getSelectionBounds();
 			if(list!=null&&!list.isEmpty())
 			{
 				RayTraceResult min = null;

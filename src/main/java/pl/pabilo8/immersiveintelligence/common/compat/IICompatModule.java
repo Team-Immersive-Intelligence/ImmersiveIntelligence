@@ -46,7 +46,7 @@ public abstract class IICompatModule
 		moduleClasses.put("immersivepetroleum", ImmersivePetroleumHelper.class);
 		moduleClasses.put("immersiveposts", ImmersivePostsHelper.class);
 		moduleClasses.put("immersivetech", ImmersiveTechnologyHelper.class);
-		moduleMinModVersions.put("immersivetech", "1.7.50");
+		moduleMinModVersions.put("immersivetech", "1.11.211");
 		//it is the only IE addon which has a _ between words
 		moduleClasses.put("immersive_energy", ImmersiveEnergyHelper.class);
 		moduleClasses.put("baubles", BaublesHelper.class);
