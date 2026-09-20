@@ -1,4 +1,4 @@
-#Над переводом работали: Королевский кот (Передаю привет вискасу и тапкам. МЯУ!) старый переводчик. Magistr Djo нынешний и основной переводчик (третий год уже пошёл), а также: Carver, Lolscope, MonsieurFeb, MrKoteo
+#Над переводом работали: Королевский кот (Передаю привет вискасу и тапкам. МЯУ!) старый переводчик. Magistr Djo нынешний и основной переводчик (третий год уже пошёл), а также: Carver, Lolscope, MonsieurFeb, MrKoteo и многие другие.
 #Items
 itemGroup.immersiveintelligence=Immersive Intelligence
 itemGroup.ii.resources=Ресурсы
@@ -128,9 +128,9 @@ item.immersiveintelligence.material_nugget.rubber.name=Кусочек резин
 item.immersiveintelligence.material_wire.tungsten.name=Вольфрамовый провод
 item.immersiveintelligence.material_wire.brass.name=Латунный провод
 
-item.immersiveintelligence.material_gem.fluorite.name=Незерский флюорит
+item.immersiveintelligence.material_gem.fluorite.name=Флюорит
 #Based on real-life mineral glauconite, though the word phosphorus is easier to remember
-item.immersiveintelligence.material_gem.phosphorus.name=Незерский фосфор
+item.immersiveintelligence.material_gem.phosphorus.name=Фосфор
 
 item.immersiveintelligence.material_boule.silicon.name=Кремниевая буля
 
@@ -946,6 +946,12 @@ subtitle.immersiveintelligence.motor_belt=Приводной ремень про
 subtitle.immersiveintelligence.track_break=Металлическая гусеница сломалась
 subtitle.immersiveintelligence.track=Металлическая гусеница проворачивается
 
+subtitle.immersiveintelligence.heavy_railgun_shot=Тяжёлый рельсотрон стреляет
+subtitle.immersiveintelligence.heavy_railgun_shot_distant=Тяжёлый рельсотрон стреляет вдалеке
+
+subtitle.immersiveintelligence.missile_shot=ПТУР стреляет
+subtitle.immersiveintelligence.missile_shot_distant=ПТУР стреляет вдалеке
+
 subtitle.immersiveintelligence.autocannon_shot=Автопушка стреляет
 subtitle.immersiveintelligence.autocannon_shot_distant=Автопушка стреляет вдалеке
 subtitle.immersiveintelligence.autocannon_reload=Автопушка перезаряжается
@@ -1118,7 +1124,7 @@ machineupgrade.immersiveintelligence.emplacement.autocannon=Автоматиче
 machineupgrade.immersiveintelligence.emplacement.autocannon.desc=Четыре автоматические пушки 3 bCal обеспечивают большую огневую мощь, что делает это оружие универсальным средством защиты от воздушных и наземных целей.
 machineupgrade.immersiveintelligence.emplacement.heavy_chemthrower=Тяжёлый жидкомёт
 machineupgrade.immersiveintelligence.emplacement.heavy_chemthrower.desc=Более тяжелая версия хорошо известного химического жидкомёта с более высоким давлением позволяет атаковать врагов на расстоянии в 4 раза большем, чем у портативного.
-machineupgrade.immersiveintelligence.emplacement.heavy_railgun=Тяжёлый Рельсотрон
+machineupgrade.immersiveintelligence.emplacement.heavy_railgun=Тяжёлый рельсотрон
 machineupgrade.immersiveintelligence.emplacement.heavy_railgun.desc=Тяжелый рельсотрон обеспечивает прямую огневую поддержку. Он может запускать металлические стержни или гранаты с высокой скоростью, что позволяет пробивать врагов и боевую технику.
 
 machineupgrade.immersiveintelligence.emplacement.machinegun=Пулемётное гнездо
@@ -1448,9 +1454,9 @@ desc.immersiveintelligence.diplomacy.law_form.commune.tier2=Коммуна
 desc.immersiveintelligence.diplomacy.law_form.commune.tier2_long=Более крупная группа, объединяющая землю, инструменты и производство для общего блага.
 desc.immersiveintelligence.diplomacy.law_form.commune.tier3=Союз коммун
 desc.immersiveintelligence.diplomacy.law_form.commune.tier3_long=Многочисленные коллективы объединились в знак солидарности и взаимной поддержки.
-desc.immersiveintelligence.diplomacy.law_form.commune.tier4=Союз народных коммун
+desc.immersiveintelligence.diplomacy.law_form.commune.tier4=Федерация народных коммун
 desc.immersiveintelligence.diplomacy.law_form.commune.tier4_long=Широкая сеть коммун, объединяющая различные отрасли промышленности.
-desc.immersiveintelligence.diplomacy.law_form.commune.tier5=Коминтерн
+desc.immersiveintelligence.diplomacy.law_form.commune.tier5=Союз федераций народных коммун
 desc.immersiveintelligence.diplomacy.law_form.commune.tier5_long=Растущее общество, полностью основанное на коллективной собственности и принятии решений.
 #Commissariat Фашисты
 desc.immersiveintelligence.diplomacy.law_form.commisariat=Комиссариат
@@ -3483,7 +3489,7 @@ ii.gui.data_input_machine.memory.page.tooltip=Позволяет выбрать 
 ii.gui.arithmetic_logic_machine.storage=Хранилище печатных плат
 ii.gui.arithmetic_logic_machine.memory.transfer=Редактор правил доступа к памяти
 ii.gui.arithmetic_logic_machine.memory.into=в
-ii.gui.arithmetic_logic_machine.memory.mode.overwrite=(перезаписать)
+ii.gui.arithmetic_logic_machine.memory.mode.overwrite=(Перезаписать)
 ii.gui.arithmetic_logic_machine.memory.mode.supplement=(Supplement)
 ii.gui.arithmetic_logic_machine.memory.load_rule_properties=Загрузить из памяти
 ii.gui.arithmetic_logic_machine.memory.save_rule_properties=Загрузить в памяти
@@ -3587,7 +3593,7 @@ ii.gui.faction_invitation=Фракция
 ii.gui.faction_invitation.invalid=Не удалось получить данные о фракции. Пожалуйста, закройте и откройте этот экран снова.
 ii.gui.faction_invitation.current=Текущее состояние
 ii.gui.faction_invitation.current.alone=%s является владельцем фракции.
-#[Name] is [Rank] of [Faction], e.g. Pabilo8 is Owner of Pabulograd и Magistr Djo владелец перевод
+#[Name] is [Rank] of [Faction], e.g. Pabilo8 is Owner of Pabulograd и Magistr Djo Владелец Перевод
 ii.gui.faction_invitation.current.faction=%s %s %s
 ii.gui.faction_invitation.invitations=Приглашения фракций
 ii.gui.faction_invitation.invitations.none=Нет ожидающих приглашений 
@@ -3645,7 +3651,7 @@ ii.gui.projectile_workshop.tooltip.component_effect_shape=Component Effect Shape
 ii.gui.projectile_workshop.tooltip.component_efficiency=Модификатор эффективности компонентов
 ii.gui.projectile_workshop.tooltip.component_efficiency.line1=Determines potency.
 ii.gui.projectile_workshop.tooltip.component_efficiency.line2=Отвечает за взрывную силу, концентрацию химических газов.
-ii.gui.projectile_workshop.tooltip.component_size=Component Size Multiplier
+ii.gui.projectile_workshop.tooltip.component_size=Коэффициент размера компонента
 ii.gui.projectile_workshop.tooltip.component_size.line1=Определяет объем компонента, отвечающий за радиус взрыва, коэффициент дальности распространения газа.
 ii.gui.projectile_workshop.tooltip.core_mass=Масса сердечника
 ii.gui.projectile_workshop.tooltip.damage_dealt=Наносимый урон
@@ -3664,9 +3670,9 @@ ii.gui.ammunition_assembler.fuse_config.timed.tooltip=Время до сраба
 ii.gui.ammunition_assembler.fuse_config.proximity=Дистанция:
 ii.gui.ammunition_assembler.fuse_config.proximity.tooltip=Необходимое расстояние до твердого поверхности для приведения в действие взрывателя (в блоках)
 
-ii.gui.data_router.into=Into side: %s
+ii.gui.data_router.into=Входная сторона: %s
 ii.gui.data_router.rule_editor=Data Routing Rule
-ii.gui.data_router.rule_properties=Rule Properties
+ii.gui.data_router.rule_properties=Правило разрешений
 ii.gui.data_router.routing=Routing
 ii.gui.data_router.packet_filters=Фильтры пакетов
 ii.gui.data_router.incoming=Входы:
@@ -3732,10 +3738,10 @@ ii.gui_tooltip.button.remove=Удалить
 ii.gui_tooltip.button.edit=Изменить
 ii.gui_tooltip.button.duplicate=Дублировать
 ii.gui_tooltip.button.clear=Очистить
-ii.gui_tooltip.button.accept=Accept
-ii.gui_tooltip.button.reject=Reject
-ii.gui_tooltip.button.help=Show Help
-ii.gui_tooltip.button.factions=Factions
+ii.gui_tooltip.button.accept=Принять
+ii.gui_tooltip.button.reject=Отклонить
+ii.gui_tooltip.button.help=Показать подсказку
+ii.gui_tooltip.button.factions=Фракции
 
 #GUI Widgets
 ii.gui_tooltip.widget.style.show=Показывать кастомизацию
@@ -3814,7 +3820,7 @@ ie.manual.entry.bullet_core.core_netherite.desc=Ancient debris is what remains o
 
 item.immersiveintelligence.bullet.component.nether_fire.name=Адский огонь
 ie.manual.entry.bullet_component.nether_fire=Адский огонь
-ie.manual.entry.bullet_component.nether_fire.lore=This "prison"... to contain ME?
+ie.manual.entry.bullet_component.nether_fire.lore=Эта "тюрьма"... для МЕНЯ?
 ie.manual.entry.bullet_component.nether_fire.desc=A fire of infernal origins,  it is a permanent, non-spreading fire that deals higher damage than normal fire and keeps on burning when it should not.
 
 # Deeper Depths Compat
