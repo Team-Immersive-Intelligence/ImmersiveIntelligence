@@ -1341,6 +1341,45 @@ desc.immersiveintelligence.variable_apply=Apply
 desc.immersiveintelligence.variable_remove=Remove
 desc.immersiveintelligence.no_editor=No editor available.
 
+desc.immersiveintelligence.diplomacy.rolename.owner=Owner
+desc.immersiveintelligence.diplomacy.rolename.trusted=Trusted
+
+desc.immersiveintelligence.diplomacy.rolename.member=Member
+desc.immersiveintelligence.diplomacy.rolename.citizen=Citizen
+
+desc.immersiveintelligence.diplomacy.rolename.ceo=CEO
+desc.immersiveintelligence.diplomacy.rolename.cfo=CFO
+desc.immersiveintelligence.diplomacy.rolename.shareholder=Shareholder
+desc.immersiveintelligence.diplomacy.rolename.manager=Manager
+desc.immersiveintelligence.diplomacy.rolename.employee=Employee
+
+desc.immersiveintelligence.diplomacy.rolename.president=President
+desc.immersiveintelligence.diplomacy.rolename.minister=Minister
+desc.immersiveintelligence.diplomacy.rolename.representative=Representative
+#desc.immersiveintelligence.diplomacy.rolename.citizen=
+
+#desc.immersiveintelligence.diplomacy.rolename.member=
+
+desc.immersiveintelligence.diplomacy.rolename.supreme_commissar=Supreme Commissar
+desc.immersiveintelligence.diplomacy.rolename.comissar=Commissar
+desc.immersiveintelligence.diplomacy.rolename.officer=Officer
+desc.immersiveintelligence.diplomacy.rolename.enforcer=Enforcer
+#desc.immersiveintelligence.diplomacy.rolename.citizen=
+desc.immersiveintelligence.diplomacy.rolename.sub_citizen=Second-Class Citizen
+
+desc.immersiveintelligence.diplomacy.rolename.mayor=Mayor
+desc.immersiveintelligence.diplomacy.rolename.councilor_industry=Councilor of Industry
+desc.immersiveintelligence.diplomacy.rolename.councilor_agriculture=Councilor of Agriculture
+desc.immersiveintelligence.diplomacy.rolename.councilor_trade=Councilor of Trade
+desc.immersiveintelligence.diplomacy.rolename.councilor_logistics=Councilor of Logistics
+desc.immersiveintelligence.diplomacy.rolename.councilor_military=Councilor of Military Affairs
+#desc.immersiveintelligence.diplomacy.rolename.citizen=
+
+desc.immersiveintelligence.diplomacy.rolename.ruler=Ruler
+desc.immersiveintelligence.diplomacy.rolename.heir=Heir
+desc.immersiveintelligence.diplomacy.rolename.noble=Noble
+desc.immersiveintelligence.diplomacy.rolename.commoner=Commoner
+
 desc.immersiveintelligence.diplomacy.ownedby=Property of %s
 desc.immersiveintelligence.diplomacy.noowner=Abandoned Property
 desc.immersiveintelligence.diplomacy.noowner_long=This property has no owner. It lies open to claim.
@@ -3060,6 +3099,7 @@ ie.manual.entry.traits.paintable=Paintable
 ie.manual.entry.wip_warning0=Warning! Work-in-Progress Content.
 ie.manual.entry.wip_warning1=The Engineering Department is working hard to bring it to the front!
 ie.manual.entry.wip_warning.upgrade=The feature may lack visuals or have no functionality, no not report this.
+ie.manual.entry.upgrade_notice=Upgrade applied using a wrench.
 
 ie.manual.entry.data_operation.inputs=Inputs
 ie.manual.entry.data_operation.output=Output
@@ -3442,7 +3482,7 @@ ii.gui.data_input_machine.memory.page.tooltip=Allows to select the memory page t
 ii.gui.arithmetic_logic_machine.storage=Circuit Storage
 ii.gui.arithmetic_logic_machine.memory.transfer=Memory Transfer Rule Editor
 ii.gui.arithmetic_logic_machine.memory.into=into
-ii.gui.arithmetic_logic_machine.memory.mode.overwrite=(Overwrite))
+ii.gui.arithmetic_logic_machine.memory.mode.overwrite=(Overwrite)
 ii.gui.arithmetic_logic_machine.memory.mode.supplement=(Supplement)
 ii.gui.arithmetic_logic_machine.memory.load_rule_properties=Load from Memory
 ii.gui.arithmetic_logic_machine.memory.save_rule_properties=Save into Memory
@@ -3833,7 +3873,7 @@ ii.gui_tooltip.widget.style.main=This %s does not allow customization.
 ii.gui_tooltip.widget.style.main.variants=This %s allows customization of style.
 ii.gui_tooltip.widget.style.main.color=This %s allows customization of color.
 ii.gui_tooltip.widget.style.main.variants.color=This %s allows customization of style and color.
-ii.gui_tooltip.widget.style.main.tile=nachine
+ii.gui_tooltip.widget.style.main.tile=machine
 ii.gui_tooltip.widget.style.main.multiblock=multiblock
 ii.gui_tooltip.widget.style.main.vehicle=vehicle
 ii.gui_tooltip.widget.style.main.entity=entity

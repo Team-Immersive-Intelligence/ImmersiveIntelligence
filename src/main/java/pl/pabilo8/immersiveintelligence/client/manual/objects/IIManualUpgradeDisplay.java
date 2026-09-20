@@ -57,7 +57,7 @@ public class IIManualUpgradeDisplay extends IIManualObject
 		ClientUtils.drawTexturedRect(x, y+2, 16, 16, sprite.getMinU(), sprite.getMaxU(), sprite.getMinV(), sprite.getMaxV());
 
 		manual.fontRenderer.setUnicodeFlag(true);
-		manual.fontRenderer.drawSplitString(TextFormatting.ITALIC+"Upgrade applied using a wrench.", x+18, y+2, 100, manual.getHighlightColour());
+		manual.fontRenderer.drawSplitString(TextFormatting.ITALIC+I18n.format("ie.manual.entry.upgrade_notice"), x+18, y+2, 100, manual.getHighlightColour());
 	}
 
 	@Override

@@ -10,7 +10,7 @@
 |[machine_recipe]{source:"recipe_belts"}|
 # production2
 Резину также можно вулканизировать в шины, обеспечивающие необходимую амортизацию для многих транспортных средств.
-|[machine_recipe]{source:"recipe_wheels"}|
+|[machine_recipe]{source:"recipe_tires"}|
 # molds
 Для работы вулканизатора необходима пресс-форма, от которой зависит конечный результат и потребление электроэнергии.
 |[crafting]{source:"vulcanizer_blueprint"}|

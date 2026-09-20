@@ -23,12 +23,12 @@
 Продвинутый манипулятор - улучшенная версия манипулятора, которая позволяет фильтровать и выбирать определенные предметы, а также позволяет брать\ставить ящики и бочки с\на вагонетки. Продвинутый манипуляторы работают намного быстрее, но требуют больше энергии.
 # advanced_commands
 **Input Variables:**<br>
-|[data_variable]{type:"string", direction:"вход", letter:"c", name:"Задание", description:"Возмонные значение: add, remove, and clear."}|
-|[data_variable]{type:"string", direction:"вход", letter:"a", name:"Тип задания", description:"Возмонные значение: item, block_place, form_minecart, into_minecart."}|
+|[data_variable]{type:"string", direction:"вход", letter:"c", name:"Задание", description:"Возможные значение: add, remove, and clear."}|
+|[data_variable]{type:"string", direction:"вход", letter:"a", name:"Тип задания", description:"Возможные значение: item, block_place, form_minecart, into_minecart."}|
 |[data_variable]{type:"itemstack", direction:"вход", letter:"s", name:"Стак", description:"Опционально. Itemstack или OreDict String, c которым предметы должны совпадать"}|
 # fluid_inserter
 |[crafting]{source:"inserter_fluid"}|
 Жидкостный манипулятор является точным ограничителем перемещения жидкости. В некоторых ситуациях требуется ввести только определенное количество жидкости. Это устройство выполняет именно эту функцию.
 # fluid_inserter_commands
-|[data_variable]{type:"string", direction:"вход", letter:"m", name:"Режим взятия жидкости", description:"Возмонные значение: set, add"}|
+|[data_variable]{type:"string", direction:"вход", letter:"m", name:"Режим взятия жидкости", description:"Возможные значение: set, add"}|
 |[data_variable]{type:"integer", direction:"вход", letter:"c", name:"Кол-во жидкости", description:"значение в миллибакетах (mB)"}|

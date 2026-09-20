@@ -20,6 +20,9 @@
 Преобразование будет выполнено корректно в случае, если это преобразование между **совместимыми типами** — двумя типами, хранящими информацию схожего типа, например, при преобразовании [Float](#float) в [Integer](#integer).
 |[data_packet]{data:{a:{Type:"float",Value:123}}}|  
 Этот механизм также является одной из основных концепций **строгой типизации**.
+# default_value4
+It is possible to convert between types using [Casting Operations](functions/type_conversion.md) in an [Arithmetic-Logic Machine](arithmetic_logic_machine.md) or a [Mainframe Computer], using the [Type Conversion Circuit](functions/_functional_circuits.md).
+|[data_operation]{id:"to_string"}|
 # data_overflow
 Каждый **тип** ограничен размером или длиной.
 Эта функция необходима для предотвращения [переполнения данных] — ситуации, когда тип занимает слишком много места и повреждает весь пакет.
@@ -64,6 +67,10 @@
 |[datatype]{type:"%SECTION%",x:52}|
 [Vector] — это [составной] тип данных, хранящий 3 числовых значения. Он может хранить [Integer](#integer), [Float](#float) или [их комбинацию].
 Он используется для представления значений в трехмерном пространстве, таких как положение или движение объектов.
+# logitag
+|[datatype]{type:"%SECTION%",x:52}|
+[LogiTag] представляет собой [составной] тип данных, хранящий информацию о [Логистическом запросе](../ii_logistics/task_system.md#logitags): как [имя], [описание], [право собствености], [origin], [destination], [color marker] and [порядковыйй номер].
+Он используется для идентификации грузовых контейнеров, таких как ящики.
 # entity
 |[datatype]{type:"%SECTION%",x:52}|
 [Entity] — это [составной] тип данных, который хранит информацию о конкретной внутриигровой [сущности]: её [имя], [ID], [позиция], [движение] и [данные NBT].
