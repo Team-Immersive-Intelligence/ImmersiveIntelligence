@@ -2,15 +2,41 @@
   "bounds": {
     "sandbags": [-15, -6, -15, 15, 6, 15],
     "gun": [-2, -2, -2, 2, 2, 2],
-    "turret": [-8, -4, -8, 8, 4, 8]
+    "turret": [-8, -4, -8, 8, 4, 8],
+    "locator": [0, 0, 0, 0, 0, 0]
   },
-  "tactile_offset": [0, 0, -0.5],
+  "tactile_transforms": {
+    "all": {
+      "offset": [-1.0, 0.0, -2.0]
+    },
+    "south": {},
+    "west": {},
+    "north": {},
+    "east": {},
+    "mirrored": {}
+  },
   "tactile": {
     "_schema": "immersiveintelligence:models/block/multiblock/emplacement/weapon/machinegun.obj.amt",
     "base": [
       {
         "offset": [15, 0, -1],
         "type": "sandbags"
+      }
+    ],
+    "turret_origin": [
+      {
+        "type": "locator"
+      }
+    ],
+    "turret": [
+      {
+        "offset": [0.5, 1.36518, -0.24498],
+        "type": "turret"
+      }
+    ],
+    "cannon_origin": [
+      {
+        "type": "locator"
       }
     ],
     "cannon": [
@@ -69,12 +95,6 @@
       {
         "offset": [0, 0, 15],
         "type": "gun"
-      }
-    ],
-    "turret": [
-      {
-        "offset": [0.5, 1.36518, -0.24498],
-        "type": "turret"
       }
     ]
   }

@@ -252,7 +252,7 @@ public class EntityMachinegun extends EntityMountedWeapon implements IAdvancedTe
 			//Check for buttons pressed
 			if(controls.getKey("fire"))
 				this.gunHandler.fire();
-			else if(loadingCrate==null&&controls.getKey("reload"))
+			else if(!upgrades.contains(WeaponUpgrade.BELT_FED_LOADER)&&controls.getKey("reload"))
 				this.gunHandler.startReloading();
 		}
 		else

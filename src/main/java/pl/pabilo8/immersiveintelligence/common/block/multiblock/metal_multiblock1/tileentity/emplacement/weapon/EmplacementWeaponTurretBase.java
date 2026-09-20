@@ -76,7 +76,7 @@ public abstract class EmplacementWeaponTurretBase extends EmplacementWeapon
 			setAimTargetAngles(te, getHidingYaw(), getHidingPitch());
 		updateAim(te);
 		if(te.tactileHandler!=null)
-			te.tactileHandler.update(rotateYawAnimation, aim.getYawNormalized(0),
+			te.tactileHandler.update(rotateYawAnimation, (aim.getYawNormalized(0)+0.5f)%1f,
 					rotatePitchAnimation, aim.getPitchNormalized(-90, 90, 0));
 
 		//The Base casing storage is stationary, so it can continue emptying while the platform operates.

@@ -232,6 +232,28 @@
     "data_input": 8,
     "energy_input": 50
   },
+  "tactile_transforms": {
+    "all": {
+      "offset": [0, 0, 0]
+    },
+    "south": {
+      "rotation": [0, 0, 0],
+      "flip_xz_size": false
+    },
+    "west": {
+      "rotation": [0, 90, 0],
+      "flip_xz_size": true
+    },
+    "north": {
+      "rotation": [0, 180, 0],
+      "flip_xz_size": false
+    },
+    "east": {
+      "rotation": [0, 270, 0],
+      "flip_xz_size": true
+    },
+    "mirrored": {}
+  },
   "tactile": {
     "_schema": "immersiveintelligence:models/block/multiblock/heavy_ammunition_assembler/tactile.obj.amt",
     "crane1": [

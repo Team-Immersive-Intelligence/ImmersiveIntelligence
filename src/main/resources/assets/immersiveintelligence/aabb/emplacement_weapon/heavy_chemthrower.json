@@ -1,101 +1,128 @@
 {
   "bounds": {
-    "base_box": [
-      -9, 0, -9,
-      9, 18, 9
-    ],
-    "barrel": [
-      -4, 0, -4,
-      4, 16, 4
-    ],
-    "gun_barrel": [
-      -2.5, -2.5, -2.5,
-      2.5, 2.5, 2.5
-    ],
-    "gun_barrel2": [
-      -2, -2, -2,
-      2, 2, 2
-    ]
+    "base": [-8, -10, -8, 8, 10, 8],
+    "tank": [-4, -8, -4, 4, 8, 4],
+    "optics": [-4, -2, -4, 4, 2, 4],
+    "locator": [0, 0, 0, 0, 0, 0],
+    "gun": [-3, -3, -3, 3, 3, 3],
+    "gun2": [-2, -2, -2, 2, 2, 2]
   },
-  "tactile_offset": [0, 0, -0.5],
+  "tactile_transforms": {
+    "all": {
+      "offset": [-1, 0, -2]
+    },
+    "south": {},
+    "west": {},
+    "north": {},
+    "east": {},
+    "mirrored": {}
+  },
   "tactile": {
     "_schema": "immersiveintelligence:models/block/multiblock/emplacement/weapon/heavy_chemthrower.obj.amt",
-    "base": [
+    "turret": [
       {
-        "type": "base_box",
-        "offset": [0, 0, 8]
-      }
-    ],
-    "chemthrower": [
-      {
-        "type": "barrel",
-        "offset": [8, 5, 20]
+        "offset": [0, 10, 0],
+        "type": "base"
       },
       {
-        "type": "barrel",
-        "offset": [-8, 5, 20]
+        "offset": [8, 13, 12],
+        "type": "tank"
+      },
+      {
+        "offset": [-8, 13, 12],
+        "type": "tank"
+      },
+      {
+        "offset": [0, 22, -5],
+        "type": "optics"
+      }
+    ],
+    "turret_origin": [
+      {
+        "offset": [0, 19, -5],
+        "type": "locator"
+      }
+    ],
+    "base": [
+      {
+        "offset": [-16, 46, 11],
+        "type": "locator"
+      }
+    ],
+    "gun_origin": [
+      {
+        "offset": [0, 7.5, 1.5],
+        "type": "locator"
       }
     ],
     "gun": [
       {
-        "type": "gun_barrel",
-        "offset": [4.5, 0, 4.5]
+        "offset": [4.5, 0.5, -1.5],
+        "type": "gun"
       },
       {
-        "type": "gun_barrel",
-        "offset": [4.5, 0, 0]
+        "offset": [4.5, 0.5, -7.5],
+        "type": "gun"
       },
       {
-        "type": "gun_barrel",
-        "offset": [-4.5, 0, 4.5]
+        "offset": [-4.5, 0.5, -7.5],
+        "type": "gun"
       },
       {
-        "type": "gun_barrel",
-        "offset": [-4.5, 0, 0]
+        "offset": [-4.5, 0.5, -1.5],
+        "type": "gun"
       }
     ],
     "stage2": [
       {
-        "type": "gun_barrel2",
-        "offset": [4.5, 0, 10]
+        "offset": [-4.5, 0, 2.5],
+        "type": "gun2"
       },
       {
-        "type": "gun_barrel2",
-        "offset": [4.5, 0, 6]
+        "offset": [-4.5, 0, -1.5],
+        "type": "gun2"
       },
       {
-        "type": "gun_barrel2",
-        "offset": [-4.5, 0, 10]
+        "offset": [4.5, 0, -1.5],
+        "type": "gun2"
       },
       {
-        "type": "gun_barrel2",
-        "offset": [-4.5, 0, 6]
+        "offset": [4.5, 0, 2.5],
+        "type": "gun2"
       }
     ],
     "stage3": [
       {
-        "type": "gun_barrel2",
-        "offset": [4.5, 0, 17]
+        "offset": [-4.5, 0, 10.25],
+        "type": "gun2"
       },
       {
-        "type": "gun_barrel2",
-        "offset": [4.5, 0, 13]
+        "offset": [-4.5, 0.5, -2.75],
+        "type": "gun"
       },
       {
-        "type": "gun_barrel",
-        "offset": [4.5, 0, 8]
+        "offset": [4.5, 0.5, -2.75],
+        "type": "gun"
       },
       {
-        "type": "gun_barrel2",
-        "offset": [-4.5, 0, 17]
+        "offset": [-4.5, 0, 6.25],
+        "type": "gun2"
       },
       {
-        "type": "gun_barrel2",
-        "offset": [-4.5, 0, 13]
+        "offset": [-4.5, 0, 2.25],
+        "type": "gun2"
       },
       {
-        "type": "gun_barrel",
-        "offset": [-4.5, 0, 8]
+        "offset": [4.5, 0, 6.25],
+        "type": "gun2"
+      },
+      {
+        "offset": [4.5, 0, 10.25],
+        "type": "gun2"
+      },
+      {
+        "offset": [4.5, 0, 2.25],
+        "type": "gun2"
       }
     ]
   }

@@ -328,7 +328,29 @@
       66, 228, 147, 309, 390, 471
     ]
   },
-  "tactile_offset": [0, 0, -0.5],
+  "tactile_transforms": {
+    "all": {
+      "offset": [-1.125, 0, -0.5125],
+      "rotation": [0, 180, 0]
+    },
+    "south": {
+      "rotation": [0, 180, 0],
+      "flip_xz_size": false
+    },
+    "west": {
+      "rotation": [0, 270, 0],
+      "flip_xz_size": true
+    },
+    "north": {
+      "rotation": [0, 0, 0],
+      "flip_xz_size": false
+    },
+    "east": {
+      "rotation": [0, 90, 0],
+      "flip_xz_size": true
+    },
+    "mirrored": {}
+  },
   "tactile": {
     "_schema": "immersiveintelligence:models/block/multiblock/artillery_howitzer.obj.amt",
     "turret": [
@@ -443,7 +465,7 @@
     ],
     "chamber_door_right": [
       {
-        "offset": [-1, 0, 0],
+        "offset": [1, 0, 0],
         "type": "tactile_chamber_door"
       }
     ],
@@ -457,53 +479,53 @@
     ],
     "door_left": [
       {
-        "offset": [-8, 0, 0],
+        "offset": [-8, 0, -16],
         "type": "tactile_door"
       },
       {
-        "offset": [-16, 0, 0],
+        "offset": [-16, 0, -16],
         "type": "tactile_door2"
       },
       {
-        "offset": [-24, 0, 0],
+        "offset": [-24, 0, -16],
         "type": "tactile_door3"
       },
       {
-        "offset": [-32, 0, 0],
+        "offset": [-32, 0, -16],
         "type": "tactile_door3"
       },
       {
-        "offset": [-40, 0, 0],
+        "offset": [-40, 0, -16],
         "type": "tactile_door3"
       },
       {
-        "offset": [-48, 0, 0],
+        "offset": [-48, 0, -16],
         "type": "tactile_door3"
       }
     ],
     "door_right": [
       {
-        "offset": [8, 0, 0],
+        "offset": [8, 0, -16],
         "type": "tactile_door"
       },
       {
-        "offset": [16, 0, 0],
+        "offset": [16, 0, -16],
         "type": "tactile_door2"
       },
       {
-        "offset": [24, 0, 0],
+        "offset": [24, 0, -16],
         "type": "tactile_door3"
       },
       {
-        "offset": [32, 0, 0],
+        "offset": [32, 0, -16],
         "type": "tactile_door3"
       },
       {
-        "offset": [40, 0, 0],
+        "offset": [40, 0, -16],
         "type": "tactile_door3"
       },
       {
-        "offset": [48, 0, 0],
+        "offset": [48, 0, -16],
         "type": "tactile_door3"
       }
     ]

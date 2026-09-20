@@ -20,9 +20,8 @@ public class EmplacementWeaponRocketLauncher extends EmplacementWeaponGunBase<En
 	protected void onInit(TileEntityEmplacement te)
 	{
 		super.onInit(te);
-		if(this.chillingState==null)
-			this.chillingState = new ChillingState(RocketLauncher.minimumIdleTime,
-					RocketLauncher.idleAnimationInterval, RocketLauncher.idleAnimationDuration);
+		this.chillingState = new ChillingState(RocketLauncher.minimumIdleTime,
+				RocketLauncher.idleAnimationInterval, RocketLauncher.idleAnimationDuration);
 		this.ammoFactory.setAmmo(IIContent.itemAmmoRocketLight);
 		this.visionAABB = this.visionAABB.grow(RocketLauncher.detectionRadius);
 		this.attackAABB = this.attackAABB.grow(RocketLauncher.attackRadius);

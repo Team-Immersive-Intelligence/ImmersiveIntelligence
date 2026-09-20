@@ -123,7 +123,7 @@ public class EntityAMTTactile extends Entity implements IEntityAdditionalSpawnDa
 	@Override
 	public void onEntityUpdate()
 	{
-		super.onEntityUpdate();
+//		super.onEntityUpdate();
 		if(!world.isRemote)
 		{
 			if(manager==null||!manager.owns(this))

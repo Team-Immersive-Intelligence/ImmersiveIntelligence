@@ -8,6 +8,7 @@ import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine.Magazines;
+import pl.pabilo8.immersiveintelligence.common.util.gun.ChillingState;
 import pl.pabilo8.immersiveintelligence.common.util.gun.ammoprovider.GunAmmoProviderItemHandler;
 import pl.pabilo8.immersiveintelligence.common.util.gun.ammoprovider.GunAmmoProviderMagazineItemHandler;
 
@@ -33,6 +34,7 @@ public class EmplacementWeaponCPDS extends EmplacementWeaponGunBase<EntityAmmoPr
 		this.ammoFactory.setAmmo(IIContent.itemAmmoMachinegun);
 		this.visionAABB = this.visionAABB.grow(CPDS.detectionRadius);
 		this.attackAABB = this.attackAABB.grow(CPDS.attackRadius);
+		this.chillingState = new ChillingState(200, 240, 144);
 		setupItemHandlers(te, 8, 4, 4, 4+22, this::isMagazine, this::isMagazine);
 		this.aim.withAimSpeed(CPDS.yawRotateSpeed, CPDS.pitchRotateSpeed)
 				.withPitchLimit(-90, 68.5f);

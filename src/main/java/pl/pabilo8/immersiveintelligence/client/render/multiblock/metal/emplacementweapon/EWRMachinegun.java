@@ -36,7 +36,7 @@ import java.util.List;
 @SideOnly(Side.CLIENT)
 public class EWRMachinegun extends EmplacementWeaponRenderer<EmplacementWeaponMachinegun>
 {
-	private IIAnimationCachedMap install, rotateYaw, rotatePitch, fire;
+	private IIAnimationCachedMap install, rotateYaw, rotatePitch, fire, chill;
 	private List<AMTCrossVariantReference<AMTBullet>> bulletsLeft, bulletsRight;
 
 	public EWRMachinegun()
@@ -125,6 +125,7 @@ public class EWRMachinegun extends EmplacementWeaponRenderer<EmplacementWeaponMa
 		this.rotateYaw = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("rotate_yaw"));
 		this.rotatePitch = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("rotate_pitch"));
 		this.fire = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("fire"));
+		this.chill = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("chill"));
 
 		//Right Belt bullets
 		this.bulletsRight = Arrays.asList(
@@ -163,5 +164,10 @@ public class EWRMachinegun extends EmplacementWeaponRenderer<EmplacementWeaponMa
 		this.rotatePitch.apply(weapon.aim.getPitchNormalized(-90, 90, partialTicks));
 
 		this.fire.apply(shotDelay);
+
+		//Idle animation
+		float chillProgress = weapon.getChillProgress(partialTicks);
+		if(chillProgress > 0)
+			this.chill.apply(chillProgress);
 	}
 }

@@ -13,6 +13,7 @@ import pl.pabilo8.immersiveintelligence.client.fx.particles.AbstractParticle;
 import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleDrawStages;
 import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleProperties;
 import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleRegistry;
+import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.util.amt.AMTModelHeader;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
@@ -96,7 +97,10 @@ public class AMTParticle extends AMT
 
 	public AMTParticle setParticleProperty(ParticleProperties property, Object value)
 	{
-		particle.setProperty(property, value);
+		if(particle!=null)
+			particle.setProperty(property, value);
+		else
+			IILogger.error("[AMTParticle] Could not set particle property "+property+", particle is null");
 		return this;
 	}
 

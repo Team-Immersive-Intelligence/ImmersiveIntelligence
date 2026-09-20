@@ -8,6 +8,7 @@ import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine.Magazines;
+import pl.pabilo8.immersiveintelligence.common.util.gun.ChillingState;
 import pl.pabilo8.immersiveintelligence.common.util.gun.ammoprovider.GunAmmoProviderItemHandler;
 import pl.pabilo8.immersiveintelligence.common.util.gun.ammoprovider.GunAmmoProviderMagazineItemHandler;
 
@@ -32,6 +33,7 @@ public class EmplacementWeaponAutocannon extends EmplacementWeaponGunBase<Entity
 		this.ammoFactory.setAmmo(IIContent.itemAmmoAutocannon);
 		this.visionAABB = this.visionAABB.grow(Autocannon.detectionRadius);
 		this.attackAABB = this.attackAABB.grow(Autocannon.attackRadius);
+		this.chillingState = new ChillingState(200, 240, 80);
 		this.aim.withAimSpeed(Autocannon.yawRotateSpeed, Autocannon.pitchRotateSpeed)
 				.withPitchLimit(-90, 55);
 

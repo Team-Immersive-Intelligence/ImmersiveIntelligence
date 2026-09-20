@@ -13,7 +13,9 @@
     "gun_lamp": [19, -68, 26],
     "base": [8, -50, 24],
     "gun_origin": [8.0158, -25.5186, 18.5233],
-    "fire": [8, -23.6, -20]
+    "fire": [8, -23.6, -20],
+    "ray_infrared": [19, -7, 18],
+    "ray_light": [8, -34.5, -2]
   },
   "hierarchy": {
     "turret": "base",
@@ -28,12 +30,23 @@
     "magazine": "gun",
     "gun_lamp": "gun",
     "gun_origin": "turret",
-    "fire": "gun"
+    "fire": "gun",
+    "ray_infrared": "ir_camera",
+    "ray_light": "gun"
   },
   "properties": {
     "fire": {
+      "particle": "ammo/gunfire",
       "rotation": [180.0, 0.0, 0.0],
       "position": [0.0, 0.0, -0.5]
+    },
+    "ray_infrared": {
+      "particle": "light/cpds_infrared_light",
+      "rotation": [0.0, 0.0, 0.0]
+    },
+    "ray_light": {
+      "particle": "light/cpds_lamp_light",
+      "rotation": [0.0, 0.0, 0.0]
     }
   }
 }

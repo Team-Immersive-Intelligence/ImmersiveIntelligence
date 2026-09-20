@@ -1,14 +1,6 @@
 {
   "comment": "Made by Pabilo8 with Blockbench",
   "groups": {
-    "turret": {
-      "rotation": [
-        {
-          "time": 0,
-          "transform": [-90, 0, 0]
-        }
-      ]
-    },
     "door": {
       "rotation": [
         {
@@ -90,6 +82,12 @@
       ]
     },
     "turntable": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [90, 0, 0]
+        }
+      ],
       "position": [
         {
           "time": 0.25,

@@ -142,7 +142,8 @@ public class TileEntityRadar extends TileEntityMultiblockIIGeneric<TileEntityRad
 		Vec3d center = getRadarCenter();
 		return new AxisAlignedBB(center, center)
 				.grow(Radar.detectionRadius, 0, Radar.detectionRadius)
-				.expand(0, Radar.detectionRadius, 0);
+				.expand(0, Radar.detectionRadius, 0)
+				.expand(0, -Radar.detectionRadius*0.25, 0);
 	}
 
 	/**

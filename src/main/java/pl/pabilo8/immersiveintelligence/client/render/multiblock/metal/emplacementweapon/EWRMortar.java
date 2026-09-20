@@ -37,6 +37,7 @@ public class EWRMortar extends EmplacementWeaponRenderer<EmplacementWeaponMortar
 				super.provideModel(header, style, upgrades),
 				new AMTModel(
 						new AMTLocator("turret_origin", header),
+						new AMTLocator("mortar_origin", header),
 						new AMTLocator("mortar_move_mechanism", header),
 						new AMTBullet("shell", header, AmmoRegistry.getGenericModel(IIContent.itemAmmoMortar)),
 						new AMTBullet("shell_loaded", header, AmmoRegistry.getGenericModel(IIContent.itemAmmoMortar))
@@ -64,11 +65,11 @@ public class EWRMortar extends EmplacementWeaponRenderer<EmplacementWeaponMortar
 		this.rotateYaw.apply(weapon.aim.getYawNormalized(partialTicks));
 		this.rotatePitch.apply(weapon.aim.getPitchNormalized(-90, 90, partialTicks));
 
-		if(chillProgress > 0)
-			this.chill.apply(chillProgress);
 		if(loadingProgress!=0&&loadingProgress!=1)
 			this.load.apply(loadingProgress);
 		if(shotDelay > 0)
 			this.fire.apply(shotDelay);
+		if(chillProgress > 0)
+			this.chill.apply(chillProgress);
 	}
 }

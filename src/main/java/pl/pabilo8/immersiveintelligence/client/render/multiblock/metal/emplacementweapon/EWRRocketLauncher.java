@@ -101,6 +101,7 @@ public class EWRRocketLauncher extends EmplacementWeaponRenderer<EmplacementWeap
 			this.loadUpper.apply(loading);
 		}
 
+		//Idle animation
 		float chillProgress = weapon.getChillProgress(partialTicks);
 		if(chillProgress > 0)
 			this.chill.apply(chillProgress);

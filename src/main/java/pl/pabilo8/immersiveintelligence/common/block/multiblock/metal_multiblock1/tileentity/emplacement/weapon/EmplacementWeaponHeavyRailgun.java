@@ -6,6 +6,7 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIRailgunOverride;
+import pl.pabilo8.immersiveintelligence.common.util.gun.ChillingState;
 
 /**
  * Implements the four-round Heavy Railgun Emplacement weapon.
@@ -30,6 +31,7 @@ public class EmplacementWeaponHeavyRailgun extends EmplacementWeaponGunBase<Enti
 		this.attackAABB = this.attackAABB.grow(HeavyRailgun.attackRadius);
 		setupItemHandlers(te, 8, 0, 4, 0,
 				ItemIIRailgunOverride::isAmmo, ItemIIRailgunOverride::isAmmo);
+		this.chillingState = new ChillingState(200, 240, 80);
 		this.aim.withAimSpeed(HeavyRailgun.yawRotateSpeed, HeavyRailgun.pitchRotateSpeed);
 	}
 

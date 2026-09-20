@@ -30,6 +30,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.EntityIIChe
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.TargetCoordinateReference;
+import pl.pabilo8.immersiveintelligence.common.util.gun.ChillingState;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
 
 import javax.annotation.Nonnull;
@@ -66,6 +67,7 @@ public class EmplacementWeaponHeavyChemthrower extends EmplacementWeaponTurretBa
 		super.onInit(te);
 		this.visionAABB = this.visionAABB.grow(HeavyChemthrower.detectionRadius);
 		this.attackAABB = this.attackAABB.grow(HeavyChemthrower.attackRadius);
+		this.chillingState = new ChillingState(200, 240, 80);
 		this.aim.withAimSpeed(HeavyChemthrower.yawRotateSpeed, HeavyChemthrower.pitchRotateSpeed)
 				.withPitchLimit(-90, 22.5f)
 				.withAimCorrectionFunction(this::getAnglePrediction);

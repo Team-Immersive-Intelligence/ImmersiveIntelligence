@@ -3,7 +3,6 @@ package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multibloc
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3i;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -73,7 +72,7 @@ public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 						Math.abs(viewSides.getZ())*InfraredObserver.detectionRadius);
 		this.aim.withCenterYaw(facing.getHorizontalAngle())
 				.withAimSpeed(InfraredObserver.yawRotateSpeed, InfraredObserver.pitchRotateSpeed)
-				.withYawLimit(0, 0);
+				.withYawLimit(-180f, 180f);
 		if(resetAngles)
 			this.aim.withCurrentAngles(this.aim.getCenterYaw(), this.aim.clampPitchToRange(90f));
 	}
@@ -100,13 +99,16 @@ public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 
 		if(!exposed)
 		{
-			float previousYaw = aim.getYaw(0);
-			float previousPitch = aim.getPitch(0);
 			if(!remote)
-				aim.setTargetClamped(aim.getCenterYaw(), aim.clampPitchToRange(90f));
+				aim.setTargetClamped(aim.getCenterYaw(), aim.clampPitchToRange(-90f));
 			aim.update();
-			if(!remote&&(Math.abs(MathHelper.wrapDegrees(aim.getYaw(0)-previousYaw)) > 0.001f
-					||Math.abs(aim.getPitch(0)-previousPitch) > 0.001f))
+			if(!remote&&!aim.isAimed(0.001f))
+				syncWithClient(te, SyncEvents.WEAPON_ROTATION);
+		}
+		else if(setup.isFullyOpened()&&!remote)
+		{
+			aim.setTargetClamped(aim.getCenterYaw(), aim.clampPitchToRange(0f));
+			if(aim.isAimed(0.001f))
 				syncWithClient(te, SyncEvents.WEAPON_ROTATION);
 		}
 

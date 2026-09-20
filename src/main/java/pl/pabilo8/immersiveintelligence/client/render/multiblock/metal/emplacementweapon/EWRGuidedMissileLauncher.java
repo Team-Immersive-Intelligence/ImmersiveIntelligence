@@ -34,7 +34,7 @@ import java.util.List;
 @SideOnly(Side.CLIENT)
 public class EWRGuidedMissileLauncher extends EmplacementWeaponRenderer<EmplacementWeaponGuidedMissileLauncher>
 {
-	private IIAnimationCachedMap rotateYaw, rotatePitch, trackerPitch, load, fire;
+	private IIAnimationCachedMap rotateYaw, rotatePitch, trackerPitch, load, fire, chill;
 	private AMTCrossVariantReference<AMTBullet> rocket;
 
 	public EWRGuidedMissileLauncher()
@@ -74,6 +74,7 @@ public class EWRGuidedMissileLauncher extends EmplacementWeaponRenderer<Emplacem
 
 		this.load = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("load"));
 		this.fire = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("fire"));
+		this.chill = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("chill"));
 
 		this.rocket = new AMTCrossVariantReference<>("rocket", model);
 	}
@@ -89,5 +90,10 @@ public class EWRGuidedMissileLauncher extends EmplacementWeaponRenderer<Emplacem
 		this.trackerPitch.apply(pitch);
 		this.load.apply(weapon.gunHandler.getLoadingProgress(partialTicks));
 		this.fire.apply(weapon.gunHandler.getShotDelay(partialTicks));
+
+		//Idle animation
+		float chillProgress = weapon.getChillProgress(partialTicks);
+		if(chillProgress > 0)
+			this.chill.apply(chillProgress);
 	}
 }

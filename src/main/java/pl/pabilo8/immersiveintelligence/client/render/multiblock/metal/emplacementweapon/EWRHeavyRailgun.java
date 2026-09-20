@@ -34,7 +34,7 @@ import java.util.List;
 @SideOnly(Side.CLIENT)
 public class EWRHeavyRailgun extends EmplacementWeaponRenderer<EmplacementWeaponHeavyRailgun>
 {
-	private IIAnimationCachedMap rotateYaw, rotatePitch, load, load2, fire;
+	private IIAnimationCachedMap rotateYaw, rotatePitch, load, load2, fire, chill;
 
 	public EWRHeavyRailgun()
 	{
@@ -83,6 +83,7 @@ public class EWRHeavyRailgun extends EmplacementWeaponRenderer<EmplacementWeapon
 		this.load = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("load1"));
 		this.load2 = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("load2"));
 		this.fire = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("fire"));
+		this.chill = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("chill"));
 	}
 
 	@Override
@@ -103,5 +104,10 @@ public class EWRHeavyRailgun extends EmplacementWeaponRenderer<EmplacementWeapon
 			this.load.apply(loading);
 			this.load2.apply(0);
 		}
+
+		//Idle animation
+		float chillProgress = weapon.getChillProgress(partialTicks);
+		if(chillProgress > 0)
+			this.chill.apply(chillProgress);
 	}
 }

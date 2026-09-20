@@ -59,7 +59,7 @@ public abstract class GuiOverlayGunBase extends GuiOverlayBase
 				if(bullets > bulletLimit)
 					break;
 				if(bullet.isEmpty())
-					break;
+					continue;
 				if(ammoItem==null)
 					ammoItem = (IAmmoTypeItem<?, ?>)bullet.getItem();
 				//Individual stack can have more than one bullet

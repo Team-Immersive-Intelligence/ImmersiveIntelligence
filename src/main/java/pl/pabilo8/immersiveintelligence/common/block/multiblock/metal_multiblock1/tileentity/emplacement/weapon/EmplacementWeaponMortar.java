@@ -4,6 +4,7 @@ import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
+import pl.pabilo8.immersiveintelligence.common.util.gun.ChillingState;
 
 import javax.annotation.Nullable;
 
@@ -25,6 +26,7 @@ public class EmplacementWeaponMortar extends EmplacementWeaponGunBase<EntityAmmo
 	protected void onInit(TileEntityEmplacement te)
 	{
 		super.onInit(te);
+		this.chillingState = new ChillingState(200, 240, 80);
 		this.ammoFactory.setAmmo(IIContent.itemAmmoMortar);
 		this.visionAABB = this.visionAABB.grow(Mortar.detectionRadius);
 		this.attackAABB = this.attackAABB.grow(Mortar.attackRadius);

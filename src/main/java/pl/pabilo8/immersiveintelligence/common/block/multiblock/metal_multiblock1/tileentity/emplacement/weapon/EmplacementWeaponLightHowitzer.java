@@ -25,9 +25,8 @@ public class EmplacementWeaponLightHowitzer extends EmplacementWeaponGunBase<Ent
 	protected void onInit(TileEntityEmplacement te)
 	{
 		super.onInit(te);
-		if(this.chillingState==null)
-			this.chillingState = new ChillingState(LightHowitzer.minimumIdleTime,
-					LightHowitzer.idleAnimationInterval, LightHowitzer.idleAnimationDuration);
+		this.chillingState = new ChillingState(LightHowitzer.minimumIdleTime,
+				LightHowitzer.idleAnimationInterval, LightHowitzer.idleAnimationDuration);
 		this.ammoFactory.setAmmo(IIContent.itemAmmoLightArtillery);
 		this.visionAABB = this.visionAABB.grow(LightHowitzer.detectionRadius);
 		this.attackAABB = this.attackAABB.grow(LightHowitzer.attackRadius);

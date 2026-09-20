@@ -19,6 +19,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProje
 import pl.pabilo8.immersiveintelligence.common.util.FilteredFluidTank;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
+import pl.pabilo8.immersiveintelligence.common.util.gun.ChillingState;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
 
 import javax.annotation.Nonnull;
@@ -52,6 +53,7 @@ public class EmplacementWeaponMachinegun extends EmplacementWeaponGunBase<Entity
 		this.ammoFactory.setAmmo(IIContent.itemAmmoMachinegun);
 		this.visionAABB = this.visionAABB.grow(Machinegun.detectionRadius);
 		this.attackAABB = this.attackAABB.grow(Machinegun.attackRadius);
+		this.chillingState = new ChillingState(160, 200, 60);
 
 		setupItemHandlers(te, 16, 2, 8, 8,
 				this.ammoFactory::isValidAmmo, this.ammoFactory::isValidAmmo);

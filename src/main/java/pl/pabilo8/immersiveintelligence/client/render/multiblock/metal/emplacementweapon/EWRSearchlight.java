@@ -22,7 +22,7 @@ import java.util.List;
 @SideOnly(Side.CLIENT)
 public class EWRSearchlight extends EmplacementWeaponRenderer<EmplacementWeaponSearchlight>
 {
-	private IIAnimationCachedMap rotateYaw, rotatePitch, active;
+	private IIAnimationCachedMap rotateYaw, rotatePitch, active, chill;
 	private AMTCrossVariantReference<AMTParticle> ray;
 
 	public EWRSearchlight()
@@ -49,6 +49,7 @@ public class EWRSearchlight extends EmplacementWeaponRenderer<EmplacementWeaponS
 		this.rotateYaw = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("rotate_yaw"));
 		this.rotatePitch = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("rotate_pitch"));
 		this.active = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("active"));
+		this.chill = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("chill"));
 		this.ray = new AMTCrossVariantReference<>("ray", model);
 	}
 
@@ -63,6 +64,11 @@ public class EWRSearchlight extends EmplacementWeaponRenderer<EmplacementWeaponS
 
 		//Heat-up animation
 		this.active.apply(weapon.setup.getProgress(partialTicks));
+
+		//Idle animation
+		float chillProgress = weapon.getChillProgress(partialTicks);
+		if(chillProgress > 0)
+			this.chill.apply(chillProgress);
 
 		//Apply light beam length vector
 		this.ray.get().setParticleProperty(ParticleProperties.STRETCH, weapon.targetPosition);

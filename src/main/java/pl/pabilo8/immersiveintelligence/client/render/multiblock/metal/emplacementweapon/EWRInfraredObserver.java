@@ -27,7 +27,7 @@ import java.util.List;
 @SideOnly(Side.CLIENT)
 public class EWRInfraredObserver extends EmplacementWeaponRenderer<EmplacementWeaponInfraredObserver>
 {
-	private IIAnimationCachedMap install, rotatePitch, chill;
+	private IIAnimationCachedMap install, rotateYaw, rotatePitch, chill;
 
 	public EWRInfraredObserver()
 	{
@@ -57,6 +57,7 @@ public class EWRInfraredObserver extends EmplacementWeaponRenderer<EmplacementWe
 	public void loadAnimations(AMTCachedModel<TileEntityEmplacement> model)
 	{
 		this.install = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("install"));
+		this.rotateYaw = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("rotate_yaw"));
 		this.rotatePitch = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("rotate_pitch"));
 		this.chill = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("chill"));
 	}
@@ -68,7 +69,8 @@ public class EWRInfraredObserver extends EmplacementWeaponRenderer<EmplacementWe
 		assert weapon.setup!=null;
 		this.install.apply(weapon.setup.getProgress(partialTicks));
 
-		//Rotation animation
+		//Rotation animations
+		this.rotateYaw.apply(weapon.aim.getYawNormalized(partialTicks));
 		this.rotatePitch.apply(weapon.aim.getPitchNormalized(-90, 90, partialTicks));
 
 		//Idle animation

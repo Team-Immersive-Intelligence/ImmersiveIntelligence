@@ -7,6 +7,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoGuidedMissile;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.TargetCoordinateReference;
+import pl.pabilo8.immersiveintelligence.common.util.gun.ChillingState;
 
 import javax.annotation.Nullable;
 
@@ -30,6 +31,7 @@ public class EmplacementWeaponGuidedMissileLauncher extends EmplacementWeaponGun
 		this.ammoFactory.setAmmo(IIContent.itemAmmoGuidedMissile).setUseArtilleryAngles(false);
 		this.visionAABB = this.visionAABB.grow(GuidedMissileLauncher.detectionRadius);
 		this.attackAABB = this.attackAABB.grow(GuidedMissileLauncher.attackRadius);
+		this.chillingState = new ChillingState(200, 240, 80);
 		setupItemHandlers(te, 8, 0, 4, 0,
 				this.ammoFactory::isValidAmmo, this.ammoFactory::isValidAmmo);
 		this.aim.withAimSpeed(GuidedMissileLauncher.yawRotateSpeed, GuidedMissileLauncher.pitchRotateSpeed)

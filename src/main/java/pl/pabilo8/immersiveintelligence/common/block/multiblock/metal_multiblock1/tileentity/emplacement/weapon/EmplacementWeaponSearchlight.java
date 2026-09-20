@@ -8,6 +8,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPanel;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.Searchlight;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
+import pl.pabilo8.immersiveintelligence.common.util.gun.ChillingState;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
 
 import java.util.Map;
@@ -36,6 +37,7 @@ public class EmplacementWeaponSearchlight extends EmplacementWeaponLightBase
 		super.onInit(te);
 		this.visionAABB = this.visionAABB.grow(Searchlight.detectionRadius);
 		this.attackAABB = this.attackAABB.grow(Searchlight.attackRadius);
+		this.chillingState = new ChillingState(200, 240, 80);
 		this.aim.withAimSpeed(Searchlight.yawRotateSpeed, Searchlight.pitchRotateSpeed);
 	}
 
