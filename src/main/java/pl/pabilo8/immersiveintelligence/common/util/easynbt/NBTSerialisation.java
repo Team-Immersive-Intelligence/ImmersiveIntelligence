@@ -31,6 +31,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodHandles.Lookup;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -491,7 +492,7 @@ public class NBTSerialisation
 			try
 			{
 				//Get the getter method using LambdaMetaFactory
-				MethodHandles.Lookup lookup = MethodHandles.lookup();
+				Lookup lookup = MethodHandles.lookup();
 				getter = lookup.findGetter(field.getDeclaringClass(), fieldName, field.getType());
 				setter = lookup.findSetter(field.getDeclaringClass(), fieldName, field.getType());
 

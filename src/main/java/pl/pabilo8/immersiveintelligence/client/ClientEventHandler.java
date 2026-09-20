@@ -22,9 +22,13 @@ import net.minecraft.client.model.ModelBiped.ArmPose;
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.GlStateManager.DestFactor;
 import net.minecraft.client.renderer.GlStateManager.FogMode;
+import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.entity.Entity;
@@ -37,6 +41,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumHandSide;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
@@ -72,7 +77,7 @@ import pl.pabilo8.immersiveintelligence.api.LogisticTag;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.ammo.penetration.DamageBlockPos;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoUtils;
-import pl.pabilo8.immersiveintelligence.api.api.protection.RadiationHandler;
+import pl.pabilo8.immersiveintelligence.api.protection.protection.RadiationHandler;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IAdvancedTooltipItem;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IItemScrollable;
@@ -123,6 +128,7 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradeableArmor;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IAdvancedBounds;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -185,9 +191,8 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	@SuppressWarnings("unused")
 	public static void handleBipedRotations(ModelBiped model, Entity entity)
 	{
-		if(!(entity instanceof EntityLivingBase))
+		if(!(entity instanceof EntityLivingBase living))
 			return;
-		EntityLivingBase living = (EntityLivingBase)entity;
 
 		//Concealed potion effect
 		if(((EntityLivingBase)entity).isPotionActive(IIPotions.concealed))
@@ -208,10 +213,9 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 			if(vehicle!=null)
 			{
 				Render<Entity> renderer = mc.getRenderManager().getEntityClassRenderObject(vehicle.getClass());
-				if(renderer instanceof IPassengerAnimationsRenderer)
+				if(renderer instanceof IPassengerAnimationsRenderer par)
 				{
 					//noinspection rawtypes
-					IPassengerAnimationsRenderer par = (IPassengerAnimationsRenderer)renderer;
 					//noinspection unchecked
 					if(par.handleBipedRotations(model, vehicle, living, mc.getRenderPartialTicks()))
 						return;
@@ -377,37 +381,76 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	{
 		if(resourcePredicate.test(VanillaResourceType.MODELS))
 			IIModelRegistry.INSTANCE.reloadRegisteredModels();
+		if(resourcePredicate.test(VanillaResourceType.TEXTURES))
+			IIClientUtils.reloadCachedColors();
 	}
 
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public void renderAdditionalBlockBounds(DrawBlockHighlightEvent event)
 	{
 		WorldClient world = ClientUtils.mc().world;
-		if(world==null||world.provider==null)
+		if(world==null)
 			return;
+		Entity viewEntity = ClientUtils.mc().getRenderViewEntity();
+		if(viewEntity==null)
+			viewEntity = ClientUtils.mc().player;
 
 		//remove invalid positions
 		int dimension = world.provider.getDimension();
 		blockDamageClient.removeIf(d -> d.damage <= 0||d.dimension!=dimension);
 
-		//render valid positions
-		IIClientUtils.drawBlockBreak(world,
-				event.getPartialTicks(),
-				blockDamageClient.stream()
-						.filter(Objects::nonNull)
-						.filter(d -> d.dimension==world.provider.getDimension()&&world.isBlockLoaded(d))
-						.toArray(DamageBlockPos[]::new)
-		);
+		//Render valid positions.
+		final Entity finalViewEntity = viewEntity;
+		DamageBlockPos[] positions = blockDamageClient.stream()
+				.filter(Objects::nonNull)
+				.filter(world::isBlockLoaded)
+				.filter(d -> finalViewEntity.getDistance(d.getX()+0.5, d.getY()+0.5, d.getZ()+0.5) < Graphics.blockDamageDrawDistance)
+				.toArray(DamageBlockPos[]::new);
+
+		if(positions.length > 0)
+			IIClientUtils.drawBlockBreak(world, event.getPartialTicks(), positions);
+
+		//Draw selection boxes for IAdvancedBounds
+		if(event.getSubID()==0&&event.getTarget().typeOfHit==Type.BLOCK)
+		{
+			float f1 = 0.002F;
+			double px = -TileEntityRendererDispatcher.staticPlayerX;
+			double py = -TileEntityRendererDispatcher.staticPlayerY;
+			double pz = -TileEntityRendererDispatcher.staticPlayerZ;
+			TileEntity tile = event.getPlayer().world.getTileEntity(event.getTarget().getBlockPos());
+			ItemStack stack = event.getPlayer().getHeldItem(EnumHand.MAIN_HAND);
+			if(tile instanceof IAdvancedBounds iasb)
+			{
+				List<AxisAlignedBB> boxes = iasb.getSelectionBounds();
+				if(boxes!=null&&!boxes.isEmpty())
+				{
+					GlStateManager.enableBlend();
+					GlStateManager.tryBlendFuncSeparate(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ONE, DestFactor.ZERO);
+					GlStateManager.glLineWidth(2.0F);
+					GlStateManager.disableTexture2D();
+					GlStateManager.depthMask(false);
+
+					//Draw the boxes
+					for(AxisAlignedBB aabb : boxes)
+						RenderGlobal.drawSelectionBoundingBox(aabb.grow(f1).offset(px, py, pz), 0, 0, 0, 0.4f);
+
+					GlStateManager.depthMask(true);
+					GlStateManager.enableTexture2D();
+					GlStateManager.disableBlend();
+					event.setCanceled(true);
+				}
+			}
+
+		}
 	}
 
 	@SubscribeEvent()
 	public void onFogUpdate(RenderFogEvent event)
 	{
 		Entity entity = event.getEntity();
-		if(!(entity instanceof EntityLivingBase))
+		if(!(entity instanceof EntityLivingBase living))
 			return;
 
-		EntityLivingBase living = (EntityLivingBase)entity;
 		//Suppression
 		if(living.getActivePotionEffect(IIPotions.suppression)!=null)
 		{
@@ -448,10 +491,8 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		Entity entity = event.getEntity();
 		World world = entity.getEntityWorld();
 
-		if(entity instanceof EntityLivingBase)
+		if(entity instanceof EntityLivingBase living)
 		{
-			EntityLivingBase living = (EntityLivingBase)entity;
-
 			//Nuke/Wasteland
 			float fogFactor = getRadiationFogFactor(living, event.getRenderPartialTicks());
 			PotionEffect nuclearHeat = living.getActivePotionEffect(IIPotions.nuclearHeat);
@@ -695,9 +736,8 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		Entity lowestRidden = ridden==null?null: ridden.getLowestRidingEntity();
 
 		//--- Camera Handling ---//
-		if(lowestRidden instanceof ICameraEntity)
+		if(lowestRidden instanceof ICameraEntity cameraEntity)
 		{
-			ICameraEntity cameraEntity = (ICameraEntity)lowestRidden;
 			if(!cameraEntity.isCameraEnabled(player))
 				CameraHandler.setEnabled(false);
 			else
@@ -785,15 +825,13 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		}
 
 		Entity ridingEntity = ClientUtils.mc().player.getRidingEntity();
-		if(ridingEntity instanceof EntityVehicleSeat)
+		if(ridingEntity instanceof EntityVehicleSeat riding)
 		{
-			EntityVehicleSeat riding = (EntityVehicleSeat)ridingEntity;
 			if(riding.info!=null&&riding.info.passMouseButtonEvent(event)&&event.isButtonstate())
 				event.setCanceled(true);
 		}
-		else if(ridingEntity instanceof EntityMountedWeapon)
+		else if(ridingEntity instanceof EntityMountedWeapon weapon)
 		{
-			EntityMountedWeapon weapon = (EntityMountedWeapon)ridingEntity;
 			if(weapon.controls!=null&&weapon.controls.passMouseButtonEvent(event)&&event.isButtonstate())
 				event.setCanceled(true);
 		}
@@ -866,10 +904,9 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 			//--- Gun Recoil Handling ---//
 
 			ItemStack stack = player.getHeldItemMainhand();
-			if(stack.getItem() instanceof ItemIIGunBase&&Graphics.cameraRecoil)
+			if(stack.getItem() instanceof ItemIIGunBase item&&Graphics.cameraRecoil)
 			{
 				//Prepare variables
-				ItemIIGunBase item = (ItemIIGunBase)stack.getItem();
 				EasyNBT upgrades = EasyNBT.wrapNBT(item.getUpgrades(stack));
 
 				boolean isAimed = ItemNBTHelper.getInt(stack, ItemIIGunBase.AIMING) > item.getAimingTime(stack, upgrades);
@@ -940,9 +977,8 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	{
 		if(event.getGui() instanceof GuiManual)
 			IISkinHandler.getManualPages();
-		else if(ClientEventHandler.lastGui instanceof GuiManual)
+		else if(ClientEventHandler.lastGui instanceof GuiManual gui)
 		{
-			GuiManual gui = (GuiManual)ClientEventHandler.lastGui;
 			String name = null;
 
 			ManualInstance inst = gui.getManual();
@@ -997,9 +1033,8 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 			}
 		}
 		//Add creative menu subtabs
-		if(gui instanceof GuiContainerCreative&&IIConfig.australianCreativeTabs)
+		if(gui instanceof GuiContainerCreative creative&&IIConfig.australianCreativeTabs)
 		{
-			GuiContainerCreative creative = (GuiContainerCreative)gui;
 			if(Factions.enableFactions&&Factions.inventoryButtonPositionCreative[0]!=-1&&Factions.inventoryButtonPositionCreative[1]!=-1)
 				try
 				{

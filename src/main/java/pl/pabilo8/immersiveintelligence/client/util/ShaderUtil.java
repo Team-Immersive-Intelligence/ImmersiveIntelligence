@@ -34,6 +34,7 @@ public class ShaderUtil
 	{
 		createShader(ALPHA, null, "alpha");
 		createShader(BLUEPRINT, null, "blueprint");
+		createShader(ENERGY, null, "energy");
 		createShader(COLOR, null, "color");
 		createShader(NOISE, null, "noise");
 		createShader(NOISE_NO_LIGHTMAP, null, "noise_no_lightmap");
@@ -66,6 +67,7 @@ public class ShaderUtil
 		switch(shader)
 		{
 			case BLUEPRINT:
+			case ENERGY:
 				shader.setFloat("alpha", parameters[0]);
 				shader.setFloat("time", parameters[1]);
 				break;
@@ -242,6 +244,7 @@ public class ShaderUtil
 	{
 		ALPHA,
 		BLUEPRINT,
+		ENERGY,
 		COLOR,
 		NOISE,
 		NOISE_NO_LIGHTMAP,

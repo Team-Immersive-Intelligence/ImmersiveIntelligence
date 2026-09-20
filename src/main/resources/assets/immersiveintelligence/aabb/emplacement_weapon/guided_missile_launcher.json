@@ -1,74 +1,98 @@
 {
   "bounds": {
-    "base_box": [
-      -7, 0, -7,
-      7, 16, 7
-    ],
-    "observer_box": [
-      -6, 0, -6,
-      6, 28, 6
-    ],
-    "back_box": [
-      -6, 0, -6,
-      6, 8, 6
-    ],
-    "rocket": [
-      -4, -4, -4,
-      4, 4, 4
-    ],
-    "none": [
-      0, 0, 0,
-      0, 0, 0
-    ]
+    "base_box": [-7, -8, -7, 7, 8, 7],
+    "observer_box": [-8.5, -11, -8.5, 8.5, 11, 8.5],
+    "none": [0, 0, 0, 0, 0, 0],
+    "rocket": [-4, -4, -4, 4, 4, 4],
+    "observer": [-6, -8, -6, 6, 8, 6],
+    "optics": [-4, -4, -4, 4, 4, 4]
   },
-  "tactile_offset": [0, 0, -0.5],
+  "tactile_transforms": {
+    "all": {
+      "offset": [-1, 0, -2]
+    },
+    "south": {},
+    "west": {},
+    "north": {},
+    "east": {},
+    "mirrored": {}
+  },
   "tactile": {
     "_schema": "immersiveintelligence:models/block/multiblock/emplacement/weapon/guided_missile_launcher.obj.amt",
     "base": [
       {
-        "type": "base_box",
-        "offset": [9, -16, 0]
+        "offset": [9, -8, -9],
+        "type": "base_box"
       },
       {
-        "type": "base_box",
-        "offset": [9, -16, 14]
+        "offset": [-7.5, -5, -2],
+        "type": "observer_box"
       },
       {
-        "type": "observer_box",
-        "offset": [-7, -16, 0]
+        "offset": [9, -8, 9],
+        "type": "base_box"
       },
       {
-        "type": "back_box",
-        "offset": [-7, -16, 14]
+        "offset": [9, -8, 0],
+        "type": "base_box"
       }
     ],
     "launcher3": [
       {
+        "offset": [0, 0, 0],
         "type": "none"
       }
     ],
     "launcher2": [
       {
+        "offset": [0, 0, 0],
         "type": "none"
       }
     ],
     "launcher": [
       {
+        "offset": [0, 0, 0],
         "type": "none"
       }
     ],
     "gun": [
       {
-        "type": "rocket",
-        "offset": [-2, 0, 0]
+        "offset": [-2, 3, -5],
+        "type": "rocket"
       },
       {
-        "type": "rocket",
-        "offset": [-2, 0, 8]
+        "offset": [-2, 3, 3],
+        "type": "rocket"
       },
       {
-        "type": "rocket",
-        "offset": [-2, 0, 16]
+        "offset": [-2, 3, 11],
+        "type": "rocket"
+      }
+    ],
+    "turen": [
+      {
+        "offset": [-1.85, -0.6, -7.13333],
+        "type": "observer"
+      },
+      {
+        "offset": [-1.85, -0.6, 4.86667],
+        "type": "observer"
+      },
+      {
+        "offset": [-1.85, 8.4, 0.86667],
+        "type": "optics"
+      }
+    ],
+    "turen_origin": [
+      {
+        "offset": [16.15, 0.65, 2.86667],
+        "type": "none"
+      }
+    ],
+    "turret": [
+      {
+        "offset": [9, 4.25, -1],
+        "type": "none"
       }
     ]
   }

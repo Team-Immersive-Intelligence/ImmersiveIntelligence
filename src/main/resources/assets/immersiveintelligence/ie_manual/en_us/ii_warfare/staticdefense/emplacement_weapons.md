@@ -14,9 +14,6 @@ Take note, this weapon does not use [magazines](magazines.md). [Loose bullets ha
 The **Machinegun** Emplacement comes in 3 variants: [Default], [Heavy Barreled], and [Water-Cooled], which are identical in function to those present in the [infantry version](machinegun.md).<br>
 |[upgrade_display]{upgrade:"immersiveintelligence:emplacement/machinegun/heavy_barrel"}|
 |[upgrade_display]{upgrade:"immersiveintelligence:emplacement/machinegun/watercooled"}|
-# mg2
-The **Machinegun** Emplacement can also be [fortified] to increase survivability in the field.
-|[upgrade_display]{upgrade:"immersiveintelligence:emplacement/machinegun/additional_fortifications"}|
 # chem0
 **Heavy Chemthrower**
 |[upgrade_display]{upgrade:"immersiveintelligence:emplacement/heavy_chemthrower"}|

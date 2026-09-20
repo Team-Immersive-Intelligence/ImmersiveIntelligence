@@ -1,0 +1,16 @@
+{
+  "type": "ParticleVanilla",
+  "max_lifetime": 5,
+  "scale": 3.75,
+  "draw_stage": "custom_additive",
+  "textures": [
+    "immersiveintelligence:particle/shrapnel/shrapnel3",
+    "immersiveintelligence:particle/shrapnel/shrapnel2",
+    "immersiveintelligence:particle/shrapnel/shrapnel1",
+    "immersiveintelligence:particle/shrapnel/shrapnel0"
+  ],
+  "programs": [
+    "lifetime_retexture",
+    "gravity(1.0,-0.125)"
+  ]
+}

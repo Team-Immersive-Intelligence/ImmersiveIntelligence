@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityBanner;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIAnimationCompiledMap;
@@ -106,6 +107,16 @@ public class AMTBanner extends AMT
 	{
 		super.applyProperties(nbt);
 		nbt.checkSetItemStack("banner", this::setBanner);
+	}
+
+	@Override
+	@Nonnull
+	public AxisAlignedBB getBoundingBox()
+	{
+		if(bannerModel==null)
+			return new AxisAlignedBB(originPos, originPos);
+		AxisAlignedBB aabb = bannerModel.getBoundingBox();
+		return isFlag?new AxisAlignedBB(aabb.minX, aabb.minZ, aabb.minY, aabb.maxX, aabb.maxZ, aabb.maxY): aabb;
 	}
 
 

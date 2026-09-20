@@ -72,14 +72,14 @@ public class ItemIISubmachinegun extends ItemIIGunBase
 	public void onUpdate(ItemStack stack, World world, Entity user, int itemSlot, boolean isSelected)
 	{
 
-		
+
 		super.onUpdate(stack, world, user, itemSlot, isSelected);
 
 		//server check
-		if(world.isRemote || !isSelected || !(user instanceof EntityLivingBase))
+		if(world.isRemote||!isSelected||!(user instanceof EntityLivingBase))
 			return;
 
-		EntityLivingBase livingUser = (EntityLivingBase) user;
+		EntityLivingBase livingUser = (EntityLivingBase)user;
 
 		//check NBT for drum
 		EasyNBT nbt = EasyNBT.wrapNBT(stack.getTagCompound());
@@ -88,7 +88,7 @@ public class ItemIISubmachinegun extends ItemIIGunBase
 			return;
 
 		//check if drum is loaded
-		if(IIContent.itemBulletMagazine.stackToSub(magazineStack) != Magazines.SUBMACHINEGUN_DRUM)
+		if(IIContent.itemBulletMagazine.stackToSub(magazineStack)!=Magazines.SUBMACHINEGUN_DRUM)
 			return;
 
 		//check if bottom loader/ drum thing is NOT installed
@@ -103,7 +103,7 @@ public class ItemIISubmachinegun extends ItemIIGunBase
 			world.spawnEntity(new EntityItem(
 					world,
 					livingUser.posX,
-					livingUser.posY + livingUser.getEyeHeight(),
+					livingUser.posY+livingUser.getEyeHeight(),
 					livingUser.posZ,
 					magazineStack
 			));
@@ -182,7 +182,7 @@ public class ItemIISubmachinegun extends ItemIIGunBase
 	@Override
 	public int getReloadTime(ItemStack weapon, ItemStack loaded, EasyNBT nbt)
 	{
-		if(IIContent.itemBulletMagazine.stackToSub(weapon)==Magazines.SUBMACHINEGUN_DRUM)
+		if(IIContent.itemBulletMagazine.stackToSub(loaded)==Magazines.SUBMACHINEGUN_DRUM)
 			return Submachinegun.drumReloadTime;
 		return Submachinegun.clipReloadTime;
 	}

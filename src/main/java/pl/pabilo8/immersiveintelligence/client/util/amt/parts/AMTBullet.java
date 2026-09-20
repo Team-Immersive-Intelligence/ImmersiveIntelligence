@@ -1,9 +1,11 @@
 package pl.pabilo8.immersiveintelligence.client.util.amt.parts;
 
+import lombok.Getter;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
@@ -15,6 +17,7 @@ import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
 import pl.pabilo8.immersiveintelligence.common.util.amt.AMTModelHeader;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -25,13 +28,18 @@ import javax.annotation.Nullable;
  */
 public class AMTBullet extends AMT
 {
-	AmmoCore core = null;
-	CoreType coreType = null;
-	float gunpowderPercentage = 0;
+	@Getter
+	private AmmoCore core = null;
+	@Getter
+	private CoreType coreType = null;
+	@Getter
+	private float gunpowderPercentage = 0;
 	@Nullable
-	IIColor paintColor = null;
+	@Getter
+	private IIColor paintColor = null;
 	@Nullable
 	private IAmmoModel<?, ?> model;
+	@Getter
 	private BulletState state = BulletState.BULLET_UNUSED;
 	private Vec3d baseRotation = Vec3d.ZERO;
 
@@ -61,6 +69,9 @@ public class AMTBullet extends AMT
 			GlStateManager.rotate((float)rot.z, 0, 0, 1);
 			GlStateManager.rotate((float)-rot.x, 1, 0, 0);
 		}
+
+		if(scale!=null)
+			GlStateManager.scale(scale.x, scale.y, scale.z);
 	}
 
 	@Override
@@ -68,8 +79,6 @@ public class AMTBullet extends AMT
 	{
 		GlStateManager.pushMatrix();
 
-		if(scale!=null)
-			GlStateManager.scale(scale.x, scale.y, scale.z);
 		if(baseRotation!=null)
 		{
 			GlStateManager.rotate((float)baseRotation.y, 0, 1, 0);
@@ -87,6 +96,9 @@ public class AMTBullet extends AMT
 				case CORE:
 					if(coreType!=null)
 						model.renderCore(core, coreType);
+					break;
+				case LID:
+					model.renderLid();
 					break;
 				case BULLET_USED:
 				case BULLET_UNUSED:
@@ -124,6 +136,13 @@ public class AMTBullet extends AMT
 		nbt.checkSetEnum("state", BulletState.class, this::withState);
 		nbt.checkSetVec3D("base_rotation", this::withBaseRotation);
 
+	}
+
+	@Override
+	@Nonnull
+	public AxisAlignedBB getBoundingBox()
+	{
+		return model==null?new AxisAlignedBB(originPos, originPos): model.getBoundingBox();
 	}
 
 	@Override
@@ -188,15 +207,11 @@ public class AMTBullet extends AMT
 		return this;
 	}
 
-	public BulletState getState()
-	{
-		return state;
-	}
-
 	public enum BulletState implements ISerializableEnum
 	{
 		CASING,
 		CORE,
+		LID,
 		BULLET_USED,
 		BULLET_UNUSED
 	}

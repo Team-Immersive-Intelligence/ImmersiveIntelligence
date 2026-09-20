@@ -18,7 +18,10 @@ import java.util.Collections;
 import java.util.List;
 
 /**
+ * Creates an II particle effect.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @ii-approved 0.3.1
  * @since 14.09.2025
  */
 public class CommandDevParticle extends CommandIIBase

@@ -16,7 +16,10 @@ import java.util.List;
 import java.util.function.Supplier;
 
 /**
+ * Provides particle rendering and generation utilities.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 28.08.2026
  * @since 17.04.2024
  */
 public class IIParticleUtils
@@ -119,7 +122,7 @@ public class IIParticleUtils
 		SAME()
 				{
 					@Override
-					public Vec3d generatePosition(Vec3d origin, int index, float size, int amount)
+					public Vec3d generatePosition(Vec3d origin, Vec3d direction, int index, float distance, int amount)
 					{
 						return new Vec3d(origin.x, origin.y, origin.z);
 					}
@@ -127,29 +130,30 @@ public class IIParticleUtils
 		RAND_XZ()
 				{
 					@Override
-					public Vec3d generatePosition(Vec3d origin, int index, float size, int amount)
+					public Vec3d generatePosition(Vec3d origin, Vec3d direction, int index, float distance, int amount)
 					{
 						Vec3d pos = new Vec3d(randFloat.get(), 0, randFloat.get());
-						return pos.scale(size).add(origin);
+						return pos.scale(distance).add(origin);
 					}
 				},
 		CIRCLE_XZ()
 				{
 					@Override
-					public Vec3d generatePosition(Vec3d origin, int index, float size, int amount)
+					public Vec3d generatePosition(Vec3d origin, Vec3d direction, int index, float distance, int amount)
 					{
 						double angle = Math.toRadians(360/(float)amount*index);
 						Vec3d pos = new Vec3d((float)Math.cos(angle), 0, (float)Math.sin(angle));
-						return pos.scale(size).add(origin);
+						return pos.scale(distance).add(origin);
 					}
 				},
-		CONE_XZ(),
-		CONE_XY(),
-		CONE_ZY(),
+		CONE_TOWARD_25(25),
+		CONE_TOWARD_45(45),
+		CONE_TOWARD_75(75),
+		CONE_TOWARD_90(90),
 		SPHERE()
 				{
 					@Override
-					public Vec3d generatePosition(Vec3d origin, int index, float size, int amount)
+					public Vec3d generatePosition(Vec3d origin, Vec3d direction, int index, float distance, int amount)
 					{
 						double phi = Math.acos(1-2*randFloat.get());
 						double theta = 2*Math.PI*randFloat.get();
@@ -158,30 +162,111 @@ public class IIParticleUtils
 								Math.sin(phi)*Math.sin(theta),
 								Math.cos(phi)
 						);
-						return pos.scale(size).add(origin);
+						return pos.scale(distance).add(origin);
 					}
-				},
-		SQUARE(),
-		STAR(),
-		ORB(),
-		CUBE();
+				};
 
+		private static final double MIN_VECTOR_LENGTH_SQUARED = 1.0E-12D;
+		private final float coneAngle;
 
-		public Vec3d generatePosition(Vec3d origin, int index, float size, int amount)
+		PositionGenerator()
 		{
-			return Vec3d.ZERO;
+			this(0);
 		}
 
-		public Vec3d generateMotion(Vec3d origin, int index, float size, int amount)
+		PositionGenerator(float coneAngle)
 		{
-			Vec3d vec = generatePosition(Vec3d.ZERO, index, size, amount);
-			vec.normalize();
-			return vec;
+			this.coneAngle = coneAngle;
 		}
 
-		public Vector2f generateRotation(Vec3d origin, int index, float size, int amount)
+		/**
+		 * Generates an offspring position.
+		 *
+		 * @param origin    parent position
+		 * @param direction normalized parent motion
+		 * @param index     offspring index
+		 * @param distance  distance from the parent
+		 * @param amount    total offspring count
+		 * @return generated absolute position
+		 */
+		public Vec3d generatePosition(Vec3d origin, Vec3d direction, int index, float distance, int amount)
+		{
+			if(coneAngle <= 0)
+				return Vec3d.ZERO;
+			return generateConeDirection(direction, coneAngle).scale(distance).add(origin);
+		}
+
+		/**
+		 * Generates offspring motion from its generated position.
+		 *
+		 * @param origin            parent position
+		 * @param direction         normalized parent motion
+		 * @param generatedPosition generated offspring position
+		 * @param index             offspring index
+		 * @param speed             motion speed
+		 * @param amount            total offspring count
+		 * @return generated motion vector
+		 */
+		public Vec3d generateMotion(Vec3d origin, Vec3d direction, Vec3d generatedPosition,
+		                            int index, float speed, int amount)
+		{
+			Vec3d vector = generatedPosition.subtract(origin);
+			if(vector.lengthSquared() <= MIN_VECTOR_LENGTH_SQUARED)
+				vector = generatePosition(Vec3d.ZERO, direction, index, 1, amount);
+			return vector.lengthSquared() <= MIN_VECTOR_LENGTH_SQUARED?Vec3d.ZERO: vector.normalize().scale(speed);
+		}
+
+		/**
+		 * Generates offspring rotation.
+		 *
+		 * @param origin    parent position
+		 * @param direction normalized parent motion
+		 * @param index     offspring index
+		 * @param distance  distance from the parent
+		 * @param amount    total offspring count
+		 * @return generated yaw and pitch
+		 */
+		public Vector2f generateRotation(Vec3d origin, Vec3d direction, int index, float distance, int amount)
 		{
 			return new Vector2f(0, 0);
+		}
+
+		/**
+		 * Generates the absolute STRETCH endpoint.
+		 *
+		 * @param origin        parent position
+		 * @param direction     normalized parent motion
+		 * @param position      generated offspring position
+		 * @param motion        generated offspring motion
+		 * @param stretchLength distance from POSITION to STRETCH
+		 * @return absolute stretch endpoint
+		 */
+		public Vec3d generateStretch(Vec3d origin, Vec3d direction, Vec3d position, Vec3d motion, float stretchLength)
+		{
+			Vec3d stretchDirection = motion;
+			if(stretchDirection.lengthSquared() <= MIN_VECTOR_LENGTH_SQUARED)
+				stretchDirection = position.subtract(origin);
+			if(stretchDirection.lengthSquared() <= MIN_VECTOR_LENGTH_SQUARED)
+				stretchDirection = direction;
+			return stretchDirection.lengthSquared() <= MIN_VECTOR_LENGTH_SQUARED?
+					position: position.add(stretchDirection.normalize().scale(stretchLength));
+		}
+
+		private static Vec3d generateConeDirection(Vec3d direction, float angle)
+		{
+			Vec3d forward = direction.lengthSquared() > MIN_VECTOR_LENGTH_SQUARED?direction.normalize(): new Vec3d(0, 1, 0);
+			Vec3d reference = Math.abs(forward.y) < 0.999D?new Vec3d(0, 1, 0): new Vec3d(1, 0, 0);
+			Vec3d right = forward.crossProduct(reference).normalize();
+			Vec3d up = right.crossProduct(forward).normalize();
+
+			double minCos = Math.cos(Math.toRadians(angle));
+			double cosTheta = 1-randFloat.get()*(1-minCos);
+			double sinTheta = Math.sqrt(Math.max(0, 1-cosTheta*cosTheta));
+			double phi = 2*Math.PI*randFloat.get();
+
+			return forward.scale(cosTheta)
+					.add(right.scale(Math.cos(phi)*sinTheta))
+					.add(up.scale(Math.sin(phi)*sinTheta));
 		}
 	}
 

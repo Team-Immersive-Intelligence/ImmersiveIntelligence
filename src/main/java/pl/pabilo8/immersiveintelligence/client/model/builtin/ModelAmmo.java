@@ -5,6 +5,7 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.client.model.obj.OBJModel;
@@ -28,7 +29,9 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.amt.AMTModelHeader;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
 
@@ -48,6 +51,8 @@ public class ModelAmmo<T extends IAmmoType<T, E>, E extends EntityAmmoBase<? sup
 	 */
 	protected final EnumMap<CoreType, HashMap<AmmoCore, AMT>> modelCore = new EnumMap<>(CoreType.class);
 	protected final EnumMap<CoreType, HashMap<AmmoCore, AMT>> modelCoreSimple = new EnumMap<>(CoreType.class);
+	@Nonnull
+	protected AMT fallbackModel = new AMTLocator("missing_core", Vec3d.ZERO);
 	/**
 	 * Core models, baked and assigned by material
 	 */
@@ -59,7 +64,8 @@ public class ModelAmmo<T extends IAmmoType<T, E>, E extends EntityAmmoBase<? sup
 	 * Casing models, generally casings shouldn't change
 	 */
 	protected AMT modelCasing, modelCasingSimple, modelPaintBase;
-
+	@Nonnull
+	protected AxisAlignedBB boundingBox;
 
 	protected ModelAmmo(T ammo, ResLoc modelLocation)
 	{
@@ -112,7 +118,11 @@ public class ModelAmmo<T extends IAmmoType<T, E>, E extends EntityAmmoBase<? sup
 		Tessellator tes = Tessellator.getInstance();
 		BufferBuilder buf = tes.getBuffer();
 
-		modelCore.get(coreType).get(coreMaterial).render(tes, buf);
+		HashMap<AmmoCore, AMT> coreHashMap = modelCore.get(coreType);
+		AMT coreModel = coreHashMap!=null?coreHashMap.get(coreMaterial): fallbackModel;
+		if(coreModel==null)
+			coreModel = fallbackModel;
+		coreModel.render(tes, buf);
 	}
 
 	/**
@@ -131,10 +141,15 @@ public class ModelAmmo<T extends IAmmoType<T, E>, E extends EntityAmmoBase<? sup
 		if(!used)
 		{
 			modelCasingSimple.render(tes, buf);
-			if(paintColor!=null)
+			if(paintColor!=null&&modelPaintBase!=null)
 				modelPaint.computeIfAbsent(paintColor, color -> ((AMTQuads)modelPaintBase).recolor(color)).render(tes, buf);
 		}
-		modelCoreSimple.get(coreType).get(coreMaterial).render(tes, buf);
+
+		HashMap<AmmoCore, AMT> coreHashMap = modelCoreSimple.get(coreType);
+		AMT coreModel = coreHashMap!=null?coreHashMap.get(coreMaterial): fallbackModel;
+		if(coreModel==null)
+			coreModel = fallbackModel;
+		coreModel.render(tes, buf);
 	}
 
 	//--- Model Loading ---//
@@ -149,6 +164,8 @@ public class ModelAmmo<T extends IAmmoType<T, E>, E extends EntityAmmoBase<? sup
 
 		//Load new models
 		AMTModel amt = new AMTModel(DefaultVertexFormats.BLOCK, modelLocation, this::getExtraModelParts);
+		this.boundingBox = amt.getBoundingBox();
+
 		//Either a proper model or no model at all
 		if(!(loaded = !amt.isEmpty()))
 			return;
@@ -180,7 +197,9 @@ public class ModelAmmo<T extends IAmmoType<T, E>, E extends EntityAmmoBase<? sup
 			//Simple model variant is optional
 			AMTQuads coreSimpleModel = (AMTQuads)amt.getPart("core_"+coreType.getName()+"_simple");
 
-			for(AmmoCore core : AmmoRegistry.getAllCores())
+			ArrayList<AmmoCore> allCores = new ArrayList<>(AmmoRegistry.getAllCores());
+			allCores.add(AmmoRegistry.MISSING_CORE);
+			for(AmmoCore core : allCores)
 			{
 				AMT quads;
 				if(coreModel instanceof AMTQuads)
@@ -205,6 +224,10 @@ public class ModelAmmo<T extends IAmmoType<T, E>, E extends EntityAmmoBase<? sup
 			modelCoreSimple.put(coreType, modelSimpleMap);
 		}
 
+		//Load fallback model, if no core is present
+		HashMap<AmmoCore, AMT> coreMap = modelCoreSimple.get(ammo.getAllowedCoreTypes()[0]);
+		fallbackModel = coreMap!=null?coreMap.get(AmmoRegistry.MISSING_CORE): new AMTLocator("missing_core", Vec3d.ZERO);
+
 		//Load a paint model, variants will be assigned dynamically
 		modelPaintBase = amt.getPart("paint");
 	}
@@ -218,5 +241,12 @@ public class ModelAmmo<T extends IAmmoType<T, E>, E extends EntityAmmoBase<? sup
 			MaterialLibrary matLib = objModel.getMatLib();
 			matLib.getMaterialNames().forEach(s -> ApiUtils.getRegisterSprite(map, matLib.getMaterial(s).getTexture().getTextureLocation()));
 		} catch(Exception ignored) {}
+	}
+
+	@Nonnull
+	@Override
+	public AxisAlignedBB getBoundingBox()
+	{
+		return boundingBox;
 	}
 }

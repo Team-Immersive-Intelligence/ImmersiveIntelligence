@@ -44,7 +44,14 @@ public interface IOwnableProperty extends IEntityProof, IWorldPosProvider
 	{
 		if(!(entity instanceof EntityLivingBase))
 			return false;
-		OwnerIdentity ownerIdentity = this.getOwnerIdentity();
+		IOwnableProperty master = master();
+		//Likely a bugged block
+		if(master==null)
+			return true;
+		//Get master block's identity and check if the entity is parmitted
+		OwnerIdentity ownerIdentity = master.getOwnerIdentity();
+		if(ownerIdentity==null)
+			return true;
 		return !ownerIdentity.isPermitted(((EntityLivingBase)entity), PermissionCategory.BREAKING_STRUCTURES);
 	}
 

@@ -72,11 +72,11 @@ import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.PenetrationRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.ammocrate.AmmunitionCrateHandler;
-import pl.pabilo8.immersiveintelligence.api.api.protection.CorrosionHandler;
-import pl.pabilo8.immersiveintelligence.api.api.protection.capability.ProtectionCapabilities;
 import pl.pabilo8.immersiveintelligence.api.crafting.DustUtils;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataOperationUtils;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataTypeUtils;
+import pl.pabilo8.immersiveintelligence.api.protection.protection.CorrosionHandler;
+import pl.pabilo8.immersiveintelligence.api.protection.protection.capability.ProtectionCapabilities;
 import pl.pabilo8.immersiveintelligence.api.rotary.CapabilityRotaryEnergy;
 import pl.pabilo8.immersiveintelligence.api.rotary.IIRotaryUtils;
 import pl.pabilo8.immersiveintelligence.api.upgrade.IUpgradableDevice;
@@ -115,6 +115,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.mounted_weapon.EntityMachi
 import pl.pabilo8.immersiveintelligence.common.entity.mounted_weapon.EntityMortar;
 import pl.pabilo8.immersiveintelligence.common.entity.mounted_weapon.EntityTripodPeriscope;
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.EntityAMTTactile;
+import pl.pabilo8.immersiveintelligence.common.entity.tactile.EntityTactileLivingBase;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityDrone;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityMotorbike;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityTrackedMotorbike;
@@ -364,7 +365,7 @@ public class CommonProxy implements IGuiHandler
 		LighterFuelHandler.addFuel(FluidRegistry.getFluid("diesel"), 10);
 		LighterFuelHandler.addFuel(FluidRegistry.getFluid("biodiesel"), 10);
 
-		MachinegunCoolantHandler.addCoolant(FluidRegistry.WATER, 1);
+		MachinegunCoolantHandler.addCoolant(FluidRegistry.WATER, 2);
 
 		CrusherRecipe.addRecipe(IIContent.itemMaterialDust.getStack(MaterialsDust.SILICON, 1),
 				new IngredientStack("plateSilicon"), 12000);
@@ -776,7 +777,8 @@ public class CommonProxy implements IGuiHandler
 		registerEntity(i++, EntityDrone.class, "drone", 64, 1, true);
 
 		registerEntity(i++, EntityIIChemthrowerShot.class, "chemthrower_shot", 64, 1, true);
-		registerEntity(i, EntityAMTTactile.class, "tactile", 64, 1, true);
+		registerEntity(i++, EntityAMTTactile.class, "tactile", 64, 1, true);
+		registerEntity(i, EntityTactileLivingBase.class, "tactile_living", 64, 1, true);
 
 		for(IMultiblock mb : IIContent.MULTIBLOCKS)
 			if(mb instanceof MultiblockStuctureBase)

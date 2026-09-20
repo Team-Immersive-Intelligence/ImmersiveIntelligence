@@ -1,15 +1,19 @@
 {
   "origins": {
-    "chemthrower": [8, -44, 24],
+    "turret": [8, -44, 24],
     "gun": [8, -29.5, 17.5],
     "stage2": [8, -29.5, 2.5],
     "stage3": [8, -29.5, -13.25],
-    "base": [8, -44, 24]
+    "base": [24, -68, 8],
+    "turret_origin": [8, -41, 24],
+    "gun_origin": [8, -29.5, 17.5]
   },
   "hierarchy": {
-    "chemthrower": "base",
-    "gun": "chemthrower",
+    "turret": "turret_origin",
+    "gun": "gun_origin",
     "stage2": "gun",
-    "stage3": "stage2"
+    "stage3": "stage2",
+    "turret_origin": "base",
+    "gun_origin": "turret"
   }
 }

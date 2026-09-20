@@ -1,0 +1,60 @@
+{
+  "bounds": {
+    "base": [-16, -4, -16, 16, 4, 16],
+    "tower": [-10, -23, -10, 10, 23, 10],
+    "sensor": [-5, -4, -5, 5, 4, 5],
+    "stage2": [-8, -28, -8, 8, 28, 8],
+    "stage3": [-6, -16, -6, 6, 16, 6]
+  },
+  "tactile_transforms": {
+    "all": {
+      "offset": [-1, 0, -2]
+    },
+    "south": {},
+    "west": {},
+    "north": {},
+    "east": {},
+    "mirrored": {}
+  },
+  "tactile": {
+    "_schema": "immersiveintelligence:models/block/multiblock/emplacement/weapon/spotlight_tower.obj.amt",
+    "base": [
+      {
+        "offset": [-15.5, -4, 15.5],
+        "type": "base"
+      },
+      {
+        "offset": [-15.5, 23, 15.5],
+        "type": "tower"
+      },
+      {
+        "offset": [-25.5, 44, 15.5],
+        "type": "sensor"
+      },
+      {
+        "offset": [-5.5, 44, 15.5],
+        "type": "sensor"
+      },
+      {
+        "offset": [-15.5, 44, 25.5],
+        "type": "sensor"
+      },
+      {
+        "offset": [-15.5, 44, 5.5],
+        "type": "sensor"
+      }
+    ],
+    "stage2": [
+      {
+        "offset": [-15.5, 102, 15.5],
+        "type": "stage2"
+      }
+    ],
+    "stage3lamp": [
+      {
+        "offset": [0, -20.55061, 0.0007],
+        "type": "stage3"
+      }
+    ]
+  }
+}

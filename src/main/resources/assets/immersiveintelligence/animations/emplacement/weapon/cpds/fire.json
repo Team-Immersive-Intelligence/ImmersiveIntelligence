@@ -1,15 +1,23 @@
 {
-  "comment": "Made by Pabilo8 with Blockbench",
+  "comment": "Made by Pabilo8 with Blockbench; eight-shot rotary firing cycle",
   "groups": {
     "gun_mount": {
       "rotation": [
         {
-          "time": 0,
-          "transform": [0, 0, 0]
+          "time": 0.0,
+          "transform": [
+            0,
+            0,
+            0
+          ]
         },
         {
-          "time": 1,
-          "transform": [0, 0, 45]
+          "time": 1.0,
+          "transform": [
+            0,
+            0,
+            360
+          ]
         }
       ]
     },
@@ -20,11 +28,67 @@
           "visibility": false
         },
         {
-          "time": 0.265,
+          "time": 0.033125,
           "visibility": true
         },
         {
-          "time": 0.76,
+          "time": 0.095,
+          "visibility": false
+        },
+        {
+          "time": 0.158125,
+          "visibility": true
+        },
+        {
+          "time": 0.22,
+          "visibility": false
+        },
+        {
+          "time": 0.283125,
+          "visibility": true
+        },
+        {
+          "time": 0.345,
+          "visibility": false
+        },
+        {
+          "time": 0.408125,
+          "visibility": true
+        },
+        {
+          "time": 0.47,
+          "visibility": false
+        },
+        {
+          "time": 0.533125,
+          "visibility": true
+        },
+        {
+          "time": 0.595,
+          "visibility": false
+        },
+        {
+          "time": 0.658125,
+          "visibility": true
+        },
+        {
+          "time": 0.72,
+          "visibility": false
+        },
+        {
+          "time": 0.783125,
+          "visibility": true
+        },
+        {
+          "time": 0.845,
+          "visibility": false
+        },
+        {
+          "time": 0.908125,
+          "visibility": true
+        },
+        {
+          "time": 0.97,
           "visibility": false
         },
         {
@@ -34,15 +98,127 @@
       ],
       "property": [
         {
-          "time": 0.26667,
+          "time": 0.033334,
           "property": 0.0
         },
         {
-          "time": 0.73333,
+          "time": 0.091666,
+          "property": 1.0
+        },
+        {
+          "time": 0.09375,
+          "property": 1.0
+        },
+        {
+          "time": 0.125,
+          "property": 0.0
+        },
+        {
+          "time": 0.158334,
+          "property": 0.0
+        },
+        {
+          "time": 0.216666,
+          "property": 1.0
+        },
+        {
+          "time": 0.21875,
+          "property": 1.0
+        },
+        {
+          "time": 0.25,
+          "property": 0.0
+        },
+        {
+          "time": 0.283334,
+          "property": 0.0
+        },
+        {
+          "time": 0.341666,
+          "property": 1.0
+        },
+        {
+          "time": 0.34375,
+          "property": 1.0
+        },
+        {
+          "time": 0.375,
+          "property": 0.0
+        },
+        {
+          "time": 0.408334,
+          "property": 0.0
+        },
+        {
+          "time": 0.466666,
+          "property": 1.0
+        },
+        {
+          "time": 0.46875,
+          "property": 1.0
+        },
+        {
+          "time": 0.5,
+          "property": 0.0
+        },
+        {
+          "time": 0.533334,
+          "property": 0.0
+        },
+        {
+          "time": 0.591666,
+          "property": 1.0
+        },
+        {
+          "time": 0.59375,
+          "property": 1.0
+        },
+        {
+          "time": 0.625,
+          "property": 0.0
+        },
+        {
+          "time": 0.658334,
+          "property": 0.0
+        },
+        {
+          "time": 0.716666,
+          "property": 1.0
+        },
+        {
+          "time": 0.71875,
           "property": 1.0
         },
         {
           "time": 0.75,
+          "property": 0.0
+        },
+        {
+          "time": 0.783334,
+          "property": 0.0
+        },
+        {
+          "time": 0.841666,
+          "property": 1.0
+        },
+        {
+          "time": 0.84375,
+          "property": 1.0
+        },
+        {
+          "time": 0.875,
+          "property": 0.0
+        },
+        {
+          "time": 0.908334,
+          "property": 0.0
+        },
+        {
+          "time": 0.966666,
+          "property": 1.0
+        },
+        {
+          "time": 0.96875,
           "property": 1.0
         },
         {

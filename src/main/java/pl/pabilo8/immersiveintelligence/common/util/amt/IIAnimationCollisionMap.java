@@ -1,13 +1,14 @@
 package pl.pabilo8.immersiveintelligence.common.util.amt;
 
-import blusunrize.immersiveengineering.common.util.chickenbones.Matrix4;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.EntityAMTTactile;
 import pl.pabilo8.immersiveintelligence.common.util.amt.IIAnimation.IIAnimationGroup;
 
 import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A map used for easily animating an array of AMTs
@@ -18,8 +19,7 @@ import java.util.List;
  */
 public class IIAnimationCollisionMap extends HashMap<EntityAMTTactile, IIAnimationGroup>
 {
-	private Matrix4 mat;
-	private EnumFacing facing;
+	private Map<EntityAMTTactile, TactileTransform> transforms;
 
 	private IIAnimationCollisionMap()
 	{
@@ -28,9 +28,17 @@ public class IIAnimationCollisionMap extends HashMap<EntityAMTTactile, IIAnimati
 
 	public static IIAnimationCollisionMap create(List<EntityAMTTactile> tactiles, IIAnimation animation, EnumFacing facing, boolean isMirrored)
 	{
+		TactileTransform transform = TactileTransform.resolve(null, facing, isMirrored);
+		Map<EntityAMTTactile, TactileTransform> transforms = new IdentityHashMap<>();
+		tactiles.forEach(tactile -> transforms.put(tactile, transform));
+		return create(tactiles, animation, transforms);
+	}
+
+	public static IIAnimationCollisionMap create(List<EntityAMTTactile> tactiles, IIAnimation animation,
+												 Map<EntityAMTTactile, TactileTransform> transforms)
+	{
 		IIAnimationCollisionMap map = new IIAnimationCollisionMap();
-		map.mat = new Matrix4(facing);
-		map.facing = facing;
+		map.transforms = transforms;
 
 		//iterate through all animation groups, if name matches, put the part into the animation map
 		for(IIAnimationGroup group : animation.groups)
@@ -62,35 +70,64 @@ public class IIAnimationCollisionMap extends HashMap<EntityAMTTactile, IIAnimati
 
 	private void setAnimationGroups(EntityAMTTactile tactile, IIAnimationGroup group, float time)
 	{
+		TactileTransform transform = transforms.get(tactile);
+		if(transform==null)
+			return;
 		//translation
 		if(group.position!=null)
-		{
-			tactile.translation = group.position.getForTime(time);
-
-			//swap axis depending on facing
-			if(facing==EnumFacing.EAST)
-				tactile.translation = new Vec3d(-tactile.translation.z, tactile.translation.y, tactile.translation.x);
-			else if(facing==EnumFacing.WEST)
-				tactile.translation = new Vec3d(tactile.translation.z, tactile.translation.y, tactile.translation.x);
-			else if(facing==EnumFacing.NORTH)
-				tactile.translation = new Vec3d(-tactile.translation.x, tactile.translation.y, tactile.translation.z);
-
-		}
+			tactile.translation = transform.transformAnimationTranslation(group.position.getForTime(time));
 		//rotation
 		if(group.rotation!=null)
-		{
-			tactile.rotation = group.rotation.getForTime(time);
-
-			if(facing==EnumFacing.EAST)
-				tactile.rotation = new Vec3d(-tactile.rotation.z, tactile.rotation.y, tactile.rotation.x);
-			else if(facing==EnumFacing.WEST)
-				tactile.rotation = new Vec3d(-tactile.rotation.z, tactile.rotation.y, tactile.rotation.x);
-			else if(facing==EnumFacing.SOUTH)
-				tactile.rotation = new Vec3d(-tactile.rotation.x, tactile.rotation.y, -tactile.rotation.z);
-		}
+			tactile.rotation = transform.transformAnimationRotation(group.rotation.getForTime(time));
 		if(group.scale!=null)
-			tactile.scale = mat.apply(group.scale.getForTime(time));
+			tactile.scale = group.scale.getForTime(time);
 		if(group.visibility!=null)
 			tactile.visibility = group.visibility.getForTime(time);
+	}
+
+	/**
+	 * Applies the same local mirror and horizontal facing rotation as the multiblock renderer.
+	 */
+	public static Vec3d transformTranslation(Vec3d translation, EnumFacing facing, boolean mirrored)
+	{
+		return TactileTransform.resolve(null, facing, mirrored).transformAnimationTranslation(translation);
+	}
+
+	/**
+	 * Transforms a model-local direction without the translation channel's AMT X inversion.
+	 */
+	public static Vec3d transformModelDirection(Vec3d vector, EnumFacing facing, boolean mirrored)
+	{
+		Vec3d local = mirrored?new Vec3d(-vector.x, vector.y, vector.z): vector;
+		return TactileTransform.resolve(null, facing, false).rotateDirection(local);
+	}
+
+	/**
+	 * Converts Blockbench/AMT Euler axes to the collision hierarchy's axes, then treats the
+	 * rotation as an axial vector. Reflection on X therefore reverses Y and Z rotation.
+	 */
+	public static Vec3d transformRotation(Vec3d rotation, EnumFacing facing, boolean mirrored)
+	{
+		return TactileTransform.resolve(null, facing, mirrored).transformAnimationRotation(rotation);
+	}
+
+	/**
+	 * Rotates a direction around the renderer's -Y facing axis, without introducing the
+	 * block-centre translation contained in an affine model matrix.
+	 */
+	public static Vec3d rotateHorizontal(Vec3d vector, EnumFacing facing)
+	{
+		switch(facing)
+		{
+			case WEST:
+				return new Vec3d(-vector.z, vector.y, vector.x);
+			case NORTH:
+				return new Vec3d(-vector.x, vector.y, -vector.z);
+			case EAST:
+				return new Vec3d(vector.z, vector.y, -vector.x);
+			case SOUTH:
+			default:
+				return vector;
+		}
 	}
 }

@@ -1019,7 +1019,7 @@ public class EasyNBT extends Constants.NBT
 	 * @param key  name of this tag
 	 * @param type enum class
 	 */
-	public <E extends Enum<E> & ISerializableEnum> E getEnum(String key, Class<E> type)
+	public <E extends Enum<E>> E getEnum(String key, Class<E> type)
 	{
 		return IIUtils.enumValue(type, getString(key));
 	}
@@ -1249,7 +1249,7 @@ public class EasyNBT extends Constants.NBT
 		return this;
 	}
 
-	public <E extends Enum<E> & ISerializableEnum> EasyNBT checkSetEnum(String key, Class<E> type, Consumer<E> ifPresent)
+	public <E extends Enum<E>> EasyNBT checkSetEnum(String key, Class<E> type, Consumer<E> ifPresent)
 	{
 		if(wrapped.hasKey(key))
 			ifPresent.accept(getEnum(key, type));

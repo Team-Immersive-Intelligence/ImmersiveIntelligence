@@ -1,13 +1,21 @@
 {
   "origins": {
-    "base": [0, 32, 0],
-    "stage2": [0, -49, 0],
-    "stage3lamp": [-15.5, 84.55061, 15.4993],
-    "lamp": [-10.5, 73.5, 15.5]
+    "base": [23.5, -36, 8.5],
+    "stage2": [23.5, -117, 8.5],
+    "stage3lamp": [8, 16.5506, 23.9993],
+    "lamp": [13, 5.5, 24],
+    "ray": [8, 6.5, 19]
   },
   "hierarchy": {
     "stage2": "base",
     "stage3lamp": "stage2",
-    "lamp": "stage3lamp"
+    "lamp": "stage3lamp",
+    "ray": "lamp"
+  },
+  "properties": {
+    "ray": {
+      "particle": "light/spotlight_tower",
+      "rotation": [180.0, 0.0, 0.0]
+    }
   }
 }

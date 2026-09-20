@@ -1,0 +1,100 @@
+{
+  "bounds": {
+    "base": [-18, -3.5, -18, 18, 3.5, 18],
+    "turret": [-15, -2, -15, 15, 2, 15],
+    "shield": [-2, -11, -2, 2, 11, 2],
+    "gun3": [-3, -3, -3, 3, 3, 3],
+    "gun2": [-4, -4, -4, 4, 4, 4],
+    "gun": [-5, -7, -5, 5, 7, 5],
+    "box": [-5, -5.5, -5, 5, 5.5, 5],
+    "radio": [-4, -4.5, -4, 4, 4.5, 4],
+    "none": [0, 0, 0, 0, 0, 0]
+  },
+  "tactile_transforms": {
+    "all": {
+      "offset": [-1, 0, -2]
+    },
+    "south": {},
+    "west": {},
+    "north": {},
+    "east": {},
+    "mirrored": {}
+  },
+  "tactile": {
+    "_schema": "immersiveintelligence:models/block/multiblock/emplacement/weapon/light_howitzer.obj.amt",
+    "base": [
+      {
+        "offset": [13.89474, -68.90789, 1.18421],
+        "type": "base"
+      }
+    ],
+    "turret": [
+      {
+        "offset": [0, -0.27014, 0],
+        "type": "turret"
+      },
+      {
+        "offset": [8, 10.22986, -14],
+        "type": "shield"
+      },
+      {
+        "offset": [12, 10.22986, -14],
+        "type": "shield"
+      },
+      {
+        "offset": [-12, 10.22986, -14],
+        "type": "shield"
+      },
+      {
+        "offset": [-8, 10.22986, -14],
+        "type": "shield"
+      },
+      {
+        "offset": [10, 7.22986, 5],
+        "type": "box"
+      },
+      {
+        "offset": [-11, 6.22986, 11],
+        "type": "radio"
+      }
+    ],
+    "barrel_end": [
+      {
+        "offset": [6, -63, -4],
+        "type": "gun3"
+      },
+      {
+        "offset": [6, -63, 2],
+        "type": "gun3"
+      }
+    ],
+    "barrel": [
+      {
+        "offset": [6.5, 1, -14],
+        "type": "gun2"
+      }
+    ],
+    "gun_block": [
+      {
+        "offset": [13.5625, -71.6875, -5.75],
+        "type": "gun"
+      },
+      {
+        "offset": [13.5625, -71.6875, 2.25],
+        "type": "gun"
+      }
+    ],
+    "turret_origin": [
+      {
+        "offset": [-11, 6.22986, 11],
+        "type": "none"
+      }
+    ],
+    "barrel_origin": [
+      {
+        "offset": [-5.5, -5.5, 16],
+        "type": "none"
+      }
+    ]
+  }
+}

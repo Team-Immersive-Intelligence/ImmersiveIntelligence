@@ -23,7 +23,10 @@ import java.util.Collections;
 import java.util.List;
 
 /**
+ * Creates one or more test enemies at the sender's look position.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @ii-approved 0.3.1
  * @since 14.09.2025
  */
 public class CommandDevTestEnemies extends CommandIIBase

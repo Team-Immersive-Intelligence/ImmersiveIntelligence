@@ -1119,8 +1119,6 @@ machineupgrade.immersiveintelligence.emplacement.machinegun.heavy_barrel=重型�
 machineupgrade.immersiveintelligence.emplacement.machinegun.heavy_barrel.desc=重型枪管提供更高的射速,同时略微增加能承受的最大热量.
 machineupgrade.immersiveintelligence.emplacement.machinegun.watercooled=水冷枪管
 machineupgrade.immersiveintelligence.emplacement.machinegun.watercooled.desc=替换原装枪管。安装后，在提供冷却液的情况下，枪管不会过热。
-machineupgrade.immersiveintelligence.emplacement.machinegun.additional_fortifications=附加防御工事
-machineupgrade.immersiveintelligence.emplacement.machinegun.additional_fortifications.desc=在机枪巢周围放置额外的沙袋可以为其提供额外的装甲并提高其耐用性.
 
 machineupgrade.immersiveintelligence.emplacement.mortar=迫击炮
 machineupgrade.immersiveintelligence.emplacement.mortar.desc=迫击炮在近距离提供间接火力支持,高抛弹道和大口径炮弹使其能够穿透屋顶并从上方摧毁敌人.

@@ -28,7 +28,7 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.api.api.protection.capability.ProtectionCapabilityProvider;
+import pl.pabilo8.immersiveintelligence.api.protection.protection.capability.ProtectionCapabilityProvider;
 import pl.pabilo8.immersiveintelligence.client.model.armor.ModelLightEngineerArmor;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.LightEngineerArmor;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
@@ -160,9 +160,7 @@ public class ItemIILightEngineerChestplate extends ItemIILightEngineerArmorBase 
 		}
 
 
-
 	}
-
 
 
 	@Nullable
@@ -206,21 +204,23 @@ public class ItemIILightEngineerChestplate extends ItemIILightEngineerArmorBase 
 
 	@Override
 	public void onStrike(ItemStack s, EntityEquipmentSlot eqSlot, EntityLivingBase p, Map<String, Object> cache,
-						 @Nullable DamageSource dSource, ElectricSource eSource)
+	                     @Nullable DamageSource dSource, ElectricSource eSource)
 	{
-		if (!(dSource instanceof ElectricDamageSource))
+		if(!(dSource instanceof ElectricDamageSource))
 			return;
 
-		ElectricDamageSource dmg = (ElectricDamageSource) dSource;
+		ElectricDamageSource dmg = (ElectricDamageSource)dSource;
 
 		//anti static mesh
-		if (hasUpgrade(s, "anti_static_mesh")) {
+		if(hasUpgrade(s, "anti_static_mesh"))
+		{
 			dmg.dmg = (p.isInWater())
-					? (float) (dmg.dmg * LightEngineerArmor.antiStaticMeshWaterDamageMod)
+					?(float)(dmg.dmg*LightEngineerArmor.antiStaticMeshWaterDamageMod)
 					: 0;
 		}
 		//IR Mesh. Doubles incoming shock damage (a la EMP mine)
-		else if (hasUpgrade(s, "ir_mesh")) {
+		else if(hasUpgrade(s, "ir_mesh"))
+		{
 			dmg.dmg *= 1.5f;
 			p.attackEntityFrom(DamageSource.LIGHTNING_BOLT, 2.0F);
 		}

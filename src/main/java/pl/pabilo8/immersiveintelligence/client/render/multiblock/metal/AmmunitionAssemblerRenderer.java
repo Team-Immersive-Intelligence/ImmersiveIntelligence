@@ -32,11 +32,11 @@ import java.util.HashMap;
 @RegisteredTileRenderer(name = "multiblock/ammunition_assembler", clazz = TileEntityAmmunitionAssembler.class)
 public class AmmunitionAssemblerRenderer extends IIMultiblockRenderer<TileEntityAmmunitionAssembler>
 {
-	final HashMap<IAmmoTypeItem<?, ?>, IIAnimationCompiledMap> productionAnimations = new HashMap<>();
-	AMTModel model;
-	AMTLocator total;
-	AMTBullet casing, core;
-	IIAnimationCompiledMap hatch;
+	private final HashMap<IAmmoTypeItem<?, ?>, IIAnimationCompiledMap> productionAnimations = new HashMap<>();
+	private AMTModel model;
+	private AMTLocator total;
+	private AMTBullet casing, core, lid;
+	private IIAnimationCompiledMap hatch;
 
 	@Override
 	public void drawAnimated(TileEntityAmmunitionAssembler te, BufferBuilder buf, float partialTicks, Tessellator tes)
@@ -60,10 +60,16 @@ public class AmmunitionAssemblerRenderer extends IIMultiblockRenderer<TileEntity
 				casing.setModel(model);
 				casing.withGunpowderPercentage(1f);
 				casing.withStack(stack, BulletState.CASING);
+
+				lid.setModel(model);
+				lid.withStack(stack, BulletState.LID);
+
 				core.setModel(model);
 				core.withStack(stack, BulletState.CORE);
+
 				casing.setVisible(true);
 				core.setVisible(true);
+				lid.setVisible(true);
 
 				total.render(tes, buf);
 			}
@@ -72,6 +78,7 @@ public class AmmunitionAssemblerRenderer extends IIMultiblockRenderer<TileEntity
 
 		casing.setVisible(false);
 		core.setVisible(false);
+		lid.setVisible(false);
 
 		model.render(tes, buf);
 	}
@@ -100,15 +107,17 @@ public class AmmunitionAssemblerRenderer extends IIMultiblockRenderer<TileEntity
 	{
 		this.model = new AMTModel(state, model, header -> new AMT[]{
 				total = new AMTLocator("total", header),
-				casing = new AMTBullet("case", header, null).withState(BulletState.CASING),
-				core = new AMTBullet("core", header, null).withState(BulletState.CORE)
+				casing = new AMTBullet("case", header, null),
+				lid = new AMTBullet("lid", header, null),
+				core = new AMTBullet("core", header, null)
 		});
-		hatch = IIAnimationCompiledMap.create(this.model, ResLoc.of(IIReference.RES_II, "ammunition_assembler/door"));
+		this.hatch = IIAnimationCompiledMap.create(this.model, ResLoc.of(IIReference.RES_II, "ammunition_assembler/door"));
 
 		//Load ammo production animations, excluding ones for the Heavy Ammunition Assembler
-		productionAnimations.clear();
+		this.productionAnimations.clear();
 		for(AmmunitionAssemblerRecipe recipe : AmmunitionAssemblerRecipe.getRecipes(AmmunitionAssemblerRecipe.class))
 			if(!recipe.advanced)
-				productionAnimations.put(recipe.ammoItem, IIAnimationCompiledMap.create(this.model, ResLoc.of(IIReference.RES_II, "ammunition_assembler/"+recipe.ammoItem.getName())));
+				this.productionAnimations.put(recipe.ammoItem,
+						IIAnimationCompiledMap.create(this.model, ResLoc.of(IIReference.RES_II, "ammunition_assembler/"+recipe.ammoItem.getName())));
 	}
 }

@@ -6,6 +6,7 @@
   "aabb": 0.0625,
   "color": "AEAEAE",
   "programs": [
+    "foliage_color",
     "gravity(1.0,0.08)",
     "dust_transition",
     "rotation(3,3)"

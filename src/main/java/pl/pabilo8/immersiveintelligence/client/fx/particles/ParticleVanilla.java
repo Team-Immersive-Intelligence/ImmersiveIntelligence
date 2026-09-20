@@ -49,32 +49,20 @@ public class ParticleVanilla extends AbstractParticle
 	@Override
 	public Object getProperty(ParticleProperties key)
 	{
-		switch(key)
+		return switch(key)
 		{
-			case COLOR:
-				return color;
-			case RED:
-				return color.red;
-			case GREEN:
-				return color.green;
-			case BLUE:
-				return color.blue;
-			case ALPHA:
-				return color.alpha;
-
-			case SIZE:
-				return size;
-			case SCALE:
-				return scale;
-			case TEXTURE_SHIFT:
-				return textureShift;
-			case TEXTURES:
-				return textures;
-			case TEXTURES_COUNT:
-				return textures.length;
-			default:
-				return super.getProperty(key);
-		}
+			case COLOR -> color;
+			case RED -> color.red;
+			case GREEN -> color.green;
+			case BLUE -> color.blue;
+			case ALPHA -> color.alpha;
+			case SIZE -> size;
+			case SCALE -> scale;
+			case TEXTURE_SHIFT -> textureShift;
+			case TEXTURES -> textures;
+			case TEXTURES_COUNT -> textures.length;
+			default -> super.getProperty(key);
+		};
 	}
 
 	@Override

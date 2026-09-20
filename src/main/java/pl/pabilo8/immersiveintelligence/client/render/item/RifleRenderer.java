@@ -33,7 +33,6 @@ import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTHand;
 import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTParticle;
 import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIItemRendererAMT.RegisteredItemRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIUpgradableItemRendererAMT;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.AssaultRifle;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIGunBase;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIRifle;
@@ -120,6 +119,7 @@ public class RifleRenderer extends IIUpgradableItemRendererAMT<ItemIIRifle> impl
 			return;
 
 		EasyNBT nbt = EasyNBT.wrapNBT(stack);
+		EasyNBT upgradeNBT = EasyNBT.wrapNBT(item.getUpgrades(stack));
 		AmmoHandler ammoHandler = item.getAmmoHandler(stack);
 
 		//Set model variant
@@ -140,7 +140,7 @@ public class RifleRenderer extends IIUpgradableItemRendererAMT<ItemIIRifle> impl
 		if(handRender)
 		{
 			int aiming = nbt.getInt(ItemIIRifle.AIMING);
-			float preciseAim = AMTUtils.getAnimationProgress(aiming, item.getAimingTime(stack, nbt),
+			float preciseAim = AMTUtils.getAnimationProgress(aiming, item.getAimingTime(stack, upgradeNBT),
 					true, !Minecraft.getMinecraft().player.isSneaking(),
 					1, 3,
 					partialTicks);
@@ -148,10 +148,9 @@ public class RifleRenderer extends IIUpgradableItemRendererAMT<ItemIIRifle> impl
 			if(preciseAim > 0)
 			{
 				//gun "push" towards player
-				float recoil = Math.min(
-						(nbt.getFloat(ItemIIRifle.RECOIL_V)+nbt.getFloat(ItemIIRifle.RECOIL_H))
-								/(AssaultRifle.maxRecoilHorizontal+AssaultRifle.maxRecoilVertical),
-						1f);
+				float maxRecoil = item.getMaxHorizontalRecoil(stack, upgradeNBT)+item.getMaxVerticalRecoil(stack, upgradeNBT);
+				float recoil = maxRecoil > 0?
+						Math.min((nbt.getFloat(ItemIIRifle.RECOIL_V)+nbt.getFloat(ItemIIRifle.RECOIL_H))/maxRecoil, 1f): 0;
 
 				GlStateManager.translate(-preciseAim*(1-0.0625-0.0625/2+0.0078125), 0.25*preciseAim, 0);
 				GlStateManager.rotate(preciseAim*-7.75f, 0, 1, 0);
@@ -170,7 +169,7 @@ public class RifleRenderer extends IIUpgradableItemRendererAMT<ItemIIRifle> impl
 
 
 			}
-			else if(swingProgress > 0&&item.getUpgrades(stack).hasKey("melee"))
+			else if(swingProgress > 0&&upgradeNBT.hasKey("melee"))
 			{
 				GlStateManager.translate(0, 0, -0.5f*(1f-Math.abs((swingProgress-0.5f)/0.5f)));
 			}
@@ -182,7 +181,7 @@ public class RifleRenderer extends IIUpgradableItemRendererAMT<ItemIIRifle> impl
 
 		float v = AMTUtils.getAnimationProgress(
 				reloading,
-				(float)item.getReloadTime(stack, ItemStack.EMPTY, EasyNBT.wrapNBT(item.getUpgrades(stack))),
+				(float)item.getReloadTime(stack, ItemStack.EMPTY, upgradeNBT),
 				reloading > 0,
 				false,
 				1,
@@ -301,6 +300,6 @@ public class RifleRenderer extends IIUpgradableItemRendererAMT<ItemIIRifle> impl
 		if(item.hasIIUpgrade(stack, WeaponUpgrade.SCOPE))
 			return false;
 
-		return ItemNBTHelper.getInt(stack, ItemIIRifle.AIMING) > item.getAimingTime(stack, EasyNBT.wrapNBT(stack))*0.85;
+		return ItemNBTHelper.getInt(stack, ItemIIRifle.AIMING) > item.getAimingTime(stack, EasyNBT.wrapNBT(item.getUpgrades(stack)))*0.85;
 	}
 }

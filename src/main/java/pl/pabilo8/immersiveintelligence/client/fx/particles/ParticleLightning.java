@@ -55,23 +55,16 @@ public class ParticleLightning extends AbstractParticle
 	@Override
 	public Object getProperty(ParticleProperties key)
 	{
-		switch(key)
+		return switch(key)
 		{
-			case COLOR:
-				return color;
-			case RED:
-				return color.red;
-			case GREEN:
-				return color.green;
-			case BLUE:
-				return color.blue;
-			case ALPHA:
-				return color.alpha;
-			case STRETCH:
-				return endPoint;
-			default:
-				return super.getProperty(key);
-		}
+			case COLOR -> color;
+			case RED -> color.red;
+			case GREEN -> color.green;
+			case BLUE -> color.blue;
+			case ALPHA -> color.alpha;
+			case STRETCH -> endPoint;
+			default -> super.getProperty(key);
+		};
 	}
 
 	@Override

@@ -7,51 +7,52 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
+import pl.pabilo8.immersiveintelligence.api.utils.tools.ISkinnable;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler.IISpecialSkin;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Displays a contributor skin and cycles through all compatible skinnable items.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 05.09.2026
  * @since 07.08.2021
  */
 public class IIManualPageContributorSkin extends IIManualPages
 {
-	public IISpecialSkin skin;
-	public ItemStack renderStack;
+	private static final int DISPLAY_TIME = 30;
+
+	public final IISpecialSkin skin;
+	public final List<ItemStack> renderStacks = new ArrayList<>();
 	protected String localizedName;
 	protected String localizedLore;
+	private final int maxTimer;
 
 	public IIManualPageContributorSkin(ManualInstance manual, IISpecialSkin skin)
 	{
 		super(manual, "contributor_skin_"+skin.name);
 		this.skin = skin;
-		if(skin.doesApply(IIContent.itemSubmachinegun.getSkinnableName()))
-		{
-			renderStack = new ItemStack(IIContent.itemSubmachinegun);
-			IIContent.itemSubmachinegun.applySkinnableSkin(renderStack, skin.name);
-		}
-		else if(skin.doesApply(IIContent.itemLightEngineerHelmet.getSkinnableName()))
-		{
-			renderStack = new ItemStack(IIContent.itemLightEngineerHelmet);
-			IIContent.itemLightEngineerHelmet.applySkinnableSkin(renderStack, skin.name);
-		}
-		else if(skin.doesApply(IIContent.itemAssaultRifle.getSkinnableName()))
-		{
-			renderStack = new ItemStack(IIContent.itemAssaultRifle);
-			IIContent.itemAssaultRifle.applySkinnableSkin(renderStack, skin.name);
-		}
-		else if(skin.doesApply(IIContent.itemMachinegun.getSkinnableName()))
-		{
-			renderStack = new ItemStack(IIContent.itemMachinegun);
-			IIContent.itemMachinegun.applySkinnableSkin(renderStack, skin.name);
-		}
-		else
-			renderStack = ItemStack.EMPTY;
+
+		for(Item item : IIContent.ITEMS)
+			if(item instanceof ISkinnable skinnable&&skin.doesApply(skinnable.getSkinnableName()))
+			{
+				ItemStack stack = new ItemStack(item);
+				skinnable.applySkinnableSkin(stack, skin.name);
+				renderStacks.add(stack);
+			}
+
+		if(renderStacks.isEmpty())
+			renderStacks.add(ItemStack.EMPTY);
+		maxTimer = renderStacks.size()*DISPLAY_TIME;
 	}
 
 	@Override
@@ -77,9 +78,7 @@ public class IIManualPageContributorSkin extends IIManualPages
 	public void renderPage(GuiManual gui, int x, int y, int mx, int my)
 	{
 		if(localizedName!=null&&!localizedName.isEmpty())
-		{
 			IIClientUtils.drawStringCentered(manual.fontRenderer, TextFormatting.BOLD.toString()+TextFormatting.UNDERLINE+localizedName, x+10, y+40, 100, 0, manual.getTextColour());
-		}
 
 		if(localizedLore!=null&&!localizedLore.isEmpty())
 			ManualUtils.drawSplitString(manual.fontRenderer, TextFormatting.ITALIC+localizedLore, x, y+52, 120, manual.getTextColour());
@@ -95,8 +94,14 @@ public class IIManualPageContributorSkin extends IIManualPages
 		RenderHelper.enableGUIStandardItemLighting();
 		GlStateManager.translate(x+42, y+4, 0);
 		GlStateManager.scale(2, 2, 2);
-		ManualUtils.renderItem().renderItemAndEffectIntoGUI(renderStack, 0, 0);
+		ManualUtils.renderItem().renderItemAndEffectIntoGUI(getCurrentlyDisplayedStack(), 0, 0);
 		GlStateManager.popMatrix();
+	}
+
+	private ItemStack getCurrentlyDisplayedStack()
+	{
+		float progress = AMTUtils.getDebugProgress(maxTimer, 0);
+		return renderStacks.get((int)MathHelper.clamp(progress*renderStacks.size(), 0, renderStacks.size()-1));
 	}
 
 	void drawOrnamentalFrame(GuiManual gui, int x, int y)

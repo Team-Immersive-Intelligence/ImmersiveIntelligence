@@ -1,0 +1,40 @@
+{
+  "type": "ParticleVanilla",
+  "textures": [
+    "minecraft:blocks/wool_colored_white"
+  ],
+  "color": "464646",
+  "max_lifetime": 3,
+  "draw_stage": "custom_additive",
+  "size": 0.0,
+  "programs": [
+    "block_color",
+    "lifetime_retexture",
+    "shockwave_transition(0.25)"
+  ],
+  "scheduled": [
+    {
+      "time": 1,
+      "generator": "same",
+      "distance": 0.0,
+      "amount": 1,
+      "speed": 0.0,
+      "type": "debris/generic_hit_heat"
+    },
+    {
+      "time": 2,
+      "generator": "cone_toward_25",
+      "distance": 0,
+      "min_amount": 3,
+      "max_amount": 6,
+      "speed": -0.5,
+      "type": "block/block_chunk",
+      "inherited_properties": [
+        "color"
+      ]
+    }
+  ],
+  "properties": {
+    "motion": [0.0, 0.0, 0.0]
+  }
+}

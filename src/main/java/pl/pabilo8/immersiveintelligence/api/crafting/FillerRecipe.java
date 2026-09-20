@@ -72,11 +72,11 @@ public class FillerRecipe extends IIMultiblockRecipe
 	@Override
 	protected IIRecipeLayout initRecipeLayout()
 	{
-		return new IIRecipeLayoutBuilder(156, 68)
+		return new IIRecipeLayoutBuilder(156, 64)
 				.withInputSlot(2, 20, itemInput)
 				.withDustTank(2+22, 4, dust, IOType.INPUT)
 				.withOutputSlot(135, 20, itemOutput)
-				.withMultiblockModel(32+8, 0)
+				.withMultiblockModel(32+8-2, 0)
 				.withTimeInfo()
 				.withPowerInfo()
 				.build();

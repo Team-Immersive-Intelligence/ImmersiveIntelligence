@@ -1,6 +1,54 @@
 {
   "comment": "Made by Pabilo8 with Blockbench",
   "groups": {
+    "inserter1": {
+      "rotation": [
+        {
+          "time": 0.19355,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.24194,
+          "transform": [0, -12, 0]
+        },
+        {
+          "time": 0.26881,
+          "transform": [0, -8.79, 0]
+        },
+        {
+          "time": 0.29032,
+          "transform": [0, -9.82, 0]
+        },
+        {
+          "time": 0.3172,
+          "transform": [0, -9.33, 0]
+        },
+        {
+          "time": 0.35484,
+          "transform": [0, -9.25, 0]
+        },
+        {
+          "time": 0.5,
+          "transform": [0, -8.21, 0]
+        },
+        {
+          "time": 0.55914,
+          "transform": [0, -12.47, 0]
+        },
+        {
+          "time": 0.58065,
+          "transform": [0, -15.93, 0]
+        },
+        {
+          "time": 0.67742,
+          "transform": [0, -15, 0]
+        },
+        {
+          "time": 0.74194,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
     "lower1": {
       "rotation": [
         {
@@ -16,12 +64,16 @@
           "transform": [20, 0, 0]
         },
         {
-          "time": 0.29032,
-          "transform": [20, 0, 0]
+          "time": 0.2957,
+          "transform": [19.17, 0, 0]
+        },
+        {
+          "time": 0.3172,
+          "transform": [30, 0, 0]
         },
         {
           "time": 0.35484,
-          "transform": [57.5, 0, 0]
+          "transform": [40, 0, 0]
         },
         {
           "time": 0.40323,
@@ -40,12 +92,20 @@
           "transform": [80, 0, 0]
         },
         {
+          "time": 0.55914,
+          "transform": [22.17, 0, 0]
+        },
+        {
           "time": 0.58065,
-          "transform": [25, 0, 0]
+          "transform": [5, 0, 0]
+        },
+        {
+          "time": 0.60752,
+          "transform": [-0.21, 0, 0]
         },
         {
           "time": 0.64516,
-          "transform": [12.5, 0, 0]
+          "transform": [22.5, 0, 0]
         },
         {
           "time": 0.6828,
@@ -72,20 +132,36 @@
           "transform": [117.5, 0, 0]
         },
         {
-          "time": 0.29032,
-          "transform": [42.5, 0, 0]
+          "time": 0.2957,
+          "transform": [65.56, 0, 0]
+        },
+        {
+          "time": 0.3172,
+          "transform": [15, 0, 0]
         },
         {
           "time": 0.35484,
-          "transform": [5, 0, 0]
+          "transform": [32.5, 0, 0]
+        },
+        {
+          "time": 0.5,
+          "transform": [32.5, 0, 0]
+        },
+        {
+          "time": 0.55914,
+          "transform": [62.62, 0, 0]
         },
         {
           "time": 0.58065,
-          "transform": [5, 0, 0]
+          "transform": [65, 0, 0]
+        },
+        {
+          "time": 0.60752,
+          "transform": [105.42, 0, 0]
         },
         {
           "time": 0.64516,
-          "transform": [115, 0, 0]
+          "transform": [120, 0, 0]
         },
         {
           "time": 0.6828,
@@ -252,12 +328,12 @@
           "transform": [0, 0, 0]
         },
         {
-          "time": 0.7957,
+          "time": 0.76345,
           "transform": [0, 0, 0]
         },
         {
           "time": 0.8172,
-          "transform": [0, 7.5, 0]
+          "transform": [0, -15, 0]
         },
         {
           "time": 0.86022,
@@ -362,10 +438,6 @@
           "transform": [0, 24.12807, 12.53614]
         },
         {
-          "time": 0.6129,
-          "transform": [0, 12.47862, 8.55522]
-        },
-        {
           "time": 0.64516,
           "transform": [0, 0.13, 12.54]
         },
@@ -388,6 +460,24 @@
       ]
     },
     "case": {
+      "rotation": [
+        {
+          "time": 0.35484,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.37097,
+          "transform": [-3.5, 0, 0]
+        },
+        {
+          "time": 0.3871,
+          "transform": [-1.75, 0, 0]
+        },
+        {
+          "time": 0.40323,
+          "transform": [0, 0, 0]
+        }
+      ],
       "position": [
         {
           "time": 0,
@@ -395,14 +485,14 @@
         },
         {
           "time": 0.12903,
-          "transform": [39.5, 0, 3]
+          "transform": [36, 0, 3]
         }
       ]
     },
     "core": {
       "rotation": [
         {
-          "time": 0.29032,
+          "time": 0.3172,
           "transform": [0, 0, 0]
         },
         {
@@ -425,47 +515,47 @@
       "position": [
         {
           "time": 0,
-          "transform": [0, -2, 0]
+          "transform": [0, -3, 0]
         },
         {
           "time": 0.06452,
-          "transform": [20, -2, 0]
+          "transform": [20, -3, 0]
         },
         {
-          "time": 0.12903,
-          "transform": [20, -2, -15]
+          "time": 0.12365,
+          "transform": [20, -3, -15]
         },
         {
           "time": 0.19355,
-          "transform": [39.5, -2, -15]
+          "transform": [37, -3, -15]
         },
         {
           "time": 0.24194,
-          "transform": [39.5, -2, -15]
+          "transform": [37, -3, -15]
         },
         {
-          "time": 0.26881,
-          "transform": [39.5, 8.56, -20.22]
+          "time": 0.2957,
+          "transform": [37, 10.56, -20.22]
         },
         {
-          "time": 0.29032,
-          "transform": [39.5, 17, -19]
+          "time": 0.3172,
+          "transform": [37, 19, -19]
         },
         {
           "time": 0.35484,
-          "transform": [39.5, 11.14567, -28.61036]
+          "transform": [36.1, 13.14567, -28.61036]
         },
         {
           "time": 0.37097,
-          "transform": [39.5, 7.92969, -29.33818]
+          "transform": [36.07, 9.92969, -28.83818]
         },
         {
           "time": 0.3871,
-          "transform": [39.5, 4.57236, -29.44884]
+          "transform": [36.03, 6.57236, -28.94884]
         },
         {
           "time": 0.40323,
-          "transform": [39.5, 1.12901, -28.5]
+          "transform": [36, -0.07099, -29.06491]
         }
       ]
     }

@@ -24,7 +24,7 @@ public class AmmoComponentPropaganda extends AmmoComponent
 {
 	public AmmoComponentPropaganda()
 	{
-		super("propaganda", 0.65f, ComponentRole.SPECIAL, IIColor.fromPackedARGB(0xbaafa4), 1);
+		super("propaganda", 0.65f, ComponentRole.SPECIAL, IIColor.fromPackedRGB(0xbaafa4), 1);
 	}
 
 	@Override

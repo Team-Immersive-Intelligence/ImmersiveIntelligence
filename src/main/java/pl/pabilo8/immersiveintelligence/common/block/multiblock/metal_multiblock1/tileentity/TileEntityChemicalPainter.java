@@ -188,6 +188,8 @@ public class TileEntityChemicalPainter extends TileEntityMultiblockProductionSin
 	@Override
 	protected IIMultiblockProcess<PaintingRecipe> findNewProductionProcess()
 	{
+		if(getRedstoneAtPos(0))
+			return null;
 		if(this.inventory.get(SLOT_INPUT).isEmpty())
 			return null;
 
@@ -235,6 +237,8 @@ public class TileEntityChemicalPainter extends TileEntityMultiblockProductionSin
 	@Override
 	public float getProductionStep(IIMultiblockProcess<PaintingRecipe> process, boolean simulate)
 	{
+		if(getRedstoneAtPos(0))
+			return 0;
 		if(energyStorage.extractEnergy(process.recipe.getEnergyPerTick(), true)==process.recipe.getEnergyPerTick())
 			return (simulate||(energyStorage.extractEnergy(process.recipe.getEnergyPerTick(), false)) > 0)?1: 0;
 		return 0;

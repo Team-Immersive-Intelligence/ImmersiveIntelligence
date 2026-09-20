@@ -1,6 +1,7 @@
 #version 130
 
 //Author: Pabilo8 (pabilo@iiteam.net)
+//brightness noise shader
 uniform float time;
 
 uniform sampler2D texture;

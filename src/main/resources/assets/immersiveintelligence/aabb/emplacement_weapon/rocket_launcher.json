@@ -1,0 +1,257 @@
+{
+  "bounds": {
+    "base": [-19, -1, -19, 19, 1, 19],
+    "base_top": [-16, -6, -18, 16, 6, 18],
+    "turret": [-14, -12, -14, 14, 12, 14],
+    "turret_base": [-11, -1, -11, 11, 1, 11],
+    "turret_base_2": [-12, -1, -12, 12, 1, 12],
+    "turret_wall": [-2, -13, -2, 2, 13, 2],
+    "crane": [-4, -4, -4, 4, 4, 4],
+    "crane2": [-2, -2, -2, 2, 2, 2],
+    "tray": [-8.5, -5, -8.5, 8.5, 5, 8.5],
+    "turret_winch": [-3, -3, -3, 3, 3, 3],
+    "turret_top": [-6.5, -1.5, -6.5, 6.5, 1.5, 6.5],
+    "none": [0, 0, 0, 0, 0, 0]
+  },
+  "tactile_transforms": {
+    "all": {
+      "offset": [-1, 0, -2]
+    },
+    "south": {},
+    "west": {},
+    "north": {},
+    "east": {},
+    "mirrored": {}
+  },
+  "tactile": {
+    "_schema": "immersiveintelligence:models/block/multiblock/emplacement/weapon/rocket_launcher.obj.amt",
+    "base": [
+      {
+        "offset": [0, -9, 0],
+        "type": "base"
+      },
+      {
+        "offset": [1.5, -2, -2],
+        "type": "base_top"
+      },
+      {
+        "offset": [-2.5, -2, -2],
+        "type": "base_top"
+      }
+    ],
+    "projector": [
+      {
+        "offset": [-4.89561, 0.15435, -1.578],
+        "type": "turret"
+      },
+      {
+        "offset": [3.10439, 0.15435, -1.578],
+        "type": "turret"
+      }
+    ],
+    "turret": [
+      {
+        "offset": [-0.078, 1.15435, -0.1044],
+        "type": "turret_base"
+      },
+      {
+        "offset": [7.922, 2.15435, -0.1044],
+        "type": "turret_base_2"
+      },
+      {
+        "offset": [-8.078, 2.15435, -0.1044],
+        "type": "turret_base_2"
+      },
+      {
+        "offset": [-18.078, 14.15435, -10.1044],
+        "type": "turret_wall"
+      },
+      {
+        "offset": [-18.078, 14.15435, -6.1044],
+        "type": "turret_wall"
+      },
+      {
+        "offset": [-18.078, 14.15435, -2.1044],
+        "type": "turret_wall"
+      },
+      {
+        "offset": [-18.078, 14.15435, 1.8956],
+        "type": "turret_wall"
+      },
+      {
+        "offset": [-18.078, 14.15435, 5.8956],
+        "type": "turret_wall"
+      },
+      {
+        "offset": [-18.078, 14.15435, 9.8956],
+        "type": "turret_wall"
+      },
+      {
+        "offset": [17.922, 14.15435, 9.8956],
+        "type": "turret_wall"
+      },
+      {
+        "offset": [17.922, 14.15435, 5.8956],
+        "type": "turret_wall"
+      },
+      {
+        "offset": [17.922, 14.15435, 1.8956],
+        "type": "turret_wall"
+      },
+      {
+        "offset": [17.922, 14.15435, -2.1044],
+        "type": "turret_wall"
+      },
+      {
+        "offset": [17.922, 14.15435, -6.1044],
+        "type": "turret_wall"
+      },
+      {
+        "offset": [17.922, 14.15435, -10.1044],
+        "type": "turret_wall"
+      },
+      {
+        "offset": [14.422, 35.15435, -8.1044],
+        "type": "turret_winch"
+      },
+      {
+        "offset": [14.422, 35.15435, -2.1044],
+        "type": "turret_winch"
+      },
+      {
+        "offset": [14.422, 35.15435, 3.8956],
+        "type": "turret_winch"
+      },
+      {
+        "offset": [14.422, 35.15435, 8.8956],
+        "type": "turret_winch"
+      },
+      {
+        "offset": [-13.578, 35.15435, 3.8956],
+        "type": "turret_winch"
+      },
+      {
+        "offset": [-13.578, 35.15435, -2.1044],
+        "type": "turret_winch"
+      },
+      {
+        "offset": [-13.578, 35.15435, -8.1044],
+        "type": "turret_winch"
+      },
+      {
+        "offset": [-13.578, 35.15435, 8.8956],
+        "type": "turret_winch"
+      },
+      {
+        "offset": [-2.578, 34.65435, 3.3956],
+        "type": "turret_top"
+      }
+    ],
+    "loader_crane": [
+      {
+        "offset": [-8.22894, 1.42816, 11.422],
+        "type": "crane"
+      },
+      {
+        "offset": [-0.22894, 1.42816, 11.422],
+        "type": "crane"
+      },
+      {
+        "offset": [15.77106, 1.42816, 11.422],
+        "type": "crane"
+      },
+      {
+        "offset": [7.77106, 1.42816, 11.422],
+        "type": "crane"
+      },
+      {
+        "offset": [-10.22894, 0.42816, 5.422],
+        "type": "crane2"
+      },
+      {
+        "offset": [18.02106, 0.42816, 5.422],
+        "type": "crane2"
+      },
+      {
+        "offset": [18.02106, 0.42816, 1.422],
+        "type": "crane2"
+      },
+      {
+        "offset": [-10.22894, 0.42816, 1.422],
+        "type": "crane2"
+      },
+      {
+        "offset": [-10.22894, 0.42816, -2.578],
+        "type": "crane2"
+      },
+      {
+        "offset": [18.02106, 0.42816, -2.578],
+        "type": "crane2"
+      },
+      {
+        "offset": [18.02106, 0.42816, -6.578],
+        "type": "crane2"
+      },
+      {
+        "offset": [-10.22894, 0.42816, -6.578],
+        "type": "crane2"
+      },
+      {
+        "offset": [-10.22894, 0.42816, -10.578],
+        "type": "crane2"
+      },
+      {
+        "offset": [18.02106, 0.42816, -10.578],
+        "type": "crane2"
+      }
+    ],
+    "tray_upper": [
+      {
+        "offset": [10.6456, 4.19005, -4.5291],
+        "type": "tray"
+      },
+      {
+        "offset": [27.6456, 4.19005, -4.5291],
+        "type": "tray"
+      },
+      {
+        "offset": [10.6456, 4.19005, -10.5291],
+        "type": "tray"
+      },
+      {
+        "offset": [27.6456, 4.19005, -10.5291],
+        "type": "tray"
+      }
+    ],
+    "tray_lower": [
+      {
+        "offset": [6.18138, 5.54244, 0.42193],
+        "type": "tray"
+      },
+      {
+        "offset": [23.18138, 5.54244, 0.42193],
+        "type": "tray"
+      },
+      {
+        "offset": [6.18138, 5.54244, -5.57807],
+        "type": "tray"
+      },
+      {
+        "offset": [23.18138, 5.54244, -5.57807],
+        "type": "tray"
+      }
+    ],
+    "turret_origin": [
+      {
+        "offset": [-0.078, 1.15435, -0.1044],
+        "type": "none"
+      }
+    ],
+    "projector_origin": [
+      {
+        "offset": [-0.89561, -19.84565, -0.078],
+        "type": "none"
+      }
+    ]
+  }
+}

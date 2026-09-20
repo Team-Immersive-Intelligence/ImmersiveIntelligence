@@ -6,14 +6,14 @@ import blusunrize.immersiveengineering.api.energy.wires.IImmersiveConnectable;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
 import blusunrize.immersiveengineering.api.energy.wires.WireType;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IAdvancedCollisionBounds;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IAdvancedSelectionBounds;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.*;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3i;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
@@ -21,6 +21,7 @@ import net.minecraftforge.fluids.IFluidTank;
 import pl.pabilo8.immersiveintelligence.api.utils.ISkyCrateConnector;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.multiblock.MultiblockSkyCratePost;
 import pl.pabilo8.immersiveintelligence.common.entity.EntitySkyCrate;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IAdvancedBounds;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockConnectable;
 
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ import static blusunrize.immersiveengineering.api.energy.wires.WireType.STRUCTUR
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 28.06.2019
  */
-public class TileEntitySkyCratePost extends TileEntityMultiblockConnectable<TileEntitySkyCratePost, IMultiblockRecipe> implements IAdvancedCollisionBounds, IAdvancedSelectionBounds, ISkyCrateConnector
+public class TileEntitySkyCratePost extends TileEntityMultiblockConnectable<TileEntitySkyCratePost, IMultiblockRecipe> implements IAdvancedBounds, ISkyCrateConnector
 {
 
 	public TileEntitySkyCratePost()
@@ -213,26 +214,13 @@ public class TileEntitySkyCratePost extends TileEntityMultiblockConnectable<Tile
 		return null;
 	}
 
+
 	@Override
-	public List<AxisAlignedBB> getAdvancedSelectionBounds()
+	public List<AxisAlignedBB> getBounds(boolean collision)
 	{
 		List<AxisAlignedBB> list = new ArrayList<>();
-
 		list.add(new AxisAlignedBB(0, 0, 0, 1, 1, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
-
 		return list;
-	}
-
-	@Override
-	public boolean isOverrideBox(AxisAlignedBB box, EntityPlayer player, RayTraceResult mop, ArrayList<AxisAlignedBB> list)
-	{
-		return false;
-	}
-
-	@Override
-	public List<AxisAlignedBB> getAdvancedColisionBounds()
-	{
-		return getAdvancedSelectionBounds();
 	}
 
 	@Override

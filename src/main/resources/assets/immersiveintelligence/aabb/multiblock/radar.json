@@ -243,9 +243,30 @@
     "radar": 272
   },
   "rotations": {
-    "data": "counterclockwise_90"
+    "data": "clockwise_90"
   },
-  "tactile_offset": [0.5, 0, 0.5],
+  "tactile_transforms": {
+    "all": {
+      "offset": [-1.5, 0, 0]
+    },
+    "north": {
+      "rotation": [0, 0, 0],
+      "flip_xz_size": true
+    },
+    "east": {
+      "rotation": [0, 90, 0],
+      "flip_xz_size": false
+    },
+    "south": {
+      "rotation": [0, 180, 0],
+      "flip_xz_size": true
+    },
+    "west": {
+      "rotation": [0, 270, 0],
+      "flip_xz_size": false
+    },
+    "mirrored": {}
+  },
   "tactile": {
     "_schema": "immersiveintelligence:models/block/multiblock/radar/radar.obj.amt",
     "rotato": [

@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.compat.ie;
 
+import blusunrize.immersiveengineering.api.ManualHelper;
 import blusunrize.immersiveengineering.api.crafting.*;
 import blusunrize.immersiveengineering.api.tool.RailgunHandler;
 import blusunrize.immersiveengineering.client.ClientUtils;
@@ -39,6 +40,7 @@ import net.minecraftforge.fml.common.registry.VillagerRegistry.VillagerProfessio
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.block.overrides.GuiIECrateOverride;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Overrides;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Overrides.Chemthrower;
@@ -288,7 +290,8 @@ public class ImmersiveEngineeringHelper extends IICompatModule
 	@Override
 	public void clientPostInit()
 	{
-
+		if(Overrides.enableFontOverride)
+			ManualHelper.getManual().fontRenderer = IIClientUtils.fontRegular;
 	}
 
 	private static class ItemstackForEmerald implements ITradeList

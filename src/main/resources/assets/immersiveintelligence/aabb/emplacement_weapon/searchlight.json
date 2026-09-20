@@ -1,0 +1,66 @@
+{
+  "bounds": {
+    "aabb": [-15, -1.5, -15, 15, 1.5, 15],
+    "aabb2": [-7, -1, -7, 7, 1, 7],
+    "aabb3": [-7, -1, -7, 7, 1, 7],
+    "aabb4": [-8, -16, -8, 8, 16, 8],
+    "aabb5": [-6, -14, -6, 6, 14, 6],
+    "aabb6": [-6, -14, -6, 6, 14, 6],
+    "none": [0, 0, 0, 0, 0, 0]
+  },
+  "tactile_transforms": {
+    "all": {
+      "offset": [-1, 0, -2]
+    },
+    "south": {},
+    "west": {},
+    "north": {},
+    "east": {},
+    "mirrored": {}
+  },
+  "tactile": {
+    "_schema": "immersiveintelligence:models/block/multiblock/emplacement/weapon/searchlight.obj.amt",
+    "base": [
+      {
+        "offset": [11, -41.5, 27],
+        "type": "aabb"
+      },
+      {
+        "offset": [11, -39, 27],
+        "type": "aabb2"
+      }
+    ],
+    "turret": [
+      {
+        "offset": [0, 1, 0],
+        "type": "aabb3"
+      }
+    ],
+    "projector": [
+      {
+        "offset": [9.01818, -2, 0.00909],
+        "type": "aabb4"
+      },
+      {
+        "offset": [21.01818, -3.5, 0.00909],
+        "type": "aabb5"
+      },
+      {
+        "offset": [-1.98182, -3.5, 0.00909],
+        "type": "aabb6"
+      }
+    ],
+    "projector_origin": [
+      {
+        "offset": [9.01818, -2, 0.00909],
+        "type": "none"
+      }
+    ],
+    "turret_origin": [
+      {
+        "offset": [0, 18, 0],
+        "type": "none"
+      }
+    ]
+  }
+}

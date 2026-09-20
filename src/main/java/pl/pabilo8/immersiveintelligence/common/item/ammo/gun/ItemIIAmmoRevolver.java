@@ -347,15 +347,12 @@ public class ItemIIAmmoRevolver extends ItemBullet implements IAmmoTypeItem<Item
 
 	private RevolverAmmoPart getEnumPart(ItemStack stack)
 	{
-		switch(stack.getMetadata())
+		return switch(stack.getMetadata())
 		{
-			case 1:
-				return RevolverAmmoPart.CORE;
-			case 2:
-				return RevolverAmmoPart.BULLET;
-			default:
-				return RevolverAmmoPart.UNUSED;
-		}
+			case 1 -> RevolverAmmoPart.CORE;
+			case 2 -> RevolverAmmoPart.BULLET;
+			default -> RevolverAmmoPart.UNUSED;
+		};
 	}
 
 	public enum RevolverAmmoPart implements ISerializableEnum

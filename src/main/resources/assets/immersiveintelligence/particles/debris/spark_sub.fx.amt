@@ -1,0 +1,13 @@
+{
+  "type": "ParticleRibbon",
+  "textures": [
+    "immersiveintelligence:particle/tracer/missile_wire"
+  ],
+  "size": 0.0625,
+  "max_lifetime": 8,
+  "draw_stage": "custom_additive",
+  "color": "cf9f38",
+  "programs": [
+    "gravity(0.12,0.05)"
+  ]
+}

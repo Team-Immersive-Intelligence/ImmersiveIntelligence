@@ -178,12 +178,18 @@ public class AssaultRifleRenderer extends IIUpgradableItemRendererAMT<ItemIIAssa
 			(transform==TransformType.FIRST_PERSON_RIGHT_HAND?handAngle: offHandAngle).apply(preciseAim);
 		}
 
-		//fireGrenade.apply(0);
-		//Choose and apply firing animation
+		//FIRE_DELAY is also the charge timer for charged fire modes.
+		float fireProgress = AMTUtils.getAnimationProgress(firing, firingDelay, true, partialTicks);
+		boolean chargingGrenade = fireMode==2
+				&&Minecraft.getMinecraft().player!=null
+				&&Minecraft.getMinecraft().player.isHandActive()
+				&&ItemStack.areItemStacksEqual(Minecraft.getMinecraft().player.getActiveItemStack(), stack);
 
-		(fireMode==2?fireGrenade: fire).apply((1f-((firing-partialTicks)/firingDelay)));
-		//Don't show muzzle flash GUI
-		if(transform==TransformType.GUI)
+		if(!chargingGrenade)
+			(fireMode==2?fireGrenade: fire).apply(fireProgress);
+
+		//Do not show shot effects in GUI or while the grenade launcher is charging.
+		if(chargingGrenade||transform==TransformType.GUI)
 		{
 			muzzleFlash.get().setVisible(false);
 			casingFired.get().setVisible(false);
@@ -261,7 +267,7 @@ public class AssaultRifleRenderer extends IIUpgradableItemRendererAMT<ItemIIAssa
 			else
 			{
 				if(fireMode==2)
-					value = (int)MathHelper.clamp((1f-((firing-partialTicks)/(float)(firingDelay)))*99, 0, 99);
+					value = (int)(fireProgress*99);
 			}
 			if(item.hasIIUpgrade(stack, WeaponUpgrade.GYROSCOPIC_STABILIZER))
 				stabilizer.apply(AMTUtils.getDebugProgress(30, partialTicks));

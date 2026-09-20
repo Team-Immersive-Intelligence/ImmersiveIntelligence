@@ -448,6 +448,25 @@ public class IISounds
 	public static SoundEvent autocannonReload = registerSound("autocannon_reload");
 	public static SoundEvent autocannonUnload = registerSound("autocannon_unload");
 
+	@ModSound(name = "heavy_railgun_shot", sounds = {"weapons/heavy_railgun/fire"}, subtitle = "heavy_railgun_shot")
+	@ModSound(name = "heavy_railgun_shot_muffled", sounds = {"weapons/heavy_railgun/fire_muffled"}, subtitle = "heavy_railgun_shot_distant")
+	@ModSound(name = "heavy_railgun_shot_distant", sounds = {"weapons/heavy_railgun/fire_distant"}, subtitle = "heavy_railgun_shot_distant")
+	public static RangedSound heavyRailgunShot = new RangedSound("heavy_railgun_shot",
+			new Tuple<>(0.0, registerSound("heavy_railgun_shot")),
+			new Tuple<>(0.45, registerSound("heavy_railgun_shot_muffled")),
+			new Tuple<>(0.75, registerSound("heavy_railgun_shot_distant"))
+	);
+
+	@ModSound(name = "missile_shot", sounds = {"weapons/missile/fire"}, subtitle = "missile_shot")
+	@ModSound(name = "missile_shot_muffled", sounds = {"weapons/missile/fire_muffled"}, subtitle = "missile_shot_distant")
+	@ModSound(name = "missile_shot_distant", sounds = {"weapons/missile/fire_distant"}, subtitle = "missile_shot_distant")
+	public static RangedSound missileShot = new RangedSound("missile_shot",
+			new Tuple<>(0.0, registerSound("missile_shot")),
+			new Tuple<>(0.45, registerSound("missile_shot_muffled")),
+			new Tuple<>(0.75, registerSound("missile_shot_distant"))
+	);
+
+
 	//Mortar
 	@ModSound(sounds = {"weapons/mortar/fire{0..1}"}, subtitle = "*")
 	public static SoundEvent mortarShot = registerSound("mortar_shot");

@@ -166,16 +166,10 @@ public class ArtilleryHowitzerRenderer extends IIMultiblockRenderer<TileEntityAr
 		gunPitch.setRotation(new Vec3d(-turretPitch, 0, 0));
 
 		//flipping
-		applyStandardRotation(te.facing);
+		applyStandardMirroring(te, true);
 		GlStateManager.translate(0, 0, -0.5);
-		if(te.mirrored)
-			mirrorRender();
-
 		//render
 		model.render(tes, buf);
-
-		if(te.mirrored)
-			unMirrorRender();
 	}
 
 	@Override

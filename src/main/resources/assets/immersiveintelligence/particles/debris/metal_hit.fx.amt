@@ -1,0 +1,49 @@
+{
+  "type": "ParticleVanilla",
+  "textures": [
+    "immersiveintelligence:particle/smoke_trej/smoke0",
+    "immersiveintelligence:particle/smoke_trej/smoke1",
+    "immersiveintelligence:particle/smoke_trej/smoke2",
+    "immersiveintelligence:particle/smoke_trej/smoke3",
+    "immersiveintelligence:particle/smoke_trej/smoke4",
+    "immersiveintelligence:particle/smoke_trej/smoke5",
+    "immersiveintelligence:particle/smoke_trej/smoke6"
+  ],
+  "color": "464646",
+  "max_lifetime": 6,
+  "draw_stage": "custom_additive",
+  "size": 0.5,
+  "programs": [
+    "block_color",
+    "lifetime_retexture",
+    "shockwave_transition(0.25)"
+  ],
+  "scheduled": [
+    {
+      "time": 1,
+      "generator": "same",
+      "distance": 0.0,
+      "amount": 1,
+      "speed": 0.0,
+      "type": "debris/spark",
+      "inherited_properties": [
+        "rotation"
+      ]
+    },
+    {
+      "time": 2,
+      "generator": "cone_toward_25",
+      "distance": 0.125,
+      "min_amount": 3,
+      "max_amount": 6,
+      "speed": -0.25,
+      "type": "debris/metal_chunk",
+      "inherited_properties": [
+        "color"
+      ]
+    }
+  ],
+  "properties": {
+    "motion": [0.0, 0.0, 0.0]
+  }
+}

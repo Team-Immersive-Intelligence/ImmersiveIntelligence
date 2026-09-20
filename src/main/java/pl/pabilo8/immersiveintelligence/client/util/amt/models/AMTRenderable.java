@@ -3,7 +3,10 @@ package pl.pabilo8.immersiveintelligence.client.util.amt.models;
 
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.util.math.AxisAlignedBB;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
+
+import javax.annotation.Nonnull;
 
 /**
  * A standard interface for the many AMT model and component classes
@@ -36,4 +39,10 @@ public interface AMTRenderable
 	{
 
 	}
+
+	/**
+	 * @return A bounding box box spanning the entire area used to render this AMT.
+	 */
+	@Nonnull
+	AxisAlignedBB getBoundingBox();
 }

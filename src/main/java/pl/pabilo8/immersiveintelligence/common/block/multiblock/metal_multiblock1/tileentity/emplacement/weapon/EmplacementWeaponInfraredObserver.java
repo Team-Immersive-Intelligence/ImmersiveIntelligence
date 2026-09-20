@@ -2,38 +2,55 @@ package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multibloc
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.Vec3i;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.api.api.protection.ProtectionHandler;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeFloat;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
+import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
+import pl.pabilo8.immersiveintelligence.api.data.types.generic.NumericDataType;
+import pl.pabilo8.immersiveintelligence.api.protection.protection.ProtectionHandler;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPanel;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.InfraredObserver;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.EmplacementStateNeeds;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement.EmplacementStateNeeds;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.TargetCoordinateReference;
 import pl.pabilo8.immersiveintelligence.common.util.gun.GunAimCoordinate;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
 
 import javax.annotation.Nonnull;
+import java.util.Locale;
 
+/**
+ * Implements the fixed-yaw Infrared Observer with safe stow and setup behavior.
+ *
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 08.09.2026
+ * @since 01.01.2026
+ */
 public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 {
+	private static final ResLoc ROTATE_PITCH = ResLoc.of(IIReference.RES_II,
+			"emplacement/weapon/infrared_observer/rotate_pitch");
 	@Nonnull
-	@SyncNBT
-	private EnumFacing facing, plannedFacing;
-	@SyncNBT
+	@SyncNBT(events = SyncEvents.WEAPON_MISC)
+	public EnumFacing facing, plannedFacing;
+	@SyncNBT(time = 0, events = SyncEvents.WEAPON_ROTATION)
 	public GunAimCoordinate aim = new GunAimCoordinate();
-	@SyncNBT
+	@SyncNBT(time = 0, events = SyncEvents.WEAPON_MISC)
 	public MultiblockInteractablePart setup;
 
 	public EmplacementWeaponInfraredObserver()
 	{
 		this.facing = this.plannedFacing = EnumFacing.NORTH;
 		this.setup = new MultiblockInteractablePart(InfraredObserver.setupTime);
+		this.aim.withPitchLimit(-90, 45.5f);
 	}
 
 	@Override
@@ -42,15 +59,22 @@ public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 		super.onInit(te);
 		if(!restoredFromNBT)
 			this.facing = this.plannedFacing = te.facing;
+		configureFacing(te, !restoredFromNBT);
+	}
 
+	private void configureFacing(TileEntityEmplacement te, boolean resetAngles)
+	{
 		Vec3i viewFront = this.facing.getDirectionVec();
 		Vec3i viewSides = this.facing.rotateY().getDirectionVec();
-		this.attackAABB = this.visionAABB = this.visionAABB
+		this.attackAABB = this.visionAABB = new net.minecraft.util.math.AxisAlignedBB(new net.minecraft.util.math.BlockPos(te.getWeaponCenter()))
 				.expand(viewFront.getX()*InfraredObserver.detectionRadius, 0, viewFront.getZ()*InfraredObserver.detectionRadius)
-				.grow(viewSides.getX()*InfraredObserver.detectionRadius, InfraredObserver.detectionRadius, viewSides.getZ()*InfraredObserver.detectionRadius);
-
-		this.aim.withAimSpeed(360, InfraredObserver.pitchRotateSpeed)
-				.withYawLimit(facing.getHorizontalAngle(), facing.getHorizontalAngle());
+				.grow(Math.abs(viewSides.getX())*InfraredObserver.detectionRadius, InfraredObserver.detectionRadius,
+						Math.abs(viewSides.getZ())*InfraredObserver.detectionRadius);
+		this.aim.withCenterYaw(facing.getHorizontalAngle())
+				.withAimSpeed(InfraredObserver.yawRotateSpeed, InfraredObserver.pitchRotateSpeed)
+				.withYawLimit(-180f, 180f);
+		if(resetAngles)
+			this.aim.withCurrentAngles(this.aim.getCenterYaw(), this.aim.clampPitchToRange(90f));
 	}
 
 	@Override
@@ -58,8 +82,56 @@ public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 	{
 		if(plannedFacing!=facing)
 			return EmplacementStateNeeds.MUST_HIDE;
-
+		if(te.door.getState()&&te.door.isFullyOpened())
+			this.aim.update();
 		return super.onUpdate(te, baseNeeds, currentTarget);
+	}
+
+	@Override
+	public void onPlatformUpdate(TileEntityEmplacement te)
+	{
+		boolean remote = te.getWorld().isRemote;
+		boolean exposed = te.door.getState()&&te.door.isFullyOpened();
+		boolean setupChanged = false;
+		if(!remote)
+			setupChanged = setup.setState(exposed);
+		setup.update();
+
+		if(!exposed)
+		{
+			if(!remote)
+				aim.setTargetClamped(aim.getCenterYaw(), aim.clampPitchToRange(-90f));
+			aim.update();
+			if(!remote&&!aim.isAimed(0.001f))
+				syncWithClient(te, SyncEvents.WEAPON_ROTATION);
+		}
+		else if(setup.isFullyOpened()&&!remote)
+		{
+			aim.setTargetClamped(aim.getCenterYaw(), aim.clampPitchToRange(0f));
+			if(aim.isAimed(0.001f))
+				syncWithClient(te, SyncEvents.WEAPON_ROTATION);
+		}
+
+		if(!remote&&!te.door.getState()&&te.door.isFullyClosed()&&plannedFacing!=facing)
+		{
+			facing = plannedFacing;
+			configureFacing(te, true);
+			syncWithClient(te, SyncEvents.WEAPON_MISC);
+			syncWithClient(te, SyncEvents.WEAPON_ROTATION);
+		}
+		else if(!remote&&setupChanged)
+			syncWithClient(te, SyncEvents.WEAPON_MISC);
+
+		if(!remote&&te.tactileHandler!=null)
+			te.tactileHandler.update(ROTATE_PITCH, aim.getPitchNormalized(-90, 90, 0));
+	}
+
+	@Override
+	public void onClientUpdate(TileEntityEmplacement te)
+	{
+		setup.update();
+		aim.update();
+		super.onClientUpdate(te);
 	}
 
 	@Override
@@ -71,49 +143,66 @@ public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 	@Override
 	public boolean handleDataCommand(DataPacket packet)
 	{
-		/*String c = packet.get('c').toString();
-		if(c.equals("facing"))
-		{
-			DataType f = packet.get('f');
-			if(f instanceof DataTypeInteger)
-				nextYaw = EnumFacing.getHorizontal(((DataTypeInteger)f).value).getHorizontalAngle();
-			else if(f instanceof DataTypeString)
-			{
-				EnumFacing facing = EnumFacing.byName(f.toString());
-				if(facing==EnumFacing.NORTH||facing==EnumFacing.SOUTH)
-					facing = facing.getOpposite();
-				if(facing!=null)
-					nextYaw = facing.getHorizontalAngle();
-			}
+		DataType command = packet.get('c');
+		if(!(command instanceof DataTypeString)
+				||!"facing".equals(((DataTypeString)command).value.trim().toLowerCase(Locale.ROOT)))
+			return super.handleDataCommand(packet);
 
-			if(nextYaw!=yaw)
-				requiresPlatformRefill = true;
-		}*/
-		return super.handleDataCommand(packet);
+		EnumFacing requested = parseFacing(packet.get('f'));
+		if(requested==null||requested.getAxis()==EnumFacing.Axis.Y)
+			return false;
+		plannedFacing = requested;
+		return true;
 	}
 
-	/*@Override
-	public EmplacementHitboxEntity[] getCollisionBoxes()
+	private EnumFacing parseFacing(DataType input)
 	{
-		if(entity==null)
-			return new EmplacementHitboxEntity[0];
+		if(input instanceof NumericDataType)
+		{
+			NumericDataType numeric = (NumericDataType)input;
+			int ordinal = numeric.intValue();
+			return numeric.floatValue()==ordinal?facingFromOrdinal(ordinal): null;
+		}
+		if(!(input instanceof DataTypeString))
+			return null;
 
-		//new Vec3d(0,0,0)
-		ArrayList<EmplacementHitboxEntity> list = new ArrayList<>();
-		list.add(new EmplacementHitboxEntity(entity, "baseBox", 1f, 0.25f,
-				new Vec3d(0, 0.25, 0), Vec3d.ZERO, 4));
-		list.add(new EmplacementHitboxEntity(entity, "backBox", 0.5f, 0.75f,
-				new Vec3d(0.75, 0.75, 0), Vec3d.ZERO, 4));
+		String value = ((DataTypeString)input).value.trim();
+		try
+		{
+			return EnumFacing.valueOf(value.toUpperCase(Locale.ROOT));
+		} catch(IllegalArgumentException ignored)
+		{
+			try
+			{
+				return facingFromOrdinal(Integer.parseInt(value));
+			} catch(NumberFormatException ignoredNumber)
+			{
+				return null;
+			}
+		}
+	}
 
-		list.add(new EmplacementHitboxEntity(entity, "observeBox", 1.25f, 1.25f,
-				new Vec3d(-0.25, 1.5, 0), Vec3d.ZERO, 4));
-		list.add(new EmplacementHitboxEntity(entity, "observeBox", 0.5f, 0.5f,
-				new Vec3d(-0.25, 1.5, 0), new Vec3d(-1, 0, -0.25), 4));
-		list.add(new EmplacementHitboxEntity(entity, "observeBox", 0.25f, 0.25f,
-				new Vec3d(-0.25, 1.5, 0), new Vec3d(-1.325, 0, -0.25), 4));
+	private EnumFacing facingFromOrdinal(int ordinal)
+	{
+		EnumFacing[] values = EnumFacing.values();
+		return ordinal >= 0&&ordinal < values.length?values[ordinal]: null;
+	}
 
-		return list.toArray(new EmplacementHitboxEntity[0]);
-	}*/
+	@Nonnull
+	@Override
+	public DataType getDataCallback(String string)
+	{
+		return switch(string)
+		{
+			case "weapon_yaw" -> new DataTypeFloat(aim.getYaw(0));
+			case "weapon_pitch" -> new DataTypeFloat(aim.getPitch(0));
+			case "weapon_target_yaw" -> new DataTypeFloat(aim.getTargetYaw());
+			case "weapon_target_pitch" -> new DataTypeFloat(aim.getTargetPitch());
+			case "weapon_setup", "weapon_setup_progress" -> new DataTypeFloat(setup.getProgress(0));
+			case "weapon_facing" -> new DataTypeString(facing.getName());
+			default -> super.getDataCallback(string);
+		};
+	}
 
 	@Override
 	public int getEnergyUpkeepCost()
@@ -139,17 +228,5 @@ public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 	{
 		return !(entity instanceof EntityLivingBase)
 				||!ProtectionHandler.isInvisibleToInfrared((EntityLivingBase)entity);
-	}
-
-	@Override
-	public NBTTagCompound serializeNBT()
-	{
-		return super.serializeNBT();
-	}
-
-	@Override
-	public void deserializeNBT(NBTTagCompound nbt)
-	{
-		super.deserializeNBT(nbt);
 	}
 }

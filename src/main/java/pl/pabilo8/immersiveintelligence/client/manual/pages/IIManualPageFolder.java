@@ -111,6 +111,7 @@ public class IIManualPageFolder extends ManualPages
 		return false;
 	}
 
+
 	public String getName()
 	{
 		return name;

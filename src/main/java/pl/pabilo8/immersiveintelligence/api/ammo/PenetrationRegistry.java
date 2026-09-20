@@ -10,11 +10,10 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraftforge.common.IPlantable;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.PenetrationHardness;
-import pl.pabilo8.immersiveintelligence.api.ammo.penetration.IPenetrationHandler;
-import pl.pabilo8.immersiveintelligence.api.ammo.penetration.PenetrationHandler;
-import pl.pabilo8.immersiveintelligence.api.ammo.penetration.PenetrationHandlerInvulnerable;
-import pl.pabilo8.immersiveintelligence.api.ammo.penetration.PenetrationHandlerMetal;
+import pl.pabilo8.immersiveintelligence.api.ammo.penetration.*;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
@@ -29,7 +28,7 @@ import java.util.function.Predicate;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 14.08.2026
+ * @updated 24.08.2026
  * @ii-approved 0.3.1
  * @since 05.03.2020
  */
@@ -54,7 +53,7 @@ public class PenetrationRegistry
 	/**
 	 * Default penetration handler used as fallback
 	 */
-	private static final IPenetrationHandler DEFAULT = new PenetrationHandler(PenetrationHardness.ROCK, 1f, 150f, PARTICLE_DEBRIS_PEBBLE, null, null);
+	private static final IPenetrationHandler DEFAULT = PenetrationHandler.builder(PenetrationHardness.ROCK, 1f, 150f, PARTICLE_DEBRIS_PEBBLE).build();
 	/**
 	 * Registry of PenetrationHandlers for entities
 	 */
@@ -71,9 +70,14 @@ public class PenetrationRegistry
 	public static void init()
 	{
 		//Bedrock
-		registerState(state -> state.getBlock().blockHardness==-1, new PenetrationHandlerInvulnerable(PenetrationHardness.BEDROCK, Integer.MAX_VALUE));
+		registerState(state -> state.getBlock().blockHardness==-1, new PenetrationHandlerInvulnerable());
 		//Fluids
-		registerState(state -> state.getMaterial().isLiquid(), new PenetrationHandlerInvulnerable(PenetrationHardness.FOLIAGE, 0f));
+		for(Fluid fluid : FluidRegistry.getRegisteredFluids().values())
+		{
+			Block fluidBlock = fluid.getBlock();
+			if(fluidBlock!=null)
+				registerState(state -> state.getBlock()==fluidBlock, new PenetrationHandlerFluid(fluid));
+		}
 
 		//Fragile metals
 		registerMetalMaterial(PenetrationHandlerMetal.create("aluminum", PenetrationHardness.FRAGILE, 1.0f, 150f));
@@ -100,15 +104,27 @@ public class PenetrationRegistry
 		REGISTERED_MATERIALS.put(material -> material==Material.IRON, PenetrationHandlerMetal.get("iron"));
 
 		//Multiblocks and machines
-		PenetrationHandler penHandlerMechanical = new PenetrationHandler(PenetrationHardness.IRON,
-				1f, 250, PARTICLE_DEBRIS_MECHANICAL, IISounds.hitMetal);
-		PenetrationHandler penHandlerHeavyMachine = new PenetrationHandler(PenetrationHardness.STEEL,
-				1.3f, 350, PARTICLE_DEBRIS_HEAVY_MACHINE, IISounds.hitMetal);
-		PenetrationHandler penHandlerLightMachine = new PenetrationHandler(PenetrationHardness.STEEL,
-				1.1f, 200, PARTICLE_DEBRIS_LIGHT_MACHINE, IISounds.hitMetal);
+		PenetrationHandler penHandlerWoodenMechanical = PenetrationHandler.builder(PenetrationHardness.IRON, 1f, 250, PARTICLE_DEBRIS_MECHANICAL)
+				.withHitSound(IISounds.hitWood)
+				.build();
+		PenetrationHandler penHandlerMechanical = PenetrationHandler.builder(PenetrationHardness.IRON, 1f, 250, PARTICLE_DEBRIS_MECHANICAL)
+				.withHitSound(IISounds.hitMetal)
+				.withImpactParticle("debris/metal_hit")
+				.withRicochetParticle("debris/metal_ricochet")
+				.build();
+		PenetrationHandler penHandlerHeavyMachine = PenetrationHandler.builder(PenetrationHardness.STEEL, 1.3f, 350, PARTICLE_DEBRIS_HEAVY_MACHINE)
+				.withHitSound(IISounds.hitMetal)
+				.withImpactParticle("debris/metal_hit")
+				.withRicochetParticle("debris/metal_ricochet")
+				.build();
+		PenetrationHandler penHandlerLightMachine = PenetrationHandler.builder(PenetrationHardness.STEEL, 1.1f, 200, PARTICLE_DEBRIS_LIGHT_MACHINE)
+				.withHitSound(IISounds.hitMetal)
+				.withImpactParticle("debris/metal_hit")
+				.withRicochetParticle("debris/metal_ricochet")
+				.build();
 
+		batchRegisterHandler(penHandlerWoodenMechanical, IIContent.blockWoodenMultiblock);
 		batchRegisterHandler(penHandlerMechanical, IEContent.blockMetalMultiblock,
-				IIContent.blockWoodenMultiblock,
 				IIContent.blockMechanicalConnector, IIContent.blockGearbox, IIContent.blockMechanicalDevice, IIContent.blockMechanicalDevice1);
 		batchRegisterHandler(penHandlerHeavyMachine, IEContent.blockMetalMultiblock,
 				IIContent.blockMetalMultiblock0, IIContent.blockMetalMultiblock1);
@@ -120,81 +136,161 @@ public class PenetrationRegistry
 
 		//Concrete
 		registerState(iBlockState -> IIUtils.compareBlockstateOredict(iBlockState, "uberConcrete"),
-				new PenetrationHandler(PenetrationHardness.UBERCONCRETE, 3f, 350, PARTICLE_DEBRIS_BRICK_BIG, IISounds.hitStone));
+				PenetrationHandler.builder(PenetrationHardness.UBERCONCRETE, 3f, 350, PARTICLE_DEBRIS_BRICK_BIG)
+						.withHitSound(IISounds.hitStone)
+						.build()
+		);
 		registerState(iBlockState -> IIUtils.compareBlockstateOredict(iBlockState, "sturdyBricksConcrete"),
-				new PenetrationHandler(PenetrationHardness.PANZERCONCRETE, 2f, 250, PARTICLE_DEBRIS_BRICK_BIG, IISounds.hitStone));
+				PenetrationHandler.builder(PenetrationHardness.PANZERCONCRETE, 2f, 250, PARTICLE_DEBRIS_BRICK_BIG)
+						.withHitSound(IISounds.hitStone)
+						.build()
+		);
 		registerState(iBlockState -> IIUtils.compareBlockstateOredict(iBlockState, "bricksConcrete"),
-				new PenetrationHandler(PenetrationHardness.CONCRETE, 1.33f, 200, PARTICLE_DEBRIS_BRICK, IISounds.hitStone));
+				PenetrationHandler.builder(PenetrationHardness.CONCRETE, 1.33f, 200, PARTICLE_DEBRIS_BRICK)
+						.withHitSound(IISounds.hitStone)
+						.build()
+		);
 		registerState(iBlockState -> IIUtils.compareBlockstateOredict(iBlockState, "leadedConcrete"),
-				new PenetrationHandler(PenetrationHardness.CONCRETE, 1.66f, 200, PARTICLE_DEBRIS_BRICK, IISounds.hitStone));
+				PenetrationHandler.builder(PenetrationHardness.CONCRETE, 1.66f, 200, PARTICLE_DEBRIS_BRICK)
+						.withHitSound(IISounds.hitStone)
+						.build()
+		);
 		registerState(iBlockState -> IIUtils.compareBlockstateOredict(iBlockState, "concrete"),
-				new PenetrationHandler(PenetrationHardness.CONCRETE, 1f, 150, PARTICLE_DEBRIS_PEBBLE, IISounds.hitStone));
+				PenetrationHandler.builder(PenetrationHardness.CONCRETE, 1f, 150, PARTICLE_DEBRIS_PEBBLE)
+						.withHitSound(IISounds.hitStone)
+						.build()
+		);
 
 		//Bricks, Stone, Rocks
 		registerState(state -> state.getBlock()==Blocks.BRICK_BLOCK||state.getBlock()==Blocks.BRICK_STAIRS,
-				new PenetrationHandler(PenetrationHardness.BRICKS, 1f, 250, PARTICLE_DEBRIS_BRICK, IISounds.hitStone));
+				PenetrationHandler.builder(PenetrationHardness.BRICKS, 1f, 250, PARTICLE_DEBRIS_BRICK)
+						.withHitSound(IISounds.hitStone)
+						.build()
+		);
 		registerState(state -> state.getBlock()==Blocks.STONEBRICK||state.getBlock()==Blocks.STONE_BRICK_STAIRS,
-				new PenetrationHandler(PenetrationHardness.BRICKS, 1f, 250, PARTICLE_DEBRIS_BRICK, IISounds.hitStone));
-		registerOre("stone", new PenetrationHandler(PenetrationHardness.ROCK, 1f, 200, PARTICLE_DEBRIS_PEBBLE, IISounds.hitStone));
-		registerOre("cobblestone", new PenetrationHandler(PenetrationHardness.ROCK, 1f, 200, PARTICLE_DEBRIS_PEBBLE, IISounds.hitStone));
-		registerOre("sandstone", new PenetrationHandler(PenetrationHardness.ROCK, 1f, 200, PARTICLE_DEBRIS_PEBBLE, IISounds.hitStone));
+				PenetrationHandler.builder(PenetrationHardness.BRICKS, 1f, 250, PARTICLE_DEBRIS_BRICK)
+						.withHitSound(IISounds.hitStone)
+						.build()
+		);
+		registerOre("stone", PenetrationHandler.builder(PenetrationHardness.ROCK, 1f, 200, PARTICLE_DEBRIS_PEBBLE)
+				.withHitSound(IISounds.hitStone)
+				.build()
+		);
+		registerOre("cobblestone", PenetrationHandler.builder(PenetrationHardness.ROCK, 1f, 200, PARTICLE_DEBRIS_PEBBLE)
+				.withHitSound(IISounds.hitStone)
+				.build()
+		);
+		registerOre("sandstone", PenetrationHandler.builder(PenetrationHardness.ROCK, 1f, 200, PARTICLE_DEBRIS_PEBBLE)
+				.withHitSound(IISounds.hitStone)
+				.build()
+		);
 
 		//ground
-		registerMaterial(Material.ROCK, new PenetrationHandler(PenetrationHardness.ROCK, 1f, 150, PARTICLE_DEBRIS_PEBBLE, IISounds.hitStone));
-		registerMaterial(Material.GRASS, new PenetrationHandler(PenetrationHardness.GROUND, 1f, 150, PARTICLE_DEBRIS_PEBBLE, IISounds.hitGrass));
-		registerMaterial(Material.GROUND, new PenetrationHandler(PenetrationHardness.GROUND, 1f, 150, PARTICLE_DEBRIS_PEBBLE, IISounds.hitDirt));
-		registerMaterial(Material.SAND, new PenetrationHandler(PenetrationHardness.GROUND, 1f, 150, PARTICLE_DEBRIS_PEBBLE, IISounds.hitSand));
+		registerMaterial(Material.ROCK, PenetrationHandler.builder(PenetrationHardness.ROCK, 1f, 150, PARTICLE_DEBRIS_PEBBLE)
+				.withHitSound(IISounds.hitStone)
+				.build()
+		);
+		registerMaterial(Material.GRASS, PenetrationHandler.builder(PenetrationHardness.GROUND, 1f, 150, PARTICLE_DEBRIS_PEBBLE)
+				.withHitSound(IISounds.hitGrass)
+				.build()
+		);
+		registerMaterial(Material.GROUND, PenetrationHandler.builder(PenetrationHardness.GROUND, 1f, 150, PARTICLE_DEBRIS_PEBBLE)
+				.withHitSound(IISounds.hitDirt)
+				.build()
+		);
+		registerMaterial(Material.SAND, PenetrationHandler.builder(PenetrationHardness.GROUND, 1f, 150, PARTICLE_DEBRIS_PEBBLE)
+				.withHitSound(IISounds.hitSand)
+				.build()
+		);
 
 		//wood
-		registerOre("plankWood",
-				new PenetrationHandler(PenetrationHardness.WOOD, 0.8f, 100, PARTICLE_DEBRIS_PLANK, IISounds.hitWood));
-		registerOre("stairWood",
-				new PenetrationHandler(PenetrationHardness.WOOD, 0.8f, 100, PARTICLE_DEBRIS_PLANK, IISounds.hitWood));
-		registerOre("slabWood",
-				new PenetrationHandler(PenetrationHardness.WOOD, 0.8f, 100, PARTICLE_DEBRIS_PLANK, IISounds.hitWood));
-		registerOre("plankTreatedWood",
-				new PenetrationHandler(PenetrationHardness.WOOD, 0.8f, 100, PARTICLE_DEBRIS_PLANK, IISounds.hitWood));
-		registerOre("stairTreatedWood",
-				new PenetrationHandler(PenetrationHardness.WOOD, 0.8f, 100, PARTICLE_DEBRIS_PLANK, IISounds.hitWood));
-		registerOre("slabTreatedWood",
-				new PenetrationHandler(PenetrationHardness.WOOD, 0.8f, 100, PARTICLE_DEBRIS_PLANK, IISounds.hitWood));
-		registerOre("logWood",
-				new PenetrationHandler(PenetrationHardness.WOOD, 1f, 250, PARTICLE_DEBRIS_BRICK, IISounds.hitWood)
-						.withFlammableVariant(state -> {
-							if(state.getBlock()==IIContent.blockCharredLog)
-								return null;
+		registerOre("plankWood", PenetrationHandler.builder(PenetrationHardness.WOOD, 0.8f, 100, PARTICLE_DEBRIS_PLANK)
+				.withHitSound(IISounds.hitWood)
+				.build()
+		);
+		registerOre("stairWood", PenetrationHandler.builder(PenetrationHardness.WOOD, 0.8f, 100, PARTICLE_DEBRIS_PLANK)
+				.withHitSound(IISounds.hitWood)
+				.build()
+		);
+		registerOre("slabWood", PenetrationHandler.builder(PenetrationHardness.WOOD, 0.8f, 100, PARTICLE_DEBRIS_PLANK)
+				.withHitSound(IISounds.hitWood)
+				.build()
+		);
+		registerOre("plankTreatedWood", PenetrationHandler.builder(PenetrationHardness.WOOD, 0.8f, 100, PARTICLE_DEBRIS_PLANK)
+				.withHitSound(IISounds.hitWood)
+				.build()
+		);
+		registerOre("stairTreatedWood", PenetrationHandler.builder(PenetrationHardness.WOOD, 0.8f, 100, PARTICLE_DEBRIS_PLANK)
+				.withHitSound(IISounds.hitWood)
+				.build()
+		);
+		registerOre("slabTreatedWood", PenetrationHandler.builder(PenetrationHardness.WOOD, 0.8f, 100, PARTICLE_DEBRIS_PLANK)
+				.withHitSound(IISounds.hitWood)
+				.build()
+		);
+		registerOre("logWood", PenetrationHandler.builder(PenetrationHardness.WOOD, 1f, 250, PARTICLE_DEBRIS_BRICK)
+				.withHitSound(IISounds.hitWood)
+				.withFlammableVariant(state -> {
+					if(state.getBlock()==IIContent.blockCharredLog)
+						return null;
 
-							IBlockState charred = IIContent.blockCharredLog.getDefaultState();
-							if(state.getPropertyKeys().contains(BlockLog.LOG_AXIS))
-								charred = charred.withProperty(BlockLog.LOG_AXIS, state.getValue(BlockLog.LOG_AXIS));
-							return charred;
-						}));
+					IBlockState charred = IIContent.blockCharredLog.getDefaultState();
+					if(state.getPropertyKeys().contains(BlockLog.LOG_AXIS))
+						charred = charred.withProperty(BlockLog.LOG_AXIS, state.getValue(BlockLog.LOG_AXIS));
+					return charred;
+				})
+				.build()
+		);
 
 		//Glass
-		registerOre("paneGlass", new PenetrationHandler(PenetrationHardness.FRAGILE, 0.125f, 20, PARTICLE_DEBRIS_GLASS, SoundEvents.BLOCK_GLASS_BREAK, null));
-		registerMaterial(Material.GLASS, new PenetrationHandler(PenetrationHardness.FRAGILE, 0.75f, 80, PARTICLE_DEBRIS_GLASS, SoundEvents.BLOCK_GLASS_BREAK, null));
+		registerOre("paneGlass", PenetrationHandler.builder(PenetrationHardness.FRAGILE, 0.125f, 20, PARTICLE_DEBRIS_GLASS)
+				.withImpactSound(SoundEvents.BLOCK_GLASS_BREAK)
+				.build()
+		);
+		registerMaterial(Material.GLASS, PenetrationHandler.builder(PenetrationHardness.FRAGILE, 0.75f, 80, PARTICLE_DEBRIS_GLASS)
+				.withImpactSound(SoundEvents.BLOCK_GLASS_BREAK)
+				.build()
+		);
 
 		//Wool
 		registerMaterial(new Material[]{Material.CARPET, Material.CLOTH},
-				new PenetrationHandler(PenetrationHardness.FRAGILE, 1f, 50, PARTICLE_DEBRIS_CLOTH, IISounds.impactFoliage, null));
+				PenetrationHandler.builder(PenetrationHardness.FRAGILE, 1f, 50, PARTICLE_DEBRIS_CLOTH).withImpactSound(IISounds.impactFoliage).build()
+		);
 
 		//leaves
 		registerMaterial(new Material[]{Material.LEAVES, Material.VINE},
-				new PenetrationHandler(PenetrationHardness.FRAGILE, 0.5f, 300, PARTICLE_DEBRIS_BRANCH_LEAF, IISounds.impactFoliage, null));
+				PenetrationHandler.builder(PenetrationHardness.FRAGILE, 0.5f, 300, PARTICLE_DEBRIS_BRANCH_LEAF)
+						.withImpactSound(IISounds.impactFoliage)
+						.build()
+		);
 		registerState(state -> state.getBlock()==Blocks.LEAVES&&state.getBlock().getMetaFromState(state)==2, //spruce leaves
-				new PenetrationHandler(PenetrationHardness.FRAGILE, 0.5f, 300, PARTICLE_DEBRIS_BRANCH_NEEDLE, IISounds.impactFoliage, null));
+				PenetrationHandler.builder(PenetrationHardness.FRAGILE, 0.5f, 300, PARTICLE_DEBRIS_BRANCH_NEEDLE)
+						.withImpactSound(IISounds.impactFoliage)
+						.build()
+		);
 		registerMaterial(new Material[]{Material.CACTUS},
-				new PenetrationHandler(PenetrationHardness.FRAGILE, 0.8f, 100, PARTICLE_DEBRIS_BRANCH_CACTUS, IISounds.impactFoliage, null));
-
+				PenetrationHandler.builder(PenetrationHardness.FRAGILE, 0.8f, 100, PARTICLE_DEBRIS_BRANCH_CACTUS)
+						.withImpactSound(IISounds.impactFoliage)
+						.build()
+		);
 
 		//grass, crops, etc.
 		registerState(state -> state.getMaterial()==Material.GRASS&&state.getBlock() instanceof IPlantable,
-				new PenetrationHandler(PenetrationHardness.GROUND, 1f, 300, PARTICLE_DEBRIS_STRAW, IISounds.hitGrass));
-		registerMaterial(Material.GOURD, new PenetrationHandler(PenetrationHardness.FRAGILE, 1f, 150, PARTICLE_DEBRIS_STRAW, IISounds.impactFoliage, null));
+				PenetrationHandler.builder(PenetrationHardness.GROUND, 1f, 300, PARTICLE_DEBRIS_STRAW)
+						.withHitSound(IISounds.hitGrass)
+						.build()
+		);
+		registerMaterial(Material.GOURD, PenetrationHandler.builder(PenetrationHardness.FRAGILE, 1f, 150, PARTICLE_DEBRIS_STRAW)
+				.withImpactSound(IISounds.impactFoliage)
+				.build()
+		);
 
 		//EntityLivingBase
 		REGISTERED_ENTITIES.put(entity -> entity instanceof EntityLivingBase,
-				new PenetrationHandler(PenetrationHardness.FRAGILE, 1f, 0, PARTICLE_DEBRIS_FLESH, IISounds.impactFlesh, null));
+				PenetrationHandler.builder(PenetrationHardness.FRAGILE, 1f, 0, PARTICLE_DEBRIS_FLESH)
+						.withImpactSound(IISounds.impactFlesh)
+						.build()
+		);
 	}
 
 	//--- Registration ---//
@@ -232,8 +328,6 @@ public class PenetrationRegistry
 		final HashSet<Material> hashSet = new HashSet<>(Arrays.asList(materials));
 		REGISTERED_MATERIALS.put(hashSet::contains, handler);
 	}
-
-	//TODO: 29.03.2024 multi-ore version of this
 
 	/**
 	 * Registers a new penetration handler for a given OreDict entry

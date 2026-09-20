@@ -64,7 +64,7 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 	public CoreType coreType = producedAmmo.getAllowedCoreTypes()[0];
 	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CLIENT_MESSAGE})
 	public int componentFillAmount = 1;
-	@SyncNBT(events = SyncEvents.TILE_CUSTOM1)
+	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_RECIPE_CHANGED})
 	public BulletComponentStack componentInside = new BulletComponentStack();
 
 	/**

@@ -13,7 +13,7 @@ import pl.pabilo8.immersiveintelligence.common.util.IIExplosion;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 06.03.2024
+ * @updated 23.08.2026
  * @ii-approved 0.3.1
  * @since 10.07.2021
  */
@@ -34,7 +34,7 @@ public class AmmoComponentTNT extends AmmoComponent
 	public void onEffect(World world, Vec3d pos, Vec3d dir, ComponentEffectShape shape, NBTTagCompound tag, float componentSize, float multiplier, Entity owner)
 	{
 		new IIExplosion(world, owner, pos, dir,
-				6*componentSize, 4*multiplier, shape, false, componentSize > 0.125f, false)
+				6*componentSize, 4*multiplier, shape, false, componentSize > 0.125f, false, true)
 				.doExplosion();
 	}
 }

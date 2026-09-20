@@ -1,40 +1,54 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon;
 
 import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
-import blusunrize.immersiveengineering.common.blocks.metal.TileEntityTeslaCoil.LightningAnimation;
-import blusunrize.immersiveengineering.common.util.Utils;
-import net.minecraft.client.Minecraft;
+import blusunrize.immersiveengineering.common.util.IEDamageSources;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.api.ammo.PenetrationRegistry;
+import pl.pabilo8.immersiveintelligence.api.ammo.utils.PenetrationCache;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeBoolean;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeFloat;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
+import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPanel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTemplates;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.TeslaCoil;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.EmplacementStateNeeds;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement.EmplacementStateNeeds;
+import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageExplosion;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.TargetCoordinateReference;
 
-import java.util.ArrayList;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Collections;
 
+/**
+ * Discharges stored energy into entity or block targets without rotating.
+ *
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 08.09.2026
+ * @since 01.01.2026
+ */
 public class EmplacementWeaponTeslaCoil extends EmplacementWeapon
 {
-	@SyncNBT
-	private final FluxStorageAdvanced energy;
-	private final ArrayList<Integer> targetedEntities = new ArrayList<>();
-	private final ArrayList<LightningAnimation> effects = new ArrayList<>();
+	@SyncNBT(time = 0, events = SyncEvents.WEAPON_MISC)
+	public final FluxStorageAdvanced energy = new FluxStorageAdvanced(TeslaCoil.energyStorage);
+	@SyncNBT(time = 0, events = SyncEvents.WEAPON_MISC)
+	public int chargeTicks;
+	@SyncNBT(time = 0, events = SyncEvents.WEAPON_MISC)
+	public int targetlessTicks;
 
 	public EmplacementWeaponTeslaCoil()
 	{
-		this.energy = new FluxStorageAdvanced(TeslaCoil.energyStorage);
+
 	}
 
 	@Override
@@ -52,139 +66,100 @@ public class EmplacementWeaponTeslaCoil extends EmplacementWeapon
 	}
 
 	@Override
-	public EmplacementStateNeeds onUpdate(TileEntityEmplacement te, EmplacementStateNeeds baseNeeds, TargetCoordinateReference currentTarget)
+	public EmplacementStateNeeds onUpdate(TileEntityEmplacement te, EmplacementStateNeeds baseNeeds,
+										  @Nullable TargetCoordinateReference currentTarget)
 	{
-		for(Integer targetedEntity : targetedEntities)
-			addEntityToAnimation(targetedEntity, te.getWorld(), new BlockPos(te.getWeaponCenter()));
-		targetedEntities.clear();
-		effects.removeIf(LightningAnimation::tick);
+		//The Base already paid this tick's upkeep before invoking the weapon.
+		energy.receiveEnergy(TeslaCoil.energyUpkeepCost, false);
+		if(!te.door.isFullyOpened()||currentTarget==null||!currentTarget.shouldBeExecuted(te.getWorld())
+				||!isCharged()
+				||te.getWorld().getTotalWorldTime()%Math.max(1, TeslaCoil.damageDelay)!=0)
+			return super.onUpdate(te, baseNeeds, currentTarget);
 
+		Vec3d targetPosition = currentTarget.supplyCoordinates();
+		Vec3d origin = te.getWeaponCenter().addVector(0, 3, 0);
+		if(targetPosition==null||energy.extractEnergy(TeslaCoil.energyUsage, true) < TeslaCoil.energyUsage)
+			return super.onUpdate(te, baseNeeds, currentTarget);
+
+		Entity target = currentTarget.getEntity();
+		if(target instanceof EntityLivingBase)
+		{
+			EntityLivingBase living = (EntityLivingBase)target;
+			living.hurtResistantTime = 0;
+			IEDamageSources.causeTeslaDamage(TeslaCoil.damage, false).apply(living);
+		}
+		else if(currentTarget.isPositionTarget())
+		{
+			BlockPos blockPosition = currentTarget.getPosition();
+			if(blockPosition==null||!te.getWorld().isBlockLoaded(blockPosition))
+				return super.onUpdate(te, baseNeeds, currentTarget);
+			PenetrationCache.dealBlockBurnDamage(te.getWorld(), TeslaCoil.damage, blockPosition,
+					PenetrationRegistry.getPenetrationHandler(te.getWorld().getBlockState(blockPosition)));
+		}
+		else
+			return super.onUpdate(te, baseNeeds, currentTarget);
+
+		energy.extractEnergy(TeslaCoil.energyUsage, false);
+		IIPacketHandler.sendToClient(MessageExplosion.createTeslaMessage(te.getWorld(), origin,
+				Collections.singletonList(targetPosition)));
+		if(te.taskManager.notifyAfterShot(currentTarget))
+			te.markDirty();
 		return super.onUpdate(te, baseNeeds, currentTarget);
 	}
 
-	/*@Override
-	public void shoot(TileEntityEmplacement te)
+	@Override
+	public void onServerTick(TileEntityEmplacement te, @Nullable TargetCoordinateReference currentTarget, boolean canOperate)
 	{
-		super.shoot(te);
-		if(te.getWorld().getTotalWorldTime()%10==0)
-		{
-			List<Entity> targets = te.getWorld().getEntitiesWithinAABB(EntityLivingBase.class, this.attack, input -> input!=entity);
-			EntityLivingBase target = null;
-			if(!targets.isEmpty())
-			{
-				ElectricDamageSource dmgsrc = IEDamageSources.causeTeslaDamage(IEConfig.Machines.teslacoil_damage*2.5f, false);
-				int randomTarget = Utils.RAND.nextInt(targets.size());
-				target = (EntityLivingBase)targets.get(randomTarget);
-				if(target!=null)
-				{
-					// TODO: 26.08.2021 energy usage
-					//energyDrain = IEConfig.Machines.teslacoil_consumption_active;
-					//if(energyStorage.extractEnergy(energyDrain, true)==energyDrain)
-					//						{
-					//energyStorage.extractEnergy(energyDrain, false);
-					if(dmgsrc.apply(target))
-					{
-						int prevFire = target.fire;
-						target.fire = 1;
-						target.addPotionEffect(new PotionEffect(IEPotions.stunned, 128));
-						target.fire = prevFire;
-					}
-					this.syncAttackedEntity(te, target);
-				}
-			}
+		super.onServerTick(te, currentTarget, canOperate);
+		int previousCharge = chargeTicks;
+		int previousTargetless = targetlessTicks;
+		int chargeTime = Math.max(0, TeslaCoil.chargeTime);
+		boolean hasTarget = currentTarget!=null&&currentTarget.shouldBeExecuted(te.getWorld());
 
-			for(Entity e : targets)
-				if(e!=target)
-					if(e instanceof EntityLivingBase)
-						IElectricEquipment.applyToEntity((EntityLivingBase)e, null, new ElectricSource(3f));
+		if(hasTarget)
+		{
+			targetlessTicks = 0;
+			if(canOperate&&te.door.isFullyOpened()&&chargeTicks < chargeTime)
+				chargeTicks++;
 		}
-
-	}*/
-
-	private void addAnimation(LightningAnimation ani)
-	{
-		Minecraft.getMinecraft().addScheduledTask(() -> effects.add(ani));
-	}
-
-	private void addEntityToAnimation(int id, World world, BlockPos pos)
-	{
-		Entity target = world.getEntityByID(id);
-		if(target instanceof EntityLivingBase)
+		else if(chargeTicks > 0)
 		{
-			double dx = target.posX-pos.getX();
-			double dy = target.posY-pos.getY();
-			double dz = target.posZ-pos.getZ();
-
-			EnumFacing f;
-			if(Math.abs(dz) > Math.abs(dx))
-				f = dz < 0?EnumFacing.NORTH: EnumFacing.SOUTH;
+			if(targetlessTicks < Math.max(0, TeslaCoil.chargeDownDelay))
+				targetlessTicks++;
 			else
-				f = dx < 0?EnumFacing.WEST: EnumFacing.EAST;
-
-			double verticalOffset = 1+Utils.RAND.nextDouble()*.25;
-			Vec3d coilPos = new Vec3d(pos).addVector(.5, .5, .5);
-			//Vertical offset
-			coilPos = coilPos.addVector(0, verticalOffset, 0);
-			//offset to direction
-			coilPos = coilPos.addVector(f.getFrontOffsetX()*.375, f.getFrontOffsetY()*.375, f.getFrontOffsetZ()*.375);
-			//random side offset
-			f = f.rotateAround(Axis.Y);
-			double dShift = (Utils.RAND.nextDouble()-.5)*.75;
-			coilPos = coilPos.addVector(f.getFrontOffsetX()*dShift, f.getFrontOffsetY()*dShift, f.getFrontOffsetZ()*dShift);
-
-			addAnimation(new LightningAnimation(coilPos, (EntityLivingBase)target));
+				chargeTicks--;
 		}
+		else
+			targetlessTicks = 0;
+
+		chargeTicks = Math.min(chargeTicks, chargeTime);
+		if(previousCharge!=chargeTicks||previousTargetless!=targetlessTicks)
+			syncWithClient(te, SyncEvents.WEAPON_MISC);
 	}
 
-	/*@Override
-	public EmplacementHitboxEntity[] getCollisionBoxes()
+	private boolean isCharged()
 	{
-		if(entity==null)
-			return new EmplacementHitboxEntity[0];
+		return chargeTicks >= Math.max(0, TeslaCoil.chargeTime);
+	}
 
-		ArrayList<EmplacementHitboxEntity> list = new ArrayList<>();
-		list.add(new EmplacementHitboxEntity(entity, "baseBox", 1f, 1f,
-				new Vec3d(0, 0.5, 0), Vec3d.ZERO, 4));
+	@Override
+	public boolean canSelectAutonomousTarget(Entity entity)
+	{
+		return entity instanceof EntityLivingBase&&entity.isEntityAlive()&&attackAABB!=null
+				&&attackAABB.intersects(entity.getEntityBoundingBox());
+	}
 
-		list.add(new EmplacementHitboxEntity(entity, "rod", 0.375f, 1.5f,
-				new Vec3d(0, 2, 0), Vec3d.ZERO, 12));
-
-		list.add(new EmplacementHitboxEntity(entity, "rodTop", 0.75f, 0.75f,
-				new Vec3d(0, 3, 0), Vec3d.ZERO, 20));
-
-		list.add(new EmplacementHitboxEntity(entity, "ring1", 0.75f, 0.1875f,
-				new Vec3d(0, 2.55f, 0), Vec3d.ZERO, 12));
-
-		list.add(new EmplacementHitboxEntity(entity, "ring2", 1f, 0.1875f,
-				new Vec3d(0, 2.15f, 0), Vec3d.ZERO, 12));
-
-		list.add(new EmplacementHitboxEntity(entity, "ring3", 1.0625f, 0.1875f,
-				new Vec3d(0, 1.8f, 0), Vec3d.ZERO, 12));
-
-		list.add(new EmplacementHitboxEntity(entity, "ring4", 1.1875f, 0.1875f,
-				new Vec3d(0, 1.5f, 0), Vec3d.ZERO, 12));
-
-		list.add(new EmplacementHitboxEntity(entity, "sideBox1", 0.5f, 0.5f,
-				new Vec3d(0.75, 0.5f, 0), Vec3d.ZERO, 4));
-
-		list.add(new EmplacementHitboxEntity(entity, "sideBox2", 0.5f, 0.5f,
-				new Vec3d(-0.75, 0.5f, 0), Vec3d.ZERO, 4));
-
-		list.add(new EmplacementHitboxEntity(entity, "sideBox3", 0.5f, 0.5f,
-				new Vec3d(0, 0.5f, 0.75), Vec3d.ZERO, 4));
-
-		list.add(new EmplacementHitboxEntity(entity, "sideBox4", 0.5f, 0.5f,
-				new Vec3d(0, 0.5f, -0.75), Vec3d.ZERO, 4));
-
-
-		list.add(new EmplacementHitboxEntity(entity, "pipe1", 0.5f, 0.35f,
-				new Vec3d(0.6, 0.35f, 0.5), Vec3d.ZERO, 4));
-
-		list.add(new EmplacementHitboxEntity(entity, "pipe2", 0.5f, 0.35f,
-				new Vec3d(0.6, 0.35f, -0.5), Vec3d.ZERO, 4));
-
-		return list.toArray(new EmplacementHitboxEntity[0]);
-	}*/
+	@Override
+	public boolean canExecuteFireMission(TargetCoordinateReference target)
+	{
+		if(target.isAimingOnly())
+			return false;
+		Entity entity = target.getEntity();
+		if(entity!=null)
+			return canSelectAutonomousTarget(entity);
+		Vec3d coordinates = target.supplyCoordinates();
+		return coordinates!=null&&attackAABB!=null&&attackAABB.contains(coordinates);
+	}
 
 	@Override
 	public int getEnergyUpkeepCost()
@@ -209,17 +184,18 @@ public class EmplacementWeaponTeslaCoil extends EmplacementWeapon
 		return TeslaCoil.maxHealth;
 	}
 
+	@Nonnull
 	@Override
-	public NBTTagCompound serializeNBT()
+	public DataType getDataCallback(String string)
 	{
-		return super.serializeNBT();
-	}
-
-	@Override
-	public void deserializeNBT(NBTTagCompound nbt)
-	{
-		super.deserializeNBT(nbt);
-		if(nbt.hasKey("targetEntity"))
-			targetedEntities.add(nbt.getInteger("targetEntity"));
+		return switch(string)
+		{
+			case "weapon_energy" -> new DataTypeInteger(energy.getEnergyStored());
+			case "weapon_charge" -> new DataTypeInteger(chargeTicks);
+			case "weapon_charge_progress" -> new DataTypeFloat(
+					TeslaCoil.chargeTime <= 0?1f: chargeTicks/(float)TeslaCoil.chargeTime);
+			case "weapon_charged" -> new DataTypeBoolean(isCharged());
+			default -> super.getDataCallback(string);
+		};
 	}
 }

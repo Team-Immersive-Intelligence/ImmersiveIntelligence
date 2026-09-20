@@ -1,7 +1,7 @@
 {
   "comment": "Made by Pabilo8 with Blockbench",
   "groups": {
-    "projector": {
+    "projector_origin": {
       "rotation": [
         {
           "time": 0,
@@ -29,7 +29,7 @@
         }
       ]
     },
-    "turen": {
+    "turen_origin": {
       "rotation": [
         {
           "time": 0,

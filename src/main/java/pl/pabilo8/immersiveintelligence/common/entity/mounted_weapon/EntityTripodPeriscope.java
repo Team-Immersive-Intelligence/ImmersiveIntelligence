@@ -62,6 +62,8 @@ public class EntityTripodPeriscope extends EntityMountedWeapon implements ICamer
 			Entity user = getPassengers().get(0);
 			aim.setTarget(user.getRotationYawHead(), user.rotationPitch);
 		}
+		else
+			aim.setTarget(aim.getYaw(0), aim.getPitch(0));
 	}
 
 	@Override
