@@ -465,7 +465,7 @@ public class IIUtils
 	 * @return enum value with name, case insensitive
 	 */
 	@Nonnull
-	public static <T extends Enum<T> & ISerializableEnum> T enumValue(Class<T> en, String name)
+	public static <T extends Enum<T>> T enumValue(Class<T> en, String name)
 	{
 		try
 		{
@@ -527,6 +527,9 @@ public class IIUtils
 	{
 		ArrayList<BlockPos> set = new ArrayList<>();
 		float diameter = radius*radius;
+
+		if(radius <= 0)
+			return (allowAir||!world.isAirBlock(centerPos))?Sets.newHashSet(centerPos): Sets.newHashSet();
 
 		//Iterate in a cube
 		for(float x = -radius; x < radius; x++)

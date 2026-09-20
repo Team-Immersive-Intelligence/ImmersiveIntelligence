@@ -41,7 +41,20 @@ public interface IPenetrationHandler
 
 	boolean canBeDamaged();
 
+	@Nullable
 	String getDebrisParticle();
+
+	@Nullable
+	default String getImpactParticle()
+	{
+		return getDebrisParticle();
+	}
+
+	@Nullable
+	default String getRicochetParticle()
+	{
+		return null;
+	}
 
 	/**
 	 * @return true if this material can change to a burnt block state

@@ -1,0 +1,105 @@
+{
+  "bounds": {
+    "base": [-10, -3, -10, 10, 3, 10],
+    "back": [-4, -8.5, -4, 4, 8.5, 4],
+    "back_2": [-4, -6.5, -4, 4, 6.5, 4],
+    "holder": [-2, -10, -2, 2, 10, 2],
+    "turret": [-10, -10, -10, 10, 10, 10],
+    "turret_front": [-5, -5, -5, 5, 5, 5],
+    "lens": [-3.5, -3.5, -3.5, 3.5, 3.5, 3.5],
+    "lens2": [-3, -3, -3, 3, 3, 3],
+    "antenna": [-0.5, -13.5, -0.5, 0.5, 13.5, 0.5],
+    "none": [0, 0, 0, 0, 0, 0]
+  },
+  "tactile_transforms": {
+    "all": {
+      "offset": [-1, 0, -2]
+    },
+    "south": {},
+    "west": {},
+    "north": {},
+    "east": {},
+    "mirrored": {}
+  },
+  "tactile": {
+    "_schema": "immersiveintelligence:models/block/multiblock/emplacement/weapon/infrared_observer.obj.amt",
+    "base": [
+      {
+        "offset": [3, -41, -2.5],
+        "type": "base"
+      },
+      {
+        "offset": [-6, -41, -2.5],
+        "type": "base"
+      },
+      {
+        "offset": [-8, -35.5, 11.5],
+        "type": "back"
+      },
+      {
+        "offset": [0, -35.5, 11.5],
+        "type": "back"
+      },
+      {
+        "offset": [6, -37.5, 13.5],
+        "type": "back_2"
+      },
+      {
+        "offset": [-12, -28, -5.5],
+        "type": "holder"
+      },
+      {
+        "offset": [-12, -28, -2.5],
+        "type": "holder"
+      },
+      {
+        "offset": [-12, -28, 0.5],
+        "type": "holder"
+      },
+      {
+        "offset": [11, -28, -2.5],
+        "type": "holder"
+      },
+      {
+        "offset": [11, -28, -5.5],
+        "type": "holder"
+      },
+      {
+        "offset": [11, -28, 0.5],
+        "type": "holder"
+      },
+      {
+        "offset": [-8, -13.5, 13],
+        "type": "antenna"
+      }
+    ],
+    "turret": [
+      {
+        "offset": [-10, -0.5, 0],
+        "type": "turret"
+      },
+      {
+        "offset": [-15, -0.5, -15],
+        "type": "turret_front"
+      },
+      {
+        "offset": [-15, 4.5, -15],
+        "type": "turret_front"
+      },
+      {
+        "offset": [-15, 4.5, -20.5],
+        "type": "lens"
+      },
+      {
+        "offset": [-5, 5, -11],
+        "type": "lens2"
+      }
+    ],
+    "turret_origin": [
+      {
+        "offset": [1.5, -6.5, 3],
+        "type": "none"
+      }
+    ]
+  }
+}

@@ -1,7 +1,7 @@
 {
   "comment": "Made by Pabilo8 with Blockbench",
   "groups": {
-    "turret": {
+    "turret_origin": {
       "rotation": [
         {
           "time": 0,
@@ -33,7 +33,7 @@
         }
       ]
     },
-    "barrel": {
+    "barrel_origin": {
       "rotation": [
         {
           "time": 0,

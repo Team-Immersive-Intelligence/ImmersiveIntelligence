@@ -1124,11 +1124,9 @@ machineupgrade.immersiveintelligence.emplacement.heavy_railgun.desc=Heavy Railgu
 machineupgrade.immersiveintelligence.emplacement.machinegun=Machinegun Nest
 machineupgrade.immersiveintelligence.emplacement.machinegun.desc=The Machinegun Nest can provide suppressive automatic fire, allowing crowd control. Due to its construction, it is unable to fight airborne enemies.
 machineupgrade.immersiveintelligence.emplacement.machinegun.heavy_barrel=Heavy Barrel
-machineupgrade.immersiveintelligence.emplacement.machinegun.heavy_barrel.desc=Heavy barrels allow for much faster firing rate and slightly increase the maximum permitted overheat.
+machineupgrade.immersiveintelligence.emplacement.machinegun.heavy_barrel.desc=Heavy barrels allow for a much faster firing rate.
 machineupgrade.immersiveintelligence.emplacement.machinegun.watercooled=Water Cooled Barrel
 machineupgrade.immersiveintelligence.emplacement.machinegun.watercooled.desc=A replacement for the stock barrels. When mounted, barrels do not overheat when a coolant is provided.
-machineupgrade.immersiveintelligence.emplacement.machinegun.additional_fortifications=Additional Fortifications
-machineupgrade.immersiveintelligence.emplacement.machinegun.additional_fortifications.desc=Placing additional sandbags around the machinegun nest gives it additional armor and increases its durability.
 
 machineupgrade.immersiveintelligence.emplacement.mortar=Mortar
 machineupgrade.immersiveintelligence.emplacement.mortar.desc=Mortar provides indirect fire support on close range, bombarding enemies at an almost vertical angle.
@@ -3163,7 +3161,7 @@ ie.manual.entry.bullet_core.core_brass.desc=Brass is a heavy metal with bad pene
 
 ie.manual.entry.bullet_core.core_copper=Copper Core
 ie.manual.entry.bullet_core.core_copper.lore=Every Penny Counts
-ie.manual.entry.bullet_core.core_copper.desc=Copper is a cheap material for bullets, its penetration ability is worse than one of brass, but its component effect.
+ie.manual.entry.bullet_core.core_copper.desc=Copper is a cheap material for bullets. Its penetration ability is worse than one of brass, but its component effect is slightly better.
 
 ie.manual.entry.bullet_core.core_lead=Lead Core
 ie.manual.entry.bullet_core.core_lead.lore=Good, bad, and ugly
@@ -3191,11 +3189,12 @@ ie.manual.entry.bullet_core.core_rubber.desc=Rubber cores are less lethal than t
 
 ie.manual.entry.bullet_components.name=Bullet Components
 ie.manual.entry.bullet_components.subtext=Load APCRHEFSPTSD B-Capped!
-ie.manual.entry.bullet_components.dmg_mod=Damage: %sx
-ie.manual.entry.bullet_components.pen_mod=Penetration: %s vBH
-ie.manual.entry.bullet_components.blast_mod=Blast Radius: %sx
 ie.manual.entry.bullet_components.density=Density: %s
+ie.manual.entry.bullet_components.damage_modifier=Damage Modifier: %sx
+ie.manual.entry.bullet_components.component_efficiency_modifier=Component Efficiency Modifier: %sx
+ie.manual.entry.bullet_components.penetration_hardness=Penetration Hardness: %s
 ie.manual.entry.bullet_components.type=Type: %s
+ie.manual.entry.bullet_components.slots_taken=Slots Taken: %s
 
 #A quote from World in Conflict
 ie.manual.entry.bullet_component.firework=Fireworks
@@ -3230,7 +3229,7 @@ ie.manual.entry.bullet_component.tnt.desc=TNT is an explosive material with medi
 #CoH2 Reference
 ie.manual.entry.bullet_component.rdx=RDX
 ie.manual.entry.bullet_component.rdx.lore=Things go up, things go down!
-ie.manual.entry.bullet_component.rdx.desc=RDX, also known as the §shexogen§r is a powerful high-explosive material. Being twice as powerful as TNT and it's able to destroy even the heaviest emplacements.
+ie.manual.entry.bullet_component.rdx.desc=RDX, also known as the §lhexogen§r is a powerful high-explosive material. Being twice as powerful as TNT and it's able to destroy even the heaviest emplacements.
 
 #There are many variants of HMX's full name, one of them is Her Majesty's Explosive
 ie.manual.entry.bullet_component.hmx=HMX
@@ -3287,7 +3286,7 @@ ie.manual.entry.bullet_component.shrapnel_electrum.desc=Electrum excels at condu
 
 #Reference to a post-ww2 poster for inter-country help in Western Europe
 ie.manual.entry.bullet_component.shrapnel_constantan=Constantan Shrapnel
-ie.manual.entry.bullet_component.shrapnel_constantan.lore=<br>Whatever the weather, we kill enemies together.
+ie.manual.entry.bullet_component.shrapnel_constantan.lore=Whatever the weather, we kill enemies together.
 ie.manual.entry.bullet_component.shrapnel_constantan.desc=Constantan is well known for its heat conductive properties, enemies hit will be prone to fire damage for some time.
 
 #Reference to words by Otto von Bismarck
@@ -3503,6 +3502,10 @@ ii.gui.flagpole.faction=Faction Management
 ii.gui.radar.map=Radar Display
 ii.gui.radar.configuration=Configuration
 ii.gui.radar.targets=Targets
+ii.gui.radar.config.reacts_redstone=React to Redstone
+ii.gui.radar.config.reacts_redstone.tooltip=When enabled, the Radar operates only while it receives redstone.
+ii.gui.radar.config.data_output=Data Output
+ii.gui.radar.config.data_output.tooltip=Send filtered visible contacts through the Radar data port.
 
 ii.gui.emplacement.platform_inventory=Platform Inventory
 ii.gui.emplacement.base_inventory=Base Inventory
@@ -3512,6 +3515,12 @@ ii.gui.emplacement.config.reacts_redstone=React to Redstone
 ii.gui.emplacement.config.reacts_redstone.tooltip=When enabled, the weapon surfaces only while the Emplacement receives redstone.
 ii.gui.emplacement.config.reacts_data=React to Data
 ii.gui.emplacement.config.reacts_data.tooltip=When disabled, the Emplacement will not react to data input.
+ii.gui.emplacement.config.data_output=Data Output
+ii.gui.emplacement.config.data_output.tooltip=Send spotted targets through the Emplacement data port.
+ii.gui.emplacement.config.ballistic_fire=Ballistic Fire
+ii.gui.emplacement.config.ballistic_fire.tooltip=Use high-angle ballistic fire for automatically detected targets. Disable for direct fire.
+ii.gui.emplacement.config.yaw=Yaw
+ii.gui.emplacement.config.pitch=Pitch
 ii.gui.emplacement.config.hide_health=Hide when health is below:
 ii.gui.emplacement.config.hide_health.tooltip=Minimum weapon health percentage. Below this value, the platform hides for repairs.
 ii.gui.emplacement.config.resurface_health=Repair until health reaches:
@@ -3530,6 +3539,114 @@ ii.gui.emplacement.fire_missions.finite_shots=Limit Shots
 ii.gui.emplacement.fire_missions.shots=Shots
 ii.gui.emplacement.fire_missions.shots_left=%s shots
 ii.gui.emplacement.fire_missions.until_done=until done
+
+ii.gui.emplacement.target_preset.mobs=Mobs
+ii.gui.emplacement.target_preset.everyone=Everyone
+ii.gui.emplacement.target_preset.enemy_factions=Enemy Factions
+ii.gui.emplacement.target_preset.shells=Shells
+ii.gui.emplacement.target_preset.custom=Custom
+ii.gui.emplacement.target_preset.name=Preset Name
+ii.gui.emplacement.target_preset.new_name=New Preset
+ii.gui.emplacement.target_preset.copy_name=%s Copy
+ii.gui.emplacement.target_preset.add.tooltip=Add a custom target preset.
+ii.gui.emplacement.target_preset.duplicate.tooltip=Duplicate the selected preset with a new identity.
+ii.gui.emplacement.target_preset.remove.tooltip=Remove the selected preset and its target tree.
+ii.gui.emplacement.target_preset.reset=Reset
+ii.gui.emplacement.target_preset.reset.tooltip=Restore a built-in preset, or restore a custom preset to its state when this page opened.
+ii.gui.emplacement.target_preset.current=Current Task
+ii.gui.emplacement.target_preset.current.tooltip=Use this preset as the autonomous targeting Job. Switch it off to disable autonomous targeting.
+
+ii.gui.emplacement.target_tree.node=Target Condition
+ii.gui.emplacement.target_tree.weight=Weight
+ii.gui.emplacement.target_tree.weight.tooltip=Add this signed value when the condition and its parent branch match.
+ii.gui.emplacement.target_tree.filter=Filter
+ii.gui.emplacement.target_tree.filter.tooltip=Select the condition evaluated for this target-tree node.
+ii.gui.emplacement.target_tree.entity_id=Entity ID
+ii.gui.emplacement.target_tree.mod_id=Mod ID
+ii.gui.emplacement.target_tree.entity_type=Type
+ii.gui.emplacement.target_tree.name=Name
+ii.gui.emplacement.target_tree.comparison=Test
+ii.gui.emplacement.target_tree.expected=State
+ii.gui.emplacement.target_tree.expected_state=Expected
+ii.gui.emplacement.target_tree.relationship=Relation
+ii.gui.emplacement.target_tree.add_child=Add Child
+ii.gui.emplacement.target_tree.add_child.tooltip=Add an Any condition below the selected node.
+ii.gui.emplacement.target_tree.remove=Remove
+ii.gui.emplacement.target_tree.remove.tooltip=Remove the selected node and all of its children. The root cannot be removed.
+ii.gui.emplacement.target_tree.condition=%s: %s
+ii.gui.emplacement.target_tree.weight_value=Weight: %s
+
+ii.gui.emplacement.target_filter.invalid=Invalid
+ii.gui.emplacement.target_filter.invalid.tooltip=This condition rejects every target because its saved data is invalid.
+ii.gui.emplacement.target_filter.any=Any
+ii.gui.emplacement.target_filter.any.value=All targets
+ii.gui.emplacement.target_filter.any.tooltip=Match every candidate that passes the weapon visibility rules.
+ii.gui.emplacement.target_filter.entity_id=Entity ID
+ii.gui.emplacement.target_filter.entity_id.tooltip=Match one exact Forge entity registry identifier.
+ii.gui.emplacement.target_filter.mod_id=Mod ID
+ii.gui.emplacement.target_filter.mod_id.tooltip=Match the namespace of the target's entity registry identifier.
+ii.gui.emplacement.target_filter.entity_type=Entity Type
+ii.gui.emplacement.target_filter.entity_type.tooltip=Match one supported Emplacement entity category.
+ii.gui.emplacement.target_filter.name=Name
+ii.gui.emplacement.target_filter.name.tooltip=Match the target's visible name without case sensitivity.
+ii.gui.emplacement.target_filter.health=Health
+ii.gui.emplacement.target_filter.health.tooltip=Compare current health or vehicle durability with a threshold.
+ii.gui.emplacement.target_filter.max_health=Maximum Health
+ii.gui.emplacement.target_filter.max_health.tooltip=Compare maximum health or vehicle durability with a threshold.
+ii.gui.emplacement.target_filter.distance=Distance
+ii.gui.emplacement.target_filter.distance.tooltip=Compare distance from the weapon targeting centre with a block threshold.
+ii.gui.emplacement.target_filter.horizontal_distance=Horizontal Distance
+ii.gui.emplacement.target_filter.horizontal_distance.tooltip=Compare X/Z distance from the weapon targeting centre with a block threshold, ignoring height.
+ii.gui.emplacement.target_filter.on_ground=On Ground
+ii.gui.emplacement.target_filter.on_ground.tooltip=Match whether the target is on the ground.
+ii.gui.emplacement.target_filter.in_water=In Water
+ii.gui.emplacement.target_filter.in_water.tooltip=Match whether the target is in water.
+ii.gui.emplacement.target_filter.on_fire=On Fire
+ii.gui.emplacement.target_filter.on_fire.tooltip=Match whether the target is burning.
+ii.gui.emplacement.target_filter.faction_relationship=Faction Relation
+ii.gui.emplacement.target_filter.faction_relationship.tooltip=Match the exact diplomatic relation between the Emplacement owner and a living target.
+ii.gui.emplacement.target_filter.unset=Not set
+ii.gui.emplacement.target_filter.boolean.true=True
+ii.gui.emplacement.target_filter.boolean.false=False
+ii.gui.emplacement.target_filter.entity_type.mob=Mob
+ii.gui.emplacement.target_filter.entity_type.animal=Animal
+ii.gui.emplacement.target_filter.entity_type.player=Player
+ii.gui.emplacement.target_filter.entity_type.npc=NPC
+ii.gui.emplacement.target_filter.entity_type.vehicle=Vehicle
+ii.gui.emplacement.target_filter.entity_type.projectile=Projectile
+ii.gui.emplacement.target_filter.relationship.member=Member
+ii.gui.emplacement.target_filter.relationship.allied=Allied
+ii.gui.emplacement.target_filter.relationship.neutral=Neutral
+ii.gui.emplacement.target_filter.relationship.enemy=Enemy
+ii.gui.emplacement.target_filter.comparison.less_than=Less than
+ii.gui.emplacement.target_filter.comparison.less_or_equal=Less than or equal to
+ii.gui.emplacement.target_filter.comparison.equal=Equal to
+ii.gui.emplacement.target_filter.comparison.greater_or_equal=Greater than or equal to
+ii.gui.emplacement.target_filter.comparison.greater_than=Greater than
+
+ii.gui.emplacement.fire_mission.editor=Fire Mission
+ii.gui.emplacement.fire_mission.entity_not_editable=Entity-based Fire Missions cannot be edited.
+ii.gui.emplacement.fire_mission.type=Type
+ii.gui.emplacement.fire_mission.type.position=Position
+ii.gui.emplacement.fire_mission.type.entity=Entity
+ii.gui.emplacement.fire_mission.position=Relative Target Position (X / Y / Z)
+ii.gui.emplacement.fire_mission.position_value=%s, %s, %s
+ii.gui.emplacement.fire_mission.position_unset=Position not set
+ii.gui.emplacement.fire_mission.entity_id=Entity ID
+ii.gui.emplacement.fire_mission.entity_id.tooltip=Runtime entity ID of the target.
+ii.gui.emplacement.fire_mission.entity_value=Entity #%s
+ii.gui.emplacement.fire_mission.coordinate.x.tooltip=Target X coordinate.
+ii.gui.emplacement.fire_mission.coordinate.y.tooltip=Target Y coordinate.
+ii.gui.emplacement.fire_mission.coordinate.z.tooltip=Target Z coordinate.
+ii.gui.emplacement.fire_mission.finite_shots=Limit Shots
+ii.gui.emplacement.fire_mission.finite_shots.tooltip=Remove this Request after the configured number of shots.
+ii.gui.emplacement.fire_mission.shots=Shots
+ii.gui.emplacement.fire_mission.shots.tooltip=Number of shots remaining for this Request.
+ii.gui.emplacement.fire_mission.shots_left=%s shots
+ii.gui.emplacement.fire_mission.until_done=Until target is gone
+ii.gui.emplacement.fire_mission.aim_only=Aim only
+ii.gui.emplacement.fire_mission.ballistic_fire=Ballistic Fire
+ii.gui.emplacement.fire_mission.ballistic_fire.tooltip=Override the Emplacement default for this Fire Mission. Disable for direct fire.
 
 ii.gui.emplacement.selector_preset=Selector Preset
 ii.gui.emplacement.filter=Filter
@@ -3628,6 +3745,7 @@ ii.gui.redstone_data_interface.mode.float=Float 0-1
 ii.gui.redstone_data_interface.mode.string=String
 
 ii.gui.projectile_workshop.component_info=Component Info
+ii.gui.projectile_workshop.tooltip.units=%s Units
 ii.gui.projectile_workshop.component.role=Role: %s
 ii.gui.projectile_workshop.component.density=Density: %s
 ii.gui.projectile_workshop.component.slots_taken=Slots Taken: %s
@@ -3641,22 +3759,32 @@ ii.gui.projectile_workshop.material_preview=Material Preview
 ii.gui.projectile_workshop.section.core=Core
 ii.gui.projectile_workshop.section.ballistics=Ballistics
 ii.gui.projectile_workshop.tooltip.component_slots=Component Slots
+ii.gui.projectile_workshop.tooltip.component_slots.tooltip=Space available for filling with Ammunition Components.
 ii.gui.projectile_workshop.tooltip.component_effect_shape=Component Effect Shape
+ii.gui.projectile_workshop.tooltip.component_effect_shape.tooltip=Shape used by component effects, i.e. explosives upon detonation. Depends on core type.
 ii.gui.projectile_workshop.tooltip.component_efficiency=Component Efficiency Modifier
-ii.gui.projectile_workshop.tooltip.component_efficiency.line1=Determines potency.
-ii.gui.projectile_workshop.tooltip.component_efficiency.line2=Responsible for explosive power, chemical gas concentration.
+ii.gui.projectile_workshop.tooltip.component_efficiency.tooltip=Determines component potency. Responsible for explosive power, chemical gas concentration.
 ii.gui.projectile_workshop.tooltip.component_size=Component Size Multiplier
-ii.gui.projectile_workshop.tooltip.component_size.line1=Determines component volume, responsible for explosion radius, gas spread range multiplier.
+ii.gui.projectile_workshop.tooltip.component_size.tooltip=Determines component volume, responsible for explosion radius, gas spread range multiplier.
 ii.gui.projectile_workshop.tooltip.core_mass=Core Mass
+ii.gui.projectile_workshop.tooltip.core_mass.tooltip=Mass of the projectile core for selected material.
 ii.gui.projectile_workshop.tooltip.damage_dealt=Damage Dealt
+ii.gui.projectile_workshop.tooltip.damage_dealt.tooltip=Direct damage dealt when the projectile hits a target.
 ii.gui.projectile_workshop.tooltip.velocity=Velocity
+ii.gui.projectile_workshop.tooltip.velocity.tooltip=Projectile speed in blocks per tick.
 ii.gui.projectile_workshop.tooltip.available_fuzes=Available Fuzes
+ii.gui.projectile_workshop.tooltip.available_fuzes.tooltip=Fuze types that can be used with this projectile.
 ii.gui.projectile_workshop.tooltip.penetration_hardness=Penetration Hardness
+ii.gui.projectile_workshop.tooltip.penetration_hardness.tooltip=The toughest material that the projectile will be able to penetrate.
+ii.gui.projectile_workshop.tooltip.penetration_depth=Penetration Depth
+ii.gui.projectile_workshop.tooltip.penetration_depth.tooltip=The maximum depth the projectile will be able to penetrate its toughest material at.
 ii.gui.projectile_workshop.tooltip.flat_trajectory_range=Flat-Trajectory Range
+ii.gui.projectile_workshop.tooltip.flat_trajectory_range.tooltip=Distance travelled by a projectile that is fired at a 0 degree angle, until it falls down by a full block of height.
 ii.gui.projectile_workshop.tooltip.max_artillery_range=Max. Artillery Range
+ii.gui.projectile_workshop.tooltip.max_artillery_range.tooltip=Horizontal distance travelled by a projectile fired at 45 degrees, until it fall.
 ii.gui.projectile_workshop.unit.blocks=%s b
 ii.gui.projectile_workshop.unit.blocks_per_tick=%s b/t
-ii.gui.projectile_workshop.value.penetration_hardness=%s b %s
+ii.gui.projectile_workshop.value.penetration_hardness=%s @ %s
 ii.gui.projectile_workshop.unit.multiplier=%sx
 
 ii.gui.ammunition_assembler.fuse_config.timed=Time:
@@ -3834,20 +3962,20 @@ item.immersiveintelligence.bullet.component.alumentum.name=Alumentum
 ie.manual.entry.bullet_component.alumentum=Alumentum
 ie.manual.entry.bullet_component.alumentum.lore=Alchemist's explosives
 ie.manual.entry.bullet_component.alumentum.desc=A very volatile fiery substance, Alumentum is smaller in radius compared to TNT, but contains more concentrated power.
- 
+
 item.immersiveintelligence.bullet.component.bottled_taint.name=Bottled Taint
 ie.manual.entry.bullet_component.bottled_taint=Bottled Taint
 ie.manual.entry.bullet_component.bottled_taint.lore=Ruinous power
 ie.manual.entry.bullet_component.bottled_taint.desc=Moving the contents of the bottle into a shell allows to deliver the corruptive Taint at much longer distances than it is possible to throw the bottle manually. Spread forth magical corruption, now at long distances!
 
-ie.manual.entry.bullet_core.core_thaumium=Thaumium
+item.immersiveintelligence.bullet.component.core_thaumium.name=Thaumium
 ie.manual.entry.bullet_core.core_thaumium=Thaumium Core
 ie.manual.entry.bullet_core.core_thaumium.lore=Thaumaturgicallymtallurgic
 ie.manual.entry.bullet_core.core_thaumium.desc=A result of infusing iron with raw magical energy. Harder and better than base iron, it is a good candidate for massproduced shells.
 
 
 # Void metal is Disturbingly slick and warm to the touch, easy to work like gold, becoming as hard as tungsten and harder when struck 
-ie.manual.entry.bullet_core.core_voidmetal=Void Metal
+item.immersiveintelligence.bullet.component.core_voidmetal=Void Metal
 ie.manual.entry.bullet_core.core_voidmetal=Void Metal Core
 ie.manual.entry.bullet_core.core_voidmetal.lore=Magical-military-industrial-complex
 ie.manual.entry.bullet_core.core_voidmetal.desc=Void Metal is an excellent choice for bullets. However, properties of the metal make it somewhat difficult for conventional explosives to detonate with proper force.

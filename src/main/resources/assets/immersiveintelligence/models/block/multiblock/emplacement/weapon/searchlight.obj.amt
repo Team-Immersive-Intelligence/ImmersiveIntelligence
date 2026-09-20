@@ -1,15 +1,26 @@
 {
   "origins": {
-    "gun": [-3, 4, -3],
-    "projector": [-1.01818, 22, -3.00909],
-    "ele_activ": [-3, 20, -15],
-    "ele_notactive": [-3, 20, -15],
-    "base": [-3, -1, -3]
+    "turret": [8, -41, 24],
+    "projector": [-1.0182, -21, 23.9909],
+    "active": [-3, 20, -15],
+    "base": [-3, -1, -3],
+    "turret_origin": [8, -41, 24],
+    "projector_origin": [-1.0182, -21, 23.9909],
+    "glass": [8, -41, 22],
+    "ray": [8, -21, 28]
   },
   "hierarchy": {
-    "gun": "base",
-    "projector": "gun",
-    "ele_activ": "projector",
-    "ele_notactive": "projector"
+    "turret": "turret_origin",
+    "projector": "projector_origin",
+    "active": "projector",
+    "turret_origin": "base",
+    "projector_origin": "turret",
+    "glass": "projector",
+    "ray": "active"
+  },
+  "properties": {
+    "ray": {
+      "particle": "light/searchlight"
+    }
   }
 }

@@ -14,7 +14,6 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
@@ -322,12 +321,12 @@ public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockI
 	public List<BlockPos> getMultiblockBlocks()
 	{
 		ArrayList<BlockPos> blocks = new ArrayList<>();
-		BlockPos origin = getPos().subtract(new Vec3i(offset[0], offset[1], offset[2]));
+		BlockPos origin = this.getOrigin();
 
 		for(int y = 0; y < structureDimensions[0]; y++)
-			for(int x = 0; x < structureDimensions[1]; x++)
-				for(int z = 0; z < structureDimensions[2]; z++)
-					blocks.add(origin.offset(facing, x).offset(facing.rotateY(), z).add(0, y, 0));
+			for(int l = 0; l < structureDimensions[1]; l++)
+				for(int w = 0; w < structureDimensions[2]; w++)
+					blocks.add(origin.offset(this.facing, l).offset(this.facing.rotateY(), mirrored?-w: w).add(0, y, 0));
 
 		return blocks;
 	}

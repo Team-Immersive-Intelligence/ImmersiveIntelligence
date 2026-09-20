@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common.entity.tactile;
 
 import io.netty.buffer.ByteBuf;
+import lombok.Setter;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
@@ -10,6 +11,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
@@ -29,6 +31,11 @@ public class EntityAMTTactile extends Entity implements IEntityAdditionalSpawnDa
 	 * Name of this part
 	 */
 	public String name;
+	/**
+	 * Optional translated display-name key.
+	 */
+	@Setter
+	public String customName;
 	/**
 	 * Offset from center of parent or block
 	 */
@@ -116,31 +123,22 @@ public class EntityAMTTactile extends Entity implements IEntityAdditionalSpawnDa
 	@Override
 	public void onEntityUpdate()
 	{
+//		super.onEntityUpdate();
 		if(!world.isRemote)
 		{
-			if(manager==null||!manager.getEntities().contains(this))
+			if(manager==null||!manager.owns(this))
 			{
 				setDead();
 				return;
 			}
 
 			if(!visibility)
-			{
-				setEntityBoundingBox(EMPTY);
 				return;
-			}
-			world.updateEntityWithOptionalForce(this, false);
 		}
 
 		AxisAlignedBB newAABB = getEntityBoundingBox();
 		if(!world.isRemote)
 			world.getEntitiesWithinAABB(EntityLivingBase.class, newAABB).forEach(this::applyEntityCollision);
-
-	}
-
-	@Override
-	public void setEntityBoundingBox(AxisAlignedBB bb)
-	{
 
 	}
 
@@ -154,7 +152,7 @@ public class EntityAMTTactile extends Entity implements IEntityAdditionalSpawnDa
 	public void applyEntityCollision(Entity entity)
 	{
 		//Tactiles shouldn't collide with each other for simplicity's sake
-		if(!(entity instanceof EntityAMTTactile))
+		if(manager==null||!manager.isManagedEntity(entity))
 		{
 			entity.move(MoverType.PISTON, motionX, motionY, motionZ);
 			if(!world.isRemote&&manager!=null)
@@ -197,7 +195,7 @@ public class EntityAMTTactile extends Entity implements IEntityAdditionalSpawnDa
 	@Override
 	public AxisAlignedBB getEntityBoundingBox()
 	{
-		return aabb.offset(posX, posY, posZ);
+		return (visibility&&aabb!=null?aabb: EMPTY).offset(posX, posY, posZ);
 	}
 
 	@Override
@@ -247,9 +245,20 @@ public class EntityAMTTactile extends Entity implements IEntityAdditionalSpawnDa
 	}
 
 	@Override
+	public String getName()
+	{
+		if(customName!=null&&!customName.isEmpty())
+			return I18n.translateToLocal(customName);
+		if(name!=null&&!name.isEmpty())
+			return name;
+		return super.getName();
+	}
+
+	@Override
 	public void writeSpawnData(ByteBuf buffer)
 	{
 		ByteBufUtils.writeUTF8String(buffer, this.name);
+		ByteBufUtils.writeUTF8String(buffer, this.customName==null?"": this.customName);
 		buffer.writeDouble(this.aabb.minX);
 		buffer.writeDouble(this.aabb.minY);
 		buffer.writeDouble(this.aabb.minZ);
@@ -262,6 +271,7 @@ public class EntityAMTTactile extends Entity implements IEntityAdditionalSpawnDa
 	public void readSpawnData(ByteBuf additionalData)
 	{
 		this.name = ByteBufUtils.readUTF8String(additionalData);
+		this.customName = ByteBufUtils.readUTF8String(additionalData);
 		this.aabb = new AxisAlignedBB(
 				additionalData.readDouble(),
 				additionalData.readDouble(),

@@ -17,7 +17,6 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.ammo.PenetrationRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.PenetrationHardness;
 import pl.pabilo8.immersiveintelligence.api.ammo.penetration.PenetrationHandler;
-import pl.pabilo8.immersiveintelligence.api.ammo.penetration.PenetrationHandlerMetal;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
@@ -91,14 +90,28 @@ public class ImmersiveTechnologyHelper extends IICompatModule
 		addBlock(blocks, new ResourceLocation("immersivetech", "metal_barrel"));
 		addBlock(blocks, new ResourceLocation("immersivetech", "metal_device"));
 		addBlock(blocks, new ResourceLocation("immersivetech", "metal_trash"));
-		PenetrationRegistry.batchRegisterHandler(PenetrationHandlerMetal.get("steel"), blocks.toArray(new Block[0]));
+
+
+		PenetrationHandler steel = PenetrationHandler.builder(PenetrationHardness.STEEL,
+						1.1f, 200, PenetrationRegistry.PARTICLE_DEBRIS_METAL)
+				.withHitSound(IISounds.hitMetal)
+				.withImpactParticle("debris/metal_hit")
+				.withRicochetParticle("debris/metal_ricochet")
+				.build();
+		PenetrationRegistry.batchRegisterHandler(steel, blocks.toArray(new Block[0]));
 
 		blocks.clear();
 		addBlock(blocks, new ResourceLocation("immersivetech", "stone_multiblock"));
 		addBlock(blocks, new ResourceLocation("immersivetech", "stone_decoration"));
 		addBlock(blocks, new ResourceLocation("immersivetech", "stone_decoration_slab"));
-		PenetrationRegistry.batchRegisterHandler(new PenetrationHandler(PenetrationHardness.CONCRETE, 1f, 150, PenetrationRegistry.PARTICLE_DEBRIS_BRICK, IISounds.hitStone),
-				blocks.toArray(new Block[0]));
+		PenetrationRegistry.batchRegisterHandler(PenetrationHandler.builder(PenetrationHardness.CONCRETE)
+						.withThickness(1f)
+						.withIntegrity(150)
+						.withDebrisParticle(PenetrationRegistry.PARTICLE_DEBRIS_BRICK)
+						.withHitSound(IISounds.hitStone)
+						.build(),
+				blocks.toArray(new Block[0])
+		);
 	}
 
 	@Optional.Method(modid = "immersivetech")

@@ -1,28 +1,60 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon;
 
+import blusunrize.immersiveengineering.api.tool.ChemthrowerHandler;
+import blusunrize.immersiveengineering.common.util.IESounds;
+import net.minecraft.entity.Entity;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoBallistics;
+import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoBallisticsCache;
+import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoBallisticsCache.BallisticSolution;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
+import pl.pabilo8.immersiveintelligence.api.data.IIDataHandlingUtils;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeBoolean;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeFluidStack;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
+import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPanel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoFluidTank;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.HeavyChemthrower;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.EmplacementStateNeeds;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.EntityIIChemthrowerShot;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.TargetCoordinateReference;
+import pl.pabilo8.immersiveintelligence.common.util.gun.ChillingState;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Arrays;
 
+/**
+ * Implements direct Platform-fluid firing and Base-to-Platform supply for the Heavy Chemthrower.
+ *
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 08.09.2026
+ * @since 01.01.2026
+ */
 public class EmplacementWeaponHeavyChemthrower extends EmplacementWeaponTurretBase
 {
-	@SyncNBT
-	private FluidTank tank = new FluidTank(HeavyChemthrower.tankCapacity);
-	private SidedFluidHandler fluidHandler = new SidedFluidHandler(this);
-	@SyncNBT
-	private boolean shouldIgnite = false;
+	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.WEAPON_MISC})
+	public FluidTank baseTank = new FluidTank(HeavyChemthrower.tankCapacity);
+	@SyncNBT(name = "tank", events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.WEAPON_MISC, SyncEvents.WEAPON_RELOAD})
+	public FluidTank platformTank = new FluidTank(HeavyChemthrower.tankCapacity);
+	@SyncNBT(events = SyncEvents.WEAPON_MISC)
+	public boolean shouldIgnite = true;
+
+	private int sprayCooldown;
+	private boolean useBallisticAngles;
 
 	public EmplacementWeaponHeavyChemthrower()
 	{
@@ -35,7 +67,10 @@ public class EmplacementWeaponHeavyChemthrower extends EmplacementWeaponTurretBa
 		super.onInit(te);
 		this.visionAABB = this.visionAABB.grow(HeavyChemthrower.detectionRadius);
 		this.attackAABB = this.attackAABB.grow(HeavyChemthrower.attackRadius);
-		this.aim.withAimSpeed(HeavyChemthrower.yawRotateSpeed, HeavyChemthrower.pitchRotateSpeed);
+		this.chillingState = new ChillingState(200, 240, 80);
+		this.aim.withAimSpeed(HeavyChemthrower.yawRotateSpeed, HeavyChemthrower.pitchRotateSpeed)
+				.withPitchLimit(-90, 22.5f)
+				.withAimCorrectionFunction(this::getAnglePrediction);
 	}
 
 	@Override
@@ -45,9 +80,148 @@ public class EmplacementWeaponHeavyChemthrower extends EmplacementWeaponTurretBa
 	}
 
 	@Override
+	public boolean isArtilleryWeapon()
+	{
+		return true;
+	}
+
+	@Override
+	public EmplacementStateNeeds onUpdate(TileEntityEmplacement te, EmplacementStateNeeds baseNeeds, TargetCoordinateReference currentTarget)
+	{
+		useBallisticAngles = te.shouldUseBallisticFire(currentTarget);
+		if(sprayCooldown > 0)
+			sprayCooldown--;
+		return super.onUpdate(te, baseNeeds, currentTarget);
+	}
+
+	private float[] getAnglePrediction(Vec3d shooterPos, Vec3d shooterMotion, Vec3d targetPos, Vec3d targetMotion)
+	{
+		Vec3d direction = targetPos.add(targetMotion).subtract(shooterPos.add(shooterMotion));
+		double horizontalDistance = Math.sqrt(direction.x*direction.x+direction.z*direction.z);
+		float yaw = (float)Math.toDegrees(Math.atan2(-direction.x, direction.z));
+		float directPitch = (float)-Math.toDegrees(Math.atan2(direction.y, horizontalDistance));
+		FluidStack fluid = platformTank.getFluid();
+		if(fluid==null||fluid.getFluid()==null)
+			return new float[]{yaw, directPitch};
+
+		boolean gas = fluid.getFluid().isGaseous(fluid)||ChemthrowerHandler.isGas(fluid.getFluid());
+		float force = gas?HeavyChemthrower.rangeGas: HeavyChemthrower.rangeFluid;
+		double gravity = EntityIIChemthrowerShot.getGravity(fluid);
+		AmmoBallistics model = AmmoBallistics.dragAfterMove(
+				Arrays.asList("chemthrower", gravity, EntityIIChemthrowerShot.getMotionDecay()),
+				force, gravity, EntityIIChemthrowerShot.getMotionDecay(),
+				EntityIIChemthrowerShot.getDefaultTickLimit()
+		);
+		AmmoBallisticsCache.CachedBallisticStats stats = AmmoBallisticsCache.get(model);
+		BallisticSolution solution = useBallisticAngles?
+				stats.getArtillerySolution(horizontalDistance, direction.y):
+				stats.getDirectSolution(horizontalDistance, direction.y);
+		if(!solution.isValid())
+			return new float[]{yaw, directPitch};
+		return new float[]{MathHelper.wrapDegrees(yaw), -(float)solution.getElevation()};
+	}
+
+	@Override
+	protected boolean handleSupplyService(TileEntityEmplacement te)
+	{
+		return updateResupplyState(te,
+				() -> platformTank.getFluidAmount() < getFluidConsumption(),
+				this::canTransferFluid,
+				() -> {
+					if(transferFluid(Math.max(0, HeavyChemthrower.fluidTransferRate)) > 0)
+						syncWithClient(te, SyncEvents.WEAPON_MISC);
+				});
+	}
+
+	private boolean canTransferFluid()
+	{
+		FluidStack available = baseTank.drain(1, false);
+		return available!=null&&platformTank.fill(available, false) > 0;
+	}
+
+	private int transferFluid(int maxAmount)
+	{
+		FluidStack available = baseTank.drain(maxAmount, false);
+		if(available==null)
+			return 0;
+		int accepted = platformTank.fill(available, false);
+		if(accepted <= 0)
+			return 0;
+
+		FluidStack drained = baseTank.drain(accepted, true);
+		return drained==null?0: platformTank.fill(drained, true);
+	}
+
+	@Override
 	public boolean canShoot(TileEntityEmplacement te)
 	{
-		return false;
+		return sprayCooldown <= 0&&platformTank.getFluidAmount() >= getFluidConsumption();
+	}
+
+	@Override
+	protected boolean shoot(TileEntityEmplacement te, TargetCoordinateReference target)
+	{
+		if(te.getWorld().isRemote||!canShoot(te))
+			return false;
+
+		FluidStack fluid = platformTank.drain(getFluidConsumption(), true);
+		if(fluid==null||fluid.getFluid()==null)
+			return false;
+
+		super.shoot(te, target);
+		Vec3d look = aim.getTarget(0).normalize();
+		boolean gas = fluid.getFluid().isGaseous(fluid)||ChemthrowerHandler.isGas(fluid.getFluid());
+		float range = gas?HeavyChemthrower.rangeGas: HeavyChemthrower.rangeFluid;
+		float scatter = gas?HeavyChemthrower.scatterGas: HeavyChemthrower.scatterFluid;
+		Vec3d position = te.getWeaponCenter();
+		for(int i = 0; i < Math.max(1, HeavyChemthrower.shotsPerDischarge); i++)
+		{
+			Vec3d direction = look.addVector(
+					te.getWorld().rand.nextGaussian()*scatter,
+					te.getWorld().rand.nextGaussian()*scatter,
+					te.getWorld().rand.nextGaussian()*scatter
+			);
+			EntityIIChemthrowerShot shot = new EntityIIChemthrowerShot(te.getWorld(), position.x, position.y, position.z,
+					direction.x*0.25, direction.y*0.25, direction.z*0.25, fluid)
+					.withMotion(direction.scale(range))
+					.withShooters(te.getMultiblockBlocks())
+					.withShooters(te.getTactileHandler().getEntities().toArray(new Entity[0]));
+			if(shouldIgnite)
+				shot.setFire(10);
+			te.getWorld().spawnEntity(shot);
+		}
+		sprayCooldown = Math.max(0, getShotDelay());
+
+		if(te.getWorld().getTotalWorldTime()%4==0)
+			te.getWorld().playSound(null, position.x, position.y, position.z,
+					shouldIgnite?IESounds.sprayFire: IESounds.spray, SoundCategory.BLOCKS, 0.75f, shouldIgnite?1.25f: 0.75f);
+		return true;
+	}
+
+	private int getFluidConsumption()
+	{
+		return Math.max(1, HeavyChemthrower.fluidConsumption);
+	}
+
+	@Nullable
+	@Override
+	public IFluidHandler getBaseFluidHandler()
+	{
+		return baseTank;
+	}
+
+	@Nullable
+	@Override
+	public IFluidHandler getPlatformFluidHandler()
+	{
+		return platformTank;
+	}
+
+	@Override
+	public void onUninstall()
+	{
+		baseTank.setFluid(null);
+		platformTank.setFluid(null);
 	}
 
 	@Override
@@ -62,62 +236,6 @@ public class EmplacementWeaponHeavyChemthrower extends EmplacementWeaponTurretBa
 		return 0;
 	}
 
-	@Nullable
-	@Override
-	public IFluidHandler getBaseFluidHandler()
-	{
-		return fluidHandler;
-	}
-
-	/*@Override
-	public EmplacementHitboxEntity[] getCollisionBoxes()
-	{
-		if(entity==null)
-			return new EmplacementHitboxEntity[0];
-
-		//new Vec3d(0,0,0)
-
-		float t = this.setupDelay/(float)HeavyChemthrower.setupTime;
-
-		ArrayList<EmplacementHitboxEntity> list = new ArrayList<>();
-		list.add(new EmplacementHitboxEntity(entity, "baseBox", 1f, 1.25f,
-				new Vec3d(0, 0.5, 0), Vec3d.ZERO, 12));
-		list.add(new EmplacementHitboxEntity(entity, "baseBoxTop", 0.5f, 0.25f,
-				new Vec3d(-0.25, 1.25, 0.25), Vec3d.ZERO, 12));
-		list.add(new EmplacementHitboxEntity(entity, "baseBoxTop", 0.5f, 0.25f,
-				new Vec3d(-0.25, 1.25, -0.25), Vec3d.ZERO, 12));
-
-		//Increase amount of B A R R E L S
-		list.add(new EmplacementHitboxEntity(entity, "barrelLeft", 0.5f, 1,
-				new Vec3d(0.75, 0.8125, 0.5), Vec3d.ZERO, 4));
-		list.add(new EmplacementHitboxEntity(entity, "barrelRight", 0.5f, 1,
-				new Vec3d(0.75, 0.8125, -0.5), Vec3d.ZERO, 4));
-
-		for(float f = -0.25f; f <= 0.25f; f += 0.5f)
-		{
-			list.add(new EmplacementHitboxEntity(entity, "gunBarrelLeft", 0.3125f, 0.3125f,
-					new Vec3d(0, 0.8125, -0.25f), new Vec3d(-0.8125, 0, 0), 12));
-
-			if(t > 0.35f)
-				list.add(new EmplacementHitboxEntity(entity, "gunBarrelLeft", 0.3125f, 0.3125f,
-						new Vec3d(0, 0.8125, f), new Vec3d(-1.125, 0, 0), 12));
-			if(t > 0.5f)
-				list.add(new EmplacementHitboxEntity(entity, "gunBarrelLeft", 0.3125f, 0.3125f,
-						new Vec3d(0, 0.8125, f), new Vec3d(-1.4375, 0, 0), 12));
-			if(t > 0.65f)
-				list.add(new EmplacementHitboxEntity(entity, "gunBarrelLeft", 0.3125f, 0.3125f,
-						new Vec3d(0, 0.8125, f), new Vec3d(-1.75, 0, 0), 12));
-			if(t > 0.75f)
-				list.add(new EmplacementHitboxEntity(entity, "gunBarrelLeft", 0.3125f, 0.3125f,
-						new Vec3d(0, 0.8125, f), new Vec3d(-2.0625, 0, 0), 12));
-			if(t > 0.9f)
-				list.add(new EmplacementHitboxEntity(entity, "gunBarrelLeft", 0.425f, 0.425f,
-						new Vec3d(0, 0.8125, f), new Vec3d(-2.487500011920929, 0, 0), 12));
-		}
-
-		return list.toArray(new EmplacementHitboxEntity[0]);
-	}*/
-
 	@Override
 	public int getEnergyUpkeepCost()
 	{
@@ -128,13 +246,12 @@ public class EmplacementWeaponHeavyChemthrower extends EmplacementWeaponTurretBa
 	@Override
 	public void initializeGUI(DecoPanel panelBase, DecoPanel panelPlatform)
 	{
-
-
-		panelPlatform.addComponent(
-				new DecoFluidTank(4, 4+2)
-						.withFluidTank(tank)
-						.withHeight(panelPlatform.height-8)
-		);
+		panelBase.addComponent(new DecoFluidTank(4, 6)
+				.withFluidTank(baseTank)
+				.withHeight(panelBase.height-8));
+		panelPlatform.addComponent(new DecoFluidTank(4, 6)
+				.withFluidTank(platformTank)
+				.withHeight(panelPlatform.height-8));
 	}
 
 	@Override
@@ -143,56 +260,26 @@ public class EmplacementWeaponHeavyChemthrower extends EmplacementWeaponTurretBa
 		return HeavyChemthrower.maxHealth;
 	}
 
-	private double getStackMass()
-	{
-		if(tank.getFluid()!=null)
-			return (tank.getFluid().getFluid().isGaseous()?0.025F: 0.05F)*(float)(tank.getFluid().getFluid().getDensity(tank.getFluid()) < 0?-1: 1);
-		else
-			return 0;
-	}
-
 	@Override
 	public boolean handleDataCommand(DataPacket packet)
 	{
+		DataType command = packet.get('c');
+		if(command instanceof DataTypeString&&"ignite".equals(((DataTypeString)command).value))
+			return IIDataHandlingUtils.expectingBooleanParam('i', packet, value -> shouldIgnite = value);
 		return super.handleDataCommand(packet);
 	}
 
-	static class SidedFluidHandler implements IFluidHandler
+	@Nonnull
+	@Override
+	public DataType getDataCallback(String string)
 	{
-		EmplacementWeaponHeavyChemthrower barrel;
-
-		SidedFluidHandler(EmplacementWeaponHeavyChemthrower barrel)
+		return switch(string)
 		{
-			this.barrel = barrel;
-		}
-
-		@Override
-		public int fill(FluidStack resource, boolean doFill)
-		{
-			if(resource==null)
-				return 0;
-			return barrel.tank.fill(resource, doFill);
-		}
-
-		@Override
-		public FluidStack drain(FluidStack resource, boolean doDrain)
-		{
-			if(resource==null)
-				return null;
-			return this.drain(resource.amount, doDrain);
-		}
-
-		@Override
-		public FluidStack drain(int maxDrain, boolean doDrain)
-		{
-			return barrel.tank.drain(maxDrain, doDrain);
-		}
-
-		@Override
-		public IFluidTankProperties[] getTankProperties()
-		{
-			return barrel.tank.getTankProperties();
-		}
+			case "weapon_fluid" -> platformTank.getFluid()==null?
+					new DataTypeFluidStack(): new DataTypeFluidStack(platformTank.getFluid());
+			case "weapon_fluid_remaining" -> new DataTypeInteger(platformTank.getFluidAmount());
+			case "weapon_ignited" -> new DataTypeBoolean(shouldIgnite);
+			default -> super.getDataCallback(string);
+		};
 	}
-
 }

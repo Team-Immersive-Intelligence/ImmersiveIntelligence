@@ -38,7 +38,7 @@ public class ChemicalBathRenderer extends IIMultiblockRenderer<TileEntityChemica
 		//Set model values
 		float productionProgress = te.getProductionProgress(te.currentProcess, partialTicks);
 		float tankAmount = te.tank.getFluidAmount();
-		fluid.withFluid(te.tank.getFluid());
+		fluid.withFluidTank(te.tank);
 		item.setStack(ItemStack.EMPTY);
 
 		//Calculate fluid height based on recipe progress

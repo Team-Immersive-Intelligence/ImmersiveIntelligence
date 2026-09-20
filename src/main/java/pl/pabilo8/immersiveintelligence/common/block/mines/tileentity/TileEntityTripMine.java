@@ -3,8 +3,6 @@ package pl.pabilo8.immersiveintelligence.common.block.mines.tileentity;
 import blusunrize.immersiveengineering.api.TargetingInfo;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
 import blusunrize.immersiveengineering.api.energy.wires.WireType;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IAdvancedCollisionBounds;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IBlockBounds;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -27,16 +25,18 @@ import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.Mines;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIITripWireCoil;
 import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIITrenchShovel;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IAdvancedBounds;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 02.02.2021
  */
-public class TileEntityTripMine extends TileEntityMineBase implements IBlockBounds, IAdvancedCollisionBounds
+public class TileEntityTripMine extends TileEntityMineBase implements IAdvancedBounds
 {
 	public static final Material[] MATCHING_MATERIALS = new Material[]{Material.GROUND, Material.GRASS, Material.SAND, Material.GOURD};
 
@@ -141,11 +141,11 @@ public class TileEntityTripMine extends TileEntityMineBase implements IBlockBoun
 	}
 
 	@Override
-	public List<AxisAlignedBB> getAdvancedColisionBounds()
+	public List<AxisAlignedBB> getBounds(boolean collision)
 	{
-		ArrayList<AxisAlignedBB> list = new ArrayList<>();
-		list.add(AABB[digLevel].offset(getPos()));
-		return list;
+		if(collision)
+			return new ArrayList<>(Collections.singleton(AABB[digLevel].offset(getPos())));
+		return Collections.emptyList();
 	}
 
 	@Override

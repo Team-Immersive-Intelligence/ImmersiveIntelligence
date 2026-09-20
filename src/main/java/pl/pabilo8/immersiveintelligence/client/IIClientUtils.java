@@ -6,7 +6,6 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -19,6 +18,7 @@ import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.renderer.vertex.VertexFormatElement;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.resources.IResource;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
@@ -35,6 +35,7 @@ import pl.pabilo8.immersiveintelligence.client.util.font.IIFontRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.font.IIFontRendererCustomGlyphs;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
+import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
 
 import javax.annotation.Nonnull;
@@ -58,6 +59,8 @@ public class IIClientUtils
 	public static IIFontRendererCustomGlyphs fontEngineerTimes, fontNormung, fontKaiser, fontTinkerer;
 	@SideOnly(Side.CLIENT)
 	private static final HashMap<Fluid, IIColor> CACHED_COLORS = new HashMap<>();
+	@SideOnly(Side.CLIENT)
+	private static final HashMap<ResourceLocation, IIColor> CACHED_TEXTURE_COLORS = new HashMap<>();
 
 	@SideOnly(Side.CLIENT)
 	private static Minecraft mc()
@@ -115,25 +118,36 @@ public class IIClientUtils
 	@SideOnly(Side.CLIENT)
 	public static void drawBlockBreak(WorldClient world, float partialTicks, DamageBlockPos... positions)
 	{
+		if(positions.length==0)
+			return;
+
+		Entity viewEntity = mc().getRenderViewEntity();
+		if(viewEntity==null)
+			return;
+
 		Tessellator tes = Tessellator.getInstance();
 		BufferBuilder buf = tes.getBuffer();
 		BlockRendererDispatcher brd = mc().getBlockRendererDispatcher();
-		EntityPlayer player = ClientUtils.mc().player;
 
-		//get rendering centre position
-		double posX = player.lastTickPosX+(player.posX-player.lastTickPosX)*(double)partialTicks;
-		double posY = player.lastTickPosY+(player.posY-player.lastTickPosY)*(double)partialTicks;
-		double posZ = player.lastTickPosZ+(player.posZ-player.lastTickPosZ)*(double)partialTicks;
+		//Get the rendering centre position.
+		double posX = viewEntity.lastTickPosX+(viewEntity.posX-viewEntity.lastTickPosX)*(double)partialTicks;
+		double posY = viewEntity.lastTickPosY+(viewEntity.posY-viewEntity.lastTickPosY)*(double)partialTicks;
+		double posZ = viewEntity.lastTickPosZ+(viewEntity.posZ-viewEntity.lastTickPosZ)*(double)partialTicks;
 
+		TextureMap atlas = mc().getTextureMapBlocks();
 		bindAtlas();
+		atlas.setBlurMipmap(false, false);
 		GlStateManager.pushMatrix();
 		GlStateManager.enableBlend();
-		GlStateManager.tryBlendFuncSeparate(774, 768, 1, 1);
-		GlStateManager.enableAlpha();
-		GlStateManager.color(1.0F, 1.0F, 1.0F, 1F);
+		GlStateManager.tryBlendFuncSeparate(
+				GlStateManager.SourceFactor.DST_COLOR, GlStateManager.DestFactor.SRC_COLOR,
+				GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO
+		);
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 0.5F);
 		GlStateManager.doPolygonOffset(-3.0F, -3.0F);
 		GlStateManager.enablePolygonOffset();
-
+		GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1F);
+		GlStateManager.enableAlpha();
 
 		buf.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
 		buf.setTranslation(-posX, -posY, -posZ);
@@ -158,16 +172,19 @@ public class IIClientUtils
 			brd.renderBlockDamage(state, pos, ClientUtils.destroyBlockIcons[progress], world);
 		}
 
-
 		tes.draw();
 		buf.setTranslation(0.0D, 0.0D, 0.0D);
+		atlas.restoreLastBlurMipmap();
+
 		GlStateManager.disableAlpha();
 		GlStateManager.doPolygonOffset(0.0F, 0.0F);
 		GlStateManager.disablePolygonOffset();
-		GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_COLOR, GL11.GL_DST_COLOR, 1, 1);
-		GlStateManager.enableAlpha();
+		GlStateManager.tryBlendFuncSeparate(
+				GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA,
+				GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO
+		);
+		GlStateManager.disableBlend();
 		GlStateManager.color(1f, 1f, 1f, 1f);
-
 		GlStateManager.depthMask(true);
 		GlStateManager.popMatrix();
 	}
@@ -190,13 +207,22 @@ public class IIClientUtils
 		if(fluid.getColor()!=0xFFFFFFFF)
 			return IIColor.fromPackedARGB(fluid.getColor());
 
+		IIColor color = getColorFromTexture(ResLoc.of(fluid.getFlowing()));
+		CACHED_COLORS.put(fluid, color);
+		return color;
+	}
+
+	public static IIColor getColorFromTexture(ResLoc resLoc)
+	{
+		if(CACHED_TEXTURE_COLORS.containsKey(resLoc))
+			return CACHED_TEXTURE_COLORS.get(resLoc);
+
 		InputStream is;
 		BufferedImage image;
-		IIColor color;
 		try
 		{
-			final ResourceLocation f = new ResourceLocation(fluid.getStill().getResourceDomain(), "textures/"+fluid.getStill().getResourcePath()+".png");
-			final IResource resource = Minecraft.getMinecraft().getResourceManager().getResource(f);
+			resLoc = resLoc.prefix("textures/", true).withExtension(ResLoc.EXT_PNG);
+			final IResource resource = Minecraft.getMinecraft().getResourceManager().getResource(resLoc);
 			is = resource.getInputStream();
 			image = ImageIO.read(is);
 
@@ -226,17 +252,25 @@ public class IIClientUtils
 				int avgR = (int)(sumR/pixelCount);
 				int avgG = (int)(sumG/pixelCount);
 				int avgB = (int)(sumB/pixelCount);
-				color = IIColor.fromPackedRGB((avgR<<16)|(avgG<<8)|avgB);
+
+				IIColor color = IIColor.fromRGB(avgR, avgG, avgB);
+				CACHED_TEXTURE_COLORS.put(resLoc, color);
+				return color;
 			}
 			else
-				color = IIColor.WHITE;
+				return IIColor.WHITE;
 		} catch(IOException e)
 		{
-			IILogger.error("Could not load fluid texture file for color analysis");
-			color = IIColor.WHITE;
+			IILogger.error("Could not load texture file %s for color analysis", resLoc);
+			CACHED_TEXTURE_COLORS.put(resLoc, IIColor.WHITE);
+			return IIColor.WHITE;
 		}
-		CACHED_COLORS.put(fluid, color);
-		return color;
+	}
+
+	public static void reloadCachedColors()
+	{
+		CACHED_COLORS.clear();
+		CACHED_TEXTURE_COLORS.clear();
 	}
 
 	//Thanks Blu, these stencil buffers look really capable
@@ -244,12 +278,6 @@ public class IIClientUtils
 	public static void drawArmorBar(int x, int y, int w, int h, float progress)
 	{
 		drawGradientBar(x, y, w, h, DecoColors.ARMOR_INTEGRITY_1, DecoColors.ARMOR_INTEGRITY_2, progress);
-	}
-
-	@Deprecated
-	public static void drawPowerBar(int x, int y, int w, int h, float progress)
-	{
-		drawGradientBar(x, y, w, h, DecoColors.POWER1, DecoColors.POWER2, progress);
 	}
 
 	@Deprecated
@@ -268,12 +296,6 @@ public class IIClientUtils
 	public static void bindAtlas()
 	{
 		bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-	}
-
-	@SideOnly(Side.CLIENT)
-	public static void displayScreen(GuiScreen screen)
-	{
-		mc().displayGuiScreen(screen);
 	}
 
 	@SideOnly(Side.CLIENT)

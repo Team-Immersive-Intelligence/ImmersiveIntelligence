@@ -7,8 +7,8 @@ plugins {
 	id 'maven-publish'
 	id 'idea'
 	id 'org.jetbrains.gradle.plugin.idea-ext' version '1.4.1'
-	id 'com.gtnewhorizons.retrofuturagradle' version '2.0.2'
-	id 'com.diffplug.spotless' version '8.6.0' apply false
+	id 'com.gtnewhorizons.retrofuturagradle' version '2.0.4'
+	id 'com.diffplug.spotless' version '8.10.2' apply false
 }
 import org.jetbrains.gradle.ext.Gradle
 

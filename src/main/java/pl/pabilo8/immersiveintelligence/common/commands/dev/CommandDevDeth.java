@@ -17,7 +17,10 @@ import pl.pabilo8.immersiveintelligence.common.util.raytracer.MultipleRayTracer;
 import java.util.Collections;
 
 /**
+ * Removes the entity that the sender is looking at.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @ii-approved 0.3.1
  * @since 14.09.2025
  */
 public class CommandDevDeth extends CommandIIBase

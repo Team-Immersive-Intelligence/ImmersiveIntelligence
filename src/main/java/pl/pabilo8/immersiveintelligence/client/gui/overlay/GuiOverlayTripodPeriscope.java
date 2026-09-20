@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.client.gui.overlay;
 
-import blusunrize.immersiveengineering.api.tool.ZoomHandler;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,6 +15,7 @@ import javax.annotation.Nullable;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 08.09.2026
  * @since 13.09.2022
  */
 public class GuiOverlayTripodPeriscope extends GuiOverlayBase
@@ -23,7 +23,8 @@ public class GuiOverlayTripodPeriscope extends GuiOverlayBase
 	@Override
 	public boolean shouldDraw(@Nonnull EntityPlayer player, @Nullable RayTraceResult mouseOver)
 	{
-		return ZoomHandler.isZooming&&player.getRidingEntity() instanceof EntityTripodPeriscope;
+		return CameraHandler.type==CameraHandler.ZoomType.RIDING
+				&&player.getLowestRidingEntity() instanceof EntityTripodPeriscope;
 	}
 
 	@Override
@@ -34,7 +35,7 @@ public class GuiOverlayTripodPeriscope extends GuiOverlayBase
 		ClientUtils.font().drawString(I18n.format(IIReference.INFO_KEY+"pitch", CameraHandler.getPitch()),
 				(int)(width*0.5)+8, (int)(height*0.5)+16, 0xffffff, true);
 
-		RayTraceResult traceResult = CameraHandler.rayTrace(90, 0);
+		RayTraceResult traceResult = CameraHandler.rayTrace(256, 0);
 		BlockPos pos = ClientUtils.mc().player.getPosition();
 
 		ClientUtils.font().drawString(I18n.format(IIReference.INFO_KEY+"distance", (traceResult==null||traceResult.typeOfHit==Type.MISS)?I18n.format(IIReference.INFO_KEY+"distance_unknown"): traceResult.getBlockPos().getDistance(pos.getX(), pos.getY(), pos.getZ())),

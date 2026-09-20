@@ -18,7 +18,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Root command tree for all Immersive Intelligence commands.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 26.08.2026
+ * @ii-approved 0.3.1
  * @since 23.06.2019
  */
 public class CommandII extends CommandTreeBase
@@ -33,7 +37,8 @@ public class CommandII extends CommandTreeBase
 
 		addSubcommand(new CommandIIHans());
 
-		addSubcommand(new CommandIIGiveBullet());
+		addSubcommand(new CommandIIGiveBullet(false));
+		addSubcommand(new CommandIIGiveBullet(true));
 		addSubcommand(new CommandIIGiveMagazine());
 
 		addSubcommand(new CommandIIGivePunchtape());
@@ -42,9 +47,6 @@ public class CommandII extends CommandTreeBase
 		addSubcommand(new CommandIIHelp(this, ""));
 	}
 
-	/**
-	 * Gets the name of the command
-	 */
 	@Nonnull
 	@Override
 	public String getName()
@@ -52,18 +54,12 @@ public class CommandII extends CommandTreeBase
 		return "ii";
 	}
 
-	/**
-	 * Return the required permission level for this command.
-	 */
 	@Override
 	public int getRequiredPermissionLevel()
 	{
 		return 0;
 	}
 
-	/**
-	 * Gets the usage string for the command.
-	 */
 	@Nonnull
 	@Override
 	public String getUsage(@Nonnull ICommandSender sender)
@@ -71,9 +67,6 @@ public class CommandII extends CommandTreeBase
 		return "Use \"/ii help\" for more information";
 	}
 
-	/**
-	 * Get a list of options for when the user presses the TAB key
-	 */
 	@Nonnull
 	@Override
 	public List<String> getTabCompletions(@Nullable MinecraftServer server, @Nonnull ICommandSender sender, String[] args, @Nullable BlockPos pos)
@@ -83,16 +76,11 @@ public class CommandII extends CommandTreeBase
 		{
 			String curr = ret.get(i);
 			if(curr.indexOf(' ') >= 0)
-			{
 				ret.set(i, start+curr+end);
-			}
 		}
 		return ret;
 	}
 
-	/**
-	 * Callback for when the command is executed
-	 */
 	@Override
 	public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, String[] args) throws CommandException
 	{
@@ -103,24 +91,25 @@ public class CommandII extends CommandTreeBase
 			if(s.startsWith(start))
 			{
 				if(currentPart!=null)
-					throw new CommandException("String opens twice (once \""+currentPart+"\", once \""+s+"\")");
+					throw new CommandException("A quoted argument starts before the previous quoted argument is closed: '%s'.", s);
 				currentPart = new StringBuilder(s);
 			}
 			else if(currentPart!=null)
 				currentPart.append(" ").append(s);
 			else
 				argsCleaned.add(s);
+
 			if(s.endsWith(end))
 			{
 				if(currentPart==null)
-					throw new CommandException("String closed without being openeed first! (\""+s+"\")");
+					throw new CommandException("A quoted argument closes without an opening '<': '%s'.", s);
 				if(currentPart.length() >= 2)
 					argsCleaned.add(currentPart.substring(1, currentPart.length()-1));
 				currentPart = null;
 			}
 		}
 		if(currentPart!=null)
-			throw new CommandException("Unclosed string ("+currentPart+")");
+			throw new CommandException("A quoted argument is not closed: '%s'.", currentPart);
 		super.execute(server, sender, argsCleaned.toArray(new String[0]));
 	}
 }

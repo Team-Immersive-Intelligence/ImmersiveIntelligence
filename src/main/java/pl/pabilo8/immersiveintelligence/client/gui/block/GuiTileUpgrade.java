@@ -6,7 +6,6 @@ import blusunrize.immersiveengineering.common.util.inventory.IIEInventory;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextFormatting;
 import pl.pabilo8.immersiveintelligence.api.upgrade.IUpgradableDevice;
 import pl.pabilo8.immersiveintelligence.api.upgrade.Upgrade;
@@ -43,6 +42,8 @@ import java.util.List;
 import java.util.Objects;
 
 /**
+ * GUI for showing upgrade information and installing/removing upgrades for {@link TileEntityIEBase tile entities.}.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 10.07.2019
  */
@@ -229,9 +230,9 @@ public class GuiTileUpgrade<T extends TileEntityIEBase & IIEInventory & IUpgrada
 		ArrayList<AMTModel> builder = new ArrayList<>();
 
 		//Add base model
-		ResLoc baseRes = techTree.getModelLocation();
-		if(baseRes!=null)
-			builder.add(new AMTModel(DefaultVertexFormats.ITEM, baseRes));
+		AMTModel baseModel = techTree.getModel();
+		if(baseModel!=null)
+			builder.add(baseModel);
 
 		//Collect all installed upgrades
 		ArrayList<Upgrade> upgrades = new ArrayList<>(tile.getAllInstalledUpgrades());
@@ -239,7 +240,7 @@ public class GuiTileUpgrade<T extends TileEntityIEBase & IIEInventory & IUpgrada
 		if(upgrade!=null)
 		{
 			upgrades.removeAll(techTree.getAllIncompatibleUpgrades(upgrade));
-			upgrades.addAll(techTree.getAllRequiredUpgrades(upgrade.getPurpose()));
+			upgrades.addAll(techTree.getAllParents(upgrade));
 			upgrades.add(upgrade);
 		}
 
@@ -251,14 +252,9 @@ public class GuiTileUpgrade<T extends TileEntityIEBase & IIEInventory & IUpgrada
 				.forEach(builder::add);
 
 		//Build
-		AMTModel built = new AMTModel(builder.toArray(new AMTModel[0]));
-		Vec3d center = built.findActualModelCenter();
-		Vec3d size = built.findModelSize();
-		float maxEdge = (float)Math.max(size.x, Math.max(size.y, size.z));
 
-		scenario.withModel(false, built);
-		scenario.withOrigin(center.x, center.y, center.z);
-		scenario.withTranslation(-center.x, -center.y, -center.z);
-		scenario.withScale(Math.min(maxEdge==0?0.125f: (0.125f/(maxEdge/6f)), 0.325f));
+		AMTModel built = new AMTModel(builder.toArray(new AMTModel[0]));
+		scenario.withModel(false, built)
+				.withCentering(built.getBoundingBox(), 3.5f, 0.125f, 1f);
 	}
 }

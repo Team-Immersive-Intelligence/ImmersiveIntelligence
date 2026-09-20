@@ -20,8 +20,8 @@ import net.minecraftforge.fml.common.Optional.Interface;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.api.api.protection.RadiationHandler;
-import pl.pabilo8.immersiveintelligence.api.api.protection.capability.IRadiationEmitter;
+import pl.pabilo8.immersiveintelligence.api.protection.protection.RadiationHandler;
+import pl.pabilo8.immersiveintelligence.api.protection.protection.capability.IRadiationEmitter;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
 

@@ -1,0 +1,16 @@
+{
+  "type": "ParticleBeam",
+  "textures": [
+    "immersiveintelligence:blocks/fluid/gas_flow"
+  ],
+  "size": 0.3125,
+  "scale": 0.385,
+  "max_lifetime": 200,
+  "draw_stage": "custom_additive",
+  "alpha": 0.25,
+  "color": "ddbc9954",
+  "color_secondary": "00bc9954",
+  "stretch": [0.0, 0.0, -0.25],
+  "programs": [
+  ]
+}

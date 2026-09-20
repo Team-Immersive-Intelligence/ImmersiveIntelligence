@@ -621,15 +621,17 @@ public abstract class TileEntityInserterBase extends TileEntityIIConnectable imp
 		{
 			if(player.isSneaking())
 			{
-				if(defaultInputFacing==hitSide)
-					defaultInputFacing = EnumFacing.UP;
+				EnumFacing previousOutput = defaultOutputFacing;
 				defaultOutputFacing = hitSide;
+				if(defaultInputFacing==hitSide)
+					defaultInputFacing = previousOutput==hitSide?hitSide.getOpposite(): previousOutput;
 			}
 			else
 			{
-				if(defaultOutputFacing==hitSide)
-					defaultOutputFacing = EnumFacing.UP;
+				EnumFacing previousInput = defaultInputFacing;
 				defaultInputFacing = hitSide;
+				if(defaultOutputFacing==hitSide)
+					defaultOutputFacing = previousInput==hitSide?hitSide.getOpposite(): previousInput;
 			}
 			markDirty();
 			updateTileForEvent(SyncEvents.TILE_CUSTOM2);

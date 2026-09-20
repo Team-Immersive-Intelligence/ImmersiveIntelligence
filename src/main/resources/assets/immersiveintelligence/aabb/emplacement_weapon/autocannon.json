@@ -1,0 +1,168 @@
+{
+  "bounds": {
+    "base": [-6, -13.5, -6, 6, 13.5, 6],
+    "ammobox": [-4, -5, -4, 4, 5, 4],
+    "inserter": [-2.5, -2.5, -2.5, 2.5, 2.5, 2.5],
+    "inserter_base": [-4, -6, -4, 4, 6, 4],
+    "inserter_top": [-1.5, -1.5, -1.5, 1.5, 1.5, 1.5],
+    "shield": [-2.5, -16, -2.5, 2.5, 16, 2.5],
+    "none": [0, 0, 0, 0, 0, 0],
+    "gun": [-2.5, -4, -2.5, 2.5, 4, 2.5],
+    "gun_box": [-5, -5, -5, 5, 5, 5]
+  },
+  "tactile_transforms": {
+    "all": {
+      "offset": [-1, 0, -2]
+    },
+    "south": {},
+    "west": {},
+    "north": {},
+    "east": {},
+    "mirrored": {}
+  },
+  "tactile": {
+    "_schema": "immersiveintelligence:models/block/multiblock/emplacement/weapon/autocannon.obj.amt",
+    "base": [
+      {
+        "offset": [0, 14, 0],
+        "type": "base"
+      }
+    ],
+    "turret": [
+      {
+        "offset": [-3, 10, 14],
+        "type": "ammobox"
+      },
+      {
+        "offset": [1, 10, 14],
+        "type": "ammobox"
+      },
+      {
+        "offset": [-7, 16, -8],
+        "type": "shield"
+      },
+      {
+        "offset": [-10, 16, -8],
+        "type": "shield"
+      },
+      {
+        "offset": [-13, 16, -8],
+        "type": "shield"
+      },
+      {
+        "offset": [10, 16, -8],
+        "type": "shield"
+      },
+      {
+        "offset": [13, 16, -8],
+        "type": "shield"
+      },
+      {
+        "offset": [7, 16, -8],
+        "type": "shield"
+      }
+    ],
+    "lower": [
+      {
+        "offset": [0, 4, 0],
+        "type": "inserter"
+      },
+      {
+        "offset": [0, 9, 0],
+        "type": "inserter"
+      }
+    ],
+    "turntable": [
+      {
+        "offset": [0, 0, 0],
+        "type": "inserter_base"
+      }
+    ],
+    "upper": [
+      {
+        "offset": [0, 0.5, 0],
+        "type": "inserter"
+      },
+      {
+        "offset": [0, 4.5, 0],
+        "type": "inserter_top"
+      },
+      {
+        "offset": [0, 7.5, 0],
+        "type": "inserter_top"
+      },
+      {
+        "offset": [0, 10.5, 0],
+        "type": "inserter_top"
+      }
+    ],
+    "gun_origin": [
+      {
+        "offset": [0, 0, 0],
+        "type": "none"
+      }
+    ],
+    "cannon1": [
+      {
+        "offset": [0, -3, -2.33333],
+        "type": "gun"
+      },
+      {
+        "offset": [0, -3, 2.66667],
+        "type": "gun"
+      },
+      {
+        "offset": [0, -3, 7.66667],
+        "type": "gun"
+      },
+      {
+        "offset": [0, -3, 12.66667],
+        "type": "gun"
+      },
+      {
+        "offset": [0, -3, 17.66667],
+        "type": "gun"
+      },
+      {
+        "offset": [0, -3, 22.66667],
+        "type": "gun"
+      }
+    ],
+    "cannon4": [
+      {
+        "offset": [0, -3, 17.66667],
+        "type": "gun"
+      },
+      {
+        "offset": [0, -3, 12.66667],
+        "type": "gun"
+      },
+      {
+        "offset": [0, -3, 7.66667],
+        "type": "gun"
+      },
+      {
+        "offset": [0, -3, 2.66667],
+        "type": "gun"
+      },
+      {
+        "offset": [0, -3, -2.33333],
+        "type": "gun"
+      },
+      {
+        "offset": [0, -3, 22.66667],
+        "type": "gun"
+      }
+    ],
+    "gun": [
+      {
+        "offset": [-9.5, 0, 0.5],
+        "type": "gun_box"
+      },
+      {
+        "offset": [9.5, 0, 0.5],
+        "type": "gun_box"
+      }
+    ]
+  }
+}

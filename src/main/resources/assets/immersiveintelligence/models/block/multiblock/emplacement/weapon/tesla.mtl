@@ -4,3 +4,5 @@ newmtl tesla_coil
 map_Kd immersiveintelligence:blocks/multiblock/fortification/weapon_tesla
 newmtl common_copper_cable
 map_Kd immersiveintelligence:blocks/common/common_copper_cable
+newmtl fluid_flow
+map_Kd immersiveintelligence:blocks/fluid/gas_flow

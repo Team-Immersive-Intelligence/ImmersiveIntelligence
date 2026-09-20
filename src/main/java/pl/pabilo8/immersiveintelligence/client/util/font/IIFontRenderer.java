@@ -50,7 +50,7 @@ public class IIFontRenderer extends FontRenderer
 		unicodeReplacements.put(IIReference.CHARICON_PROXIMITY, new CharReplacement(2, 2)); //proximity
 
 		//Manual Directory Symbol
-		unicodeReplacements.put(IIReference.CHARICON_FOLDER, new CharReplacement(2, 3)); //folder
+		unicodeReplacements.put(IIReference.CHARICON_FOLDER, new CharReplacement(3, 2)); //folder
 
 		//Weapon Classes
 		unicodeReplacements.put(IIReference.CHARICON_MG, new CharReplacement(0, 3)); //mg

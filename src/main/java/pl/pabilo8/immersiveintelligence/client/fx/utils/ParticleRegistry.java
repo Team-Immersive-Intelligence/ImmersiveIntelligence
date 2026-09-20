@@ -12,6 +12,8 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.IFluidBlock;
 import net.minecraftforge.fml.common.toposort.TopologicalSort;
 import net.minecraftforge.fml.common.toposort.TopologicalSort.DirectedGraph;
 import net.minecraftforge.fml.relauncher.Side;
@@ -33,10 +35,7 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import javax.annotation.Nullable;
 import javax.vecmath.Vector2f;
 import javax.vecmath.Vector3f;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -46,7 +45,7 @@ import java.util.regex.Pattern;
  * Allows loading particle effects from {@link ResLoc#EXT_FX_AMT .fx.amt} (JSON) files.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 05.04.2024
+ * @updated 23.08.2026
  * @ii-approved 0.3.1
  * @since 17.07.2020
  */
@@ -325,6 +324,17 @@ public class ParticleRegistry
 	                                        float radius, float power, ComponentEffectShape shape,
 	                                        List<BlockPos> affectedSurface)
 	{
+		spawnExplosionBoomFX(world, pos, dir, radius, power, shape, affectedSurface, false, Collections.emptyList());
+	}
+
+	/**
+	 * Spawns the client-side explosion effect with optional fluid splash data.
+	 */
+	public static void spawnExplosionBoomFX(World world, Vec3d pos, Vec3d dir,
+	                                        float radius, float power, ComponentEffectShape shape,
+	                                        List<BlockPos> affectedSurface, boolean fluidExplosion,
+	                                        List<BlockPos> affectedFluids)
+	{
 		float playerDistance = (float)ClientUtils.mc().player.getDistance(pos.x, pos.y, pos.z);
 		float effectExtent = Math.max(1f, Math.min(radius, power+1f));
 		float logSize = 1f+MathHelper.log2(Math.max(1, (int)effectExtent));
@@ -368,9 +378,17 @@ public class ParticleRegistry
 			scheduleSpawnParticle("explosion/glow", pos.add(dir), Vec3d.ZERO, new Vector2f(0, 0), 1)
 					.withProperty(ParticleProperties.SIZE, effectExtent);
 
-			spawnParticle("explosion/main", pos.add(dir.scale(effectExtent/2f)), Vec3d.ZERO, facing)
-					.withProperty(ParticleProperties.SIZE, effectExtent*0.75f)
-					.withProperty(ParticleProperties.MAX_LIFETIME, (int)(4*logSize)+3);
+			if(!fluidExplosion)
+				spawnParticle("explosion/main", pos.add(dir.scale(effectExtent/2f)), Vec3d.ZERO, facing)
+						.withProperty(ParticleProperties.SIZE, effectExtent*0.75f)
+						.withProperty(ParticleProperties.MAX_LIFETIME, (int)(4*logSize)+3);
+		}
+
+		if(fluidExplosion)
+		{
+			if(spawnDebris)
+				spawnFluidExplosionSplashes(world, pos, power, affectedFluids);
+			return;
 		}
 
 		List<BlockPos> effectBlocks;
@@ -498,6 +516,62 @@ public class ParticleRegistry
 			}
 			debrisIndex++;
 		}
+	}
+
+	private static void spawnFluidExplosionSplashes(World world, Vec3d explosionPos, float power, List<BlockPos> fluidBlocks)
+	{
+		if(fluidBlocks==null||fluidBlocks.isEmpty())
+			return;
+
+		Map<Long, Double> surfaceHeight = new HashMap<>();
+		for(BlockPos fluidPos : fluidBlocks)
+		{
+			IBlockState state = world.getBlockState(fluidPos);
+			Fluid fluid = FluidRegistry.lookupFluidForBlock(state.getBlock());
+			if(fluid==null)
+				continue;
+
+			long column = ((long)fluidPos.getX()<<32)^(fluidPos.getZ()&0xFFFFFFFFL);
+			double surfaceY = surfaceHeight.computeIfAbsent(column, key -> findFluidSurface(world, fluidPos));
+			Vec3d blockCenter = new Vec3d(fluidPos).addVector(0.5, 0.5, 0.5);
+			Vec3d radial = new Vec3d(blockCenter.x-explosionPos.x, 0, blockCenter.z-explosionPos.z);
+			if(radial.x*radial.x+radial.z*radial.z < 1.0E-4)
+				radial = IIParticleUtils.getRandXZ();
+			radial = radial.normalize();
+
+			double speed = 0.16+IIParticleUtils.randFloat.get()*0.18+Math.min(0.25, power*0.01);
+			Vec3d motion = radial.scale(speed).addVector(0, 0.28+IIParticleUtils.randFloat.get()*0.28, 0);
+			Vec3d spawnPos = new Vec3d(
+					fluidPos.getX()+0.25+IIParticleUtils.randFloat.get()*0.5,
+					surfaceY+0.35+IIParticleUtils.randFloat.get()*0.35,
+					fluidPos.getZ()+0.25+IIParticleUtils.randFloat.get()*0.5
+			);
+			Vec3d stretchEnd = spawnPos.add(motion.scale(2.5));
+			AbstractParticle particle = spawnParticle("debris/water_splash", spawnPos, motion, new Vector2f());
+			if(particle!=null)
+				particle.withProperty(ParticleProperties.STRETCH,
+								new Vector3f((float)stretchEnd.x, (float)stretchEnd.y, (float)stretchEnd.z))
+						.withProperty(ParticleProperties.COLOR, IIClientUtils.getFluidTextureColor(fluid))
+						.withProperty(ParticleProperties.SIZE, 0.5f+IIParticleUtils.randFloat.get()*0.65f);
+		}
+	}
+
+	private static double findFluidSurface(World world, BlockPos start)
+	{
+		BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos(start);
+		while(pos.getY() < world.getHeight()-1)
+		{
+			BlockPos above = pos.up();
+			if(!isFluidState(world.getBlockState(above)))
+				break;
+			pos.setPos(above.getX(), above.getY(), above.getZ());
+		}
+		return pos.getY()+1.0;
+	}
+
+	private static boolean isFluidState(IBlockState state)
+	{
+		return state.getBlock() instanceof IFluidBlock||state.getMaterial().isLiquid();
 	}
 
 	private static List<BlockPos> getExactExplosionSurface(World world, Vec3d pos, Vec3d explosionDirection,
@@ -637,7 +711,7 @@ public class ParticleRegistry
 			int perRing = (int)((i+1)*2*Math.PI);
 			for(int p = 0; p < perRing; p++)
 			{
-				Vec3d pos = PositionGenerator.CIRCLE_XZ.generatePosition(centerPos, p, i*cloudSize, perRing);
+				Vec3d pos = PositionGenerator.CIRCLE_XZ.generatePosition(centerPos, Vec3d.ZERO, p, i*cloudSize, perRing);
 				scheduleSpawnParticle("nuke/dust_cloud", pos.addVector(0, (steps-i)*0.25f-2.0f, 0),
 						Vec3d.ZERO, new Vector2f(0, 0), delay)
 						.withProperty(ParticleProperties.SIZE, cloudSize)
@@ -650,7 +724,7 @@ public class ParticleRegistry
 		int lifetime = (int)(65*logSize)+75;
 		for(int p = 0; p < 8*size; p++)
 		{
-			Vec3d pos = PositionGenerator.CIRCLE_XZ.generatePosition(centerPos, p, coreSize+1, (int)(8*size));
+			Vec3d pos = PositionGenerator.CIRCLE_XZ.generatePosition(centerPos, Vec3d.ZERO, p, coreSize+1, (int)(8*size));
 
 			scheduleSpawnParticle("nuke/dust_cloud", pos.addVector(0, -1.0f, 0),
 					Vec3d.ZERO, new Vector2f(0, 0), 60)
@@ -695,7 +769,7 @@ public class ParticleRegistry
 			int perRing = (int)((i+1)*2*Math.PI);
 			for(int p = 0; p < perRing; p++)
 			{
-				Vec3d pos = PositionGenerator.CIRCLE_XZ.generatePosition(centerPos, p, i*coreSize*0.5f, perRing);
+				Vec3d pos = PositionGenerator.CIRCLE_XZ.generatePosition(centerPos, Vec3d.ZERO, p, i*coreSize*0.5f, perRing);
 				Vec3d mushroomPos = pos.addVector(0, mushroomHeight+(steps-i)*0.25f-2.0f, 0);
 
 				scheduleSpawnParticle("nuke/nuke_core", mushroomPos,

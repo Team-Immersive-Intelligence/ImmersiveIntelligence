@@ -100,7 +100,7 @@ public class MachinegunRenderer extends Render<EntityMachinegun> implements IRel
 				GlStateManager.translate(0f, 0.5, 0f);
 
 			GlStateManager.translate(0f, -0.34375, 0f);
-			float setup = AMTUtils.getAnimationProgress(entity.setupTime, entity.maxSetupTime, true, partialTicks);
+			float setup = 1f-AMTUtils.getAnimationProgress(entity.setupTime, entity.maxSetupTime, false, partialTicks);
 			GlStateManager.rotate(-25f*setup, 1, 0, 0);
 			GlStateManager.translate(0, 0.25*setup, 0);
 

@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.util.EnumFacing.AxisDirection;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
@@ -22,6 +23,7 @@ import pl.pabilo8.immersiveintelligence.common.util.amt.IIAnimation;
 import pl.pabilo8.immersiveintelligence.common.util.amt.IIAnimation.IIAnimationGroup;
 import pl.pabilo8.immersiveintelligence.common.util.amt.IIAnimation.IIVectorLine;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 
 /**
@@ -254,5 +256,21 @@ public class AMTChain extends AMT
 	{
 		AMTUtils.disposeOf(segment);
 		compiled = false;
+	}
+
+	@Override
+	@Nonnull
+	public AxisAlignedBB getBoundingBox()
+	{
+		if(nodes.isEmpty())
+			return new AxisAlignedBB(originPos, originPos);
+		Vec3d first = nodes.get(0);
+		AxisAlignedBB aabb = new AxisAlignedBB(first, first);
+		for(Vec3d node : nodes)
+			aabb.union(new AxisAlignedBB(
+					node.subtract(segmentLength/2, segmentLength/2, segmentLength/2),
+					node.addVector(segmentLength/2, segmentLength/2, segmentLength/2)
+			));
+		return aabb;
 	}
 }

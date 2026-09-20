@@ -1,12 +1,16 @@
 package pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.Tuple;
 import net.minecraft.util.math.MathHelper;
+import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.input.Keyboard;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoEntryPanel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
@@ -18,11 +22,12 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 24.02.2025
+ * @updated 08.09.2026
  * @ii-approved 0.3.1
  * @since 17.09.2021
  */
@@ -382,5 +387,44 @@ public class DecoDropdown<T> extends DecoScrolledCollection<DecoDropdown<T>, T>
 		if(dropped)
 			return IIMath.isPointInRectangle(x, y+height, x+dropdownWidth, y+height+getListHeight(), mouseX, mouseY);
 		return false;
+	}
+
+	@Override
+	protected boolean ownsVirtualChild(DecoComponent<?> component)
+	{
+		return display.ownsComponent(component);
+	}
+
+	@Override
+	protected DecoMouseCapture decoMousePressedVirtualChild(Minecraft mc, int mouseX, int mouseY, MouseButton button)
+	{
+		Optional<Pair<DecoEntryPanel<T>, Integer>> hovered = getHoveredPanel(mouseX, mouseY);
+		if(!hovered.isPresent())
+			return null;
+
+		Pair<DecoEntryPanel<T>, Integer> pair = hovered.get();
+		DecoMouseCapture capture = pair.getKey().decoMousePressed(mc, mouseX-x, mouseY-pair.getValue(), button);
+		return capture==null?null: capture.translated(-x, -pair.getValue());
+	}
+
+	private Optional<Pair<DecoEntryPanel<T>, Integer>> getHoveredPanel(int mouseX, int mouseY)
+	{
+		if(!(display instanceof DecoEntryPanel))
+			return Optional.empty();
+		if(IIMath.isPointInRectangle(x, y, x+width-12, y+height, mouseX, mouseY))
+		{
+			T selected = getSelectedEntry();
+			DecoEntryPanel<T> panel = selected==null?null: ((DecoEntryPanel<T>)display).getElementPanel(selected);
+			return panel==null?Optional.empty(): Optional.of(Pair.of(panel, y));
+		}
+		if(!dropped)
+			return Optional.empty();
+
+		Tuple<Integer, Integer> clicked = getClickedEntryIndex(x+2, y-scroll+height+2, mouseX, mouseY);
+		if(clicked==null||clicked.getFirst()==ON_CREATE_OPTION)
+			return Optional.empty();
+		T entry = entries.get(clicked.getFirst());
+		DecoEntryPanel<T> panel = ((DecoEntryPanel<T>)display).getElementPanel(entry);
+		return panel==null?Optional.empty(): Optional.of(Pair.of(panel, clicked.getSecond()));
 	}
 }

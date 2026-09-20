@@ -37,6 +37,7 @@ public class BlockIITellermine extends BlockIIMine
 		public ItemBlockTellermine(BlockIIMine b)
 		{
 			super(b);
+			setMaxStackSize(4);
 		}
 
 		@Override

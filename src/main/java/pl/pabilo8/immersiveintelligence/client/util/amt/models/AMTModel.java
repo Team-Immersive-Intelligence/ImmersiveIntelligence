@@ -12,7 +12,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Tuple;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.model.obj.OBJModel;
 import net.minecraftforge.client.model.obj.OBJModel.Group;
@@ -396,69 +396,20 @@ public class AMTModel implements Iterable<AMT>, AMTRenderable
 
 	//--- Utils ---//
 
-	public Tuple<Vec3d, Vec3d> findModelBounds()
+	@Override
+	@Nonnull
+	public AxisAlignedBB getBoundingBox()
 	{
-		Vec3d min = new Vec3d(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
-		Vec3d max = new Vec3d(-Double.MAX_VALUE, -Double.MAX_VALUE, -Double.MAX_VALUE);
-
-		//Find the furthest vertices in each direction
+		if(model.length==0)
+			return new AxisAlignedBB(0, 0, 0, 0, 0, 0);
+		AxisAlignedBB aabb = model[0].getBoundingBox();
 		for(AMT amt : getChildrenRecursive())
-			if(amt instanceof AMTQuads)
-				for(BakedQuad quad : ((AMTQuads)amt).getQuads())
-					for(int i = 0; i < 4; i++)
-					{
-						//Extract vertex position from quad data
-						int vertexIndex = i*DefaultVertexFormats.BLOCK.getIntegerSize();
-						int[] vertexData = quad.getVertexData();
-						double x = Float.intBitsToFloat(vertexData[vertexIndex]);
-						double y = Float.intBitsToFloat(vertexData[vertexIndex+1]);
-						double z = Float.intBitsToFloat(vertexData[vertexIndex+2]);
-
-						min = new Vec3d(
-								Math.min(min.x, x),
-								Math.min(min.y, y),
-								Math.min(min.z, z)
-						);
-						max = new Vec3d(
-								Math.max(max.x, x),
-								Math.max(max.y, y),
-								Math.max(max.z, z)
-						);
-					}
-		return new Tuple<>(min, max);
+			aabb = aabb.union(amt.getBoundingBox());
+		return aabb;
 	}
 
-	public Vec3d findModelSize()
+	public Vec3d getModelCenter()
 	{
-		//Find model bounds
-		Tuple<Vec3d, Vec3d> bounds = findModelBounds();
-		Vec3d min = bounds.getFirst();
-		Vec3d max = bounds.getSecond();
-
-		//Fallback, for when the model has no quads
-		if(min.x==Double.MIN_VALUE||min.y==Double.MIN_VALUE||min.z==Double.MIN_VALUE)
-			return Vec3d.ZERO;
-
-		//Calculate size from bounds
-		return new Vec3d(
-				max.x-min.x,
-				max.y-min.y,
-				max.z-min.z
-		);
-	}
-
-	public Vec3d findActualModelCenter()
-	{
-		//Find model bounds
-		Tuple<Vec3d, Vec3d> bounds = findModelBounds();
-		Vec3d min = bounds.getFirst();
-		Vec3d max = bounds.getSecond();
-
-		//Calculate center from bounds
-		return new Vec3d(
-				(min.x+max.x)/2,
-				(min.y+max.y)/2,
-				(min.z+max.z)/2
-		);
+		return getBoundingBox().getCenter();
 	}
 }

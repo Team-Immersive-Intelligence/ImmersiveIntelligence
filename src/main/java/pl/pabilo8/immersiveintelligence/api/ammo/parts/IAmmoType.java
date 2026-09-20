@@ -7,6 +7,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseType;
+import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoBallistics;
 import pl.pabilo8.immersiveintelligence.client.model.builtin.IAmmoModel;
 import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMT;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
@@ -43,6 +44,36 @@ public interface IAmmoType<T extends IAmmoType<T, E>, E extends EntityAmmoBase<?
 	 * Guns can apply additional velocity by multiplying the result of this method.
 	 */
 	float getVelocity();
+
+	/**
+	 * Provides the flight model used for cached aiming and range statistics.
+	 * Ammo with custom physics, such as missiles, can override this method.
+	 *
+	 * @param stack ammunition stack
+	 */
+	default AmmoBallistics getBallistics(ItemStack stack)
+	{
+		return getBallistics(stack, 1D);
+	}
+
+	/**
+	 * Provides the flight model with a custom muzzle velocity multiplier.
+	 *
+	 * @param stack            ammunition stack
+	 * @param velocityModifier muzzle velocity multiplier
+	 */
+	default AmmoBallistics getBallistics(ItemStack stack, double velocityModifier)
+	{
+		return AmmoBallistics.forProjectile(this, stack, velocityModifier);
+	}
+
+	/**
+	 * Provides a flight model when only explicit mass and standard velocity are available.
+	 */
+	default AmmoBallistics getBallistics(double mass, double velocity)
+	{
+		return AmmoBallistics.forProjectile(this, mass, velocity);
+	}
 
 	/**
 	 * @return How much damage this ammunition deals on contact (in half-hearts)

@@ -1,4 +1,40 @@
 {
-  "origins": {},
-  "hierarchy": {}
+  "origins": {
+    "progress0": [8, -21.5, 24],
+    "progress1": [8, -16.5, 24],
+    "progress2": [8, -10.5, 24],
+    "progress3": [8, -4.5, 24],
+    "progress4": [8, 6, 24],
+    "base": [7.8521, -24.2025, 25.4071],
+    "blend": [7.8521, -24.2025, 25.4071]
+  },
+  "hierarchy": {
+    "blend": "base",
+    "progress0": "blend",
+    "progress1": "blend",
+    "progress2": "blend",
+    "progress3": "blend",
+    "progress4": "blend"
+  },
+  "properties": {
+    "progress0": {
+      "lighting": false
+    },
+    "progress1": {
+      "lighting": false
+    },
+    "progress2": {
+      "lighting": false
+    },
+    "progress3": {
+      "lighting": false
+    },
+    "progress4": {
+      "lighting": false
+    },
+    "blend": {
+      "source_factor": "src_alpha",
+      "dest_factor": "one_minus_constant_alpha"
+    }
+  }
 }

@@ -6,7 +6,6 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextFormatting;
 import pl.pabilo8.immersiveintelligence.api.upgrade.IUpgradableDevice;
 import pl.pabilo8.immersiveintelligence.api.upgrade.Upgrade;
@@ -43,6 +42,8 @@ import java.util.List;
 import java.util.Objects;
 
 /**
+ * GUI for showing upgrade information and installing/removing upgrades for {@link Entity entities}.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 10.07.2019
  */
@@ -142,13 +143,13 @@ public class GuiEntityUpgrade<T extends Entity & IIEInventory & IUpgradableDevic
 				.withSize(contentWidth, contentHeight)
 				.withBackground(DecoSprite.atlasSprite(DecoTextures.BG_DARK, 64)));
 
-		infoTab = (DecoTab)new DecoTab()
+		infoTab = new DecoTab()
 				.withText(IIReference.DESCRIPTION_KEY+"upgrade_gui.info");
 		contentTabs = addComponent(new DecoTabGroup(contentX, 16-8-4+14-14+8)
 				.withSize(contentWidth, 14)
 				.withHorizontalAlignment(true)
 				.withTabWidth(contentWidth/2)
-				.withTab((DecoTab)new DecoTab()
+				.withTab(new DecoTab()
 								.withText(IIReference.DESCRIPTION_KEY+"upgrade_gui.tech_tree"), techTreePanel,
 						() -> refreshModelPreview(null))
 				.withTab(infoTab, panelInfo, () -> {
@@ -229,9 +230,9 @@ public class GuiEntityUpgrade<T extends Entity & IIEInventory & IUpgradableDevic
 		ArrayList<AMTModel> builder = new ArrayList<>();
 
 		//Add base model
-		ResLoc baseRes = techTree.getModelLocation();
-		if(baseRes!=null)
-			builder.add(new AMTModel(DefaultVertexFormats.ITEM, baseRes));
+		AMTModel baseModel = techTree.getModel();
+		if(baseModel!=null)
+			builder.add(baseModel);
 
 		//Collect all installed upgrades
 		ArrayList<Upgrade> upgrades = new ArrayList<>(entity.getAllInstalledUpgrades());
@@ -239,7 +240,7 @@ public class GuiEntityUpgrade<T extends Entity & IIEInventory & IUpgradableDevic
 		if(upgrade!=null)
 		{
 			upgrades.removeAll(techTree.getAllIncompatibleUpgrades(upgrade));
-			upgrades.addAll(techTree.getAllRequiredUpgrades(upgrade.getPurpose()));
+			upgrades.addAll(techTree.getAllParents(upgrade));
 			upgrades.add(upgrade);
 		}
 
@@ -252,13 +253,7 @@ public class GuiEntityUpgrade<T extends Entity & IIEInventory & IUpgradableDevic
 
 		//Build
 		AMTModel built = new AMTModel(builder.toArray(new AMTModel[0]));
-		Vec3d center = built.findActualModelCenter();
-		Vec3d size = built.findModelSize();
-		float maxEdge = (float)Math.max(size.x, Math.max(size.y, size.z));
-
-		scenario.withModel(false, built);
-		scenario.withOrigin(center.x, center.y, center.z);
-		scenario.withTranslation(-center.x, -center.y, -center.z);
-		scenario.withScale(Math.min(maxEdge==0?0.125f: (0.125f/(maxEdge/6f)), 0.325f));
+		scenario.withModel(false, built)
+				.withCentering(built.getBoundingBox(), 6f, 0.125f, 0.325f);
 	}
 }

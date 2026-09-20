@@ -1,0 +1,90 @@
+{
+  "bounds": {
+    "base": [-14, -1.5, -14, 14, 1.5, 14],
+    "ring1": [-11, -1.5, -11, 11, 1.5, 11],
+    "ring2": [-9, -1.5, -9, 9, 1.5, 9],
+    "ring3": [-8, -1.5, -8, 8, 1.5, 8],
+    "ring4": [-7, -1.5, -7, 7, 1.5, 7],
+    "bol": [-5, -5, -5, 5, 5, 5],
+    "rod": [-3, -16, -3, 3, 16, 3],
+    "base_upper": [-8, -4, -8, 8, 4, 8],
+    "base_upper2": [-6, -2.5, -6, 6, 2.5, 6],
+    "box": [-5, -6, -5, 5, 6, 5],
+    "pipe": [-5, -3, -5, 5, 3, 5]
+  },
+  "tactile_transforms": {
+    "all": {
+      "offset": [-1, 0, -2]
+    },
+    "south": {},
+    "west": {},
+    "north": {},
+    "east": {},
+    "mirrored": {}
+  },
+  "tactile": {
+    "_schema": "immersiveintelligence:models/block/multiblock/emplacement/weapon/tesla.obj.amt",
+    "base": [
+      {
+        "offset": [0, -18.5, 0],
+        "type": "base"
+      },
+      {
+        "offset": [0.25, 3, -1.5],
+        "type": "ring1"
+      },
+      {
+        "offset": [0.25, 7.75, -1.5],
+        "type": "ring2"
+      },
+      {
+        "offset": [0.25, 13.75, -1.5],
+        "type": "ring3"
+      },
+      {
+        "offset": [0.25, 19.75, -1.5],
+        "type": "ring4"
+      },
+      {
+        "offset": [0.25, 30.25, -1.5],
+        "type": "bol"
+      },
+      {
+        "offset": [0.25, 9.25, -1.5],
+        "type": "rod"
+      },
+      {
+        "offset": [0, -12.75, -1.5],
+        "type": "base_upper"
+      },
+      {
+        "offset": [0.25, -6.25, -1.5],
+        "type": "base_upper2"
+      },
+      {
+        "offset": [0, -14, -13],
+        "type": "box"
+      },
+      {
+        "offset": [0, -14, 10],
+        "type": "box"
+      },
+      {
+        "offset": [-11, -14, -1],
+        "type": "box"
+      },
+      {
+        "offset": [11, -14, -1],
+        "type": "box"
+      },
+      {
+        "offset": [-8, -14.75, 9],
+        "type": "pipe"
+      },
+      {
+        "offset": [9, -14.75, 9],
+        "type": "pipe"
+      }
+    ]
+  }
+}

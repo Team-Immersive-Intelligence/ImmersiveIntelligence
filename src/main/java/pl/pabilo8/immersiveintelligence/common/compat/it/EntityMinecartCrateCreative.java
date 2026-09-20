@@ -2,8 +2,8 @@ package pl.pabilo8.immersiveintelligence.common.compat.it;
 
 import mctmods.immersivetechnology.common.ITContent;
 import mctmods.immersivetechnology.common.blocks.wooden.types.BlockType_WoodenCrate;
-import mctmods.immersivetechnology.common.util.TranslationKey;
 import net.minecraft.block.Block;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.item.EntityMinecartContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -94,15 +94,13 @@ public class EntityMinecartCrateCreative extends EntityMinecartCrateBase impleme
 	@Override
 	public ItemStack getStackInSlot(int index)
 	{
-		NonNullList<ItemStack> contained = ReflectionHelper.getPrivateValue(EntityMinecartContainer.class, this, "minecartContainerItems");
-		return contained.get(index).copy();
+		return this.minecartContainerItems.get(index).copy();
 	}
 
 	@Override
 	public ItemStack decrStackSize(int index, int count)
 	{
-		NonNullList<ItemStack> contained = ReflectionHelper.getPrivateValue(EntityMinecartContainer.class, this, "minecartContainerItems");
-		ItemStack stack = contained.get(index).copy();
+		ItemStack stack = this.minecartContainerItems.get(index).copy();
 		stack.setCount(Math.min(stack.getCount(), count));
 		return stack;
 	}
@@ -118,7 +116,8 @@ public class EntityMinecartCrateCreative extends EntityMinecartCrateBase impleme
 	@Override
 	public String[] getOverlayText(EntityPlayer player, RayTraceResult mop)
 	{
-		return new String[]{TranslationKey.OVERLAY_OSD_CREATIVE_CRATE_NORMAL_FIRST_LINE.format(this.getStackInSlot(0).getDisplayName(), 0)};
+		return new String[]{I18n.format("overlay.immersivetech.osd.creative_crate.normal.firstline",
+				this.getStackInSlot(0).getDisplayName(), 0)};
 	}
 
 

@@ -70,11 +70,11 @@ public interface IAmmoTypeItem<T extends IAmmoType<T, E>, E extends EntityAmmoBa
 	default void makeDefault(ItemStack stack)
 	{
 		EasyNBT nbt = EasyNBT.wrapNBT(stack);
-		if(nbt.hasKey(NBT_CORE))
+		if(!nbt.hasKey(NBT_CORE))
 			nbt.withString(NBT_CORE, AmmoRegistry.MISSING_CORE.getName());
-		if(nbt.hasKey(NBT_CORE_TYPE))
+		if(!nbt.hasKey(NBT_CORE_TYPE))
 			nbt.withString(NBT_CORE_TYPE, getAllowedCoreTypes()[0].getName());
-		if(!isBulletCore(stack))
+		if(!isBulletCore(stack)&&!nbt.hasKey(NBT_FUSE))
 			nbt.withString(NBT_FUSE, getAllowedFuseTypes()[0].getName());
 	}
 

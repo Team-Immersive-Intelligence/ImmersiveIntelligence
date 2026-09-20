@@ -1,62 +1,134 @@
 {
   "comment": "Made by Pabilo8 with Blockbench",
   "groups": {
-    "base": {
+    "turen": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, -90, 0]
+        },
+        {
+          "time": 0.33333,
+          "transform": [0, -90, 0]
+        },
+        {
+          "time": 0.53333,
+          "transform": [0, -57.5, 0]
+        },
+        {
+          "time": 0.73333,
+          "transform": [0, -57.5, 0]
+        },
+        {
+          "time": 1,
+          "transform": [0, -90, 0]
+        }
+      ]
+    },
+    "Head": {
       "rotation": [
         {
           "time": 0,
           "transform": [0, 0, 0]
         },
         {
-          "time": 0.16667,
-          "transform": [0, -10, 0]
+          "time": 0.08333,
+          "transform": [1.5, 0, 0]
         },
         {
-          "time": 0.25,
-          "transform": [0, -10, 0]
+          "time": 0.1625,
+          "transform": [-1.5, 0, 1.25]
         },
         {
-          "time": 0.31943,
-          "transform": [0, -14.17, 0]
+          "time": 0.24583,
+          "transform": [1.5, 0, 1.25]
         },
         {
-          "time": 0.40277,
-          "transform": [0, -14.17, 0]
+          "time": 0.325,
+          "transform": [1.5, 0, 0.5]
         },
         {
-          "time": 0.70833,
-          "transform": [0, 10, 0]
+          "time": 0.41667,
+          "transform": [0, 0, 0]
         },
         {
-          "time": 0.79167,
-          "transform": [0, 10, 0]
+          "time": 0.5,
+          "transform": [1.5, 0, 0]
         },
         {
-          "time": 1,
+          "time": 0.57917,
+          "transform": [-1.5, 0, 1.25]
+        },
+        {
+          "time": 0.6625,
+          "transform": [1.5, 0, 1.25]
+        },
+        {
+          "time": 0.74167,
+          "transform": [1.5, 0, 0.5]
+        },
+        {
+          "time": 0.83333,
           "transform": [0, 0, 0]
         }
       ]
     },
-    "gun": {
+    "base": {
       "rotation": [
         {
-          "time": 0,
+          "time": 0.08333,
           "transform": [0, 0, 0]
         },
         {
-          "time": 0.20833,
+          "time": 0.17917,
+          "transform": [0, -10, 0]
+        },
+        {
+          "time": 0.22917,
+          "transform": [0, -10, 0]
+        },
+        {
+          "time": 0.26667,
+          "transform": [0, -14.17, 0]
+        },
+        {
+          "time": 0.31667,
+          "transform": [0, -14.17, 0]
+        },
+        {
+          "time": 0.49167,
+          "transform": [0, 10, 0]
+        },
+        {
+          "time": 0.54167,
+          "transform": [0, 10, 0]
+        },
+        {
+          "time": 0.66667,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "gun_origin": {
+      "rotation": [
+        {
+          "time": 0.08333,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.2,
           "transform": [-7.5, 0, 0]
         },
         {
-          "time": 0.34723,
+          "time": 0.27917,
           "transform": [-7.5, 0, 0]
         },
         {
-          "time": 0.70833,
+          "time": 0.49167,
           "transform": [-5, 0, 0]
         },
         {
-          "time": 1,
+          "time": 0.66667,
           "transform": [0, 0, 0]
         }
       ]

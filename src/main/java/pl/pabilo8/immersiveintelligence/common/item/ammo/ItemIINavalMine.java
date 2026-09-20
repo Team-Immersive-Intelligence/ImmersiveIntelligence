@@ -31,7 +31,7 @@ import pl.pabilo8.immersiveintelligence.api.ammo.enums.PropellantType;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoFactory;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IItemScrollable;
 import pl.pabilo8.immersiveintelligence.client.model.builtin.IAmmoModel;
-import pl.pabilo8.immersiveintelligence.client.model.builtin.ModelAmmoNavalMine;
+import pl.pabilo8.immersiveintelligence.client.model.builtin.ModelAmmoLidExplosives;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.naval_mine.EntityNavalMine;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.naval_mine.EntityNavalMineAnchor;
@@ -102,7 +102,7 @@ public class ItemIINavalMine extends ItemIIAmmoBase<EntityNavalMine> implements 
 	@Override
 	public Function<ItemIIAmmoBase<EntityNavalMine>, IAmmoModel<ItemIIAmmoBase<EntityNavalMine>, EntityNavalMine>> get3DModel()
 	{
-		return ModelAmmoNavalMine::createNavalMineModel;
+		return ModelAmmoLidExplosives::createLidExplosivesModel;
 	}
 
 	@Nonnull

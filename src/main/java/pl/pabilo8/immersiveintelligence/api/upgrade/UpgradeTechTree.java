@@ -1,9 +1,12 @@
 package pl.pabilo8.immersiveintelligence.api.upgrade;
 
+import lombok.Getter;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.UpgradePurpose;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.UpgradeTier;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
@@ -13,6 +16,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
+ * Stores upgrade relationships and preview models for an upgradable device.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
  * @since 29.08.2025
@@ -23,7 +28,8 @@ public class UpgradeTechTree
 	private final List<UpgradeTreeNode> nodes = new ArrayList<>();
 
 	@Nullable
-	private ResLoc modelLocation = null;
+	@SideOnly(Side.CLIENT)
+	private AMTModel model;
 
 	public static UpgradeTechTree getTreeFor(IUpgradableDevice machine)
 	{
@@ -97,10 +103,31 @@ public class UpgradeTechTree
 		return this;
 	}
 
+	/**
+	 * Sets the base model for the upgrade preview.
+	 *
+	 * @param model base preview model
+	 * @return this tech tree
+	 */
+	@SideOnly(Side.CLIENT)
+	public UpgradeTechTree withBaseModel(@Nonnull AMTModel model)
+	{
+		if(this.model!=null&&this.model!=model)
+			this.model.disposeOf();
+		this.model = model;
+		return this;
+	}
+
+	/**
+	 * Creates and sets the base model for the upgrade preview.
+	 *
+	 * @param modelLocation base preview model location
+	 * @return this tech tree
+	 */
+	@SideOnly(Side.CLIENT)
 	public UpgradeTechTree withBaseModelLocation(@Nonnull ResLoc modelLocation)
 	{
-		this.modelLocation = modelLocation;
-		return this;
+		return withBaseModel(new AMTModel(DefaultVertexFormats.ITEM, modelLocation));
 	}
 
 	public UpgradeTechTree withUpgradeModelLocation(@Nonnull Upgrade upgrade, @Nonnull ResLoc modelLocation)
@@ -187,13 +214,23 @@ public class UpgradeTechTree
 	 * @param upgrade upgrade to check for
 	 * @return all upgrades required to install the given upgrade
 	 */
-	public List<Upgrade> getAllRequiredUpgrades(UpgradePurpose upgrade)
+	public List<Upgrade> getAllParents(@Nonnull Upgrade upgrade)
 	{
+		UpgradeTreeNode node = getUpgradeNodeFor(upgrade);
+		return node.getDependenciesRecursive(new ArrayList<>());
+	}
+
+	/**
+	 *
+	 * @param upgrade upgrade to check for
+	 * @return all upgrades that can be installed after the given upgrade is installed
+	 */
+	public List<Upgrade> getAllChildren(@Nonnull Upgrade upgrade)
+	{
+		final UpgradeTreeNode node = getUpgradeNodeFor(upgrade);
 		return nodes.stream()
-				.filter(n -> n.upgrade.getPurpose()==upgrade)
-				.flatMap(n -> n.dependencies.stream())
+				.filter(n -> getAllUpgrades().contains(node))
 				.map(n -> n.upgrade)
-				.distinct()
 				.collect(Collectors.toList());
 	}
 
@@ -214,13 +251,13 @@ public class UpgradeTechTree
 	}
 
 	/**
-	 * @return the 3D model location to render in the upgrade GUI, or null for no model
+	 * @return the 3D model to render in the upgrade GUI, or null for no model
 	 */
 	@Nullable
 	@SideOnly(Side.CLIENT)
-	public ResLoc getModelLocation()
+	public AMTModel getModel()
 	{
-		return modelLocation;
+		return model;
 	}
 
 	/**
@@ -241,9 +278,13 @@ public class UpgradeTechTree
 	 */
 	public static class UpgradeTreeNode
 	{
+		@Getter
 		private final Upgrade upgrade;
+		@Getter
 		private final UpgradeTier tier;
+		@Getter
 		private final Set<UpgradeTreeNode> dependencies = new HashSet<>();
+		@Getter
 		private final Set<UpgradeTreeNode> locksOut = new HashSet<>();
 		@Nullable
 		private ResLoc modelLocation = null;
@@ -260,24 +301,14 @@ public class UpgradeTechTree
 			return this;
 		}
 
-		public Upgrade getUpgrade()
+		private List<Upgrade> getDependenciesRecursive(ArrayList<Upgrade> list)
 		{
-			return upgrade;
-		}
-
-		public UpgradeTier getTier()
-		{
-			return tier;
-		}
-
-		public Set<UpgradeTreeNode> getDependencies()
-		{
-			return dependencies;
-		}
-
-		public Set<UpgradeTreeNode> getLocksOut()
-		{
-			return locksOut;
+			for(UpgradeTreeNode dependency : dependencies)
+			{
+				list.add(dependency.upgrade);
+				dependency.getDependenciesRecursive(list);
+			}
+			return list;
 		}
 
 		/**
@@ -289,6 +320,8 @@ public class UpgradeTechTree
 		{
 			return modelLocation;
 		}
+
+
 	}
 }
 

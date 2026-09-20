@@ -121,6 +121,7 @@ public class AIHansGrenade extends AIHansHandWeapon
 	@Override
 	protected float calculateBallisticAngle(ItemStack ammo, EntityLivingBase attackTarget)
 	{
-		return IIAmmoUtils.calculateBallisticAngle(hans.getPositionVector(), attackTarget.getPositionVector(), ammo, 0.04f);
+		return IIAmmoUtils.getArtilleryFireAngle(ammo,
+				attackTarget.getPositionVector().subtract(hans.getPositionVector()));
 	}
 }

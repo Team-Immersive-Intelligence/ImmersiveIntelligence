@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.entity.ammo.types;
 
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -7,7 +8,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.ammo.penetration.IPenetrationHandler;
 import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleProperties;
 import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleRegistry;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.entity.IIEntityUtils;
 
 import javax.vecmath.Vector2f;
@@ -19,8 +22,9 @@ import javax.vecmath.Vector2f;
  */
 public class EntityAmmoMissile extends EntityAmmoProjectile
 {
-	@SyncNBT
-	int fuelRemaining = 1000;
+	public static final int BOOSTER_TIME = 100;
+	@SyncNBT(events = SyncEvents.ENTITY_COLLISION)
+	public int fuelRemaining = BOOSTER_TIME;
 
 	public EntityAmmoMissile(World world)
 	{
@@ -35,6 +39,29 @@ public class EntityAmmoMissile extends EntityAmmoProjectile
 			fuelRemaining--;
 		else
 			super.updatePhysics();
+	}
+
+	/**
+	 * @return whether the missile jet is still suppressing gravity
+	 */
+	public boolean isBoosterActive()
+	{
+		return fuelRemaining > 0;
+	}
+
+	@Override
+	public void readEntityFromNBT(NBTTagCompound compound)
+	{
+		super.readEntityFromNBT(compound);
+		if(compound.hasKey("fuel_remaining"))
+			this.fuelRemaining = Math.max(0, EasyNBT.wrapNBT(compound).getInt("fuel_remaining"));
+	}
+
+	@Override
+	public void writeEntityToNBT(NBTTagCompound compound)
+	{
+		super.writeEntityToNBT(compound);
+		EasyNBT.wrapNBT(compound).withInt("fuel_remaining", fuelRemaining);
 	}
 
 	@Override
