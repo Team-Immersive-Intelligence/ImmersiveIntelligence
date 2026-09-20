@@ -46,6 +46,8 @@ import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoType;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem.IIAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.api.ammo.penetration.IPenetrationHandler;
+import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoBallisticsCache.BallisticFireMode;
+import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoBallisticsCache.BallisticSolution;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoBallisticsCache.CachedBallisticStats;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
@@ -57,6 +59,7 @@ import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIConcreteDecoration.ConcreteDecorations;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIMetalBase.Metals;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 
@@ -73,9 +76,6 @@ import java.util.stream.Stream;
  */
 public class IIAmmoUtils
 {
-	private static final int MAX_TRAJECTORY_SIMULATION_STEPS = 4096;
-	private static final double MIN_TRAJECTORY_VELOCITY = 1e-7D;
-
 	//--- Global Values ---//
 	public static boolean ammoBreaksBlocks = Weapons.blockDamage;
 	public static boolean ammoExplodesBlocks = Ammunition.blockDamage;
@@ -128,300 +128,157 @@ public class IIAmmoUtils
 	 * @param posShooter position of the shooter
 	 * @param posTarget  position of the target
 	 * @param ammoStack  ammo stack
-	 * @param precision  precision of the calculation
+	 * @param precision  legacy precision parameter; cache precision is shared between callers
 	 * @return optimal ballistic shooting angle
 	 */
 	public static float calculateBallisticAngle(Vec3d posShooter, Vec3d posTarget, ItemStack ammoStack, float precision)
 	{
-		Vec3d dist = posShooter.subtract(posTarget);
 		IAmmoTypeItem<?, ?> ammoItem = AmmoRegistry.getAmmoItem(ammoStack);
-
 		if(ammoItem==null)
 			return 0;
 
-		return calculateBallisticAngle(new Vec3d(dist.x, 0, dist.z).distanceTo(Vec3d.ZERO),
-				dist.y,
-				ammoItem.getVelocity(),
-				EntityAmmoProjectile.GRAVITY*ammoItem.getMass(ammoStack),
-				1f-EntityAmmoProjectile.DRAG,
-				precision
-		);
+		Vec3d direction = posTarget.subtract(posShooter);
+		BallisticSolution solution = AmmoBallisticsCache.get(ammoItem, ammoStack)
+				.getArtillerySolution(Math.hypot(direction.x, direction.z), direction.y);
+		return solution.isValid()?90F-(float)solution.getElevation(): Float.NaN;
 	}
 
-	//TODO: 15.02.2024 use an equation instead of simulating the trajectory
-
 	/**
-	 * Pitch calculation for artillery stolen from Pneumaticcraft. Huge thanks to desht and MineMaarten for this amazing code!
-	 * <a href="https://github.com/TeamPneumatic/pnc-repressurized/blob/master/src/main/java/me/desht/pneumaticcraft/common/tileentity/TileEntityAirCannon.java">https://github.com/TeamPneumatic/pnc-repressurized/blob/master/src/main/java/me/desht/pneumaticcraft/common/tileentity/TileEntityAirCannon.java</a>
+	 * Compatibility overload for non-ammo callers. Results are backed by the shared cache;
+	 * {@code anglePrecision} is retained for source compatibility.
 	 *
 	 * @param distance       distance to target
 	 * @param height         height difference between the gun and target
-	 * @param force          speed (blocks/s) of the bullet
+	 * @param force          speed (blocks/tick) of the bullet
 	 * @param gravity        gravity of the bullet
 	 * @param drag           drag factor of the bullet
-	 * @param anglePrecision precision with which the angle will be searched, the lower the number, the higher the precision
+	 * @param anglePrecision legacy precision parameter
 	 * @return optimal ballistic shooting angle
-	 * @author desht
-	 * @author MineMaarten
 	 */
 	public static float calculateBallisticAngle(double distance, double height, float force, double gravity, double drag, double anglePrecision)
 	{
-		if(!areFinite(distance, height, force, gravity, drag, anglePrecision)
-				||distance < 0||force <= 0||gravity < 0||drag <= 0||drag > 1||anglePrecision <= 0||anglePrecision >= 0.5D)
-			return Float.NaN;
-		if(gravity==0D)
-			return 90F-(float)Math.toDegrees(Math.atan2(height, distance));
-
-		double bestAngle = 0;
-		double bestDistance = Double.MAX_VALUE;
-		int angleSteps = 0;
-		/*
-		 * Simulate the trajectory for candidate angles and stop malformed or unreachable
-		 * calculations before they can hold the server thread indefinitely.
-		 */
-		for(double i = Math.PI*anglePrecision; i < Math.PI*0.5D; i += anglePrecision)
-		{
-			if(++angleSteps > MAX_TRAJECTORY_SIMULATION_STEPS)
-				return Float.NaN;
-
-			double motionX = MathHelper.cos((float)i)*force;
-			double motionY = MathHelper.sin((float)i)*force;
-			double posX = 0;
-			double posY = 0;
-			int trajectorySteps = 0;
-			while(posY > height||motionY > 0)
-			{
-				if(++trajectorySteps > MAX_TRAJECTORY_SIMULATION_STEPS)
-					return Float.NaN;
-
-				motionX *= drag;
-				motionY = motionY*drag-gravity;
-				posX += motionX;
-				posY += motionY;
-				if(!areFinite(motionX, motionY, posX, posY))
-					return Float.NaN;
-			}
-
-			double distanceToTarget = Math.abs(distance-posX);
-			if(distanceToTarget < bestDistance)
-			{
-				bestDistance = distanceToTarget;
-				bestAngle = i;
-			}
-		}
-
-		return 90F-(float)Math.toDegrees(bestAngle);
-	}
-
-	//TODO: 15.02.2024 check out optimized version
-	/*
-	//Optimized version
-	public static float calculateBallisticAngle(double distance, double height, float force, double gravity, double drag, double anglePrecision) {
-    double lowerBound = Math.PI * anglePrecision;
-    double upperBound = Math.PI * 0.5D;
-    double bestAngle = 0;
-    double bestDistance = Double.MAX_VALUE;
-
-    while (Math.abs(upperBound - lowerBound) > anglePrecision) {
-        double midPoint = (lowerBound + upperBound) / 2;
-        double motionX = MathHelper.cos((float)midPoint) * force;
-        double motionY = MathHelper.sin((float)midPoint) * force;
-        double posX = 0;
-        double posY = 0;
-
-        while (posY > height || motionY > 0) {
-            motionX *= drag;
-            motionY *= drag;
-            motionY -= gravity;
-            posX += motionX;
-            posY += motionY;
-        }
-
-        double distanceToTarget = Math.abs(distance - posX);
-        if (distanceToTarget < bestDistance) {
-            bestDistance = distanceToTarget;
-            bestAngle = midPoint;
-        }
-
-        if (posX < distance) {
-            lowerBound = midPoint;
-        } else {
-            upperBound = midPoint;
-        }
-    }
-
-    return 90F - (float)(bestAngle * 180D / Math.PI);
-}
-	 */
-
-
-	/**
-	 * Calculates the direct-fire travel time with projectile drag.
-	 *
-	 * @param distance horizontal distance to the target
-	 * @param pitch    calculated projectile pitch
-	 * @param velocity initial projectile velocity
-	 * @return travel time in ticks, or -1 if the target cannot be reached
-	 */
-	public static int calculateDirectImpactTime(double distance, float pitch, double velocity)
-	{
-		if(distance <= 0D)
-			return 0;
-		if(!Double.isFinite(distance)||!Float.isFinite(pitch)||!Double.isFinite(velocity)||velocity <= 0D)
-			return -1;
-
-		double drag = 1D-EntityAmmoProjectile.DRAG;
-		double horizontalVelocity = Math.cos(Math.toRadians(90D-pitch))*velocity;
-		if(drag <= 0D||drag >= 1D||horizontalVelocity <= 0D)
-			return -1;
-
-		double remaining = 1D-distance*(1D-drag)/(horizontalVelocity*drag);
-		return remaining > 0D?(int)Math.ceil(Math.log(remaining)/Math.log(drag)): -1;
-	}
-
-	/**
-	 * Calculates the ballistic travel time until the projectile reaches the target height.
-	 *
-	 * @param height  target height relative to the shooter
-	 * @param pitch   calculated projectile pitch
-	 * @param force   initial projectile velocity
-	 * @param gravity projectile gravity
-	 * @param drag    projectile drag factor
-	 * @return travel time in ticks, or -1 if the parameters are invalid
-	 */
-	public static int calculateBallisticImpactTime(double height, float pitch, float force, double gravity, double drag)
-	{
-		if(!Double.isFinite(height)||!Float.isFinite(pitch)||!Float.isFinite(force)
-				||!Double.isFinite(gravity)||!Double.isFinite(drag)
-				||force <= 0F||gravity <= 0D||drag <= 0D||drag >= 1D)
-			return -1;
-
-		double motionY = Math.sin(Math.toRadians(90D-pitch))*force;
-		int min = 0;
-		if(motionY > 0D)
-		{
-			double apex = gravity/(gravity+(1D-drag)*motionY);
-			min = (int)Math.ceil(Math.log(apex)/Math.log(drag));
-		}
-
-		int max = Integer.MAX_VALUE;
-		if(getBallisticHeightAtTick(max, motionY, gravity, drag) > height)
-			return -1;
-
-		while(min < max)
-		{
-			int tick = min+(max-min)/2;
-			if(getBallisticHeightAtTick(tick, motionY, gravity, drag) <= height)
-				max = tick;
-			else
-				min = tick+1;
-		}
-		return min;
-	}
-
-	private static double getBallisticHeightAtTick(int tick, double initialMotionY, double gravity, double drag)
-	{
-		double dragSum = drag*(1D-Math.pow(drag, tick))/(1D-drag);
-		return initialMotionY*dragSum-gravity/(1D-drag)*(tick-dragSum);
-	}
-
-	/**
-	 * Calculates a direct-fire elevation angle with drag and gravity compensation.
-	 *
-	 * @param initialVelocity projectile velocity
-	 * @param mass            projectile mass
-	 * @param toTarget        relative target position
-	 * @return compensated elevation angle, or {@link Float#NaN} for invalid or unreachable input
-	 */
-	public static float getDirectFireAngle(double initialVelocity, double mass, Vec3d toTarget)
-	{
-		if(toTarget==null||!areFinite(initialVelocity, mass, toTarget.x, toTarget.y, toTarget.z)
-				||initialVelocity <= 0||mass < 0)
+		if(!IIMath.isNumberFinite(distance, height, force, gravity, drag, anglePrecision)
+				||distance < 0||force <= 0||gravity < 0||drag <= 0||drag > 1||anglePrecision <= 0)
 			return Float.NaN;
 
-		double force = initialVelocity;
-		double dist = Math.hypot(toTarget.x, toTarget.z);
-		double gravityMotionY = 0, motionY = 0, baseMotionY = toTarget.normalize().y, baseMotionYC;
-
-		for(int step = 0; dist > 0&&step < MAX_TRAJECTORY_SIMULATION_STEPS; step++)
-		{
-			force -= EntityAmmoProjectile.DRAG*force;
-			if(force <= MIN_TRAJECTORY_VELOCITY||!Double.isFinite(force))
-				return Float.NaN;
-
-			gravityMotionY -= EntityAmmoProjectile.GRAVITY*mass;
-			baseMotionYC = baseMotionY*(force/initialVelocity);
-			motionY += baseMotionYC+gravityMotionY;
-			dist -= force;
-			if(!areFinite(gravityMotionY, motionY, dist))
-				return Float.NaN;
-		}
-		if(dist > 0)
-			return Float.NaN;
-
-		toTarget = toTarget.addVector(0, motionY-baseMotionY, 0).normalize();
-		return (float)Math.toDegrees(Math.atan2(toTarget.y, Math.hypot(toTarget.x, toTarget.z)));
+		BallisticSolution solution = getLegacyBallistics(force, gravity, drag)
+				.getArtillerySolution(distance, height);
+		return solution.isValid()?90F-(float)solution.getElevation(): Float.NaN;
 	}
 
-	private static boolean areFinite(double... values)
+	public static float getDirectFireAngle(ItemStack ammoStack, Vec3d toTarget)
 	{
-		for(double value : values)
-			if(!Double.isFinite(value))
-				return false;
-		return true;
+		return getDirectFireAngle(ammoStack, toTarget, 1D);
+	}
+
+	public static float getDirectFireAngle(ItemStack ammoStack, Vec3d toTarget, double velocityModifier)
+	{
+		IAmmoTypeItem<?, ?> ammo = AmmoRegistry.getAmmoItem(ammoStack);
+		if(ammo==null||toTarget==null)
+			return Float.NaN;
+		return AmmoBallisticsCache.get(ammo, ammoStack, velocityModifier)
+				.getDirectFireAngle(Math.hypot(toTarget.x, toTarget.z), toTarget.y);
+	}
+
+	public static float getArtilleryFireAngle(ItemStack ammoStack, Vec3d toTarget)
+	{
+		return getArtilleryFireAngle(ammoStack, toTarget, 1D);
+	}
+
+	public static float getArtilleryFireAngle(ItemStack ammoStack, Vec3d toTarget, double velocityModifier)
+	{
+		IAmmoTypeItem<?, ?> ammo = AmmoRegistry.getAmmoItem(ammoStack);
+		if(ammo==null||toTarget==null)
+			return Float.NaN;
+		return AmmoBallisticsCache.get(ammo, ammoStack, velocityModifier)
+				.getArtilleryAngle(Math.hypot(toTarget.x, toTarget.z), toTarget.y);
+	}
+
+	private static CachedBallisticStats getProjectileBallistics(double velocity, double mass)
+	{
+		return AmmoBallisticsCache.get(AmmoBallistics.projectile(
+				Arrays.asList("ii_projectile", mass), velocity,
+				EntityAmmoProjectile.GRAVITY*mass, 1D-EntityAmmoProjectile.DRAG,
+				EntityAmmoProjectile.MAX_TICKS
+		));
+	}
+
+	private static CachedBallisticStats getLegacyBallistics(double velocity, double gravity, double drag)
+	{
+		Object identity = Arrays.asList("legacy_projectile", gravity, drag);
+		return AmmoBallisticsCache.get(AmmoBallistics.custom(identity, velocity,
+				EntityAmmoProjectile.MAX_TICKS, state -> {
+					state.multiplyMotion(drag);
+					state.addMotion(0, -gravity);
+					state.move();
+				}));
 	}
 
 	public static float calculateFireAngle(double initialVelocity, double gravity, double distance, double heightDifference)
 	{
-		double velocity2 = Math.pow(initialVelocity, 2);
-		double gravity2 = Math.pow(gravity, 2);
-		double distance2 = Math.pow(distance, 2);
-		double underRoot = Math.pow(initialVelocity, 4)-gravity*(gravity2*distance2+2*heightDifference*velocity2);
-
-		//No real solutions, the target is out of reach
-		if(underRoot < 0)
+		if(!IIMath.isNumberFinite(initialVelocity, gravity, distance, heightDifference)
+				||initialVelocity <= 0||gravity < 0||distance < 0)
 			return Float.NaN;
 
-		double positive = Math.atan((velocity2+Math.sqrt(underRoot))/(gravity*distance));
-		double negative = Math.atan((velocity2-Math.sqrt(underRoot))/(gravity*distance));
-
-		//Return the smaller angle (for the faster trajectory)
-		return (float)Math.min(positive, negative);
+		BallisticSolution solution = getLegacyBallistics(initialVelocity, gravity, 1D)
+				.getDirectSolution(distance, heightDifference);
+		return solution.isValid()?(float)Math.toRadians(solution.getElevation()): Float.NaN;
 	}
 
 	public static float getIEDirectRailgunAngle(ItemStack ammo, Vec3d toTarget)
 	{
 		RailgunProjectileProperties p = RailgunHandler.getProjectileProperties(ammo);
-		if(p!=null)
-		{
-			float force = 20;
-			float gravity = (float)p.gravity;
+		if(p==null||toTarget==null)
+			return Float.NaN;
 
-			double gravityMotionY = 0, motionY = 0, baseMotionY = toTarget.normalize().y, baseMotionYC = baseMotionY;
-			double dist = toTarget.distanceTo(new Vec3d(0, toTarget.y, 0));
-			while(dist > 0)
-			{
-				dist -= force;
-				force *= 0.99;
-				baseMotionYC *= 0.99f;
-				gravityMotionY -= gravity/force;
-				motionY += (baseMotionYC+gravityMotionY);
-			}
-
-			toTarget = toTarget.addVector(0, motionY-baseMotionY, 0).normalize();
-		}
-
-		return (float)Math.toDegrees((Math.atan2(toTarget.y, toTarget.distanceTo(new Vec3d(0, toTarget.y, 0)))));
+		CachedBallisticStats stats = AmmoBallisticsCache.get(AmmoBallistics.dragAfterMove(
+				Arrays.asList("ie_railgun", p.gravity), 20D, p.gravity, 0.99D,
+				EntityAmmoProjectile.MAX_TICKS
+		));
+		return stats.getDirectFireAngle(Math.hypot(toTarget.x, toTarget.z), toTarget.y);
 	}
 
-	public static float[] getInterceptionAngles(Vec3d shooterPos, Vec3d shooterVel, Vec3d targetPos, Vec3d targetVel, double projectileSpeed, double mass)
+	/**
+	 * Calculates target lead using cached impact time and then resolves the requested cached arc.
+	 */
+	public static float[] getInterceptionAngles(Vec3d shooterPos, Vec3d shooterVel,
+												Vec3d targetPos, Vec3d targetVel,
+												CachedBallisticStats ballistics,
+												BallisticFireMode fireMode)
 	{
-		Vec3d vv = shooterPos.subtract(shooterVel).subtract(targetPos).add(targetVel).normalize();
-		float yy = (float)((Math.atan2(vv.x, vv.z)*180D)/Math.PI);
-		float pp = (float)Math.toDegrees((Math.atan2(vv.y, vv.distanceTo(new Vec3d(0, vv.y, 0)))))
-				+getDirectFireAngle(projectileSpeed, mass, shooterPos.subtract(targetPos));
+		Vec3d relativeVelocity = targetVel.subtract(shooterVel);
+		Vec3d direction = targetPos.subtract(shooterPos);
+		if(ballistics==null||fireMode==null)
+			return getUncompensatedAngles(direction);
+		Vec3d solvedDirection = direction;
+		BallisticSolution solution = null;
 
-		return new float[]{yy, pp};
+		for(int iteration = 0; iteration < 3; iteration++)
+		{
+			BallisticSolution next = ballistics.getSolution(Math.hypot(direction.x, direction.z),
+					direction.y, fireMode);
+			if(!next.isValid())
+			{
+				direction = solvedDirection;
+				break;
+			}
+			solution = next;
+			solvedDirection = direction;
+			if(iteration < 2)
+				direction = targetPos.add(relativeVelocity.scale(solution.getImpactTime())).subtract(shooterPos);
+		}
+
+		if(solution==null||!solution.isValid())
+			return getUncompensatedAngles(direction);
+		float yaw = (float)Math.toDegrees(Math.atan2(-direction.x, direction.z));
+		return new float[]{MathHelper.wrapDegrees(yaw), -(float)solution.getElevation()};
+	}
+
+	private static float[] getUncompensatedAngles(Vec3d direction)
+	{
+		float yaw = (float)Math.toDegrees(Math.atan2(-direction.x, direction.z));
+		float pitch = (float)-Math.toDegrees(Math.atan2(direction.y, Math.hypot(direction.x, direction.z)));
+		return new float[]{MathHelper.wrapDegrees(yaw), pitch};
 	}
 
 	//--- Item Tooltips ---//
@@ -439,6 +296,11 @@ public class IIAmmoUtils
 	{
 		//add category tooltip
 		tooltip.add(getFormattedBulletTypeName(ammo, stack));
+
+		//Do not display info for bullet cores
+		if(ammo.isBulletCore(stack))
+			return;
+
 		//get common parameters
 		AmmoCore core = ammo.getCore(stack);
 		CoreType coreType = ammo.getCoreType(stack);
@@ -489,21 +351,20 @@ public class IIAmmoUtils
 
 		//Performance tab
 		IIAmmoProjectile annotation = IIUtils.getAnnotation(IIAmmoProjectile.class, ammo);
-		if(annotation!=null&&!ammo.isBulletCore(stack)
-				&&ItemTooltipHandler.addExpandableTooltip(Keyboard.KEY_LCONTROL, IIReference.DESC_BULLETS+"ballistics", tooltip))
+		if(annotation!=null&&ItemTooltipHandler.addExpandableTooltip(Keyboard.KEY_LCONTROL, IIReference.DESC_BULLETS+"ballistics", tooltip))
 		{
 			//Ballistics section
 			CachedBallisticStats stats = AmmoBallisticsCache.get(ammo, stack);
 
 			tooltip.add(IIReference.COLOR_ENGINEERS_BLUE.getHexCol(I18n.format(IIReference.DESC_BULLETS+"performance")));
 			tooltip.add(I18n.format(IIReference.DESC_BULLETS+"damage_dealt", ammo.getDamage()*core.getDamageModifier()*coreType.getDamageMod()));
-			tooltip.add(I18n.format(IIReference.DESC_BULLETS+"standard_velocity", Utils.formatDouble(ammo.getVelocity(), "0.###")));
+			tooltip.add(I18n.format(IIReference.DESC_BULLETS+"standard_velocity", Utils.formatDouble(stats.getVelocity(), "0.###")));
 
 			//Max distance tooltip
 			if(annotation.artillery())
 			{
 				tooltip.add(I18n.format(IIReference.DESC_BULLETS+"max_artillery_range",
-						Utils.formatDouble(stats.getGetMaxArtilleryRange(), "0.##")));
+						Utils.formatDouble(stats.getMaxArtilleryRange(), "0.##")));
 				tooltip.add(I18n.format(IIReference.DESC_BULLETS+"max_artillery_height",
 						Utils.formatDouble(stats.getMaxHeightReached(), "0.##")));
 				tooltip.add(I18n.format(IIReference.DESC_BULLETS+"max_direct_range",
@@ -605,7 +466,7 @@ public class IIAmmoUtils
 	 * @return amount of blocks penetrated by the ammo
 	 */
 	public static int getPenetratedAmount(IAmmoType<?, ?> ammoType, AmmoCore coreMaterial, CoreType coreType,
-	                                      IPenetrationHandler penHandler, PenetrationHardness blockHardness)
+										  IPenetrationHandler penHandler, PenetrationHardness blockHardness)
 	{
 		float penetrationDepth = getCombinedDepth(ammoType, coreType);
 		PenetrationHardness ammoHardness = getCombinedHardness(coreMaterial, coreType);

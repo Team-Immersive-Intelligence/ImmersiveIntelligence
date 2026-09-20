@@ -6,10 +6,8 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
 import pl.pabilo8.immersiveintelligence.api.upgrade.Upgrade;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeTechTree;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoColors;
 import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIAnimationCachedMap;
 import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTCachedModel;
 import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTCrossVariantReference;
@@ -26,14 +24,17 @@ import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
+ * Renders the Guided Missile Launcher with the ammunition currently loaded by the weapon.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
+ * @updated 17.08.2026
  * @since 19.02.2026
  */
 @SideOnly(Side.CLIENT)
 public class EWRGuidedMissileLauncher extends EmplacementWeaponRenderer<EmplacementWeaponGuidedMissileLauncher>
 {
-	private IIAnimationCachedMap rotateYaw, rotatePitch, trackerPitch, load, fire;
+	private IIAnimationCachedMap rotateYaw, rotatePitch, trackerPitch, load, fire, chill;
 	private AMTCrossVariantReference<AMTBullet> rocket;
 
 	public EWRGuidedMissileLauncher()
@@ -73,6 +74,7 @@ public class EWRGuidedMissileLauncher extends EmplacementWeaponRenderer<Emplacem
 
 		this.load = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("load"));
 		this.fire = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("fire"));
+		this.chill = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("chill"));
 
 		this.rocket = new AMTCrossVariantReference<>("rocket", model);
 	}
@@ -80,14 +82,18 @@ public class EWRGuidedMissileLauncher extends EmplacementWeaponRenderer<Emplacem
 	@Override
 	public void apply(EmplacementWeaponGuidedMissileLauncher weapon, AMTCachedModel<TileEntityEmplacement> model, BufferBuilder buf, Tessellator tes, float partialTicks)
 	{
-		this.rocket.get().withState(BulletState.BULLET_UNUSED)
-				.withProperties(IIContent.ammoCoreIron, CoreType.SHAPED, DecoColors.POWER2);
+		this.applyAmmoItem(weapon, BulletState.BULLET_UNUSED, rocket);
 
 		this.rotateYaw.apply(weapon.aim.getYawNormalized(partialTicks));
-		float pitch = weapon.aim.getPitchNormalized(partialTicks);
+		float pitch = weapon.aim.getPitchNormalized(-90, 90, partialTicks);
 		this.rotatePitch.apply(pitch);
 		this.trackerPitch.apply(pitch);
 		this.load.apply(weapon.gunHandler.getLoadingProgress(partialTicks));
 		this.fire.apply(weapon.gunHandler.getShotDelay(partialTicks));
+
+		//Idle animation
+		float chillProgress = weapon.getChillProgress(partialTicks);
+		if(chillProgress > 0)
+			this.chill.apply(chillProgress);
 	}
 }

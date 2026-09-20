@@ -1,0 +1,105 @@
+{
+  "bounds": {
+    "none": [0, 0, 0, 0, 0, 0],
+    "turret": [-16, -8, -16, 16, 8, 16],
+    "turret_top": [-8, -5, -8, 8, 5, 8],
+    "turret_top_edge": [-5, -5, -5, 5, 5, 5],
+    "turret_top_edge2": [-5, -2, -5, 5, 2, 5],
+    "camera": [-5, -4, -5, 5, 4, 5],
+    "gun_back": [-5, -8, -5, 5, 8, 5],
+    "gun": [-5, -4, -5, 5, 4, 5],
+    "gun_front": [-3, -3, -3, 3, 3, 3],
+    "lamp": [-4, -4, -4, 4, 4, 4]
+  },
+  "tactile_transforms": {
+    "all": {
+      "offset": [-1, 0, -2]
+    },
+    "south": {},
+    "west": {},
+    "north": {},
+    "east": {},
+    "mirrored": {}
+  },
+  "tactile": {
+    "_schema": "immersiveintelligence:models/block/multiblock/emplacement/weapon/cpds.obj.amt",
+    "base": [
+      {
+        "offset": [0, 7, 0],
+        "type": "none"
+      }
+    ],
+    "turret": [
+      {
+        "offset": [0, 17, 0],
+        "type": "turret"
+      },
+      {
+        "offset": [-8, 30, 8],
+        "type": "turret_top"
+      },
+      {
+        "offset": [8, 30, 8],
+        "type": "turret_top"
+      },
+      {
+        "offset": [11, 30, -5],
+        "type": "turret_top_edge"
+      },
+      {
+        "offset": [-11, 30, -5],
+        "type": "turret_top_edge"
+      },
+      {
+        "offset": [11, 27, -10],
+        "type": "turret_top_edge2"
+      },
+      {
+        "offset": [-11, 27, -10],
+        "type": "turret_top_edge2"
+      }
+    ],
+    "ir_camera": [
+      {
+        "offset": [0, 5.5, -1.5],
+        "type": "camera"
+      }
+    ],
+    "gun": [
+      {
+        "offset": [-0.01581, 0.51858, 6.47668],
+        "type": "gun_back"
+      },
+      {
+        "offset": [-0.01581, 0.51858, -3.52332],
+        "type": "gun_back"
+      },
+      {
+        "offset": [-0.01581, -0.48142, -14.52332],
+        "type": "gun"
+      },
+      {
+        "offset": [-0.01581, -0.48142, -22.52332],
+        "type": "gun_front"
+      },
+      {
+        "offset": [-0.01581, -0.48142, -28.52332],
+        "type": "gun_front"
+      },
+      {
+        "offset": [-0.01581, -0.48142, -34.52332],
+        "type": "gun_front"
+      },
+      {
+        "offset": [-0.01581, -8.48142, -15.52332],
+        "type": "lamp"
+      }
+    ],
+    "gun_origin": [
+      {
+        "offset": [-0.01581, -17.48142, 5.47668],
+        "type": "none"
+      }
+    ]
+  }
+}

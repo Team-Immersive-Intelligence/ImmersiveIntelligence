@@ -3,7 +3,6 @@ package pl.pabilo8.immersiveintelligence.common.util.item;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemMonsterPlacer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -26,7 +25,7 @@ import java.util.List;
 public interface IItemEntityPlacer<E extends Entity>
 {
 	default EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing,
-									   float hitX, float hitY, float hitZ)
+	                                   float hitX, float hitY, float hitZ)
 	{
 		//Can't place on the same position as player
 		if(facing==EnumFacing.DOWN)
@@ -66,8 +65,7 @@ public interface IItemEntityPlacer<E extends Entity>
 					for(int z = (int)Math.floor(takenSpace.minZ), zMax = (int)Math.ceil(takenSpace.maxZ); z < zMax; z++)
 						world.setBlockToAir(new BlockPos(x, y, z));
 
-			//Spawn the entity
-			ItemMonsterPlacer.applyItemEntityDataToEntity(world, player, placedStack, placed);
+			//Spawn the configured entity directly.
 			world.spawnEntity(placed);
 
 			//Play placing sound

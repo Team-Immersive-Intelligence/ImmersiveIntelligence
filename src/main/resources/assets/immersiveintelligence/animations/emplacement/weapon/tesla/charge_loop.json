@@ -1,0 +1,175 @@
+{
+  "comment": "Made by Pabilo8 with Blockbench",
+  "groups": {
+    "progress0": {
+      "scale": [
+        {
+          "time": 0.0,
+          "transform": [0.95, 0.95, 0.95]
+        },
+        {
+          "time": 0.25,
+          "transform": [0.9525, 0.9525, 0.9525]
+        },
+        {
+          "time": 0.5,
+          "transform": [0.95, 0.95, 0.95]
+        },
+        {
+          "time": 0.75,
+          "transform": [0.9475, 0.9475, 0.9475]
+        },
+        {
+          "time": 1.0,
+          "transform": [0.95, 0.95, 0.95]
+        }
+      ],
+      "energy": [
+        {
+          "time": 0.0,
+          "energy": [1.0, 0.0]
+        },
+        {
+          "time": 1.0,
+          "energy": [1.0, 1.0]
+        }
+      ]
+    },
+    "progress1": {
+      "scale": [
+        {
+          "time": 0.0,
+          "transform": [1.0, 1.0, 1.0]
+        },
+        {
+          "time": 0.25,
+          "transform": [0.9975, 0.9975, 0.9975]
+        },
+        {
+          "time": 0.5,
+          "transform": [1.0, 1.0, 1.0]
+        },
+        {
+          "time": 0.75,
+          "transform": [1.03185, 1.03185, 1.03185]
+        },
+        {
+          "time": 1.0,
+          "transform": [1.0, 1.0, 1.0]
+        }
+      ],
+      "energy": [
+        {
+          "time": 0.0,
+          "energy": [1.0, 0.0]
+        },
+        {
+          "time": 1.0,
+          "energy": [1.0, 1.0]
+        }
+      ]
+    },
+    "progress2": {
+      "scale": [
+        {
+          "time": 0.0,
+          "transform": [1.0, 1.0, 1.0]
+        },
+        {
+          "time": 0.25,
+          "transform": [1.03185, 1.03185, 1.03185]
+        },
+        {
+          "time": 0.5,
+          "transform": [1.0, 1.0, 1.0]
+        },
+        {
+          "time": 0.75,
+          "transform": [0.9975, 0.9975, 0.9975]
+        },
+        {
+          "time": 1.0,
+          "transform": [1.0, 1.0, 1.0]
+        }
+      ],
+      "energy": [
+        {
+          "time": 0.0,
+          "energy": [1.0, 0.0]
+        },
+        {
+          "time": 1.0,
+          "energy": [1.0, 1.0]
+        }
+      ]
+    },
+    "progress3": {
+      "scale": [
+        {
+          "time": 0.0,
+          "transform": [1.0, 1.0, 1.0]
+        },
+        {
+          "time": 0.25,
+          "transform": [0.9975, 0.9975, 0.9975]
+        },
+        {
+          "time": 0.5,
+          "transform": [1.0, 1.0, 1.0]
+        },
+        {
+          "time": 0.75,
+          "transform": [1.03185, 1.03185, 1.03185]
+        },
+        {
+          "time": 1.0,
+          "transform": [1.0, 1.0, 1.0]
+        }
+      ],
+      "energy": [
+        {
+          "time": 0.0,
+          "energy": [1.0, 0.0]
+        },
+        {
+          "time": 1.0,
+          "energy": [1.0, 1.0]
+        }
+      ]
+    },
+    "progress4": {
+      "scale": [
+        {
+          "time": 0.0,
+          "transform": [0.95, 0.95, 0.95]
+        },
+        {
+          "time": 0.25,
+          "transform": [0.9525, 0.9525, 0.9525]
+        },
+        {
+          "time": 0.5,
+          "transform": [0.95, 0.95, 0.95]
+        },
+        {
+          "time": 0.75,
+          "transform": [0.9475, 0.9475, 0.9475]
+        },
+        {
+          "time": 1.0,
+          "transform": [0.95, 0.95, 0.95]
+        }
+      ],
+      "energy": [
+        {
+          "time": 0.0,
+          "energy": [1.0, 0.0]
+        },
+        {
+          "time": 1.0,
+          "energy": [1.0, 1.0]
+        }
+      ]
+    }
+  }
+}

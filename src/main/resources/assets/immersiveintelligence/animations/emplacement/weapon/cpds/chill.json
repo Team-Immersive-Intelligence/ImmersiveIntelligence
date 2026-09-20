@@ -1,0 +1,121 @@
+{
+  "comment": "Made by Pabilo8 with Blockbench",
+  "groups": {
+    "ir_camera": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.27273,
+          "transform": [-25, -127.5, 0]
+        },
+        {
+          "time": 0.41667,
+          "transform": [-25, -127.5, 0]
+        },
+        {
+          "time": 0.63636,
+          "transform": [-7.32, -291.95, 0]
+        },
+        {
+          "time": 0.81818,
+          "transform": [-7.32, -291.95, 0]
+        },
+        {
+          "time": 0.90909,
+          "transform": [0, -360, 0]
+        }
+      ]
+    },
+    "turret": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.09091,
+          "transform": [0, -10, 0]
+        },
+        {
+          "time": 0.12122,
+          "transform": [0, -10, 0]
+        },
+        {
+          "time": 0.16667,
+          "transform": [0, -7.5, 0]
+        },
+        {
+          "time": 0.31818,
+          "transform": [0, -7.5, 0]
+        },
+        {
+          "time": 0.72727,
+          "transform": [0, 10, 0]
+        },
+        {
+          "time": 0.77273,
+          "transform": [0, 10, 0]
+        },
+        {
+          "time": 0.81818,
+          "transform": [0, 7.5, 0]
+        },
+        {
+          "time": 0.86364,
+          "transform": [0, 7.5, 0]
+        },
+        {
+          "time": 0.95455,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "gun_origin": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.09091,
+          "transform": [-10, 0, 0]
+        },
+        {
+          "time": 0.12122,
+          "transform": [-10, 0, 0]
+        },
+        {
+          "time": 0.16667,
+          "transform": [-5, 0, 0]
+        },
+        {
+          "time": 0.31818,
+          "transform": [-5, 0, 0]
+        },
+        {
+          "time": 0.72727,
+          "transform": [5, 0, 0]
+        },
+        {
+          "time": 0.77273,
+          "transform": [5, 0, 0]
+        },
+        {
+          "time": 0.81818,
+          "transform": [7.5, 0, 0]
+        },
+        {
+          "time": 0.86364,
+          "transform": [7.5, 0, 0]
+        },
+        {
+          "time": 0.95455,
+          "transform": [0, 0, 0]
+        }
+      ]
+    }
+  }
+}

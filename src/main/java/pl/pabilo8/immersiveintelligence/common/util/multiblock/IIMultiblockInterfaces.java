@@ -1,23 +1,19 @@
 package pl.pabilo8.immersiveintelligence.common.util.multiblock;
 
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IAdvancedCollisionBounds;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IAdvancedSelectionBounds;
+import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IBlockBounds;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IComparatorOverride;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
 import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.IIEInventory;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagFloat;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.common.util.INBTSerializable;
 import pl.pabilo8.immersiveintelligence.api.utils.MultiblockConstructionManager;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -132,7 +128,7 @@ public class IIMultiblockInterfaces
 		boolean isLadder();
 	}
 
-	public interface IAdvancedBounds extends IAdvancedCollisionBounds, IAdvancedSelectionBounds
+	public interface IAdvancedBounds extends IBlockBounds
 	{
 		/**
 		 * @param collision whether it's checking collision or selection
@@ -140,25 +136,16 @@ public class IIMultiblockInterfaces
 		 */
 		List<AxisAlignedBB> getBounds(boolean collision);
 
-		@Override
-		default List<AxisAlignedBB> getAdvancedColisionBounds()
+		default List<AxisAlignedBB> getColisionBounds()
 		{
 			return getBounds(true);
 		}
 
-		@Override
-		default List<AxisAlignedBB> getAdvancedSelectionBounds()
+		default List<AxisAlignedBB> getSelectionBounds()
 		{
 			return getBounds(false);
 		}
 
-		@Override
-		default boolean isOverrideBox(AxisAlignedBB box, EntityPlayer player, RayTraceResult mop, ArrayList<AxisAlignedBB> list)
-		{
-			return false;
-		}
-
-		@Override
 		default float[] getBlockBounds()
 		{
 			return new float[]{0, 0, 0, 1, 1, 1};

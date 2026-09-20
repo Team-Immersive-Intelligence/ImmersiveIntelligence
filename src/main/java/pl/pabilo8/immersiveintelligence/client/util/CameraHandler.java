@@ -16,7 +16,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.EntityCamera;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 16.02.2023
+ * @updated 08.09.2026
  * @since 10.11.2019
  */
 @SideOnly(Side.CLIENT)
@@ -26,7 +26,7 @@ public class CameraHandler
 	public static float fovZoom = 1;
 	public static ZoomType type = null;
 	public static IAdvancedZoom zoom;
-	public static ItemStack stack;
+	public static ItemStack stack = ItemStack.EMPTY;
 
 	//--- CameraHandler ---//
 	private static EntityCamera camera;
@@ -97,41 +97,45 @@ public class CameraHandler
 			return true;
 		type = null;
 		zoom = null;
+		stack = ItemStack.EMPTY;
 		return false;
 	}
 
 	private static boolean handleZoomLogic()
 	{
-		//Setup
 		EntityPlayer player = ClientUtils.mc().player;
-		Entity lowestRidden;
-
-		//Zoom provider is an item in player's hand
-		if((stack = player.getHeldItem(EnumHand.MAIN_HAND)).getItem() instanceof IAdvancedZoom)
-		{
-			type = ZoomType.ITEM_MAINHAND;
-			zoom = (IAdvancedZoom)(stack.getItem());
-		}
-		else if((stack = player.getHeldItem(EnumHand.OFF_HAND)).getItem() instanceof IAdvancedZoom)
-		{
-			type = ZoomType.ITEM_OFFHAND;
-			zoom = (IAdvancedZoom)(stack.getItem());
-		}
-		//Zoom provider is an entity ridden by player
-		else if((lowestRidden = player.getLowestRidingEntity()) instanceof ICameraEntity)
-		{
-			ICameraEntity camera = (ICameraEntity)lowestRidden;
-			if(!camera.isCameraEnabled(player))
-				return false;
-			type = ZoomType.RIDING;
-			zoom = camera.getZoom();
-		}
-		else
+		if(player==null)
 			return false;
 
-		//Zoom conditions aren't met
-		if(zoom==null||!zoom.shouldZoom(stack, player))
+		//An active item zoom has priority over the ridden camera zoom.
+		if(tryUseHeldZoom(player, EnumHand.MAIN_HAND, ZoomType.ITEM_MAINHAND)
+				||tryUseHeldZoom(player, EnumHand.OFF_HAND, ZoomType.ITEM_OFFHAND))
+			return true;
+
+		Entity lowestRidden = player.getLowestRidingEntity();
+		if(!(lowestRidden instanceof ICameraEntity camera)||!camera.isCameraEnabled(player))
 			return false;
+
+		return tryUseZoom(camera.getZoom(), camera.getZoomStack(), player, ZoomType.RIDING);
+	}
+
+	private static boolean tryUseHeldZoom(EntityPlayer player, EnumHand hand, ZoomType zoomType)
+	{
+		ItemStack heldStack = player.getHeldItem(hand);
+		if(!(heldStack.getItem() instanceof IAdvancedZoom itemZoom))
+			return false;
+
+		return tryUseZoom(itemZoom, heldStack, player, zoomType);
+	}
+
+	private static boolean tryUseZoom(IAdvancedZoom newZoom, ItemStack newStack, EntityPlayer player, ZoomType newType)
+	{
+		if(newZoom==null||!newZoom.shouldZoom(newStack, player))
+			return false;
+
+		zoom = newZoom;
+		stack = newStack;
+		type = newType;
 
 		float[] steps = zoom.getZoomSteps(stack, player);
 		if(steps!=null&&steps.length > 0)

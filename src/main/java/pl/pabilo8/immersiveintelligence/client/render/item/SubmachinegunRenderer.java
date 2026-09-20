@@ -28,7 +28,6 @@ import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTHand;
 import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTParticle;
 import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIItemRendererAMT.RegisteredItemRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIUpgradableItemRendererAMT;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.AssaultRifle;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIGunBase;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIISubmachinegun;
@@ -160,7 +159,9 @@ public class SubmachinegunRenderer extends IIUpgradableItemRendererAMT<ItemIISub
 			if(preciseAim > 0)
 			{
 				//gun "push" towards player
-				float recoil = Math.min((nbt.getFloat(ItemIISubmachinegun.RECOIL_V)+nbt.getFloat(ItemIISubmachinegun.RECOIL_H))/(AssaultRifle.maxRecoilHorizontal+AssaultRifle.maxRecoilVertical), 1f);
+				float maxRecoil = item.getMaxHorizontalRecoil(stack, upgradeNBT)+item.getMaxVerticalRecoil(stack, upgradeNBT);
+				float recoil = maxRecoil > 0?
+						Math.min((nbt.getFloat(ItemIISubmachinegun.RECOIL_V)+nbt.getFloat(ItemIISubmachinegun.RECOIL_H))/maxRecoil, 1f): 0;
 
 				GlStateManager.translate(-preciseAim*(1-0.125-0.0625/3), 0.15*preciseAim, 0);
 				GlStateManager.rotate(preciseAim*-7.75f, 0, 1, 0);
@@ -173,7 +174,7 @@ public class SubmachinegunRenderer extends IIUpgradableItemRendererAMT<ItemIISub
 			}
 			(transform==TransformType.FIRST_PERSON_RIGHT_HAND?handAngle: offHandAngle).apply(preciseAim);
 		}
-		if(item.hasIIUpgrade(stack, WeaponUpgrade.FOLDING_STOCK)&&preciseAim > 0)
+		if(item.hasIIUpgrade(stack, WeaponUpgrade.FOLDING_STOCK))
 			foldingStock.apply(preciseAim);
 
 
@@ -186,7 +187,7 @@ public class SubmachinegunRenderer extends IIUpgradableItemRendererAMT<ItemIISub
 
 		float v = AMTUtils.getAnimationProgress(
 				reloading,
-				(float)item.getReloadTime(stack, ItemStack.EMPTY, EasyNBT.wrapNBT(item.getUpgrades(stack))),
+				(float)item.getReloadTime(stack, ItemStack.EMPTY, upgradeNBT),
 				false,
 				reloading > 0?partialTicks: 0
 		);

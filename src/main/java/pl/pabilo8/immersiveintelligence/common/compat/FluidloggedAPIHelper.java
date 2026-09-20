@@ -1,14 +1,10 @@
 package pl.pabilo8.immersiveintelligence.common.compat;
 
-import net.minecraft.server.MinecraftServer;
-import pl.pabilo8.immersiveintelligence.common.IILogger;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.InputStream;
-
 /**
+ * Integrates Immersive Intelligence fluidloggable blocks with Fluidlogged API.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 29.08.2026
  * @since 21.07.2022
  */
 public class FluidloggedAPIHelper extends IICompatModule
@@ -22,27 +18,9 @@ public class FluidloggedAPIHelper extends IICompatModule
 	@Override
 	public void preInit()
 	{
-		//TODO: 08.04.2026 remake this the correct way, once our dev environment becomes compatible with Fluidlogged-API
-		File dir = new File(configurationDirectory, "fluidlogged_api/internal/immersiveintelligence/");
-		if(dir.exists()||dir.mkdirs())
-			try(InputStream stream = MinecraftServer.class.getResourceAsStream("/assets/immersiveintelligence/ii_fluidlogged.json"))
-			{
-				assert stream!=null;
-				File output = new File(dir, "whitelist.jsonc");
-				if(output.exists()||output.createNewFile())
-				{
-					IILogger.info("Adding Fluidlogged-API config file.");
-					FileWriter writer = new FileWriter(output);
-					int read;
-					while((read = stream.read())!=-1)
-						writer.write(read);
-					writer.close();
-				}
-			} catch(Exception e)
-			{
-				IILogger.error("Could not add Fluidlogged-API config file, "+e.getMessage());
-			}
+
 	}
+
 
 	@Override
 	public void registerRecipes()

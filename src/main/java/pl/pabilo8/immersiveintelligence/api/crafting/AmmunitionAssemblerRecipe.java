@@ -6,9 +6,13 @@ import com.google.common.collect.Lists;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.NonNullList;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIMultiblockRecipe;
 import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIRecipeLayout;
+import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIRecipeLayout.IOType;
+import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIRecipeLayoutBuilder;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityAmmunitionAssembler;
 
 import javax.annotation.Nullable;
@@ -44,7 +48,7 @@ public class AmmunitionAssemblerRecipe extends IIMultiblockRecipe
 	private NonNullList<ItemStack> getExampleItems()
 	{
 		return NonNullList.from(ItemStack.EMPTY,
-				process.apply(coreInput.getExampleStack(), casingInput.getExampleStack().copy())
+				process.apply(coreInput.getExampleStack().copy(), casingInput.getExampleStack().copy())
 		);
 	}
 
@@ -60,6 +64,21 @@ public class AmmunitionAssemblerRecipe extends IIMultiblockRecipe
 	@Override
 	protected IIRecipeLayout initRecipeLayout()
 	{
-		return null;
+		ItemStack casingStack = casingInput.getExampleStack();
+		NonNullList<ItemStack> cores = NonNullList.create(), outputs = NonNullList.create();
+		for(CoreType allowedCoreType : this.ammoItem.getAllowedCoreTypes())
+		{
+			cores.add(ammoItem.getAmmoCoreStack(IIContent.ammoCoreIron, allowedCoreType));
+			outputs.add(process.apply(cores.get(cores.size()-1), casingStack.copy()));
+		}
+
+		return new IIRecipeLayoutBuilder(144, 64)
+				.withSlot(8+2, 5+1, new IngredientStack(cores), IOType.INPUT, "frame_input")
+				.withSlot(8+2, 9+4-1+20, this.casingInput, IOType.INPUT, "frame_input")
+				.withSlot(134-12-4, 9+20-8, new IngredientStack(outputs), IOType.OUTPUT, "frame_output")
+				.withMultiblockModel(30, -2)
+				.withTimeInfo()
+				.withPowerInfo()
+				.build();
 	}
 }

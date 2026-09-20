@@ -88,7 +88,7 @@ public class CommandReloadMultiblock extends CommandIIBase
 					.forEach(MultiblockStuctureBase::updateStructure);
 
 			//Technically, it should always be true, but who knows ^^
-			success = IIContent.MULTIBLOCKS.size() > 0;
+			success = !IIContent.MULTIBLOCKS.isEmpty();
 		}
 		sender.sendMessage(new TextComponentString((success?"Succesfully reloaded ": "Couldn't reload ")+(args.length==1?args[0]: "multiblocks")));
 	}

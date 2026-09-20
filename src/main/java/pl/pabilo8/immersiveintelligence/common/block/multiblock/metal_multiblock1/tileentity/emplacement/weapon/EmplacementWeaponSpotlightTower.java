@@ -1,34 +1,36 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon;
 
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPanel;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.Autocannon;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.CPDS;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.InfraredObserver;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.SpotlightTower;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
 
-public class EmplacementWeaponSpotlightTower extends EmplacementWeaponTurretBase
+import javax.annotation.Nullable;
+
+/**
+ * Tracks targets and exposes hostile entities inside the illuminated area.
+ *
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 08.09.2026
+ * @since 01.01.2026
+ */
+public class EmplacementWeaponSpotlightTower extends EmplacementWeaponLightBase
 {
 	public EmplacementWeaponSpotlightTower()
 	{
-		this.setup = new MultiblockInteractablePart(InfraredObserver.setupTime);
+		this.setup = new MultiblockInteractablePart(SpotlightTower.setupTime);
 	}
 
 	@Override
 	protected void onInit(TileEntityEmplacement te)
 	{
 		super.onInit(te);
-		this.visionAABB = this.visionAABB.grow(Autocannon.detectionRadius);
-		this.attackAABB = this.attackAABB.grow(Autocannon.attackRadius);
-		this.aim.withAimSpeed(CPDS.yawRotateSpeed, CPDS.pitchRotateSpeed);
-	}
-
-	@Override
-	public boolean canShoot(TileEntityEmplacement te)
-	{
-		return false;
+		this.visionAABB = this.visionAABB.grow(SpotlightTower.detectionRadius);
+		this.attackAABB = this.attackAABB.grow(SpotlightTower.attackRadius);
+		this.aim.withAimSpeed(SpotlightTower.yawRotateSpeed, SpotlightTower.pitchRotateSpeed);
 	}
 
 	@Override
@@ -40,19 +42,19 @@ public class EmplacementWeaponSpotlightTower extends EmplacementWeaponTurretBase
 	@Override
 	public int getShotDelay()
 	{
-		return Autocannon.bulletFireTime;
+		return SpotlightTower.shotFireTime;
 	}
 
 	@Override
 	public int getReloadDelay()
 	{
-		return Autocannon.reloadTime;
+		return SpotlightTower.reloadTime;
 	}
 
 	@Override
 	public int getEnergyUpkeepCost()
 	{
-		return Autocannon.energyUpkeepCost;
+		return SpotlightTower.energyUpkeepCost;
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -65,6 +67,49 @@ public class EmplacementWeaponSpotlightTower extends EmplacementWeaponTurretBase
 	@Override
 	public int getMaxHealth()
 	{
-		return Autocannon.maxHealth;
+		return SpotlightTower.maxHealth;
+	}
+
+	@Override
+	protected float getIlluminationRange()
+	{
+		return SpotlightTower.attackRadius;
+	}
+
+	@Override
+	protected float getExposureRadius()
+	{
+		return SpotlightTower.exposureRadius;
+	}
+
+	@Override
+	protected int getExposureDuration()
+	{
+		return SpotlightTower.exposureDuration;
+	}
+
+	@Nullable
+	@Override
+	protected Float getHidingPitch()
+	{
+		return 0f;
+	}
+
+	@Nullable
+	@Override
+	protected Float getHidingYaw()
+	{
+		return 0f;
+	}
+
+	@Override
+	protected boolean canTrackTarget(TileEntityEmplacement te)
+	{
+		return true;
+	}
+
+	protected Vec3d getAimOrigin(TileEntityEmplacement te)
+	{
+		return super.getAimOrigin(te).addVector(0, 7.125, 0);
 	}
 }

@@ -60,6 +60,9 @@ public class AmmoComponentWhitePhosphorus extends AmmoComponent
 		else
 			world.playSound(null, blockPos, SoundEvents.BLOCK_LAVA_EXTINGUISH, SoundCategory.BLOCKS, 1f, 1f);
 
+		if(Math.abs(dir.y) > 0.85)
+			dir = new Vec3d(dir.y, dir.y, dir.y).normalize();
+
 		IIPacketHandler.sendToClient(MessageExplosion.createWhitePhosphorusMessage(world, pos, dir, shape, size));
 
 		//Spawn main phosphorus entity, shared between all modes

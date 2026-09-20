@@ -16,8 +16,8 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.api.protection.CorrosionHandler;
-import pl.pabilo8.immersiveintelligence.api.api.protection.ProtectionHandler;
+import pl.pabilo8.immersiveintelligence.api.protection.protection.CorrosionHandler;
+import pl.pabilo8.immersiveintelligence.api.protection.protection.ProtectionHandler;
 import pl.pabilo8.immersiveintelligence.common.util.IIDamageSources;
 
 import java.util.ArrayList;
@@ -123,12 +123,12 @@ public class IIPotions
 					living.setInvisible(true);
 			}
 		};
-		exposed = new IIPotion("exposed", true, 0x558858)
+		exposed = new IIPotion("exposed", true, 0xc8c8c8)
 		{
 			@Override
 			public void performEffect(EntityLivingBase living, int amplifier)
 			{
-				living.setGlowing(true);
+				living.addPotionEffect(new PotionEffect(MobEffects.GLOWING, 20, 0, true, false));
 				living.setInvisible(false);
 				living.removePotionEffect(MobEffects.INVISIBILITY);
 				living.removePotionEffect(IIPotions.concealed);
@@ -138,12 +138,14 @@ public class IIPotions
 			public void removeAttributesModifiersFromEntity(EntityLivingBase entityLivingBaseIn, AbstractAttributeMap attributeMapIn, int amplifier)
 			{
 				super.removeAttributesModifiersFromEntity(entityLivingBaseIn, attributeMapIn, amplifier);
-				entityLivingBaseIn.setGlowing(false);
 			}
 		};
-		exposed.registerPotionAttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED, Utils.generateNewUUID().toString(), -0.05f, 1);
+		exposed.registerPotionAttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED, Utils.generateNewUUID().toString(), -0.5f, 1);
+		exposed.registerPotionAttributeModifier(SharedMonsterAttributes.FLYING_SPEED, Utils.generateNewUUID().toString(), -0.5f, 1);
+		exposed.registerPotionAttributeModifier(SharedMonsterAttributes.ARMOR_TOUGHNESS, Utils.generateNewUUID().toString(), 0, 2);
+		exposed.registerPotionAttributeModifier(SharedMonsterAttributes.ARMOR, Utils.generateNewUUID().toString(), 0, 2);
 		exposed.registerPotionAttributeModifier(SharedMonsterAttributes.LUCK, Utils.generateNewUUID().toString(), -1f, 1);
-		exposed.registerPotionAttributeModifier(SharedMonsterAttributes.FOLLOW_RANGE, Utils.generateNewUUID().toString(), -0.007843138f, 2);
+		exposed.registerPotionAttributeModifier(SharedMonsterAttributes.FOLLOW_RANGE, Utils.generateNewUUID().toString(), -0.5f, 1);
 
 
 		radiation = new IIPotion("radiation", true, 0xd2a846)

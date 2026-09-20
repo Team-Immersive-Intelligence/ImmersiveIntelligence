@@ -11,6 +11,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTLoader;
@@ -19,6 +20,8 @@ import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.amt.AMTModelHeader;
 import pl.pabilo8.immersiveintelligence.common.util.amt.IIAnimation;
 import pl.pabilo8.immersiveintelligence.common.util.amt.IIAnimationCollisionMap;
+import pl.pabilo8.immersiveintelligence.common.util.amt.TactileTransform;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.OwnerIdentity;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
 
 import javax.annotation.Nonnull;
@@ -38,9 +41,9 @@ import java.util.stream.Collectors;
 public class TactileManager
 {
 	//--- Animation Cache ---//
-	private static HashMap<ResLoc, AMTModelHeader> HEADERS = new HashMap<>();
-	private static HashMap<ResLoc, IIAnimation> ANIMATIONS = new HashMap<>();
-	private static HashMap<ResLoc, SourceData> SOURCE_CACHE = new HashMap<>();
+	private static final Map<ResLoc, AMTModelHeader> HEADERS = new HashMap<>();
+	private static final Map<ResLoc, IIAnimation> ANIMATIONS = new HashMap<>();
+	private static final Map<ResLoc, SourceData> SOURCE_CACHE = new HashMap<>();
 
 	private static final String CATEGORY_BASE = "base";
 
@@ -49,7 +52,15 @@ public class TactileManager
 	private final Map<String, ResLoc> aabbLocations;
 	private final ITactileListener listener;
 	private final ArrayList<EntityAMTTactile> entities;
+	private final Set<EntityAMTTactile> managedEntities;
+	private final Map<String, EntityAMTTactile> entitiesByName;
+	private final Map<EntityAMTTactile, TactileTransform> entityTransforms;
 	private final HashMap<ResLoc, IIAnimationCollisionMap> animations;
+	private EntityAMTTactile[] partArray = new EntityAMTTactile[0];
+	@Nullable
+	private EntityTactileLivingBase livingEntity;
+	@Nullable
+	private Vec3d livingEntityPosition;
 
 	//Reloadable values
 	private boolean initialized = false;
@@ -76,6 +87,9 @@ public class TactileManager
 
 		//Initialize storage
 		entities = new ArrayList<>();
+		managedEntities = Collections.newSetFromMap(new IdentityHashMap<>());
+		entitiesByName = new HashMap<>();
+		entityTransforms = new IdentityHashMap<>();
 		animations = new HashMap<>();
 	}
 
@@ -104,6 +118,9 @@ public class TactileManager
 
 		//Initialize storage
 		entities = new ArrayList<>();
+		managedEntities = Collections.newSetFromMap(new IdentityHashMap<>());
+		entitiesByName = new HashMap<>();
+		entityTransforms = new IdentityHashMap<>();
 		animations = new HashMap<>();
 	}
 
@@ -116,8 +133,9 @@ public class TactileManager
 		if(category==null||category.isEmpty())
 			return;
 
-		aabbLocations.put(category, location);
-		forceReload();
+		if(Objects.equals(aabbLocations.put(category, location), location))
+			return;
+		resetEntities();
 	}
 
 	/**
@@ -133,8 +151,6 @@ public class TactileManager
 			return false;
 		if(!Graphics.tactileAMT)
 			return false;
-
-		BlockPos mainPos = getPos();
 
 		List<SourceData> sources = new ArrayList<>();
 		List<AMTModelHeader> headers = new ArrayList<>();
@@ -161,12 +177,22 @@ public class TactileManager
 		List<EntityAMTTactile> addedAll = new ArrayList<>();
 		for(SourceData data : sources)
 		{
-			ArrayList<EntityAMTTactile> tempEntities = parseTactiles(data.tactile, data.allBounds, mergedHeader, data.globalOffset);
-			addedAll.addAll(processTactiles(tempEntities, mainPos, mergedHeader, data.globalOffset));
+			TactileTransform transform = TactileTransform.resolve(data.transforms, getFacing(), getIsMirrored());
+			ArrayList<EntityAMTTactile> tempEntities = parseTactiles(data.tactile, data.allBounds, mergedHeader, transform);
+			addedAll.addAll(processTactiles(tempEntities, mergedHeader, transform));
 		}
 
 		mergedHeader.applyHierarchy(addedAll);
-		addedAll.forEach(e -> e.setPosition(mainPos.getX(), mainPos.getY(), mainPos.getZ()));
+		entitiesByName.clear();
+		entities.forEach(e -> entitiesByName.put(e.name, e));
+		managedEntities.clear();
+		managedEntities.addAll(entities);
+		partArray = entities.toArray(new EntityAMTTactile[0]);
+
+		//Spawn packets must contain the final model-space position. Spawning at the master
+		//block first leaves clients colliding with stale boxes until the tracker sends a move.
+		entities.forEach(EntityAMTTactile::defaultizeAnimation);
+		applyAnimationPositions(true);
 		addedAll.forEach(getWorld()::spawnEntity);
 
 		return true;
@@ -185,28 +211,21 @@ public class TactileManager
 			return null;
 
 		//Collect AABB dictionary
-		Map<String, AxisAlignedBB> allBounds = jsonObject.get("bounds").getAsJsonObject()
-				.entrySet().stream()
+		Map<String, AxisAlignedBB> allBounds = (!jsonObject.has("bounds")?Collections.<Entry<String, JsonElement>>emptySet():
+				jsonObject.get("bounds").getAsJsonObject().entrySet())
+				.stream()
 				.filter(e -> e.getValue() instanceof JsonArray)
 				.map(e -> {
 					JsonArray array = e.getValue().getAsJsonArray();
-					return new Tuple<>(e.getKey(), getAxisAlignedBB(array));
+					return new Tuple<>(e.getKey(), getRawAxisAlignedBB(array));
 				})
 				.collect(Collectors.toMap(Tuple::getFirst, Tuple::getSecond));
 
 		if(!jsonObject.has("tactile"))
 			return null;
 
-		Vec3d globalOffset = Vec3d.ZERO;
-		if(jsonObject.has("tactile_offset"))
-		{
-			JsonArray array = jsonObject.get("tactile_offset").getAsJsonArray();
-			globalOffset = new Vec3d(
-					array.get(0).getAsDouble(),
-					array.get(1).getAsDouble(),
-					array.get(2).getAsDouble()
-			);
-		}
+		JsonObject transforms = jsonObject.has("tactile_transforms")&&jsonObject.get("tactile_transforms").isJsonObject()?
+				jsonObject.getAsJsonObject("tactile_transforms"): null;
 
 		JsonObject tactile = jsonObject.get("tactile").getAsJsonObject();
 
@@ -220,7 +239,7 @@ public class TactileManager
 			return null;
 
 		AMTModelHeader header = HEADERS.computeIfAbsent(headerLoc, AMTLoader::loadHeaderServer);
-		SourceData data = new SourceData(header, tactile, allBounds, globalOffset);
+		SourceData data = new SourceData(header, tactile, allBounds, transforms);
 		SOURCE_CACHE.put(sourceLoc, data);
 		return data;
 	}
@@ -230,20 +249,22 @@ public class TactileManager
 		private final AMTModelHeader header;
 		private final JsonObject tactile;
 		private final Map<String, AxisAlignedBB> allBounds;
-		private final Vec3d globalOffset;
+		@Nullable
+		private final JsonObject transforms;
 
-		private SourceData(AMTModelHeader header, JsonObject tactile, Map<String, AxisAlignedBB> allBounds, Vec3d globalOffset)
+		private SourceData(AMTModelHeader header, JsonObject tactile, Map<String, AxisAlignedBB> allBounds,
+						   @Nullable JsonObject transforms)
 		{
 			this.header = header;
 			this.tactile = tactile;
 			this.allBounds = allBounds;
-			this.globalOffset = globalOffset;
+			this.transforms = transforms;
 		}
 	}
 
 	@Nonnull
 	private ArrayList<EntityAMTTactile> parseTactiles(JsonObject tactile, Map<String, AxisAlignedBB> allBounds,
-													  AMTModelHeader header, Vec3d globalOffset)
+													  AMTModelHeader header, TactileTransform transform)
 	{
 		//Load entities
 		ArrayList<EntityAMTTactile> tempEntities = new ArrayList<>();
@@ -280,12 +301,13 @@ public class TactileManager
 					if(boxObject.has("type"))
 						aabb = allBounds.getOrDefault(boxObject.get("type").getAsString(), aabb);
 					else if(boxObject.has("bounds"))
-						aabb = getAxisAlignedBB(boxObject.get("bounds").getAsJsonArray());
+						aabb = getRawAxisAlignedBB(boxObject.get("bounds").getAsJsonArray());
 
 					//Add entity to the list and create it in the world
-					tempEntities.add(new EntityAMTTactile(this, entries.getKey(),
-							processOffset(header, globalOffset, entries.getKey(), offset), aabb)
-					);
+					EntityAMTTactile entity = new EntityAMTTactile(this, entries.getKey(),
+							processOffset(header, transform, entries.getKey(), offset), transform.transformBounds(aabb));
+					entityTransforms.put(entity, transform);
+					tempEntities.add(entity);
 
 				}
 			}
@@ -293,35 +315,9 @@ public class TactileManager
 		return tempEntities;
 	}
 
-	private Vec3d processOffset(AMTModelHeader header, Vec3d globalOffset, String key, Vec3d offset)
+	private Vec3d processOffset(AMTModelHeader header, TactileTransform transform, String key, Vec3d offset)
 	{
-		//.add(new Vec3d(0, 0, -0.5))
-		Vec3d total = header.getOffset(key)
-				.add(offset)
-				.add(globalOffset)
-				.addVector(-1, 0, -1.5);
-		boolean mirrored = getIsMirrored();
-		total = new Vec3d(mirrored?(total.x-1): -total.x, total.y, -total.z);
-		//.add(new Vec3d(0.5, 0.5, 1));
-		//rotate the vector depending on facing
-		EnumFacing facing = getFacing();
-
-		Vec3d apply = new Matrix4(facing)
-				.apply(total);
-		//Add corrections based on block corner offset
-		switch(facing)
-		{
-			case SOUTH:
-				apply = apply.addVector(-1, 0, 0);
-				break;
-			case EAST:
-				apply = apply.addVector(-0.5, 0, 0.5);
-				break;
-			case WEST:
-				apply = apply.addVector(-0.5, 0, -0.5);
-				break;
-		}
-		return apply;
+		return transform.transformPosition(header.getOffset(key).add(offset));
 	}
 
 	/**
@@ -330,40 +326,39 @@ public class TactileManager
 	 * If no -> the object is a Main Object, it will be a part of animation
 	 * In both cases, the Main Object may have a parent, which it will base its position on
 	 **/
-	private List<EntityAMTTactile> processTactiles(ArrayList<EntityAMTTactile> tempEntities, BlockPos mainPos,
-												   AMTModelHeader header, Vec3d globalOffset)
+	private List<EntityAMTTactile> processTactiles(ArrayList<EntityAMTTactile> tempEntities,
+												   AMTModelHeader header, TactileTransform transform)
 	{
 		List<EntityAMTTactile> added = new ArrayList<>();
-		while(!tempEntities.isEmpty())
+		Map<String, List<EntityAMTTactile>> grouped = tempEntities.stream()
+				.collect(Collectors.groupingBy(e -> e.name, LinkedHashMap::new, Collectors.toList()));
+		for(Entry<String, List<EntityAMTTactile>> entry : grouped.entrySet())
 		{
-			EntityAMTTactile amt = tempEntities.remove(0);
-			List<EntityAMTTactile> matching = tempEntities.stream().filter(e -> e.name.equals(amt.name)).collect(Collectors.toList());
+			List<EntityAMTTactile> matching = entry.getValue();
 
-			if(matching.isEmpty())
+			if(matching.size()==1)
 			{
+				EntityAMTTactile amt = matching.get(0);
 				entities.add(amt);
 				added.add(amt);
 			}
 			else
 			{
 				//Add parent entity with empty AABB
-				EntityAMTTactile parent = new EntityAMTTactile(this, amt.name,
-						processOffset(header, globalOffset, amt.name, Vec3d.ZERO),
+				EntityAMTTactile parent = new EntityAMTTactile(this, entry.getKey(),
+						processOffset(header, transform, entry.getKey(), Vec3d.ZERO),
 						new AxisAlignedBB(0, 0, 0, 0, 0, 0));
+				entityTransforms.put(parent, transform);
 				entities.add(parent);
 				added.add(parent);
 
 				//Rename child objects to OBJ_child[n]
-				matching.add(0, amt);
 				for(int i = 0; i < matching.size(); i++)
 				{
 					matching.get(i).name += "_child"+i;
 					matching.get(i).setParent(parent);
 					added.add(matching.get(i));
 				}
-
-				//Continue iteration
-				tempEntities.removeAll(matching);
 				entities.addAll(matching);
 			}
 		}
@@ -371,9 +366,9 @@ public class TactileManager
 	}
 
 	@Nonnull
-	private AxisAlignedBB getAxisAlignedBB(JsonArray array)
+	private static AxisAlignedBB getRawAxisAlignedBB(JsonArray array)
 	{
-		AxisAlignedBB aabb = new AxisAlignedBB(
+		return new AxisAlignedBB(
 				array.get(0).getAsDouble()*0.0625,
 				array.get(1).getAsDouble()*0.0625,
 				array.get(2).getAsDouble()*0.0625,
@@ -381,17 +376,6 @@ public class TactileManager
 				array.get(4).getAsDouble()*0.0625,
 				array.get(5).getAsDouble()*0.0625
 		);
-		if(getIsMirrored())
-		{
-			double xLength = Math.abs(aabb.maxX-aabb.minX);
-			aabb = new AxisAlignedBB(-aabb.minX+2, aabb.minY, aabb.minZ, -aabb.maxX+2, aabb.maxY, aabb.maxZ);
-		}
-
-		//aabb = new AxisAlignedBB(-0.25, -0.25, -0.25, 0.25, 0.25, 0.25);
-		Matrix4 mat = new Matrix4(getFacing());
-		Vec3d vMin = mat.apply(new Vec3d(aabb.minX, aabb.minY, aabb.minZ));
-		Vec3d vMax = mat.apply(new Vec3d(aabb.maxX, aabb.maxY, aabb.maxZ));
-		return new AxisAlignedBB(vMin.x, vMin.y, vMin.z, vMax.x, vMax.y, vMax.z);
 	}
 
 	//--- Called by Listener ---//
@@ -432,36 +416,57 @@ public class TactileManager
 			return;
 		}
 
-		//Load a cached animation or from JSON
-		IIAnimationCollisionMap anim;
-		if(!animations.containsKey(animation))
-			anim = loadAnimation(animation);
-		else
-			anim = animations.get(animation);
+		applyAnimation(animation, time);
+		applyAnimationPositions();
+	}
 
-		if(anim==null)
+	/**
+	 * Applies two animation channels before recalculating the hierarchy once.
+	 */
+	public void update(@Nullable ResLoc firstAnimation, float firstTime,
+					   @Nullable ResLoc secondAnimation, float secondTime)
+	{
+		if(worldSupplier.get().isRemote)
+			return;
+		if(!initialized&&!(initialized = init()))
 			return;
 
-		anim.apply(time);
+		applyAnimation(firstAnimation, firstTime);
+		applyAnimation(secondAnimation, secondTime);
 		applyAnimationPositions();
+	}
+
+	private void applyAnimation(@Nullable ResLoc animation, float time)
+	{
+		if(animation==null)
+			return;
+		IIAnimationCollisionMap mapped = animations.computeIfAbsent(animation, this::loadAnimation);
+		if(mapped!=null)
+			mapped.apply(time);
 	}
 
 	private void applyAnimationPositions()
 	{
+		applyAnimationPositions(false);
+	}
+
+	private void applyAnimationPositions(boolean snapToPosition)
+	{
 		BlockPos handlerPos = getPos();
 		Set<EntityAMTTactile> applied = new HashSet<>();
 		for(EntityAMTTactile e : entities)
-			applyEntityTransformRecursive(e, handlerPos, applied);
+			applyEntityTransformRecursive(e, handlerPos, applied, snapToPosition);
 	}
 
-	private void applyEntityTransformRecursive(EntityAMTTactile e, BlockPos handlerPos, Set<EntityAMTTactile> applied)
+	private void applyEntityTransformRecursive(EntityAMTTactile e, BlockPos handlerPos,
+											   Set<EntityAMTTactile> applied, boolean snapToPosition)
 	{
 		if(applied.contains(e))
 			return;
 
 		EntityAMTTactile parent = e.getParent();
 		if(parent!=null)
-			applyEntityTransformRecursive(parent, handlerPos, applied);
+			applyEntityTransformRecursive(parent, handlerPos, applied, snapToPosition);
 
 		e.prevPosX = e.posX;
 		e.prevPosY = e.posY;
@@ -471,7 +476,7 @@ public class TactileManager
 		{
 			e.posX = handlerPos.getX()+e.offset.x+e.translation.x;
 			e.posY = handlerPos.getY()+e.offset.y+e.translation.y;
-			e.posZ = handlerPos.getZ()-0.5+e.offset.z+e.translation.z;
+			e.posZ = handlerPos.getZ()+e.offset.z+e.translation.z;
 			e.rotationPitch = (float)e.rotation.x;
 			e.rotationYaw = (float)e.rotation.y;
 			e.setRotationRoll((float)e.rotation.z);
@@ -483,10 +488,11 @@ public class TactileManager
 			e.rotationPitch = (float)(parent.rotationPitch+e.rotation.x);
 			e.setRotationRoll((float)(parent.getRotationRoll()+e.rotation.z));
 
+			//A part's own rotation changes its orientation and descendants, not its pivot position.
 			Vec3d angle = new Matrix4().setIdentity()
-					.rotate(Math.toRadians(-e.rotationYaw), 0, 1, 0)
-					.rotate(Math.toRadians(e.getRotationRoll()), 0, 0, 1)
-					.rotate(Math.toRadians(e.rotationPitch), 1, 0, 0)
+					.rotate(Math.toRadians(parent.rotationYaw), 0, -1, 0)
+					.rotate(Math.toRadians(parent.getRotationRoll()), 0, 0, -1)
+					.rotate(Math.toRadians(parent.rotationPitch), -1, 0, 0)
 					.apply(relativeOffset.add(e.translation));
 
 			e.posX = parent.posX+angle.x;
@@ -494,9 +500,21 @@ public class TactileManager
 			e.posZ = parent.posZ+angle.z;
 		}
 
-		e.motionX = e.posX-e.prevPosX;
-		e.motionY = e.posY-e.prevPosY;
-		e.motionZ = e.posZ-e.prevPosZ;
+		if(snapToPosition)
+		{
+			e.prevPosX = e.lastTickPosX = e.posX;
+			e.prevPosY = e.lastTickPosY = e.posY;
+			e.prevPosZ = e.lastTickPosZ = e.posZ;
+			e.prevRotationYaw = e.rotationYaw;
+			e.prevRotationPitch = e.rotationPitch;
+			e.motionX = e.motionY = e.motionZ = 0;
+		}
+		else
+		{
+			e.motionX = e.posX-e.prevPosX;
+			e.motionY = e.posY-e.prevPosY;
+			e.motionZ = e.posZ-e.prevPosZ;
+		}
 
 		applied.add(e);
 	}
@@ -509,21 +527,12 @@ public class TactileManager
 	 */
 	private IIAnimationCollisionMap loadAnimation(ResLoc res)
 	{
-		IIAnimation anim = ANIMATIONS.get(res);
-		//Animation not found in cache, it must be loaded from json
-		if(anim==null)
-		{
-			IIAnimation animation = AMTLoader.loadAnimationServer(res);
-			ANIMATIONS.put(res, animation);
-		}
+		IIAnimation anim = ANIMATIONS.computeIfAbsent(res, AMTLoader::loadAnimationServer);
 
 		//Attempt mapping and caching the animation
 		IIAnimationCollisionMap mapped = null;
 		if(anim!=null)
-		{
-			mapped = IIAnimationCollisionMap.create(entities, anim, getFacing(), getIsMirrored());
-			animations.put(res, mapped);
-		}
+			mapped = IIAnimationCollisionMap.create(entities, anim, entityTransforms);
 
 		//Whether loaded or not, return it
 		return mapped;
@@ -535,14 +544,25 @@ public class TactileManager
 	 */
 	public void forceReload()
 	{
-		this.initialized = false;
-		this.entities.forEach(Entity::setDead);
-		this.entities.clear();
-		this.animations.clear();
-
+		resetEntities();
 		SOURCE_CACHE.clear();
 		HEADERS.clear();
 		ANIMATIONS.clear();
+	}
+
+	private void resetEntities()
+	{
+		this.initialized = false;
+		this.entities.forEach(Entity::setDead);
+		this.entities.clear();
+		this.managedEntities.clear();
+		this.entitiesByName.clear();
+		this.entityTransforms.clear();
+		this.partArray = new EntityAMTTactile[0];
+		this.animations.clear();
+		if(this.livingEntity!=null)
+			this.livingEntity.setDead();
+		this.livingEntity = null;
 	}
 
 	//--- Tactile Handling ---//
@@ -572,7 +592,7 @@ public class TactileManager
 
 	public boolean getIsMirrored()
 	{
-		return mirroredSupplier.get();
+		return mirroredSupplier!=null&&mirroredSupplier.get();
 	}
 
 	/**
@@ -608,6 +628,101 @@ public class TactileManager
 	public ArrayList<EntityAMTTactile> getEntities()
 	{
 		return entities;
+	}
+
+	/**
+	 * Gets a tactile by its final AMT part name.
+	 */
+	@Nullable
+	public EntityAMTTactile getPart(String partName)
+	{
+		ensureInitialized();
+		return partName==null?null: entitiesByName.get(partName);
+	}
+
+	/**
+	 * Gets a tactile's current world position, or the zero vector when it is unavailable.
+	 */
+	@Nonnull
+	public Vec3d getPosition(String partName)
+	{
+		EntityAMTTactile part = getPart(partName);
+		return part==null?Vec3d.ZERO: part.getPositionVector();
+	}
+
+	/**
+	 * Gets a tactile's current yaw and pitch, or zero rotation when it is unavailable.
+	 */
+	@Nonnull
+	public Vec2f getRotation(String partName)
+	{
+		EntityAMTTactile part = getPart(partName);
+		return part==null?new Vec2f(0, 0): new Vec2f(part.rotationYaw, part.rotationPitch);
+	}
+
+	/**
+	 * Creates the invisible living multipart root used for ownership and projectile attribution.
+	 */
+	@Nonnull
+	public EntityTactileLivingBase getOrCreateLivingEntity(@Nullable OwnerIdentity owner, @Nullable String customName)
+	{
+		ensureInitialized();
+		if(livingEntity==null||livingEntity.isDead)
+		{
+			livingEntity = new EntityTactileLivingBase(this);
+			livingEntity.setOwnerIdentity(owner);
+			livingEntity.setTactileName(customName);
+			Vec3d position = getLivingEntityPosition();
+			livingEntity.setPosition(position.x, position.y, position.z);
+			getWorld().spawnEntity(livingEntity);
+		}
+		else
+		{
+			livingEntity.setOwnerIdentity(owner);
+			livingEntity.setTactileName(customName);
+		}
+		return livingEntity;
+	}
+
+	public void setLivingEntityPosition(@Nullable Vec3d position)
+	{
+		this.livingEntityPosition = position;
+		if(livingEntity!=null&&!livingEntity.isDead)
+		{
+			Vec3d current = getLivingEntityPosition();
+			livingEntity.setPosition(current.x, current.y, current.z);
+		}
+	}
+
+	Vec3d getLivingEntityPosition()
+	{
+		return livingEntityPosition==null?new Vec3d(getPos()).addVector(0.5, 0.5, 0.5): livingEntityPosition;
+	}
+
+	private void ensureInitialized()
+	{
+		if(!initialized&&worldSupplier.get()!=null&&!worldSupplier.get().isRemote)
+			initialized = init();
+	}
+
+	EntityAMTTactile[] getPartArray()
+	{
+		return partArray;
+	}
+
+	boolean owns(EntityAMTTactile tactile)
+	{
+		return managedEntities.contains(tactile);
+	}
+
+	boolean owns(EntityTactileLivingBase entity)
+	{
+		return livingEntity==entity;
+	}
+
+	boolean isManagedEntity(Entity entity)
+	{
+		return entity==livingEntity||entity instanceof EntityAMTTactile&&owns((EntityAMTTactile)entity);
 	}
 
 	/**

@@ -31,7 +31,7 @@ public enum ParticleDrawStages implements ISerializableEnum
 	/**
 	 * Normal particles, but uses additive blending
 	 */
-	VANILLA_ADDITIVE(GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP,
+	VANILLA_ADDITIVE(GlStateManager.DestFactor.ONE_MINUS_CONSTANT_ALPHA, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP,
 			false, false, ParticleSystem.PARTICLE_TEXTURES),
 
 	/**
@@ -95,13 +95,13 @@ public enum ParticleDrawStages implements ISerializableEnum
 	}
 
 	ParticleDrawStages(DestFactor destFactor, VertexFormat vertexFormat, boolean renderThroughBlocks, boolean applyLighting,
-	                   @Nullable ResourceLocation textureRes, int drawMode, boolean smoothShading)
+					   @Nullable ResourceLocation textureRes, int drawMode, boolean smoothShading)
 	{
 		this(destFactor, vertexFormat, renderThroughBlocks, applyLighting, textureRes, drawMode, smoothShading, 1f);
 	}
 
 	ParticleDrawStages(DestFactor destFactor, VertexFormat vertexFormat, boolean renderThroughBlocks, boolean applyLighting,
-	                   @Nullable ResourceLocation textureRes, int drawMode, boolean smoothShading, float lineWidth)
+					   @Nullable ResourceLocation textureRes, int drawMode, boolean smoothShading, float lineWidth)
 	{
 		this.destFactor = destFactor;
 		this.vertexFormat = vertexFormat;
@@ -118,7 +118,7 @@ public enum ParticleDrawStages implements ISerializableEnum
 	}
 
 	ParticleDrawStages(DestFactor destFactor, VertexFormat vertexFormat, boolean renderThroughBlocks, boolean applyLighting, @Nullable ResourceLocation textureRes,
-	                   Shaders shader, Function<Float, float[]> shaderParameters)
+					   Shaders shader, Function<Float, float[]> shaderParameters)
 	{
 		this.destFactor = destFactor;
 		this.vertexFormat = vertexFormat;

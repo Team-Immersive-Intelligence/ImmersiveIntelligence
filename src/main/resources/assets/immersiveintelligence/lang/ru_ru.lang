@@ -1114,9 +1114,6 @@ machineupgrade.immersiveintelligence.emplacement.machinegun.heavy_barrel.desc=Т
 machineupgrade.immersiveintelligence.emplacement.machinegun.watercooled=Ствол с водяным охлаждением
 machineupgrade.immersiveintelligence.emplacement.machinegun.watercooled.desc=Замена стандартного ствола. Когда установлено, стволы не перегреваются при подаче охлаждающей жидкости.
 
-machineupgrade.immersiveintelligence.emplacement.machinegun.bunker=Дополнительные укрепления
-machineupgrade.immersiveintelligence.emplacement.machinegun.bunker.desc=Размещение дополнительных мешков с песком вокруг пулеметного гнезда придает ему дополнительную броню и увеличивает его прочность.
-
 machineupgrade.immersiveintelligence.emplacement.mortar=Миномёт
 machineupgrade.immersiveintelligence.emplacement.mortar.desc=Миномет обеспечивает непрямую огневую поддержку с близкого расстояния, вертикальный угол обстрела и большой калибр снаряда позволяют ему пробивать крыши домов и уничтожать врагов сверху.
 

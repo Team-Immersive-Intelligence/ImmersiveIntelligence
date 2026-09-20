@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -89,7 +90,8 @@ public class AMTFluid extends AMT
 		if(stack!=null)
 		{
 			Fluid fluid = stack.getFluid();
-			return withFluid(ClientUtils.getSprite(flowing?fluid.getFlowing(stack): fluid.getStill(stack)), IIColor.fromPackedARGB(fluid.getColor()));
+			return withFluid(ClientUtils.getSprite(flowing?fluid.getFlowing(stack): fluid.getStill(stack)),
+					IIColor.fromPackedARGB(fluid.getColor(stack)));
 		}
 		return this;
 	}
@@ -145,6 +147,11 @@ public class AMTFluid extends AMT
 		double heightDrawn = 0;
 
 		//Draw sides
+		ClientUtils.bindAtlas();
+		GlStateManager.enableAlpha();
+		GlStateManager.enableBlend();
+		GlStateManager.enableRescaleNormal();
+		GlStateManager.color(1f, 1f, 1f, 1f);
 		buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
 		for(int i = 0; i < layers.size()-1&&heightDrawn < localHeight; i++)
 		{
@@ -216,15 +223,13 @@ public class AMTFluid extends AMT
 		}
 		GlStateManager.scale(0.0625, 0.0625, 0.0625);
 
-		ClientUtils.bindAtlas();
-		GlStateManager.enableAlpha();
-		GlStateManager.enableBlend();
 		tes.draw();
+		GlStateManager.disableRescaleNormal();
 	}
 
 	private static void renderTopFace(BufferBuilder buf, TextureAtlasSprite sprite, IIColor color,
-									  double u0, double v0,
-									  double x0, double z0, double x1, double z1, double y)
+	                                  double u0, double v0,
+	                                  double x0, double z0, double x1, double z1, double y)
 	{
 		final double xMin = Math.min(x0, x1), xMax = Math.max(x0, x1);
 		final double zMin = Math.min(z0, z1), zMax = Math.max(z0, z1);
@@ -251,11 +256,11 @@ public class AMTFluid extends AMT
 	}
 
 	private static void putQuad(BufferBuilder buf, IIColor color,
-								double x0, double y0, double z0, double u0, double v0,
-								double x1, double y1, double z1, double u1, double v1,
-								double x2, double y2, double z2, double u2, double v2,
-								double x3, double y3, double z3, double u3, double v3,
-								int nx, int ny, int nz)
+	                            double x0, double y0, double z0, double u0, double v0,
+	                            double x1, double y1, double z1, double u1, double v1,
+	                            double x2, double y2, double z2, double u2, double v2,
+	                            double x3, double y3, double z3, double u3, double v3,
+	                            int nx, int ny, int nz)
 	{
 		putVertex(buf, color, x0, y0, z0, u0, v0, nx, ny, nz);
 		putVertex(buf, color, x1, y1, z1, u1, v1, nx, ny, nz);
@@ -266,7 +271,7 @@ public class AMTFluid extends AMT
 	private static void putVertex(BufferBuilder buf, IIColor color, double x, double y, double z, double u, double v, int nx, int ny, int nz)
 	{
 		buf.pos(x, y, z).tex(u, v)
-				.color(color.red, color.green, color.blue, 255)
+				.color(color.red, color.green, color.blue, 127)
 				.normal(nx, ny, nz)
 				.endVertex();
 	}
@@ -292,6 +297,18 @@ public class AMTFluid extends AMT
 					withFluidLayer(layer.getDoubleAt(0), layer.getDoubleAt(1), layer.getDoubleAt(2),
 							layer.getDoubleAt(3), layer.getDoubleAt(4)));
 		}
+	}
+
+	@Override
+	@Nonnull
+	public AxisAlignedBB getBoundingBox()
+	{
+		AxisAlignedBB bb = new AxisAlignedBB(originPos.x, originPos.y, originPos.z, originPos.x, originPos.y, originPos.z);
+		for(FluidLayer layer : layers)
+			bb = bb.union(new AxisAlignedBB(
+					originPos.x+layer.xMin(), originPos.y+layer.yLevel, originPos.z+layer.zMin(),
+					originPos.x+layer.xMax(), originPos.y+layer.yLevel, originPos.z+layer.zMax()));
+		return bb;
 	}
 
 

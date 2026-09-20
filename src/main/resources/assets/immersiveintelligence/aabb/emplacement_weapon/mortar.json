@@ -1,0 +1,113 @@
+{
+  "bounds": {
+    "base": [-18, -3.5, -18, 18, 3.5, 18],
+    "turret": [-16, -2, -16, 16, 2, 16],
+    "none": [0, 0, 0, 0, 0, 0],
+    "fastener": [-2, -4, -2, 2, 4, 2],
+    "barrel": [-4, -4, -4, 4, 4, 4],
+    "barrel_bottom": [-4.5, -4.5, -4.5, 4.5, 4.5, 4.5],
+    "crate": [-5, -5, -5, 5, 5, 5],
+    "camera": [-3, -6.5, -3, 3, 6.5, 3]
+  },
+  "tactile_transforms": {
+    "all": {
+      "offset": [-1, 0, -2]
+    },
+    "south": {},
+    "west": {},
+    "north": {},
+    "east": {},
+    "mirrored": {}
+  },
+  "tactile": {
+    "_schema": "immersiveintelligence:models/block/multiblock/emplacement/weapon/mortar.obj.amt",
+    "base": [
+      {
+        "offset": [12, -0.5, 5],
+        "type": "base"
+      }
+    ],
+    "turret": [
+      {
+        "offset": [0, 1, 0],
+        "type": "turret"
+      },
+      {
+        "offset": [-11, 8.5, 10],
+        "type": "crate"
+      },
+      {
+        "offset": [13, 9.5, 2],
+        "type": "camera"
+      },
+      {
+        "offset": [13, 9.5, -4],
+        "type": "camera"
+      }
+    ],
+    "turret_origin": [
+      {
+        "offset": [0, -4.5, 0],
+        "type": "none"
+      }
+    ],
+    "mortar_frame": [
+      {
+        "offset": [-7.5, 1.5, 0],
+        "type": "fastener"
+      },
+      {
+        "offset": [7.5, 1.5, 0],
+        "type": "fastener"
+      },
+      {
+        "offset": [7.5, 9.5, 0],
+        "type": "fastener"
+      },
+      {
+        "offset": [-7.5, 9.5, 0],
+        "type": "fastener"
+      }
+    ],
+    "mortar_fastener": [
+      {
+        "offset": [-7.5, 2.5, 0],
+        "type": "fastener"
+      },
+      {
+        "offset": [7.5, 2.5, 0],
+        "type": "fastener"
+      }
+    ],
+    "mortar_move_mechanism": [
+      {
+        "offset": [0, -9.5, 9.5],
+        "type": "none"
+      }
+    ],
+    "mortar": [
+      {
+        "offset": [-7.325, -16.5, -1],
+        "type": "none"
+      }
+    ],
+    "barrel": [
+      {
+        "offset": [0.02895, 9.00839, 0.1783],
+        "type": "barrel"
+      },
+      {
+        "offset": [0.02895, 1.00839, 0.1783],
+        "type": "barrel_bottom"
+      },
+      {
+        "offset": [0.02895, -7.99161, 0.1783],
+        "type": "barrel_bottom"
+      },
+      {
+        "offset": [0.02895, -16.99161, 0.1783],
+        "type": "barrel_bottom"
+      }
+    ]
+  }
+}

@@ -1,8 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.block.mines.tileentity;
 
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IAdvancedCollisionBounds;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IBlockBounds;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,19 +16,21 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIITrenchShovel;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IAdvancedBounds;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 06.02.2021
  */
-public class TileEntityTellermine extends TileEntityMineBase implements IBlockBounds, IAdvancedCollisionBounds
+public class TileEntityTellermine extends TileEntityMineBase implements IAdvancedBounds
 {
 	public static final Material[] MATCHING_MATERIALS = new Material[]{Material.GROUND, Material.GRASS, Material.SAND, Material.GOURD};
-	
+
 	private static final AxisAlignedBB[] AABB = new AxisAlignedBB[16];
 
 	static
@@ -90,11 +90,11 @@ public class TileEntityTellermine extends TileEntityMineBase implements IBlockBo
 	}
 
 	@Override
-	public List<AxisAlignedBB> getAdvancedColisionBounds()
+	public List<AxisAlignedBB> getBounds(boolean collision)
 	{
-		ArrayList<AxisAlignedBB> list = new ArrayList<>();
-		list.add(AABB[digLevel].offset(getPos()));
-		return list;
+		if(collision)
+			return new ArrayList<>(Collections.singleton(AABB[digLevel].offset(getPos())));
+		return Collections.emptyList();
 	}
 
 	@Override

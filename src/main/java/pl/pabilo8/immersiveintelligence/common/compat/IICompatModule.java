@@ -46,7 +46,7 @@ public abstract class IICompatModule
 		moduleClasses.put("immersivepetroleum", ImmersivePetroleumHelper.class);
 		moduleClasses.put("immersiveposts", ImmersivePostsHelper.class);
 		moduleClasses.put("immersivetech", ImmersiveTechnologyHelper.class);
-		moduleMinModVersions.put("immersivetech", "1.7.50");
+		moduleMinModVersions.put("immersivetech", "1.11.211");
 		//it is the only IE addon which has a _ between words
 		moduleClasses.put("immersive_energy", ImmersiveEnergyHelper.class);
 		moduleClasses.put("baubles", BaublesHelper.class);
@@ -62,6 +62,7 @@ public abstract class IICompatModule
 		moduleClasses.put("thaumicaugmentation", ThaumicAugmentationHelper.class);
 		moduleClasses.put("cfb", CratesFeltBlueHelper.class);
 		moduleClasses.put("fluidlogged_api", FluidloggedAPIHelper.class);
+		moduleClasses.put("srparasites", ParasitesHelper.class);
 	}
 
 	public static void doModulesPreInit(FMLPreInitializationEvent event)
@@ -101,7 +102,7 @@ public abstract class IICompatModule
 				action.accept(compat);
 			} catch(Exception exception)
 			{
-				IILogger.error(String.format("Compat module for {0} {1}. Report this and include the error message below!", compat, message));
+				IILogger.error(String.format("Compat module for %s %s. Report this and include the error message below!", compat, message));
 				IILogger.error(exception);
 			}
 	}
@@ -147,6 +148,14 @@ public abstract class IICompatModule
 		}
 	}
 
+	public static void doModulesOnConfigChange(String modName, String configID, boolean requiresMcRestart, boolean worldRunning)
+	{
+		doModuleAction(iiCompatModule -> {
+			if(iiCompatModule.getName().equals(modName))
+				iiCompatModule.configChanged(configID, requiresMcRestart, worldRunning);
+		}, "could not process config changes");
+	}
+
 	public abstract String getName();
 
 	public abstract void preInit();
@@ -159,6 +168,11 @@ public abstract class IICompatModule
 
 	public void loadComplete()
 	{
+	}
+
+	public void configChanged(String configID, boolean requiresMcRestart, boolean worldRunning)
+	{
+
 	}
 
 	@SideOnly(Side.CLIENT)

@@ -3,28 +3,29 @@ package pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.emplacem
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
 import pl.pabilo8.immersiveintelligence.api.upgrade.Upgrade;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeTechTree;
-import pl.pabilo8.immersiveintelligence.client.fx.IIParticles;
 import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIAnimationCachedMap;
 import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTCachedModel;
 import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTCrossVariantReference;
 import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
 import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTBullet;
 import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTBullet.BulletState;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTLocator;
 import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTParticle;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon.EmplacementWeaponMachinegun;
-import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.amt.AMTModelHeader;
 
 import javax.annotation.Nonnull;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -35,9 +36,8 @@ import java.util.List;
 @SideOnly(Side.CLIENT)
 public class EWRMachinegun extends EmplacementWeaponRenderer<EmplacementWeaponMachinegun>
 {
-	private IIAnimationCachedMap install, uninstall, rotateYaw, rotatePitch, fire;
-	private AMTCrossVariantReference<AMTBullet> bulletR1, bulletR2, bulletR3, bulletR4, bulletR5;
-	private AMTCrossVariantReference<AMTBullet> bulletL1, bulletL2, bulletL3, bulletL4, bulletL5;
+	private IIAnimationCachedMap install, rotateYaw, rotatePitch, fire, chill;
+	private List<AMTCrossVariantReference<AMTBullet>> bulletsLeft, bulletsRight;
 
 	public EWRMachinegun()
 	{
@@ -65,25 +65,19 @@ public class EWRMachinegun extends EmplacementWeaponRenderer<EmplacementWeaponMa
 				upgradeHeavyBarrel, upgradeWaterCooled,
 				//FX
 				new AMTModel(
+						//Part locators
+						new AMTLocator("turret_origin", header),
+						new AMTLocator("cannon_origin", header),
+						new AMTLocator("belt", header),
+						new AMTLocator("belt2", header),
+						new AMTLocator("lid1_origin", header),
+						new AMTLocator("lid2_origin", header),
+
 						//Gunfire particles
-						new AMTParticle("fire1", header)
-								.setParticle(IIParticles.PARTICLE_GUNFIRE),
-						new AMTParticle("fire2", header)
-								.setParticle(IIParticles.PARTICLE_GUNFIRE),
+						new AMTParticle("fire1", header),
+						new AMTParticle("fire2", header),
 
 						//Right Belt bullets
-						new AMTBullet("shell_r1", header, AmmoRegistry.getGenericModel(IIContent.itemAmmoMachinegun))
-								.withState(BulletState.BULLET_UNUSED),
-						new AMTBullet("shell_r2", header, AmmoRegistry.getGenericModel(IIContent.itemAmmoMachinegun))
-								.withState(BulletState.BULLET_UNUSED),
-						new AMTBullet("shell_r3", header, AmmoRegistry.getGenericModel(IIContent.itemAmmoMachinegun))
-								.withState(BulletState.BULLET_UNUSED),
-						new AMTBullet("shell_r4", header, AmmoRegistry.getGenericModel(IIContent.itemAmmoMachinegun))
-								.withState(BulletState.BULLET_UNUSED),
-						new AMTBullet("shell_r5", header, AmmoRegistry.getGenericModel(IIContent.itemAmmoMachinegun))
-								.withState(BulletState.BULLET_UNUSED),
-
-						//Left belt bullets
 						new AMTBullet("shell_l1", header, AmmoRegistry.getGenericModel(IIContent.itemAmmoMachinegun))
 								.withState(BulletState.BULLET_UNUSED),
 						new AMTBullet("shell_l2", header, AmmoRegistry.getGenericModel(IIContent.itemAmmoMachinegun))
@@ -93,6 +87,22 @@ public class EWRMachinegun extends EmplacementWeaponRenderer<EmplacementWeaponMa
 						new AMTBullet("shell_l4", header, AmmoRegistry.getGenericModel(IIContent.itemAmmoMachinegun))
 								.withState(BulletState.BULLET_UNUSED),
 						new AMTBullet("shell_l5", header, AmmoRegistry.getGenericModel(IIContent.itemAmmoMachinegun))
+								.withState(BulletState.BULLET_UNUSED),
+						new AMTBullet("shell_l6", header, AmmoRegistry.getGenericModel(IIContent.itemAmmoMachinegun))
+								.withState(BulletState.BULLET_UNUSED),
+
+						//Left belt bullets
+						new AMTBullet("shell_l7", header, AmmoRegistry.getGenericModel(IIContent.itemAmmoMachinegun))
+								.withState(BulletState.BULLET_UNUSED),
+						new AMTBullet("shell_l8", header, AmmoRegistry.getGenericModel(IIContent.itemAmmoMachinegun))
+								.withState(BulletState.BULLET_UNUSED),
+						new AMTBullet("shell_l9", header, AmmoRegistry.getGenericModel(IIContent.itemAmmoMachinegun))
+								.withState(BulletState.BULLET_UNUSED),
+						new AMTBullet("shell_l10", header, AmmoRegistry.getGenericModel(IIContent.itemAmmoMachinegun))
+								.withState(BulletState.BULLET_UNUSED),
+						new AMTBullet("shell_l11", header, AmmoRegistry.getGenericModel(IIContent.itemAmmoMachinegun))
+								.withState(BulletState.BULLET_UNUSED),
+						new AMTBullet("shell_l12", header, AmmoRegistry.getGenericModel(IIContent.itemAmmoMachinegun))
 								.withState(BulletState.BULLET_UNUSED)
 				)
 		);
@@ -112,47 +122,52 @@ public class EWRMachinegun extends EmplacementWeaponRenderer<EmplacementWeaponMa
 	{
 		//Animations
 		this.install = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("install"));
-		this.uninstall = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("uninstall"));
 		this.rotateYaw = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("rotate_yaw"));
 		this.rotatePitch = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("rotate_pitch"));
 		this.fire = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("fire"));
+		this.chill = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("chill"));
 
 		//Right Belt bullets
-		this.bulletR1 = new AMTCrossVariantReference<>("shell_r1", model);
-		this.bulletR2 = new AMTCrossVariantReference<>("shell_r2", model);
-		this.bulletR3 = new AMTCrossVariantReference<>("shell_r3", model);
-		this.bulletR4 = new AMTCrossVariantReference<>("shell_r4", model);
-		this.bulletR5 = new AMTCrossVariantReference<>("shell_r5", model);
+		this.bulletsRight = Arrays.asList(
+				new AMTCrossVariantReference<>("shell_l6", model),
+				new AMTCrossVariantReference<>("shell_l5", model),
+				new AMTCrossVariantReference<>("shell_l4", model),
+				new AMTCrossVariantReference<>("shell_l3", model),
+				new AMTCrossVariantReference<>("shell_l2", model),
+				new AMTCrossVariantReference<>("shell_l1", model)
+		);
+
 		//Left Belt bullets
-		this.bulletL1 = new AMTCrossVariantReference<>("shell_l1", model);
-		this.bulletL2 = new AMTCrossVariantReference<>("shell_l2", model);
-		this.bulletL3 = new AMTCrossVariantReference<>("shell_l3", model);
-		this.bulletL4 = new AMTCrossVariantReference<>("shell_l4", model);
-		this.bulletL5 = new AMTCrossVariantReference<>("shell_l5", model);
+		this.bulletsLeft = Arrays.asList(
+				new AMTCrossVariantReference<>("shell_l12", model),
+				new AMTCrossVariantReference<>("shell_l11", model),
+				new AMTCrossVariantReference<>("shell_l10", model),
+				new AMTCrossVariantReference<>("shell_l9", model),
+				new AMTCrossVariantReference<>("shell_l8", model),
+				new AMTCrossVariantReference<>("shell_l7", model)
+		);
 	}
 
 	@Override
 	public void apply(EmplacementWeaponMachinegun weapon, AMTCachedModel<TileEntityEmplacement> model, BufferBuilder buf, Tessellator tes, float partialTicks)
 	{
-		this.bulletL1.get().withProperties(IIContent.ammoCoreIron, CoreType.PIERCING, IIColor.MC_RED);
-		this.bulletL2.get().withProperties(IIContent.ammoCoreIron, CoreType.PIERCING, IIColor.MC_RED);
-		this.bulletL3.get().withProperties(IIContent.ammoCoreIron, CoreType.PIERCING, IIColor.MC_RED);
-		this.bulletL4.get().withProperties(IIContent.ammoCoreIron, CoreType.PIERCING, IIColor.MC_RED);
-		this.bulletL5.get().withProperties(IIContent.ammoCoreIron, CoreType.PIERCING, IIColor.MC_RED);
-		this.bulletR1.get().withProperties(IIContent.ammoCoreIron, CoreType.PIERCING, IIColor.MC_RED);
-		this.bulletR2.get().withProperties(IIContent.ammoCoreIron, CoreType.PIERCING, IIColor.MC_RED);
-		this.bulletR3.get().withProperties(IIContent.ammoCoreIron, CoreType.PIERCING, IIColor.MC_RED);
-		this.bulletR4.get().withProperties(IIContent.ammoCoreIron, CoreType.PIERCING, IIColor.MC_RED);
-		this.bulletR5.get().withProperties(IIContent.ammoCoreIron, CoreType.PIERCING, IIColor.MC_RED);
-
 		assert weapon.setup!=null;
-		if(weapon.setup.getState())
-			this.uninstall.apply(weapon.setup.getProgress(partialTicks));
-		else
-			this.install.apply(weapon.setup.getProgress(partialTicks));
+		NonNullList<ItemStack> allAmmo = weapon.getAllAmmo();
+		applyAmmoItems(weapon, allAmmo, BulletState.BULLET_UNUSED, bulletsRight);
+		applyAmmoItems(weapon, allAmmo, BulletState.BULLET_UNUSED, bulletsLeft);
+
+		float shotDelay = weapon.gunHandler.getShotDelay(partialTicks);
+
+		this.install.apply(weapon.setup.getProgress(partialTicks));
 
 		this.rotateYaw.apply(weapon.aim.getYawNormalized(partialTicks));
-		this.rotatePitch.apply(weapon.aim.getPitchNormalized(partialTicks));
-		this.fire.apply(weapon.gunHandler.getShotDelay(partialTicks));
+		this.rotatePitch.apply(weapon.aim.getPitchNormalized(-90, 90, partialTicks));
+
+		this.fire.apply(shotDelay);
+
+		//Idle animation
+		float chillProgress = weapon.getChillProgress(partialTicks);
+		if(chillProgress > 0)
+			this.chill.apply(chillProgress);
 	}
 }

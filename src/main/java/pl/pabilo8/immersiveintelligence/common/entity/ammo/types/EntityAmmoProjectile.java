@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.entity.ammo.types;
 
+import blusunrize.immersiveengineering.client.ClientUtils;
 import lombok.Getter;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -29,7 +30,10 @@ import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoType;
 import pl.pabilo8.immersiveintelligence.api.ammo.penetration.IPenetrationHandler;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoUtils;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.PenetrationCache;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Graphics;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
+import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageParticleEffect;
 import pl.pabilo8.immersiveintelligence.common.util.IIDamageSources;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
@@ -49,6 +53,7 @@ import java.util.stream.Collectors;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 08.09.2026
  * @ii-approved 0.3.1
  * @since 02.02.2024
  */
@@ -132,6 +137,10 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 	 * Once true, the bullet will detonate at the end of the tick
 	 */
 	protected boolean markedForDetonation = false;
+	/**
+	 * Used to produce sound and particle effects only once during penetration line check.
+	 */
+	private boolean hasImpactedBefore;
 	private float velocityModifier;
 
 	public EntityAmmoProjectile(World world)
@@ -220,6 +229,7 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 	 */
 	protected void doProjectileMotion()
 	{
+		hasImpactedBefore = false;
 		//if velocity is fully lost, perform a raytracer based motion or a simple gravity motion with collision check
 		if(velocity > 0)
 		{
@@ -250,9 +260,9 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 			if(traceResult!=null)
 			{
 				Vec3d motionInterrupt = traceResult.hitVec.subtract(posX, posY, posZ);
-				motionX = motionInterrupt.x-Math.signum(motionInterrupt.x)*width;
-				motionY = motionInterrupt.y-Math.signum(motionInterrupt.y)*height;
-				motionZ = motionInterrupt.z-Math.signum(motionInterrupt.z)*width;
+				motionX = motionInterrupt.x;
+				motionY = motionInterrupt.y;
+				motionZ = motionInterrupt.z;
 			}
 		}
 
@@ -321,6 +331,8 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 	@SideOnly(Side.CLIENT)
 	protected void spawnTrailParticles()
 	{
+		if(!Graphics.renderCloseBullets&&ClientUtils.mc().player.getDistance(this) < 1)
+			return;
 		for(Tuple<AmmoComponent, NBTTagCompound> component : components)
 			component.getFirst().spawnParticleTrail(this, component.getSecond());
 	}
@@ -367,13 +379,15 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 				return true;
 			}
 
-			if(world.isRemote)
-				return false;
-
 			//don't damage fluids
-			if(!state.getMaterial().isLiquid())
+			if(!world.isRemote&&!state.getMaterial().isLiquid())
 				PenetrationCache.dealBlockDamage(world, getDirection(), getDamage(), pos, penHandler);
 
+		}
+		if(penetrationDepth <= 0)
+		{
+			detonate();
+			return true;
 		}
 		return false;
 	}
@@ -390,6 +404,8 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 		if(hit.entityHit==this) //can't touch this
 			return false;
 		Entity other = hit.entityHit;
+		if(other.isDead)
+			return false;
 
 		//Shoot down another bullet
 		if(other instanceof EntityAmmoBase)
@@ -411,6 +427,8 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 		//Damage entity armor
 		if(living!=null)
 		{
+			if(!living.isEntityAlive())
+				return false;
 			float armor = MathHelper.floor(living.getEntityAttribute(SharedMonsterAttributes.ARMOR).getAttributeValue())*ARMOR_FACTOR;
 			//Damage the other entity armor whether penetrated or not
 			if(armor > 0)
@@ -426,7 +444,7 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 		boolean attackSuccessful = other.attackEntityFrom(IIDamageSources.causeBulletDamage(this, other), getDamage());
 		other.hurtResistantTime = 0;
 
-		if(!attackSuccessful)
+		if(!attackSuccessful||penetrationDepth <= 0)
 		{
 			detonate();
 			return true;
@@ -455,10 +473,27 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 		velocity *= 0.9f;
 		penetrationDepth -= handler.getThickness();
 
-		//Play ricochet sound
-		SoundEvent sound = handler.getSpecialSound(HitEffect.IMPACT);
-		if(sound!=null)
-			playSound(sound, 0.5f, 1f);
+		//Spawn first penetration particle
+		if(!hasImpactedBefore&&!world.isRemote)
+		{
+			//Play impact sound
+			SoundEvent sound = handler.getSpecialSound(HitEffect.IMPACT);
+			if(sound!=null)
+				playSound(sound, 0.5f, 1f);
+
+			//Create impact particle
+			String impactParticle = handler.getImpactParticle();
+			if(impactParticle!=null)
+			{
+				Vec3d impactPos = hit.hitVec==null?new Vec3d(hit.getBlockPos()).addVector(0.5, 0.5, 0.5): hit.hitVec;
+				float[] angles = IIMath.getRotationFromVector(baseMotion);
+				IIPacketHandler.sendToClient(new MessageParticleEffect(impactParticle, world,
+						impactPos, baseMotion.scale(0.01), angles[0], -angles[1], EasyNBT.newNBT()
+						.withFloat("size", 0.0625f*(ammoType.getCaliber()+1))
+				));
+			}
+		}
+		hasImpactedBefore = true;
 	}
 
 	//--- Setters ---//
@@ -499,16 +534,33 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 		baseMotion = baseMotion.subtract(
 				surfaceNormal.scale(2*baseMotion.dotProduct(surfaceNormal))
 		).normalize();
-		updateEntityForEvent(SyncEvents.ENTITY_COLLISION);
+
+		if(!hasImpactedBefore&&!world.isRemote)
+		{
+			//Play impact sound
+			SoundEvent sound = handler.getSpecialSound(HitEffect.RICOCHET);
+			if(sound!=null)
+				playSound(sound, 0.5f, 1f);
+
+			//Create ricochet particle
+			String ricochetParticle = handler.getRicochetParticle();
+			if(ricochetParticle!=null)
+			{
+				Vec3d impactPos = hit.hitVec==null?new Vec3d(hit.getBlockPos()).addVector(0.5, 0.5, 0.5): hit.hitVec;
+				float[] angles = IIMath.getRotationFromVector(baseMotion);
+				IIPacketHandler.sendToClient(new MessageParticleEffect(ricochetParticle, world,
+						impactPos, baseMotion.scale(0.01), angles[0], -angles[1], EasyNBT.newNBT()
+						.withFloat("size", 0.0625f*(ammoType.getCaliber()+1))
+				));
+			}
+
+		}
+		hasImpactedBefore = true;
 
 		//Clear the lists
 		ignoredEntities.clear();
 		ignoredPositions.clear();
-
-		//Play impact sound
-		SoundEvent sound = handler.getSpecialSound(HitEffect.RICOCHET);
-		if(sound!=null)
-			playSound(sound, 0.5f, 1f);
+		updateEntityForEvent(SyncEvents.ENTITY_COLLISION);
 	}
 
 	/**
@@ -553,7 +605,9 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 		this.mass = ammoType.getCoreMass(core, components.stream().map(Tuple::getFirst).toArray(AmmoComponent[]::new));
 		this.penetrationDepth = IIAmmoUtils.getCombinedDepth(ammoType, coreType);
 		this.penetrationHardness = IIAmmoUtils.getCombinedHardness(core, coreType);
-		this.flightTracer = FactoryTracer.create(aabb.grow(0.125)).setFilters(ignoredEntities, ignoredPositions);
+		this.flightTracer = FactoryTracer.create(aabb.grow(0.125))
+				.setFilters(ignoredEntities, ignoredPositions)
+				.setAllowFluidBlocks(true);
 	}
 
 	@Override
@@ -603,7 +657,10 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 		if(ignoredBlocks!=null)
 			this.ignoredPositions.addAll(ignoredBlocks);
 		if(ignoredEntities!=null)
+		{
 			this.ignoredEntities.addAll(ignoredEntities);
+			this.ignoredEntities.add(this);
+		}
 	}
 
 }

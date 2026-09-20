@@ -14,3 +14,5 @@ newmtl common_steel_norivets
 map_Kd immersiveintelligence:blocks/common/common_steel_norivets
 newmtl crane_gray
 map_Kd immersiveintelligence:blocks/metal_device/crane/crane_gray
+newmtl gas_flow
+map_Kd immersiveintelligence:blocks/fluid/gas_flow

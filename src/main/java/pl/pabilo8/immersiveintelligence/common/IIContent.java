@@ -204,9 +204,6 @@ public class IIContent
 			.withType(UpgradePurpose.SPEED);
 	public static final Upgrade UPGRADE_EMPLACEMENT_MACHINEGUN_WATERCOOLED = new Upgrade("emplacement/machinegun/watercooled")
 			.withType(UpgradePurpose.EFFICIENCY);
-	public static final Upgrade UPGRADE_EMPLACEMENT_MACHINEGUN_BUNKER = new Upgrade("emplacement/machinegun/additional_fortifications")
-			.withType(UpgradePurpose.ARMOR)
-			.withWIPStatus();
 
 	public static final Upgrade UPGRADE_FLAGPOLE_CAPTURE_DEFIANCE = new Upgrade("flagpole/capture_defiance")
 			.withType(UpgradePurpose.DEFENSE_SYSTEM);

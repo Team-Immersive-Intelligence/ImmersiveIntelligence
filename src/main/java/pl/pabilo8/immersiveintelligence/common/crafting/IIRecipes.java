@@ -42,8 +42,6 @@ import pl.pabilo8.immersiveintelligence.api.LogisticTag;
 import pl.pabilo8.immersiveintelligence.api.PackerHandler;
 import pl.pabilo8.immersiveintelligence.api.PackerHandler.CapacitorChargeHandler;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseType;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.crafting.*;
 import pl.pabilo8.immersiveintelligence.api.crafting.PrintingRecipe.PrintFunction;
@@ -56,7 +54,6 @@ import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Override
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Overrides.Chemthrower;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Overrides.Railgun;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.block.data_device.BlockIIDataDevice;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.BlockIIDataDevice.IIBlockTypes_Connector;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDecoration.IIBlockTypes_MetalDecoration;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDevice.IIBlockTypes_MetalDevice;
@@ -989,38 +986,38 @@ public class IIRecipes
 		addBathingCleaningRecipe(
 				new ItemStack(Blocks.WOOL, 1),
 				new IngredientStack("wool"),
-				1000, 1024, 200, true, false, false
+				1000, 256*200, 200, true, false, false
 		);
 		addBathingCleaningRecipe(
 				new ItemStack(Blocks.GLASS, 1),
 				new IngredientStack("blockGlass"),
-				1000, 1024, 200, true
+				1000, 256*200, 200, true
 		);
 		addBathingCleaningRecipe(
 				new ItemStack(Blocks.GLASS_PANE, 1),
 				new IngredientStack("paneGlass"),
-				1000, 1024, 200, true
+				1000, 256*200, 200, true
 		);
 
 		addBathingCleaningRecipe(
 				new ItemStack(Blocks.BED, 1),
 				new IngredientStack(new ItemStack(Blocks.BED, 1, OreDictionary.WILDCARD_VALUE)),
 				2000,
-				3096, 240, true, false, false
+				256*240, 240, true, false, false
 		);
 
 		addBathingCleaningRecipe(
 				new ItemStack(Blocks.CARPET, 1),
 				new IngredientStack(new ItemStack(Blocks.CARPET, 1, OreDictionary.WILDCARD_VALUE)),
 				2000,
-				3096, 240, true, false, false
+				256*240, 240, true, false, false
 		);
 
 		addBathingCleaningRecipe(
 				new ItemStack(Blocks.HARDENED_CLAY, 1),
 				new IngredientStack(new ItemStack(Blocks.STAINED_HARDENED_CLAY, 1, OreDictionary.WILDCARD_VALUE)),
 				2000,
-				1440, 280, false, true, true
+				256*200, 280, false, true, true
 		);
 
 		Block[] shulker_boxes = new Block[]{
@@ -1043,14 +1040,14 @@ public class IIRecipes
 				new ItemStack(Blocks.PURPLE_SHULKER_BOX, 1),
 				new IngredientStack(Arrays.stream(shulker_boxes).map(ItemStack::new).collect(Collectors.toList())),
 				2000,
-				4096, 120, false, true, true
+				256*120, 120, false, true, true
 		);
 
 		addBathingCleaningRecipe(
 				new ItemStack(Items.BANNER, 1, OreDictionary.WILDCARD_VALUE),
 				new IngredientStack(new ItemStack(Items.BANNER, 1, 15)),
 				2000,
-				1024, 160, true, false, false
+				256*160, 160, true, false, false
 		);
 
 		//gray concrete cleaning recipe
@@ -1059,19 +1056,19 @@ public class IIRecipes
 				IIContent.blockConcreteDecoration.getStack(ConcreteDecorations.CONCRETE_BRICKS),
 				new IngredientStack(IIContent.blockConcreteDecoration.getStack(ConcreteDecorations.CONCRETE_BRICKS_GRAY)),
 				1000,
-				1024, 160, true, false, false);
+				256*160, 160, true, false, false);
 
 		addBathingCleaningRecipe(//gray panzer concrete
 				IIContent.blockConcreteDecoration.getStack(ConcreteDecorations.STURDY_CONCRETE_BRICKS),
 				new IngredientStack(IIContent.blockConcreteDecoration.getStack(ConcreteDecorations.STURDY_CONCRETE_BRICKS_GRAY)),
 				1000,
-				1024, 160, true, false, false);
+				256*160, 160, true, false, false);
 
 		addBathingCleaningRecipe(//gray uber concrete
 				IIContent.blockConcreteDecoration.getStack(ConcreteDecorations.UBERCONCRETE),
 				new IngredientStack(IIContent.blockConcreteDecoration.getStack(ConcreteDecorations.UBERCONCRETE_GRAY)),
 				1000,
-				1024, 160, true, false, false);
+				256*160, 160, true, false, false);
 
 /*		BathingRecipe.addRecipe(IIContent.blockConcreteDecoration.getStack(ConcreteDecorations.CONCRETE_BRICKS_GRAY),
 				new IngredientStack(IIContent.blockConcreteDecoration.getStack(ConcreteDecorations.CONCRETE_BRICKS)),
@@ -1085,38 +1082,38 @@ public class IIRecipes
 		new PaintingRecipe((rgb, stack) -> {
 			//get closest approximated dye
 			return new ItemStack(Blocks.WOOL, 1, rgb.getDyeColor().getMetadata());
-		}, new IngredientStack(new ItemStack(Blocks.WOOL)), 512, 240, 125);
+		}, new IngredientStack(new ItemStack(Blocks.WOOL)), 256*240, 240, 125);
 
 		new PaintingRecipe((rgb, stack) -> {
 			//get closest approximated dye
 			return new ItemStack(Blocks.CARPET, 1, rgb.getDyeColor().getMetadata());
-		}, new IngredientStack(new ItemStack(Blocks.CARPET)), 512, 240, 50);
+		}, new IngredientStack(new ItemStack(Blocks.CARPET)), 256*240, 240, 50);
 
 		new PaintingRecipe((rgb, stack) -> {
 			//get closest approximated dye
 			return new ItemStack(Blocks.STAINED_GLASS, 1, rgb.getDyeColor().getMetadata());
-		}, new IngredientStack(new ItemStack(Blocks.GLASS)), 512, 240, 125);
+		}, new IngredientStack(new ItemStack(Blocks.GLASS)), 256*240, 240, 125);
 
 		new PaintingRecipe((rgb, stack) -> {
 			//get closest approximated dye
 			return new ItemStack(Blocks.STAINED_GLASS_PANE, 1, rgb.getDyeColor().getMetadata());
-		}, new IngredientStack(new ItemStack(Blocks.GLASS_PANE)), 512, 240, 125);
+		}, new IngredientStack(new ItemStack(Blocks.GLASS_PANE)), 256*240, 240, 125);
 
 		new PaintingRecipe((rgb, stack) -> {
 			//get closest approximated dye
 			return new ItemStack(Blocks.STAINED_HARDENED_CLAY, 1, rgb.getDyeColor().getMetadata());
-		}, new IngredientStack(new ItemStack(Blocks.HARDENED_CLAY)), 512, 240, 125);
+		}, new IngredientStack(new ItemStack(Blocks.HARDENED_CLAY)), 256*240, 240, 125);
 
 		new PaintingRecipe((rgb, stack) -> {
 			//get closest approximated dye
 			return new ItemStack(Items.BED, 1, rgb.getDyeColor().getMetadata());
-		}, new IngredientStack(new ItemStack(Items.BED)), 512, 240, 200);
+		}, new IngredientStack(new ItemStack(Items.BED)), 256*240, 240, 200);
 
 		//II / IE items
 		new PaintingRecipe((rgb, stack) -> {
 			IIContent.itemAdvancedPowerPack.setColor(stack, rgb.getPackedRGB());
 			return stack;
-		}, new IngredientStack(new ItemStack(IIContent.itemAdvancedPowerPack)), 8192, 340, 2000);
+		}, new IngredientStack(new ItemStack(IIContent.itemAdvancedPowerPack)), 512*340, 340, 2000);
 
 		new PaintingRecipe((rgb, stack) -> {
 			Items.LEATHER_HELMET.setColor(stack, rgb.getPackedRGB());
@@ -1126,7 +1123,7 @@ public class IIRecipes
 				new ItemStack(Items.LEATHER_CHESTPLATE),
 				new ItemStack(Items.LEATHER_LEGGINGS),
 				new ItemStack(Items.LEATHER_BOOTS)
-		)), 8192, 340, 2000);
+		)), 512*340, 340, 2000);
 
 		new PaintingRecipe((rgb, stack) -> {
 			IIContent.itemLightEngineerChestplate.setColor(stack, rgb.getPackedRGB());
@@ -1136,18 +1133,18 @@ public class IIRecipes
 				new ItemStack(IIContent.itemLightEngineerChestplate),
 				new ItemStack(IIContent.itemLightEngineerLeggings),
 				new ItemStack(IIContent.itemLightEngineerBoots)
-		)), 8192, 340, 2000);
+		)), 512*340, 340, 2000);
 
 		for(IAmmoTypeItem<?, ?> bullet : AmmoRegistry.getAllAmmoItems())
 		{
-			ItemStack bulletStack = bullet.getAmmoStack(AmmoRegistry.MISSING_CORE, CoreType.SOFTPOINT, FuseType.CONTACT);
-			//clear nbt
-			bulletStack.setTagCompound(new NBTTagCompound());
+			int time = 100+(bullet.getCaliber()*40);
+			ItemStack bulletStack = bullet.getAmmoStack(IIContent.ammoCoreIron,
+					bullet.getAllowedCoreTypes()[0], bullet.getAllowedFuseTypes()[0]);
 			new PaintingRecipe((rgb, stack) -> {
 				ItemStack ret = bullet.setPaintColor(stack, rgb);
 				ret.setCount(1);
 				return ret;
-			}, new IngredientStack(bulletStack).setUseNBT(false), bullet.getCaliber()*1024, 100+(bullet.getCaliber()*40), 50+(bullet.getCaliber()*25));
+			}, new IngredientStack(bulletStack).setUseNBT(false), bullet.getCaliber()*72*time, time, 50+(bullet.getCaliber()*25));
 		}
 	}
 
@@ -1284,7 +1281,7 @@ public class IIRecipes
 				.withCost(new IngredientStack(new ItemStack(IEContent.blockMetalDevice0, 2, BlockTypes_MetalDevice0.CAPACITOR_HV.getMeta())))
 				.withCost(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration1, 5, BlockTypes_MetalDecoration1.STEEL_SCAFFOLDING_0.getMeta())))
 				.withCost(new IngredientStack(IIContent.blockDataConnector.getStack(IIBlockTypes_Connector.PROGRAMMABLE_SPEAKER)))
-				.withCost(new IngredientStack(new ItemStack(IEContent.blockMetalDevice1,1, BlockTypes_MetalDevice1.FLOODLIGHT.getMeta())))
+				.withCost(new IngredientStack(new ItemStack(IEContent.blockMetalDevice1, 1, BlockTypes_MetalDevice1.FLOODLIGHT.getMeta())))
 				.withCost(new IngredientStack("opticsAdvanced", 1))
 				.withCost(new IngredientStack(new ItemStack(IEContent.itemWireCoil, 5, 0)))
 				.withRequiredProgress(80000);
@@ -1292,9 +1289,9 @@ public class IIRecipes
 		IIContent.UPGRADE_EMPLACEMENT_SEARCHLIGHT
 				.withCost(new IngredientStack(new ItemStack(IEContent.blockMetalDevice0, 1, BlockTypes_MetalDevice0.CAPACITOR_HV.getMeta())))
 				.withCost(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration1, 2, BlockTypes_MetalDecoration1.STEEL_SCAFFOLDING_0.getMeta())))
-				.withCost(new IngredientStack(new ItemStack(IEContent.blockSheetmetal,4,8)))
-				.withCost(new IngredientStack(new ItemStack(IEContent.blockSheetmetal,1,3)))
-				.withCost(new IngredientStack(new ItemStack(IEContent.itemGraphiteElectrode,1)))
+				.withCost(new IngredientStack(new ItemStack(IEContent.blockSheetmetal, 4, 8)))
+				.withCost(new IngredientStack(new ItemStack(IEContent.blockSheetmetal, 1, 3)))
+				.withCost(new IngredientStack(new ItemStack(IEContent.itemGraphiteElectrode, 1)))
 				.withCost(new IngredientStack("opticsAdvanced", 1))
 				.withRequiredProgress(80000);
 
@@ -1403,16 +1400,16 @@ public class IIRecipes
 
 	public static void addAmmunitionCasingRecipes()
 	{
-		new FillerRecipe(IIContent.itemAmmoHeavyArtillery, 160, 8000);
-		new FillerRecipe(IIContent.itemAmmoMediumArtillery, 150, 7000);
-		new FillerRecipe(IIContent.itemAmmoLightArtillery, 140, 6000);
-		new FillerRecipe(IIContent.itemAmmoMortar, 140, 6000);
-		new FillerRecipe(IIContent.itemAmmoLightGun, 130, 4000);
-		new FillerRecipe(IIContent.itemAmmoAutocannon, 80, 1000);
-		new FillerRecipe(IIContent.itemAmmoMachinegun, 60, 800);
-		new FillerRecipe(IIContent.itemAmmoAssaultRifle, 55, 700);
-		new FillerRecipe(IIContent.itemAmmoSubmachinegun, 50, 600);
-		new FillerRecipe(IIContent.itemAmmoRevolver, 40, 400);
+		new FillerRecipe(IIContent.itemAmmoHeavyArtillery, 160, 160*1024);
+		new FillerRecipe(IIContent.itemAmmoMediumArtillery, 150, 150*720);
+		new FillerRecipe(IIContent.itemAmmoLightArtillery, 140, 140*512);
+		new FillerRecipe(IIContent.itemAmmoMortar, 140, 140*384);
+		new FillerRecipe(IIContent.itemAmmoLightGun, 130, 140*384);
+		new FillerRecipe(IIContent.itemAmmoAutocannon, 80, 140*256);
+		new FillerRecipe(IIContent.itemAmmoMachinegun, 60, 140*128);
+		new FillerRecipe(IIContent.itemAmmoAssaultRifle, 55, 55*128);
+		new FillerRecipe(IIContent.itemAmmoSubmachinegun, 50, 50*128);
+		new FillerRecipe(IIContent.itemAmmoRevolver, 50, 50*128);
 
 		//Projectiles
 		for(ItemIIAmmoBase<?> item : new ItemIIAmmoBase[]{IIContent.itemAmmoHeavyArtillery, IIContent.itemAmmoMediumArtillery, IIContent.itemAmmoLightArtillery,
@@ -1423,6 +1420,7 @@ public class IIRecipes
 			ItemStack casingStack = item.getCasingStack(1);
 			ItemNBTHelper.setBoolean(casingStack, "ii_FilledCasing", true);
 
+			int time = (item.getCaliber() > 3?140: 70)+(25*Math.max(0, item.getCaliber()-1));
 			new AmmunitionAssemblerRecipe(
 					(core, casing) -> {
 						ItemStack stack = item.getStack(AmmoParts.BULLET);
@@ -1431,15 +1429,17 @@ public class IIRecipes
 					},
 					new IngredientStack(item.getAmmoCoreStack(IIContent.ammoCoreBrass, item.getAllowedCoreTypes()[0])),
 					new IngredientStack(casingStack).setUseNBT(true),
-					128*item.getCaliber(),
-					(item.getCaliber() > 3?140: 70)+(25*Math.max(0, item.getCaliber()-1)), false
+					time*128*item.getCaliber(),
+					time, false
 			);
 		}
 
-		for(ItemIIAmmoBase<?> item : new ItemIIAmmoBase[]{IIContent.itemAmmoRocketLight, IIContent.itemAmmoRocketHeavy, IIContent.itemAmmoGuidedMissile, IIContent.itemNavalMine})
+		//IIContent.itemAmmoRocketHeavy not included, as it's too big for the Ammunition Assembler
+		for(ItemIIAmmoBase<?> item : new ItemIIAmmoBase[]{IIContent.itemAmmoRocketLight, IIContent.itemAmmoGuidedMissile})
 		{
 			assert item!=null;
 			ItemStack casingStack = item.getCasingStack(1);
+			int time = 140+(25*Math.max(0, item.getCaliber()-1));
 			new AmmunitionAssemblerRecipe(
 					(core, casing) -> {
 						ItemStack stack = item.getStack(AmmoParts.BULLET);
@@ -1448,13 +1448,13 @@ public class IIRecipes
 					},
 					new IngredientStack(item.getAmmoCoreStack(IIContent.ammoCoreBrass, item.getAllowedCoreTypes()[0])),
 					new IngredientStack(casingStack).setUseNBT(true),
-					128*item.getCaliber(),
-					140+(25*Math.max(0, item.getCaliber()-1)), false
+					time*128*item.getCaliber(),
+					time, false
 			);
 		}
 
 		//Explosives and Mines
-		for(Item item : new Item[]{IIContent.blockTripmine.itemBlock, IIContent.blockTellermine.itemBlock, IIContent.blockRadioExplosives.itemBlock})
+		for(Item item : new Item[]{IIContent.blockTripmine.itemBlock, IIContent.blockTellermine.itemBlock, IIContent.blockRadioExplosives.itemBlock, IIContent.itemNavalMine})
 		{
 			assert item!=null;
 			IAmmoTypeItem<?, ?> bullet = (IAmmoTypeItem<?, ?>)item;
@@ -1467,7 +1467,7 @@ public class IIRecipes
 					},
 					new IngredientStack(bullet.getAmmoCoreStack(IIContent.ammoCoreBrass, bullet.getAllowedCoreTypes()[0])),
 					new IngredientStack(bullet.getCasingStack(1)).setUseNBT(true),
-					256*bullet.getCaliber(),
+					512*480,
 					480, false
 			);
 		}
@@ -1481,7 +1481,7 @@ public class IIRecipes
 					return stack;
 				},
 				new IngredientStack(IIContent.itemGrenade.getAmmoCoreStack(IIContent.ammoCoreBrass, IIContent.itemGrenade.getAllowedCoreTypes()[0])),
-				new IngredientStack("stickTreatedWood"), 600, 480, false
+				new IngredientStack("stickTreatedWood"), 384*480, 480, false
 		);
 
 		new AmmunitionAssemblerRecipe(
@@ -1491,7 +1491,7 @@ public class IIRecipes
 					return stack;
 				},
 				new IngredientStack(IIContent.itemRailgunGrenade.getAmmoCoreStack(IIContent.ammoCoreBrass, IIContent.itemRailgunGrenade.getAllowedCoreTypes()[0])),
-				new IngredientStack("stickSteel"), 1200, 540, false
+				new IngredientStack("stickSteel"), 384*480, 540, false
 		);
 
 		//Advanced Ammunition

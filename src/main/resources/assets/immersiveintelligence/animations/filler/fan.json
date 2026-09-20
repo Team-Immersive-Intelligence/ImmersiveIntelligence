@@ -1,0 +1,17 @@
+{
+  "comment": "Made with Blockbench",
+  "groups": {
+    "fan": {
+      "rotation": [
+        {
+          "time": 0.0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 1.0,
+          "transform": [360, 0, 0]
+        }
+      ]
+    }
+  }
+}

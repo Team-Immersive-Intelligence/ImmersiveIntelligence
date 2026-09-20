@@ -32,6 +32,7 @@ import static pl.pabilo8.immersiveintelligence.common.util.IIReference.GUI_LABEL
  * </ul>
  *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 31.08.2026
  * @ii-approved 0.3.1
  * @implSpec Callers must provide: <ul>
  * <li>entries (full list)</li>
@@ -63,6 +64,9 @@ public class DecoTaskList<T extends INBTSerializable<NBTTagCompound>> extends De
 	private Supplier<T> blankTaskSupplier;
 	@Nullable
 	private Function<T, T> duplicateFunction;
+	@Nullable
+	private Runnable onEntriesChanged;
+	private Predicate<T> canModifyPredicate = t -> true;
 	@Nullable
 	private DecoEntryPanelBuilder<T> displayFunction;
 
@@ -133,6 +137,33 @@ public class DecoTaskList<T extends INBTSerializable<NBTTagCompound>> extends De
 	public DecoTaskList<T> withBlankTaskSupplier(@Nullable Supplier<T> blankTaskSupplier)
 	{
 		this.blankTaskSupplier = blankTaskSupplier;
+		return this;
+	}
+
+	/**
+	 * Sets the copy operation used by the Duplicate button.
+	 */
+	public DecoTaskList<T> withDuplicateFunction(@Nullable Function<T, T> duplicateFunction)
+	{
+		this.duplicateFunction = duplicateFunction;
+		return this;
+	}
+
+	/**
+	 * Runs after the list adds, removes, duplicates, or clears an entry.
+	 */
+	public DecoTaskList<T> withOnEntriesChanged(@Nullable Runnable onEntriesChanged)
+	{
+		this.onEntriesChanged = onEntriesChanged;
+		return this;
+	}
+
+	/**
+	 * Sets the predicate used to protect read-only entries from list modifications.
+	 */
+	public DecoTaskList<T> withCanModifyPredicate(@Nullable Predicate<T> canModifyPredicate)
+	{
+		this.canModifyPredicate = canModifyPredicate==null?t -> true: canModifyPredicate;
 		return this;
 	}
 
@@ -296,30 +327,36 @@ public class DecoTaskList<T extends INBTSerializable<NBTTagCompound>> extends De
 		if(created==null)
 			return;
 		this.allEntries.add(created);
-		selected = created;
+		setSelected(created);
 		refreshListEntries();
+		notifyEntriesChanged();
 	}
 
 	private void onRemovePressed()
 	{
-		if(selected==null||allEntries==null)
+		if(selected==null||allEntries==null||!canModifyPredicate.test(selected))
 			return;
 		//Remove task and set selected to null
 		this.allEntries.remove(selected);
 		setSelected(null);
 		refreshListEntries();
+		notifyEntriesChanged();
 	}
 
 	private void onDuplicatePressed()
 	{
-		if(selected==null||blankTaskSupplier==null||allEntries==null)
+		if(selected==null||allEntries==null||!canModifyPredicate.test(selected))
 			return;
-		//Create a new blank task and copy data from selected into it.
-		T created = allEntries.copyEntry(selected);
+		//Use a caller copy function when entries contain stable identities.
+		T created = duplicateFunction==null?allEntries.copyEntry(selected): duplicateFunction.apply(selected);
+		if(created==null)
+			return;
+		allEntries.add(created);
 		//Ensure duplicate is visible in current mode, otherwise switch mode to match it
 		setMode(isJobPredicate.test(created)?ListMode.JOBS: ListMode.REQUESTS);
-
+		setSelected(created);
 		refreshListEntries();
+		notifyEntriesChanged();
 	}
 
 	private void onClearPressed()
@@ -327,9 +364,17 @@ public class DecoTaskList<T extends INBTSerializable<NBTTagCompound>> extends De
 		if(allEntries==null)
 			return;
 		//Clear only current mode
-		allEntries.removeIf(t -> isJobPredicate.test(t)!=(this.mode==ListMode.JOBS));
-		selected = null;
+		allEntries.removeIf(t -> isJobPredicate.test(t)!=(this.mode==ListMode.JOBS)
+				&&canModifyPredicate.test(t));
+		setSelected(null);
 		refreshListEntries();
+		notifyEntriesChanged();
+	}
+
+	private void notifyEntriesChanged()
+	{
+		if(onEntriesChanged!=null)
+			onEntriesChanged.run();
 	}
 
 	private void setSelected(@Nullable T selected)

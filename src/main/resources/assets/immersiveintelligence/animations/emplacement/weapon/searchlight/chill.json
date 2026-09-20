@@ -1,0 +1,57 @@
+{
+  "comment": "Made by Pabilo8 with Blockbench",
+  "groups": {
+    "turret_origin": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.29167,
+          "transform": [0, -10, 0]
+        },
+        {
+          "time": 0.66667,
+          "transform": [0, 12.5, 0]
+        },
+        {
+          "time": 0.75,
+          "transform": [0, 12.5, 0]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "projector_origin": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.16667,
+          "transform": [-10, 0, 0]
+        },
+        {
+          "time": 0.27777,
+          "transform": [-10, 0, 0]
+        },
+        {
+          "time": 0.6111,
+          "transform": [12.5, 0, 0]
+        },
+        {
+          "time": 0.77777,
+          "transform": [12.5, 0, 0]
+        },
+        {
+          "time": 0.94443,
+          "transform": [0, 0, 0]
+        }
+      ]
+    }
+  }
+}

@@ -1,22 +1,34 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon;
 
 import blusunrize.immersiveengineering.common.util.Utils;
+import net.minecraft.entity.Entity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeFloat;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeNull;
+import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Emplacement;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.EmplacementStateNeeds;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement.EmplacementStateNeeds;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.TargetCoordinateReference;
 import pl.pabilo8.immersiveintelligence.common.util.gun.GunAimCoordinate;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
+ * Controls aiming, platform movement pose, setup, and firing for angle-based Emplacement weapons.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
- * @updated 16.08.2026
+ * @updated 08.09.2026
  * @since 01.01.2026
  */
 public abstract class EmplacementWeaponTurretBase extends EmplacementWeapon
@@ -26,85 +38,241 @@ public abstract class EmplacementWeaponTurretBase extends EmplacementWeapon
 	@Nullable
 	@SyncNBT(time = 0, events = SyncEvents.WEAPON_MISC, nullable = true)
 	public MultiblockInteractablePart setup = null;
+	private int casingOutputTicker = 0;
+	private transient ResLoc rotateYawAnimation, rotatePitchAnimation;
 
 	/**
-	 * Called after the weapon is installed or loaded from NBT
-	 * Initialize sight AABB here
+	 * Initializes the weapon with the Emplacement facing as its local yaw center.
 	 */
+	@Override
 	protected void onInit(TileEntityEmplacement te)
 	{
 		super.onInit(te);
+		this.rotateYawAnimation = ResLoc.of(IIReference.RES_II, "emplacement/weapon/", getName(), "/rotate_yaw");
+		this.rotatePitchAnimation = ResLoc.of(IIReference.RES_II, "emplacement/weapon/", getName(), "/rotate_pitch");
+		this.aim.withCenterYaw(te.facing.getHorizontalAngle());
 		if(!restoredFromNBT)
-			this.aim.withCurrentAngles(te.facing.getHorizontalAngle(), 0);
+		{
+			Float hidingYaw = getHidingYaw();
+			Float hidingPitch = getHidingPitch();
+			this.aim.withCurrentAngles(hidingYaw==null?this.aim.getCenterYaw(): hidingYaw, hidingPitch==null?this.aim.clampPitchToRange(0f): hidingPitch);
+		}
+	}
+
+	@Override
+	public void onPlatformUpdate(TileEntityEmplacement te)
+	{
+		applyRotationUpgrade(te);
+		boolean exposed = te.door.getState()&&te.door.isFullyOpened();
+		boolean setupChanged = false;
+		if(this.setup!=null)
+		{
+			setupChanged = this.setup.setState(exposed);
+			this.setup.update();
+		}
+
+		//Only platform movement and the hidden state force the weapon into its hiding pose.
+		if(!exposed)
+			setAimTargetAngles(te, getHidingYaw(), getHidingPitch());
+		updateAim(te);
+		if(te.tactileHandler!=null)
+			te.tactileHandler.update(rotateYawAnimation, (aim.getYawNormalized(0)+0.5f)%1f,
+					rotatePitchAnimation, aim.getPitchNormalized(-90, 90, 0));
+
+		//The Base casing storage is stationary, so it can continue emptying while the platform operates.
+		if(++casingOutputTicker >= Math.max(0, getItemTransferSpeed()))
+		{
+			casingOutputTicker = 0;
+			ItemStack casing = extractBaseCasing(1);
+			if(!casing.isEmpty())
+			{
+				te.outputItem(casing);
+				if(getItemTransferSpeed() > 10||te.getWorld().getTotalWorldTime()%10==0)
+					te.updateTileForEvent(SyncEvents.TILE_RECIPE_CHANGED);
+			}
+		}
+
+		if(setupChanged)
+			syncWithClient(te, SyncEvents.WEAPON_MISC);
+	}
+
+	@Override
+	public void onClientUpdate(TileEntityEmplacement te)
+	{
+		//The client only advances state received from the server.
+		applyRotationUpgrade(te);
+		if(this.setup!=null)
+			this.setup.update();
+		this.aim.update();
+		super.onClientUpdate(te);
+	}
+
+	@Override
+	protected boolean canChill(TileEntityEmplacement te)
+	{
+		return te.door.getState()&&te.door.isFullyOpened()&&(setup==null||setup.isFullyOpened());
 	}
 
 	@Override
 	public EmplacementStateNeeds onUpdate(TileEntityEmplacement te, EmplacementStateNeeds baseNeeds, TargetCoordinateReference currentTarget)
 	{
-		boolean remote = te.getWorld().isRemote;
+		//onPlatformUpdate owns passive aim movement and the hiding pose.
+		if(!te.door.getState()||!te.door.isFullyOpened())
+			return EmplacementStateNeeds.WANTS_SURFACE;
+
+		//Keep the current aim until setup is complete.
+		if(setup!=null&&!setup.isFullyOpened())
+			return EmplacementStateNeeds.WANTS_SURFACE;
+
+		//Freeze an exposed idle weapon at its current angle. A gun can reserve the aim for loading.
 		if(currentTarget==null||!currentTarget.shouldBeExecuted(te.getWorld()))
 		{
-			boolean setupChanged = false;
-			if(this.setup!=null)
-			{
-				if(!remote)
-					setupChanged = this.setup.setState(false);
-				this.setup.update();
-			}
-
-			//The server owns target selection, but the client must keep advancing the last synced aim.
-			float previousYaw = this.aim.getYaw(0);
-			float previousPitch = this.aim.getPitch(0);
-			this.aim.update();
-
-			if(!remote&&hasCurrentAngleChanged(previousYaw, previousPitch))
-				syncWithClient(te, SyncEvents.WEAPON_ROTATION);
-			if(setupChanged)
-				syncWithClient(te, SyncEvents.WEAPON_MISC);
-			return super.onUpdate(te, baseNeeds, currentTarget);
+			if(canTrackTarget(te))
+				setAimTargetAngles(te, null, null);
+			onIdleUpdate(te);
+			return EmplacementStateNeeds.WANTS_SURFACE;
 		}
+		if(!canTrackTarget(te))
+			return EmplacementStateNeeds.WANTS_SURFACE;
 
 		boolean rotationChanged = false;
-		float previousYaw = this.aim.getYaw(0);
-		float previousPitch = this.aim.getPitch(0);
-		if(!remote)
+		boolean targetAccepted = false;
+		Vec3d target = currentTarget.supplyCoordinates();
+		if(target!=null)
 		{
-			Vec3d target = currentTarget.supplyCoordinates();
-			if(target!=null)
-			{
-				float previousTargetYaw = this.aim.getTargetYaw();
-				float previousTargetPitch = this.aim.getTargetPitch();
-				if(this.aim.setTarget(te.getWeaponCenter(), Vec3d.ZERO, target, getTargetMotion(currentTarget)))
-					rotationChanged = hasTargetAngleChanged(previousTargetYaw, previousTargetPitch);
-			}
-		}
-		//Do not calculate targets on the client. It only interpolates the server-owned aim state.
-		this.aim.update();
-		if(!remote)
-			rotationChanged |= hasCurrentAngleChanged(previousYaw, previousPitch);
-
-		boolean setupChanged = false;
-		if(this.setup!=null)
-		{
-			if(!remote)
-				setupChanged = this.setup.setState(true);
-			this.setup.update();
+			float previousTargetYaw = this.aim.getTargetYaw();
+			float previousTargetPitch = this.aim.getTargetPitch();
+			targetAccepted = this.aim.setTarget(getAimOrigin(te), Vec3d.ZERO, target, currentTarget.supplyMotion());
+			if(targetAccepted)
+				rotationChanged = hasTargetAngleChanged(previousTargetYaw, previousTargetPitch);
 		}
 
-		boolean fired = !remote&&isReadyToShoot(te)&&shoot(te, currentTarget);
+		if(currentTarget.isAimingOnly()&&targetAccepted&&aim.isAimed(1.5f)
+				&&te.taskManager.completeAimMission(currentTarget))
+		{
+			te.markDirty();
+			te.updateTileForEvent(SyncEvents.TILE_CUSTOM1);
+		}
+
+		boolean fired = !currentTarget.isAimingOnly()
+				&&te.door.isFullyOpened()&&(setup==null||setup.isFullyOpened())&&aim.isAimed(1.5f)&&canShoot(te)
+				&&shoot(te, currentTarget);
+		if(fired&&te.taskManager.notifyAfterShot(currentTarget))
+			te.markDirty();
+
+		if(rotationChanged)
+			syncWithClient(te, SyncEvents.WEAPON_ROTATION);
 		if(fired)
-			currentTarget.notifyAfterShot();
-
-		if(!remote)
-		{
-			if(rotationChanged)
-				syncWithClient(te, SyncEvents.WEAPON_ROTATION);
-			if(setupChanged)
-				syncWithClient(te, SyncEvents.WEAPON_MISC);
-			if(fired)
-				syncWithClient(te, SyncEvents.WEAPON_RELOAD);
-		}
+			syncWithClient(te, SyncEvents.WEAPON_RELOAD);
 		return EmplacementStateNeeds.WANTS_SURFACE;
+	}
+
+	/**
+	 * Updates an exposed weapon when it has no active target.
+	 */
+	protected void onIdleUpdate(TileEntityEmplacement te)
+	{
+
+	}
+
+	/**
+	 * Sets nullable local yaw and absolute pitch constraints without advancing the aim.
+	 */
+	protected final void setAimTargetAngles(TileEntityEmplacement te, @Nullable Float localYaw, @Nullable Float pitch)
+	{
+		if(te.getWorld().isRemote)
+			return;
+
+		float previousTargetYaw = aim.getTargetYaw();
+		float previousTargetPitch = aim.getTargetPitch();
+		float targetYaw = localYaw==null?aim.getYaw(0): MathHelper.wrapDegrees(aim.getCenterYaw()+localYaw);
+		float targetPitch = pitch==null?aim.getPitch(0): pitch;
+		aim.setTargetClamped(targetYaw, targetPitch);
+
+		if(hasTargetAngleChanged(previousTargetYaw, previousTargetPitch))
+			syncWithClient(te, SyncEvents.WEAPON_ROTATION);
+	}
+
+	/**
+	 * Checks nullable local yaw and absolute pitch constraints.
+	 */
+	protected final boolean isAtAngles(@Nullable Float localYaw, @Nullable Float pitch, float tolerance)
+	{
+		return (localYaw==null||Math.abs(MathHelper.wrapDegrees(aim.getRelativeYaw(0)-localYaw)) <= tolerance)
+				&&(pitch==null||Math.abs(aim.getPitch(0)-aim.clampPitchToRange(pitch)) <= tolerance);
+	}
+
+	/**
+	 * @return true when this weapon can track a fire mission target
+	 */
+	protected boolean canTrackTarget(TileEntityEmplacement te)
+	{
+		return true;
+	}
+
+	/**
+	 * @return world-space point used as the origin for aiming calculations
+	 */
+	protected Vec3d getAimOrigin(TileEntityEmplacement te)
+	{
+		return te.getWeaponCenter();
+	}
+
+	@Nonnull
+	@Override
+	public DataType getDataCallback(String string)
+	{
+		return switch(string)
+		{
+			case "weapon_yaw" -> new DataTypeFloat(aim.getYaw(0));
+			case "weapon_pitch" -> new DataTypeFloat(aim.getPitch(0));
+			case "weapon_target_yaw" -> new DataTypeFloat(aim.getTargetYaw());
+			case "weapon_target_pitch" -> new DataTypeFloat(aim.getTargetPitch());
+			case "weapon_setup", "weapon_setup_progress" -> setup==null?
+					new DataTypeNull(): new DataTypeFloat(setup.getProgress(0));
+			default -> super.getDataCallback(string);
+		};
+	}
+
+	@Override
+	public boolean canSelectAutonomousTarget(Entity entity)
+	{
+		return entity!=null&&entity.isEntityAlive()&&attackAABB!=null&&attackAABB.intersects(entity.getEntityBoundingBox());
+	}
+
+	@Override
+	public boolean canExecuteFireMission(TargetCoordinateReference target)
+	{
+		Entity entity = target.getEntity();
+		if(entity!=null)
+			return isVisibleTarget(entity)&&canSelectAutonomousTarget(entity);
+		Vec3d coordinates = target.supplyCoordinates();
+		return coordinates!=null&&attackAABB!=null&&attackAABB.contains(coordinates);
+	}
+
+	private void updateAim(TileEntityEmplacement te)
+	{
+		float previousYaw = aim.getYaw(0);
+		float previousPitch = aim.getPitch(0);
+		aim.update();
+		if(hasCurrentAngleChanged(previousYaw, previousPitch))
+			syncWithClient(te, SyncEvents.WEAPON_ROTATION);
+	}
+
+	private void applyRotationUpgrade(TileEntityEmplacement te)
+	{
+		float multiplier = te.isUpgradeInstalled(IIContent.UPGRADE_EMPLACEMENT_STURDY_BEARINGS)?
+				Emplacement.sturdyBearingsRotationMultiplier: 1f;
+		aim.withAimSpeedMultiplier(multiplier);
+	}
+
+	/**
+	 * Extracts one casing from stationary Base storage for the output port.
+	 */
+	@Nonnull
+	protected ItemStack extractBaseCasing(int amount)
+	{
+		return ItemStack.EMPTY;
 	}
 
 	private boolean hasTargetAngleChanged(float previousYaw, float previousPitch)
@@ -119,24 +287,8 @@ public abstract class EmplacementWeaponTurretBase extends EmplacementWeapon
 				||Math.abs(this.aim.getPitch(0)-previousPitch) > 0.001f;
 	}
 
-	protected Vec3d getTargetMotion(TargetCoordinateReference target)
-	{
-		if(target.getEntity()!=null)
-			return new Vec3d(target.getEntity().motionX, target.getEntity().motionY, target.getEntity().motionZ);
-		return Vec3d.ZERO;
-	}
-
-	protected boolean isReadyToShoot(TileEntityEmplacement te)
-	{
-		return te.door.isFullyOpened()&&(setup==null||setup.isFullyOpened())&&aim.isAimed(1.5f)&&canShoot(te);
-	}
-
 	public abstract boolean canShoot(TileEntityEmplacement te);
 
-	/**
-	 * Used for shooting action. Base turret logic only handles attract/noise bookkeeping;
-	 * concrete weapons should return true only after actually spawning a projectile/effect.
-	 */
 	protected boolean shoot(TileEntityEmplacement te, TargetCoordinateReference target)
 	{
 		if(baseEntity!=null)
@@ -144,13 +296,35 @@ public abstract class EmplacementWeaponTurretBase extends EmplacementWeapon
 		return false;
 	}
 
-	public boolean requiresZeroingBeforeReload()
-	{
-		return true;
-	}
+	//--- Abstract Methods ---//
 
 	public abstract int getShotDelay();
 
 	public abstract int getReloadDelay();
 
+	/**
+	 * @return interval in ticks between Base casing output attempts
+	 */
+	protected int getItemTransferSpeed()
+	{
+		return Emplacement.itemTransferInterval;
+	}
+
+	/**
+	 * @return local yaw used while the platform moves or stays hidden; null keeps the current yaw
+	 */
+	@Nullable
+	protected Float getHidingYaw()
+	{
+		return 0f;
+	}
+
+	/**
+	 * @return pitch used while the platform moves or stays hidden; null keeps the current pitch
+	 */
+	@Nullable
+	protected Float getHidingPitch()
+	{
+		return aim.clampPitchToRange(-90f);
+	}
 }

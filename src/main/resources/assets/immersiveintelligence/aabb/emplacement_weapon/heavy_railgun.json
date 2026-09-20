@@ -1,0 +1,123 @@
+{
+  "bounds": {
+    "base": [-16, -1.5, -16, 16, 1.5, 16],
+    "crane_base": [-4, -17.5, -4, 4, 17.5, 4],
+    "crane1": [-3, -3, -3, 3, 3, 3],
+    "crane_rod": [-2, -2, -2, 2, 2, 2],
+    "coilbox_base": [-5, -10, -5, 5, 10, 5],
+    "ammobox": [-4, -6, -4, 4, 6, 4],
+    "none": [0, 0, 0, 0, 0, 0],
+    "gun": [-5, -5, -5, 5, 5, 5],
+    "gun_2": [-5, -8, -5, 5, 8, 5],
+    "gun_3": [-5, -6, -5, 5, 6, 5]
+  },
+  "tactile_transforms": {
+    "all": {
+      "offset": [-1, 0, -2]
+    },
+    "south": {},
+    "west": {},
+    "north": {},
+    "east": {},
+    "mirrored": {}
+  },
+  "tactile": {
+    "_schema": "immersiveintelligence:models/block/multiblock/emplacement/weapon/heavy_railgun.obj.amt",
+    "turret": [
+      {
+        "offset": [0, 2.5, 0],
+        "type": "base"
+      },
+      {
+        "offset": [12, 22, 12],
+        "type": "crane_base"
+      },
+      {
+        "offset": [-13, 14, -8],
+        "type": "coilbox_base"
+      },
+      {
+        "offset": [-13, 14, 1],
+        "type": "coilbox_base"
+      },
+      {
+        "offset": [12, 10, -10],
+        "type": "ammobox"
+      },
+      {
+        "offset": [12, 10, -2],
+        "type": "ammobox"
+      }
+    ],
+    "turen": [
+      {
+        "offset": [0.05, 22.98437, -7.9918],
+        "type": "crane1"
+      },
+      {
+        "offset": [0.05, 22.98437, 6.0082],
+        "type": "crane1"
+      }
+    ],
+    "hand": [
+      {
+        "offset": [0, 0.11111, 9.61111],
+        "type": "crane1"
+      },
+      {
+        "offset": [0, 0.11111, 4.86111],
+        "type": "crane_rod"
+      },
+      {
+        "offset": [0, 0.11111, 0.86111],
+        "type": "crane_rod"
+      },
+      {
+        "offset": [0, 0.11111, -3.13889],
+        "type": "crane_rod"
+      }
+    ],
+    "gun_origin": [
+      {
+        "offset": [0, 0, 0],
+        "type": "none"
+      }
+    ],
+    "gun": [
+      {
+        "offset": [-4, 2, -39],
+        "type": "gun"
+      },
+      {
+        "offset": [-4, 2, -29],
+        "type": "gun"
+      },
+      {
+        "offset": [-4, 2, -19],
+        "type": "gun"
+      },
+      {
+        "offset": [-4, 2, -10],
+        "type": "gun_2"
+      },
+      {
+        "offset": [-4, 2, 0],
+        "type": "gun_2"
+      },
+      {
+        "offset": [-4, 2, 10],
+        "type": "gun_2"
+      },
+      {
+        "offset": [-4, 0, 14],
+        "type": "gun_3"
+      }
+    ],
+    "base": [
+      {
+        "offset": [0, 2.5, 0],
+        "type": "none"
+      }
+    ]
+  }
+}

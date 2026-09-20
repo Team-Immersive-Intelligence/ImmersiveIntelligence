@@ -10,7 +10,10 @@ import net.minecraftforge.server.command.CommandTreeBase;
 import pl.pabilo8.immersiveintelligence.common.util.CommandIIBase;
 
 /**
+ * Disables daylight cycle, weather, and mob spawning. Adds a GlobalEnemy team for Hans testing.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @ii-approved 0.3.1
  * @since 14.09.2025
  */
 public class CommandDevWorldSetup extends CommandIIBase

@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.client.model.obj.OBJModel;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
 import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMT;
@@ -51,7 +52,7 @@ public abstract class AMTCachedModel<T> extends HashMap<Integer, AMTModel> imple
 	private AMTModel lastPicked = null;
 
 	public AMTCachedModel(@Nonnull OBJModel[] models, @Nonnull Tuple<Predicate<T>, OBJModel>[] conditionalModels, @Nonnull BiFunction<ResourceLocation, T, TextureAtlasSprite> textureProvider,
-						  @Nullable AMTModelHeader[] headers, @Nonnull BiFunction<T, AMTModelHeader, AMT[]> modelProvider, Function<T, AMTModelHeader> headerProvider, boolean isBlock)
+	                      @Nullable AMTModelHeader[] headers, @Nonnull BiFunction<T, AMTModelHeader, AMT[]> modelProvider, Function<T, AMTModelHeader> headerProvider, boolean isBlock)
 	{
 		super();
 		this.models = models;
@@ -177,5 +178,10 @@ public abstract class AMTCachedModel<T> extends HashMap<Integer, AMTModel> imple
 		lastPicked = null;
 	}
 
-
+	@Override
+	@Nonnull
+	public AxisAlignedBB getBoundingBox()
+	{
+		return lastPicked==null?base.getBoundingBox(): lastPicked.getBoundingBox();
+	}
 }

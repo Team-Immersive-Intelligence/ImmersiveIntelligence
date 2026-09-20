@@ -56,26 +56,13 @@
       0, 0, 12,
       16, 16, 16
     ],
-    "platform_rod": [
-      -5, 0, -5,
-      5, 16, 5
-    ],
-    "platform_rod1": [
-      -7, 0, -11,
-      5, 10, 1
-    ],
-    "platform_rod2": [
-      -4, 0, -4,
-      4, 16, 4
-    ],
-    "platform": [
-      -16, 1, -16,
-      16, 0, 16
-    ],
-    "door": [
-      -19, -1, -2,
-      19, 1, 2
-    ]
+    "platform_rod1": [-6, -8, -6, 6, 8, 6],
+    "platform_rod": [-5, -8, -5, 5, 8, 5],
+    "platform_rod2": [-4, -8, -4, 4, 8, 4],
+    "platform_rod2_2": [-3, -8, -3, 3, 8, 3],
+    "platform": [-16, -0.5, -16, 16, 0.5, 16],
+    "platform_rod2_3": [-4, -5.5, -4, 4, 5.5, 4],
+    "door": [-19, -1, -2, 19, 1, 2]
   },
   "positions": {
     "53,50,47": "corner_front",
@@ -103,82 +90,121 @@
     "armor": [27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44]
   },
   "rotations": {
-    "data": "none"
+    "data": "clockwise_180",
+    "input": "counterclockwise_90",
+    "output": "counterclockwise_90"
   },
-  "tactile_offset": [0, 0, 0],
+  "tactile_transforms": {
+    "all": {
+      "offset": [-1.0, 0.0, -2.0]
+    },
+    "south": {
+      "rotation": [0, 0, 0],
+      "flip_xz_size": false
+    },
+    "west": {
+      "rotation": [0, 90, 0],
+      "flip_xz_size": true
+    },
+    "north": {
+      "rotation": [0, 180, 0],
+      "flip_xz_size": false
+    },
+    "east": {
+      "rotation": [0, 270, 0],
+      "flip_xz_size": true
+    },
+    "mirrored": {}
+  },
   "tactile": {
     "_schema": "immersiveintelligence:models/block/multiblock/emplacement/emplacement.obj.amt",
     "platform": [
       {
-        "offset": [0, -82, -8],
+        "offset": [1, -80, -3],
         "type": "platform_rod1"
       }
     ],
     "platform1": [
       {
-        "offset": [1, -72, -3],
+        "offset": [1, -64, -3],
         "type": "platform_rod"
       }
     ],
     "platform2": [
       {
-        "offset": [0, -15, 0],
+        "offset": [0, -7, 0],
         "type": "platform_rod"
       }
     ],
     "platform3": [
       {
-        "offset": [0, -15, 0],
+        "offset": [0, -7, 0],
         "type": "platform_rod2"
       }
     ],
     "platform4": [
       {
-        "offset": [1, -17, -3],
+        "offset": [1, -9, -3],
         "type": "platform_rod2"
       }
     ],
     "platform5": [
       {
-        "offset": [1, -17, -3],
-        "type": "platform_rod2"
+        "offset": [1, -11, -3],
+        "type": "platform_rod2_2"
       }
     ],
     "platform6": [
       {
-        "offset": [1, 10, -3],
+        "offset": [1, 10.5, -3],
         "type": "platform"
       },
       {
-        "offset": [1, -6, -3],
-        "type": "platform_rod2"
-      }
-    ],
-    "door1": [
-      {
-        "offset": [0, -2, 8],
-        "type": "door"
-      },
-      {
-        "offset": [0, -2, 12],
-        "type": "door"
-      },
-      {
-        "offset": [0, -2, 18],
-        "type": "door"
+        "offset": [1, 4.5, -3],
+        "type": "platform_rod2_3"
       }
     ],
     "door2": [
       {
-        "offset": [0, -2, -8],
+        "offset": [0, -2, -9],
         "type": "door"
       },
       {
-        "offset": [0, -2, -12],
+        "offset": [0, -2, -13],
         "type": "door"
       },
       {
-        "offset": [0, -2, -18],
+        "offset": [0, -2, -5],
+        "type": "door"
+      },
+      {
+        "offset": [0, -2, -17],
+        "type": "door"
+      },
+      {
+        "offset": [0, -2, -21],
+        "type": "door"
+      }
+    ],
+    "door1": [
+      {
+        "offset": [-0.03333, -2, 20.06667],
+        "type": "door"
+      },
+      {
+        "offset": [-0.03333, -2, 16.06667],
+        "type": "door"
+      },
+      {
+        "offset": [-0.03333, -2, 12.06667],
+        "type": "door"
+      },
+      {
+        "offset": [-0.03333, -2, 8.06667],
+        "type": "door"
+      },
+      {
+        "offset": [-0.03333, -2, 4.06667],
         "type": "door"
       }
     ]

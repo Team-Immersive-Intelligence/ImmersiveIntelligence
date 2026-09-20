@@ -42,6 +42,7 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.entity.ISyncNBTEntity;
 import pl.pabilo8.immersiveintelligence.common.util.raytracer.FactoryTracer;
 
+import javax.annotation.Nullable;
 import javax.vecmath.Vector2f;
 import javax.vecmath.Vector3f;
 import java.util.*;
@@ -58,6 +59,7 @@ import java.util.*;
 @Interface(iface = "com.elytradev.mirage.lighting.IEntityLightEventConsumer", modid = "mirage")
 public class EntityIIChemthrowerShot extends Entity implements ISyncNBTEntity<EntityIIChemthrowerShot>, IEntityLightEventConsumer
 {
+	private static final float MOTION_DECAY = 0.99f;
 	private final Set<Entity> ignoredEntities = new HashSet<>();
 	private final Set<BlockPos> ignoredPositions = new HashSet<>();
 	private final FactoryTracer flightTracer = FactoryTracer.create(
@@ -333,7 +335,7 @@ public class EntityIIChemthrowerShot extends Entity implements ISyncNBTEntity<En
 		posZ += motionZ;
 		updateRotation();
 
-		float decay = 0.99f;
+		float decay = MOTION_DECAY;
 		if(isInWater())
 			decay *= 0.8f;
 		motionX *= decay;
@@ -382,12 +384,27 @@ public class EntityIIChemthrowerShot extends Entity implements ISyncNBTEntity<En
 	 */
 	public double getGravity()
 	{
+		return getGravity(fluidStack);
+	}
+
+	public static double getGravity(@Nullable FluidStack fluidStack)
+	{
 		if(fluidStack==null||fluidStack.getFluid()==null)
 			return 0.05f;
 
 		Fluid fluid = fluidStack.getFluid();
 		boolean gas = fluid.isGaseous(fluidStack)||ChemthrowerHandler.isGas(fluid);
 		return (gas?0.025f: 0.05f)*(fluid.getDensity(fluidStack) < 0?-1: 1);
+	}
+
+	public static float getMotionDecay()
+	{
+		return MOTION_DECAY;
+	}
+
+	public static int getDefaultTickLimit()
+	{
+		return Chemthrower.chemthrowerShotLifetime;
 	}
 
 	/**
@@ -483,13 +500,13 @@ public class EntityIIChemthrowerShot extends Entity implements ISyncNBTEntity<En
 		String particleName = gas?"gas": "fluid";
 		IIColor color = IIClientUtils.getFluidTextureColor(this.fluidStack);
 		if(ignited)
-			particleName = ticksExisted < 6?particleName+"_fire": (gas?"fire_gas": "fire");
+			particleName = ticksExisted < 3?particleName+"_fire": (gas?"fire_gas": "fire");
 
 		AbstractParticle particle = ParticleRegistry.spawnParticle("chemthrower/"+particleName, start, new Vec3d(motionX, motionY, motionZ), new Vector2f());
 		if(particle!=null)
 			particle.withProperty(ParticleProperties.STRETCH, new Vector3f((float)end.x, (float)end.y, (float)end.z))
 					.withProperty(ParticleProperties.COLOR, color)
-					.withProperty(ParticleProperties.SIZE, (gas?2.5f: 0.75f)*MathHelper.clamp(ticksExisted/10f, 0.35f, 1f));
+					.withProperty(ParticleProperties.SIZE, (gas?2.5f: 0.75f)*MathHelper.clamp(ticksExisted/6f, 0.35f, 1f));
 	}
 
 	@Override

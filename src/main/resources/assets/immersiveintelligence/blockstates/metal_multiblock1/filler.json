@@ -69,7 +69,7 @@
         "model": "immersiveintelligence:multiblock/filler/filler_base.obj"
       },
       "true": {
-        "model": "immersiveintelligence:multiblock/filler/filler_base_flipped.obj"
+        "model": "immersiveintelligence:multiblock/filler/filler_flipped.obj"
       }
     },
     "boolean1": {

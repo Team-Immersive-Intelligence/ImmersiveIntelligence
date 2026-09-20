@@ -4,6 +4,7 @@ import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
@@ -12,9 +13,11 @@ import pl.pabilo8.immersiveintelligence.client.fx.particles.AbstractParticle;
 import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleDrawStages;
 import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleProperties;
 import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleRegistry;
+import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.util.amt.AMTModelHeader;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
+import javax.annotation.Nonnull;
 import java.nio.FloatBuffer;
 import java.util.function.Consumer;
 
@@ -89,6 +92,15 @@ public class AMTParticle extends AMT
 	public AMTParticle setCorrectRotation(boolean correctRotation)
 	{
 		this.correctRotation = correctRotation;
+		return this;
+	}
+
+	public AMTParticle setParticleProperty(ParticleProperties property, Object value)
+	{
+		if(particle!=null)
+			particle.setProperty(property, value);
+		else
+			IILogger.error("[AMTParticle] Could not set particle property "+property+", particle is null");
 		return this;
 	}
 
@@ -190,6 +202,15 @@ public class AMTParticle extends AMT
 		super.applyProperties(nbt);
 		nbt.checkSetString("particle", this::setParticle);
 		nbt.checkSetBoolean("correct_rotation", this::setCorrectRotation);
+	}
+
+	@Override
+	@Nonnull
+	public AxisAlignedBB getBoundingBox()
+	{
+		if(particle!=null&&particle.getProperty(ParticleProperties.AABB) instanceof AxisAlignedBB aabb)
+			return aabb;
+		return new AxisAlignedBB(originPos, originPos);
 	}
 
 	@Override

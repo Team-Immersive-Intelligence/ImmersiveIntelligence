@@ -1,14 +1,6 @@
 {
   "comment": "Made by Pabilo8 with Blockbench",
   "groups": {
-    "barrel": {
-      "rotation": [
-        {
-          "time": 0,
-          "transform": [0, 0, 0]
-        }
-      ]
-    },
     "barrel_end": {
       "position": [
         {
@@ -16,11 +8,31 @@
           "transform": [0, 0, 0]
         },
         {
-          "time": 0.25,
+          "time": 0.125,
           "transform": [0, 0, 5]
         },
         {
-          "time": 1,
+          "time": 0.5,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "turret_origin": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.125,
+          "transform": [-1, 0, 0]
+        },
+        {
+          "time": 0.2917,
+          "transform": [1, 0, 0]
+        },
+        {
+          "time": 0.4167,
           "transform": [0, 0, 0]
         }
       ]

@@ -124,6 +124,8 @@ public class UpgradeManager<T extends IUpgradableDevice> implements INBTSerializ
 	public boolean remove(Upgrade upgrade)
 	{
 		upgrades.remove(upgrade);
+		List<Upgrade> children = techTree.getAllChildren(upgrade);
+		children.forEach(upgrades::remove);
 		sendTileUpdate();
 		return true;
 	}

@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.model.obj.OBJModel;
 import pl.pabilo8.immersiveintelligence.api.upgrade.IUpgradableDevice;
@@ -28,6 +29,7 @@ import pl.pabilo8.immersiveintelligence.common.util.amt.IIAnimation.IIBooleanLin
 import pl.pabilo8.immersiveintelligence.common.util.amt.IIAnimation.IIShaderLine;
 import pl.pabilo8.immersiveintelligence.common.util.amt.IIAnimation.IIVectorLine;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
 
@@ -158,6 +160,13 @@ public class AMTUpgradeCachedModel<T extends TileEntity & IUpgradableDevice> imp
 	public void disposeOf()
 	{
 		constructionModel.disposeOf();
+	}
+
+	@Override
+	@Nonnull
+	public AxisAlignedBB getBoundingBox()
+	{
+		return batchedConstructionModel.getBoundingBox();
 	}
 
 

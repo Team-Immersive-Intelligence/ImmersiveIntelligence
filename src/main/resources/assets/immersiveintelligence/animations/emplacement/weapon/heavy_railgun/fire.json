@@ -4,16 +4,122 @@
     "gun": {
       "position": [
         {
-          "time": 0,
+          "time": 0.5,
           "transform": [0, 0, 0]
         },
         {
-          "time": 0.3332,
+          "time": 0.6666,
           "transform": [0, 0, 1]
         },
         {
           "time": 1,
           "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "turret_chargeup": {
+      "visibility": [
+        {
+          "time": 0,
+          "visibility": false
+        },
+        {
+          "time": 0.05,
+          "visibility": true
+        },
+        {
+          "time": 0.6,
+          "visibility": true
+        },
+        {
+          "time": 1.0,
+          "visibility": false
+        }
+      ],
+      "energy": [
+        {
+          "time": 0.0,
+          "energy": [0.0, 0.0]
+        },
+        {
+          "time": 0.5,
+          "energy": [1.0, 1.0]
+        },
+        {
+          "time": 0.6666,
+          "energy": [0.0, 0.0]
+        }
+      ]
+    },
+    "gun_chargeup": {
+      "visibility": [
+        {
+          "time": 0,
+          "visibility": false
+        },
+        {
+          "time": 0.05,
+          "visibility": true
+        },
+        {
+          "time": 0.6,
+          "visibility": true
+        },
+        {
+          "time": 1.0,
+          "visibility": false
+        }
+      ],
+      "energy": [
+        {
+          "time": 0.0,
+          "energy": [0.0, 0.0]
+        },
+        {
+          "time": 0.5,
+          "energy": [1.0, 1.0]
+        },
+        {
+          "time": 0.6666,
+          "energy": [0.0, 0.0]
+        }
+      ]
+    },
+    "fire": {
+      "visibility": [
+        {
+          "time": 0.5,
+          "visibility": false
+        },
+        {
+          "time": 0.66,
+          "visibility": true
+        },
+        {
+          "time": 0.85,
+          "visibility": false
+        },
+        {
+          "time": 1.0,
+          "visibility": false
+        }
+      ],
+      "property": [
+        {
+          "time": 0.5,
+          "property": 0.0
+        },
+        {
+          "time": 0.66,
+          "property": 1.0
+        },
+        {
+          "time": 0.85,
+          "property": 1.0
+        },
+        {
+          "time": 1.0,
+          "property": 0.0
         }
       ]
     }
