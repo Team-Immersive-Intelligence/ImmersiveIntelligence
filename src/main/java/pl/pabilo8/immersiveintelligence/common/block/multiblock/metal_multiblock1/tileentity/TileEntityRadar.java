@@ -52,7 +52,7 @@ public class TileEntityRadar extends TileEntityMultiblockIIGeneric<TileEntityRad
 		IConstructionRequiringDevice, IManagedUpgradableDevice<TileEntityRadar>, IOwnableProperty,
 		IIIGuiMultiblockTile, ITactileListener, IManagedDamageResistantMultiblock
 {
-	@SyncNBT
+	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CUSTOM2})
 	public int dishRotation = 0;
 	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CUSTOM2})
 	public boolean active = false;

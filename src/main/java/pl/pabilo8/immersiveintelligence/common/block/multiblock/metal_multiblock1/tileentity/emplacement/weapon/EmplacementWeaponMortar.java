@@ -2,6 +2,7 @@ package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multibloc
 
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.Mortar;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.common.util.gun.ChillingState;
@@ -34,6 +35,7 @@ public class EmplacementWeaponMortar extends EmplacementWeaponGunBase<EntityAmmo
 		this.aim.withAimSpeed(Mortar.yawRotateSpeed, Mortar.pitchRotateSpeed)
 				.withPitchLimit(Mortar.minPitch, Mortar.maxPitch);
 		this.rotateAfterFiring = false;
+		this.gunHandler.withShootSound(IISounds.howitzerShot, 55);
 	}
 
 	@Override

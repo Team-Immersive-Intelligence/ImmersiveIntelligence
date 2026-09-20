@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multibloc
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.RocketLauncher;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.common.util.gun.ChillingState;
@@ -30,6 +31,7 @@ public class EmplacementWeaponRocketLauncher extends EmplacementWeaponGunBase<En
 		this.aim.withAimSpeed(RocketLauncher.yawRotateSpeed, RocketLauncher.pitchRotateSpeed)
 				.withPitchLimit(RocketLauncher.minPitch, RocketLauncher.maxPitch);
 		this.rotateAfterFiring = false;
+		this.gunHandler.withShootSound(IISounds.missileShot, 68);
 	}
 
 	@Override

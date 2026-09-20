@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multibloc
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.GuidedMissileLauncher;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoGuidedMissile;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
@@ -36,6 +37,7 @@ public class EmplacementWeaponGuidedMissileLauncher extends EmplacementWeaponGun
 				this.ammoFactory::isValidAmmo, this.ammoFactory::isValidAmmo);
 		this.aim.withAimSpeed(GuidedMissileLauncher.yawRotateSpeed, GuidedMissileLauncher.pitchRotateSpeed)
 				.withPitchLimit(GuidedMissileLauncher.minPitch, GuidedMissileLauncher.maxPitch);
+		this.gunHandler.withShootSound(IISounds.missileShot, 68);
 	}
 
 	@Override

@@ -946,6 +946,12 @@ subtitle.immersiveintelligence.motor_belt=Drive Belt Turning
 subtitle.immersiveintelligence.track_break=Metal Track Breaks
 subtitle.immersiveintelligence.track=Metal Track Turning
 
+subtitle.immersiveintelligence.heavy_railgun_shot=Heavy Railgun Firing
+subtitle.immersiveintelligence.heavy_railgun_shot_distant=Heavy Railgun Firing in Distance
+
+subtitle.immersiveintelligence.missile_shot=Missile being Fired
+subtitle.immersiveintelligence.missile_shot_distant=Missile being Fired in Distance
+
 subtitle.immersiveintelligence.autocannon_shot=Autocannon Firing
 subtitle.immersiveintelligence.autocannon_shot_distant=Autocannon Firing in Distance
 subtitle.immersiveintelligence.autocannon_reload=Autocannon Reloading

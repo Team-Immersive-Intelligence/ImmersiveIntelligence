@@ -304,11 +304,11 @@ public class IIConfigHandler
 
 			@RangeInt(min = 0, max = 65345)
 			@Comment({"Max amount of particles that will be simulated."})
-			public static int maxSimulatedParticles = 6000;
+			public static int maxSimulatedParticles = 8192;
 
 			@RangeInt(min = 0, max = 65345)
 			@Comment({"Max amount of particles that will be drawn. Should be less or equal to maxSimulatedParticles."})
-			public static int maxDrawnParticles = 1000;
+			public static int maxDrawnParticles = 4196;
 
 			@Comment({"Determines the look of II explosion particles",
 					"The final value will be this or the Particles option from Video Settings, whichever is lower."})

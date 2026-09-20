@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Value;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoType;
+import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
 
 /**
@@ -122,7 +123,10 @@ public class AmmoBallistics
 	{
 		if(cacheIdentity==null||flightModel==null||!Double.isFinite(velocity)
 				||velocity <= 0||maxFlightTime <= 0)
-			throw new IllegalArgumentException("Invalid ballistic flight model");
+		{
+			IILogger.error("Invalid ballistic flight model");
+			return new AmmoBallistics("straight", 1D, 40, FlightState::move);
+		}
 		return new AmmoBallistics(cacheIdentity, velocity, maxFlightTime, flightModel);
 	}
 

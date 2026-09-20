@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multibloc
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.HeavyRailgun;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIRailgunOverride;
@@ -33,6 +34,7 @@ public class EmplacementWeaponHeavyRailgun extends EmplacementWeaponGunBase<Enti
 				ItemIIRailgunOverride::isAmmo, ItemIIRailgunOverride::isAmmo);
 		this.chillingState = new ChillingState(200, 240, 80);
 		this.aim.withAimSpeed(HeavyRailgun.yawRotateSpeed, HeavyRailgun.pitchRotateSpeed);
+		this.gunHandler.withShootSound(IISounds.heavyRailgunShot, 55);
 	}
 
 	@Override
