@@ -1,5 +1,6 @@
-package pl.pabilo8.immersiveintelligence.common.util;
+package pl.pabilo8.immersiveintelligence.common.util.fluid;
 
+import lombok.Setter;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
@@ -8,16 +9,20 @@ import javax.annotation.Nullable;
 import java.util.function.Predicate;
 
 /**
- * A FluidTank with option to allow or disallow certain fluids being added or taken.
+ * A {@link FluidTank} that allows filtering of fluids that can be inserted or extracted.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
  * @since 22.08.2025
  */
-public class FilteredFluidTank extends FluidTank
+public class FilteredFluidTank extends FluidTank implements IFilteredTank<FilteredFluidTank>
 {
+	@Setter
 	private Predicate<FluidStack> inputFilter;
+	@Setter
 	private Predicate<FluidStack> outputFilter;
+
+	//--- Constructors ---//
 
 	public FilteredFluidTank(int capacity)
 	{
@@ -32,26 +37,6 @@ public class FilteredFluidTank extends FluidTank
 	public FilteredFluidTank(Fluid fluid, int amount, int capacity)
 	{
 		super(fluid, amount, capacity);
-	}
-
-	public FilteredFluidTank withInputFilter(Predicate<FluidStack> inputFilter)
-	{
-		this.inputFilter = inputFilter;
-		return this;
-	}
-
-	public FilteredFluidTank withOutputFilter(Predicate<FluidStack> outputFilter)
-	{
-		this.outputFilter = outputFilter;
-		return this;
-	}
-
-	public float getFillPercentage()
-	{
-		int cap = getCapacity();
-		if(cap==0)
-			return 0;
-		return getFluidAmount()/(float)cap;
 	}
 
 	@Override

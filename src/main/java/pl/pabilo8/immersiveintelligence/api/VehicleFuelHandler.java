@@ -2,7 +2,9 @@ package pl.pabilo8.immersiveintelligence.api;
 
 import net.minecraft.entity.Entity;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -12,7 +14,18 @@ import java.util.HashMap;
  */
 public class VehicleFuelHandler
 {
-	static HashMap<Class<? extends Entity>, Fluid[]> allowedFluids = new HashMap<>();
+	private static HashMap<Class<? extends Entity>, Fluid[]> allowedFluids = new HashMap<>();
+	private static ArrayList<Fluid> allowedFluidsList = new ArrayList<>();
+
+	public static boolean isValidFluid(FluidStack fluidStack)
+	{
+		return allowedFluidsList.contains(fluidStack.getFluid());
+	}
+
+	public static boolean isValidFluid(Fluid fluid)
+	{
+		return allowedFluidsList.contains(fluid);
+	}
 
 	public static boolean isValidVehicle(Entity e)
 	{
@@ -29,11 +42,9 @@ public class VehicleFuelHandler
 	public static void addVehicle(Class<? extends Entity> clazz, Fluid... fluids)
 	{
 		if(!allowedFluids.containsKey(clazz))
+		{
 			allowedFluids.put(clazz, fluids);
-	}
-
-	public static void removeVehicle(Fluid fluid)
-	{
-		allowedFluids.remove(fluid);
+			allowedFluidsList.addAll(Arrays.asList(fluids));
+		}
 	}
 }
