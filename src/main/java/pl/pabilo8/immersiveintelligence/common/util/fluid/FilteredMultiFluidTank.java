@@ -87,7 +87,7 @@ public class FilteredMultiFluidTank extends MultiFluidTank implements IFilteredT
 	@Override
 	public int fill(FluidStack fluid, boolean doFill)
 	{
-		if(inputFilter==null||(fluid!=null&&inputFilter.test(fluid)))
+		if(inputFilter!=null&&(fluid==null||!inputFilter.test(fluid)))
 			return 0;
 		return super.fill(fluid, doFill);
 	}

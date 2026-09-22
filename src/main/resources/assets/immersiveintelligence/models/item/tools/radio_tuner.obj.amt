@@ -4,5 +4,25 @@
     "knob2": [-1.5, 3, 2],
     "hand": [7.5, 5, 1]
   },
-  "hierarchy": {}
+  "hierarchy": {},
+  "transforms": {
+    "ground": {
+      "scale": [0.45, 0.45, 0.45],
+      "translate": [0.5, 0, 0.5]
+    },
+    "third_person_right_hand": {
+      "scale": [0.5, 0.5, 0.5],
+      "rotate": [0, -20.5, 0],
+      "translate": [0, 0.125, 0.385]
+    },
+    "first_person_right_hand": {
+      "rotate": [0, -25, 0],
+      "translate": [0.25, 0, -0.375]
+    },
+    "gui": {
+      "scale": [0.7, 0.7, 0.7],
+      "rotate": [-8.11002742, -22.29711193, -3.09472447],
+      "translate": [0.26396558, 0.01427149, -0.10840272]
+    }
+  }
 }

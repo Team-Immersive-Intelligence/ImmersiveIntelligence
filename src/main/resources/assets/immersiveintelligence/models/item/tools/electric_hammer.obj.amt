@@ -20,5 +20,27 @@
     "mainhand": {
       "hand": "main_hand"
     }
+  },
+  "transforms": {
+    "ground": {
+      "scale": [0.625, 0.625, 0.625],
+      "translate": [0.5, 0, 0.5]
+    },
+    "third_person_right_hand": {
+      "scale": [0.625, 0.625, 0.625],
+      "translate": [0.5, 0.25, 0.575]
+    },
+    "third_person_left_hand": {
+      "scale": [0.625, 0.625, 0.625],
+      "translate": [-0.5, 0.25, 0.575]
+    },
+    "first_person_right_hand": {
+      "scale": [1.5, 1.5, 1.5],
+      "translate": [1, 0, -0.385]
+    },
+    "first_person_left_hand": {
+      "scale": [1.5, 1.5, 1.5],
+      "translate": [0, 0, -0.385]
+    }
   }
 }

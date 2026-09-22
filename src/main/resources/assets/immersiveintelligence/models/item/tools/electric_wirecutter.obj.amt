@@ -29,5 +29,29 @@
       "hand": "main_hand",
       "scale": [0.5, 0.5, 0.5]
     }
+  },
+  "transforms": {
+    "ground": {
+      "scale": [0.625, 0.625, 0.625],
+      "translate": [0.5, 0, 0.5]
+    },
+    "third_person_right_hand": {
+      "scale": [0.625, 0.625, 0.625],
+      "translate": [0.5, 0.25, 0.575]
+    },
+    "third_person_left_hand": {
+      "scale": [0.625, 0.625, 0.625],
+      "translate": [-0.5, 0.25, 0.575]
+    },
+    "first_person_right_hand": {
+      "scale": [1.5, 1.5, 1.5],
+      "rotate": [-65, 77.5, 0],
+      "translate": [1.27775273, 1.14815255, 0.74100855]
+    },
+    "first_person_left_hand": {
+      "scale": [1.5, 1.5, 1.5],
+      "rotate": [-65, 77.5, 0],
+      "translate": [0.8353404, 1.35946168, 0.83908901]
+    }
   }
 }

@@ -1,9 +1,6 @@
 package pl.pabilo8.immersiveintelligence.client.render.item;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
-import blusunrize.immersiveengineering.client.ImmersiveModelRegistry.ItemModelReplacement;
-import blusunrize.immersiveengineering.client.ImmersiveModelRegistry.ItemModelReplacement_OBJ;
-import blusunrize.immersiveengineering.common.util.chickenbones.Matrix4;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
@@ -40,27 +37,6 @@ public class ElectricHammerRenderer extends IIItemRendererAMT<ItemIIElectricHamm
 	{
 		super(IIContent.itemHammer, ResLoc.of(IIReference.RES_ITEM_MODEL, "tools/electric_hammer")
 				.withExtension(ResLoc.EXT_OBJ), true);
-	}
-
-	@Override
-	protected ItemModelReplacement setTransforms(ItemModelReplacement_OBJ model)
-	{
-		return model
-				.setTransformations(TransformType.GROUND, new Matrix4()
-						.scale(0.625, 0.625, 0.625)
-						.translate(0.5, 0, 0.5))
-				.setTransformations(TransformType.THIRD_PERSON_RIGHT_HAND, new Matrix4()
-						.scale(0.625, 0.625, 0.625)
-						.translate(0.5, 0.25, 0.575))
-				.setTransformations(TransformType.THIRD_PERSON_LEFT_HAND, new Matrix4()
-						.scale(0.625, 0.625, 0.625)
-						.translate(-0.5, 0.25, 0.575))
-				.setTransformations(TransformType.FIRST_PERSON_RIGHT_HAND, new Matrix4()
-						.scale(1.5, 1.5, 1.5)
-						.translate(1f, 0, 0.125-0.25f-0.385f+0.125))
-				.setTransformations(TransformType.FIRST_PERSON_LEFT_HAND, new Matrix4()
-						.scale(1.5, 1.5, 1.5)
-						.translate(0f, 0, 0.125-0.25f-0.385f+0.125));
 	}
 
 	@Override

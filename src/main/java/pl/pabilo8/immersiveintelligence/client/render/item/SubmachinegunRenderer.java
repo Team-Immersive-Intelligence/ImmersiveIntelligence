@@ -1,10 +1,7 @@
 package pl.pabilo8.immersiveintelligence.client.render.item;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
-import blusunrize.immersiveengineering.client.ImmersiveModelRegistry.ItemModelReplacement;
-import blusunrize.immersiveengineering.client.ImmersiveModelRegistry.ItemModelReplacement_OBJ;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
-import blusunrize.immersiveengineering.common.util.chickenbones.Matrix4;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -61,62 +58,6 @@ public class SubmachinegunRenderer extends IIUpgradableItemRendererAMT<ItemIISub
 	public SubmachinegunRenderer()
 	{
 		super(IIContent.itemSubmachinegun, ResLoc.of(RES_MODEL_WEAPON, "submachinegun"));
-	}
-
-	@Override
-	protected ItemModelReplacement setTransforms(ItemModelReplacement_OBJ model)
-	{
-		Matrix4 tpp = new Matrix4()
-				.scale(0.425, 0.425, 0.425)
-				.rotate(Math.toRadians(-20.5f), 0, 1, 0)
-				.translate(0.625f, -1.125, 0.65f);
-		Matrix4 tppOffhand = new Matrix4()
-				.scale(0.385, 0.385, 0.385)
-				.rotate(Math.toRadians(75f), 1, 0, 0)
-				.rotate(Math.toRadians(20.5f), 0, 0, 1)
-				.rotate(Math.toRadians(90f), 0, 1, 0)
-				.translate(-0.5f, -.25, .125);
-
-		Matrix4 fpp = new Matrix4()
-				.scale(0.75, 0.75, 0.75)
-				.translate(1f-0.25f, -1f, 0)
-				.rotate(Math.toRadians(7.5f), 0, 1, 0)
-				.rotate(Math.toRadians(5), 1, 0, 0)
-				.translate(-0.125f, 0, 0.125f);
-		Matrix4 fppOffhand = new Matrix4()
-				.scale(0.55, 0.55, 0.55)
-				.translate(1f-0.25f, -1f, 0)
-				.rotate(Math.toRadians(82.5), 0, 1, 0)
-				.rotate(Math.toRadians(2.5), 1, 0, 0)
-				.translate(0, 0, -0.5f);
-
-		return model
-				.setTransformations(TransformType.GROUND, new Matrix4()
-						.scale(0.425, 0.425, 0.425)
-						.translate(0.5, -0.75, 1))
-				.setTransformations(TransformType.THIRD_PERSON_RIGHT_HAND, tpp)
-				.setTransformations(TransformType.THIRD_PERSON_LEFT_HAND, tppOffhand)
-				.setTransformations(TransformType.FIXED, new Matrix4()
-						.rotate(Math.toRadians(-3.5), 1, 0, 0)
-						.rotate(Math.toRadians(-75), 0, 1, 0)
-						.translate(0.125, -0.25, -0.125)
-						.scale(0.425, 0.425, 0.425))
-				.setTransformations(TransformType.GUI, new Matrix4()
-						.translate(0, -0.25, 0)
-						.scale(0.5, 0.5, 0.5)
-						.rotate(Math.toRadians(35), 1, 0, 0)
-						.rotate(Math.toRadians(135), 0, 1, 0)
-						.translate(0, 0, 0.325)
-				)
-				.setTransformations(TransformType.FIRST_PERSON_RIGHT_HAND, fpp)
-				.setTransformations(TransformType.FIRST_PERSON_LEFT_HAND, fppOffhand);
-	}
-
-	@Override
-	public void registerSprites(TextureMap map)
-	{
-		super.registerSprites(map);
-		IISkinHandler.registerSprites(map, IIContent.itemSubmachinegun.getSkinnableName());
 	}
 
 	@Override
@@ -276,6 +217,13 @@ public class SubmachinegunRenderer extends IIUpgradableItemRendererAMT<ItemIISub
 		offHandAngle = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "offhand"));
 
 		foldingStock = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "folding_stock"));
+	}
+
+	@Override
+	public void registerSprites(TextureMap map)
+	{
+		super.registerSprites(map);
+		IISkinHandler.registerSprites(map, IIContent.itemSubmachinegun.getSkinnableName());
 	}
 
 

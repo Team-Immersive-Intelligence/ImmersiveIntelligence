@@ -1,8 +1,5 @@
 package pl.pabilo8.immersiveintelligence.client.render.item;
 
-import blusunrize.immersiveengineering.client.ImmersiveModelRegistry.ItemModelReplacement;
-import blusunrize.immersiveengineering.client.ImmersiveModelRegistry.ItemModelReplacement_OBJ;
-import blusunrize.immersiveengineering.common.util.chickenbones.Matrix4;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
@@ -37,34 +34,6 @@ public class TachometerRenderer extends IIItemRendererAMT<ItemIITachometer>
 	public TachometerRenderer()
 	{
 		super(IIContent.itemTachometer, ResLoc.of(IIReference.RES_ITEM_MODEL, "tools/tachometer").withExtension(ResLoc.EXT_OBJ));
-	}
-
-	@Override
-	protected ItemModelReplacement setTransforms(ItemModelReplacement_OBJ model)
-	{
-		Matrix4 tpp = new Matrix4()
-				.scale(0.5, 0.5, 0.5)
-				.rotate(Math.toRadians(-20.5f), 0, 1, 0)
-				.translate(0, 0.125, 0.385f);
-
-		Matrix4 fpp = new Matrix4()
-				.scale(1, 1, 1)
-				.rotate(Math.toRadians(-25), 0, 1, 0)
-				.translate(0.25f, 0, 0.125)
-				.translate(0, 0, -0.5f);
-
-		return model
-				.setTransformations(TransformType.GROUND, new Matrix4()
-						.scale(0.45, 0.45, 0.45)
-						.translate(0.5, 0, 0.5))
-				.setTransformations(TransformType.THIRD_PERSON_RIGHT_HAND, tpp)
-				.setTransformations(TransformType.FIRST_PERSON_RIGHT_HAND, fpp)
-				.setTransformations(TransformType.GUI, new Matrix4()
-						.translate(0.2, 0, 0)
-						.scale(0.7, 0.7, 0.7)
-						.rotate(Math.toRadians(-22.5), 0, 1, 0)
-						.rotate(Math.toRadians(-7.5), 1, 0, 0)
-				);
 	}
 
 	@Override
