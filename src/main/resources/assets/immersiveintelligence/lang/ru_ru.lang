@@ -1,4 +1,4 @@
-#Над переводом работали: Королевский кот (Передаю привет вискасу и тапкам. МЯУ!) старый переводчик. Magistr Djo нынешний и основной переводчик (третий год уже пошёл), а также: Carver, Lolscope, MonsieurFeb, MrKoteo
+#Над переводом работали: Королевский кот (Передаю привет вискасу и тапкам. МЯУ!) старый переводчик. Magistr Djo нынешний и основной переводчик (третий год уже пошёл), а также: Carver, Lolscope, MonsieurFeb, MrKoteo и многие другие.
 #Items
 itemGroup.immersiveintelligence=Immersive Intelligence
 itemGroup.ii.resources=Ресурсы
@@ -128,9 +128,9 @@ item.immersiveintelligence.material_nugget.rubber.name=Кусочек резин
 item.immersiveintelligence.material_wire.tungsten.name=Вольфрамовый провод
 item.immersiveintelligence.material_wire.brass.name=Латунный провод
 
-item.immersiveintelligence.material_gem.fluorite.name=Незерский флюорит
+item.immersiveintelligence.material_gem.fluorite.name=Флюорит
 #Based on real-life mineral glauconite, though the word phosphorus is easier to remember
-item.immersiveintelligence.material_gem.phosphorus.name=Незерский фосфор
+item.immersiveintelligence.material_gem.phosphorus.name=Фосфор
 
 item.immersiveintelligence.material_boule.silicon.name=Кремниевая буля
 
@@ -317,7 +317,7 @@ desc.immersiveintelligence.toolupgrade.suppressor=Глушит звук выст
 desc.immersiveintelligence.toolupgrade.bottom_loading=Убирает рукоятку, позволяя заряжать ПП снизу и снаряжать барабанные магазины.
 desc.immersiveintelligence.toolupgrade.folding_stock=Уменьшает время перезарядки и прицеливания. Снижает точность стрельбы в движении.
 
-desc.immersiveintelligence.toolupgrade.heavy_springbox=Увеличивает скорость пули, придавая ей более высокую проникающую способность. Увеличивает время между выстрелами.
+desc.immersiveintelligence.toolupgrade.heavy_springbox=Увеличивает скорость пули, придавая ей более высокую пробивную способность. Увеличивает время между выстрелами.
 
 desc.immersiveintelligence.toolupgrade.rifle_grenade_launcher=Позволяет стрелять рельсотронными гранатами. Дальность стрельбы значительно ниже, чем у стандартного рельсотрона.
 desc.immersiveintelligence.toolupgrade.stereoscopic_rangefinder=Показывает расстояние до цели. В сочетании с радиомаркером позволяет передавать данные о местоположении противника.
@@ -946,6 +946,12 @@ subtitle.immersiveintelligence.motor_belt=Приводной ремень про
 subtitle.immersiveintelligence.track_break=Металлическая гусеница сломалась
 subtitle.immersiveintelligence.track=Металлическая гусеница проворачивается
 
+subtitle.immersiveintelligence.heavy_railgun_shot=Тяжёлый рельсотрон стреляет
+subtitle.immersiveintelligence.heavy_railgun_shot_distant=Тяжёлый рельсотрон стреляет вдалеке
+
+subtitle.immersiveintelligence.missile_shot=ПТУР стреляет
+subtitle.immersiveintelligence.missile_shot_distant=ПТУР стреляет вдалеке
+
 subtitle.immersiveintelligence.autocannon_shot=Автопушка стреляет
 subtitle.immersiveintelligence.autocannon_shot_distant=Автопушка стреляет вдалеке
 subtitle.immersiveintelligence.autocannon_reload=Автопушка перезаряжается
@@ -1118,17 +1124,15 @@ machineupgrade.immersiveintelligence.emplacement.autocannon=Автоматиче
 machineupgrade.immersiveintelligence.emplacement.autocannon.desc=Четыре автоматические пушки 3 bCal обеспечивают большую огневую мощь, что делает это оружие универсальным средством защиты от воздушных и наземных целей.
 machineupgrade.immersiveintelligence.emplacement.heavy_chemthrower=Тяжёлый жидкомёт
 machineupgrade.immersiveintelligence.emplacement.heavy_chemthrower.desc=Более тяжелая версия хорошо известного химического жидкомёта с более высоким давлением позволяет атаковать врагов на расстоянии в 4 раза большем, чем у портативного.
-machineupgrade.immersiveintelligence.emplacement.heavy_railgun=Тяжёлый Рельсотрон
+machineupgrade.immersiveintelligence.emplacement.heavy_railgun=Тяжёлый рельсотрон
 machineupgrade.immersiveintelligence.emplacement.heavy_railgun.desc=Тяжелый рельсотрон обеспечивает прямую огневую поддержку. Он может запускать металлические стержни или гранаты с высокой скоростью, что позволяет пробивать врагов и боевую технику.
 
 machineupgrade.immersiveintelligence.emplacement.machinegun=Пулемётное гнездо
 machineupgrade.immersiveintelligence.emplacement.machinegun.desc=Пулеметное гнездо может вести подавляющий автоматический огонь, что позволяет сдерживать толпу. Из-за своей конструкции оно не может сражаться с воздушными врагами.
 machineupgrade.immersiveintelligence.emplacement.machinegun.heavy_barrel=Тяжелый ствол
-machineupgrade.immersiveintelligence.emplacement.machinegun.heavy_barrel.desc=Тяжелый ствол обеспечивает гораздо более высокую скорострельность и немного увеличивают максимально допустимый перегрев.
+machineupgrade.immersiveintelligence.emplacement.machinegun.heavy_barrel.desc=Тяжелый ствол обеспечивает гораздо более высокую скорострельность.
 machineupgrade.immersiveintelligence.emplacement.machinegun.watercooled=Ствол с водяным охлаждением
 machineupgrade.immersiveintelligence.emplacement.machinegun.watercooled.desc=Замена стандартного ствола. Когда установлено, стволы не перегреваются при подаче охлаждающей жидкости.
-machineupgrade.immersiveintelligence.emplacement.machinegun.bunker=Дополнительные укрепления
-machineupgrade.immersiveintelligence.emplacement.machinegun.bunker.desc=Размещение дополнительных мешков с песком вокруг пулеметного гнезда придает ему дополнительную броню и увеличивает его прочность.
 
 machineupgrade.immersiveintelligence.emplacement.mortar=Миномёт
 machineupgrade.immersiveintelligence.emplacement.mortar.desc=Миномет обеспечивает непрямую огневую поддержку с близкого расстояния, вертикальный угол обстрела и большой калибр снаряда позволяют ему пробивать крыши домов и уничтожать врагов сверху.
@@ -1448,9 +1452,9 @@ desc.immersiveintelligence.diplomacy.law_form.commune.tier2=Коммуна
 desc.immersiveintelligence.diplomacy.law_form.commune.tier2_long=Более крупная группа, объединяющая землю, инструменты и производство для общего блага.
 desc.immersiveintelligence.diplomacy.law_form.commune.tier3=Союз коммун
 desc.immersiveintelligence.diplomacy.law_form.commune.tier3_long=Многочисленные коллективы объединились в знак солидарности и взаимной поддержки.
-desc.immersiveintelligence.diplomacy.law_form.commune.tier4=Союз народных коммун
+desc.immersiveintelligence.diplomacy.law_form.commune.tier4=Федерация народных коммун
 desc.immersiveintelligence.diplomacy.law_form.commune.tier4_long=Широкая сеть коммун, объединяющая различные отрасли промышленности.
-desc.immersiveintelligence.diplomacy.law_form.commune.tier5=Коминтерн
+desc.immersiveintelligence.diplomacy.law_form.commune.tier5=Союз федераций народных коммун
 desc.immersiveintelligence.diplomacy.law_form.commune.tier5_long=Растущее общество, полностью основанное на коллективной собственности и принятии решений.
 #Commissariat Фашисты
 desc.immersiveintelligence.diplomacy.law_form.commisariat=Комиссариат
@@ -3191,11 +3195,12 @@ ie.manual.entry.bullet_core.core_rubber.desc=Резиновые сердечни
 
 ie.manual.entry.bullet_components.name=Компоненты пули
 ie.manual.entry.bullet_components.subtext=Загрузка APCRHEFSPTSD ограничена!
-ie.manual.entry.bullet_components.dmg_mod=Урон: %sx
-ie.manual.entry.bullet_components.pen_mod=Пробитие: %s vBH
-ie.manual.entry.bullet_components.blast_mod=Радиус взрыва: %sx
+ie.manual.entry.bullet_components.damage_modifier=Модификатор урона: %sx
+ie.manual.entry.bullet_components.component_efficiency_modifier=Модификатор эффективности компонентов: %sx
+ie.manual.entry.bullet_components.penetration_hardness=Пробивная способность: %s
 ie.manual.entry.bullet_components.density=Плотность: %s
 ie.manual.entry.bullet_components.type=Тип: %s
+ie.manual.entry.bullet_components.slots_taken=Используемые компоненты: %s
 
 #A quote from World in Conflict
 ie.manual.entry.bullet_component.firework=Фейерверк
@@ -3230,7 +3235,7 @@ ie.manual.entry.bullet_component.tnt.desc=ТНТ — взрывчатое вещ
 #CoH2 Reference
 ie.manual.entry.bullet_component.rdx=RDX
 ie.manual.entry.bullet_component.rdx.lore=Всё идёт вверх, всё идёт вниз!
-ie.manual.entry.bullet_component.rdx.desc=RDX, также известный как §ггексоген§r, — мощное взрывчатое вещество. Будучи вдвое мощнее ТНТ, он способен уничтожить даже самые мощные огневые точки.
+ie.manual.entry.bullet_component.rdx.desc=RDX, также известный как §lгексоген§r, — мощное взрывчатое вещество. Будучи вдвое мощнее ТНТ, он способен уничтожить даже самые мощные огневые точки.
 
 #There are many variants of HMX's full name, one of them is Her Majesty's Explosive
 ie.manual.entry.bullet_component.hmx=HMX
@@ -3483,7 +3488,7 @@ ii.gui.data_input_machine.memory.page.tooltip=Позволяет выбрать 
 ii.gui.arithmetic_logic_machine.storage=Хранилище печатных плат
 ii.gui.arithmetic_logic_machine.memory.transfer=Редактор правил доступа к памяти
 ii.gui.arithmetic_logic_machine.memory.into=в
-ii.gui.arithmetic_logic_machine.memory.mode.overwrite=(перезаписать)
+ii.gui.arithmetic_logic_machine.memory.mode.overwrite=(Перезаписать)
 ii.gui.arithmetic_logic_machine.memory.mode.supplement=(Supplement)
 ii.gui.arithmetic_logic_machine.memory.load_rule_properties=Загрузить из памяти
 ii.gui.arithmetic_logic_machine.memory.save_rule_properties=Загрузить в памяти
@@ -3503,6 +3508,10 @@ ii.gui.flagpole.faction=Управление фракциями
 ii.gui.radar.map=Дисплей радара
 ii.gui.radar.configuration=Конфигурация
 ii.gui.radar.targets=Цели
+ii.gui.radar.config.reacts_redstone=Реакция на редстоун
+ii.gui.radar.config.reacts_redstone.tooltip=Если включено, радар активируется редстоун-сигналом.
+ii.gui.radar.config.data_output=Вывод данных
+ii.gui.radar.config.data_output.tooltip=Отправляет обнаруженные цели через порт данных радара.
 
 ii.gui.emplacement.platform_inventory=Хранилеще платформы
 ii.gui.emplacement.base_inventory=Основное хранилище
@@ -3512,6 +3521,12 @@ ii.gui.emplacement.config.reacts_redstone=Реакция на редстоун
 ii.gui.emplacement.config.reacts_redstone.tooltip=Если включено, вооружение активируется редстоун-сигналом.
 ii.gui.emplacement.config.reacts_data=Реакция на данные
 ii.gui.emplacement.config.reacts_data.tooltip=Если выключено, огневая точка не реагирует на данные.
+ii.gui.emplacement.config.data_output=Вывод данных
+ii.gui.emplacement.config.data_output.tooltip=Отправляет обнаруженные цели через порт данных огневой точки.
+ii.gui.emplacement.config.ballistic_fire=Навесной огонь
+ii.gui.emplacement.config.ballistic_fire.tooltip=Используйте навесной огонь по автоматически обнаруженным целям. Отключите этот режим для стрельбы прямой наводкой.
+ii.gui.emplacement.config.yaw=Рыскание
+ii.gui.emplacement.config.pitch=Тангаж
 ii.gui.emplacement.config.hide_health=Опускаться, когда уровень здоровья ниже:
 ii.gui.emplacement.config.hide_health.tooltip=Минимальный процент здоровья вооружения. Ниже этого значения платформа опускаться для ремонта.
 ii.gui.emplacement.config.resurface_health=Чинить до:
@@ -3530,6 +3545,114 @@ ii.gui.emplacement.fire_missions.finite_shots=Лимит выстрелов
 ii.gui.emplacement.fire_missions.shots=Выстрелов
 ii.gui.emplacement.fire_missions.shots_left=%s выстрелов
 ii.gui.emplacement.fire_missions.until_done=until done
+
+ii.gui.emplacement.target_preset.mobs=Мобы
+ii.gui.emplacement.target_preset.everyone=Каждый
+ii.gui.emplacement.target_preset.enemy_factions=Вражеские фракции
+ii.gui.emplacement.target_preset.shells=Снаряды
+ii.gui.emplacement.target_preset.custom=Пользовательская
+ii.gui.emplacement.target_preset.name=Имя пресета
+ii.gui.emplacement.target_preset.new_name=Новый пресет
+ii.gui.emplacement.target_preset.copy_name=%s Копия
+ii.gui.emplacement.target_preset.add.tooltip=Добавьте пользовательский пресет цели.
+ii.gui.emplacement.target_preset.duplicate.tooltip=Дублируйте выбранный пресет с новым именем.
+ii.gui.emplacement.target_preset.remove.tooltip=Удалите выбранный пресет и соответствующее ему древо целей.
+ii.gui.emplacement.target_preset.reset=Перезагрузить
+ii.gui.emplacement.target_preset.reset.tooltip=Вернуть пресет до исходного состояния.
+ii.gui.emplacement.target_preset.current=Текущая задача
+ii.gui.emplacement.target_preset.current.tooltip=Используйте этот пресет в качестве задачи для автономного наведения. Отключите его, чтобы деактивировать автономное наведение.
+
+ii.gui.emplacement.target_tree.node=Состояние цели
+ii.gui.emplacement.target_tree.weight=Вес
+ii.gui.emplacement.target_tree.weight.tooltip=Add this signed value when the condition and its parent branch match.
+ii.gui.emplacement.target_tree.filter=Фильтр
+ii.gui.emplacement.target_tree.filter.tooltip=Выберите условие, для данного узла древа целей.
+ii.gui.emplacement.target_tree.entity_id=ID сущности
+ii.gui.emplacement.target_tree.mod_id=ID мода
+ii.gui.emplacement.target_tree.entity_type=Тип
+ii.gui.emplacement.target_tree.name=Имя
+ii.gui.emplacement.target_tree.comparison=Тест
+ii.gui.emplacement.target_tree.expected=Состояние
+ii.gui.emplacement.target_tree.expected_state=Ожидание
+ii.gui.emplacement.target_tree.relationship=Отношение
+ii.gui.emplacement.target_tree.add_child=Добавить ветвь
+ii.gui.emplacement.target_tree.add_child.tooltip=Добавьте «Любое» условие под выбранным узлом.
+ii.gui.emplacement.target_tree.remove=Удалить
+ii.gui.emplacement.target_tree.remove.tooltip=Удалите выбранный узел и все его ветви. Корневой узел удалить нельзя.
+ii.gui.emplacement.target_tree.condition=%s: %s
+ii.gui.emplacement.target_tree.weight_value=Вес: %s
+
+ii.gui.emplacement.target_filter.invalid=НЕДЕЙСТВИТЕЛЬНО
+ii.gui.emplacement.target_filter.invalid.tooltip=Это условие отклоняет каждую цель, поскольку сохраненные для нее данные недействительны.
+ii.gui.emplacement.target_filter.any=Любой
+ii.gui.emplacement.target_filter.any.value=Все цели
+ii.gui.emplacement.target_filter.any.tooltip=Сопоставьте каждой цели в зоне видимости огневой точки.
+ii.gui.emplacement.target_filter.entity_id=ID сущности
+ii.gui.emplacement.target_filter.entity_id.tooltip=Match one exact Forge entity registry identifier.
+ii.gui.emplacement.target_filter.mod_id=ID мода
+ii.gui.emplacement.target_filter.mod_id.tooltip=Match the namespace of the target's entity registry identifier.
+ii.gui.emplacement.target_filter.entity_type=Тип сущности
+ii.gui.emplacement.target_filter.entity_type.tooltip=Match one supported Emplacement entity category.
+ii.gui.emplacement.target_filter.name=Имя
+ii.gui.emplacement.target_filter.name.tooltip=Match the target's visible name without case sensitivity.
+ii.gui.emplacement.target_filter.health=Здоровье
+ii.gui.emplacement.target_filter.health.tooltip=Compare current health or vehicle durability with a threshold.
+ii.gui.emplacement.target_filter.max_health=Максимум здоровья
+ii.gui.emplacement.target_filter.max_health.tooltip=Compare maximum health or vehicle durability with a threshold.
+ii.gui.emplacement.target_filter.distance=Дистанция
+ii.gui.emplacement.target_filter.distance.tooltip=Compare distance from the weapon targeting centre with a block threshold.
+ii.gui.emplacement.target_filter.horizontal_distance=Горизонтальная дистанция
+ii.gui.emplacement.target_filter.horizontal_distance.tooltip=Compare X/Z distance from the weapon targeting centre with a block threshold, ignoring height.
+ii.gui.emplacement.target_filter.on_ground=На земле
+ii.gui.emplacement.target_filter.on_ground.tooltip=Match whether the target is on the ground.
+ii.gui.emplacement.target_filter.in_water=В воде
+ii.gui.emplacement.target_filter.in_water.tooltip=Match whether the target is in water.
+ii.gui.emplacement.target_filter.on_fire=В огне
+ii.gui.emplacement.target_filter.on_fire.tooltip=Match whether the target is burning.
+ii.gui.emplacement.target_filter.faction_relationship=Отношения с фракцией
+ii.gui.emplacement.target_filter.faction_relationship.tooltip=Установите точное дипломатическое отношение между владельцем огневой точки и живой целью.
+ii.gui.emplacement.target_filter.unset=НЕ УСТАНОВЛЕНО
+ii.gui.emplacement.target_filter.boolean.true=Истина
+ii.gui.emplacement.target_filter.boolean.false=Ложь
+ii.gui.emplacement.target_filter.entity_type.mob=Моб
+ii.gui.emplacement.target_filter.entity_type.animal=Животное
+ii.gui.emplacement.target_filter.entity_type.player=Игрок
+ii.gui.emplacement.target_filter.entity_type.npc=НИП
+ii.gui.emplacement.target_filter.entity_type.vehicle=Техника
+ii.gui.emplacement.target_filter.entity_type.projectile=Снаряд
+ii.gui.emplacement.target_filter.relationship.member=Участик
+ii.gui.emplacement.target_filter.relationship.allied=Союзник
+ii.gui.emplacement.target_filter.relationship.neutral=Нейтрал
+ii.gui.emplacement.target_filter.relationship.enemy=Враг
+ii.gui.emplacement.target_filter.comparison.less_than=Меньше, чем
+ii.gui.emplacement.target_filter.comparison.less_or_equal=Меньше или эквивалентно
+ii.gui.emplacement.target_filter.comparison.equal=Эквивалентно
+ii.gui.emplacement.target_filter.comparison.greater_or_equal=Больше или эквивалентно
+ii.gui.emplacement.target_filter.comparison.greater_than=Больше, чем
+
+ii.gui.emplacement.fire_mission.editor=Огневая задача
+ii.gui.emplacement.fire_mission.entity_not_editable=Entity-based Fire Missions cannot be edited.
+ii.gui.emplacement.fire_mission.type=Тип
+ii.gui.emplacement.fire_mission.type.position=Позиция
+ii.gui.emplacement.fire_mission.type.entity=Сущность
+ii.gui.emplacement.fire_mission.position=Относительное положение цели (X / Y / Z)
+ii.gui.emplacement.fire_mission.position_value=%s, %s, %s
+ii.gui.emplacement.fire_mission.position_unset=Position not set
+ii.gui.emplacement.fire_mission.entity_id=ID сущности
+ii.gui.emplacement.fire_mission.entity_id.tooltip=Runtime entity ID of the target.
+ii.gui.emplacement.fire_mission.entity_value=Сущность #%s
+ii.gui.emplacement.fire_mission.coordinate.x.tooltip=Координата цели по X.
+ii.gui.emplacement.fire_mission.coordinate.y.tooltip=Координата цели по Y.
+ii.gui.emplacement.fire_mission.coordinate.z.tooltip=Координата цели по Z.
+ii.gui.emplacement.fire_mission.finite_shots=Лимит выстрелов
+ii.gui.emplacement.fire_mission.finite_shots.tooltip=Remove this Request after the configured number of shots.
+ii.gui.emplacement.fire_mission.shots=Выстрелов
+ii.gui.emplacement.fire_mission.shots.tooltip=Number of shots remaining for this Request.
+ii.gui.emplacement.fire_mission.shots_left=%s выстрелов
+ii.gui.emplacement.fire_mission.until_done=Until target is gone
+ii.gui.emplacement.fire_mission.aim_only=Aim only
+ii.gui.emplacement.fire_mission.ballistic_fire=Навесной огонь
+ii.gui.emplacement.fire_mission.ballistic_fire.tooltip=Override the Emplacement default for this Fire Mission. Disable for direct fire.
 
 ii.gui.emplacement.selector_preset=Selector Preset
 ii.gui.emplacement.filter=Фильтр
@@ -3587,7 +3710,7 @@ ii.gui.faction_invitation=Фракция
 ii.gui.faction_invitation.invalid=Не удалось получить данные о фракции. Пожалуйста, закройте и откройте этот экран снова.
 ii.gui.faction_invitation.current=Текущее состояние
 ii.gui.faction_invitation.current.alone=%s является владельцем фракции.
-#[Name] is [Rank] of [Faction], e.g. Pabilo8 is Owner of Pabulograd и Magistr Djo владелец перевод
+#[Name] is [Rank] of [Faction], e.g. Pabilo8 is Owner of Pabulograd и Magistr Djo Владелец Перевод
 ii.gui.faction_invitation.current.faction=%s %s %s
 ii.gui.faction_invitation.invitations=Приглашения фракций
 ii.gui.faction_invitation.invitations.none=Нет ожидающих приглашений 
@@ -3628,9 +3751,10 @@ ii.gui.redstone_data_interface.mode.float=Дробное 0-1
 ii.gui.redstone_data_interface.mode.string=Строка
 
 ii.gui.projectile_workshop.component_info=Информация о компоненте
+ii.gui.projectile_workshop.tooltip.units=%s Юнитов
 ii.gui.projectile_workshop.component.role=Роль: %s
 ii.gui.projectile_workshop.component.density=Плотность: %s
-ii.gui.projectile_workshop.component.slots_taken=Кол-во используемых компонентов: %s
+ii.gui.projectile_workshop.component.slots_taken=Используемые компоненты: %s
 ii.gui.projectile_workshop.entry.core=Сердечник
 ii.gui.projectile_workshop.entry.type=Тип
 ii.gui.projectile_workshop.tooltip.core_type=Тип сердечника
@@ -3641,32 +3765,42 @@ ii.gui.projectile_workshop.material_preview=Предпросмотр матер�
 ii.gui.projectile_workshop.section.core=Сердечник
 ii.gui.projectile_workshop.section.ballistics=Баллистика
 ii.gui.projectile_workshop.tooltip.component_slots=Кол-во возможных компонентов
+ii.gui.projectile_workshop.tooltip.component_slots.tooltip=Количество возможных компонентов для размещения в боеприпасов.
 ii.gui.projectile_workshop.tooltip.component_effect_shape=Component Effect Shape
+ii.gui.projectile_workshop.tooltip.component_effect_shape.tooltip=Shape used by component effects, i.e. explosives upon detonation. Depends on core type.
 ii.gui.projectile_workshop.tooltip.component_efficiency=Модификатор эффективности компонентов
-ii.gui.projectile_workshop.tooltip.component_efficiency.line1=Determines potency.
-ii.gui.projectile_workshop.tooltip.component_efficiency.line2=Отвечает за взрывную силу, концентрацию химических газов.
-ii.gui.projectile_workshop.tooltip.component_size=Component Size Multiplier
-ii.gui.projectile_workshop.tooltip.component_size.line1=Определяет объем компонента, отвечающий за радиус взрыва, коэффициент дальности распространения газа.
+ii.gui.projectile_workshop.tooltip.component_efficiency.tooltip=Отвечает за взрывную силу, концентрацию химических газов.
+ii.gui.projectile_workshop.tooltip.component_size=Коэффициент размера компонента
+ii.gui.projectile_workshop.tooltip.component_size.tooltip=Определяет объем компонента, отвечающий за радиус взрыва, коэффициент дальности распространения газа.
 ii.gui.projectile_workshop.tooltip.core_mass=Масса сердечника
+ii.gui.projectile_workshop.tooltip.core_mass.tooltip=Масса сердечника снаряда из выбранного материала.
 ii.gui.projectile_workshop.tooltip.damage_dealt=Наносимый урон
+ii.gui.projectile_workshop.tooltip.damage_dealt.tooltip=Прямой урон, наносимый при попадании снаряда в цель.
 ii.gui.projectile_workshop.tooltip.velocity=Скорость
+ii.gui.projectile_workshop.tooltip.velocity.tooltip=Скорость снаряда в b/t.
 ii.gui.projectile_workshop.tooltip.available_fuzes=Доступные взрыватели
+ii.gui.projectile_workshop.tooltip.available_fuzes.tooltip=Типы взрывателей, которые могут использоваться с этим снарядом.
 ii.gui.projectile_workshop.tooltip.penetration_hardness=Пробивная способность
+ii.gui.projectile_workshop.tooltip.penetration_hardness.tooltip=Самый твердый материал, который сможет пробить снаряд.
+ii.gui.projectile_workshop.tooltip.penetration_depth=Глубина пробития
+ii.gui.projectile_workshop.tooltip.penetration_depth.tooltip=Максимальная глубина, на которую снаряд сможет проникнуть в самый прочный из материалов.
 ii.gui.projectile_workshop.tooltip.flat_trajectory_range=Дальность прямого выстрела
-ii.gui.projectile_workshop.tooltip.max_artillery_range=Макс. Арифметическая дальность
+ii.gui.projectile_workshop.tooltip.flat_trajectory_range.tooltip=Расстояние, которое пролетает снаряд, выпущенный под углом 0 градусов, до момента падения на высоту одного полного блока.
+ii.gui.projectile_workshop.tooltip.max_artillery_range=Макс. артиллерийская дальность 
+ii.gui.projectile_workshop.tooltip.max_artillery_range.tooltip=Горизонтальная дальность полета снаряда, выпущенного под углом 45 градусов, до момента его падения.
 ii.gui.projectile_workshop.unit.blocks=%s b
 ii.gui.projectile_workshop.unit.blocks_per_tick=%s b/t
-ii.gui.projectile_workshop.value.penetration_hardness=%s b %s
+ii.gui.projectile_workshop.value.penetration_hardness=%s @ %s
 ii.gui.projectile_workshop.unit.multiplier=%sx
-
+#Макс. Арифметическая дальность
 ii.gui.ammunition_assembler.fuse_config.timed=Время:
 ii.gui.ammunition_assembler.fuse_config.timed.tooltip=Время до срабатывания взрывателя (в тиках)
 ii.gui.ammunition_assembler.fuse_config.proximity=Дистанция:
 ii.gui.ammunition_assembler.fuse_config.proximity.tooltip=Необходимое расстояние до твердого поверхности для приведения в действие взрывателя (в блоках)
 
-ii.gui.data_router.into=Into side: %s
+ii.gui.data_router.into=Входная сторона: %s
 ii.gui.data_router.rule_editor=Data Routing Rule
-ii.gui.data_router.rule_properties=Rule Properties
+ii.gui.data_router.rule_properties=Правило разрешений
 ii.gui.data_router.routing=Routing
 ii.gui.data_router.packet_filters=Фильтры пакетов
 ii.gui.data_router.incoming=Входы:
@@ -3732,10 +3866,10 @@ ii.gui_tooltip.button.remove=Удалить
 ii.gui_tooltip.button.edit=Изменить
 ii.gui_tooltip.button.duplicate=Дублировать
 ii.gui_tooltip.button.clear=Очистить
-ii.gui_tooltip.button.accept=Accept
-ii.gui_tooltip.button.reject=Reject
-ii.gui_tooltip.button.help=Show Help
-ii.gui_tooltip.button.factions=Factions
+ii.gui_tooltip.button.accept=Принять
+ii.gui_tooltip.button.reject=Отклонить
+ii.gui_tooltip.button.help=Показать подсказку
+ii.gui_tooltip.button.factions=Фракции
 
 #GUI Widgets
 ii.gui_tooltip.widget.style.show=Показывать кастомизацию
@@ -3814,7 +3948,7 @@ ie.manual.entry.bullet_core.core_netherite.desc=Ancient debris is what remains o
 
 item.immersiveintelligence.bullet.component.nether_fire.name=Адский огонь
 ie.manual.entry.bullet_component.nether_fire=Адский огонь
-ie.manual.entry.bullet_component.nether_fire.lore=This "prison"... to contain ME?
+ie.manual.entry.bullet_component.nether_fire.lore=Эта "тюрьма"... для МЕНЯ?
 ie.manual.entry.bullet_component.nether_fire.desc=A fire of infernal origins,  it is a permanent, non-spreading fire that deals higher damage than normal fire and keeps on burning when it should not.
 
 # Deeper Depths Compat
@@ -3840,14 +3974,14 @@ ie.manual.entry.bullet_component.bottled_taint=Bottled Taint
 ie.manual.entry.bullet_component.bottled_taint.lore=Ruinous power
 ie.manual.entry.bullet_component.bottled_taint.desc=Moving the contents of the bottle into a shell allows to deliver the corruptive Taint at much longer distances than it is possible to throw the bottle manually. Spread forth magical corruption, now at long distances!
 
-ie.manual.entry.bullet_core.core_core_thaumium=Таумиум
+item.immersiveintelligence.bullet.component.core_thaumium.name=Таумиум
 ie.manual.entry.bullet_core.core_thaumium=Таумиумный сердечник пули
 ie.manual.entry.bullet_core.ore_thaumium.lore=Тауматургиталлургия
 ie.manual.entry.bullet_core.core_thaumium.desc=A result of infusing iron with raw magical energy. Harder and better than base iron, it is a good candidate for massproduced shells, provided you can make alchemical mettalurgy supply keep up with the industrial demands.
 
 
 # Void metal is Disturbingly slick and warm to the touch, easy to work like gold, becoming as hard as tungsten and harder when struck 
-ie.manual.entry.bullet_core.core_core_core_voidmetal=Пустотный металл
+item.immersiveintelligence.bullet.component.core_voidmetal=Пустотный металл
 ie.manual.entry.bullet_core.core_voidmetal=Пустотнометаллческий сердечник пули
 ie.manual.entry.bullet_core.core_voidmetal.lore=Тауматургиталлургия
 ie.manual.entry.bullet_core.core_voidmetal.desc=Disturbingly slick and warm to the touch, easy to work like gold, becoming as hard as tungsten and harder when struck - Void Metal is an excellent choice for bullets. However, properties of the metal make it somewhat difficult for conventional explosives to detonate with proper force. Furthermore, you cannot retrieve this metal core despite its regenerative properties, as it becomes unuseable after hitting the target.

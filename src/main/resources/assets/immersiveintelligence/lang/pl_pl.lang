@@ -5,6 +5,7 @@ itemGroup.immersiveintelligence=Immersive Intelligence
 item.immersiveintelligence.material.basic_circuit_board_raw.name=Niewytrawiony Prosty Układ Scalony
 item.immersiveintelligence.material.basic_circuit_board_etched.name=Wytrawiony Prosty Układ Scalony
 item.immersiveintelligence.material.basic_electronic_element.name=Prosty Komponent Elektroniczny
+item.immersiveintelligence.material.circuit_template.name=Układ Scalony
 
 item.immersiveintelligence.material.advanced_circuit_board_raw.name=Niewytrawiony Zaawansowany Układ Scalony
 item.immersiveintelligence.material.advanced_circuit_board_etched.name=Wytrawiony Zaawansowany Układ Scalony
@@ -20,7 +21,6 @@ item.immersiveintelligence.material.transistor.name=Tranzystor
 item.immersiveintelligence.material.compact_electric_engine.name=Silniczek Elektryczny
 item.immersiveintelligence.material.compact_electric_engine_advanced.name=Zaawansowany Silniczek Elektryczny
 item.immersiveintelligence.material.carbon_brush.name=Szczotka Węglowa
-item.immersiveintelligence.material.wire_tungsten.name=Wolframowy Drut
 item.immersiveintelligence.material.glass_fibre_cable.name=Światłowód
 
 item.immersiveintelligence.material.advanced_electron_tube.name=Zaawansowana Lampa Elektronowa
@@ -36,7 +36,6 @@ item.immersiveintelligence.assembly_scheme.name=Schemat Konstrukcyjny
 item.immersiveintelligence.press_mold.howitzer.name=Forma do Prasy: Pocisk Artyleryjski
 item.immersiveintelligence.press_mold.machinegun.name=Forma do Prasy: Pocisk do Karabinu Maszynowego
 item.immersiveintelligence.press_mold.submachinegun.name=Forma do Prasy: Pocisk do Pistoletu Maszynowego
-item.immersiveintelligence.press_mold.grenade.name=Forma do Prasy: Granat
 
 item.immersiveintelligence.material_ingot.platinum.name=Sztabka Platyny
 item.immersiveintelligence.material_ingot.zinc.name=Sztabka Cynku
@@ -72,6 +71,7 @@ item.immersiveintelligence.material_nugget.advanced_electronic_alloy.name=Odłam
 item.immersiveintelligence.material_nugget.silicon.name=Kawałek Krzemu
 
 item.immersiveintelligence.material_wire.tungsten.name=Wolframowy Drut
+item.immersiveintelligence.material_wire.brass.name=Mosiężny Drut
 
 item.immersiveintelligence.material_gem.fluorite.name=Netherowy Fluoryt
 #Oparty na prawdziwym minerale o nazwie glaukonit, po prostu łatwiej jest zapamiętać "fosfor"
