@@ -207,6 +207,8 @@ public class BlockIIBase<E extends Enum<E> & IIBlockEnum> extends Block implemen
 			if(properties.blastResistance()!=-1) blastResistance[i] = properties.blastResistance();
 
 			if(properties.hardness()!=-1) hardness[i] = properties.hardness();
+			if(properties.harvestLevel()!=-1)
+				setHarvestLevel("pickaxe", properties.harvestLevel(), getDefaultState().withProperty(property, enumValues[i]));
 
 			if(!properties.descKey().isEmpty()) description[i] = properties.descKey();
 			if(properties.category()!=IICategory.NULL) category[i] = properties.category();
