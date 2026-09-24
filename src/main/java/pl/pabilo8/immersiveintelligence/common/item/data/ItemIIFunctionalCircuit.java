@@ -264,7 +264,7 @@ public class ItemIIFunctionalCircuit extends ItemIISubItemsBase<Circuits> implem
 				"item_matches_oredict"
 		),
 		ARRAY(CircuitTypes.BASIC,
-				"array_create",
+				"array_create", "array_join",
 				"array_get", "array_set",
 				"array_length",
 				"array_push", "array_pop",

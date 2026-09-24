@@ -136,6 +136,7 @@ public class IIDataOperationUtils
 
 		//Array
 		registerOperation(DataOperationArrayCreate.class);
+		registerOperation(DataOperationArrayJoin.class);
 		registerOperation(DataOperationArrayGet.class);
 		registerOperation(DataOperationArraySet.class);
 		registerOperation(DataOperationArrayPop.class);

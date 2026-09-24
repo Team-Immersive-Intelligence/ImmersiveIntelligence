@@ -1,9 +1,13 @@
 use ARRAY
 
 array a = array_create 10
+array b = array_create 15
 type array_length @a
 null n = array_push @a 20
+null n = array_push @b 20
 type array_length @a
+array c = array_join @a @b
+type array_length @c
 type array_get @a 0
 type array_set @a 0 15
 type array_get @a 0

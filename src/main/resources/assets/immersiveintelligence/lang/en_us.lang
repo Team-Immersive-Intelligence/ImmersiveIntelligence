@@ -2264,6 +2264,15 @@ datasystem.immersiveintelligence.function.array_create.param.first.desc=
 datasystem.immersiveintelligence.function.array_create.result=Array
 datasystem.immersiveintelligence.function.array_create.result.desc=The new array
 
+datasystem.immersiveintelligence.function.array_join=Join Arrays
+datasystem.immersiveintelligence.function.array_join.desc=Returns a new array with the elements of both input arrays
+datasystem.immersiveintelligence.function.array_join.param.first=First Array
+datasystem.immersiveintelligence.function.array_join.param.first.desc=The array placed first
+datasystem.immersiveintelligence.function.array_join.param.second=Second Array
+datasystem.immersiveintelligence.function.array_join.param.second.desc=The array placed after the first
+datasystem.immersiveintelligence.function.array_join.result=Array
+datasystem.immersiveintelligence.function.array_join.result.desc=The joined array
+
 datasystem.immersiveintelligence.function.array_get=Get
 datasystem.immersiveintelligence.function.array_get.desc=Returns the value at the specified index in the input array
 datasystem.immersiveintelligence.function.array_get.param.array=Array
