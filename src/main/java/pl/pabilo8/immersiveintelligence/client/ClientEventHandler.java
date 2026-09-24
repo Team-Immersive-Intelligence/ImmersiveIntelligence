@@ -778,6 +778,8 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 
 		if(ItemNBTHelper.hasKey(stack, "ii_FilledCasing"))
 			event.getToolTip().add(TextFormatting.DARK_GRAY+I18n.format(IIReference.DESCRIPTION_KEY+"filled_casing"));
+		else if(ItemNBTHelper.hasKey(stack, "ii_FilledRocket"))
+			event.getToolTip().add(TextFormatting.RED+I18n.format(IIReference.DESCRIPTION_KEY+"filled_rocket"));
 
 		if(stack.getItem() instanceof IAmmoTypeItem)
 			IIAmmoUtils.createAmmoTooltip((IAmmoTypeItem<?, ?>)stack.getItem(), stack, event.getEntity().world, event.getToolTip());

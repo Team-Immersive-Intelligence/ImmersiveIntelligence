@@ -32,7 +32,7 @@ import javax.annotation.Nullable;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 09.07.2024
+ * @updated 24.09.2026
  * @ii-approved 0.3.1
  * @since 04.03.2021
  */
@@ -87,10 +87,12 @@ public class TileEntityAmmunitionAssembler extends TileEntityMultiblockProductio
 		switch(i)
 		{
 			case MultiblockAmmunitionAssembler.SLOT_CORE:
-				return stack.getItem() instanceof IAmmoTypeItem&&((IAmmoTypeItem<?, ?>)stack.getItem()).isBulletCore(stack);
+				return stack.getItem() instanceof IAmmoTypeItem
+						&&!((IAmmoTypeItem<?, ?>)stack.getItem()).requiresAdvancedAssembly()
+						&&((IAmmoTypeItem<?, ?>)stack.getItem()).isBulletCore(stack);
 			case MultiblockAmmunitionAssembler.SLOT_CASING:
 				return AmmunitionAssemblerRecipe.streamRecipes(AmmunitionAssemblerRecipe.class)
-						.anyMatch(a -> a.casingInput.matchesItemStackIgnoringSize(stack));
+						.anyMatch(a -> !a.advanced&&a.casingInput.matchesItemStackIgnoringSize(stack));
 			default:
 				return false;
 		}
@@ -139,7 +141,7 @@ public class TileEntityAmmunitionAssembler extends TileEntityMultiblockProductio
 	protected IIMultiblockProcess<AmmunitionAssemblerRecipe> getProcessByName(String name)
 	{
 		AmmunitionAssemblerRecipe recipe = IIMultiblockRecipe.getRecipe(AmmunitionAssemblerRecipe.class, name);
-		return recipe==null?null: new IIMultiblockProcess<>(recipe);
+		return recipe==null||recipe.advanced?null: new IIMultiblockProcess<>(recipe);
 	}
 
 	@Override

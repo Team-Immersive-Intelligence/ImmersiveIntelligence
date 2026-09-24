@@ -407,6 +407,7 @@ public class IIContent
 	public static BlockIIFluid blockFluidInkBlack, blockFluidInkCyan, blockFluidInkMagenta, blockFluidInkYellow;
 	public static BlockIIFluid blockFluidEtchingAcid, blockFluidSulfuricAcid, blockFluidNitricAcid, blockFluidHydrofluoricAcid, blockFluidFormicAcid;
 	public static BlockIIFluid blockFluidAmmonia, blockFluidMethanol;
+	public static BlockIIFluid blockFluidRocketPropellant;
 	public static BlockIIFluid blockFluidBrine;
 	public static BlockIIFluid blockGasHydrogen, blockGasOxygen, blockGasChlorine, blockGasCO2, blockGasCO;
 	public static BlockIIFluid blockGasMustardGas;
@@ -415,6 +416,7 @@ public class IIContent
 	public static Fluid fluidInkBlack, fluidInkCyan, fluidInkMagenta, fluidInkYellow;
 	public static Fluid fluidEtchingAcid, fluidSulfuricAcid, fluidHydrofluoricAcid, fluidNitricAcid, fluidFormicAcid;
 	public static Fluid fluidAmmonia, fluidMethanol;
+	public static Fluid fluidRocketPropellant;
 	public static Fluid fluidBrine;
 	public static Fluid gasHydrogen, gasOxygen, gasChlorine, gasCO2, gasCO;
 	public static Fluid gasMustardGas;
@@ -442,6 +444,7 @@ public class IIContent
 		IIContent.gasChlorine = makeFluid("chlorine", IIColor.fromHex("557b7a72"), true, -1000+100, 132);
 		IIContent.fluidAmmonia = makeFluid("ammonia", IIColor.fromHex("f0e5d1"), false, 771, 1007);
 		IIContent.fluidMethanol = makeFluid("methanol", IIColor.fromHex("806d94"), false, 792, 553);
+		IIContent.fluidRocketPropellant = makeFluid("rocket_propellant", IIColor.fromHex("c98461"), false, 860, 1450);
 		IIContent.fluidLatex = makeFluid("latex", IIColor.fromHex("cccccc"), false, 4300, 3500);
 		IIContent.gasMustardGas = makeFluid("mustard_gas", IIColor.fromHex("66807551"), true, 127, 340);
 		IIContent.fluidMilk = makeFluid("milk", "item.milk.name", IIColor.fromHex("ffffff"), false, 1000, 1200, 0, 298);
@@ -460,6 +463,7 @@ public class IIContent
 
 		IIContent.blockFluidAmmonia = new BlockIIFluid("ammonia", IIContent.fluidAmmonia, Material.WATER);
 		IIContent.blockFluidMethanol = new BlockIIFluid("methanol", IIContent.fluidMethanol, Material.WATER);
+		IIContent.blockFluidRocketPropellant = new BlockIIFluid("rocket_propellant", IIContent.fluidRocketPropellant, Material.WATER);
 
 		IIContent.blockGasHydrogen = new BlockIIFluid("hydrogen", IIContent.gasHydrogen, Material.WATER);
 		IIContent.blockGasOxygen = new BlockIIFluid("oxygen", IIContent.gasOxygen, Material.WATER)
@@ -499,6 +503,7 @@ public class IIContent
 		IIContent.gasChlorine = FluidRegistry.getFluid("chlorine");
 		IIContent.fluidAmmonia = FluidRegistry.getFluid("ammonia");
 		IIContent.fluidMethanol = FluidRegistry.getFluid("methanol");
+		IIContent.fluidRocketPropellant = FluidRegistry.getFluid("rocket_propellant");
 		IIContent.fluidLatex = FluidRegistry.getFluid("latex");
 		IIContent.gasMustardGas = FluidRegistry.getFluid("mustard_gas");
 		IIContent.fluidMilk = FluidRegistry.getFluid("milk");

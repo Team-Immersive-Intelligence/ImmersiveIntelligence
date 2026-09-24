@@ -13,6 +13,7 @@ import javax.annotation.Nullable;
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
+ * @updated 24.09.2026
  * @since 08.06.2025
  **/
 public class ProjectileWorkshopRecipe extends IIMultiblockRecipe
@@ -24,6 +25,7 @@ public class ProjectileWorkshopRecipe extends IIMultiblockRecipe
 	@Nullable
 	public IAmmoTypeItem<?, ?> ammo;
 	public boolean isFilling;
+	public final boolean advanced;
 	public ItemStack effect = ItemStack.EMPTY, ingredient = ItemStack.EMPTY;
 
 	/**
@@ -33,6 +35,7 @@ public class ProjectileWorkshopRecipe extends IIMultiblockRecipe
 	{
 		super(FILLING_RECIPE_NAME);
 		this.isFilling = true;
+		this.advanced = false; //The filler checks the input ammo type when creating a process.
 
 		this.setTimeAndEnergy(
 				ProjectileWorkshop.fillingTime,
@@ -51,6 +54,7 @@ public class ProjectileWorkshopRecipe extends IIMultiblockRecipe
 		super(core, coreType);
 		this.ammo = ammo;
 		this.isFilling = false;
+		this.advanced = ammo.requiresAdvancedAssembly();
 
 		this.ingredient = core.getMaterial().getExampleStack();
 		this.effect = ammo.getAmmoCoreStack(core, coreType);

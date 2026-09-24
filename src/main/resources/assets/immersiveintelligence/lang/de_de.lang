@@ -294,6 +294,7 @@ desc.immersiveintelligence.toolupgrade.item.autorevolver=Autorevolver
 desc.immersiveintelligence.toolupgrade.item.rifle=Gewehr
 
 desc.immersiveintelligence.filled_casing=Mit Schwarzpulver gefüllt
+desc.immersiveintelligence.filled_casing=Mit Raketentreibstoff gefüllt
 desc.immersiveintelligence.explosives_programmed=Mit Datenpaket programmiert
 
 desc.immersiveintelligence.toolupgrade.item.light_engineer_helmet=Leichter Ingenieurshelm

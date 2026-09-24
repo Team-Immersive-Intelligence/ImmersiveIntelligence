@@ -41,7 +41,7 @@ public class AmmunitionAssemblerTweaker
 		CraftTweakerAPI.apply(new Add(
 				new AmmunitionAssemblerRecipe(
 						(s1, s2) -> CraftTweakerMC.getItemStack(function.process(CraftTweakerMC.getIItemStack(s1), CraftTweakerMC.getIItemStack(s2))),
-						iCoreInput, iCasingInput, energy, time, false)
+						iCoreInput, iCasingInput, energy, time)
 		));
 	}
 

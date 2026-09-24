@@ -55,7 +55,7 @@ import java.util.Set;
  * Dispenses aimed chemthrower fluid using data and power wire connections.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 14.08.2026
+ * @updated 24.09.2026
  * @since 15.07.2019
  */
 public class TileEntityChemicalDispenser extends TileEntityIIDirectionalConnectable implements

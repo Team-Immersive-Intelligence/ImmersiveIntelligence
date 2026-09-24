@@ -829,13 +829,13 @@ public class IIConfigHandler
 				public static int mediCrateFluidDrain = 250;
 
 				@Comment({"The amount of energy an inserter upgraded Medical Crate takes per one heal (in IF/RF/FE)"})
-				public static int mediCrateEnergyPerAction = 50;
+				public static int mediCrateEnergyPerAction = 1024;
 
 				@Comment({"The amount of energy an inserter upgraded Repair Crate takes per one repair (in IF/RF/FE)"})
-				public static int repairCrateEnergyPerAction = 65;
+				public static int repairCrateEnergyPerAction = 1024;
 
 				@Comment({"The amount of energy an inserter upgraded Ammunition Crate takes per one 4 second effect (in IF/RF/FE)"})
-				public static int ammoCrateEnergyPerAction = 85;
+				public static int ammoCrateEnergyPerAction = 1024;
 
 				@Comment({"The amount of energy an inserter upgraded crate can store (in IF/RF/FE)"})
 				public static int maxEnergyStored = 4000;

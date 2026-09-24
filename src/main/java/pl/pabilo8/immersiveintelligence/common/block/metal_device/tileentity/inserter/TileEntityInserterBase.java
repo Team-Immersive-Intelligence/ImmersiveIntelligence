@@ -57,7 +57,7 @@ import java.util.function.Supplier;
  * Provides common wire, task, inventory, synchronization, and animation logic for Inserters.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 12.08.2026
+ * @updated 24.09.2026
  * @since 28.09.2020
  */
 public abstract class TileEntityInserterBase extends TileEntityIIConnectable implements IIEInventory, ITileDrop,
@@ -922,4 +922,3 @@ public abstract class TileEntityInserterBase extends TileEntityIIConnectable imp
 		}
 	}
 }
-

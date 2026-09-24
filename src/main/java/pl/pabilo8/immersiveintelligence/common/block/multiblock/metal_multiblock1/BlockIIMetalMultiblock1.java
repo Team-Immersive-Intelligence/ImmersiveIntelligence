@@ -74,7 +74,6 @@ public class BlockIIMetalMultiblock1 extends BlockIIMultiblock<MetalMultiblocks1
 		FUEL_STATION,
 
 		@IIBlockProperties(hidden = TernaryValue.TRUE)
-		@EnumMultiblockProvider(multiblock = MultiblockVehicleWorkshop.class, tile = TileEntityVehicleWorkshop.class)
 		VEHICLE_WORKSHOP, //not implemented
 		@IIBlockProperties(needsCustomState = true)
 		@EnumMultiblockProvider(multiblock = MultiblockFlagpole.class, tile = TileEntityFlagpole.class)
@@ -94,8 +93,7 @@ public class BlockIIMetalMultiblock1 extends BlockIIMultiblock<MetalMultiblocks1
 		@EnumMultiblockProvider(multiblock = MultiblockVulcanizer.class, tile = TileEntityVulcanizer.class)
 		VULCANIZER,
 
-		@IIBlockProperties(needsCustomState = true)
-		@EnumMultiblockProvider(multiblock = MultiblockHeavyAmmunitionAssembler.class, tile = TileEntityHeavyAmmunitionAssembler.class)
+		@IIBlockProperties(hidden = TernaryValue.TRUE)
 		HEAVY_AMMUNITION_ASSEMBLER,
 	}
 }

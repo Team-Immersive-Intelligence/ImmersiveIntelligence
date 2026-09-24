@@ -50,7 +50,3 @@ Finally, bullets may be loaded into [magazines](magazines.md) with the help of t
 # ammunition_assembler_data
 **Input Variables:**
 |[data_variable]{type:"string", direction:"in", letter:"f", name:"Fuse", description:"Fuse properties. Defined by key strings 'fuse' and 'fuse_config'."}|
-# heavy_ammuniton_assembler
-|[multiblock]{mb:"II:HeavyAmmunitionAssembler"}|
-This device is formed by using a [hammer](introduction#introductionHammer) on the heavy engineering block between the wooden scaffolding.
-|[wip_notice]{brief:1b}|

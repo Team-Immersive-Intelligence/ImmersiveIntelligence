@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " s ",
+    "wpw",
+    "wpw"
+  ],
+  "key": {
+    "s": {
+      "item": "immersiveengineering:material",
+      "data": 8
+    },
+    "w": {
+      "type": "forge:ore_dict",
+      "ore": "plankTreatedWood"
+    },
+    "p": {
+      "type": "forge:ore_dict",
+      "ore": "paper"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:clipboard",
+    "data": 0,
+    "count": 1
+  }
+}

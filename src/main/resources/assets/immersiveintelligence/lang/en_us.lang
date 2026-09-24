@@ -294,6 +294,7 @@ desc.immersiveintelligence.toolupgrade.item.autorevolver=Autorevolver
 desc.immersiveintelligence.toolupgrade.item.rifle=Rifle
 
 desc.immersiveintelligence.filled_casing=Filled with Gunpowder
+desc.immersiveintelligence.filled_rocket=Filled with Rocket Propellant
 desc.immersiveintelligence.explosives_programmed=Programmed with a Data Packet
 
 desc.immersiveintelligence.toolupgrade.item.light_engineer_helmet=Engineer's Light Helmet
@@ -856,6 +857,7 @@ fluid.brine=Brine
 fluid.ammonia=Ammonia
 fluid.hexamine=Hexamine
 fluid.methanol=Methanol
+fluid.rocket_propellant=Rocket Propellant
 
 fluid.latex=Latex
 

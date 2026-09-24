@@ -247,6 +247,15 @@ public interface IAmmoTypeItem<T extends IAmmoType<T, E>, E extends EntityAmmoBa
 	 */
 	boolean isBulletCore(ItemStack stack);
 
+	/**
+	 * @return whether the ammo type item requires the Heavy Ammunition Assembler
+	 * and Heavy Projectile Workshp instead of the regular Ammunition Assembler and Projectile Workshop to be created
+	 */
+	default boolean requiresAdvancedAssembly()
+	{
+		return false;
+	}
+
 	//--- IAdvancedTooltipItem ---//
 
 	@SideOnly(Side.CLIENT)

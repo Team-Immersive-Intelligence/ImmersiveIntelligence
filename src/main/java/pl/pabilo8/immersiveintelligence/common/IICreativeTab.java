@@ -554,7 +554,7 @@ public class IICreativeTab extends CreativeTabs
 		//Missiles
 		items.clear();
 		items.put("AR6", IIContent.itemAmmoRocketLight);
-		items.put("AR10", IIContent.itemAmmoRocketHeavy);
+//		items.put("AR10", IIContent.itemAmmoRocketHeavy);
 		items.put("AR6F", IIContent.itemAmmoGuidedMissile);
 
 		items.forEach((name, item) -> {

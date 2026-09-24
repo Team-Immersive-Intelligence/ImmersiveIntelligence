@@ -61,7 +61,7 @@ import java.util.stream.Collectors;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 04.09.2026
+ * @updated 24.09.2026
  * @ii-approved 0.3.1
  * @since 10.07.2019
  */
@@ -334,7 +334,9 @@ public class GuiProjectileWorkshop extends DecoTileGui<TileEntityProjectileWorks
 						.withDropdownWidth(144)
 						.withScrollBarBackground(DecoTextures.COMPONENT_SLIDER_PAPER)
 						.withBackground(DecoTextures.COMPONENT_BUTTON_PAPER)
-						.withEntries(AmmoRegistry.getAllAmmoItems())
+						.withEntries(AmmoRegistry.getAllAmmoItems().stream()
+								.filter(ammo -> !ammo.requiresAdvancedAssembly())
+								.collect(Collectors.toList()))
 						.withSortFunction(new DecoElementSorter<>()
 						{
 							@Override
