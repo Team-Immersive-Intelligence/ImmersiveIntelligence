@@ -138,5 +138,9 @@
     "conveyor_out": 11,
     "energy": 21,
     "redstone": 8
+  },
+  "rotations": {
+    "output": "clockwise_90",
+    "input": "counterclockwise_90"
   }
 }

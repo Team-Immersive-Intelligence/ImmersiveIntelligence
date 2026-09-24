@@ -22,10 +22,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
-import net.minecraftforge.items.CapabilityItemHandler;
 import pl.pabilo8.immersiveintelligence.api.data.device.IDataDevice;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
@@ -33,7 +31,6 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInter
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.function.Function;
 
 /**
@@ -71,7 +68,8 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 	{
 		inventory = null;
 		energyStorage = null;
-		wrapper = null;
+		if(!this.isPOI(MultiblockPOI.ENERGY))
+			wrapper = null;
 	}
 
 	//--- Redstone ---//
@@ -120,14 +118,6 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 	public NonNullList<ItemStack> getInventory()
 	{
 		return inventory;
-	}
-
-	@Override
-	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
-	{
-		if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY&&isPOI(MultiblockPOI.ITEM_INPUT))
-			return true;
-		return super.hasCapability(capability, facing);
 	}
 
 	@Override
