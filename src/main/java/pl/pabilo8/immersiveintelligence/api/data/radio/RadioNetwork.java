@@ -55,8 +55,13 @@ public class RadioNetwork
 	 */
 	public void sendPacket(DataPacket packet, IRadioDevice sender, ArrayList<IRadioDevice> visited)
 	{
+		sendPacket(packet, sender, sender, visited);
+	}
+
+	private void sendPacket(DataPacket packet, IRadioDevice sender, IRadioDevice origin, ArrayList<IRadioDevice> visited)
+	{
 		flushRemovedDevices();
-		if(sender==null||!sender.isRadioAvailable())
+		if(sender==null||!sender.isRadioAvailable()||!sender.canRelayRadio())
 			return;
 
 		if(!visited.contains(sender))
@@ -68,10 +73,11 @@ public class RadioNetwork
 		for(IRadioDevice device : getDevices())
 			if(!visited.contains(device)&&device.isRadioAvailable()&&
 					device.getFrequency()==sender.getFrequency()&&distanceCheck(sender, device)&&
-					device.onRadioReceive(packet))
+					device.onRadioReceive(packet, origin))
 			{
 				visited.add(device);
-				sendPacket(packet, device, visited);
+				if(device.canRelayRadio())
+					sendPacket(packet, device, origin, visited);
 			}
 	}
 

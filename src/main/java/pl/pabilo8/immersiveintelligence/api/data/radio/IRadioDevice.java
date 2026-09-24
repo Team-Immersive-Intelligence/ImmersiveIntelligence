@@ -19,6 +19,22 @@ public interface IRadioDevice
 
 	boolean onRadioReceive(DataPacket packet);
 
+	/**
+	 * Receives a packet with its original sender.
+	 */
+	default boolean onRadioReceive(DataPacket packet, IRadioDevice sender)
+	{
+		return onRadioReceive(packet);
+	}
+
+	/**
+	 * Returns true when this device forwards received packets.
+	 */
+	default boolean canRelayRadio()
+	{
+		return true;
+	}
+
 	int getFrequency();
 
 	void setFrequency(int value);

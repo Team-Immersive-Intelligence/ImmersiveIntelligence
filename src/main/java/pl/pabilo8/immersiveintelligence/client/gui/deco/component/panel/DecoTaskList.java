@@ -364,7 +364,7 @@ public class DecoTaskList<T extends INBTSerializable<NBTTagCompound>> extends De
 		if(allEntries==null)
 			return;
 		//Clear only current mode
-		allEntries.removeIf(t -> isJobPredicate.test(t)!=(this.mode==ListMode.JOBS)
+		allEntries.removeIf(t -> isJobPredicate.test(t)==(this.mode==ListMode.JOBS)
 				&&canModifyPredicate.test(t));
 		setSelected(null);
 		refreshListEntries();
