@@ -8,6 +8,7 @@ import net.minecraft.util.math.MathHelper;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.clipboard.DecoClipboardUtils;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
@@ -250,6 +251,24 @@ public class DecoColorPicker extends DecoComponent<DecoColorPicker>
 				crosshair.getMinV(), crosshair.getInterpolatedV(2));
 
 		draw.finish();
+	}
+
+	@Override
+	public void onGuiEvent(DecoGuiEvent event)
+	{
+		switch(event)
+		{
+			case COPY:
+				DecoClipboardUtils.copy(selectedColor);
+				break;
+			case PASTE:
+				Object pasted = DecoClipboardUtils.paste();
+				if(pasted instanceof IIColor)
+					withColor((IIColor)pasted);
+				break;
+			default:
+				super.onGuiEvent(event);
+		}
 	}
 
 	@Override

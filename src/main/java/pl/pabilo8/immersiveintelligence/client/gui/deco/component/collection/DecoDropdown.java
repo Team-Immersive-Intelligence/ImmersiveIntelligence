@@ -2,7 +2,6 @@ package pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.Tuple;
@@ -14,11 +13,11 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoEntr
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.clipboard.DecoClipboardUtils;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
-import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -239,23 +238,20 @@ public class DecoDropdown<T> extends DecoScrolledCollection<DecoDropdown<T>, T>
 		switch(event)
 		{
 			case COPY:
-			{
-				GuiScreen.setClipboardString(EasyNBT.newNBT()
-						.withString("type", getSelectedEntry().getClass().toString())
-						.withString("selected", getSelectedEntry().toString())
-						.toString());
-			}
-			break;
+				T selected = getSelectedEntry();
+				if(selected!=null&&!DecoClipboardUtils.copy(selected))
+					DecoClipboardUtils.copy(selected.toString());
+				break;
 			case PASTE:
 			{
-				EasyNBT nbt = EasyNBT.parseEasyNBT(GuiScreen.getClipboardString());
-				if(nbt.hasKey("type", "selected"))
-					for(T entry : this.entries)
-						if(entry.toString().equals(nbt.getString("selected")))
-						{
-							selectedEntry = this.entries.indexOf(entry);
-							break;
-						}
+				Object pasted = DecoClipboardUtils.paste();
+				for(T entry : this.entries)
+					if(entry.equals(pasted)||DecoClipboardUtils.valuesEqual(entry, pasted)
+							||(pasted instanceof String&&entry.toString().equals(pasted)))
+					{
+						changeSelectedEntry(this.entries.indexOf(entry));
+						break;
+					}
 			}
 			break;
 			default:

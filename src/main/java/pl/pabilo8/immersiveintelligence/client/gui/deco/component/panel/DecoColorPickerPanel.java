@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel;
 
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.EnumDyeColor;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
@@ -10,6 +9,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.DecoTextF
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.util.TextFilter;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTemplates;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.clipboard.DecoClipboardUtils;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
@@ -158,14 +158,15 @@ public class DecoColorPickerPanel extends DecoPanel
 		{
 			case CUT:
 			case COPY:
-				GuiScreen.setClipboardString(color.getHexRGB());
+				DecoClipboardUtils.copy(color);
 				break;
 			case PASTE:
 			{
-				String string = GuiScreen.getClipboardString();
-				if(string.length()!=6)
-					break;
-				withColor(IIColor.fromHex(string));
+				Object pasted = DecoClipboardUtils.paste();
+				if(pasted instanceof IIColor)
+					withColor((IIColor)pasted);
+				else if(pasted instanceof String&&((String)pasted).length()==6)
+					withColor(IIColor.fromHex((String)pasted));
 			}
 			break;
 			case UNDO:

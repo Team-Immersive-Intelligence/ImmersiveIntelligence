@@ -161,7 +161,9 @@ public class BlockIIBase<E extends Enum<E> & IIBlockEnum> extends Block implemen
 		Arrays.fill(this.mobilityFlags, EnumPushReaction.NORMAL);
 
 		IIContent.BLOCKS.add(this);
-		IIContent.ITEMS.add(this.itemBlock = itemBlock.apply(this));
+		this.itemBlock = itemBlock==null?null: itemBlock.apply(this);
+		if(this.itemBlock!=null)
+			IIContent.ITEMS.add(this.itemBlock);
 
 		lightOpacity = 255;
 	}

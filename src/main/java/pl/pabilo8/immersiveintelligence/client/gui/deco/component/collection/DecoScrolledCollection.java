@@ -42,6 +42,7 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 	protected int scroll = 0, maxScroll = 0, scrollStep = fontRenderer.FONT_HEIGHT;
 	protected int entriesInGrid = 1;
 	protected int entryMaxWidth;
+	private boolean layoutDirty;
 	protected DecoElementDisplay<T> display = DecoElementDisplays.getDefaultDisplay();
 	protected DecoElementSorter<T> sorter = DecoElementDisplays.getDefaultSorter();
 
@@ -302,6 +303,11 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 		return entries;
 	}
 
+	public void requestLayout()
+	{
+		this.layoutDirty = true;
+	}
+
 	protected final void drawList(int x, int y, int listWidth, int mouseX, int mouseY, float partialTicks)
 	{
 		//Apply queued changes to the list
@@ -322,7 +328,9 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 		}
 
 		//Allow stateful displays to invalidate their cached layout on a controlled cadence.
-		if(entriesChanged||display.onDisplayTick())
+		boolean refreshLayout = layoutDirty;
+		layoutDirty = false;
+		if(entriesChanged||refreshLayout||display.onDisplayTick())
 			calculateSlideLength();
 
 		//Draw list
@@ -373,11 +381,21 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 		{
 			int elementX = x+(currentColumn*entryMaxWidth);
 			int elementY = y+1+alreadyDrawnHeight;
+			if(parentGui!=null)
+				parentGui.pushScissorOffset(elementX, elementY-scroll);
 			GlStateManager.pushMatrix();
-			GlStateManager.translate(elementX, elementY, 0);
-			int offset = display.displayElement(filteredEntry, entryMaxWidth, fontRenderer,
-					mouseX-elementX, mouseY+scroll-elementY, partialTicks, false);
-			GlStateManager.popMatrix();
+			int offset;
+			try
+			{
+				GlStateManager.translate(elementX, elementY, 0);
+				offset = display.displayElement(filteredEntry, entryMaxWidth, fontRenderer,
+						mouseX-elementX, mouseY+scroll-elementY, partialTicks, false);
+			} finally
+			{
+				GlStateManager.popMatrix();
+				if(parentGui!=null)
+					parentGui.popScissorOffset();
+			}
 			displayedElements.add(new DisplayedElement<>(filteredEntry, elementX, elementY-scroll, offset));
 
 			currentColumn++;

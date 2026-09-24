@@ -13,6 +13,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -42,6 +43,8 @@ public abstract class DecoComponent<TYPE extends DecoComponent<? super TYPE>> ex
 	private DecoKeyboardEvent<TYPE> onKeyTyped;
 	private Function<TYPE, Collection<String>> onTooltip;
 	private Consumer<TYPE> onGuiSave;
+	@Nullable
+	private Supplier<Boolean> visibilityCondition;
 
 	public DecoComponent(int x, int y)
 	{
@@ -121,6 +124,8 @@ public abstract class DecoComponent<TYPE extends DecoComponent<? super TYPE>> ex
 	@Override
 	public final void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks)
 	{
+		if(visibilityCondition!=null)
+			this.visible = Boolean.TRUE.equals(visibilityCondition.get());
 		if(!initialized)
 		{
 			initialized = initialize();
@@ -314,7 +319,21 @@ public abstract class DecoComponent<TYPE extends DecoComponent<? super TYPE>> ex
 	 */
 	public void onGuiEvent(DecoGuiEvent event)
 	{
+		for(DecoComponent<?> child : children)
+			if(child.isMouseOver())
+			{
+				child.onGuiEvent(event);
+				return;
+			}
+	}
 
+	/**
+	 * Sets a condition evaluated before every draw to control visibility and interaction.
+	 */
+	public TYPE withVisibility(Supplier<Boolean> visibilityCondition)
+	{
+		this.visibilityCondition = visibilityCondition;
+		return (TYPE)this;
 	}
 
 	/**

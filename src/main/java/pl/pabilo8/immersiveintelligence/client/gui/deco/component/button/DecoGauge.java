@@ -5,6 +5,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoTextBasedComponent;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoColors;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.clipboard.DecoClipboardUtils;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
@@ -241,6 +242,29 @@ public class DecoGauge extends DecoTextBasedComponent<DecoGauge>
 	{
 		int rounded = Math.round(value);
 		return Math.abs(value-rounded) < 0.05f?String.valueOf(rounded): String.format(java.util.Locale.ROOT, "%.1f", value);
+	}
+
+	@Override
+	public void onGuiEvent(DecoGuiEvent event)
+	{
+		switch(event)
+		{
+			case COPY:
+				DecoClipboardUtils.copy(angle);
+				break;
+			case PASTE:
+				Object pasted = DecoClipboardUtils.paste();
+				if(pasted instanceof Number)
+				{
+					float oldAngle = angle;
+					setAngle(((Number)pasted).floatValue());
+					if(onValueChanged!=null&&oldAngle!=angle)
+						onValueChanged.accept(angle);
+				}
+				break;
+			default:
+				super.onGuiEvent(event);
+		}
 	}
 
 	@Override

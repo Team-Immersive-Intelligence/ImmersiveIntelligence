@@ -8,6 +8,7 @@ import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoTextBasedComponent;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.clipboard.DecoClipboardUtils;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
@@ -151,6 +152,28 @@ public class DecoSwitch extends DecoTextBasedComponent<DecoSwitch>
 	protected boolean canBeClicked(int mouseX, int mouseY)
 	{
 		return IIMath.isPointInRectangle(x, y, x+X_SIZE, y+Y_SIZE, mouseX, mouseY);
+	}
+
+	@Override
+	public void onGuiEvent(DecoGuiEvent event)
+	{
+		switch(event)
+		{
+			case COPY:
+				DecoClipboardUtils.copy(state);
+				break;
+			case PASTE:
+				Object pasted = DecoClipboardUtils.paste();
+				if(pasted instanceof Boolean&&state!=(Boolean)pasted)
+				{
+					withCurrentState((Boolean)pasted);
+					if(onToggle!=null)
+						onToggle.accept(state);
+				}
+				break;
+			default:
+				super.onGuiEvent(event);
+		}
 	}
 
 

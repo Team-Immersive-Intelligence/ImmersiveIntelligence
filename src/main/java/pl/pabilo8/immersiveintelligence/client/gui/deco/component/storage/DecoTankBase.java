@@ -11,6 +11,7 @@ import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.clipboard.DecoClipboardUtils;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
@@ -33,7 +34,9 @@ public abstract class DecoTankBase<TYPE extends DecoTankBase<TYPE, RESOURCE>, RE
 	private final String STRING_TANK_EMPTY = I18n.format("gui.immersiveengineering.empty");
 	private final Map<RESOURCE, Float> displayedAmounts = new HashMap<>();
 
+	@Nullable
 	protected ResLoc tankBackgroundLocation = DecoTextures.BG_DARK_TANK;
+	@Nullable
 	protected ResLoc tankOverlayLocation = DecoTextures.COMPONENT_TANK;
 	protected ResLoc tankColorMarkerLocation = DecoTextures.COMPONENT_TANK_MARKER;
 	@Nullable
@@ -58,14 +61,14 @@ public abstract class DecoTankBase<TYPE extends DecoTankBase<TYPE, RESOURCE>, RE
 		return (TYPE)this;
 	}
 
-	public TYPE withTankBackgroundLocation(ResLoc tankBackgroundLocation)
+	public TYPE withTankBackgroundLocation(@Nullable ResLoc tankBackgroundLocation)
 	{
 		this.tankBackgroundLocation = tankBackgroundLocation;
 		//noinspection unchecked
 		return (TYPE)this;
 	}
 
-	public TYPE withTankOverlayLocation(ResLoc tankOverlayLocation)
+	public TYPE withTankOverlayLocation(@Nullable ResLoc tankOverlayLocation)
 	{
 		this.tankOverlayLocation = tankOverlayLocation;
 		//noinspection unchecked
@@ -124,8 +127,9 @@ public abstract class DecoTankBase<TYPE extends DecoTankBase<TYPE, RESOURCE>, RE
 		//Draw a regular, rectangle shaped tank
 		if(!maskDrawingMode)
 		{
-			draw.drawConnectedTexColorRect(x, y, width, height, IIColor.WHITE, tankBackgroundLocation,
-					textureSize, textureSize, 8, 8);
+			if(tankBackgroundLocation!=null)
+				draw.drawConnectedTexColorRect(x, y, width, height, IIColor.WHITE, tankBackgroundLocation,
+						textureSize, textureSize, 8, 8);
 			//Draw color marker (useful for f.e. ink fluid tanks)
 			if(colorMarker!=null)
 			{
@@ -198,7 +202,9 @@ public abstract class DecoTankBase<TYPE extends DecoTankBase<TYPE, RESOURCE>, RE
 		if(!maskDrawingMode)
 		{
 			//Draw overlay
-			draw.drawConnectedTexColorRect(x, y, width, height, IIColor.WHITE, tankOverlayLocation, textureSize, textureSize, 16, 16).finish();
+			if(tankOverlayLocation!=null)
+				draw.drawConnectedTexColorRect(x, y, width, height, IIColor.WHITE, tankOverlayLocation, textureSize, textureSize, 16, 16);
+			draw.finish();
 		}
 		else
 		{
@@ -317,5 +323,18 @@ public abstract class DecoTankBase<TYPE extends DecoTankBase<TYPE, RESOURCE>, RE
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public void onGuiEvent(DecoGuiEvent event)
+	{
+		if(event==DecoGuiEvent.COPY)
+		{
+			RESOURCE resource = getProvidedIngredient();
+			if(resource!=null)
+				DecoClipboardUtils.copy(resource);
+		}
+		else
+			super.onGuiEvent(event);
 	}
 }

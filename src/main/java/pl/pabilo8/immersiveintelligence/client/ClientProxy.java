@@ -437,6 +437,7 @@ public class ClientProxy extends CommonProxy
 		new ElectricWrenchRenderer();
 		new ElectricWirecutterRenderer();
 		//TODO: 22.09.2024 mine detector renderer
+		new ClipboardRenderer();
 
 		for(IAmmoTypeItem<?, ?> bullet : AmmoRegistry.getAllAmmoItems())
 		{

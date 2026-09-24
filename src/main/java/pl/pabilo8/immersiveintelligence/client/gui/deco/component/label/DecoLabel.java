@@ -50,6 +50,18 @@ public class DecoLabel extends GuiLabel
 
 	//--- Property Setting ---//
 
+	public DecoLabel withWidth(int width)
+	{
+		this.width = width;
+		return this;
+	}
+
+	public DecoLabel withHeight(int height)
+	{
+		this.height = height;
+		return this;
+	}
+
 	public DecoLabel withSize(int w, int h)
 	{
 		this.width = w;

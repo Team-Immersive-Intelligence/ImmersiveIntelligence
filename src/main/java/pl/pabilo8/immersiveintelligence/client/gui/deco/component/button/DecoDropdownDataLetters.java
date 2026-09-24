@@ -2,10 +2,12 @@ package pl.pabilo8.immersiveintelligence.client.gui.deco.component.button;
 
 import net.minecraft.client.renderer.GlStateManager;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
+import pl.pabilo8.immersiveintelligence.api.data.DataVariable;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoDropdown;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoElementDisplays.DecoElementDisplay;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.clipboard.DecoClipboardUtils;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.client.util.font.IIFontRenderer;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
@@ -136,5 +138,30 @@ public class DecoDropdownDataLetters extends DecoDropdown<Character> implements 
 	public boolean isSelectable(Character character)
 	{
 		return DataPacket.isValidVariable(character)&&!constraints.has(character);
+	}
+
+	@Override
+	public void onGuiEvent(DecoGuiEvent event)
+	{
+		switch(event)
+		{
+			case COPY:
+				Character selected = getSelectedEntry();
+				if(selected!=null)
+					DecoClipboardUtils.copy(String.valueOf(selected));
+				break;
+			case PASTE:
+				Object pasted = DecoClipboardUtils.paste();
+				Character letter = null;
+				if(pasted instanceof DataVariable)
+					letter = ((DataVariable)pasted).getName();
+				else if(pasted instanceof String&&((String)pasted).length()==1)
+					letter = ((String)pasted).charAt(0);
+				if(letter!=null&&entries.contains(letter)&&isSelectable(letter))
+					withSelectedEntry(letter);
+				break;
+			default:
+				super.onGuiEvent(event);
+		}
 	}
 }

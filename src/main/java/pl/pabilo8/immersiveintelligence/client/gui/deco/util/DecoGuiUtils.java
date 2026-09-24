@@ -1,24 +1,17 @@
 package pl.pabilo8.immersiveintelligence.client.gui.deco.util;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
-import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionBase.IIIMultiblockRecipe;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionMulti;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionSingle;
 
-import java.awt.*;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.StringSelection;
-import java.awt.datatransfer.Transferable;
 import java.util.function.Function;
 
 /**
@@ -29,93 +22,6 @@ import java.util.function.Function;
 @SideOnly(Side.CLIENT)
 public class DecoGuiUtils
 {
-
-	/**
-	 * Sets the system clipboard string, with a fallback to Minecraft's clipboard handling
-	 *
-	 * @param string String to set
-	 */
-	public static void setClipboardString(String string)
-	{
-		try
-		{
-			Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(string), null);
-		} catch(Exception ignored)
-		{
-			GuiScreen.setClipboardString(string);
-		}
-	}
-
-	/**
-	 * Sets NBT to the system clipboard, with a fallback to Minecraft's clipboard handling
-	 *
-	 * @param compound NBT to set
-	 */
-	public static void setClipboardNBT(NBTTagCompound compound)
-	{
-		setClipboardString(compound.toString());
-	}
-
-	/**
-	 * Sets EasyNBT to the system clipboard, with a fallback to Minecraft's clipboard handling
-	 *
-	 * @param nbt EasyNBT to set
-	 */
-	public static void setClipboardEasyNBT(EasyNBT nbt)
-	{
-		setClipboardNBT(nbt.unwrap());
-	}
-
-	/**
-	 * Reads a string from the system clipboard, with a fallback to Minecraft's clipboard handling
-	 *
-	 * @return Clipboard string
-	 */
-	public static String getClipboardString()
-	{
-		try
-		{
-			Transferable t = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(null);
-			if(t!=null&&t.isDataFlavorSupported(DataFlavor.stringFlavor))
-				return (String)t.getTransferData(DataFlavor.stringFlavor);
-		} catch(Exception ignored) {}
-		return GuiScreen.getClipboardString();
-	}
-
-	/**
-	 * Reads NBT from the system clipboard, with a fallback to Minecraft's clipboard handling
-	 *
-	 * @return Clipboard NBT
-	 */
-	public static NBTTagCompound getClipboardNBT()
-	{
-		String clipboardString = getClipboardString();
-		try
-		{
-			return EasyNBT.parseNBT(clipboardString);
-		} catch(Exception e)
-		{
-			return new NBTTagCompound();
-		}
-	}
-
-	/**
-	 * Reads EasyNBT from the system clipboard, with a fallback to Minecraft's clipboard handling
-	 *
-	 * @return Clipboard EasyNBT
-	 */
-	public static EasyNBT getClipboardEasyNBT()
-	{
-		String clipboardString = getClipboardString();
-		try
-		{
-			return EasyNBT.parseEasyNBT(clipboardString);
-		} catch(Exception e)
-		{
-			return EasyNBT.newNBT();
-		}
-	}
-
 	public static <T extends TileEntityMultiblockProductionMulti<T, R>, R extends IIIMultiblockRecipe> Function<Float, Float>
 	getMultiblockProductionMultiProgress(TileEntityMultiblockProductionMulti<T, R> tile)
 	{
@@ -167,7 +73,7 @@ public class DecoGuiUtils
 	 * @param texSize size of the texture to calculate corners from (it's drawn 1:1)
 	 */
 	public static void drawRepeatedRect(IIDrawUtils draw, int x, int y, int width, int height,
-	                                    ResourceLocation spriteLocation, IIColor color, int texSize, int borderSize)
+										ResourceLocation spriteLocation, IIColor color, int texSize, int borderSize)
 	{
 		int iSize = Math.min(texSize-2*borderSize, Math.min(width, height)/2);
 		float tSize = (iSize/(float)texSize)*16;

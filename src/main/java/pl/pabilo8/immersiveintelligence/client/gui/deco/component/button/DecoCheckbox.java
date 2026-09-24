@@ -5,6 +5,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoTextBasedComponent;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.clipboard.DecoClipboardUtils;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
@@ -113,6 +114,28 @@ public class DecoCheckbox extends DecoTextBasedComponent<DecoCheckbox>
 	protected boolean canBeClicked(int mouseX, int mouseY)
 	{
 		return IIMath.isPointInRectangle(x, y, x+BOX_SIZE, y+BOX_SIZE, mouseX, mouseY);
+	}
+
+	@Override
+	public void onGuiEvent(DecoGuiEvent event)
+	{
+		switch(event)
+		{
+			case COPY:
+				DecoClipboardUtils.copy(checked);
+				break;
+			case PASTE:
+				Object pasted = DecoClipboardUtils.paste();
+				if(pasted instanceof Boolean&&checked!=(Boolean)pasted)
+				{
+					checked = (Boolean)pasted;
+					if(onToggle!=null)
+						onToggle.accept(checked);
+				}
+				break;
+			default:
+				super.onGuiEvent(event);
+		}
 	}
 
 	@Override

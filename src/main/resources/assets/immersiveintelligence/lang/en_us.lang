@@ -477,6 +477,7 @@ item.immersiveintelligence.bullet_magazine.cpds_drum.name=CPDS Drum Magazine
 item.immersiveintelligence.bullet_magazine.rifle.name=Rifle Magazine
 
 item.immersiveintelligence.casing_pouch.name=Spent Casings Pouch
+item.immersiveintelligence.clipboard.name=Engineer's Clipboard
 
 item.immersiveintelligence.motor_gear.copper.name=Copper Gear
 item.immersiveintelligence.motor_gear.brass.name=Brass Gear
@@ -658,6 +659,27 @@ tile.immersiveintelligence.small_crate.metal_crate_wide.name=Small Metal Crate (
 tile.immersiveintelligence.small_crate.reinforced_crate_box.name=Small Reinforced Crate (Box)
 tile.immersiveintelligence.small_crate.reinforced_crate_cube.name=Small Reinforced Crate (Cube)
 tile.immersiveintelligence.small_crate.reinforced_crate_wide.name=Small Reinforced Crate (Wide)
+tile.immersiveintelligence.clipboard.clipboard.name=Engineer's Clipboard
+
+ii.gui.clipboard.title=Engineer's Clipboard
+ii.gui.clipboard.packet_variables=%s data variables
+ii.gui.clipboard.action.copy=Copy entry
+ii.gui.clipboard.action.edit=Replace entry with clipboard contents
+ii.gui.clipboard.action.remove=Delete entry
+ii.gui.clipboard.type.plain_text=Plain Text
+ii.gui.clipboard.type.data_variable=II Data System Variable
+ii.gui.clipboard.type.data_packet=II Data System Packet
+ii.gui.clipboard.type.item_stack=Item Stack
+ii.gui.clipboard.type.ingredient_stack=Ingredient Stack
+ii.gui.clipboard.type.fluid_stack=Fluid Stack
+ii.gui.clipboard.type.dust_stack=Dust Stack
+ii.gui.clipboard.type.integer=Integer
+ii.gui.clipboard.type.float=Float
+ii.gui.clipboard.type.double=Double
+ii.gui.clipboard.type.enum=Enum Value
+ii.gui.clipboard.type.manual_page=Engineer's Manual Page
+ii.gui_tooltip.widget.clipboard.show.unnamed=Show Engineer's Clipboard
+ii.gui_tooltip.widget.clipboard.show.named=Show Clipboard: %s
 
 tile.immersiveintelligence.metal_fortification.steel_chain_fence.name=Steel Chain Fence
 tile.immersiveintelligence.metal_fortification.brass_chain_fence.name=Brass Chain Fence

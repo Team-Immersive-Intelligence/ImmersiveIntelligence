@@ -274,6 +274,7 @@ public class IIContent
 	public static final ItemIIMineDetector itemMineDetector = new ItemIIMineDetector();
 	public static final ItemIIDrillHead itemDrillhead = new ItemIIDrillHead();
 	public static final ItemIITachometer itemTachometer = new ItemIITachometer();
+	public static final ItemIIClipboard itemClipboard = new ItemIIClipboard();
 	public static final ItemIIDataWireCoil itemDataWireCoil = new ItemIIDataWireCoil();
 	public static final ItemIISmallWireCoil itemSmallWireCoil = new ItemIISmallWireCoil();
 	public static final ItemIITripWireCoil itemTripWireCoil = new ItemIITripWireCoil();
@@ -349,6 +350,7 @@ public class IIContent
 	public static final BlockIIMetalDevice1 blockMetalDevice1 = new BlockIIMetalDevice1();
 	public static final BlockIIDataDevice blockDataConnector = new BlockIIDataDevice();
 	public static final BlockIISmallCrate blockSmallCrate = new BlockIISmallCrate();
+	public static final BlockIIClipboard blockClipboard = new BlockIIClipboard();
 	//explosives
 	public static final BlockIIAdvancedExplosives blockAdvancedExplosives = new BlockIIAdvancedExplosives();
 	//ammunition

@@ -12,8 +12,8 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.util.Move
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.util.TextCaret;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.util.TextFilter;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.util.TextHistoryState;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.clipboard.DecoClipboardUtils;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.client.util.font.IIFontRenderer;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
@@ -914,21 +914,21 @@ public abstract class DecoTextInputBase<TYPE extends DecoTextInputBase<TYPE>> ex
 		switch(event)
 		{
 			case COPY:
-				DecoGuiUtils.setClipboardString(buildCopyString());
+				DecoClipboardUtils.copy(buildCopyString());
 				break;
 			case CUT:
 				if(editable&&anySelection())
 				{
 					TextHistoryState before = prepareHistory(EditKind.CUT);
 					String beforeText = getText();
-					DecoGuiUtils.setClipboardString(buildCopyString());
+					DecoClipboardUtils.copy(buildCopyString());
 					deleteSelections();
 					finishUserEdit(before, beforeText, EditKind.CUT);
 				}
 				break;
 			case PASTE:
 				if(editable)
-					pasteString(DecoGuiUtils.getClipboardString());
+					pasteString(DecoClipboardUtils.pasteText());
 				break;
 			case UNDO:
 				undo();

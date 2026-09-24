@@ -47,6 +47,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoResource;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTemplate;
 import pl.pabilo8.immersiveintelligence.client.gui.entity.GuiEntityUpgrade;
 import pl.pabilo8.immersiveintelligence.client.gui.item.GuiCasingPouch;
+import pl.pabilo8.immersiveintelligence.client.gui.item.GuiClipboardItem;
 import pl.pabilo8.immersiveintelligence.client.gui.item.GuiPrintedPage;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity.TileEntityDataMerger;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity.TileEntityDataRouter;
@@ -62,6 +63,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multibloc
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySkyCartStation;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySkyCrateStation;
 import pl.pabilo8.immersiveintelligence.common.block.rotary_device.tileentity.TileEntityGearbox;
+import pl.pabilo8.immersiveintelligence.common.block.simple.tileentity.TileEntityClipboard;
 import pl.pabilo8.immersiveintelligence.common.block.simple.tileentity.TileEntitySmallCrate;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.DecoGuiJEIHandler;
 import pl.pabilo8.immersiveintelligence.common.gui.*;
@@ -182,7 +184,9 @@ public enum IIGUI implements ISerializableEnum
 	RADAR(TileEntityRadar.class, ContainerRadar::new),
 	RADAR_CONFIG(TileEntityRadar.class, ContainerRadar::new),
 	RADAR_TARGETS(TileEntityRadar.class, ContainerRadar::new),
-	FACTION_INVITATIONS(ContainerPlayerGui::new);
+	FACTION_INVITATIONS(ContainerPlayerGui::new),
+	CLIPBOARD_ITEM(ContainerClipboardItem::new),
+	CLIPBOARD_BLOCK(TileEntityClipboard.class, ContainerClipboardTile::new);
 
 	public final Class<? extends TileEntity> teClass;
 	public final Class<? extends Entity> entityClass;
@@ -335,6 +339,8 @@ public enum IIGUI implements ISerializableEnum
 		IIGUI.PRINTED_PAGE_BOOK.setClientStackGui(GuiPrintedPage::new);
 
 		IIGUI.CASING_POUCH.setClientStackGui(GuiCasingPouch::new);
+		IIGUI.CLIPBOARD_ITEM.setClientStackGui(GuiClipboardItem::new);
+		IIGUI.CLIPBOARD_BLOCK.setClientTileGui(GuiClipboardBlock::new);
 
 		//noinspection rawtypes,unchecked
 		IIGUI.UPGRADE_TILE.setClientTileGui((player, tile) -> new GuiTileUpgrade(player, tile));

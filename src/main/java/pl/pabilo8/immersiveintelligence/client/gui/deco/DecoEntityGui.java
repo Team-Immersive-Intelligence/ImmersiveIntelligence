@@ -31,6 +31,7 @@ public abstract class DecoEntityGui<E extends Entity, C extends Container> exten
 	@Override
 	protected void onInitStandardAddons()
 	{
+		super.onInitStandardAddons();
 		if(category==DecoGuiCategory.VEHICLE_ENTITY)
 			addWidget(new DecoManualWidget());
 		if(entity instanceof IStyleCustomizable)

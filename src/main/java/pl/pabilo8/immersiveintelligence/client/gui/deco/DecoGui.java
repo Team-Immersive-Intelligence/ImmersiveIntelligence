@@ -15,6 +15,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -40,12 +41,14 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent.
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent.MouseButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoTab;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.widget.DecoClipboardWidget;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.widget.DecoComponentWidgetBase;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.widget.DecoManualWidget;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -112,6 +115,7 @@ public abstract class DecoGui<T, C extends Container> extends GuiContainer
 	//OpenGL model-view translations do not affect glScissor. Virtual component trees
 	//therefore register their render origin here while drawing translated overlays.
 	private final Deque<Point> scissorOffsetStack = new ArrayDeque<>();
+	private final Deque<Rectangle> scissorStack = new ArrayDeque<>();
 	private int scissorOffsetX, scissorOffsetY;
 	//Widgets
 	private DecoComponentWidgetBase<?> previousWidget, currentWidget;
@@ -162,6 +166,7 @@ public abstract class DecoGui<T, C extends Container> extends GuiContainer
 		this.mouseCapture = null;
 		this.hoveredElement = null;
 		this.scissorOffsetStack.clear();
+		this.scissorStack.clear();
 		this.scissorOffsetX = this.scissorOffsetY = 0;
 		this.previousWidget = null;
 		this.currentWidget = null;
@@ -228,7 +233,17 @@ public abstract class DecoGui<T, C extends Container> extends GuiContainer
 	 */
 	protected void onInitStandardAddons()
 	{
+		if(playerContainer==null||category==DecoGuiCategory.CLIPBOARD)
+			return;
 
+		int clipboards = 0;
+		for(int slot = 0; slot < playerContainer.mainInventory.size()&&clipboards < 4; slot++)
+			if(playerContainer.mainInventory.get(slot).getItem()==IIContent.itemClipboard)
+				addWidget(new DecoClipboardWidget(playerContainer, slot));
+
+		if(clipboards < 4&&!playerContainer.offHandInventory.isEmpty()
+				&&playerContainer.offHandInventory.get(0).getItem()==IIContent.itemClipboard)
+			addWidget(new DecoClipboardWidget(playerContainer, EnumHand.OFF_HAND));
 	}
 
 	/**
@@ -595,42 +610,54 @@ public abstract class DecoGui<T, C extends Container> extends GuiContainer
 		else if(Keyboard.isKeyDown(Keyboard.KEY_F6))
 			exportCurrentGui();
 
-		//Process key typed for the currently focused component
-		if(focusedElement!=null)
+		if(focusedElement!=null&&keyCode==Keyboard.KEY_ESCAPE)
 		{
-			if(keyCode==Keyboard.KEY_ESCAPE)
+			requestFocus(null);
+			return;
+		}
+
+		//Special actions prefer the focused component, then the first hovered component.
+		DecoComponent<?> actionTarget = focusedElement==null?getFirstHoveredComponent(): focusedElement;
+		if(actionTarget!=null&&(Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)||Keyboard.isKeyDown(Keyboard.KEY_RCONTROL)))
+			switch(keyCode)
 			{
-				requestFocus(null);
-				return;
+				case Keyboard.KEY_C:
+					actionTarget.onGuiEvent(DecoGuiEvent.COPY);
+					return;
+				case Keyboard.KEY_V:
+					actionTarget.onGuiEvent(DecoGuiEvent.PASTE);
+					return;
+				case Keyboard.KEY_X:
+					actionTarget.onGuiEvent(DecoGuiEvent.CUT);
+					return;
+				case Keyboard.KEY_Z:
+					actionTarget.onGuiEvent(DecoGuiEvent.UNDO);
+					return;
+				case Keyboard.KEY_Y:
+					actionTarget.onGuiEvent(DecoGuiEvent.REDO);
+					return;
 			}
 
-			//Common keys are turned into events for unified handling
-			if(Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)||Keyboard.isKeyDown(Keyboard.KEY_RCONTROL))
-				switch(keyCode)
-				{
-					case Keyboard.KEY_C:
-						focusedElement.onGuiEvent(DecoGuiEvent.COPY);
-						return;
-					case Keyboard.KEY_V:
-						focusedElement.onGuiEvent(DecoGuiEvent.PASTE);
-						return;
-					case Keyboard.KEY_X:
-						focusedElement.onGuiEvent(DecoGuiEvent.CUT);
-						return;
-					case Keyboard.KEY_Z:
-						focusedElement.onGuiEvent(DecoGuiEvent.UNDO);
-						return;
-					case Keyboard.KEY_Y:
-						focusedElement.onGuiEvent(DecoGuiEvent.REDO);
-						return;
-				}
-			//Other cases
+		//Process other keys for the currently focused component.
+		if(focusedElement!=null)
+		{
 			if(focusedElement.keyTyped(typedChar, keyCode))
 				return;
 		}
 
 		//Result to super if no component handled the key
 		super.keyTyped(typedChar, keyCode);
+	}
+
+	@Nullable
+	private DecoComponent<?> getFirstHoveredComponent()
+	{
+		if(currentWidget!=null&&currentWidget.enabled&&currentWidget.isMouseOver())
+			return currentWidget;
+		for(GuiButton button : buttonList)
+			if(button.enabled&&button instanceof DecoComponent&&button.isMouseOver())
+				return (DecoComponent<?>)button;
+		return null;
 	}
 
 	/**
@@ -1081,13 +1108,12 @@ public abstract class DecoGui<T, C extends Container> extends GuiContainer
 	{
 		x += scissorOffsetX;
 		y += scissorOffsetY;
-		GL11.glEnable(GL11.GL_SCISSOR_TEST);
-
+		Rectangle rectangle;
 		if(screenshotMode)
 		{
 			//When in screenshot mode, use coordinates relative to the framebuffer
 			//Add offsets to account for the GUI position adjustment
-			GL11.glScissor(
+			rectangle = new Rectangle(
 					x-guiLeft+16,  //Offset by the same amount as in exportCurrentGui
 					height-(y-guiTop+16)-ySize,  //Flip Y coordinate for OpenGL
 					xSize,
@@ -1102,8 +1128,14 @@ public abstract class DecoGui<T, C extends Container> extends GuiContainer
 			ySize = ySize*res.getScaleFactor();
 			y = ClientUtils.mc().displayHeight-(y*res.getScaleFactor())-ySize;
 			xSize = xSize*res.getScaleFactor();
-			GL11.glScissor(x, y, xSize, ySize);
+			rectangle = new Rectangle(x, y, xSize, ySize);
 		}
+
+		if(!scissorStack.isEmpty())
+			rectangle = rectangle.intersection(scissorStack.peek());
+		scissorStack.push(rectangle);
+		GL11.glEnable(GL11.GL_SCISSOR_TEST);
+		applyScissor(rectangle);
 	}
 
 	/**
@@ -1111,7 +1143,17 @@ public abstract class DecoGui<T, C extends Container> extends GuiContainer
 	 */
 	public void scissorEnd()
 	{
-		GL11.glDisable(GL11.GL_SCISSOR_TEST);
+		if(!scissorStack.isEmpty())
+			scissorStack.pop();
+		if(scissorStack.isEmpty())
+			GL11.glDisable(GL11.GL_SCISSOR_TEST);
+		else
+			applyScissor(scissorStack.peek());
+	}
+
+	private void applyScissor(Rectangle rectangle)
+	{
+		GL11.glScissor(rectangle.x, rectangle.y, Math.max(0, rectangle.width), Math.max(0, rectangle.height));
 	}
 
 	/**

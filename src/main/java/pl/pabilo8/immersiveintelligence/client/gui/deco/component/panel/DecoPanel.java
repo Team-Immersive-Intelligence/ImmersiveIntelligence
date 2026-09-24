@@ -250,6 +250,28 @@ public class DecoPanel extends DecoComponent<DecoPanel>
 		return true;
 	}
 
+	/**
+	 * Rebuilds size-dependent panel geometry without replacing interactive children.
+	 */
+	protected void rebuildPanelGeometry()
+	{
+		if(vbo > 0)
+		{
+			GlStateManager.glDeleteLists(vbo, 1);
+			vbo = -1;
+		}
+		if(frameVbo > 0)
+		{
+			GlStateManager.glDeleteLists(frameVbo, 1);
+			frameVbo = -1;
+		}
+		bindAtlas();
+		if(background!=null&&backgroundMask!=null)
+			initializeBackground();
+		if(frame!=null)
+			initializeFrame();
+	}
+
 	@Override
 	protected void draw(int mouseX, int mouseY, float partialTicks)
 	{

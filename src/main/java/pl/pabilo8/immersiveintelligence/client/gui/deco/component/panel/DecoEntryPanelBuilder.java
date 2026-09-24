@@ -12,6 +12,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -33,6 +34,7 @@ public class DecoEntryPanelBuilder<TYPE> extends DecoEntryPanel<TYPE>
 	private int refreshInterval, displayTicks;
 	private boolean layoutDirty;
 	private BiConsumer<TYPE, DecoEntryPanelBuilder<TYPE>> elementApplyMethod;
+	private BiFunction<TYPE, Integer, Integer> elementHeight;
 	private Function<TYPE, String> elementTooltip;
 	@Nullable
 	private DecoFrame panelFrame;
@@ -54,6 +56,7 @@ public class DecoEntryPanelBuilder<TYPE> extends DecoEntryPanel<TYPE>
 		this.paddingX = template.paddingX;
 		this.paddingY = template.paddingY;
 		this.elementApplyMethod = template.elementApplyMethod;
+		this.elementHeight = template.elementHeight;
 		this.elementTooltip = template.elementTooltip;
 		this.panelFrame = template.panelFrame;
 		this.panelBackground = template.panelBackground;
@@ -93,6 +96,12 @@ public class DecoEntryPanelBuilder<TYPE> extends DecoEntryPanel<TYPE>
 	{
 		if(elementApplyMethod!=null)
 			elementApplyMethod.accept(type, this);
+	}
+
+	@Override
+	protected int getElementHeight(TYPE element, int width)
+	{
+		return elementHeight==null?super.getElementHeight(element, width): elementHeight.apply(element, width);
 	}
 
 	@Override
@@ -355,6 +364,13 @@ public class DecoEntryPanelBuilder<TYPE> extends DecoEntryPanel<TYPE>
 	public DecoEntryPanelBuilder<TYPE> withElementApplyMethod(BiConsumer<TYPE, DecoEntryPanelBuilder<TYPE>> method)
 	{
 		this.elementApplyMethod = method;
+		invalidateDefinition();
+		return this;
+	}
+
+	public DecoEntryPanelBuilder<TYPE> withElementHeight(BiFunction<TYPE, Integer, Integer> elementHeight)
+	{
+		this.elementHeight = elementHeight;
 		invalidateDefinition();
 		return this;
 	}

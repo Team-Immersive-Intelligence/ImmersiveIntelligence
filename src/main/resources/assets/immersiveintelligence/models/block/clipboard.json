@@ -1,0 +1,32 @@
+{
+  "textures": {
+    "particle": "immersiveintelligence:blocks/common/small_decor/clipboard",
+    "clipboard": "immersiveintelligence:blocks/common/small_decor/clipboard"
+  },
+  "elements": [
+    {
+      "from": [2, 0, 2],
+      "to": [14, 2, 14],
+      "faces": {
+        "down": {
+          "texture": "#clipboard"
+        },
+        "up": {
+          "texture": "#clipboard"
+        },
+        "north": {
+          "texture": "#clipboard"
+        },
+        "south": {
+          "texture": "#clipboard"
+        },
+        "west": {
+          "texture": "#clipboard"
+        },
+        "east": {
+          "texture": "#clipboard"
+        }
+      }
+    }
+  ]
+}

@@ -6,13 +6,16 @@ import net.minecraft.util.math.MathHelper;
 import org.apache.commons.lang3.tuple.Pair;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoEntryPanel;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.clipboard.DecoClipboardUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 /**
@@ -22,20 +25,28 @@ import java.util.stream.Stream;
 public class DecoList<T> extends DecoScrolledCollection<DecoList<T>, T>
 {
 	protected Consumer<T> onEntryClicked = null;
+	private Supplier<T> droppedEntry = null;
 	private T lastHoveredEntry = null;
+	private T selectedEntry = null;
 
 	public DecoList(int x, int y)
 	{
 		super(x, y);
 
 		withOnPressed((gui, mouseButton, mouseX, mouseY) -> {
+			if(mouseButton==MouseButton.LEFT&&droppedEntry!=null)
+			{
+				T dropped = droppedEntry.get();
+				if(dropped!=null)
+					return addEntry(dropped);
+			}
 			Tuple<Integer, Integer> clicked = getClickedEntryIndex(gui.x+2, gui.y-scroll+2, mouseX, mouseY);
 			if(clicked!=null)
 			{
 				if(clicked.getFirst()==ON_CREATE_OPTION)
 					return runCreateAction();
 
-				lastHoveredEntry = entries.get(clicked.getFirst());
+				selectedEntry = lastHoveredEntry = entries.get(clicked.getFirst());
 				if(onEntryClicked!=null)
 				{
 					onEntryClicked.accept(lastHoveredEntry);
@@ -68,6 +79,15 @@ public class DecoList<T> extends DecoScrolledCollection<DecoList<T>, T>
 		return this;
 	}
 
+	/**
+	 * Adds a supplier used when a value is dragged and dropped on the list.
+	 */
+	public DecoList<T> withDropAction(Supplier<T> droppedEntry)
+	{
+		this.droppedEntry = droppedEntry;
+		return this;
+	}
+
 	@Override
 	protected int getAddButtonHeight()
 	{
@@ -83,7 +103,54 @@ public class DecoList<T> extends DecoScrolledCollection<DecoList<T>, T>
 	@Override
 	protected void draw(int mouseX, int mouseY, float partialTicks)
 	{
+		Tuple<Integer, Integer> hovered = getClickedEntryIndex(x+2, y-scroll+2, mouseX, mouseY);
+		lastHoveredEntry = hovered!=null&&hovered.getFirst() >= 0&&hovered.getFirst() < entries.size()?
+				entries.get(hovered.getFirst()): null;
 		drawList(x, y, width, mouseX, mouseY, partialTicks);
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public void onGuiEvent(DecoGuiEvent event)
+	{
+		T current = lastHoveredEntry!=null?lastHoveredEntry: selectedEntry;
+		switch(event)
+		{
+			case COPY:
+				if(current!=null)
+					DecoClipboardUtils.copy(current);
+				break;
+			case CUT:
+				if(current!=null&&DecoClipboardUtils.copy(current))
+				{
+					removeEntry(current);
+					if(current==selectedEntry)
+						selectedEntry = null;
+				}
+				break;
+			case PASTE:
+				if(onCreate==null)
+					break;
+				Object pasted = DecoClipboardUtils.paste();
+				Class<?> entryType = getClipboardEntryType();
+				if(pasted!=null&&entryType!=null&&entryType.isInstance(pasted))
+					addEntry((T)pasted);
+				break;
+			default:
+				super.onGuiEvent(event);
+		}
+	}
+
+	private Class<?> getClipboardEntryType()
+	{
+		if(lastHoveredEntry!=null)
+			return lastHoveredEntry.getClass();
+		if(selectedEntry!=null)
+			return selectedEntry.getClass();
+		for(T entry : entries)
+			if(entry!=null)
+				return entry.getClass();
+		return null;
 	}
 
 	@Override
@@ -119,6 +186,7 @@ public class DecoList<T> extends DecoScrolledCollection<DecoList<T>, T>
 	public List<T> getEntries()
 	{
 		ArrayList<T> result = new ArrayList<>(entries);
+		result.addAll(toBeAdded);
 		result.removeAll(toBeRemoved);
 		return result;
 	}
@@ -129,6 +197,12 @@ public class DecoList<T> extends DecoScrolledCollection<DecoList<T>, T>
 	public Stream<T> streamEntries()
 	{
 		return getEntries().stream();
+	}
+
+	@Nullable
+	protected T getHoveredEntry()
+	{
+		return lastHoveredEntry;
 	}
 
 	/**

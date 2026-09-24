@@ -40,7 +40,8 @@ public class RadioTunerRenderer extends IIItemRendererAMT<ItemIIRadioTuner>
 
 	public RadioTunerRenderer()
 	{
-		super(IIContent.itemRadioTuner, ResLoc.of(IIReference.RES_ITEM_MODEL, "tools/radio_tuner").withExtension(ResLoc.EXT_OBJ));
+		super(IIContent.itemRadioTuner, ResLoc.of(IIReference.RES_ITEM_MODEL, "tools/radio_tuner")
+				.withExtension(ResLoc.EXT_OBJ), true);
 	}
 
 	@Override

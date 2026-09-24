@@ -33,7 +33,8 @@ public class TachometerRenderer extends IIItemRendererAMT<ItemIITachometer>
 
 	public TachometerRenderer()
 	{
-		super(IIContent.itemTachometer, ResLoc.of(IIReference.RES_ITEM_MODEL, "tools/tachometer").withExtension(ResLoc.EXT_OBJ));
+		super(IIContent.itemTachometer, ResLoc.of(IIReference.RES_ITEM_MODEL, "tools/tachometer")
+				.withExtension(ResLoc.EXT_OBJ), true);
 	}
 
 	@Override

@@ -45,6 +45,7 @@ public abstract class DecoTileGui<T extends TileEntityIEBase & IIEInventory, C e
 	@Override
 	protected void onInitStandardAddons()
 	{
+		super.onInitStandardAddons();
 		if(category==DecoGuiCategory.DATA_TILE||category==DecoGuiCategory.PRODUCTION_TILE||category==DecoGuiCategory.TERRITORY_CONTROL_TILE)
 			addWidget(new DecoManualWidget());
 		if(tile instanceof IOwnableProperty)

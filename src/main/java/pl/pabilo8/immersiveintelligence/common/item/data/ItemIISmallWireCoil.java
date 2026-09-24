@@ -21,6 +21,7 @@ import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 import pl.pabilo8.immersiveintelligence.common.wire.IISmallWireType;
+import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -66,6 +67,7 @@ public class ItemIISmallWireCoil extends ItemIISubItemsBase<SmallWires> implemen
 		return EnumActionResult.FAIL;
 	}
 
+	@GeneratedItemModels(itemName = "small_wirecoil")
 	public enum SmallWires implements IIItemEnum
 	{
 		REDSTONE(Wires.smallRedstoneWireColouration, Wires.smallRedstoneWireLength),

@@ -40,6 +40,7 @@ public class IIPacketHandler
 	public static void preInit()
 	{
 		registerMessage(MessageItemScrollableSwitch.class, false, true);
+		registerMessage(MessageClipboardItemSync.class, false, true);
 		registerMessage(MessageBooleanAnimatedPartsSync.class, true, true);
 		registerMessage(MessageChatInfo.class, true, false);
 		registerMessage(MessageIITileSync.class, true, true);
