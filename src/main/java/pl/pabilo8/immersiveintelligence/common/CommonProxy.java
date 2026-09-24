@@ -400,8 +400,11 @@ public class CommonProxy implements IGuiHandler
 		{
 			if(!(state.getBlock()==IIContent.blockAdvancedExplosives))
 				return false;
-			IIContent.blockAdvancedExplosives.explode(world, pos, igniter);
-			world.setBlockToAir(pos);
+			if(!world.isRemote)
+			{
+				world.setBlockToAir(pos);
+				IIContent.blockAdvancedExplosives.explode(world, pos, state, igniter);
+			}
 			return true;
 		});
 

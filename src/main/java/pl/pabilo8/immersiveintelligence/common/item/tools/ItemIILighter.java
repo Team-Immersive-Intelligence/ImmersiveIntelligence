@@ -102,16 +102,21 @@ public class ItemIILighter extends ItemIIBase implements ITool
 		//Check if the block has a special action registered
 		IBlockState state = world.getBlockState(pos);
 		TileEntity tileEntity = world.getTileEntity(pos);
+		boolean handled = false;
 		for(IIILighterAction action : blockActions)
 			if(action.test(world, pos, player, state, tileEntity))
-				return EnumActionResult.SUCCESS;
+			{
+				handled = true;
+				break;
+			}
 
 
 		//Doesn't affect the clicked block, but the block adjacent to it
-		pos = pos.offset(side);
+		if(!handled)
+			pos = pos.offset(side);
 
 		//If not, ignite the block normally
-		if(world.isAirBlock(pos))
+		if(!handled&&world.isAirBlock(pos))
 		{
 			world.playSound(player, pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0F, itemRand.nextFloat()*0.4F+0.8F);
 			world.setBlockState(pos, Blocks.FIRE.getDefaultState(), 11);

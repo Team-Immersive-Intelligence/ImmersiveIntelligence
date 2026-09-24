@@ -49,7 +49,7 @@ public class BlockIIAdvancedExplosives extends BlockIIBase<HMX_Explosives>
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
 	{
-		//TODO: 05.01.2025 II lighter
+		// Let ItemIILighter handle its fuel and registered ignition action.
 		if(!world.isRemote)
 		{
 			ItemStack heldItem = player.getHeldItem(hand);
@@ -64,6 +64,17 @@ public class BlockIIAdvancedExplosives extends BlockIIBase<HMX_Explosives>
 	}
 
 	@Override
+	public void onBlockAdded(World world, BlockPos pos, IBlockState state)
+	{
+		super.onBlockAdded(world, pos, state);
+		if(!world.isRemote&&world.isBlockPowered(pos))
+		{
+			world.setBlockToAir(pos);
+			explode(world, pos, state, null);
+		}
+	}
+
+	@Override
 	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos)
 	{
 		if(!world.isRemote)
@@ -71,15 +82,15 @@ public class BlockIIAdvancedExplosives extends BlockIIBase<HMX_Explosives>
 			//If powered by redstone, detonate
 			if(world.isBlockPowered(pos))
 			{
-				explode(world, pos, state, null);
 				world.setBlockToAir(pos);
+				explode(world, pos, state, null);
 				return;
 			}
 			//If fire is used, detonate
 			if(isAdjacentToFire(world, pos))
 			{
-				explode(world, pos, state, null);
 				world.setBlockToAir(pos);
+				explode(world, pos, state, null);
 			}
 		}
 	}
@@ -89,8 +100,8 @@ public class BlockIIAdvancedExplosives extends BlockIIBase<HMX_Explosives>
 	{
 		if(!world.isRemote&&isAdjacentToFire(world, pos))
 		{
-			explode(world, pos, state, null);
 			world.setBlockToAir(pos);
+			explode(world, pos, state, null);
 		}
 	}
 
@@ -166,5 +177,3 @@ public class BlockIIAdvancedExplosives extends BlockIIBase<HMX_Explosives>
 		WHITE_PHOSPHORUS
 	}
 }
-
-
