@@ -157,15 +157,10 @@ public abstract class IIManualObject extends GuiButtonManual
 			return "missingno"; //translate automatically
 	}
 
-	private String getPositionKeyword(float offset, String left, String middle, String right, boolean allowNone)
+	@Nullable
+	public EasyNBT provideManualNBTInfo()
 	{
-		if(offset < 0.33)
-			return I18n.format("ie.manual.entry.multiblock_forming."+left);
-		if(offset > 0.66)
-			return I18n.format("ie.manual.entry.multiblock_forming."+right);
-		if(allowNone&&(offset < 0.45||offset > 0.55))
-			return "";
-		return middle.isEmpty()?"": I18n.format("ie.manual.entry.multiblock_forming."+middle);
+		return null;
 	}
 
 	public static class ManualObjectInfo

@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.client.manual.pages;
 
+import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.lib.manual.ManualInstance;
 import blusunrize.lib.manual.ManualUtils;
 import blusunrize.lib.manual.gui.GuiManual;
@@ -16,7 +17,9 @@ import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler.IISpecialSkin;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +30,7 @@ import java.util.List;
  * @updated 05.09.2026
  * @since 07.08.2021
  */
-public class IIManualPageContributorSkin extends IIManualPages
+public class IIManualPageContributorSkin extends IIManualPageBase
 {
 	private static final int DISPLAY_TIME = 30;
 
@@ -121,5 +124,12 @@ public class IIManualPageContributorSkin extends IIManualPages
 	public boolean listForSearch(String searchTag)
 	{
 		return false;
+	}
+
+	@Nullable
+	@Override
+	public EasyNBT provideManualData()
+	{
+		return EasyNBT.newNBT().withString("lastSkin", ClientUtils.mc().player.getUniqueID()+":"+skin.name);
 	}
 }

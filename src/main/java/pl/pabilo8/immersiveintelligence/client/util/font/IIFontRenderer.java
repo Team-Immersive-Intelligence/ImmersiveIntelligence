@@ -199,11 +199,11 @@ public class IIFontRenderer extends FontRenderer
 						if(formattingReplacements.containsKey(hexColor))
 							formatting = formattingReplacements.get(hexColor);
 						else
-							while(formatting < 16&&text.contains("\u00A7"+colorFormattingKeys.charAt(formatting)))
+							while(formatting < 16&&text.contains("§"+colorFormattingKeys.charAt(formatting)))
 								formatting++;
 						if(formatting < 16)
 						{
-							rep = "\u00A7"+colorFormattingKeys.charAt(formatting)+rep+"\u00A7r";
+							rep = "§"+colorFormattingKeys.charAt(formatting)+rep+"§r";
 							this.colorCode[formatting] = hexColor;
 							this.colorCode[16+formatting] = ClientUtils.getDarkenedTextColour(hexColor);
 						}

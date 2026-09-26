@@ -28,6 +28,8 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.village.MerchantRecipe;
 import net.minecraft.village.MerchantRecipeList;
 import net.minecraftforge.client.event.GuiOpenEvent;
@@ -40,8 +42,8 @@ import net.minecraftforge.fml.common.registry.VillagerRegistry.VillagerProfessio
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.block.overrides.GuiIECrateOverride;
+import pl.pabilo8.immersiveintelligence.client.util.font.IIFontRenderer;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Overrides;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Overrides.Chemthrower;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Overrides.Railgun;
@@ -56,6 +58,7 @@ import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing.Casing
 import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIMaterial.Materials;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIChemthrowerOverride;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIRailgunOverride;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.IIReflectionUtils;
 
 import java.util.List;
@@ -72,6 +75,9 @@ import java.util.function.Predicate;
  */
 public class ImmersiveEngineeringHelper extends IICompatModule
 {
+	@SideOnly(Side.CLIENT)
+	private IIFontRenderer fontManual;
+
 	public static IIGUI GUI_IE_CRATE_OVERRIDE = null;
 
 	@Override
@@ -283,7 +289,12 @@ public class ImmersiveEngineeringHelper extends IICompatModule
 	@Override
 	public void clientInit()
 	{
-
+		if(Overrides.enableFontOverride)
+		{
+			this.fontManual = new IIFontRenderer(new ResourceLocation("textures/font/ascii.png"));
+			this.fontManual.colorCode[TextFormatting.GOLD.getColorIndex()] = IIReference.COLOR_IMMERSIVE_ORANGE.getPackedRGB();
+			this.fontManual.createColorBackup();
+		}
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -291,7 +302,7 @@ public class ImmersiveEngineeringHelper extends IICompatModule
 	public void clientPostInit()
 	{
 		if(Overrides.enableFontOverride)
-			ManualHelper.getManual().fontRenderer = IIClientUtils.fontRegular;
+			ManualHelper.getManual().fontRenderer = fontManual;
 	}
 
 	private static class ItemstackForEmerald implements ITradeList

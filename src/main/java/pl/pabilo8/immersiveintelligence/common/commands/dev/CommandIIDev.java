@@ -34,6 +34,7 @@ public class CommandIIDev extends CommandTreeBase
 		addSubcommand(new CommandDevPlaceMb(this));
 		addSubcommand(new CommandDevParticle(this));
 		addSubcommand(new CommandDevInyerface(this));
+		addSubcommand(new CommandDevHeldInfo(this));
 		addSubcommand(new CommandIIHelp(this, "dev"));
 	}
 
