@@ -193,7 +193,7 @@ public abstract class TileEntityIIConnectable extends TileEntityIIBase implement
 	public boolean allowEnergyToPass(@Nullable Connection connection)
 	{
 		//The data and power sockets share an IE network node. Data wires cannot carry power.
-		return connection!=null&&connection.cableType.isEnergyWire();
+		return connection!=null&&(connection.cableType.isEnergyWire()||connection.cableType instanceof MotorBeltType);
 	}
 
 	@Override
