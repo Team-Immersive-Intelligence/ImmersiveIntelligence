@@ -10,6 +10,7 @@ import net.minecraft.tileentity.BannerPattern;
 import net.minecraft.tileentity.TileEntityBanner;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
+import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoSprite;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
@@ -19,7 +20,6 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Displays a minecraft banner as a flat image inside a Deco GUI.
@@ -66,8 +66,11 @@ public class DecoBannerDisplay extends DecoComponent<DecoBannerDisplay>
 	public DecoBannerDisplay withBannerPatterns(IIColor baseColor, List<BannerPattern> patterns, List<IIColor> colors)
 	{
 		StringBuilder sb = new StringBuilder("b"+baseColor.getDyeColor().getDyeDamage());
-		this.patternList = patterns;
-		this.colorList = colors.stream().map(IIColor::getDyeColor).collect(Collectors.toList());
+		this.patternList = new ArrayList<>();
+		this.colorList = new ArrayList<>();
+		//The base mask and its colour must be the first layer.
+		this.patternList.add(BannerPattern.BASE);
+		this.colorList.add(baseColor.getDyeColor());
 
 		int limit = Math.min(patterns.size(), colors.size());
 		for(int i = 0; i < limit; i++)
@@ -75,6 +78,8 @@ public class DecoBannerDisplay extends DecoComponent<DecoBannerDisplay>
 			BannerPattern pattern = patterns.get(i);
 			if(pattern==null)
 				continue;
+			this.patternList.add(pattern);
+			this.colorList.add(colors.get(i).getDyeColor());
 			sb.append(pattern.getHashname()).append(colors.get(i).getDyeColor().getDyeDamage());
 		}
 		this.patternID = sb.toString();
@@ -119,7 +124,6 @@ public class DecoBannerDisplay extends DecoComponent<DecoBannerDisplay>
 		int availableH = Math.max(1, height-yPadding);
 
 		this.isFlag = availableW > availableH;
-		this.bannerTexture = BannerTextures.BANNER_DESIGNS.getResourceLocation(patternID, patternList, colorList);
 		return true;
 	}
 
@@ -134,6 +138,10 @@ public class DecoBannerDisplay extends DecoComponent<DecoBannerDisplay>
 					.finish();
 		}
 
+		if(patternID==null||patternID.isEmpty())
+			return;
+		this.bannerTexture = (isFlag?IIClientUtils.FLAG_DESIGNS: BannerTextures.BANNER_DESIGNS)
+				.getResourceLocation(patternID, patternList, colorList);
 		if(bannerTexture==null)
 			return;
 		ClientUtils.mc().getTextureManager().bindTexture(bannerTexture);

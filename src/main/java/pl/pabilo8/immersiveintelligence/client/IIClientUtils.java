@@ -7,10 +7,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.multiplayer.WorldClient;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -33,6 +30,7 @@ import pl.pabilo8.immersiveintelligence.api.ammo.penetration.DamageBlockPos;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoColors;
 import pl.pabilo8.immersiveintelligence.client.util.font.IIFontRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.font.IIFontRendererCustomGlyphs;
+import pl.pabilo8.immersiveintelligence.client.util.texture.FlagBannerTexturesCache;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
@@ -47,6 +45,8 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
+ * Provides client rendering and texture utilities.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 29.08.2022
  */
@@ -61,6 +61,9 @@ public class IIClientUtils
 	private static final HashMap<Fluid, IIColor> CACHED_COLORS = new HashMap<>();
 	@SideOnly(Side.CLIENT)
 	private static final HashMap<ResourceLocation, IIColor> CACHED_TEXTURE_COLORS = new HashMap<>();
+
+	@SideOnly(Side.CLIENT)
+	public static final BannerTextures.Cache FLAG_DESIGNS = new FlagBannerTexturesCache();
 
 	@SideOnly(Side.CLIENT)
 	private static Minecraft mc()
