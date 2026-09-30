@@ -1,15 +1,33 @@
 {
   "bounds": {
+    "full_block": [0, 0, 0, 16, 16, 16],
+    "table_leg1": [12, 0, 1, 15, 13, 4],
+    "table_leg2": [1, 0, 1, 4, 13, 4],
+    "table_leg3": [12, 0, 12, 15, 13, 15],
+    "table_leg4": [1, 0, 12, 4, 13, 15],
+    "crates1": [0, 0, 0, 13, 6, 16],
+    "crates2": [0, 5, 0, 13, 10, 11],
+    "crates3": [5, -1, 0, 18, 5, 12],
+    "drawer": [4, 9, 0, 16, 13, 15],
+    "drawer_copy": [9, 10, 15, 11, 12, 16],
+    "blueprint": [2, 16, 1, 20, 17, 15],
+    "circuit": [5, 16, 3, 15, 17, 13.75],
+    "chip": [8, 17, 4, 13, 19, 7]
   },
+  "name": "II:ArithmeticLogicMachine",
+  "master": [0, 1, 1],
   "positions": {
+    "0": ["table_leg2", "table_leg4", "crates3", "drawer", "drawer_copy", "blueprint"],
+    "1": ["table_leg1", "table_leg3", "crates1", "crates2", "circuit", "chip"],
+    "2,3,4,5,8,9,10,11,14,15,16": "full_block"
   },
   "poi": {
     "energy": 16,
     "data_in": 2,
     "data_out": 3,
-    "front_panel": [],
-    "crates": [],
-    "door": []
+    "front_panel": [0, 1],
+    "crates": [0, 1],
+    "door": [8, 9, 14, 15]
   },
   "rotations": {
     "data_out": "clockwise_90"
