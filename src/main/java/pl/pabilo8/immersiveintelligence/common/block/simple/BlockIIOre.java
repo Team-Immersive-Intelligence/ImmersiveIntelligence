@@ -66,6 +66,15 @@ public class BlockIIOre extends BlockIIBase<Ores>
 		@IIBlockProperties(harvestLevel = 3)
 		FLUORITE,
 		@IIBlockProperties(harvestLevel = 3)
-		PHOSPHORUS
+		PHOSPHORUS,
+		@IIBlockProperties(harvestLevel = 1)
+		TIN,
+		@IIBlockProperties(harvestLevel = 2)
+		CHROMIUM,
+		@IIBlockProperties(harvestLevel = 3)
+		OVERWORLDPHOSPHORUS,
+		@IIBlockProperties(harvestLevel = 3)
+		OVERWORLDFLUORITE,
+
 	}
 }
