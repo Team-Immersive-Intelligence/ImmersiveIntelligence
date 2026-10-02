@@ -69,6 +69,60 @@ public class ItemIIMaterial extends ItemIISubItemsBase<Materials>
 		@IIItemProperties(oreDict = "dustSalt")
 		DUST_SALT,
 
+		@IIItemProperties(oreDict = "dustSodium")
+		SODIUM,
+		@IIItemProperties(oreDict = "dustPotassium")
+		POTASSIUM,
+		@IIItemProperties(oreDict = "dustAmmoniumNitrate")
+		AMMONIUM_NITRATE,
+		@IIItemProperties(oreDict = "dustSiliconDioxide")
+		SILICON_DIOXIDE,
+		@IIItemProperties(oreDict = "dustSodiumCarbonate")
+		SODIUM_CARBONATE,
+		@IIItemProperties(oreDict = "dustSodiumHydroxide")
+		SODIUM_HYDROXIDE,
+		@IIItemProperties(oreDict = "SyntheticRubberCrumbs")
+		SYNTHETIC_RUBBER_CRUMBS,
+		@IIItemProperties(oreDict = "SolidPropellant")
+		SOLID_PROPELLANT,
+		@IIItemProperties(oreDict = "dustPotassiumHydroxide")
+		POTASSIUM_HYDROXIDE,
+		@IIItemProperties(oreDict = "Opriment")
+		OPRIMENT,
+		@IIItemProperties(oreDict = "dustSlag")
+		SLAG_DUST,
+		@IIItemProperties(oreDict = "Thermite")
+		THERMITE,
+		@IIItemProperties(oreDict = "ZincSulfide")
+		ZINC_SULFIDE,
+
+		@IIItemProperties(oreDict = "CopperCatalyst")
+		COPPER_CATALYST,
+		@IIItemProperties(oreDict = "IronCatalyst")
+		IRON_CATALYST,
+		@IIItemProperties(oreDict = "NickelCatalyst")
+		NICKEL_CATALYST,
+		@IIItemProperties(oreDict = "PlatinumCatalyst")
+		PLATINUM_CATALYST,
+
+
+		@IIItemProperties(oreDict = "RedChemicalDye")
+		RED_CHEMICAL_DYE,
+		@IIItemProperties(oreDict = "GreenChemicalDye")
+		GREEN_CHEMICAL_DYE,
+		@IIItemProperties(oreDict = "BlueChemicalDye")
+		BLUE_CHEMICAL_DYE,
+		@IIItemProperties(oreDict = "CyanChemicalDye")
+		CYAN_CHEMICAL_DYE,
+		@IIItemProperties(oreDict = "YellowChemicalDye")
+		YELLOW_CHEMICAL_DYE,
+		@IIItemProperties(oreDict = "MagentaChemicalDye")
+		MAGENTA_CHEMICAL_DYE,
+		@IIItemProperties(oreDict = "BlackChemicalDye")
+		BLACK_CHEMICAL_DYE,
+
+
+
 		@IIItemProperties(oreDict = "brushCarbon")
 		CARBON_BRUSH,
 		@IIItemProperties(hidden = true)

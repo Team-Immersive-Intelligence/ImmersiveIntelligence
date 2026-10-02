@@ -31,6 +31,9 @@ public class ItemIIMaterialIngot extends ItemIISubItemsBase<MaterialsIngot>
 		ZINC,
 		MAGNET,
 		SILICON,
-		DURALUMINIUM
+		DURALUMINIUM,
+		TIN,
+		STAINLESS_STEEL,
+		CHROMIUM
 	}
 }

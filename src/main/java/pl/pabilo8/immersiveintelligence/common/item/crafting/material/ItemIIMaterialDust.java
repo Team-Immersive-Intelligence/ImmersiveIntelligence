@@ -34,6 +34,9 @@ public class ItemIIMaterialDust extends ItemIISubItemsBase<MaterialsDust>
 		QUARTZ,
 		QUARTZ_DIRTY,
 		PHOSPHORUS,
-		DURALUMINIUM
+		DURALUMINIUM,
+		TIN,
+		STAINLESS_STEEL,
+		CHROMIUM
 	}
 }

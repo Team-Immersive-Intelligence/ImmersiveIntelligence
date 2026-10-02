@@ -31,6 +31,9 @@ public class ItemIIMaterialNugget extends ItemIISubItemsBase<MaterialsNugget>
 		ZINC,
 		SILICON,
 		DURALUMINIUM,
-		RUBBER
+		RUBBER,
+		TIN,
+		STAINLESS_STEEL,
+		CHROMIUM
 	}
 }

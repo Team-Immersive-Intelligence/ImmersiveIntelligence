@@ -88,12 +88,18 @@ item.immersiveintelligence.material_ingot.advanced_electronic_alloy.name=Advance
 item.immersiveintelligence.material_ingot.silicon.name=Silicon Ingot
 item.immersiveintelligence.material_ingot.magnet.name=Magnet
 item.immersiveintelligence.material_ingot.duraluminium.name=Duraluminium Ingot
+item.immersiveintelligence.material_ingot.tin.name=Tin Ingot
+item.immersiveintelligence.material_ingot.stainless_steel.name=Stainless Steel Ingot
+item.immersiveintelligence.material_ingot.chromium.name=Chromium Ingot
 
 item.immersiveintelligence.material_rod.brass.name=Brass Rod
 item.immersiveintelligence.material_rod.tungsten.name=Tungsten Rod
 item.immersiveintelligence.material_rod.zinc.name=Zinc Rod
 item.immersiveintelligence.material_rod.platinum.name=Platinum Rod
 item.immersiveintelligence.material_rod.duraluminium.name=Duraluminium Rod
+item.immersiveintelligence.material_rod.tin.name=Tin Rod
+item.immersiveintelligence.material_rod.stainless_steel.name=Stainless Steel Rod
+item.immersiveintelligence.material_rod.chromium.name=Chromium Rod
 
 item.immersiveintelligence.material_dust.platinum.name=Platinum Grit
 item.immersiveintelligence.material_dust.zinc.name=Zinc Grit
@@ -106,6 +112,9 @@ item.immersiveintelligence.material_dust.quartz.name=Quartz Dust
 item.immersiveintelligence.material_dust.quartz_dirty.name=Dirty Quartz Dust
 item.immersiveintelligence.material_dust.phosphorus.name=Phosphorus Dust
 item.immersiveintelligence.material_dust.duraluminium.name=Duraluminium Grit
+item.immersiveintelligence.material_dust.tin.name=Tin Grit
+item.immersiveintelligence.material_dust.stainless_steel.name=Stainless Steel Grit
+item.immersiveintelligence.material_dust.chromium.name=Chromium Grit
 
 item.immersiveintelligence.material_plate.platinum.name=Platinum Plate
 item.immersiveintelligence.material_plate.zinc.name=Zinc Plate
@@ -115,6 +124,9 @@ item.immersiveintelligence.material_plate.advanced_electronic_alloy.name=Advance
 item.immersiveintelligence.material_plate.silicon.name=Silicon Wafer
 item.immersiveintelligence.material_plate.rubber_raw.name=Natural Rubber Sheet
 item.immersiveintelligence.material_plate.duraluminium.name=Duraluminium Plate
+item.immersiveintelligence.material_plate.tin.name=Tin Plate
+item.immersiveintelligence.material_plate.stainless_steel.name=Stainless Steel Plate
+item.immersiveintelligence.material_plate.chromium.name=Chromium Plate
 
 item.immersiveintelligence.material_nugget.platinum.name=Platinum Nugget
 item.immersiveintelligence.material_nugget.zinc.name=Zinc Nugget
@@ -124,6 +136,9 @@ item.immersiveintelligence.material_nugget.advanced_electronic_alloy.name=Advanc
 item.immersiveintelligence.material_nugget.silicon.name=Silicon Piece
 item.immersiveintelligence.material_nugget.duraluminium.name=Duraluminium Nugget
 item.immersiveintelligence.material_nugget.rubber.name=Rubber Nugget
+item.immersiveintelligence.material_nugget.tin.name=Tin Nugget
+item.immersiveintelligence.material_nugget.stainless_steel.name=Stainless Steel Nugget
+item.immersiveintelligence.material_nugget.chromium.name=Chromium Nugget
 
 item.immersiveintelligence.material_wire.tungsten.name=Tungsten Wire
 item.immersiveintelligence.material_wire.brass.name=Brass Wire
@@ -160,6 +175,38 @@ item.immersiveintelligence.material.artificial_leather.name=Artificial Leather
 item.immersiveintelligence.material.natural_rubber.name=Natural Rubber
 item.immersiveintelligence.material.rubber_belt.name=Rubber Strap
 item.immersiveintelligence.material.rubber_tire.name=Rubber Tire
+
+#Chemistry Items
+item.immersiveintelligence.material.sodium.name=Sodium Metal
+item.immersiveintelligence.material.potassium.name=Potassium Metal
+item.immersiveintelligence.material.ammonium_nitrate.name=Ammonium Nitrate
+item.immersiveintelligence.material.potassium_hydroxide.name=Potassium Hydroxide
+item.immersiveintelligence.material.potassium_carbonate.name=Potassium Carbonate
+item.immersiveintelligence.material.synthetic_rubber_crumbs.name=Synthetic Rubber Crumbs
+item.immersiveintelligence.material.opriment.name=Opriment
+item.immersiveintelligence.material.silicon_dioxide.name=Silicon Dioxide
+item.immersiveintelligence.material.sodium_carbonate.name=Sodium Carbonate
+item.immersiveintelligence.material.slag_dust.name=Slag Dust
+item.immersiveintelligence.material.solid_propellant.name=Solid Propellant
+item.immersiveintelligence.material.sodium_hydroxide.name=Sodium Hydroxide
+item.immersiveintelligence.material.zinc_sulfide.name=Zinc Sulfide
+item.immersiveintelligence.material.thermite.name=Thermite
+
+
+item.immersiveintelligence.material.copper_catalyst.name=Copper Catalyst
+item.immersiveintelligence.material.iron_catalyst.name=Iron Catalyst
+item.immersiveintelligence.material.platinum_catalyst.name=Platinum Catalyst
+item.immersiveintelligence.material.nickel_catalyst.name=Nickle Catalyst
+
+item.immersiveintelligence.material.red_chemical_dye.name=Red Chemical Dye
+item.immersiveintelligence.material.blue_chemical_dye.name=Blue Chemical Dye
+item.immersiveintelligence.material.green_chemical_dye.name=Green Chemical Dye
+item.immersiveintelligence.material.cyan_chemical_dye.name=Cyan Chemical Dye
+item.immersiveintelligence.material.yellow_chemical_dye.name=Yellow Chemical Dye
+item.immersiveintelligence.material.magenta_chemical_dye.name=Magenta Chemical Dye
+item.immersiveintelligence.material.black_chemical_dye.name=Black Chemical Dye
+
+#Chemistry Fluids
 
 item.immersiveintelligence.circuit_functional.arithmetic.name=Arithmetic Circuit
 item.immersiveintelligence.circuit_functional.advanced_arithmetic.name=Advanced Arithmetic Circuit
