@@ -32,6 +32,9 @@ public class ItemIIMaterialRod extends ItemIISubItemsBase<MaterialsRod>
 		TUNGSTEN,
 		ZINC,
 		PLATINUM,
-		DURALUMINIUM
+		DURALUMINIUM,
+		TIN,
+		STAINLESS_STEEL,
+		CHROMIUM
 	}
 }
