@@ -31,8 +31,10 @@ import pl.pabilo8.immersiveintelligence.common.util.tile.TileEntityIIDirectional
 import javax.annotation.Nonnull;
 
 /**
+ * Collects latex from a stripped rubber log into a bucket.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 30.06.2026
+ * @updated 03.10.2026
  * @ii-approved 0.3.1
  * @since 19.05.2021
  */
@@ -60,6 +62,10 @@ public class TileEntityLatexCollector extends TileEntityIIDirectional implements
 			return;
 		}
 
+		//Stop collection when the stripped rubber log is absent
+		if(!isNextToTree())
+			return;
+
 		//Stop collecting if the bucket is full
 		IFluidHandlerItem capability = bucket.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
 		if(capability==null||capability.drain(1000, false)!=null)
@@ -73,17 +79,17 @@ public class TileEntityLatexCollector extends TileEntityIIDirectional implements
 			//Increment collected amount
 			if(collectedLatex < 1000)
 			{
-				collectedLatex += (int)(LatexCollector.dropAmount*getIncomeModifier());
+				collectedLatex = MathHelper.clamp(collectedLatex+(int)(LatexCollector.dropAmount*getIncomeModifier()), 0, 1000);
 				collectionTimer = 0;
 			}
 			else
 			{
 				//Fill the bucket item (and stop collection next tick)
-				this.collectedLatex = 0;
-				if(!world.isRemote)
+				if(!world.isRemote&&capability.fill(new FluidStack(IIContent.fluidLatex, 1000), true)==1000)
 				{
+					this.collectedLatex = 0;
 					bucket = capability.getContainer();
-					updateTileForEvent(SyncEvents.ENTITY_CUSTOM1);
+					updateTileForEvent(SyncEvents.TILE_CUSTOM1);
 				}
 			}
 		}
@@ -99,8 +105,8 @@ public class TileEntityLatexCollector extends TileEntityIIDirectional implements
 			bucket = heldItem.copy();
 			bucket.setCount(1);
 			heldItem.shrink(1);
-			updateTileForEvent(SyncEvents.ENTITY_CUSTOM1);
 			this.collectedLatex = 0;
+			updateTileForEvent(SyncEvents.TILE_CUSTOM1);
 			return true;
 		}
 		//Handle bucket removal
@@ -108,8 +114,8 @@ public class TileEntityLatexCollector extends TileEntityIIDirectional implements
 		{
 			player.inventory.addItemStackToInventory(bucket.copy());
 			bucket = ItemStack.EMPTY;
-			updateTileForEvent(SyncEvents.ENTITY_CUSTOM1);
 			this.collectedLatex = 0;
+			updateTileForEvent(SyncEvents.TILE_CUSTOM1);
 			return true;
 		}
 		else return heldItem.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);

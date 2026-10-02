@@ -22,7 +22,7 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 13.05.2026
+ * @updated 03.10.2026
  * @ii-approved 0.3.1
  * @since 30.08.2020
  */
@@ -54,15 +54,16 @@ public class LatexCollectorRenderer extends IITileRenderer<TileEntityLatexCollec
 		else
 		{
 			float soonCollected = 0;
-			if(!te.bucket.isEmpty())
+			if(nextToTree&&!te.bucket.isEmpty())
 				soonCollected = (Math.max(0, te.collectionTimer-(LatexCollector.dropTimer-14)+partialTicks)/14f)
 						*te.getIncomeModifier()*LatexCollector.dropAmount;
 			this.latex.withLevel(MathHelper.clamp((te.collectedLatex+soonCollected)/(float)1000, 0f, 1f));
 
 			//Apply drip particle animation
-			this.particle.setProperty(AMTUtils.getAnimationProgress(Math.max(0, te.collectionTimer-(LatexCollector.dropTimer-35)+partialTicks)
-							+MathHelper.clamp((te.collectionTimer+partialTicks)/10f, 0, 7),
-					35, false, 0));
+			if(nextToTree&&!te.bucket.isEmpty())
+				this.particle.setProperty(AMTUtils.getAnimationProgress(Math.max(0, te.collectionTimer-(LatexCollector.dropTimer-35)+partialTicks)
+								+MathHelper.clamp((te.collectionTimer+partialTicks)/10f, 0, 7),
+						35, false, 0));
 		}
 
 		//Render
