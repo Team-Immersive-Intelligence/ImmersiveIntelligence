@@ -697,6 +697,8 @@ public class CommonProxy implements IGuiHandler
 		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.ZINC.getMeta()), "zinc", IIConfig.Ores.oreZinc, EnumOreType.OVERWORLD);
 		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.TUNGSTEN.getMeta()), "tungsten", IIConfig.Ores.oreTungsten, EnumOreType.OVERWORLD);
 		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.SALT.getMeta()), "salt", IIConfig.Ores.oreSalt, EnumOreType.OVERWORLD);
+		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.OVERWORLDFLUORITE.getMeta()), "overworldfluorite", IIConfig.Ores.oreFluorite, EnumOreType.OVERWORLD);
+		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.OVERWORLDPHOSPHORUS.getMeta()), "overworldphosphorus", IIConfig.Ores.orePhosphorus, EnumOreType.OVERWORLD);
 		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.FLUORITE.getMeta()), "fluorite", IIConfig.Ores.oreFluorite, EnumOreType.NETHER);
 		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.PHOSPHORUS.getMeta()), "phosphorus", IIConfig.Ores.orePhosphorus, EnumOreType.NETHER);
 

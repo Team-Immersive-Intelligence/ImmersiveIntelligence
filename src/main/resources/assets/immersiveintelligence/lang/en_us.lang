@@ -565,6 +565,11 @@ tile.immersiveintelligence.ore.salt.name=Salt Ore
 
 tile.immersiveintelligence.ore.fluorite.name=Nether Fluorite Ore
 tile.immersiveintelligence.ore.phosphorus.name=Nether Phosphorus Ore
+tile.immersiveintelligence.ore.potash.name=Potash Ore
+tile.immersiveintelligence.ore.tin.name=Tin Ore
+tile.immersiveintelligence.ore.chromium.name=Chromium Ore
+tile.immersiveintelligence.ore.overworldfluorite.name=Overworld Fluorite Ore
+tile.immersiveintelligence.ore.overworldphosphorus.name=Overworld Phosphorus Ore
 
 tile.immersiveintelligence.sheetmetal.brass.name=Brass Sheetmetal
 tile.immersiveintelligence.storage.brass.name=Brass Block
