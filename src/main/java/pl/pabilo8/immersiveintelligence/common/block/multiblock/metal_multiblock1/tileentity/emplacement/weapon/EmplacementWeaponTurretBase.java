@@ -5,11 +5,15 @@ import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeFloat;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeNull;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
+import pl.pabilo8.immersiveintelligence.client.util.carversound.ConditionCompoundSound;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Emplacement;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.EmplacementStateNeeds;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
@@ -18,7 +22,7 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.TargetCoordinateReference;
 import pl.pabilo8.immersiveintelligence.common.util.gun.GunAimCoordinate;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
+import pl.pabilo8.immersiveintelligence.common.util.sound.AdvancedSounds.MultiSound;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -28,18 +32,18 @@ import javax.annotation.Nullable;
  *
  * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
- * @updated 08.09.2026
+ * @updated 27.09.2026
  * @since 01.01.2026
  */
 public abstract class EmplacementWeaponTurretBase extends EmplacementWeapon
 {
 	@SyncNBT(time = 0, events = SyncEvents.WEAPON_ROTATION)
 	public GunAimCoordinate aim = new GunAimCoordinate();
-	@Nullable
-	@SyncNBT(time = 0, events = SyncEvents.WEAPON_MISC, nullable = true)
-	public MultiblockInteractablePart setup = null;
 	private int casingOutputTicker = 0;
 	private transient ResLoc rotateYawAnimation, rotatePitchAnimation;
+	private transient boolean clientYawRotating, clientPitchRotating;
+	@SideOnly(Side.CLIENT)
+	private ConditionCompoundSound<TileEntityEmplacement> yawRotationSound, pitchRotationSound;
 
 	/**
 	 * Initializes the weapon with the Emplacement facing as its local yaw center.
@@ -51,12 +55,23 @@ public abstract class EmplacementWeaponTurretBase extends EmplacementWeapon
 		this.rotateYawAnimation = ResLoc.of(IIReference.RES_II, "emplacement/weapon/", getName(), "/rotate_yaw");
 		this.rotatePitchAnimation = ResLoc.of(IIReference.RES_II, "emplacement/weapon/", getName(), "/rotate_pitch");
 		this.aim.withCenterYaw(te.facing.getHorizontalAngle());
+	}
+
+	@Override
+	protected void onInitComplete(TileEntityEmplacement te)
+	{
+		super.onInitComplete(te);
 		if(!restoredFromNBT)
 		{
 			Float hidingYaw = getHidingYaw();
 			Float hidingPitch = getHidingPitch();
-			this.aim.withCurrentAngles(hidingYaw==null?this.aim.getCenterYaw(): hidingYaw, hidingPitch==null?this.aim.clampPitchToRange(0f): hidingPitch);
+			this.aim.withCurrentAngles(
+					hidingYaw==null?this.aim.getCenterYaw(): MathHelper.wrapDegrees(this.aim.getCenterYaw()+hidingYaw),
+					hidingPitch==null?this.aim.clampPitchToRange(0f): hidingPitch
+			);
 		}
+		if(te.getWorld().isRemote)
+			initializeRotationSounds(te);
 	}
 
 	@Override
@@ -75,10 +90,6 @@ public abstract class EmplacementWeaponTurretBase extends EmplacementWeapon
 		if(!exposed)
 			setAimTargetAngles(te, getHidingYaw(), getHidingPitch());
 		updateAim(te);
-		if(te.tactileHandler!=null)
-			te.tactileHandler.update(rotateYawAnimation, (aim.getYawNormalized(0)+0.5f)%1f,
-					rotatePitchAnimation, aim.getPitchNormalized(-90, 90, 0));
-
 		//The Base casing storage is stationary, so it can continue emptying while the platform operates.
 		if(++casingOutputTicker >= Math.max(0, getItemTransferSpeed()))
 		{
@@ -97,14 +108,74 @@ public abstract class EmplacementWeaponTurretBase extends EmplacementWeapon
 	}
 
 	@Override
+	public void applyTactileAnimations(TileEntityEmplacement te)
+	{
+		applyTurretTactileAnimationSet(te, new ResLoc[0], new float[0]);
+	}
+
+	/**
+	 * Adds turret rotation before weapon-specific tactile animation channels.
+	 */
+	protected final void applyTurretTactileAnimationSet(TileEntityEmplacement te, @Nonnull ResLoc[] weaponAnimations,
+														@Nonnull float[] weaponAnimationTimes)
+	{
+		if(weaponAnimations.length!=weaponAnimationTimes.length)
+			throw new IllegalArgumentException("Animation and time arrays must have equal lengths");
+
+		ResLoc[] animations = new ResLoc[2+weaponAnimations.length];
+		float[] animationTimes = new float[animations.length];
+		animations[0] = rotateYawAnimation;
+		animations[1] = rotatePitchAnimation;
+		animationTimes[0] = (aim.getYawNormalized(0)+0.5f)%1f;
+		animationTimes[1] = aim.getPitchNormalized(-90, 90, 0);
+		System.arraycopy(weaponAnimations, 0, animations, 2, weaponAnimations.length);
+		System.arraycopy(weaponAnimationTimes, 0, animationTimes, 2, weaponAnimationTimes.length);
+		applyTactileAnimationSet(te, animations, animationTimes);
+	}
+
+	@Override
 	public void onClientUpdate(TileEntityEmplacement te)
 	{
 		//The client only advances state received from the server.
 		applyRotationUpgrade(te);
 		if(this.setup!=null)
 			this.setup.update();
+		this.clientYawRotating = isYawRotating();
+		this.clientPitchRotating = isPitchRotating();
 		this.aim.update();
 		super.onClientUpdate(te);
+	}
+
+	@SideOnly(Side.CLIENT)
+	private void initializeRotationSounds(TileEntityEmplacement te)
+	{
+		yawRotationSound = new ConditionCompoundSound<>(getYawRotationSound(), te.getWeaponCenter(), te,
+				controller -> !controller.isInvalid()&&controller.currentWeapon==this&&clientYawRotating);
+		pitchRotationSound = new ConditionCompoundSound<>(getPitchRotationSound(), te.getWeaponCenter(), te,
+				controller -> !controller.isInvalid()&&controller.currentWeapon==this&&clientPitchRotating);
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void stopClientSounds()
+	{
+		if(yawRotationSound!=null)
+			yawRotationSound.forceStop();
+		if(pitchRotationSound!=null)
+			pitchRotationSound.forceStop();
+		yawRotationSound = null;
+		pitchRotationSound = null;
+		super.stopClientSounds();
+	}
+
+	private boolean isYawRotating()
+	{
+		return Math.abs(MathHelper.wrapDegrees(aim.getTargetYaw()-aim.getYaw(0))) > 0.001f;
+	}
+
+	private boolean isPitchRotating()
+	{
+		return Math.abs(aim.getTargetPitch()-aim.getPitch(0)) > 0.001f;
 	}
 
 	@Override
@@ -147,7 +218,7 @@ public abstract class EmplacementWeaponTurretBase extends EmplacementWeapon
 				rotationChanged = hasTargetAngleChanged(previousTargetYaw, previousTargetPitch);
 		}
 
-		if(currentTarget.isAimingOnly()&&targetAccepted&&aim.isAimed(1.5f)
+		if(currentTarget.isAimingOnly()&&targetAccepted&&aim.isAimed(Emplacement.aimingTolerance)
 				&&te.taskManager.completeAimMission(currentTarget))
 		{
 			te.markDirty();
@@ -155,7 +226,7 @@ public abstract class EmplacementWeaponTurretBase extends EmplacementWeapon
 		}
 
 		boolean fired = !currentTarget.isAimingOnly()
-				&&te.door.isFullyOpened()&&(setup==null||setup.isFullyOpened())&&aim.isAimed(1.5f)&&canShoot(te)
+				&&te.door.isFullyOpened()&&(setup==null||setup.isFullyOpened())&&aim.isAimed(Emplacement.aimingTolerance)&&canShoot(te)
 				&&shoot(te, currentTarget);
 		if(fired&&te.taskManager.notifyAfterShot(currentTarget))
 			te.markDirty();
@@ -316,7 +387,7 @@ public abstract class EmplacementWeaponTurretBase extends EmplacementWeapon
 	@Nullable
 	protected Float getHidingYaw()
 	{
-		return 0f;
+		return Emplacement.hidingYaw;
 	}
 
 	/**
@@ -325,6 +396,24 @@ public abstract class EmplacementWeaponTurretBase extends EmplacementWeapon
 	@Nullable
 	protected Float getHidingPitch()
 	{
-		return aim.clampPitchToRange(-90f);
+		return aim.clampPitchToRange(Emplacement.hidingPitch);
+	}
+
+	/**
+	 * @return repeated sound used while the turret changes yaw
+	 */
+	@Nonnull
+	protected MultiSound getYawRotationSound()
+	{
+		return IISounds.turntableForwardLoop;
+	}
+
+	/**
+	 * @return repeated sound used while the turret changes pitch
+	 */
+	@Nonnull
+	protected MultiSound getPitchRotationSound()
+	{
+		return IISounds.electricMotorForwardLoop;
 	}
 }

@@ -170,7 +170,7 @@ public enum IIGUI implements ISerializableEnum
 	FLAGPOLE_CONFIG(TileEntityFlagpole.class, ContainerFlagpole::getContainerForConfigPage),
 	FLAGPOLE_FACTION(TileEntityFlagpole.class, ContainerFlagpole::getContainerForFactionPage),
 	EMPLACEMENT_STORAGE(TileEntityEmplacement.class, ContainerEmplacement::getContainerForStoragePage),
-	EMPLACEMENT_CONFIG(TileEntityEmplacement.class, ContainerEmplacement::new),
+	EMPLACEMENT_CONFIG(TileEntityEmplacement.class, ContainerEmplacement::getContainerForConfigPage),
 	EMPLACEMENT_TARGET_FILTERS(TileEntityEmplacement.class, ContainerEmplacement::new),
 	EMPLACEMENT_FIRE_MISSIONS(TileEntityEmplacement.class, ContainerEmplacement::new),
 

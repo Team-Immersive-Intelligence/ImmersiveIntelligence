@@ -1,10 +1,15 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon;
 
+import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.LightHowitzer;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
+import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageParticleEffect;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.TargetCoordinateReference;
 import pl.pabilo8.immersiveintelligence.common.util.gun.ChillingState;
 
 /**
@@ -34,9 +39,24 @@ public class EmplacementWeaponLightHowitzer extends EmplacementWeaponGunBase<Ent
 		setupItemHandlers(te, 8, 8, 4, 4,
 				this.ammoFactory::isValidAmmo, this.ammoFactory::isValidAmmo);
 		this.aim.withAimSpeed(LightHowitzer.yawRotateSpeed, LightHowitzer.pitchRotateSpeed)
-				.withPitchLimit(-90f, 22.5f);
+				.withYawLimit(LightHowitzer.minYaw, LightHowitzer.maxYaw)
+				.withPitchLimit(LightHowitzer.minPitch, LightHowitzer.maxPitch);
 		this.gunHandler.withShootSound(IISounds.howitzerShot, 55);
 		this.rotateAfterFiring = false;
+	}
+
+	@Override
+	protected void configureProjectile(TileEntityEmplacement te, EntityAmmoProjectile projectile, TargetCoordinateReference target)
+	{
+		super.configureProjectile(te, projectile, target);
+		IIPacketHandler.sendToClient(new MessageParticleEffect("ammo/gunfire_howitzer", te.getWorld(), te.tactileHandler.getPosition("fire"),
+				aim.getTarget(0).scale(0.01), aim.getYaw(0), aim.getPitch(0), EasyNBT.newNBT()));
+	}
+
+	@Override
+	public Vec3d getWeaponOffset()
+	{
+		return new Vec3d(0, 0.625f, 0);
 	}
 
 	@Override
@@ -48,13 +68,13 @@ public class EmplacementWeaponLightHowitzer extends EmplacementWeaponGunBase<Ent
 	@Override
 	protected Float getLoadingYaw()
 	{
-		return 0f;
+		return LightHowitzer.loadingYaw;
 	}
 
 	@Override
 	protected Float getLoadingPitch()
 	{
-		return 0f;
+		return LightHowitzer.loadingPitch;
 	}
 
 	@Override

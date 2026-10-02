@@ -34,10 +34,12 @@ public class EmplacementWeaponCPDS extends EmplacementWeaponGunBase<EntityAmmoPr
 		this.ammoFactory.setAmmo(IIContent.itemAmmoMachinegun);
 		this.visionAABB = this.visionAABB.grow(CPDS.detectionRadius);
 		this.attackAABB = this.attackAABB.grow(CPDS.attackRadius);
-		this.chillingState = new ChillingState(200, 240, 144);
+		this.chillingState = new ChillingState(CPDS.minimumIdleTime,
+				CPDS.idleAnimationInterval, CPDS.idleAnimationDuration);
 		setupItemHandlers(te, 8, 4, 4, 4+22, this::isMagazine, this::isMagazine);
 		this.aim.withAimSpeed(CPDS.yawRotateSpeed, CPDS.pitchRotateSpeed)
-				.withPitchLimit(-90, 68.5f);
+				.withYawLimit(CPDS.minYaw, CPDS.maxYaw)
+				.withPitchLimit(CPDS.minPitch, CPDS.maxPitch);
 
 		this.rotateAfterFiring = true;
 		this.gunHandler.withShootSound(IISounds.autocannonShot, 55)
@@ -114,13 +116,13 @@ public class EmplacementWeaponCPDS extends EmplacementWeaponGunBase<EntityAmmoPr
 	@Override
 	protected Float getLoadingPitch()
 	{
-		return 0f;
+		return CPDS.loadingPitch;
 	}
 
 	@Nullable
 	@Override
 	protected Float getHidingPitch()
 	{
-		return -90f;
+		return CPDS.hidingPitch;
 	}
 }

@@ -47,7 +47,7 @@ public class EWRLightHowitzer extends EmplacementWeaponRenderer<EmplacementWeapo
 				new AMTModel(
 						new AMTLocator("turret_origin", header),
 						new AMTLocator("barrel_origin", header),
-						new AMTBullet("6bCal", header, AmmoRegistry.getGenericModel(IIContent.itemAmmoLightArtillery)),
+						new AMTBullet("projectile", header, AmmoRegistry.getGenericModel(IIContent.itemAmmoLightArtillery)),
 						new AMTBullet("casing", header, AmmoRegistry.getGenericModel(IIContent.itemAmmoLightArtillery))
 				)
 		);
@@ -63,14 +63,14 @@ public class EWRLightHowitzer extends EmplacementWeaponRenderer<EmplacementWeapo
 		this.work = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("work"));
 		this.chill = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("chill"));
 
-		this.shell = new AMTCrossVariantReference<>("6bCal", model);
+		this.shell = new AMTCrossVariantReference<>("projectile", model);
 	}
 
 	@Override
 	public void apply(EmplacementWeaponLightHowitzer weapon, AMTCachedModel<TileEntityEmplacement> model, BufferBuilder buf, Tessellator tes, float partialTicks)
 	{
 		float loadingProgress = weapon.gunHandler.getLoadingProgress(partialTicks);
-		float shotDelay = weapon.gunHandler.getShotDelay(partialTicks);
+		float shotDelay = 1f-(weapon.gunHandler.getShotDelay(partialTicks)/weapon.getShotDelay());
 		float chillProgress = weapon.getChillProgress(partialTicks);
 
 		this.applyAmmoItem(weapon, BulletState.BULLET_UNUSED, shell);

@@ -321,8 +321,8 @@ public class ParticleRegistry
 	 * Spawns the client-side explosion effect.
 	 */
 	public static void spawnExplosionBoomFX(World world, Vec3d pos, Vec3d dir,
-	                                        float radius, float power, ComponentEffectShape shape,
-	                                        List<BlockPos> affectedSurface)
+											float radius, float power, ComponentEffectShape shape,
+											List<BlockPos> affectedSurface)
 	{
 		spawnExplosionBoomFX(world, pos, dir, radius, power, shape, affectedSurface, false, Collections.emptyList());
 	}
@@ -331,9 +331,9 @@ public class ParticleRegistry
 	 * Spawns the client-side explosion effect with optional fluid splash data.
 	 */
 	public static void spawnExplosionBoomFX(World world, Vec3d pos, Vec3d dir,
-	                                        float radius, float power, ComponentEffectShape shape,
-	                                        List<BlockPos> affectedSurface, boolean fluidExplosion,
-	                                        List<BlockPos> affectedFluids)
+											float radius, float power, ComponentEffectShape shape,
+											List<BlockPos> affectedSurface, boolean fluidExplosion,
+											List<BlockPos> affectedFluids)
 	{
 		float playerDistance = (float)ClientUtils.mc().player.getDistance(pos.x, pos.y, pos.z);
 		float effectExtent = Math.max(1f, Math.min(radius, power+1f));
@@ -575,8 +575,8 @@ public class ParticleRegistry
 	}
 
 	private static List<BlockPos> getExactExplosionSurface(World world, Vec3d pos, Vec3d explosionDirection,
-	                                                       float radius, float power, ComponentEffectShape shape,
-	                                                       Vec3d visualDirection)
+														   float radius, float power, ComponentEffectShape shape,
+														   Vec3d visualDirection)
 	{
 		IIExplosion explosion = new IIExplosion(world, null, pos, explosionDirection,
 				radius, power, shape, false, true, false);
@@ -608,7 +608,7 @@ public class ParticleRegistry
 	 * Spawns the complete white phosphorus effect without client-side effect entities.
 	 */
 	public static void spawnWhitePhosphorusFX(World world, Vec3d centerPos, Vec3d direction,
-	                                          ComponentEffectShape shape, float size)
+											  ComponentEffectShape shape, float size)
 	{
 		Vec3d mainPosition = centerPos.subtract(direction);
 		Vec3d mainMotion = direction.scale(-0.75);
@@ -892,15 +892,6 @@ public class ParticleRegistry
 
 	public static void spawnTeslaFX(World world, Vec3d centerPos, List<Vec3d> affectedTargets)
 	{
-		IIColor coreColor = IIColor.fromPackedRGB(0xDDF7FF);
-		IIColor edgeColor = IIColor.fromPackedRGB(0x2F7FFF);
-
-		AbstractParticle glow = spawnParticle("emp/glow", centerPos, Vec3d.ZERO, new Vector2f(0, 0));
-		if(glow!=null)
-			glow.withProperty(ParticleProperties.SIZE, 0.125f)
-					.withProperty(ParticleProperties.COLOR, coreColor)
-					.withProperty(ParticleProperties.COLOR_SECONDARY, edgeColor);
-
 		if(affectedTargets==null)
 			return;
 		for(Vec3d target : affectedTargets)

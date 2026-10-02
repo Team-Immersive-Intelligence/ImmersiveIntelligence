@@ -73,19 +73,19 @@
   "properties": {
     "shell1": {
       "state": "bullet_unused",
-      "base_rotation": [-90, 0, 0]
+      "base_rotation": [90, 0, 0]
     },
     "shell2": {
       "state": "bullet_unused",
-      "base_rotation": [-90, 0, 0]
+      "base_rotation": [90, 0, 0]
     },
     "shell3": {
       "state": "bullet_unused",
-      "base_rotation": [-90, 0, 0]
+      "base_rotation": [90, 0, 0]
     },
     "shell4": {
       "state": "bullet_unused",
-      "base_rotation": [-90, 0, 0]
+      "base_rotation": [90, 0, 0]
     },
     "shell5": {
       "state": "bullet_unused",
@@ -105,15 +105,15 @@
     },
     "shell_hatch1": {
       "state": "bullet_unused",
-      "base_rotation": [-90, 0, 0]
+      "base_rotation": [90, 0, 0]
     },
     "shell_hatch2": {
       "state": "bullet_unused",
-      "base_rotation": [-90, 0, 0]
+      "base_rotation": [90, 0, 0]
     },
     "shell_hatch3": {
       "state": "bullet_unused",
-      "base_rotation": [-90, 0, 0]
+      "base_rotation": [90, 0, 0]
     },
     "shell_hatch4": {
       "state": "bullet_unused",

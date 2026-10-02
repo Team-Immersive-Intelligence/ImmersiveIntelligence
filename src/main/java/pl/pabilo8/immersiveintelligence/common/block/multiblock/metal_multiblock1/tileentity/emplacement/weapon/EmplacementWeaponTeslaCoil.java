@@ -77,7 +77,7 @@ public class EmplacementWeaponTeslaCoil extends EmplacementWeapon
 			return super.onUpdate(te, baseNeeds, currentTarget);
 
 		Vec3d targetPosition = currentTarget.supplyCoordinates();
-		Vec3d origin = te.getWeaponCenter().addVector(0, 3, 0);
+		Vec3d origin = te.getWeaponCenter().addVector(0, 2.5f, 0);
 		if(targetPosition==null||energy.extractEnergy(TeslaCoil.energyUsage, true) < TeslaCoil.energyUsage)
 			return super.onUpdate(te, baseNeeds, currentTarget);
 

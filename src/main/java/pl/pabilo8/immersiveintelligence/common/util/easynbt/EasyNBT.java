@@ -912,8 +912,8 @@ public class EasyNBT extends Constants.NBT
 	 */
 	public Vec3d getVec3d(String key)
 	{
+		//Double vector
 		NBTTagList pos = getList(key, TAG_DOUBLE);
-
 		if(pos.tagCount() > 2)
 		{
 			NBTTagDouble x = (NBTTagDouble)pos.get(0);
@@ -921,6 +921,15 @@ public class EasyNBT extends Constants.NBT
 			NBTTagDouble z = (NBTTagDouble)pos.get(2);
 
 			return new Vec3d(x.getDouble(), y.getDouble(), z.getDouble());
+		}
+		//Integer vector
+		pos = getList(key, TAG_INT);
+		if(pos.tagCount() > 0)
+		{
+			NBTTagInt x = (NBTTagInt)pos.get(0);
+			NBTTagInt y = (NBTTagInt)pos.get(1);
+			NBTTagInt z = (NBTTagInt)pos.get(2);
+			return new Vec3d(x.getInt(), y.getInt(), z.getInt());
 		}
 
 		//only if key is present
@@ -939,6 +948,7 @@ public class EasyNBT extends Constants.NBT
 	{
 		NBTTagList pos = getList(key, TAG_DOUBLE);
 
+		//Double vector
 		if(pos.tagCount() > 2)
 		{
 			NBTTagDouble x = (NBTTagDouble)pos.get(0);
@@ -946,6 +956,15 @@ public class EasyNBT extends Constants.NBT
 			NBTTagDouble z = (NBTTagDouble)pos.get(2);
 
 			return new Vector3f((float)x.getDouble(), (float)y.getDouble(), (float)z.getDouble());
+		}
+		//Integer vector
+		pos = getList(key, TAG_INT);
+		if(pos.tagCount() > 0)
+		{
+			NBTTagInt x = (NBTTagInt)pos.get(0);
+			NBTTagInt y = (NBTTagInt)pos.get(1);
+			NBTTagInt z = (NBTTagInt)pos.get(2);
+			return new Vector3f(x.getInt(), y.getInt(), z.getInt());
 		}
 
 		//only if key is present
@@ -968,6 +987,14 @@ public class EasyNBT extends Constants.NBT
 		{
 			NBTTagFloat x = (NBTTagFloat)pos.get(0);
 			NBTTagFloat y = (NBTTagFloat)pos.get(1);
+
+			return new Vector2f(x.getFloat(), y.getFloat());
+		}
+		pos = getList(key, TAG_INT);
+		if(pos.tagCount() > 1)
+		{
+			NBTTagInt x = (NBTTagInt)pos.get(0);
+			NBTTagInt y = (NBTTagInt)pos.get(1);
 
 			return new Vector2f(x.getFloat(), y.getFloat());
 		}

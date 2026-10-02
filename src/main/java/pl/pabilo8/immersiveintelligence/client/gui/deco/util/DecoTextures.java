@@ -134,6 +134,14 @@ public class DecoTextures
 	public static final ResLoc ICON_ENERGY_OUTPUT = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_energy_output");
 	public static final ResLoc ICON_ENERGY_INPUT = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_energy_input");
 	public static final ResLoc ICON_ENERGY = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_energy");
+	public static final ResLoc ICON_CASING_OUTPUT = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_casing_output");
+	public static final ResLoc ICON_CASING_INPUT = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_casing_input");
+	public static final ResLoc ICON_CASING = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_casing");
+	public static final ResLoc ICON_AMMO_OUTPUT = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_ammo_output");
+	public static final ResLoc ICON_AMMO_INPUT = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_ammo_input");
+	public static final ResLoc ICON_AMMO = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_ammo");
+	public static final ResLoc ICON_RANGE_VISION = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_range_vision");
+	public static final ResLoc ICON_RANGE_ATTACK = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_range_attack");
 
 	//--- Ammo Icons ---//
 	public static final ResLoc ICON_CONTACT = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_fuse_contact");

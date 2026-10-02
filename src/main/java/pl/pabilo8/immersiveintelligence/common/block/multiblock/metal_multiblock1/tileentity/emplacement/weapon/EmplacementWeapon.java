@@ -27,6 +27,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPane
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Emplacement;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockEmplacement;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.EmplacementStateNeeds;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.EntityGasCloud;
@@ -40,6 +41,8 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.TargetCoordinateReference;
 import pl.pabilo8.immersiveintelligence.common.util.gun.ChillingState;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
+import pl.pabilo8.immersiveintelligence.common.util.sound.SoundHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -49,7 +52,7 @@ import java.util.function.BooleanSupplier;
  * Defines common state, servicing, and lifecycle behavior for an Emplacement weapon.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 08.09.2026
+ * @updated 27.09.2026
  * @since 15.02.2024
  */
 public abstract class EmplacementWeapon implements ITypeNBTSerializable
@@ -61,6 +64,9 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable
 	@Nullable
 	@SyncNBT(time = 0, events = SyncEvents.WEAPON_MISC, nullable = true)
 	public ChillingState chillingState = null;
+	@Nullable
+	@SyncNBT(time = 0, events = SyncEvents.WEAPON_MISC, nullable = true)
+	public MultiblockInteractablePart setup = null;
 	protected AxisAlignedBB visionAABB, attackAABB;
 	protected boolean initialized = false;
 	protected boolean restoredFromNBT = false;
@@ -71,6 +77,7 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable
 	protected EntityTactileLivingBase baseEntity;
 	@Nullable
 	private transient TileEntityEmplacement emplacement;
+	private transient ResLoc setupAnimation, chillingAnimation;
 
 	/**
 	 * Called after the weapon is installed or loaded from NBT.
@@ -81,6 +88,9 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable
 		this.initialized = true;
 		this.visionAABB = new AxisAlignedBB(new BlockPos(te.getWeaponCenter()));
 		this.attackAABB = new AxisAlignedBB(new BlockPos(te.getWeaponCenter()));
+		this.setupAnimation = ResLoc.of(IIReference.RES_II,
+				"emplacement/weapon/", getName(), "/", getSetupAnimationName());
+		this.chillingAnimation = ResLoc.of(IIReference.RES_II, "emplacement/weapon/", getName(), "/chill");
 
 		if(!te.getWorld().isRemote)
 		{
@@ -90,11 +100,20 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable
 		}
 	}
 
+	/**
+	 * Runs after the complete class hierarchy has initialized this weapon.
+	 */
+	protected void onInitComplete(TileEntityEmplacement te)
+	{
+
+	}
+
 	public final void init(TileEntityEmplacement te)
 	{
 		if(!initialized)
 		{
 			onInit(te);
+			onInitComplete(te);
 			restoredFromNBT = false;
 		}
 	}
@@ -109,8 +128,7 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable
 	 */
 	public EmplacementStateNeeds onUpdate(TileEntityEmplacement te, EmplacementStateNeeds baseNeeds, TargetCoordinateReference currentTarget)
 	{
-		if(!initialized)
-			this.onInit(te);
+		init(te);
 		return baseNeeds;
 	}
 
@@ -134,6 +152,24 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable
 	}
 
 	/**
+	 * Handles optional client-side weapon sounds for the current animation state.
+	 */
+	@SideOnly(Side.CLIENT)
+	public void handleClientSounds(SoundHandler soundHandler)
+	{
+
+	}
+
+	/**
+	 * Stops client-side sounds owned by this weapon before it is replaced.
+	 */
+	@SideOnly(Side.CLIENT)
+	public void stopClientSounds()
+	{
+
+	}
+
+	/**
 	 * Updates optional idle-animation timing on the server.
 	 *
 	 * @param te            owning Emplacement
@@ -144,6 +180,46 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable
 	{
 		if(chillingState!=null&&chillingState.updateServer(currentTarget!=null, canOperate&&canChill(te)))
 			syncWithClient(te, SyncEvents.WEAPON_MISC);
+	}
+
+	/**
+	 * Applies the complete server-side collision animation pose for this tick.
+	 */
+	public void applyTactileAnimations(TileEntityEmplacement te)
+	{
+		applyTactileAnimationSet(te, new ResLoc[0], new float[0]);
+	}
+
+	/**
+	 * Adds weapon-specific channels to the shared Platform, setup, and chilling animation set.
+	 */
+	protected final void applyTactileAnimationSet(TileEntityEmplacement te, @Nonnull ResLoc[] weaponAnimations,
+												  @Nonnull float[] weaponAnimationTimes)
+	{
+		if(te.tactileHandler==null)
+			return;
+		if(weaponAnimations.length!=weaponAnimationTimes.length)
+			throw new IllegalArgumentException("Animation and time arrays must have equal lengths");
+
+		ResLoc[] animations = new ResLoc[3+weaponAnimations.length];
+		float[] animationTimes = new float[animations.length];
+		animations[0] = MultiblockEmplacement.animationPlatform;
+		animations[1] = setup==null?null: setupAnimation;
+		animations[2] = chillingState==null?null: chillingAnimation;
+		animationTimes[0] = te.door.getProgress(0);
+		animationTimes[1] = setup==null?0f: setup.getProgress(0);
+		animationTimes[2] = getChillProgress(0);
+		System.arraycopy(weaponAnimations, 0, animations, 3, weaponAnimations.length);
+		System.arraycopy(weaponAnimationTimes, 0, animationTimes, 3, weaponAnimationTimes.length);
+		te.tactileHandler.update(animations, animationTimes);
+	}
+
+	/**
+	 * @return EWR animation name used while installing or setting up this weapon
+	 */
+	protected String getSetupAnimationName()
+	{
+		return "install";
 	}
 
 	/**
@@ -223,6 +299,14 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable
 	public boolean isResupplying()
 	{
 		return resupplying;
+	}
+
+	/**
+	 * @return true while the Base resupply loop has useful work to perform
+	 */
+	public boolean shouldLoopReloadSound()
+	{
+		return isResupplying();
 	}
 
 	private void setResupplying(TileEntityEmplacement te, boolean resupplying)
@@ -396,14 +480,18 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable
 
 		float previousHealth = this.health;
 		this.health -= amount-armor;
-		if(previousHealth > 0&&this.health <= 0)
+		//The upgrade promises cover when the weapon becomes heavily damaged. The previous
+		//zero-health check ran only as the weapon was being destroyed and removed.
+		float smokeThreshold = emplacement==null?0:
+				getMaxHealth()*MathHelper.clamp(emplacement.weaponHideHealthThreshold, 0f, 1f);
+		if(previousHealth > smokeThreshold&&this.health <= smokeThreshold)
 			deployEmergencySmoke();
 		tactile.world.playSound(null, tactile.getPosition(), IISounds.hitMetal.getImpactSound(), SoundCategory.BLOCKS, 1.5f, 0.95f);
 		return false;
 	}
 
 	/**
-	 * Releases the Emergency Smoke upgrade when damage destroys the weapon.
+	 * Releases the Emergency Smoke upgrade when damage pushes the weapon below its retreat threshold.
 	 */
 	private void deployEmergencySmoke()
 	{

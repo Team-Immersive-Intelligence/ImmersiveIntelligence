@@ -9,13 +9,11 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoGau
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoSlider;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoSwitch;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPanel;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoMapDisplay;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.map.DecoMapDefaultColorMapper;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.map.scanners.BlockTypeScanner;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityArtilleryHowitzer;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityFlagpole;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon.EmplacementWeaponTurretBase;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -71,7 +69,7 @@ public class GuiEmplacementConfig extends GuiEmplacement
 						.withBackground(DecoTextures.BG_PAPER)
 						.withBackgroundMask(DecoTextures.TEMPLATE_PAPER),
 				new DecoPanel(0, 128+8)
-						.withSize(128, 24)
+						.withSize(128, 24+16)
 						.withBackground(DecoTextures.BG_STEEL)
 						.withBackgroundMask(DecoTextures.TEMPLATE_SQUARE),
 
@@ -91,32 +89,31 @@ public class GuiEmplacementConfig extends GuiEmplacement
 						.addRectangle((int)fireRange.minX, (int)fireRange.minZ, (int)fireRange.maxX, (int)fireRange.maxZ, IIColor.MC_RED.withAlpha(127f))
 						.build()
 						//Markers
-						.withScanner(new BlockTypeScanner("flagpoles")
-								.withMultiblockFilter(TileEntityFlagpole.class)
-								.withMarkerStyle(DecoTextures.MAP_MARKER_FLAGPOLE, 8, IIColor.WHITE)
-						)
-						.withScanner(new BlockTypeScanner("emplacement")
-								.withMultiblockFilter(TileEntityEmplacement.class)
-								.withMarkerStyle(DecoTextures.MAP_MARKER_EMPLACEMENT, 8, IIColor.WHITE)
-						)
-						.withScanner(new BlockTypeScanner("howitzer")
-								.withMultiblockFilter(TileEntityArtilleryHowitzer.class)
-								.withMarkerStyle(DecoTextures.MAP_MARKER_ARTILLERY_HOWITZER, 8, IIColor.WHITE)
-						),
+						.withScanner(DecoTemplates.getFlagpoleScanner(() -> true))
+						.withScanner(DecoTemplates.getEmplacementScanner(() -> true))
+						.withScanner(DecoTemplates.getArtilleryHowitzerScanner(() -> true)),
 
 				//
 				new DecoPanel(128, 8)
-						.withSize(120-4, 152-8+4)
+						.withSize(120-4, 152-8+4+16)
 						.withBackground(DecoTextures.BG_PAPER)
 						.withBackgroundMask(DecoTextures.TEMPLATE_PAPER)
 		);
 
-		addLabel(I18n.format(KEY+"vision_range", calculateRange(sightRange, pos)), 4+8, 132+8-1)
+		addLabel(I18n.format(KEY+"vision_range", calculateRange(sightRange, pos)), 4+8+8, 132+8-1+4)
 				.withSize(120, 10)
 				.withAlign(DecoAlignment.LEFT);
-		addLabel(I18n.format(KEY+"attack_range", calculateRange(fireRange, pos)), 4+8, 142+8-1)
+		addComponent(new DecoImage(2, 132+8-1)
+				.withSize(16, 16)
+				.withImageLocation(DecoTextures.ICON_RANGE_VISION, true)
+		);
+		addLabel(I18n.format(KEY+"attack_range", calculateRange(fireRange, pos)), 4+8+8, 142+8-1+8+4)
 				.withSize(120, 10)
 				.withAlign(DecoAlignment.LEFT);
+		addComponent(new DecoImage(2, 142+8-1+8)
+				.withSize(16, 16)
+				.withImageLocation(DecoTextures.ICON_RANGE_ATTACK, true)
+		);
 
 		addComponent(new DecoSwitch(136-4-2, 14-4)
 				.withText(KEY+"reacts_redstone")
@@ -195,7 +192,7 @@ public class GuiEmplacementConfig extends GuiEmplacement
 			);
 		}
 		if(artilleryWeapon)
-			addComponent(new DecoSwitch(136-4-2, 143)
+			addComponent(new DecoSwitch(136-4-2, 143+16)
 					.withText(KEY+"ballistic_fire")
 					.withSize(110, 11)
 					.withCurrentState(ballisticFireMode)

@@ -53,11 +53,13 @@ public class EmplacementWeaponMachinegun extends EmplacementWeaponGunBase<Entity
 		this.ammoFactory.setAmmo(IIContent.itemAmmoMachinegun);
 		this.visionAABB = this.visionAABB.grow(Machinegun.detectionRadius);
 		this.attackAABB = this.attackAABB.grow(Machinegun.attackRadius);
-		this.chillingState = new ChillingState(160, 200, 60);
+		this.chillingState = new ChillingState(Machinegun.minimumIdleTime,
+				Machinegun.idleAnimationInterval, Machinegun.idleAnimationDuration);
 
 		setupItemHandlers(te, 16, 2, 8, 8,
 				this.ammoFactory::isValidAmmo, this.ammoFactory::isValidAmmo);
 		this.aim.withAimSpeed(Machinegun.yawRotateSpeed, Machinegun.pitchRotateSpeed)
+				.withYawLimit(Machinegun.minYaw, Machinegun.maxYaw)
 				.withPitchLimit(Machinegun.minPitch, Machinegun.maxPitch);
 
 		this.rotateAfterFiring = true;
@@ -164,7 +166,7 @@ public class EmplacementWeaponMachinegun extends EmplacementWeaponGunBase<Entity
 	@Override
 	protected Float getHidingPitch()
 	{
-		return 0f;
+		return Machinegun.hidingPitch;
 	}
 
 	@Override

@@ -32,16 +32,19 @@ public class EmplacementWeaponGuidedMissileLauncher extends EmplacementWeaponGun
 		this.ammoFactory.setAmmo(IIContent.itemAmmoGuidedMissile).setUseArtilleryAngles(false);
 		this.visionAABB = this.visionAABB.grow(GuidedMissileLauncher.detectionRadius);
 		this.attackAABB = this.attackAABB.grow(GuidedMissileLauncher.attackRadius);
-		this.chillingState = new ChillingState(200, 240, 80);
+		this.chillingState = new ChillingState(GuidedMissileLauncher.minimumIdleTime,
+				GuidedMissileLauncher.idleAnimationInterval, GuidedMissileLauncher.idleAnimationDuration);
 		setupItemHandlers(te, 8, 0, 4, 0,
 				this.ammoFactory::isValidAmmo, this.ammoFactory::isValidAmmo);
 		this.aim.withAimSpeed(GuidedMissileLauncher.yawRotateSpeed, GuidedMissileLauncher.pitchRotateSpeed)
+				.withYawLimit(GuidedMissileLauncher.minYaw, GuidedMissileLauncher.maxYaw)
 				.withPitchLimit(GuidedMissileLauncher.minPitch, GuidedMissileLauncher.maxPitch);
 		this.gunHandler.withShootSound(IISounds.missileShot, 68);
+		this.rotateAfterFiring = false;
 	}
 
 	@Override
-	protected void configureProjectile(EntityAmmoProjectile projectile, TargetCoordinateReference target)
+	protected void configureProjectile(TileEntityEmplacement te, EntityAmmoProjectile projectile, TargetCoordinateReference target)
 	{
 		if(projectile instanceof EntityAmmoGuidedMissile)
 			((EntityAmmoGuidedMissile)projectile).setHomingTarget(target.getEntity());
@@ -99,13 +102,13 @@ public class EmplacementWeaponGuidedMissileLauncher extends EmplacementWeaponGun
 	@Override
 	protected Float getHidingPitch()
 	{
-		return 0f;
+		return GuidedMissileLauncher.hidingPitch;
 	}
 
 	@Nullable
 	@Override
 	protected Float getLoadingPitch()
 	{
-		return 0f;
+		return GuidedMissileLauncher.loadingPitch;
 	}
 }

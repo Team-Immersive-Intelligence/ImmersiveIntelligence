@@ -82,14 +82,14 @@ public class EWRGuidedMissileLauncher extends EmplacementWeaponRenderer<Emplacem
 	@Override
 	public void apply(EmplacementWeaponGuidedMissileLauncher weapon, AMTCachedModel<TileEntityEmplacement> model, BufferBuilder buf, Tessellator tes, float partialTicks)
 	{
-		this.applyAmmoItem(weapon, BulletState.BULLET_UNUSED, rocket);
+		this.applyAmmoItem(weapon, BulletState.BULLET_UNUSED, rocket, weapon.getAllAmmo());
 
 		this.rotateYaw.apply(weapon.aim.getYawNormalized(partialTicks));
 		float pitch = weapon.aim.getPitchNormalized(-90, 90, partialTicks);
 		this.rotatePitch.apply(pitch);
 		this.trackerPitch.apply(pitch);
 		this.load.apply(weapon.gunHandler.getLoadingProgress(partialTicks));
-		this.fire.apply(weapon.gunHandler.getShotDelay(partialTicks));
+		this.fire.apply(1f-(weapon.gunHandler.getShotDelay(partialTicks)/weapon.getShotDelay()));
 
 		//Idle animation
 		float chillProgress = weapon.getChillProgress(partialTicks);

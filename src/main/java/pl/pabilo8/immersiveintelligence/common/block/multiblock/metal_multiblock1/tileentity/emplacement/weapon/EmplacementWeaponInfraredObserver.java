@@ -31,11 +31,13 @@ import java.util.Locale;
  * Implements the fixed-yaw Infrared Observer with safe stow and setup behavior.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 08.09.2026
+ * @updated 27.09.2026
  * @since 01.01.2026
  */
 public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 {
+	private static final ResLoc ROTATE_YAW = ResLoc.of(IIReference.RES_II,
+			"emplacement/weapon/infrared_observer/rotate_yaw");
 	private static final ResLoc ROTATE_PITCH = ResLoc.of(IIReference.RES_II,
 			"emplacement/weapon/infrared_observer/rotate_pitch");
 	@Nonnull
@@ -43,14 +45,12 @@ public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 	public EnumFacing facing, plannedFacing;
 	@SyncNBT(time = 0, events = SyncEvents.WEAPON_ROTATION)
 	public GunAimCoordinate aim = new GunAimCoordinate();
-	@SyncNBT(time = 0, events = SyncEvents.WEAPON_MISC)
-	public MultiblockInteractablePart setup;
 
 	public EmplacementWeaponInfraredObserver()
 	{
 		this.facing = this.plannedFacing = EnumFacing.NORTH;
 		this.setup = new MultiblockInteractablePart(InfraredObserver.setupTime);
-		this.aim.withPitchLimit(-90, 45.5f);
+		this.aim.withPitchLimit(InfraredObserver.minPitch, InfraredObserver.maxPitch);
 	}
 
 	@Override
@@ -72,9 +72,10 @@ public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 						Math.abs(viewSides.getZ())*InfraredObserver.detectionRadius);
 		this.aim.withCenterYaw(facing.getHorizontalAngle())
 				.withAimSpeed(InfraredObserver.yawRotateSpeed, InfraredObserver.pitchRotateSpeed)
-				.withYawLimit(-180f, 180f);
+				.withYawLimit(InfraredObserver.minYaw, InfraredObserver.maxYaw)
+				.withPitchLimit(InfraredObserver.minPitch, InfraredObserver.maxPitch);
 		if(resetAngles)
-			this.aim.withCurrentAngles(this.aim.getCenterYaw(), this.aim.clampPitchToRange(90f));
+			this.aim.withCurrentAngles(this.aim.getCenterYaw(), this.aim.clampPitchToRange(InfraredObserver.initialPitch));
 	}
 
 	@Override
@@ -97,17 +98,18 @@ public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 			setupChanged = setup.setState(exposed);
 		setup.update();
 
+		this.aim.withCenterYaw(facing.getHorizontalAngle());
 		if(!exposed)
 		{
 			if(!remote)
-				aim.setTargetClamped(aim.getCenterYaw(), aim.clampPitchToRange(-90f));
+				aim.setTargetClamped(aim.getCenterYaw(), aim.clampPitchToRange(InfraredObserver.hidingPitch));
 			aim.update();
 			if(!remote&&!aim.isAimed(0.001f))
 				syncWithClient(te, SyncEvents.WEAPON_ROTATION);
 		}
 		else if(setup.isFullyOpened()&&!remote)
 		{
-			aim.setTargetClamped(aim.getCenterYaw(), aim.clampPitchToRange(0f));
+			aim.setTargetClamped(aim.getCenterYaw(), aim.clampPitchToRange(InfraredObserver.operatingPitch));
 			if(aim.isAimed(0.001f))
 				syncWithClient(te, SyncEvents.WEAPON_ROTATION);
 		}
@@ -122,8 +124,14 @@ public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 		else if(!remote&&setupChanged)
 			syncWithClient(te, SyncEvents.WEAPON_MISC);
 
-		if(!remote&&te.tactileHandler!=null)
-			te.tactileHandler.update(ROTATE_PITCH, aim.getPitchNormalized(-90, 90, 0));
+	}
+
+	@Override
+	public void applyTactileAnimations(TileEntityEmplacement te)
+	{
+		applyTactileAnimationSet(te,
+				new ResLoc[]{ROTATE_YAW, ROTATE_PITCH},
+				new float[]{(aim.getYawNormalized(0)+0.5f)%1f, aim.getPitchNormalized(-90, 90, 0)});
 	}
 
 	@Override

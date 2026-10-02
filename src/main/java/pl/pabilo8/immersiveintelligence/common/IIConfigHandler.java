@@ -1135,7 +1135,7 @@ public class IIConfigHandler
 				public static int energyUsage = 2048;
 
 				@Comment({"Radar target detection radius (in blocks)."})
-				public static int detectionRadius = 72;
+				public static int detectionRadius = 144;
 
 				@Comment({"How much explosion and block breaking damage the multiblock can take (in half-hearts)."})
 				public static int baseHealth = 600;
@@ -1205,6 +1205,18 @@ public class IIConfigHandler
 
 			public static class Emplacement
 			{
+				@Comment({"Maximum yaw/pitch error allowed before firing, completing forced aim or starting a reload (in degrees)."})
+				@RangeDouble(min = 0, max = 180)
+				public static float aimingTolerance = 1.5f;
+
+				@Comment({"Default hiding yaw relative to the Emplacement facing; weapon-specific hiding settings override it (in degrees)."})
+				@RangeDouble(min = -180, max = 180)
+				public static float hidingYaw = 0f;
+
+				@Comment({"Default hiding pitch, clamped to weapon limits; weapon-specific hiding settings override it (in degrees)."})
+				@RangeDouble(min = -90, max = 90)
+				public static float hidingPitch = -90f;
+
 				@Comment({"Rotation speed multiplier provided by the Sturdy Bearings upgrade."})
 				@RangeDouble(min = 0)
 				public static float sturdyBearingsRotationMultiplier = 1.5f;
@@ -1610,6 +1622,34 @@ public class IIConfigHandler
 
 				public static class Autocannon
 				{
+					@Comment({"Minimum yaw angle relative to the Emplacement facing (in degrees)."})
+					@RangeDouble(min = -180, max = 180)
+					public static float minYaw = -180f;
+
+					@Comment({"Maximum yaw angle relative to the Emplacement facing (in degrees)."})
+					@RangeDouble(min = -180, max = 180)
+					public static float maxYaw = 180f;
+
+					@Comment({"Minimum pitch angle (in degrees)."})
+					@RangeDouble(min = -90, max = 90)
+					public static float minPitch = -90f;
+
+					@Comment({"Maximum pitch angle (in degrees)."})
+					@RangeDouble(min = -90, max = 90)
+					public static float maxPitch = 55f;
+
+					@Comment({"Idle time before the first idle animation (in ticks)."})
+					@RangeInt(min = 0)
+					public static int minimumIdleTime = 200;
+
+					@Comment({"Minimum interval between idle animations (in ticks)."})
+					@RangeInt(min = 0)
+					public static int idleAnimationInterval = 240;
+
+					@Comment({"Idle animation duration (in ticks)."})
+					@RangeInt(min = 1)
+					public static int idleAnimationDuration = 80;
+
 					@Comment({"Yaw rotation speed (degrees/tick)"})
 					public static float yawRotateSpeed = 4;
 
@@ -1631,8 +1671,8 @@ public class IIConfigHandler
 					@Comment({"Enemy detection range (in blocks)"})
 					public static float detectionRadius = 32;
 
-					@Comment({"Enemy detection range (in blocks)"})
-					public static float attackRadius = 40;
+					@Comment({"Enemy attack range (in blocks)"})
+					public static float attackRadius = 125;
 
 					@Comment({"Base energy usage per tick (in IF)."})
 					public static int energyUpkeepCost = 2048;
@@ -1640,6 +1680,30 @@ public class IIConfigHandler
 
 				public static class Machinegun
 				{
+					@Comment({"Minimum yaw angle relative to the Emplacement facing (in degrees)."})
+					@RangeDouble(min = -180, max = 180)
+					public static float minYaw = -180f;
+
+					@Comment({"Maximum yaw angle relative to the Emplacement facing (in degrees)."})
+					@RangeDouble(min = -180, max = 180)
+					public static float maxYaw = 180f;
+
+					@Comment({"Idle time before the first idle animation (in ticks)."})
+					@RangeInt(min = 0)
+					public static int minimumIdleTime = 160;
+
+					@Comment({"Minimum interval between idle animations (in ticks)."})
+					@RangeInt(min = 0)
+					public static int idleAnimationInterval = 200;
+
+					@Comment({"Idle animation duration (in ticks)."})
+					@RangeInt(min = 1)
+					public static int idleAnimationDuration = 60;
+
+					@Comment({"Hiding pitch angle (in degrees)."})
+					@RangeDouble(min = -90, max = 90)
+					public static float hidingPitch = 0f;
+
 					@Comment({"Yaw rotation speed (degrees/tick)"})
 					public static float yawRotateSpeed = 4;
 
@@ -1699,7 +1763,7 @@ public class IIConfigHandler
 					public static float detectionRadius = 24;
 
 					@Comment({"Enemy attack range (in blocks)"})
-					public static float attackRadius = 32;
+					public static float attackRadius = 100;
 
 					@Comment({"Base energy usage per tick (in IF)."})
 					public static int energyUpkeepCost = 1024;
@@ -1742,6 +1806,34 @@ public class IIConfigHandler
 
 				public static class InfraredObserver
 				{
+					@Comment({"Minimum yaw angle relative to the Emplacement facing (in degrees)."})
+					@RangeDouble(min = -180, max = 180)
+					public static float minYaw = -180f;
+
+					@Comment({"Maximum yaw angle relative to the Emplacement facing (in degrees)."})
+					@RangeDouble(min = -180, max = 180)
+					public static float maxYaw = 180f;
+
+					@Comment({"Minimum pitch angle (in degrees)."})
+					@RangeDouble(min = -90, max = 90)
+					public static float minPitch = -90f;
+
+					@Comment({"Maximum pitch angle (in degrees)."})
+					@RangeDouble(min = -90, max = 90)
+					public static float maxPitch = 45.5f;
+
+					@Comment({"Initial pitch angle when the observer is installed or its facing changes (in degrees)."})
+					@RangeDouble(min = -90, max = 90)
+					public static float initialPitch = 90f;
+
+					@Comment({"Hiding pitch angle (in degrees)."})
+					@RangeDouble(min = -90, max = 90)
+					public static float hidingPitch = -90f;
+
+					@Comment({"Pitch angle used after observer setup (in degrees)."})
+					@RangeDouble(min = -90, max = 90)
+					public static float operatingPitch = 0f;
+
 					@Comment({"Yaw snap speed used by the fixed-facing observer (degrees/tick)."})
 					public static float yawRotateSpeed = 360f;
 
@@ -1756,7 +1848,7 @@ public class IIConfigHandler
 
 					//5 chunks
 					@Comment({"Enemy detection range (in blocks)"})
-					public static float detectionRadius = 76;
+					public static float detectionRadius = 108;
 
 					@Comment({"Base energy usage per tick (in IF)."})
 					public static int energyUpkeepCost = 1024;
@@ -1764,6 +1856,42 @@ public class IIConfigHandler
 
 				public static class CPDS
 				{
+					@Comment({"Minimum yaw angle relative to the Emplacement facing (in degrees)."})
+					@RangeDouble(min = -180, max = 180)
+					public static float minYaw = -180f;
+
+					@Comment({"Maximum yaw angle relative to the Emplacement facing (in degrees)."})
+					@RangeDouble(min = -180, max = 180)
+					public static float maxYaw = 180f;
+
+					@Comment({"Minimum pitch angle (in degrees)."})
+					@RangeDouble(min = -90, max = 90)
+					public static float minPitch = -90f;
+
+					@Comment({"Maximum pitch angle (in degrees)."})
+					@RangeDouble(min = -90, max = 90)
+					public static float maxPitch = 68.5f;
+
+					@Comment({"Idle time before the first idle animation (in ticks)."})
+					@RangeInt(min = 0)
+					public static int minimumIdleTime = 200;
+
+					@Comment({"Minimum interval between idle animations (in ticks)."})
+					@RangeInt(min = 0)
+					public static int idleAnimationInterval = 240;
+
+					@Comment({"Idle animation duration (in ticks)."})
+					@RangeInt(min = 1)
+					public static int idleAnimationDuration = 144;
+
+					@Comment({"Loading pitch angle (in degrees)."})
+					@RangeDouble(min = -90, max = 90)
+					public static float loadingPitch = 0f;
+
+					@Comment({"Hiding pitch angle (in degrees)."})
+					@RangeDouble(min = -90, max = 90)
+					public static float hidingPitch = -90f;
+
 					@Comment({"Yaw rotation speed (degrees/tick)"})
 					public static float yawRotateSpeed = 8;
 
@@ -1777,7 +1905,7 @@ public class IIConfigHandler
 					public static float detectionRadius = 24;
 
 					@Comment({"Enemy attack range (in blocks)"})
-					public static float attackRadius = 64;
+					public static float attackRadius = 155;
 
 					@Comment({"Base energy usage per tick (in IF)."})
 					public static int energyUpkeepCost = 4096;
@@ -1794,6 +1922,34 @@ public class IIConfigHandler
 
 				public static class HeavyChemthrower
 				{
+					@Comment({"Minimum yaw angle relative to the Emplacement facing (in degrees)."})
+					@RangeDouble(min = -180, max = 180)
+					public static float minYaw = -180f;
+
+					@Comment({"Maximum yaw angle relative to the Emplacement facing (in degrees)."})
+					@RangeDouble(min = -180, max = 180)
+					public static float maxYaw = 180f;
+
+					@Comment({"Minimum pitch angle (in degrees)."})
+					@RangeDouble(min = -90, max = 90)
+					public static float minPitch = -90f;
+
+					@Comment({"Maximum pitch angle (in degrees)."})
+					@RangeDouble(min = -90, max = 90)
+					public static float maxPitch = 22.5f;
+
+					@Comment({"Idle time before the first idle animation (in ticks)."})
+					@RangeInt(min = 0)
+					public static int minimumIdleTime = 200;
+
+					@Comment({"Minimum interval between idle animations (in ticks)."})
+					@RangeInt(min = 0)
+					public static int idleAnimationInterval = 240;
+
+					@Comment({"Idle animation duration (in ticks)."})
+					@RangeInt(min = 1)
+					public static int idleAnimationDuration = 80;
+
 					@Comment({"Time required for chemthrower setup (barrel extension animation) (in ticks)."})
 					public static int setupTime = 100;
 
@@ -1845,6 +2001,38 @@ public class IIConfigHandler
 
 				public static class HeavyRailgun
 				{
+					@Comment({"Minimum yaw angle relative to the Emplacement facing (in degrees)."})
+					@RangeDouble(min = -180, max = 180)
+					public static float minYaw = -180f;
+
+					@Comment({"Maximum yaw angle relative to the Emplacement facing (in degrees)."})
+					@RangeDouble(min = -180, max = 180)
+					public static float maxYaw = 180f;
+
+					@Comment({"Minimum pitch angle (in degrees)."})
+					@RangeDouble(min = -90, max = 90)
+					public static float minPitch = -90f;
+
+					@Comment({"Maximum pitch angle (in degrees)."})
+					@RangeDouble(min = -90, max = 90)
+					public static float maxPitch = 90f;
+
+					@Comment({"Idle time before the first idle animation (in ticks)."})
+					@RangeInt(min = 0)
+					public static int minimumIdleTime = 200;
+
+					@Comment({"Minimum interval between idle animations (in ticks)."})
+					@RangeInt(min = 0)
+					public static int idleAnimationInterval = 240;
+
+					@Comment({"Idle animation duration (in ticks)."})
+					@RangeInt(min = 1)
+					public static int idleAnimationDuration = 80;
+
+					@Comment({"Loading pitch angle (in degrees)."})
+					@RangeDouble(min = -90, max = 90)
+					public static float loadingPitch = 0f;
+
 					@Comment({"Time required to fire a single shot."})
 					public static int shotFireTime = 20;
 
@@ -1864,7 +2052,7 @@ public class IIConfigHandler
 					public static float detectionRadius = 24;
 
 					@Comment({"Enemy attack range (in blocks)"})
-					public static float attackRadius = 64;
+					public static float attackRadius = 200;
 
 					@Comment({"Base energy usage per tick (in IF)."})
 					public static int energyUpkeepCost = 2048;
@@ -1872,6 +2060,34 @@ public class IIConfigHandler
 
 				public static class GuidedMissileLauncher
 				{
+					@Comment({"Minimum yaw angle relative to the Emplacement facing (in degrees)."})
+					@RangeDouble(min = -180, max = 180)
+					public static float minYaw = -180f;
+
+					@Comment({"Maximum yaw angle relative to the Emplacement facing (in degrees)."})
+					@RangeDouble(min = -180, max = 180)
+					public static float maxYaw = 180f;
+
+					@Comment({"Idle time before the first idle animation (in ticks)."})
+					@RangeInt(min = 0)
+					public static int minimumIdleTime = 200;
+
+					@Comment({"Minimum interval between idle animations (in ticks)."})
+					@RangeInt(min = 0)
+					public static int idleAnimationInterval = 240;
+
+					@Comment({"Idle animation duration (in ticks)."})
+					@RangeInt(min = 1)
+					public static int idleAnimationDuration = 80;
+
+					@Comment({"Loading pitch angle (in degrees)."})
+					@RangeDouble(min = -90, max = 90)
+					public static float loadingPitch = 0f;
+
+					@Comment({"Hiding pitch angle (in degrees)."})
+					@RangeDouble(min = -90, max = 90)
+					public static float hidingPitch = 0f;
+
 					@Comment({"Yaw rotation speed (degrees/tick)."})
 					public static float yawRotateSpeed = 2.5f;
 
@@ -1879,7 +2095,7 @@ public class IIConfigHandler
 					public static float pitchRotateSpeed = 5f;
 
 					@Comment({"Time between shots (in ticks)."})
-					public static int shotFireTime = 10;
+					public static int shotFireTime = 65;
 
 					@Comment({"Time required to load one missile (in ticks)."})
 					public static int reloadTime = 160;
@@ -1891,7 +2107,7 @@ public class IIConfigHandler
 					public static float detectionRadius = 32;
 
 					@Comment({"Enemy attack range (in blocks)."})
-					public static float attackRadius = 128;
+					public static float attackRadius = 250;
 
 					@Comment({"Base energy use per tick (in IF)."})
 					public static int energyUpkeepCost = 1024;
@@ -1905,6 +2121,30 @@ public class IIConfigHandler
 
 				public static class LightHowitzer
 				{
+					@Comment({"Minimum yaw angle relative to the Emplacement facing (in degrees)."})
+					@RangeDouble(min = -180, max = 180)
+					public static float minYaw = -180f;
+
+					@Comment({"Maximum yaw angle relative to the Emplacement facing (in degrees)."})
+					@RangeDouble(min = -180, max = 180)
+					public static float maxYaw = 180f;
+
+					@Comment({"Minimum pitch angle (in degrees)."})
+					@RangeDouble(min = -90, max = 90)
+					public static float minPitch = -90f;
+
+					@Comment({"Maximum pitch angle (in degrees)."})
+					@RangeDouble(min = -90, max = 90)
+					public static float maxPitch = 22.5f;
+
+					@Comment({"Loading yaw angle relative to the Emplacement facing (in degrees)."})
+					@RangeDouble(min = -180, max = 180)
+					public static float loadingYaw = 0f;
+
+					@Comment({"Loading pitch angle (in degrees)."})
+					@RangeDouble(min = -90, max = 90)
+					public static float loadingPitch = 0f;
+
 					@Comment({"Yaw rotation speed (degrees/tick)."})
 					public static float yawRotateSpeed = 3.5f;
 
@@ -1924,7 +2164,7 @@ public class IIConfigHandler
 					public static float detectionRadius = 0;
 
 					@Comment({"Enemy attack range (in blocks)."})
-					public static float attackRadius = 240;
+					public static float attackRadius = 650;
 
 					@Comment({"Base energy use per tick (in IF)."})
 					public static int energyUpkeepCost = 512;
@@ -1941,6 +2181,42 @@ public class IIConfigHandler
 
 				public static class Mortar
 				{
+					@Comment({"Minimum yaw angle relative to the Emplacement facing (in degrees)."})
+					@RangeDouble(min = -180, max = 180)
+					public static float minYaw = -180f;
+
+					@Comment({"Maximum yaw angle relative to the Emplacement facing (in degrees)."})
+					@RangeDouble(min = -180, max = 180)
+					public static float maxYaw = 180f;
+
+					@Comment({"Idle time before the first idle animation (in ticks)."})
+					@RangeInt(min = 0)
+					public static int minimumIdleTime = 200;
+
+					@Comment({"Minimum interval between idle animations (in ticks)."})
+					@RangeInt(min = 0)
+					public static int idleAnimationInterval = 240;
+
+					@Comment({"Idle animation duration (in ticks)."})
+					@RangeInt(min = 1)
+					public static int idleAnimationDuration = 80;
+
+					@Comment({"Loading yaw angle relative to the Emplacement facing (in degrees)."})
+					@RangeDouble(min = -180, max = 180)
+					public static float loadingYaw = 180f;
+
+					@Comment({"Loading pitch angle (in degrees)."})
+					@RangeDouble(min = -90, max = 90)
+					public static float loadingPitch = -57f;
+
+					@Comment({"Hiding yaw angle relative to the Emplacement facing (in degrees)."})
+					@RangeDouble(min = -180, max = 180)
+					public static float hidingYaw = 180f;
+
+					@Comment({"Hiding pitch angle (in degrees)."})
+					@RangeDouble(min = -90, max = 90)
+					public static float hidingPitch = -90f;
+
 					@Comment({"Yaw rotation speed (degrees/tick)."})
 					public static float yawRotateSpeed = 4f;
 
@@ -1948,10 +2224,10 @@ public class IIConfigHandler
 					public static float pitchRotateSpeed = 2.5f;
 
 					@Comment({"Minimum pitch angle (in degrees)."})
-					public static float minPitch = -89.5f;
+					public static float minPitch = -89.9f;
 
 					@Comment({"Maximum pitch angle (in degrees)."})
-					public static float maxPitch = 45f;
+					public static float maxPitch = -45f;
 
 					@Comment({"Time between shots (in ticks)."})
 					public static int shotFireTime = 25;
@@ -1963,10 +2239,10 @@ public class IIConfigHandler
 					public static int maxHealth = 350;
 
 					@Comment({"Enemy detection range (in blocks)."})
-					public static float detectionRadius = 0;
+					public static float detectionRadius = 32;
 
 					@Comment({"Enemy attack range (in blocks)."})
-					public static float attackRadius = 160;
+					public static float attackRadius = 400;
 
 					@Comment({"Base energy use per tick (in IF)."})
 					public static int energyUpkeepCost = 512;
@@ -1974,6 +2250,30 @@ public class IIConfigHandler
 
 				public static class RocketLauncher
 				{
+					@Comment({"Minimum yaw angle relative to the Emplacement facing (in degrees)."})
+					@RangeDouble(min = -180, max = 180)
+					public static float minYaw = -180f;
+
+					@Comment({"Maximum yaw angle relative to the Emplacement facing (in degrees)."})
+					@RangeDouble(min = -180, max = 180)
+					public static float maxYaw = 180f;
+
+					@Comment({"Loading yaw angle relative to the Emplacement facing (in degrees)."})
+					@RangeDouble(min = -180, max = 180)
+					public static float loadingYaw = 180f;
+
+					@Comment({"Loading pitch angle (in degrees)."})
+					@RangeDouble(min = -90, max = 90)
+					public static float loadingPitch = 0f;
+
+					@Comment({"Hiding yaw angle relative to the Emplacement facing (in degrees)."})
+					@RangeDouble(min = -180, max = 180)
+					public static float hidingYaw = 0f;
+
+					@Comment({"Hiding pitch angle (in degrees)."})
+					@RangeDouble(min = -90, max = 90)
+					public static float hidingPitch = 0f;
+
 					@Comment({"Yaw rotation speed (degrees/tick)."})
 					public static float yawRotateSpeed = 2f;
 
@@ -2016,6 +2316,38 @@ public class IIConfigHandler
 
 				public static class Searchlight
 				{
+					@Comment({"Minimum yaw angle relative to the Emplacement facing (in degrees)."})
+					@RangeDouble(min = -180, max = 180)
+					public static float minYaw = -180f;
+
+					@Comment({"Maximum yaw angle relative to the Emplacement facing (in degrees)."})
+					@RangeDouble(min = -180, max = 180)
+					public static float maxYaw = 180f;
+
+					@Comment({"Minimum pitch angle (in degrees)."})
+					@RangeDouble(min = -90, max = 90)
+					public static float minPitch = -90f;
+
+					@Comment({"Maximum pitch angle (in degrees)."})
+					@RangeDouble(min = -90, max = 90)
+					public static float maxPitch = 90f;
+
+					@Comment({"Time required for Searchlight setup (in ticks)."})
+					@RangeInt(min = 1)
+					public static int setupTime = 20;
+
+					@Comment({"Idle time before the first idle animation (in ticks)."})
+					@RangeInt(min = 0)
+					public static int minimumIdleTime = 200;
+
+					@Comment({"Minimum interval between idle animations (in ticks)."})
+					@RangeInt(min = 0)
+					public static int idleAnimationInterval = 240;
+
+					@Comment({"Idle animation duration (in ticks)."})
+					@RangeInt(min = 1)
+					public static int idleAnimationDuration = 80;
+
 					@Comment({"Yaw rotation speed (degrees/tick)."})
 					public static float yawRotateSpeed = 8f;
 
@@ -2052,6 +2384,30 @@ public class IIConfigHandler
 
 				public static class SpotlightTower
 				{
+					@Comment({"Minimum yaw angle relative to the Emplacement facing (in degrees)."})
+					@RangeDouble(min = -180, max = 180)
+					public static float minYaw = -180f;
+
+					@Comment({"Maximum yaw angle relative to the Emplacement facing (in degrees)."})
+					@RangeDouble(min = -180, max = 180)
+					public static float maxYaw = 180f;
+
+					@Comment({"Minimum pitch angle (in degrees)."})
+					@RangeDouble(min = -90, max = 90)
+					public static float minPitch = -90f;
+
+					@Comment({"Maximum pitch angle (in degrees)."})
+					@RangeDouble(min = -90, max = 90)
+					public static float maxPitch = 90f;
+
+					@Comment({"Hiding yaw angle relative to the Emplacement facing (in degrees)."})
+					@RangeDouble(min = -180, max = 180)
+					public static float hidingYaw = 0f;
+
+					@Comment({"Hiding pitch angle (in degrees)."})
+					@RangeDouble(min = -90, max = 90)
+					public static float hidingPitch = 0f;
+
 					@Comment({"Time required to set up the tower (in ticks)."})
 					public static int setupTime = 300;
 

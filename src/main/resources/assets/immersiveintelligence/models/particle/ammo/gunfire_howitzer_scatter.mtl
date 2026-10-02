@@ -1,0 +1,12 @@
+newmtl howitzer_scatter0
+map_Kd immersiveintelligence:particle/gunfire/scatter0
+newmtl howitzer_scatter1
+map_Kd immersiveintelligence:particle/gunfire/scatter1
+newmtl howitzer_scatter2
+map_Kd immersiveintelligence:particle/gunfire/scatter2
+newmtl howitzer_scatter3
+map_Kd immersiveintelligence:particle/gunfire/scatter3
+newmtl howitzer_scatter4
+map_Kd immersiveintelligence:particle/gunfire/scatter4
+newmtl howitzer_scatter5
+map_Kd immersiveintelligence:particle/gunfire/scatter5

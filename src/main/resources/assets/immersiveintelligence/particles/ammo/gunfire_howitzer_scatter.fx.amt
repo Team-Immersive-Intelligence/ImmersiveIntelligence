@@ -1,0 +1,10 @@
+{
+  "type": "ParticleModel",
+  "models": ["ammo/gunfire_howitzer_scatter.obj"],
+  "max_lifetime": 4,
+  "draw_stage": "custom_additive",
+  "programs": [
+    "lifetime_retexture"
+  ],
+  "size": 1.5
+}

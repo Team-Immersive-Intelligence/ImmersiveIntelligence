@@ -39,7 +39,7 @@
   },
   "properties": {
     "rocket": {
-      "rotation": [90.0, 0.0, 0.0]
+      "base_rotation": [90.0, 0.0, 0.0]
     }
   }
 }

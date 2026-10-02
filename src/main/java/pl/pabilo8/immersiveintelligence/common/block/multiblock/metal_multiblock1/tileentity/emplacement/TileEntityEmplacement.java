@@ -78,7 +78,7 @@ import java.util.Optional;
  * Coordinates Emplacement platform movement, servicing, weapon operation, and external storage access.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 16.09.2026
+ * @updated 27.09.2026
  * @ii-approved 0.3.1
  * @since 27.10.2020
  */
@@ -134,6 +134,8 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 	private ConditionCompoundSound<TileEntityEmplacement> repairSound, resupplySound, spotlightAlarmSound;
 	@SideOnly(Side.CLIENT)
 	private SoundHandler sounds;
+	@SideOnly(Side.CLIENT)
+	private EmplacementWeapon clientSoundWeapon;
 
 	public TileEntityEmplacement()
 	{
@@ -170,7 +172,12 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 		if(world.isRemote)
 			this.sounds = new SoundHandler(this);
 		else
+		{
 			this.tactileHandler = new TactileManager(this.multiblock, this);
+			if(this.currentWeapon!=null)
+				this.currentWeapon.init(this);
+			this.tactileHandler.defaultize();
+		}
 	}
 
 	@Override
@@ -235,8 +242,12 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 		}
 
 		if(currentWeapon!=null)
+		{
 			currentWeapon.onServerTick(this, currentTarget, powered);
-		this.tactileHandler.update(MultiblockEmplacement.animationPlatform, door.getProgress(0));
+			currentWeapon.applyTactileAnimations(this);
+		}
+		else
+			this.tactileHandler.update(MultiblockEmplacement.animationPlatform, door.getProgress(0));
 	}
 
 	private void setPlatformState(boolean surface)
@@ -554,6 +565,8 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 			assert currentWeapon==null;
 			this.currentWeapon = ((UpgradeEmplacementWeapon<?>)upgrade).createWeapon();
 			this.currentWeapon.init(this);
+			if(this.tactileHandler!=null)
+				this.tactileHandler.defaultize();
 			this.weaponRepairTicker = 0;
 			this.weaponRepairing = false;
 			this.weaponRepairForced = false;
@@ -577,7 +590,11 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 				this.currentWeapon.setDead();
 			}
 			clearWeaponState();
-			if(this.tactileHandler!=null) this.tactileHandler.setAdditionalModel("weapon", null);
+			if(this.tactileHandler!=null)
+			{
+				this.tactileHandler.setAdditionalModel("weapon", null);
+				this.tactileHandler.defaultize();
+			}
 			updateTileForEvent(SyncEvents.TILE_CUSTOM2);
 		}
 		return removed;
@@ -602,7 +619,10 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 		currentWeapon.setDead();
 		clearWeaponState();
 		if(tactileHandler!=null)
+		{
 			tactileHandler.setAdditionalModel("weapon", null);
+			tactileHandler.defaultize();
+		}
 		updateTileForEvent(SyncEvents.TILE_CUSTOM2);
 	}
 
@@ -823,8 +843,15 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 				MultiblockEmplacement.INSTANCE.closingSoundAnimation.handleSounds(sounds, animationTime, 0.75f);
 		}
 
+		if(clientSoundWeapon!=currentWeapon)
+		{
+			if(clientSoundWeapon!=null)
+				clientSoundWeapon.stopClientSounds();
+			clientSoundWeapon = currentWeapon;
+		}
 		if(currentWeapon==null)
 			return;
+		currentWeapon.handleClientSounds(sounds);
 		//Repairing (welding) sound
 		if(repairSound==null)
 			repairSound = new ConditionCompoundSound<>(IISounds.weldingLoop, getWeaponCenter(), this,
@@ -833,7 +860,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 		//Ammunition resupply (heavy ATM machine) sound
 		if(resupplySound==null)
 			resupplySound = new ConditionCompoundSound<>(IISounds.rollingLoop, getWeaponCenter(), this,
-					te -> !te.isInvalid()&&te.currentWeapon!=null&&te.currentWeapon.isResupplying()&&te.door.isFullyClosed());
+					te -> !te.isInvalid()&&te.currentWeapon!=null&&te.currentWeapon.shouldLoopReloadSound()&&te.door.isFullyClosed());
 		//Spotlight target alarm
 		if(spotlightAlarmSound==null)
 			spotlightAlarmSound = new ConditionCompoundSound<>(IISounds.siren, getWeaponCenter(), this,

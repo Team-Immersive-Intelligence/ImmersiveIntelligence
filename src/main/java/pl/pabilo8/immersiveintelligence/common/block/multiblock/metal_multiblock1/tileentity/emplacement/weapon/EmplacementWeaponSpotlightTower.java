@@ -30,7 +30,9 @@ public class EmplacementWeaponSpotlightTower extends EmplacementWeaponLightBase
 		super.onInit(te);
 		this.visionAABB = this.visionAABB.grow(SpotlightTower.detectionRadius);
 		this.attackAABB = this.attackAABB.grow(SpotlightTower.attackRadius);
-		this.aim.withAimSpeed(SpotlightTower.yawRotateSpeed, SpotlightTower.pitchRotateSpeed);
+		this.aim.withAimSpeed(SpotlightTower.yawRotateSpeed, SpotlightTower.pitchRotateSpeed)
+				.withYawLimit(SpotlightTower.minYaw, SpotlightTower.maxYaw)
+				.withPitchLimit(SpotlightTower.minPitch, SpotlightTower.maxPitch);
 	}
 
 	@Override
@@ -92,14 +94,14 @@ public class EmplacementWeaponSpotlightTower extends EmplacementWeaponLightBase
 	@Override
 	protected Float getHidingPitch()
 	{
-		return 0f;
+		return SpotlightTower.hidingPitch;
 	}
 
 	@Nullable
 	@Override
 	protected Float getHidingYaw()
 	{
-		return 0f;
+		return SpotlightTower.hidingYaw;
 	}
 
 	@Override

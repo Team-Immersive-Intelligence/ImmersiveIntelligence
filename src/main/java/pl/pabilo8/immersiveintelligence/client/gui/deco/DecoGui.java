@@ -81,6 +81,7 @@ import java.util.function.Supplier;
  * Use annotation {@link DecoTemplate} to specify traits.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 27.09.2026
  * @since 04.01.2025
  */
 @SuppressWarnings({"rawtypes", "unchecked"})
@@ -147,6 +148,22 @@ public abstract class DecoGui<T, C extends Container> extends GuiContainer
 			name = "deco";
 			category = DecoGuiCategory.GENERIC_TILE;
 		}
+	}
+
+	/**
+	 * @return horizontal screen position of the GUI origin
+	 */
+	public int getScreenLeft()
+	{
+		return guiLeft;
+	}
+
+	/**
+	 * @return vertical screen position of the GUI origin
+	 */
+	public int getScreenTop()
+	{
+		return guiTop;
 	}
 
 	@Override

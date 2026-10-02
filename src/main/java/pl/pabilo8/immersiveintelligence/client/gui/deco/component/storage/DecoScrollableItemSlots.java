@@ -1,11 +1,13 @@
 package pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.inventory.Slot;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
@@ -23,6 +25,7 @@ import java.util.Map;
  *
  * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
+ * @updated 27.09.2026
  * @since 31.01.2026
  */
 public class DecoScrollableItemSlots extends DecoComponent<DecoScrollableItemSlots>
@@ -138,6 +141,7 @@ public class DecoScrollableItemSlots extends DecoComponent<DecoScrollableItemSlo
 	@Override
 	protected void draw(int mouseX, int mouseY, float partialTicks)
 	{
+		GlStateManager.enableBlend();
 		bindAtlas();
 		//Scrollbar
 		drawScrollbar();
@@ -198,7 +202,7 @@ public class DecoScrollableItemSlots extends DecoComponent<DecoScrollableItemSlo
 		final int visible = getVisibleRows()*cols;
 		final int listRight = x+getListWidth();
 
-		IIDrawUtils draw = IIDrawUtils.startColored();
+		IIDrawUtils draw = IIDrawUtils.startTexturedColored();
 		for(int cell = 0; cell < visible; cell++)
 		{
 			final int sx = x+(cell%cols)*SLOT_SIZE+1;
@@ -209,10 +213,9 @@ public class DecoScrollableItemSlots extends DecoComponent<DecoScrollableItemSlo
 			Slot slot = getSlotByVisibleIndex(cell);
 			if(slot==null)
 				continue;
-			slot.xPos = sx-width-7;
-			slot.yPos = sy-height/2+13;
-			draw.drawColorRect(sx-1, sy-1, SLOT_SIZE, SLOT_SIZE,
-					IIColor.fromPackedARGB(0x33000000));
+			slot.xPos = sx-parentGui.getScreenLeft();
+			slot.yPos = sy-parentGui.getScreenTop();
+			DecoGuiUtils.drawRepeatedRect(draw, sx-1, sy-1, SLOT_SIZE, SLOT_SIZE, DecoTextures.SLOT_VANILLA, IIColor.WHITE, 32, 8);
 		}
 		draw.finish();
 	}

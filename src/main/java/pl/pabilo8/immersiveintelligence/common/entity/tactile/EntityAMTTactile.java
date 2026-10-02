@@ -15,6 +15,10 @@ import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageTactileSync;
 
 import javax.annotation.Nullable;
 
@@ -242,6 +246,33 @@ public class EntityAMTTactile extends Entity implements IEntityAdditionalSpawnDa
 	{
 		this.translation = this.rotation = this.scale = Vec3d.ZERO;
 		this.visibility = true;
+	}
+
+	/**
+	 * Sends a full state snapshot after a model rebuild or another major server-side change.
+	 */
+	public void synchronize()
+	{
+		if(!world.isRemote)
+			IIPacketHandler.sendToClient(this, new MessageTactileSync(this));
+	}
+
+	@SideOnly(Side.CLIENT)
+	public void applySynchronizedState(String name, String customName, AxisAlignedBB aabb,
+									   double x, double y, double z, float yaw, float pitch, boolean visibility)
+	{
+		this.name = name;
+		this.customName = customName;
+		this.aabb = aabb;
+		this.visibility = visibility;
+		this.height = (float)(aabb.maxY-aabb.minY);
+		this.width = (float)Math.max(aabb.maxX-aabb.minX, aabb.maxZ-aabb.minZ);
+		setLocationAndAngles(x, y, z, yaw, pitch);
+		this.prevPosX = this.lastTickPosX = x;
+		this.prevPosY = this.lastTickPosY = y;
+		this.prevPosZ = this.lastTickPosZ = z;
+		this.prevRotationYaw = yaw;
+		this.prevRotationPitch = pitch;
 	}
 
 	@Override

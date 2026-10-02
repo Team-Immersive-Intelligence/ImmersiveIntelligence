@@ -1,0 +1,14 @@
+newmtl mortar_gunfire0
+map_Kd immersiveintelligence:particle/gunfire/mortar_gunfire0
+newmtl mortar_gunfire1
+map_Kd immersiveintelligence:particle/gunfire/mortar_gunfire1
+newmtl mortar_gunfire2
+map_Kd immersiveintelligence:particle/gunfire/mortar_gunfire2
+newmtl mortar_gunfire3
+map_Kd immersiveintelligence:particle/gunfire/mortar_gunfire3
+newmtl mortar_gunfire4
+map_Kd immersiveintelligence:particle/gunfire/mortar_gunfire4
+newmtl mortar_gunfire5
+map_Kd immersiveintelligence:particle/gunfire/mortar_gunfire5
+newmtl mortar_gunfire6
+map_Kd immersiveintelligence:particle/gunfire/mortar_gunfire6
