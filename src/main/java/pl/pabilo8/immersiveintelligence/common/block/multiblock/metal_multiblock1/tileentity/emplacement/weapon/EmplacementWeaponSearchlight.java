@@ -82,6 +82,14 @@ public class EmplacementWeaponSearchlight extends EmplacementWeaponLightBase
 	}
 
 	@Override
+	public int getArmorForPart(String partName)
+	{
+		if(partName.startsWith("projector"))
+			return 1;
+		return partName.startsWith("base")?12: 8;
+	}
+
+	@Override
 	public int getMaxHealth()
 	{
 		return Searchlight.maxHealth;

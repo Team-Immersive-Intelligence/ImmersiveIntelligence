@@ -60,6 +60,7 @@ public class DecoTextures
 	public static final ResLoc SLOT_IE_BRASS_MARKER = ResLoc.of(RES_TEXTURES_DECO, "slot/brass_marker");
 	public static final ResLoc SLOT_IE_MANUAL = ResLoc.of(RES_TEXTURES_DECO, "slot/manual");
 	public static final ResLoc SLOT_IE_MANUAL_MARKER = ResLoc.of(RES_TEXTURES_DECO, "slot/manual_marker");
+	public static final ResLoc SLOT_VANILLA_STEEL = ResLoc.of(RES_TEXTURES_DECO, "slot/vanilla_steel");
 
 	//--- Label Backgrounds ---//
 	public static final ResLoc LABEL_WOODEN = ResLoc.of(RES_TEXTURES_DECO, "label/label_wooden");

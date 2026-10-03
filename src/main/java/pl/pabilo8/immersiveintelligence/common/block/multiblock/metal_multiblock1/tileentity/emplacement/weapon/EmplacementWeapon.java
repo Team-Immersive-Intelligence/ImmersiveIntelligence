@@ -7,12 +7,12 @@ import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
@@ -23,6 +23,7 @@ import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeFloat;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeNull;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
+import pl.pabilo8.immersiveintelligence.api.data.types.generic.NumericDataType;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPanel;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Emplacement;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
@@ -30,7 +31,7 @@ import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockEmplacement;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.EmplacementStateNeeds;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
-import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.EntityGasCloud;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.EntityEmplacementSmoke;
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.EntityAMTTactile;
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.EntityTactileLivingBase;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
@@ -46,6 +47,7 @@ import pl.pabilo8.immersiveintelligence.common.util.sound.SoundHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Locale;
 import java.util.function.BooleanSupplier;
 
 /**
@@ -242,8 +244,8 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable
 	/**
 	 * Determines if the weapon must stay in the Base for supply or repair.
 	 *
-	 * @param minimumRepairThreshold minimum health ratio required for a fire mission
-	 * @param maximumRepairThreshold health ratio required before routine repair ends
+	 * @param minimumRepairThreshold health ratio below which automatic repair starts
+	 * @param maximumRepairThreshold health ratio required before automatic repair ends
 	 */
 	public EmplacementStateNeeds getServiceNeeds(TileEntityEmplacement te, @Nullable TargetCoordinateReference currentTarget,
 												 float minimumRepairThreshold, float maximumRepairThreshold)
@@ -251,7 +253,8 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable
 		float minimum = MathHelper.clamp(minimumRepairThreshold, 0f, 1f);
 		float maximum = MathHelper.clamp(Math.max(maximumRepairThreshold, minimum), 0f, 1f);
 		boolean belowMinimum = isBelowHealthThreshold(minimum);
-		boolean routineRepair = currentTarget==null&&!isRepairedTo(maximum);
+		//Once retreat starts, keep repairing until satisfactory health, even if a target appears.
+		boolean automaticRepair = belowMinimum||(te.weaponRepairing&&!isRepairedTo(maximum));
 		boolean forcedRepair = te.isWeaponRepairForced();
 		if(forcedRepair&&isRepairedTo(1f))
 		{
@@ -259,8 +262,8 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable
 			forcedRepair = false;
 		}
 
-		te.setWeaponRepairing(belowMinimum||routineRepair||forcedRepair);
-		if(handleSupplyService(te)||belowMinimum||routineRepair||forcedRepair)
+		te.setWeaponRepairing(automaticRepair||forcedRepair);
+		if(handleSupplyService(te)||automaticRepair||forcedRepair)
 			return EmplacementStateNeeds.MUST_HIDE;
 		return EmplacementStateNeeds.WANTS_SURFACE;
 	}
@@ -342,6 +345,44 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable
 	public boolean handleDataCommand(DataPacket packet)
 	{
 		return false;
+	}
+
+	/**
+	 * Reads a facing name or an integral EnumFacing ordinal from a data command.
+	 */
+	@Nullable
+	protected static EnumFacing parseFacing(DataType input)
+	{
+		int ordinal;
+		if(input instanceof NumericDataType)
+		{
+			NumericDataType numeric = (NumericDataType)input;
+			ordinal = numeric.intValue();
+			if(numeric.floatValue()!=ordinal)
+				return null;
+		}
+		else if(input instanceof DataTypeString)
+		{
+			String value = ((DataTypeString)input).value.trim();
+			try
+			{
+				return EnumFacing.valueOf(value.toUpperCase(Locale.ROOT));
+			} catch(IllegalArgumentException ignored)
+			{
+				try
+				{
+					ordinal = Integer.parseInt(value);
+				} catch(NumberFormatException ignoredNumber)
+				{
+					return null;
+				}
+			}
+		}
+		else
+			return null;
+
+		EnumFacing[] values = EnumFacing.values();
+		return ordinal >= 0&&ordinal < values.length?values[ordinal]: null;
 	}
 
 	@Nonnull
@@ -474,8 +515,8 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable
 
 		if(armor-amount > 0)
 		{
-			tactile.world.playSound(null, tactile.getPosition(), IISounds.hitMetal.getImpactSound(), SoundCategory.BLOCKS, 1.5f, armor/amount*0.95f);
-			return true;
+			tactile.world.playSound(null, tactile.getPosition(), IISounds.hitMetal.getRicochetSound(), SoundCategory.BLOCKS, 1.5f, armor/amount*0.95f);
+			return false;
 		}
 
 		float previousHealth = this.health;
@@ -496,8 +537,7 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable
 	private void deployEmergencySmoke()
 	{
 		if(emplacement==null||emplacement.getWorld()==null||emplacement.getWorld().isRemote
-				||!emplacement.isUpgradeInstalled(IIContent.UPGRADE_EMPLACEMENT_FALLBACK_GRENADES)
-				||IIContent.gasOxygen==null)
+				||!emplacement.isUpgradeInstalled(IIContent.UPGRADE_EMPLACEMENT_FALLBACK_GRENADES))
 			return;
 
 		Vec3d center = emplacement.getWeaponCenter();
@@ -505,9 +545,9 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable
 		double cornerOffset = Math.max(0, Emplacement.emergencySmokeDistance)/Math.sqrt(2d);
 		for(int xSign = -1; xSign <= 1; xSign += 2)
 			for(int zSign = -1; zSign <= 1; zSign += 2)
-				emplacement.getWorld().spawnEntity(new EntityGasCloud(emplacement.getWorld(),
+				emplacement.getWorld().spawnEntity(new EntityEmplacementSmoke(emplacement.getWorld(),
 						center.x+xSign*cornerOffset, center.y, center.z+zSign*cornerOffset,
-						new FluidStack(IIContent.gasOxygen, amount)));
+						amount));
 	}
 
 	//--- Range ---//

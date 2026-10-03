@@ -80,7 +80,7 @@ public class EWRSpotlightTower extends EmplacementWeaponRenderer<EmplacementWeap
 		if(ray!=null)
 		{
 			ray.setVisible(weapon.shouldRenderLightBeam());
-			ray.setParticleProperty(ParticleProperties.STRETCH, weapon.targetPosition);
+			ray.withParticleProperty(ParticleProperties.STRETCH, weapon.targetPosition);
 		}
 	}
 }

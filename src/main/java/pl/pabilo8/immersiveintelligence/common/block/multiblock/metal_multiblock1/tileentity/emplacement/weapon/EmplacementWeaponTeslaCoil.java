@@ -179,6 +179,19 @@ public class EmplacementWeaponTeslaCoil extends EmplacementWeapon
 	}
 
 	@Override
+	public int getArmorForPart(String partName)
+	{
+		return switch(partName)
+		{
+			case "base_child1", "base_child2", "base_child3", "base_child4", "base_child5",
+				 "base_child6", "base_child9", "base_child10", "base_child11", "base_child12",
+				 "base_child13", "base_child14" -> 1;
+			case "base_child0" -> 12;
+			default -> 8;
+		};
+	}
+
+	@Override
 	public int getMaxHealth()
 	{
 		return TeslaCoil.maxHealth;

@@ -67,6 +67,17 @@ public class EmplacementWeaponSpotlightTower extends EmplacementWeaponLightBase
 	}
 
 	@Override
+	public int getArmorForPart(String partName)
+	{
+		return switch(partName)
+		{
+			case "base_child2", "base_child3", "base_child4", "base_child5", "stage3lamp" -> 1;
+			case "base_child0" -> 12;
+			default -> 8;
+		};
+	}
+
+	@Override
 	public int getMaxHealth()
 	{
 		return SpotlightTower.maxHealth;

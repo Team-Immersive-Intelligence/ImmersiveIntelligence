@@ -163,6 +163,21 @@ public class EmplacementWeaponRocketLauncher extends EmplacementWeaponGunBase<En
 	}
 
 	@Override
+	public int getArmorForPart(String partName)
+	{
+		if(partName.startsWith("tray_upper")||partName.startsWith("tray_lower"))
+			return 1;
+		return switch(partName)
+		{
+			case "turret_child3", "turret_child4", "turret_child5", "turret_child6",
+				 "turret_child7", "turret_child8", "turret_child9", "turret_child10",
+				 "turret_child11", "turret_child12", "turret_child13", "turret_child14" -> 24;
+			case "base", "base_child0", "base_child1", "base_child2" -> 12;
+			default -> 8;
+		};
+	}
+
+	@Override
 	public int getMaxHealth()
 	{
 		return RocketLauncher.maxHealth;

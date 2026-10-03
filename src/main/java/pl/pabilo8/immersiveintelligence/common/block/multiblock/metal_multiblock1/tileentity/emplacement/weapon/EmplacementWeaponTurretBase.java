@@ -3,12 +3,15 @@ package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multibloc
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeFloat;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeNull;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.client.util.carversound.ConditionCompoundSound;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Emplacement;
@@ -26,6 +29,7 @@ import pl.pabilo8.immersiveintelligence.common.util.sound.AdvancedSounds.MultiSo
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Locale;
 
 /**
  * Controls aiming, platform movement pose, setup, and firing for angle-based Emplacement weapons.
@@ -39,6 +43,9 @@ public abstract class EmplacementWeaponTurretBase extends EmplacementWeapon
 {
 	@SyncNBT(time = 0, events = SyncEvents.WEAPON_ROTATION)
 	public GunAimCoordinate aim = new GunAimCoordinate();
+	@Nullable
+	@SyncNBT(events = SyncEvents.WEAPON_MISC, nullable = true)
+	public EnumFacing plannedFacing;
 	private int casingOutputTicker = 0;
 	private transient ResLoc rotateYawAnimation, rotatePitchAnimation;
 	private transient boolean clientYawRotating, clientPitchRotating;
@@ -195,6 +202,26 @@ public abstract class EmplacementWeaponTurretBase extends EmplacementWeapon
 		if(setup!=null&&!setup.isFullyOpened())
 			return EmplacementStateNeeds.WANTS_SURFACE;
 
+		//A facing task keeps its yaw until reached, yielding to required loading poses.
+		if(plannedFacing!=null)
+		{
+			if(canFollowFacingCommand(te))
+			{
+				float previousTargetYaw = aim.getTargetYaw();
+				float previousTargetPitch = aim.getTargetPitch();
+				boolean accepted = aim.setTarget(plannedFacing.getHorizontalAngle(), aim.getTargetPitch());
+				if(hasTargetAngleChanged(previousTargetYaw, previousTargetPitch))
+					syncWithClient(te, SyncEvents.WEAPON_ROTATION);
+				if(!accepted||!isYawRotating())
+				{
+					plannedFacing = null;
+					syncWithClient(te, SyncEvents.WEAPON_MISC);
+					te.markDirty();
+				}
+			}
+			return EmplacementStateNeeds.WANTS_SURFACE;
+		}
+
 		//Freeze an exposed idle weapon at its current angle. A gun can reserve the aim for loading.
 		if(currentTarget==null||!currentTarget.shouldBeExecuted(te.getWorld()))
 		{
@@ -278,6 +305,30 @@ public abstract class EmplacementWeaponTurretBase extends EmplacementWeapon
 	 */
 	protected boolean canTrackTarget(TileEntityEmplacement te)
 	{
+		return true;
+	}
+
+	/**
+	 * Allows a facing task to turn an unloaded weapon without interrupting servicing.
+	 */
+	protected boolean canFollowFacingCommand(TileEntityEmplacement te)
+	{
+		return true;
+	}
+
+	@Override
+	public boolean handleDataCommand(DataPacket packet)
+	{
+		DataType command = packet.get('c');
+		if(!(command instanceof DataTypeString)
+				||!"facing".equals(((DataTypeString)command).value.trim().toLowerCase(Locale.ROOT)))
+			return super.handleDataCommand(packet);
+
+		EnumFacing requested = parseFacing(packet.get('f'));
+		if(requested==null||requested.getAxis()==EnumFacing.Axis.Y
+				||!aim.isWithinLimits(requested.getHorizontalAngle(), aim.getTargetPitch()))
+			return false;
+		plannedFacing = requested;
 		return true;
 	}
 

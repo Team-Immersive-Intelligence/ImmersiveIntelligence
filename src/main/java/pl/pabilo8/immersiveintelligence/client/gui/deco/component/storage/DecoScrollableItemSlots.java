@@ -39,6 +39,7 @@ public class DecoScrollableItemSlots extends DecoComponent<DecoScrollableItemSlo
 	private final Map<Slot, int[]> originalPos = new IdentityHashMap<>();
 
 	private ResourceLocation scrollbarSprite = DecoTextures.COMPONENT_SLIDER;
+	private ResourceLocation slotBackground = DecoTextures.SLOT_VANILLA_STEEL;
 
 	private int columns = 1;
 	private int scrollRows = 0;
@@ -106,6 +107,12 @@ public class DecoScrollableItemSlots extends DecoComponent<DecoScrollableItemSlo
 	public DecoScrollableItemSlots withScrollbarTrackTexture(ResourceLocation scrollbarTrack)
 	{
 		this.scrollbarSprite = scrollbarTrack;
+		return this;
+	}
+
+	public DecoScrollableItemSlots withSlotBackground(ResourceLocation slotBackground)
+	{
+		this.slotBackground = slotBackground;
 		return this;
 	}
 
@@ -215,7 +222,7 @@ public class DecoScrollableItemSlots extends DecoComponent<DecoScrollableItemSlo
 				continue;
 			slot.xPos = sx-parentGui.getScreenLeft();
 			slot.yPos = sy-parentGui.getScreenTop();
-			DecoGuiUtils.drawRepeatedRect(draw, sx-1, sy-1, SLOT_SIZE, SLOT_SIZE, DecoTextures.SLOT_VANILLA, IIColor.WHITE, 32, 8);
+			DecoGuiUtils.drawRepeatedRect(draw, sx-1, sy-1, SLOT_SIZE, SLOT_SIZE, slotBackground, IIColor.WHITE, 32, 8);
 		}
 		draw.finish();
 	}

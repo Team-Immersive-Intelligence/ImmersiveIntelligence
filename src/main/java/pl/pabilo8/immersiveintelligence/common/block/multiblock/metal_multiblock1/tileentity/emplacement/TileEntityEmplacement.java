@@ -119,7 +119,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CLIENT_MESSAGE, SyncEvents.TILE_CUSTOM2})
 	public boolean ballisticFireMode = false;
 	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CLIENT_MESSAGE})
-	private boolean ballisticFireModeInitialized = false;
+	public boolean ballisticFireModeInitialized = false;
 	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CLIENT_MESSAGE, SyncEvents.TILE_CUSTOM2})
 	public boolean weaponRepairing = false;
 	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CUSTOM2})

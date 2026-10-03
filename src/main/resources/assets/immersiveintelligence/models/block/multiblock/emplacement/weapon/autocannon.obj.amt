@@ -24,7 +24,11 @@
     "turret_door2": [13, -17.1014, 16.1727],
     "turret_door1": [3, -17.1014, 16.1727],
     "base": [8, -44, 24],
-    "gun_origin": [8, -26, 24]
+    "gun_origin": [8, -26, 24],
+    "fire3": [-1.5, -29, -14.0],
+    "fire1": [17.5, -23, -14.0],
+    "fire2": [17.5, -29, -14.0],
+    "fire4": [-1.5, -23, -14.0]
   },
   "hierarchy": {
     "turret": "base",
@@ -43,13 +47,35 @@
     "magazine3": "gun",
     "magazine4": "gun",
     "cannon1": "gun",
-    "cannon4": "gun",
     "cannon2": "gun",
     "cannon3": "gun",
+    "cannon4": "gun",
     "ammobox": "turret",
     "open": "ammobox",
     "turret_door2": "turret",
     "turret_door1": "turret",
-    "gun_origin": "turret"
+    "gun_origin": "turret",
+    "fire1": "cannon1",
+    "fire2": "cannon2",
+    "fire3": "cannon3",
+    "fire4": "cannon4"
+  },
+  "properties": {
+    "fire3": {
+      "particle": "ammo/gunfire",
+      "base_rotation": [-180.0, 0.0, 0.0]
+    },
+    "fire1": {
+      "particle": "ammo/gunfire",
+      "base_rotation": [-180.0, 0.0, 0.0]
+    },
+    "fire2": {
+      "particle": "ammo/gunfire",
+      "base_rotation": [-180.0, 0.0, 0.0]
+    },
+    "fire4": {
+      "particle": "ammo/gunfire",
+      "base_rotation": [-180.0, 0.0, 0.0]
+    }
   }
 }

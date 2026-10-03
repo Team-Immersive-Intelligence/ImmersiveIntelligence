@@ -103,7 +103,7 @@ public class TargetDecisionTree implements INBTSerializable<NBTTagCompound>
 	}
 
 	/**
-	 * Scores one prepared evaluation context.
+	 * Scores one prepared evaluation context. A negative final weight excludes the target.
 	 */
 	public long score(@Nonnull TargetEvaluationContext context)
 	{
@@ -125,7 +125,7 @@ public class TargetDecisionTree implements INBTSerializable<NBTTagCompound>
 				i = entry.subtreeEnd;
 			}
 		}
-		return score;
+		return score < 0?NO_MATCH: score;
 	}
 
 	/**

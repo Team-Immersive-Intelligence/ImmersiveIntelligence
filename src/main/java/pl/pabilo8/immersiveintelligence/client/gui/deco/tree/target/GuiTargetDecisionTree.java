@@ -4,6 +4,7 @@ import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
 import blusunrize.immersiveengineering.common.util.inventory.IIEInventory;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
@@ -332,6 +333,26 @@ public abstract class GuiTargetDecisionTree<T extends TileEntityIEBase & IIEInve
 							if(newValue!=null)
 							{
 								typeFilter.setTargetType(newValue);
+								saveTargetConfiguration();
+							}
+						}));
+			}
+			break;
+			case RELATIVE_DIRECTION:
+			{
+				RelativeDirectionFilter directionFilter = (RelativeDirectionFilter)filter;
+				editorPanel.addLabel(TREE_KEY+"direction", 4, y).withSize(44, 14).withAlign(DecoAlignment.LEFT);
+				editorPanel.addComponent(new DecoDropdown<EnumFacing>(48, y)
+						.withSize(editorPanel.width-52, 14)
+						.withDropdownWidth(editorPanel.width-52)
+						.withEntries(EnumFacing.NORTH, EnumFacing.EAST, EnumFacing.SOUTH, EnumFacing.WEST)
+						.withDisplayFunction(DecoElementDisplays.getSimpleTextDisplay(direction ->
+								I18n.format(FILTER_KEY+"relative_direction."+direction.getName())))
+						.withSelectedEntry(directionFilter.getDirection())
+						.withOnSelectedEntry((oldValue, newValue) -> {
+							if(newValue!=null)
+							{
+								directionFilter.setDirection(newValue);
 								saveTargetConfiguration();
 							}
 						}));

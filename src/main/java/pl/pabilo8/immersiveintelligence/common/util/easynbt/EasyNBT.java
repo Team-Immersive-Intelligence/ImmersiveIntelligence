@@ -975,7 +975,7 @@ public class EasyNBT extends Constants.NBT
 	}
 
 	/**
-	 * Gets a Vec2f
+	 * Gets a Vector2f
 	 *
 	 * @param key name of this tag
 	 */
@@ -1001,7 +1001,7 @@ public class EasyNBT extends Constants.NBT
 
 		//only if key is present
 		if(wrapped.hasKey(key))
-			IILogger.error("Malformed Vec2f tag for \""+key+"\" in"+Arrays.toString(new Throwable().getStackTrace()));
+			IILogger.error("Malformed Vector2f tag for \""+key+"\" in"+Arrays.toString(new Throwable().getStackTrace()));
 
 		return new Vector2f();
 	}

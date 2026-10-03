@@ -170,6 +170,19 @@ public class EmplacementWeaponMachinegun extends EmplacementWeaponGunBase<Entity
 	}
 
 	@Override
+	public int getArmorForPart(String partName)
+	{
+		if(partName.startsWith("gun1")||partName.startsWith("gun2"))
+			return 20;
+		return switch(partName)
+		{
+			case "turret" -> 10;
+			case "base" -> 12;
+			default -> 8;
+		};
+	}
+
+	@Override
 	public int getMaxHealth()
 	{
 		return Machinegun.maxHealth;

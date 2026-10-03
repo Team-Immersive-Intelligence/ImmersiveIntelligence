@@ -136,6 +136,19 @@ public class EmplacementWeaponMortar extends EmplacementWeaponGunBase<EntityAmmo
 	}
 
 	@Override
+	public int getArmorForPart(String partName)
+	{
+		if(partName.startsWith("barrel"))
+			return 20;
+		return switch(partName)
+		{
+			case "turret_child1", "turret_child2", "turret_child3" -> 1;
+			case "base" -> 12;
+			default -> 8;
+		};
+	}
+
+	@Override
 	public int getMaxHealth()
 	{
 		return Mortar.maxHealth;

@@ -79,6 +79,23 @@ public class ContainerEmplacement extends ContainerIITileBase<TileEntityEmplacem
 		return container;
 	}
 
+	@Nonnull
+	@Override
+	public ItemStack transferStackInSlot(EntityPlayer player, int slot)
+	{
+		if(slot < 0||slot >= inventorySlots.size()||!inventorySlots.get(slot).canTakeStack(player))
+			return ItemStack.EMPTY;
+		return super.transferStackInSlot(player, slot);
+	}
+
+	@Override
+	protected boolean mergeItemStack(ItemStack stack, int startIndex, int endIndex, boolean reverseDirection)
+	{
+		//Vanilla's existing-stack merge bypasses isItemValid, so exclude the read-only prefix entirely.
+		startIndex = Math.max(startIndex, slotsPlatformAmmo.length+slotsPlatformCasings.length);
+		return startIndex < endIndex&&super.mergeItemStack(stack, startIndex, endIndex, reverseDirection);
+	}
+
 	private Slot[] addWeaponSlots(IItemHandler handler, int y, boolean readOnly)
 	{
 		if(handler==null)

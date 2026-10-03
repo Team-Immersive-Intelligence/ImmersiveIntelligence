@@ -11,7 +11,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTLoader;
@@ -670,10 +669,10 @@ public class TactileManager
 	 * Gets a tactile's current yaw and pitch, or zero rotation when it is unavailable.
 	 */
 	@Nonnull
-	public Vec2f getRotation(String partName)
+	public float[] getRotation(String partName)
 	{
 		EntityAMTTactile part = getPart(partName);
-		return part==null?new Vec2f(0, 0): new Vec2f(part.rotationYaw, part.rotationPitch);
+		return part==null?new float[]{0, 0}: new float[]{part.rotationYaw, part.rotationPitch};
 	}
 
 	/**

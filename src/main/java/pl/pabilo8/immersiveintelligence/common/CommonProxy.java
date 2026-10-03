@@ -856,7 +856,8 @@ public class CommonProxy implements IGuiHandler
 
 		registerEntity(i++, EntityIIChemthrowerShot.class, "chemthrower_shot", 64, 1, true);
 		registerEntity(i++, EntityAMTTactile.class, "tactile", 64, 1, true);
-		registerEntity(i, EntityTactileLivingBase.class, "tactile_living", 64, 1, true);
+		registerEntity(i++, EntityTactileLivingBase.class, "tactile_living", 64, 1, true);
+		registerEntity(i, EntityEmplacementSmoke.class, "emplacement_smoke", 64, 1, false);
 
 		for(IMultiblock mb : IIContent.MULTIBLOCKS)
 			if(mb instanceof MultiblockStuctureBase)

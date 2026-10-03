@@ -93,6 +93,18 @@ public class EmplacementWeaponGuidedMissileLauncher extends EmplacementWeaponGun
 	}
 
 	@Override
+	public int getArmorForPart(String partName)
+	{
+		return switch(partName)
+		{
+			case "gun", "gun_child0", "gun_child1", "gun_child2",
+				 "turen_child2", "base_child1" -> 1;
+			case "base_child0", "base_child2", "base_child3" -> 12;
+			default -> 8;
+		};
+	}
+
+	@Override
 	public int getMaxHealth()
 	{
 		return GuidedMissileLauncher.maxHealth;

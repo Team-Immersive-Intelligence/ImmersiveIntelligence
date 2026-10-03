@@ -6,6 +6,8 @@ import blusunrize.immersiveengineering.common.EventHandler;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IMirrorAble;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IUsesBooleanProperty;
 import blusunrize.immersiveengineering.common.blocks.TileEntityMultiblockPart;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -408,6 +410,20 @@ public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockI
 	{
 		if(!message.hasNoTags())
 			IIPacketHandler.sendToServer(new MessageIITileSync(this, message));
+	}
+
+	@Override
+	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState)
+	{
+		if(world.isBlockLoaded(pos))
+			newState = world.getBlockState(pos);
+
+		if(oldState.getBlock()==newState.getBlock()&&oldState.getBlock() instanceof BlockIIMultiblock<?>&&newState.getBlock() instanceof BlockIIMultiblock<?>)
+		{
+			IProperty<?> type = ((BlockIIMultiblock<?>)oldState.getBlock()).property;
+			return oldState.getValue(type)!=newState.getValue(type);
+		}
+		return true;
 	}
 
 	//--- IAdvancedBounds ---//

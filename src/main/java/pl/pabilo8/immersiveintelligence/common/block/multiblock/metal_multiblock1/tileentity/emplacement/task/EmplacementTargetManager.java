@@ -514,7 +514,7 @@ public class EmplacementTargetManager implements INBTSerializable<NBTTagCompound
 		if(!terrainVisibility.isConfiguredFor(world, origin, bounds)||worldTime < lastTerrainVisibilityUpdate
 				||worldTime-lastTerrainVisibilityUpdate >= TERRAIN_VISIBILITY_UPDATE_INTERVAL)
 		{
-			terrainVisibility.update(world, origin, bounds);
+			terrainVisibility.update(world, origin, bounds, emplacement.getMultiblockBlocks());
 			lastTerrainVisibilityUpdate = worldTime;
 		}
 	}

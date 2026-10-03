@@ -344,6 +344,12 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 	}
 
 	@Override
+	protected boolean canFollowFacingCommand(TileEntityEmplacement te)
+	{
+		return platformAmmoProvider!=null&&!platformAmmoProvider.isReloading()&&!returnToLastFiringAngles;
+	}
+
+	@Override
 	public boolean canShoot(TileEntityEmplacement te)
 	{
 		ensureShootingComponents();

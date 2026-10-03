@@ -150,6 +150,19 @@ public class EmplacementWeaponHeavyRailgun extends EmplacementWeaponGunBase<Enti
 	}
 
 	@Override
+	public int getArmorForPart(String partName)
+	{
+		if(partName.startsWith("gun"))
+			return 20;
+		return switch(partName)
+		{
+			case "turret_child2", "turret_child3", "turret_child4", "turret_child5" -> 1;
+			case "turret_child0" -> 12;
+			default -> 8;
+		};
+	}
+
+	@Override
 	public int getMaxHealth()
 	{
 		return HeavyRailgun.maxHealth;

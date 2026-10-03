@@ -244,7 +244,7 @@ public class ArtilleryHowitzerRenderer extends IIMultiblockRenderer<TileEntityAr
 						shellEjected = createDefaultShellAMT(header, "shell_hatch"),
 						shellHeld = createDefaultShellAMT(header, "shell_held"),
 
-						new AMTParticle("muzzle_flash", header).setParticle(IIParticles.PARTICLE_GUNFIRE)
+						new AMTParticle("muzzle_flash", header).withParticle(IIParticles.PARTICLE_GUNFIRE)
 				}
 		);
 		animationDefault = IIAnimationCompiledMap.create(this.model, new ResourceLocation(ImmersiveIntelligence.MODID, "artillery_howitzer/artillery_howitzer_default"));

@@ -415,6 +415,7 @@ public class ClientProxy extends CommonProxy
 
 		registerEntityRenderer(EntityAtomicBoom.class, EntityRenderNone::new);
 		registerEntityRenderer(EntityGasCloud.class, EntityRenderNone::new);
+		registerEntityRenderer(EntityEmplacementSmoke.class, EntityRenderNone::new);
 		registerEntityRenderer(EntityFlare.class, EntityRenderNone::new);
 
 		registerEntityRenderer(EntityHans.class, HansRenderer::new);

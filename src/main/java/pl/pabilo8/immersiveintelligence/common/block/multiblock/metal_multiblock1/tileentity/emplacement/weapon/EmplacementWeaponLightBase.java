@@ -92,7 +92,9 @@ public abstract class EmplacementWeaponLightBase extends EmplacementWeaponTurret
 		OwnerIdentity owner = te.getOwnerIdentity();
 		double radius = Math.max(0d, getExposureRadius());
 		double radiusSq = radius*radius;
-		AxisAlignedBB area = new AxisAlignedBB(targetPosition, targetPosition).grow(radius);
+		AxisAlignedBB area = new AxisAlignedBB(targetPosition.x, targetPosition.y, targetPosition.z,
+				targetPosition.x, targetPosition.y, targetPosition.z)
+				.grow(radius);
 
 		//Select all around the targeted position
 		for(EntityLivingBase entity : te.getWorld().getEntitiesWithinAABB(EntityLivingBase.class, area,

@@ -4,13 +4,14 @@
   "size": 0.5,
   "draw_stage": "custom",
   "textures": [
-    "immersiveintelligence:particle/shrapnel/shrapnel0",
-    "immersiveintelligence:particle/shrapnel/shrapnel1",
-    "immersiveintelligence:particle/shrapnel/shrapnel2",
-    "immersiveintelligence:particle/shrapnel/shrapnel3"
+    "immersiveintelligence:particle/chemthrower/chemthrower0",
+    "immersiveintelligence:particle/chemthrower/chemthrower1",
+    "immersiveintelligence:particle/chemthrower/chemthrower2",
+    "immersiveintelligence:particle/chemthrower/chemthrower3"
   ],
+  "alpha": 0.75,
   "programs": [
-    "smoke_transition(0.35)",
+    "smoke_transition(0.75)",
     "lifetime_retexture"
   ]
 }

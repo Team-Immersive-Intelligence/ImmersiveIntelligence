@@ -479,10 +479,11 @@ public class ParticleRegistry
 			Vector2f debrisFacing = IIParticleUtils.toVector2f(debrisMotion);
 			ResourceLocation sideTexture = ClientUtils.getSideTexture(state, EnumFacing.WEST);
 
-			scheduleSpawnParticle(debrisParticle, new Vec3d(destroyed),
-					debrisMotion, new Vector2f(IIParticleUtils.randFloat.get()*4, IIParticleUtils.randFloat.get()*4), 3)
-					.withProperty(ParticleProperties.SIZE, debrisSize)
-					.withProperty(ParticleProperties.TEXTURES, new ResourceLocation[]{sideTexture});
+			AbstractParticle particle = scheduleSpawnParticle(debrisParticle, new Vec3d(destroyed),
+					debrisMotion, new Vector2f(IIParticleUtils.randFloat.get()*4, IIParticleUtils.randFloat.get()*4), 3);
+			if(particle!=null)
+				particle.withProperty(ParticleProperties.SIZE, debrisSize)
+						.withProperty(ParticleProperties.TEXTURES, new ResourceLocation[]{sideTexture});
 
 			if(spawnDebrisTrails&&(!adaptiveDebris||debrisIndex%2==0))
 				scheduleSpawnParticle("smoke/smoke_trace", destroyedCenter,
@@ -872,6 +873,19 @@ public class ParticleRegistry
 			if(particle!=null)
 				particle.withProperty(ParticleProperties.COLOR, color)
 						.withProperty(ParticleProperties.SIZE, fallsSlowly?0.12f: 0.18f);
+		}
+	}
+
+	public static void spawnEmplacementSmoke(Vec3d pos, float size)
+	{
+		for(int i = 0; i < 10; i++)
+		{
+			AbstractParticle particle = spawnParticle("emplacement/emergency_smoke",
+					pos.add(IIParticleUtils.getRandXZ().scale(size/2)), Vec3d.ZERO, new Vector2f(0, 0));
+			if(particle!=null)
+				particle.withProperty(ParticleProperties.SIZE, size*1.5f)
+						.withProperty(ParticleProperties.MAX_LIFETIME, Math.max(20, (int)Math.ceil(size*55)))
+						.withProperty(ParticleProperties.COLOR, IIColor.MC_GRAY);
 		}
 	}
 

@@ -15,7 +15,7 @@
   "properties": {
     "ray": {
       "particle": "light/spotlight_tower",
-      "rotation": [180.0, 0.0, 0.0]
+      "base_rotation": [180.0, 0.0, 0.0]
     }
   }
 }

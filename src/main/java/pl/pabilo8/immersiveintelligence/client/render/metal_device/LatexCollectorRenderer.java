@@ -78,7 +78,7 @@ public class LatexCollectorRenderer extends IITileRenderer<TileEntityLatexCollec
 				this.latex = new AMTFluid("latex", header)
 						.withFluid(new FluidStack(IIContent.fluidLatex, 1000)),
 				this.particle = new AMTParticle("particle", header)
-						.setParticle("machine/latex_drip")
+						.withParticle("machine/latex_drip")
 		});
 		this.placeBucket = IIAnimationCompiledMap.create(this.model, IIReference.RES_II.with("latex_collector/place_bucket"));
 		this.extractorVisibility = IIAnimationCompiledMap.create(this.model, IIReference.RES_II.with("latex_collector/extractor"));

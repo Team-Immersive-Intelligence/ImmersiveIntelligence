@@ -69,9 +69,9 @@ public class GuiEmplacementConfig extends GuiEmplacement
 						.withBackground(DecoTextures.BG_PAPER)
 						.withBackgroundMask(DecoTextures.TEMPLATE_PAPER),
 				new DecoPanel(0, 128+8)
-						.withSize(128, 24+16)
-						.withBackground(DecoTextures.BG_STEEL)
-						.withBackgroundMask(DecoTextures.TEMPLATE_SQUARE),
+						.withSize(128, 24+16-4)
+						.withBackground(DecoTextures.BG_PAPER)
+						.withBackgroundMask(DecoTextures.TEMPLATE_PAPER),
 
 				new DecoMapDisplay(4, 4+8)
 						.withSize(120, 120)
@@ -100,17 +100,17 @@ public class GuiEmplacementConfig extends GuiEmplacement
 						.withBackgroundMask(DecoTextures.TEMPLATE_PAPER)
 		);
 
-		addLabel(I18n.format(KEY+"vision_range", calculateRange(sightRange, pos)), 4+8+8, 132+8-1+4)
+		addLabel(I18n.format(KEY+"vision_range", calculateRange(sightRange, pos)), 4+8+8, 132+8-1+4-2)
 				.withSize(120, 10)
 				.withAlign(DecoAlignment.LEFT);
-		addComponent(new DecoImage(2, 132+8-1)
+		addComponent(new DecoImage(2, 132+8-1-2)
 				.withSize(16, 16)
 				.withImageLocation(DecoTextures.ICON_RANGE_VISION, true)
 		);
-		addLabel(I18n.format(KEY+"attack_range", calculateRange(fireRange, pos)), 4+8+8, 142+8-1+8+4)
+		addLabel(I18n.format(KEY+"attack_range", calculateRange(fireRange, pos)), 4+8+8, 142+8-1+8+4-2)
 				.withSize(120, 10)
 				.withAlign(DecoAlignment.LEFT);
-		addComponent(new DecoImage(2, 142+8-1+8)
+		addComponent(new DecoImage(2, 142+8-1+8-2)
 				.withSize(16, 16)
 				.withImageLocation(DecoTextures.ICON_RANGE_ATTACK, true)
 		);
@@ -133,12 +133,19 @@ public class GuiEmplacementConfig extends GuiEmplacement
 				.withCurrentState(this.dataOutputEnabled = tile.dataOutputEnabled)
 				.withOnToggle(value -> this.dataOutputEnabled = value)
 				.withTranslatedTooltip(KEY+"data_output.tooltip"));
+		if(artilleryWeapon)
+			addComponent(new DecoSwitch(136-4-2, 38+12-4)
+					.withText(KEY+"ballistic_fire")
+					.withSize(110, 11)
+					.withCurrentState(ballisticFireMode)
+					.withOnToggle(value -> ballisticFireMode = value)
+					.withTranslatedTooltip(KEY+"ballistic_fire.tooltip"));
 
-		addLabel(KEY+"hide_health", 136-4-2, 60-20-2)
+		addLabel(KEY+"hide_health", 136-4-2, 60-20-2+24)
 				.withSize(110, 24)
 				.withWrapping(true)
 				.withAlign(DecoAlignment.LEFT);
-		addComponent(new DecoSlider(136-4-2+1, 72-20+8)
+		addComponent(new DecoSlider(136-4-2+1, 72-20+8+24)
 				.withSize(110, 12)
 				.withRange(0f, 1f)
 				.withValue(this.weaponHideHealthThreshold = tile.weaponHideHealthThreshold)
@@ -146,11 +153,11 @@ public class GuiEmplacementConfig extends GuiEmplacement
 				.withBarColors(DecoColors.ARMOR_INTEGRITY_1, DecoColors.ARMOR_INTEGRITY_2)
 				.withTranslatedTooltip(KEY+"hide_health.tooltip"));
 
-		addLabel(KEY+"resurface_health", 136-4-2, 60-20+32-2)
+		addLabel(KEY+"resurface_health", 136-4-2, 60-20+32-2+24)
 				.withSize(110, 24)
 				.withWrapping(true)
 				.withAlign(DecoAlignment.LEFT);
-		addComponent(new DecoSlider(136-4-2+1, 72-20+8+32)
+		addComponent(new DecoSlider(136-4-2+1, 72-20+8+32+24)
 				.withSize(110, 12)
 				.withRange(0f, 1f)
 				.withValue(this.weaponRepairSatisfactoryThreshold = tile.weaponRepairSatisfactoryThreshold)
@@ -167,23 +174,26 @@ public class GuiEmplacementConfig extends GuiEmplacement
 			weaponAimDistance = calculateAimDistance(fireRange, tile.getWeaponCenter());
 			lastAimMissionPosition = null;
 			addComponents(
-					new DecoGauge(132+8, 72-20+8+32+4+8)
+					new DecoGauge(132+8, 72-20+8+32+4+8+24)
 							.withSize(36, 36)
 							.withText(KEY+"yaw")
 							.withRange(-180f, 180f)
 							.withAngle(weaponYaw)
 							.withDisplayValues(false)
+							.withTextColor(DecoColors.H2, DecoColors.H2)
 							.withValueListener(() -> weaponYaw)
 							.withOnValueChanged(value -> {
 								weaponYaw = value;
 								sendAimMission();
 							}),
-					new DecoGauge(188, 72-20+8+32+4+8)
+					new DecoGauge(188+8, 72-20+8+32+4+8+24)
 							.withSize(36, 36)
 							.withText(KEY+"pitch")
 							.withRange(-90f, 90f)
+							.withInverted(true)
 							.withAngle(weaponPitch)
 							.withDisplayValues(false)
+							.withTextColor(DecoColors.H2, DecoColors.H2)
 							.withValueListener(() -> weaponPitch)
 							.withOnValueChanged(value -> {
 								weaponPitch = value;
@@ -191,13 +201,6 @@ public class GuiEmplacementConfig extends GuiEmplacement
 							})
 			);
 		}
-		if(artilleryWeapon)
-			addComponent(new DecoSwitch(136-4-2, 143+16)
-					.withText(KEY+"ballistic_fire")
-					.withSize(110, 11)
-					.withCurrentState(ballisticFireMode)
-					.withOnToggle(value -> ballisticFireMode = value)
-					.withTranslatedTooltip(KEY+"ballistic_fire.tooltip"));
 	}
 
 	private void sendAimMission()

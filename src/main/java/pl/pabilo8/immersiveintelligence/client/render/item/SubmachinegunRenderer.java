@@ -173,7 +173,7 @@ public class SubmachinegunRenderer extends IIUpgradableItemRendererAMT<ItemIISub
 						(stack, combinedHeader) -> new AMT[]{
 								//Main Model
 								new AMTParticle("muzzle_flash", combinedHeader)
-										.setParticle(IIParticles.PARTICLE_GUNFIRE),
+										.withParticle(IIParticles.PARTICLE_GUNFIRE),
 								new AMTHand("hand_main", combinedHeader, EnumHand.OFF_HAND),
 								new AMTHand("hand_off", combinedHeader, EnumHand.OFF_HAND),
 

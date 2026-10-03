@@ -4,13 +4,13 @@
   "size": 0.5,
   "draw_stage": "custom",
   "textures": [
-    "immersiveintelligence:particle/shrapnel/shrapnel0",
-    "immersiveintelligence:particle/shrapnel/shrapnel1",
-    "immersiveintelligence:particle/shrapnel/shrapnel2",
-    "immersiveintelligence:particle/shrapnel/shrapnel3"
+    "immersiveintelligence:particle/smoke_trej/smoke3",
+    "immersiveintelligence:particle/smoke_trej/smoke4",
+    "immersiveintelligence:particle/smoke_trej/smoke5",
+    "immersiveintelligence:particle/smoke_trej/smoke6"
   ],
   "programs": [
-    "smoke_transition(0.55)",
+    "smoke_transition(0.95)",
     "lifetime_retexture"
   ],
   "scheduled": [

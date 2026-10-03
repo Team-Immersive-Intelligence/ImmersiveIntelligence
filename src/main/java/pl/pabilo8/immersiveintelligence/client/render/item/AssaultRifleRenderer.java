@@ -234,7 +234,7 @@ public class AssaultRifleRenderer extends IIUpgradableItemRendererAMT<ItemIIAssa
 				.withModelProvider(
 						(stack, combinedHeader) -> new AMT[]{
 								//Main Model
-								new AMTParticle("muzzle_flash", combinedHeader).setParticle(IIParticles.PARTICLE_GUNFIRE),
+								new AMTParticle("muzzle_flash", combinedHeader).withParticle(IIParticles.PARTICLE_GUNFIRE),
 								new AMTHand("hand", combinedHeader, EnumHand.OFF_HAND),
 
 								//Ammo

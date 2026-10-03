@@ -46,7 +46,7 @@ public class EWRSearchlight extends EmplacementWeaponRenderer<EmplacementWeaponS
 				new AMTLocator("turret_origin", header),
 				new AMTLocator("projector_origin", header),
 				new AMTParticle("ray", header)
-						.setParticle("light/searchlight")
+						.withParticle("light/searchlight")
 		);
 	}
 
@@ -82,7 +82,7 @@ public class EWRSearchlight extends EmplacementWeaponRenderer<EmplacementWeaponS
 		if(ray!=null)
 		{
 			ray.setVisible(weapon.shouldRenderLightBeam());
-			ray.setParticleProperty(ParticleProperties.STRETCH, weapon.targetPosition);
+			ray.withParticleProperty(ParticleProperties.STRETCH, weapon.targetPosition);
 		}
 	}
 }

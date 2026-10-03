@@ -1221,7 +1221,7 @@ public class IIConfigHandler
 				@RangeDouble(min = 0)
 				public static float sturdyBearingsRotationMultiplier = 1.5f;
 
-				@Comment({"Oxygen released by each Emergency Smoke gas cloud (in millibuckets)."})
+				@Comment({"Smoke quantity released by each Emergency Smoke cloud. Larger amounts increase radius and lifetime."})
 				@RangeInt(min = 1)
 				public static int emergencySmokeFluidAmount = 1000;
 
@@ -1498,7 +1498,7 @@ public class IIConfigHandler
 			@SubConfig
 			@LangKey("ii.config.Emplacement_Weapons")
 			@Comment("Config for Emplacement weapons, allows for the adjustment of fire rate, detection radius, movement speed and health")
-			public static EmplacementWeapons emplacementWeapons;
+			public static EmplacementWeapons emplacementWeaponsV3;
 			@SubConfig
 			@LangKey("ii.config.Grenade")
 			@Comment("Config for Grenades, such as throwing speed")
@@ -1565,7 +1565,6 @@ public class IIConfigHandler
 
 			public static class EmplacementWeapons
 			{
-
 				@SubConfig
 				@LangKey("machineupgrade.immersiveintelligence.autocannon")
 				@Comment("Config for the Autocannon Emplacement, allows for changes to fire rate, energy consumption, movement speed, health and detection radius")
@@ -1822,10 +1821,6 @@ public class IIConfigHandler
 					@RangeDouble(min = -90, max = 90)
 					public static float maxPitch = 45.5f;
 
-					@Comment({"Initial pitch angle when the observer is installed or its facing changes (in degrees)."})
-					@RangeDouble(min = -90, max = 90)
-					public static float initialPitch = 90f;
-
 					@Comment({"Hiding pitch angle (in degrees)."})
 					@RangeDouble(min = -90, max = 90)
 					public static float hidingPitch = -90f;
@@ -1844,7 +1839,7 @@ public class IIConfigHandler
 					public static int maxHealth = 100;
 
 					@Comment({"Time required for observer setup (lens attachment animation) (in ticks)."})
-					public static int setupTime = 300;
+					public static int setupTime = 240;
 
 					//5 chunks
 					@Comment({"Enemy detection range (in blocks)"})

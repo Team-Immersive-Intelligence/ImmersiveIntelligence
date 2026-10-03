@@ -107,6 +107,17 @@ public class EmplacementWeaponCPDS extends EmplacementWeaponGunBase<EntityAmmoPr
 	}
 
 	@Override
+	public int getArmorForPart(String partName)
+	{
+		return switch(partName)
+		{
+			case "ir_camera", "gun_child0", "gun_child1", "gun_child6" -> 1;
+			case "gun_child2", "gun_child3", "gun_child4", "gun_child5" -> 20;
+			default -> partName.startsWith("turret")?16: 8;
+		};
+	}
+
+	@Override
 	public int getMaxHealth()
 	{
 		return CPDS.maxHealth;

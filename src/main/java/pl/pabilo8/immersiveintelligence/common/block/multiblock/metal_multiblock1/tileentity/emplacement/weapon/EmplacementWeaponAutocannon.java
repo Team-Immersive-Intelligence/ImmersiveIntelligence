@@ -12,6 +12,8 @@ import pl.pabilo8.immersiveintelligence.common.util.gun.ChillingState;
 import pl.pabilo8.immersiveintelligence.common.util.gun.ammoprovider.GunAmmoProviderItemHandler;
 import pl.pabilo8.immersiveintelligence.common.util.gun.ammoprovider.GunAmmoProviderMagazineItemHandler;
 
+import javax.annotation.Nullable;
+
 /**
  * Implements the four-barrel Autocannon Emplacement weapon.
  *
@@ -107,10 +109,30 @@ public class EmplacementWeaponAutocannon extends EmplacementWeaponGunBase<Entity
 	}
 
 	@Override
+	public int getArmorForPart(String partName)
+	{
+		if(partName.startsWith("cannon"))
+			return 20;
+		return switch(partName)
+		{
+			case "turret_child0", "turret_child1" -> 1;
+			case "turret_child2", "turret_child3", "turret_child4", "turret_child5",
+				 "turret_child6", "turret_child7" -> 24;
+			case "base" -> 12;
+			default -> 8;
+		};
+	}
+
+	@Override
 	public int getMaxHealth()
 	{
 		return Autocannon.maxHealth;
 	}
 
-
+	@Nullable
+	@Override
+	protected Float getLoadingPitch()
+	{
+		return 0f;
+	}
 }

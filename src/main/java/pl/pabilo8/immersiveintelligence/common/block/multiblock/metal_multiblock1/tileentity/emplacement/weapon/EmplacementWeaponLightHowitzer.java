@@ -114,6 +114,20 @@ public class EmplacementWeaponLightHowitzer extends EmplacementWeaponGunBase<Ent
 	}
 
 	@Override
+	public int getArmorForPart(String partName)
+	{
+		if(partName.startsWith("barrel"))
+			return 20;
+		return switch(partName)
+		{
+			case "turret_child5", "turret_child6" -> 1;
+			case "turret_child1", "turret_child2", "turret_child3", "turret_child4" -> 24;
+			case "base" -> 12;
+			default -> partName.startsWith("gun_block")?16: 8;
+		};
+	}
+
+	@Override
 	public int getMaxHealth()
 	{
 		return LightHowitzer.maxHealth;

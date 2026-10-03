@@ -263,6 +263,19 @@ public class EmplacementWeaponHeavyChemthrower extends EmplacementWeaponTurretBa
 	}
 
 	@Override
+	public int getArmorForPart(String partName)
+	{
+		if(partName.startsWith("gun")||partName.startsWith("stage2")||partName.startsWith("stage3"))
+			return 20;
+		return switch(partName)
+		{
+			case "turret_child1", "turret_child2", "turret_child3" -> 1;
+			case "turret_child0" -> 12;
+			default -> 8;
+		};
+	}
+
+	@Override
 	public int getMaxHealth()
 	{
 		return HeavyChemthrower.maxHealth;

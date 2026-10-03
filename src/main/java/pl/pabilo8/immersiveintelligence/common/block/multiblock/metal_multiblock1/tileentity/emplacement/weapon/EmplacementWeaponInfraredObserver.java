@@ -10,7 +10,6 @@ import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeFloat;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
-import pl.pabilo8.immersiveintelligence.api.data.types.generic.NumericDataType;
 import pl.pabilo8.immersiveintelligence.api.protection.protection.ProtectionHandler;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPanel;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.InfraredObserver;
@@ -43,13 +42,13 @@ public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 	@Nonnull
 	@SyncNBT(events = SyncEvents.WEAPON_MISC)
 	public EnumFacing facing, plannedFacing;
-	@SyncNBT(time = 0, events = SyncEvents.WEAPON_ROTATION)
+	@SyncNBT(time = 0, events = {SyncEvents.WEAPON_ROTATION, SyncEvents.WEAPON_MISC})
 	public GunAimCoordinate aim = new GunAimCoordinate();
 
 	public EmplacementWeaponInfraredObserver()
 	{
 		this.facing = this.plannedFacing = EnumFacing.NORTH;
-		this.setup = new MultiblockInteractablePart(InfraredObserver.setupTime);
+		this.setup = new MultiblockInteractablePart(240);
 		this.aim.withPitchLimit(InfraredObserver.minPitch, InfraredObserver.maxPitch);
 	}
 
@@ -75,7 +74,7 @@ public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 				.withYawLimit(InfraredObserver.minYaw, InfraredObserver.maxYaw)
 				.withPitchLimit(InfraredObserver.minPitch, InfraredObserver.maxPitch);
 		if(resetAngles)
-			this.aim.withCurrentAngles(this.aim.getCenterYaw(), this.aim.clampPitchToRange(InfraredObserver.initialPitch));
+			this.aim.withCurrentAngles(this.aim.getCenterYaw(), InfraredObserver.hidingPitch);
 	}
 
 	@Override
@@ -83,47 +82,37 @@ public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 	{
 		if(plannedFacing!=facing)
 			return EmplacementStateNeeds.MUST_HIDE;
-		if(te.door.getState()&&te.door.isFullyOpened())
-			this.aim.update();
 		return super.onUpdate(te, baseNeeds, currentTarget);
 	}
 
 	@Override
 	public void onPlatformUpdate(TileEntityEmplacement te)
 	{
-		boolean remote = te.getWorld().isRemote;
 		boolean exposed = te.door.getState()&&te.door.isFullyOpened();
-		boolean setupChanged = false;
-		if(!remote)
-			setupChanged = setup.setState(exposed);
+		boolean setupChanged = setup.setState(exposed);
 		setup.update();
 
+		float previousTargetYaw = aim.getTargetYaw();
+		float previousTargetPitch = aim.getTargetPitch();
+		boolean wasRotating = !aim.isAimed(0.001f);
 		this.aim.withCenterYaw(facing.getHorizontalAngle());
-		if(!exposed)
-		{
-			if(!remote)
-				aim.setTargetClamped(aim.getCenterYaw(), aim.clampPitchToRange(InfraredObserver.hidingPitch));
-			aim.update();
-			if(!remote&&!aim.isAimed(0.001f))
-				syncWithClient(te, SyncEvents.WEAPON_ROTATION);
-		}
-		else if(setup.isFullyOpened()&&!remote)
-		{
-			aim.setTargetClamped(aim.getCenterYaw(), aim.clampPitchToRange(InfraredObserver.operatingPitch));
-			if(aim.isAimed(0.001f))
-				syncWithClient(te, SyncEvents.WEAPON_ROTATION);
-		}
+		//Keep the lens stowed during setup, then publish its operating target immediately.
+		aim.setTargetClamped(aim.getCenterYaw(), exposed&&setup.isFullyOpened()?
+				InfraredObserver.operatingPitch: InfraredObserver.hidingPitch);
+		aim.update();
+		if(previousTargetYaw!=aim.getTargetYaw()||previousTargetPitch!=aim.getTargetPitch()
+				||wasRotating||!aim.isAimed(0.001f))
+			syncWithClient(te, SyncEvents.WEAPON_ROTATION);
 
-		if(!remote&&!te.door.getState()&&te.door.isFullyClosed()&&plannedFacing!=facing)
+		if(!te.door.getState()&&te.door.isFullyClosed()&&plannedFacing!=facing)
 		{
 			facing = plannedFacing;
 			configureFacing(te, true);
 			syncWithClient(te, SyncEvents.WEAPON_MISC);
 			syncWithClient(te, SyncEvents.WEAPON_ROTATION);
 		}
-		else if(!remote&&setupChanged)
+		else if(setupChanged)
 			syncWithClient(te, SyncEvents.WEAPON_MISC);
-
 	}
 
 	@Override
@@ -163,39 +152,6 @@ public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 		return true;
 	}
 
-	private EnumFacing parseFacing(DataType input)
-	{
-		if(input instanceof NumericDataType)
-		{
-			NumericDataType numeric = (NumericDataType)input;
-			int ordinal = numeric.intValue();
-			return numeric.floatValue()==ordinal?facingFromOrdinal(ordinal): null;
-		}
-		if(!(input instanceof DataTypeString))
-			return null;
-
-		String value = ((DataTypeString)input).value.trim();
-		try
-		{
-			return EnumFacing.valueOf(value.toUpperCase(Locale.ROOT));
-		} catch(IllegalArgumentException ignored)
-		{
-			try
-			{
-				return facingFromOrdinal(Integer.parseInt(value));
-			} catch(NumberFormatException ignoredNumber)
-			{
-				return null;
-			}
-		}
-	}
-
-	private EnumFacing facingFromOrdinal(int ordinal)
-	{
-		EnumFacing[] values = EnumFacing.values();
-		return ordinal >= 0&&ordinal < values.length?values[ordinal]: null;
-	}
-
 	@Nonnull
 	@Override
 	public DataType getDataCallback(String string)
@@ -223,6 +179,18 @@ public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 	public void initializeGUI(DecoPanel panelBase, DecoPanel panelPlatform)
 	{
 
+	}
+
+	@Override
+	public int getArmorForPart(String partName)
+	{
+		return switch(partName)
+		{
+			case "base_child11", "turret_child3", "turret_child4" -> 1;
+			case "turret_child1", "turret_child2" -> 16;
+			case "base_child0", "base_child1" -> 12;
+			default -> 8;
+		};
 	}
 
 	@Override

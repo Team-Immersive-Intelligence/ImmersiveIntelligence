@@ -14,6 +14,7 @@ import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTCrossVariantRe
 import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
 import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTBullet;
 import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTBullet.BulletState;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTLocator;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon.EmplacementWeaponGuidedMissileLauncher;
@@ -52,7 +53,8 @@ public class EWRGuidedMissileLauncher extends EmplacementWeaponRenderer<Emplacem
 				new AMTModel(DefaultVertexFormats.BLOCK, MODEL_DIR.with("guided_missile_launcher_"+style).withExtension(ResLoc.EXT_OBJ)),
 				//FX
 				new AMTModel(
-						new AMTBullet("rocket", header, AmmoRegistry.getGenericModel(IIContent.itemAmmoGuidedMissile))
+						new AMTBullet("rocket", header, AmmoRegistry.getGenericModel(IIContent.itemAmmoGuidedMissile)),
+						new AMTLocator("base", header)
 				)
 		);
 	}
