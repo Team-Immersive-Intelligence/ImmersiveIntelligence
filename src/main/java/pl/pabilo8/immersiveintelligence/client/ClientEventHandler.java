@@ -141,6 +141,7 @@ import static pl.pabilo8.immersiveintelligence.api.ammo.utils.PenetrationCache.b
  * Handles events for client side.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 03.10.2026
  * @since 27.09.2019
  */
 @SideOnly(Side.CLIENT)
@@ -152,7 +153,8 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	private static final ArrayList<InWorldOverlayBase> IN_WORLD_OVERLAYS = new ArrayList<>();
 	private static final ArrayList<ScreenShake> SCREEN_SHAKE_EFFECTS = new ArrayList<>();
 	private static IIManualPageBase lastManualPage = null;
-	private static float cameraFov = 70f;
+	private static float cameraFov = 70f, terrainFov = 70f;
+	private static boolean terrainZoomChanged = false;
 	public static GuiScreen lastGui = null;
 	//Whether the Light Engineer Armor is worn
 	public static boolean gotTheDrip = false, nightVisionActive = false;
@@ -579,21 +581,20 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	}
 
 	/**
-	 * Handling zoom for camera (in vehicles/mounted weapons)
-	 * we do a little bypassing of the default IE zoom cap (0.1f) by using the forge one instead, since theres no cap to it
+	 * Sets the camera FOV and records zoom state changes for the next terrain pass.
 	 */
 	@SubscribeEvent
 	public void onFOVCamera(FOVModifier event)
 	{
-		CameraHandler.handleZoom();
+		boolean wasZooming = CameraHandler.zoom!=null;
+		boolean zooming = CameraHandler.handleZoom();
 
 		float newFOV = event.getFOV();
-		if(CameraHandler.zoom!=null)
-		{
+		if(zooming)
 			newFOV *= CameraHandler.fovZoom;
-			event.setFOV(newFOV);
-		}
-		cameraFov = newFOV;
+		event.setFOV(newFOV);
+		cameraFov = event.getFOV();
+		terrainZoomChanged |= wasZooming!=zooming;
 	}
 
 	@SubscribeEvent
@@ -850,9 +851,20 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		GlStateManager.popMatrix();
 	}
 
+	/**
+	 * Refreshes terrain visibility after projection setup and applies camera effects.
+	 */
 	@SubscribeEvent
 	public void cameraSetup(CameraSetup event)
 	{
+		//The world projection is set before this event and before terrain culling.
+		if(terrainZoomChanged||Float.compare(cameraFov, terrainFov)!=0)
+		{
+			ClientUtils.mc().renderGlobal.setDisplayListEntitiesDirty();
+			terrainFov = cameraFov;
+			terrainZoomChanged = false;
+		}
+
 		EntityPlayer player = ClientUtils.mc().player;
 		double partialTicks = event.getRenderPartialTicks();
 

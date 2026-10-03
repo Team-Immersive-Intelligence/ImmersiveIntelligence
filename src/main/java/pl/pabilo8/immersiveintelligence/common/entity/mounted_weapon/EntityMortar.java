@@ -124,7 +124,14 @@ public class EntityMortar extends EntityMountedWeapon implements ICameraEntity
 			//Handle rotation
 			if(controls.getKey("left")||controls.getKey("right"))
 			{
-
+				rotateYawPrep = Math.min(10, rotateYawPrep+1);
+				if(rotateYawPrep==10)
+				{
+					if(controls.getKey("left"))
+						aim.setTarget(aim.getTargetYaw()-1, aim.getTargetPitch());
+					else
+						aim.setTarget(aim.getTargetYaw()+1, aim.getTargetPitch());
+				}
 			}
 			else
 				rotateYawPrep = Math.max(0, rotateYawPrep-1);
