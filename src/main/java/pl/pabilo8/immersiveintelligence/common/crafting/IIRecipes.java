@@ -826,6 +826,10 @@ public class IIRecipes
 		CrusherRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.DUST_WOOD),
 				new IngredientStack("plankWood", 2), 3192);
 
+		//crushed slag
+		CrusherRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.DUST_SLAG, 2),
+				new IngredientStack("itemSlag"), 4096);
+		
 		//Add recipes for all planks dynamically
 
 		//Vanilla planks (Oak, Spruce, Birch, etc.)
