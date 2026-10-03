@@ -106,19 +106,19 @@ public class ItemIIMaterial extends ItemIISubItemsBase<Materials>
 		PLATINUM_CATALYST,
 
 
-		@IIItemProperties(oreDict = "RedChemicalDye")
+		@IIItemProperties(oreDict = {"dye", "dyeRed","RedChemicalDye"})
 		RED_CHEMICAL_DYE,
-		@IIItemProperties(oreDict = "GreenChemicalDye")
+		@IIItemProperties(oreDict = {"dye", "dyeGreen", "GreenChemicalDye"})
 		GREEN_CHEMICAL_DYE,
-		@IIItemProperties(oreDict = "BlueChemicalDye")
+		@IIItemProperties(oreDict = {"dye", "dyeBlue", "BlueChemicalDye"})
 		BLUE_CHEMICAL_DYE,
-		@IIItemProperties(oreDict = "CyanChemicalDye")
+		@IIItemProperties(oreDict = {"dye", "dyeCyan", "CyanChemicalDye"})
 		CYAN_CHEMICAL_DYE,
-		@IIItemProperties(oreDict = "YellowChemicalDye")
+		@IIItemProperties(oreDict = {"dye", "dyeYellow", "YellowChemicalDye"})
 		YELLOW_CHEMICAL_DYE,
-		@IIItemProperties(oreDict = "MagentaChemicalDye")
+		@IIItemProperties(oreDict = {"dye", "dyeMagenta", "MagentaChemicalDye"})
 		MAGENTA_CHEMICAL_DYE,
-		@IIItemProperties(oreDict = "BlackChemicalDye")
+		@IIItemProperties(oreDict = {"dye", "dyeBlack", "BlackChemicalDye"})
 		BLACK_CHEMICAL_DYE,
 
 
