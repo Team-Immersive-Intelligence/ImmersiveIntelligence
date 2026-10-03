@@ -154,7 +154,8 @@ public class ItemIIAmmoRevolver extends ItemBullet implements IAmmoTypeItem<Item
 				.withString(NBT_CORE_TYPE, coreType.getName())
 				.withString(NBT_FUSE, fuse.getName())
 				.withList(NBT_COMPONENTS, c -> new NBTTagString(c.getName()), components)
-				.withList(NBT_COMPONENTS_DATA, c -> new NBTTagCompound(), components);
+				.withList(NBT_COMPONENTS_DATA, c -> new NBTTagCompound(), components)
+				.withString("bullet", "ii_bullet");
 
 		return stack;
 	}

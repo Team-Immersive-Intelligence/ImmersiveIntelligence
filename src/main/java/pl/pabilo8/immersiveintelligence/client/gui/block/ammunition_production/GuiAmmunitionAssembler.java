@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.client.gui.block.ammunition_production;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseType;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTileGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoDropdown;
@@ -19,14 +20,17 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityAmmunitionAssembler;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerAmmunitionAssembler;
+import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
-import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 
 /**
+ * Sets the fuse type and value for the ammunition assembler.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
  * @author Avalon (avalon@iiteam.net)
  * @since 10.07.2019
@@ -105,11 +109,15 @@ public class GuiAmmunitionAssembler extends DecoTileGui<TileEntityAmmunitionAsse
 						.withFilter(TextFilter.DECIMAL)
 						.withText(this.fuseConfig)
 						.withOnTextChanged(newValue -> {
-							//Contact fuse has no config value
-							if(this.fuseType==FuseType.CONTACT)
-								textField.withText(newValue = "0");
-							this.fuseConfig = IIStringUtil.parseInt(newValue);
-						}),
+							if(TextFilter.DECIMAL.isValid(newValue))
+								setFuseConfig(textField, TextFilter.DECIMAL.parseInt(newValue, this.fuseConfig));
+						})
+						.withArrows(arrows -> arrows
+								.withHeight(16)
+								.withOnArrow(up -> {
+									if(!up||this.fuseConfig < Integer.MAX_VALUE)
+										setFuseConfig(textField, this.fuseConfig+(up?1: -1));
+								})),
 				new DecoDropdown<FuseType>(4, 2)
 						.withEntries(FuseType.values())
 						.withDisplayFunction(new DecoEntryPanelBuilder<FuseType>()
@@ -131,13 +139,37 @@ public class GuiAmmunitionAssembler extends DecoTileGui<TileEntityAmmunitionAsse
 							textField.withDisabled(newFuse==FuseType.CONTACT);
 							textField.visible = newFuse!=FuseType.CONTACT;
 							configLabel.visible = newFuse!=FuseType.CONTACT;
-							this.fuseType = newFuse;
 							configLabel.withText(I18n.format(IIReference.GUI_LABEL_KEY+"ammunition_assembler.fuse_config."+newFuse.getName()))
 									.withTranslatedTooltip(IIReference.GUI_LABEL_KEY+"ammunition_assembler.fuse_config."+newFuse.getName()+".tooltip");
+							boolean fuseChanged = this.fuseType!=newFuse;
+							int oldConfig = this.fuseConfig;
+							this.fuseType = newFuse;
+							setFuseConfig(textField, this.fuseConfig);
+							if(fuseChanged||oldConfig!=this.fuseConfig)
+								syncFuseConfiguration();
 						})
 						.withSelectedEntry(this.fuseType)
 						.withSize(80, 20)
 		);
+		addValueListener(() -> this.fuseConfig)
+				.addObserver(value -> syncFuseConfiguration());
+	}
+
+	private void setFuseConfig(DecoTextField textField, int value)
+	{
+		this.fuseConfig = switch(this.fuseType)
+		{
+			case CONTACT -> 0;
+			case PROXIMITY -> MathHelper.clamp(value, 0, 6);
+			case TIMED -> Math.max(1, value);
+		};
+		if(!textField.getText().equals(Integer.toString(this.fuseConfig)))
+			textField.withText(this.fuseConfig);
+	}
+
+	private void syncFuseConfiguration()
+	{
+		IIPacketHandler.sendToServer(new MessageIITileSync(tile, onSaveTileData()));
 	}
 
 	private void drawFuseEntry(FuseType fuseType, DecoEntryPanelBuilder<FuseType> builder)

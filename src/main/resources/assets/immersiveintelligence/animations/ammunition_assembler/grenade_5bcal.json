@@ -193,15 +193,15 @@
         },
         {
           "time": 0.67105,
-          "transform": [-7.5, 0, 0]
+          "transform": [12.5, 0, 0]
         },
         {
           "time": 0.71053,
-          "transform": [-20, 0, 0]
+          "transform": [12.5, 0, 0]
         },
         {
           "time": 0.75,
-          "transform": [-15, 0, 0]
+          "transform": [12.5, 0, 0]
         },
         {
           "time": 0.86842,
@@ -238,6 +238,24 @@
       ]
     },
     "total": {
+      "rotation": [
+        {
+          "time": 0.42104,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.47368,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.49999,
+          "transform": [140, 0, 0]
+        },
+        {
+          "time": 0.55263,
+          "transform": [180, 0, 0]
+        }
+      ],
       "position": [
         {
           "time": 0,
@@ -257,27 +275,39 @@
         },
         {
           "time": 0.49999,
-          "transform": [40, 14, 6]
+          "transform": [40, 23, 14]
         },
         {
           "time": 0.55263,
-          "transform": [40, 0, 12]
+          "transform": [40, 17, 16]
         },
         {
           "time": 0.60527,
-          "transform": [40, 0, 12]
+          "transform": [40, 17, 18]
         },
         {
           "time": 0.71053,
-          "transform": [55, 0, 12]
+          "transform": [57, 17, 19]
+        },
+        {
+          "time": 0.78947,
+          "transform": [57, 17, 19]
         },
         {
           "time": 0.86842,
-          "transform": [55, 0, 12]
+          "transform": [57, 17, 19]
         },
         {
           "time": 1.00001,
-          "transform": [95, 0, 12]
+          "transform": [96, 17, 19]
+        }
+      ]
+    },
+    "case": {
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, 10, 4]
         }
       ]
     },
@@ -340,14 +370,6 @@
         {
           "time": 0.39474,
           "transform": [0, 10, -28]
-        }
-      ]
-    },
-    "case": {
-      "position": [
-        {
-          "time": 0,
-          "transform": [0, 10, 4]
         }
       ]
     }

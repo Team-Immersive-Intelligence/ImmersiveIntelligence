@@ -267,6 +267,14 @@ public abstract class DecoTextInputBase<TYPE extends DecoTextInputBase<TYPE>> ex
 		return 0;
 	}
 
+	/**
+	 * @return width of the drawn background
+	 */
+	protected int getBackgroundWidth()
+	{
+		return width;
+	}
+
 	protected void onBoundsChanged()
 	{
 
@@ -332,7 +340,7 @@ public abstract class DecoTextInputBase<TYPE extends DecoTextInputBase<TYPE>> ex
 		{
 			bindAtlas();
 			IIDrawUtils.startTexturedColored()
-					.drawConnectedTexColorRect(x, y, width, height, IIColor.WHITE, backgroundLocation, 32, 32, 8, 8)
+					.drawConnectedTexColorRect(x, y, getBackgroundWidth(), height, IIColor.WHITE, backgroundLocation, 32, 32, 8, 8)
 					.finish();
 		}
 
