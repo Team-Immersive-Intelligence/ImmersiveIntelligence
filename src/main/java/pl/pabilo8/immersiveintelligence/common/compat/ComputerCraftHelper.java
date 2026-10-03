@@ -12,18 +12,17 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
-import pl.pabilo8.immersiveintelligence.api.data.DataVariable;
-import pl.pabilo8.immersiveintelligence.api.data.types.*;
-import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity.TileEntityDataConnector;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Connects II data networks to ComputerCraft peripherals.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 03.10.2026
  * @since 27.07.2021
  */
 public class ComputerCraftHelper extends IICompatModule
@@ -126,53 +125,19 @@ public class ComputerCraftHelper extends IICompatModule
 			{
 				case 0:
 				{
-					//takes a table and converts to a data packet
 					DataPacket packet = new DataPacket();
 					if(args.length > 0)
 					{
-						Map<?,?> map;
-						if (ComputerCraftHelper.isCCTweaked())
-							map = dan200.computercraft.api.lua.ArgumentHelper.optTable(args, 0, new HashMap<>());
-						else
-							map = dan200.computercraft.core.apis.ArgumentHelper.optTable(args, 0, new HashMap<>());
-
-						for(char c : DataPacket.VARIABLE_NAMES)
-							if(map.containsKey(String.valueOf(c))) //parse into IDataType
-							{
-								Object o = map.get(String.valueOf(c));
-								DataType type;
-
-								String strType = "";
-								if (ComputerCraftHelper.isCCTweaked())
-									strType = dan200.computercraft.api.lua.ArgumentHelper.getType(o);
-								else
-									strType = dan200.computercraft.core.apis.ArgumentHelper.getType(o);
-
-
-								switch(strType)
-								{
-									default:
-									case "string":
-										type = new DataTypeString(o.toString());
-										break;
-									case "nil":
-										type = new DataTypeNull();
-										break;
-									case "boolean":
-										type = new DataTypeBoolean(((Boolean)o));
-										break;
-									case "number":
-									{
-										Number num = (Number)o;
-										if(num.floatValue()%1 > 0) //is a float
-											type = new DataTypeFloat(num.floatValue());
-										else
-											type = new DataTypeInteger(num.intValue());
-									}
-									break;
-								}
-								packet.set(c, type);
-							}
+						// Both 1.12 APIs supply Lua tables as Java maps.
+						if(!(args[0] instanceof Map))
+							throw new LuaException("Expected a packet table");
+						try
+						{
+							packet = LuaDataConverter.fromLua((Map<?, ?>)args[0]);
+						} catch(IllegalArgumentException exception)
+						{
+							throw new LuaException(exception.getMessage());
+						}
 					}
 
 					te.sendPacket(packet);
@@ -184,9 +149,8 @@ public class ComputerCraftHelper extends IICompatModule
 				{
 					if(!te.compatReceived)
 					{
-						Map<String, Object> map = new HashMap<>();
-						for(DataVariable dataVariable : te.lastReceived)
-							map.put(String.valueOf(dataVariable.getName()), dataVariable.getValue().toString());
+						// Both APIs convert numeric and keyed Java maps to Lua tables.
+						Map<String, Object> map = LuaDataConverter.toLua(te.lastReceived);
 
 						te.compatReceived = true;
 						return new Object[]{map};
