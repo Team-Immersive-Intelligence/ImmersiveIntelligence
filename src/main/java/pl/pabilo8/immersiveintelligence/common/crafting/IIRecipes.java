@@ -827,6 +827,10 @@ public class IIRecipes
 				}
 		);
 
+		//Crushed slag
+		CrusherRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.DUST_SLAG, 2),
+				new IngredientStack("itemSlag"), 4096);
+
 		//Sticks from planks
 		IngredientStack allPlanks = new IngredientStack("plankWood"); // Handles OreDict entries for any planks
 		new SawmillRecipe(new ItemStack(Items.STICK, 3),

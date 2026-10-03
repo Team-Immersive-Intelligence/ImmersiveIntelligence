@@ -90,7 +90,7 @@ public class ItemIIMaterial extends ItemIISubItemsBase<Materials>
 		@IIItemProperties(oreDict = "Opriment")
 		OPRIMENT,
 		@IIItemProperties(oreDict = "dustSlag")
-		SLAG_DUST,
+		DUST_SLAG,
 		@IIItemProperties(oreDict = "Thermite")
 		THERMITE,
 		@IIItemProperties(oreDict = "ZincSulfide")
