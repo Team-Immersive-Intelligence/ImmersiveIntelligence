@@ -37,6 +37,13 @@ public class BlockIIMetalBase extends BlockIIBase<Metals>
 		@IIBlockProperties(hardness = 5, blastResistance = 10)
 		BRASS,
 		@IIBlockProperties(hardness = 6, blastResistance = 10)
-		DURALUMINIUM
+		DURALUMINIUM,
+		@IIBlockProperties(hardness = 4, blastResistance = 10)
+		TIN,
+		@IIBlockProperties(hardness = 6, blastResistance = 10)
+		STAINLESS_STEEL,
+		@IIBlockProperties(hardness = 5, blastResistance = 10)
+		CHROMIUM,
+
 	}
 }

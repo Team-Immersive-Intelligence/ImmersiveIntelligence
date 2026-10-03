@@ -1,0 +1,26 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "transform": "forge:default-block",
+    "model": "cube_all",
+    "textures": {
+      "all": "immersiveintelligence:blocks/industrial_glowstone"
+    }
+  },
+  "variants": {
+    "inventory,type=industrial": [
+      {
+        "textures": {
+          "all": "immersiveintelligence:blocks/industrial_glowstone"
+        }
+      }
+    ],
+    "type": {
+      "industrial": {
+        "textures": {
+          "all": "immersiveintelligence:blocks/industrial_glowstone"
+        }
+      }
+    }
+  }
+}
