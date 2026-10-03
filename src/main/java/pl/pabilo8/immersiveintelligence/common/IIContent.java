@@ -317,6 +317,7 @@ public class IIContent
 	public static final BlockIIRubberLeaves blockRubberLeaves = new BlockIIRubberLeaves();
 	public static final BlockIIRubberSapling blockRubberSapling = new BlockIIRubberSapling();
 	public static final BlockIICharredLog blockCharredLog = new BlockIICharredLog();
+	public static final BlockIIIndustrialGlowstone blockIndustrialGlowstone = new BlockIIIndustrialGlowstone();
 	//metal
 	@IBatchOredictRegister(oreDict = "ore")
 	public static final BlockIIOre blockOre = new BlockIIOre();

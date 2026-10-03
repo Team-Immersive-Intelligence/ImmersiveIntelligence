@@ -192,7 +192,6 @@ item.immersiveintelligence.material.sodium_hydroxide.name=Sodium Hydroxide
 item.immersiveintelligence.material.zinc_sulfide.name=Zinc Sulfide
 item.immersiveintelligence.material.thermite.name=Thermite
 
-
 item.immersiveintelligence.material.copper_catalyst.name=Copper Catalyst
 item.immersiveintelligence.material.iron_catalyst.name=Iron Catalyst
 item.immersiveintelligence.material.platinum_catalyst.name=Platinum Catalyst
@@ -566,8 +565,6 @@ tile.immersiveintelligence.ore.salt.name=Salt Ore
 tile.immersiveintelligence.ore.fluorite.name=Nether Fluorite Ore
 tile.immersiveintelligence.ore.phosphorus.name=Nether Phosphorus Ore
 tile.immersiveintelligence.ore.potash.name=Potash Ore
-tile.immersiveintelligence.ore.tin.name=Tin Ore
-tile.immersiveintelligence.ore.chromium.name=Chromium Ore
 tile.immersiveintelligence.ore.overworldfluorite.name=Overworld Fluorite Ore
 tile.immersiveintelligence.ore.overworldphosphorus.name=Overworld Phosphorus Ore
 
@@ -586,6 +583,26 @@ tile.immersiveintelligence.fence_tungsten.name=Tungsten Fence
 tile.immersiveintelligence.fence_zinc.name=Zinc Fence
 tile.immersiveintelligence.fence_platinum.name=Platinum Fence
 tile.immersiveintelligence.fence_duraluminium.name=Duraluminium Fence
+tile.immersiveintelligence.fence_stainless_steel.name=Stainless Steel Fence
+
+tile.immersiveintelligence.ore.tin.name=Tin Ore
+tile.immersiveintelligence.sheetmetal.tin.name=Tin Sheetmetal
+tile.immersiveintelligence.storage.tin.name=Tin Block
+tile.immersiveintelligence.sheetmetal_slab.tin.name=Tin Sheetmetal Slab
+tile.immersiveintelligence.storage_slab.tin.name=Tin Slab
+
+tile.immersiveintelligence.ore.chromium.name=Chromium Ore
+tile.immersiveintelligence.sheetmetal.chromium.name=Chromium Sheetmetal
+tile.immersiveintelligence.storage.chromium.name=Chromium Block
+tile.immersiveintelligence.sheetmetal_slab.chromium.name=Chromium Sheetmetal Slab
+tile.immersiveintelligence.storage_slab.chromium.name=Chromium Slab
+
+tile.immersiveintelligence.sheetmetal.stainless_steel.name=Stainless Steel Sheetmetal
+tile.immersiveintelligence.storage.stainless_steel.name=Stainless Steel Block
+tile.immersiveintelligence.sheetmetal_slab.stainless_steel.name=Stainless Steel Sheetmetal Slab
+tile.immersiveintelligence.storage_slab.stainless_steel.name=Stainless Steel Slab
+
+tile.immersiveintelligence.industrial_glowstone.industrial.name=Industrial Glowstone
 
 tile.immersiveintelligence.rubber_log.raw.name=Rubber Tree Wood
 tile.immersiveintelligence.rubber_log.rebbur.name=Latex Extraction Hole
@@ -627,6 +644,7 @@ tile.immersiveintelligence.metal_decoration.advanced_electronic_engineering.name
 tile.immersiveintelligence.metal_decoration.computer_engineering.name=Computer Engineering Block
 tile.immersiveintelligence.metal_decoration.mechanical_engineering.name=Mechanical Engineering Block
 tile.immersiveintelligence.metal_decoration.heavy_mechanical_engineering.name=Heavy Mechanical Engineering Block
+tile.immersiveintelligence.metal_decoration.chemical_engineering.name=Chemical Engineering Block
 
 tile.immersiveintelligence.metal_decoration.coil_data.name=Data Cable Coil
 tile.immersiveintelligence.cloth_decoration.coil_rope.name=Rope Coil
