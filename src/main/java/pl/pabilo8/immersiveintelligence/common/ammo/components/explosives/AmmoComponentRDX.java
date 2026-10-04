@@ -35,6 +35,7 @@ public class AmmoComponentRDX extends AmmoComponent
 	{
 		new IIExplosion(world, owner, pos, dir,
 				8*componentSize, 8*multiplier, shape, false, componentSize > 0.125f, false)
+				.withParticleComponentSize(componentSize)
 				.doExplosion();
 	}
 }

@@ -17,6 +17,7 @@ import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleRegistry;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Graphics;
 import pl.pabilo8.immersiveintelligence.common.network.IIMessage;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
+import pl.pabilo8.immersiveintelligence.common.util.IIExplosion;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -110,6 +111,16 @@ public class MessageExplosion extends IIMessage implements IPositionBoundMessage
 	}
 
 	/**
+	 * Selects the small-calibre visual variant of a regular explosion.
+	 * Both variants use the same payload layout.
+	 */
+	public MessageExplosion withSmallParticles(boolean smallParticles)
+	{
+		this.effectType = smallParticles?EffectType.SMALL_EXPLOSION: EffectType.EXPLOSION;
+		return this;
+	}
+
+	/**
 	 * Creates a white phosphorus effect message.
 	 */
 	public static MessageExplosion createWhitePhosphorusMessage(World world, Vec3d pos, Vec3d direction,
@@ -143,6 +154,18 @@ public class MessageExplosion extends IIMessage implements IPositionBoundMessage
 			message.effectTargets = Collections.emptyList();
 		else
 			message.effectTargets = new ArrayList<>(targets.subList(0, Math.min(MAX_EMP_TARGETS, targets.size())));
+		return message;
+	}
+
+	/**
+	 * Creates an EMP message with particles selected from the component size.
+	 */
+	public static MessageExplosion createEMPMessage(World world, Vec3d pos, float radius,
+													List<Vec3d> targets, float componentSize)
+	{
+		MessageExplosion message = createEMPMessage(world, pos, radius, targets);
+		if(IIExplosion.isSmallComponentSize(componentSize))
+			message.effectType = EffectType.SMALL_EMP;
 		return message;
 	}
 
@@ -189,10 +212,13 @@ public class MessageExplosion extends IIMessage implements IPositionBoundMessage
 				ClientEventHandler.addScreenshakeSource(pos, MathHelper.clamp(size*2f, 1f, 4f), 20, 0);
 				ParticleRegistry.spawnAtomicExplosionFX(world, pos, size);
 			}
-			case EMP ->
+			case EMP, SMALL_EMP ->
 			{
 				ClientEventHandler.addScreenshakeSource(pos, MathHelper.clamp(radius/10f, 0.5f, 2f), 8, 0);
-				ParticleRegistry.spawnEMPExplosionFX(world, pos, radius, effectTargets);
+				if(effectType==EffectType.SMALL_EMP)
+					ParticleRegistry.spawnSmallTeslaFX(pos, effectTargets);
+				else
+					ParticleRegistry.spawnEMPExplosionFX(world, pos, radius, effectTargets);
 			}
 			case TESLA ->
 			{
@@ -202,8 +228,11 @@ public class MessageExplosion extends IIMessage implements IPositionBoundMessage
 			default ->
 			{
 				ClientEventHandler.addScreenshakeSource(pos, MathHelper.clamp(strength/4f, 0.25f, 3f), 4, 2);
-				ParticleRegistry.spawnExplosionBoomFX(world, pos, direction, radius, strength, shape,
-						particleBlocks, fluidExplosion, fluidBlocks);
+				if(effectType==EffectType.SMALL_EXPLOSION)
+					ParticleRegistry.spawnSmallExplosionFX(pos, direction, radius, strength, fluidExplosion);
+				else
+					ParticleRegistry.spawnExplosionBoomFX(world, pos, direction, radius, strength, shape,
+							particleBlocks, fluidExplosion, fluidBlocks);
 			}
 		}
 	}
@@ -223,7 +252,7 @@ public class MessageExplosion extends IIMessage implements IPositionBoundMessage
 				this.size = buf.readFloat();
 			}
 			case NUKE -> this.size = buf.readFloat();
-			case EMP ->
+			case EMP, SMALL_EMP ->
 			{
 				this.radius = buf.readFloat();
 				int effectTargetCount = Math.min(MAX_EMP_TARGETS,
@@ -284,7 +313,7 @@ public class MessageExplosion extends IIMessage implements IPositionBoundMessage
 				buf.writeFloat(size);
 			}
 			case NUKE -> buf.writeFloat(size);
-			case EMP ->
+			case EMP, SMALL_EMP ->
 			{
 				buf.writeFloat(radius);
 				int effectTargetCount = Math.min(MAX_EMP_TARGETS, effectTargets.size());
@@ -347,7 +376,7 @@ public class MessageExplosion extends IIMessage implements IPositionBoundMessage
 		{
 			case NUKE -> Math.max(Graphics.explosionMessageDistance, NUKE_MESSAGE_DISTANCE);
 			case WHITE_PHOSPHORUS -> Math.max(Graphics.explosionMessageDistance, WHITE_PHOSPHORUS_MESSAGE_DISTANCE);
-			case EMP -> Math.max(Graphics.explosionMessageDistance, EMP_MESSAGE_DISTANCE);
+			case EMP, SMALL_EMP -> Math.max(Graphics.explosionMessageDistance, EMP_MESSAGE_DISTANCE);
 			case TESLA -> Math.max(Graphics.explosionMessageDistance, TESLA_MESSAGE_DISTANCE);
 			case SHRAPNEL -> Math.max(Graphics.explosionMessageDistance, SHRAPNEL_MESSAGE_DISTANCE);
 			default -> Graphics.explosionMessageDistance;
@@ -367,6 +396,8 @@ public class MessageExplosion extends IIMessage implements IPositionBoundMessage
 		NUKE,
 		EMP,
 		TESLA,
-		SHRAPNEL
+		SHRAPNEL,
+		SMALL_EXPLOSION,
+		SMALL_EMP
 	}
 }
