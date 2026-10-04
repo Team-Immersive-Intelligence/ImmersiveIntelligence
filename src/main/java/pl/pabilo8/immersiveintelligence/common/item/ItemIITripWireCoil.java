@@ -29,7 +29,10 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
+ * Connects mines and anchors with mechanical tripwire.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 04.10.2026
  * @since 31.05.2019
  */
 @IIItemProperties(category = IICategory.WARFARE)

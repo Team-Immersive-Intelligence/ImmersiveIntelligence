@@ -6,7 +6,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.model.obj.OBJModel;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
@@ -63,14 +62,13 @@ public class ArtilleryHowitzerRenderer extends IIMultiblockRenderer<TileEntityAr
 		boolean canOperateActive = canOperatePassive&&te.energyStorage.getEnergyStored() >= ArtilleryHowitzer.energyUsagePassive+ArtilleryHowitzer.energyUsageActive;
 
 		//platform and door animation
-		animationOpen.apply(te.door.getProgress(partialTicks));
-		animationPlatform.apply(te.platform.getProgress(partialTicks));
+		animationOpen.apply(te.door.getProgress(canOperatePassive?partialTicks: 0f));
+		animationPlatform.apply(te.platform.getProgress(canOperateActive?partialTicks: 0f));
 
-		//gun pitch and yaw
-		//calculated before animations, so animations can modify it
-		float pDiff = te.plannedPitch-te.turretPitch, yDiff = MathHelper.wrapDegrees(360+te.plannedYaw-te.turretYaw);
-		float turretYaw = te.turretYaw+Math.signum(yDiff)*MathHelper.clamp(Math.abs(yDiff)*partialTicks, 0, ArtilleryHowitzer.rotateSpeed);
-		float turretPitch = te.turretPitch+Math.signum(pDiff)*MathHelper.clamp(Math.abs(yDiff)*partialTicks, 0, ArtilleryHowitzer.rotateSpeed);
+		//The server controls ascent, breech loading, elevation and firing; only interpolate its aim.
+		float aimTicks = canOperateActive&&te.aimMoving?partialTicks: 0f;
+		float turretYaw = te.aim.getYaw(aimTicks);
+		float turretPitch = te.aim.getPitch(aimTicks)+90f;
 
 		//conveyor animation
 		float conveyorAnim = AMTUtils.getAnimationProgress(te.shellConveyorTime, ArtilleryHowitzer.conveyorTime,
@@ -97,8 +95,7 @@ public class ArtilleryHowitzerRenderer extends IIMultiblockRenderer<TileEntityAr
 		shellEjected.setVisible(false);
 		shellLoaded.setVisible(false);
 
-		float animationProgress = AMTUtils.getAnimationProgress(te.animationTime, te.animationTimeMax,
-				canOperateActive&&te.action!=ArtilleryHowitzerAction.STOP, false, 1f, 0f, partialTicks);
+		float animationProgress = te.getAnimationProgress(canOperateActive?partialTicks: 0f);
 		switch(te.action)
 		{
 			case LOAD1:
@@ -128,30 +125,12 @@ public class ArtilleryHowitzerRenderer extends IIMultiblockRenderer<TileEntityAr
 			case FIRE3:
 			case FIRE4:
 			{
-				//loading from rack / firing animation
+				//The clock pauses after breech loading and before casing ejection while the barrel moves.
 				int slot = te.action.ordinal()-ArtilleryHowitzerAction.FIRE1.ordinal();
-				BulletState firingState = animationProgress > ArtilleryHowitzer.gunFireMoment?BulletState.CASING: BulletState.BULLET_UNUSED;
+				BulletState firingState = te.actionExecuted?BulletState.CASING: BulletState.BULLET_UNUSED;
 				setupShellDisplay(te, firingState, slot);
 				animationFire[slot].apply(animationProgress);
 
-				double firstMarker = ArtilleryHowitzer.gunFireMoment-0.03f;
-				double secondMarker = ArtilleryHowitzer.gunFireMoment-0.07f;
-				double dist = Math.abs(firstMarker-secondMarker);
-				double firstMarker2 = ArtilleryHowitzer.gunFireMoment+0.01f;
-				double secondMarker2 = ArtilleryHowitzer.gunFireMoment+0.04f;
-				double dist2 = Math.abs(firstMarker2-secondMarker2);
-
-				// TODO: 11.08.2022 add parameter handling to animation system and remove this mess
-				if(animationProgress < 0.1f)
-					turretPitch = lerp(turretPitch, 90, Math.min(animationProgress/0.1f, 1f));
-				else if(animationProgress > 0.9f)
-					turretPitch = lerp(90, turretPitch, (animationProgress-0.9f)/0.1f);
-				else if(animationProgress > secondMarker&&animationProgress < firstMarker)
-					turretPitch = lerp(90, turretPitch, (float)((animationProgress-secondMarker)/dist));
-				else if(animationProgress > firstMarker2&&animationProgress < secondMarker2)
-					turretPitch = lerp(turretPitch, 90, (float)((animationProgress-firstMarker2)/dist2));
-				else if(animationProgress < secondMarker||animationProgress > secondMarker2)
-					turretPitch = 90;
 			}
 			break;
 			case STOP:
@@ -188,10 +167,11 @@ public class ArtilleryHowitzerRenderer extends IIMultiblockRenderer<TileEntityAr
 
 	private void setupShellDisplay(TileEntityArtilleryHowitzer te, BulletState state, int slot)
 	{
-		shellLoaded.withStack(te.inventory.get(5), state);
-		shellHeld.withStack(te.inventory.get(5), state);
-		shellEjected.withStack(te.inventory.get(5), state);
-		shellsStorage[slot].withStack(te.inventory.get(5), state);
+		ItemStack shell = te.cyclingShell;
+		shellLoaded.withStack(shell, state);
+		shellHeld.withStack(shell, state);
+		shellEjected.withStack(shell, state);
+		shellsStorage[slot].withStack(shell, state);
 	}
 
 	/**
@@ -300,8 +280,4 @@ public class ArtilleryHowitzerRenderer extends IIMultiblockRenderer<TileEntityAr
 		return mod;
 	}
 
-	float lerp(float a, float b, float f)
-	{
-		return a*(1.0f-f)+b*f;
-	}
 }

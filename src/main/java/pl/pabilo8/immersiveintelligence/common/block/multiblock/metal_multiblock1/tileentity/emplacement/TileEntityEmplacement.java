@@ -86,10 +86,6 @@ import java.util.Optional;
 public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEntityEmplacement> implements IBooleanAnimatedPartsBlock,
 		IManagedUpgradableDevice<TileEntityEmplacement>, IOwnableProperty, IStyleCustomizable, IIIGuiMultiblockTile, IManagedDamageResistantMultiblock, ITactileListener, ILightEventConsumer
 {
-	private static final int WEAPON_REPAIR_INTERVAL = 20;
-	private static final int WEAPON_REPAIR_ENERGY_COST = 80;
-	private static final float WEAPON_REPAIR_AMOUNT = 8f;
-
 	@SyncNBT(events = SyncEvents.TILE_OWNERSHIP_MODIFIED)
 	public OwnerIdentity ownerIdentity;
 	@SyncNBT(name = "upgrades", events = SyncEvents.TILE_UPGRADES_MODIFIED)
@@ -326,14 +322,14 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 		if(currentWeapon.getHealth() < currentWeapon.getMaxHealth())
 		{
 			weaponRepairTicker++;
-			if(weaponRepairTicker >= WEAPON_REPAIR_INTERVAL)
+			if(weaponRepairTicker >= Emplacement.repairDelay)
 			{
 				weaponRepairTicker = 0;
-				if(energyStorage.extractEnergy(WEAPON_REPAIR_ENERGY_COST, true)==WEAPON_REPAIR_ENERGY_COST)
+				if(energyStorage.extractEnergy(Emplacement.repairCost, true)==Emplacement.repairCost)
 				{
-					energyStorage.extractEnergy(WEAPON_REPAIR_ENERGY_COST, false);
+					energyStorage.extractEnergy(Emplacement.repairCost, false);
 					energyChanged = true;
-					changed = currentWeapon.repair(WEAPON_REPAIR_AMOUNT);
+					changed = currentWeapon.repair(Emplacement.repairAmount);
 				}
 			}
 		}

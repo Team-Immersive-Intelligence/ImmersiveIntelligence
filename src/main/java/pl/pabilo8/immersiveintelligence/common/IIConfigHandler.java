@@ -531,6 +531,16 @@ public class IIConfigHandler
 					"immersiveintelligence:small_crate:5"
 			};
 
+			@Comment({"The energy capacity of the Mine Detector in IF."})
+			@RangeInt(min = 1)
+			@RequiresMcRestart
+			public static int mineDetectorCapacity = 24000;
+
+			@Comment({"The energy used per tick while the player holds the Mine Detector in either hand."})
+			@RangeInt(min = 1)
+			@RequiresMcRestart
+			public static int mineDetectorEnergyPerTick = 10;
+
 			@Comment({"The detection radius (technically a square) of the Mine Detector (in blocks)."})
 			public static int mineDetectorRadius = 4;
 
@@ -1244,17 +1254,14 @@ public class IIConfigHandler
 				@Comment({"Radius for chunks to be claimed (not loaded) around this multiblock"})
 				public static int chunkClaimRadius = 1;
 
-				@Comment({"Interval for the multiblock weapon to update sighted targets (in ticks)."})
-				public static int sightUpdateTime = 10;
-
 				@Comment({"Energy required to perform a single repair action (in IF)."})
-				public static int repairCost = 1024;
+				public static int repairCost = 256;
 
 				@Comment({"Time for a single repair action (in ticks)."})
-				public static int repairDelay = 40;
+				public static int repairDelay = 20;
 
 				@Comment({"Amount of turret health restored during single repair action (in half-hearts)."})
-				public static int repairAmount = 4;
+				public static int repairAmount = 8;
 
 				@Comment({"How much explosion and block breaking damage the multiblock can take (in half-hearts)."})
 				public static int baseHealth = 600;
@@ -1674,7 +1681,7 @@ public class IIConfigHandler
 					public static float attackRadius = 125;
 
 					@Comment({"Base energy usage per tick (in IF)."})
-					public static int energyUpkeepCost = 2048;
+					public static int energyUpkeepCost = 640;
 				}
 
 				public static class Machinegun
@@ -1765,7 +1772,7 @@ public class IIConfigHandler
 					public static float attackRadius = 100;
 
 					@Comment({"Base energy usage per tick (in IF)."})
-					public static int energyUpkeepCost = 1024;
+					public static int energyUpkeepCost = 480;
 				}
 
 				public static class TeslaCoil
@@ -1785,7 +1792,7 @@ public class IIConfigHandler
 					public static int damage = 20;
 
 					@Comment({"Base energy usage per tick (in IF)."})
-					public static int energyUpkeepCost = 3096;
+					public static int energyUpkeepCost = 1024;
 
 					@Comment({"Energy used per shot (in IF)"})
 					public static int energyUsage = 2048;
@@ -1846,7 +1853,7 @@ public class IIConfigHandler
 					public static float detectionRadius = 108;
 
 					@Comment({"Base energy usage per tick (in IF)."})
-					public static int energyUpkeepCost = 1024;
+					public static int energyUpkeepCost = 880;
 				}
 
 				public static class CPDS
@@ -1903,7 +1910,7 @@ public class IIConfigHandler
 					public static float attackRadius = 155;
 
 					@Comment({"Base energy usage per tick (in IF)."})
-					public static int energyUpkeepCost = 4096;
+					public static int energyUpkeepCost = 1000;
 
 					@Comment({"Time required to reload the magazine."})
 					public static int reloadTime = 120;
@@ -1991,7 +1998,7 @@ public class IIConfigHandler
 					public static float attackRadius = 32;
 
 					@Comment({"Base energy usage per tick (in IF)."})
-					public static int energyUpkeepCost = 2048;
+					public static int energyUpkeepCost = 880;
 				}
 
 				public static class HeavyRailgun
@@ -2050,7 +2057,7 @@ public class IIConfigHandler
 					public static float attackRadius = 200;
 
 					@Comment({"Base energy usage per tick (in IF)."})
-					public static int energyUpkeepCost = 2048;
+					public static int energyUpkeepCost = 880;
 				}
 
 				public static class GuidedMissileLauncher
@@ -2105,7 +2112,7 @@ public class IIConfigHandler
 					public static float attackRadius = 250;
 
 					@Comment({"Base energy use per tick (in IF)."})
-					public static int energyUpkeepCost = 1024;
+					public static int energyUpkeepCost = 1000;
 
 					@Comment({"Minimum pitch angle (in degrees)."})
 					public static float minPitch = -45f;
@@ -2162,7 +2169,7 @@ public class IIConfigHandler
 					public static float attackRadius = 650;
 
 					@Comment({"Base energy use per tick (in IF)."})
-					public static int energyUpkeepCost = 512;
+					public static int energyUpkeepCost = 880;
 
 					@Comment({"Idle time before the first idle animation (in ticks)."})
 					public static int minimumIdleTime = 160;
@@ -2240,7 +2247,7 @@ public class IIConfigHandler
 					public static float attackRadius = 400;
 
 					@Comment({"Base energy use per tick (in IF)."})
-					public static int energyUpkeepCost = 512;
+					public static int energyUpkeepCost = 640;
 				}
 
 				public static class RocketLauncher
@@ -2297,7 +2304,7 @@ public class IIConfigHandler
 					public static float attackRadius = 240;
 
 					@Comment({"Base energy use per tick (in IF)."})
-					public static int energyUpkeepCost = 1024;
+					public static int energyUpkeepCost = 880;
 
 					@Comment({"Idle time before the first idle animation (in ticks)."})
 					public static int minimumIdleTime = 240;
@@ -2374,7 +2381,7 @@ public class IIConfigHandler
 					public static float pullDownSpeed = 0.25f;
 
 					@Comment({"Base energy use per tick (in IF)."})
-					public static int energyUpkeepCost = 2048;
+					public static int energyUpkeepCost = 560;
 				}
 
 				public static class SpotlightTower
@@ -2434,7 +2441,7 @@ public class IIConfigHandler
 					public static int exposureDuration = 5;
 
 					@Comment({"Base energy use per tick (in IF)."})
-					public static int energyUpkeepCost = 2048;
+					public static int energyUpkeepCost = 880;
 				}
 			}
 

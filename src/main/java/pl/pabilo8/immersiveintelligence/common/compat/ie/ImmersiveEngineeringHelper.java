@@ -292,7 +292,7 @@ public class ImmersiveEngineeringHelper extends IICompatModule
 		if(Overrides.enableFontOverride)
 		{
 			this.fontManual = new IIFontRenderer(new ResourceLocation("textures/font/ascii.png"));
-			this.fontManual.colorCode[TextFormatting.GOLD.getColorIndex()] = IIReference.COLOR_IMMERSIVE_ORANGE.getPackedRGB();
+			this.fontManual.colorCode[TextFormatting.GOLD.getColorIndex()] = IIReference.COLOR_IMMERSIVE_ORANGE_DARK.getPackedRGB();
 			this.fontManual.createColorBackup();
 		}
 	}

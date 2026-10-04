@@ -11,12 +11,18 @@
     "Head": [20, -18.5617, 58.5],
     "rod": [20, -14, 58.5],
     "shell_head": [20.5, -23.5, 60.85],
-    "turret_origin": [8, -45, 24],
+    "base": [8, -45, 24],
     "gun_origin": [12, -23, 21],
     "turret_chargeup": [-4.5, -21.1667, 20.5],
-    "turret_chargeup_blend": [-4.5, -21.1667, 20.5],
     "gun_chargeup": [7.5, -23.2979, -4.7379],
-    "gun_chargeup_blend": [7.5, -23.2979, -4.7379],
+    "gun_fire1": [7.5, -21, -1.5],
+    "gun_fire2": [7.5, -21, -3.5],
+    "gun_fire3": [7.5, -21, -5.5],
+    "gun_fire4": [7.5, -21, -7.5],
+    "gun_fire5": [7.5, -21, -9.5],
+    "gun_fire6": [7.5, -21, -11.5],
+    "gun_fire7": [7.5, -21, -13.5],
+    "gun_fire8": [7.5, -21, -15.5],
     "shell_head1": [20.5, -19, 72.15],
     "shell_head2": [20.5, -22, 72.15],
     "shell_head3": [20.5, -25, 72.15],
@@ -48,10 +54,16 @@
     "rod": "Head",
     "shell_head": "Head",
     "gun_origin": "turret",
-    "turret_chargeup_blend": "turret",
-    "turret_chargeup": "turret_chargeup_blend",
-    "gun_chargeup_blend": "gun",
-    "gun_chargeup": "gun_chargeup_blend",
+    "turret_chargeup": "turret",
+    "gun_chargeup": "gun",
+    "gun_fire1": "gun",
+    "gun_fire2": "gun",
+    "gun_fire3": "gun",
+    "gun_fire4": "gun",
+    "gun_fire5": "gun",
+    "gun_fire6": "gun",
+    "gun_fire7": "gun",
+    "gun_fire8": "gun",
     "shell_head1": "shell_head",
     "shell_head2": "shell_head",
     "shell_head3": "shell_head",
@@ -71,6 +83,52 @@
     "fire": "gun"
   },
   "properties": {
+    "turret_chargeup": {
+      "lighting": false
+    },
+    "gun_chargeup": {
+      "lighting": false
+    },
+    "gun_fire1": {
+      "lighting": false
+    },
+    "gun_fire2": {
+      "lighting": false
+    },
+    "gun_fire3": {
+      "lighting": false
+    },
+    "gun_fire4": {
+      "lighting": false
+    },
+    "gun_fire5": {
+      "lighting": false
+    },
+    "gun_fire6": {
+      "lighting": false
+    },
+    "gun_fire7": {
+      "lighting": false
+    },
+    "gun_fire8": {
+      "lighting": false
+    },
+    "shell_head1": {
+      "state": "bullet_unused",
+      "base_rotation": [90, 0, 0]
+    },
+    "shell_head2": {
+      "state": "bullet_unused",
+      "base_rotation": [90, 0, 0]
+    },
+    "shell_head3": {
+      "state": "bullet_unused",
+      "base_rotation": [90, 0, 0]
+    },
+    "shell_head4": {
+      "state": "bullet_unused",
+      "base_rotation": [90, 0, 0]
+    },
     "shell1": {
       "state": "bullet_unused",
       "base_rotation": [90, 0, 0]
@@ -89,19 +147,19 @@
     },
     "shell5": {
       "state": "bullet_unused",
-      "base_rotation": [-90, 0, 0]
+      "base_rotation": [90, 0, 0]
     },
     "shell6": {
       "state": "bullet_unused",
-      "base_rotation": [-90, 0, 0]
+      "base_rotation": [90, 0, 0]
     },
     "shell7": {
       "state": "bullet_unused",
-      "base_rotation": [-90, 0, 0]
+      "base_rotation": [90, 0, 0]
     },
     "shell8": {
       "state": "bullet_unused",
-      "base_rotation": [-90, 0, 0]
+      "base_rotation": [90, 0, 0]
     },
     "shell_hatch1": {
       "state": "bullet_unused",
@@ -117,25 +175,7 @@
     },
     "shell_hatch4": {
       "state": "bullet_unused",
-      "base_rotation": [-90, 0, 0]
-    },
-    "turret_chargeup_blend": {
-      "source_factor": "src_alpha",
-      "dest_factor": "one_minus_constant_alpha"
-    },
-    "turret_chargeup": {
-      "visibility": true
-    },
-    "gun_chargeup_blend": {
-      "source_factor": "src_alpha",
-      "dest_factor": "one_minus_constant_alpha"
-    },
-    "gun_chargeup": {
-      "visibility": true
-    },
-    "fire": {
-      "rotation": [180.0, 0.0, 0.0],
-      "position": [0.0, 0.0, -0.5]
+      "base_rotation": [90, 0, 0]
     }
   }
 }

@@ -69,8 +69,8 @@ public class MessageExplosion extends IIMessage implements IPositionBoundMessage
 	 * Creates a regular explosion effect message without a surface sample.
 	 */
 	public static MessageExplosion createExplosionMessage(World world, boolean flaming, boolean damagesTerrain,
-	                                                      float radius, float strength, Vec3d pos, Vec3d direction,
-	                                                      ComponentEffectShape shape)
+														  float radius, float strength, Vec3d pos, Vec3d direction,
+														  ComponentEffectShape shape)
 	{
 		return createExplosionMessage(world, flaming, damagesTerrain, radius, strength, pos, direction, shape,
 				Collections.emptyList());
@@ -80,8 +80,8 @@ public class MessageExplosion extends IIMessage implements IPositionBoundMessage
 	 * Creates a regular explosion effect message with a bounded surface sample.
 	 */
 	public static MessageExplosion createExplosionMessage(World world, boolean flaming, boolean damagesTerrain,
-	                                                      float radius, float strength, Vec3d pos, Vec3d direction,
-	                                                      ComponentEffectShape shape, List<BlockPos> particleBlocks)
+														  float radius, float strength, Vec3d pos, Vec3d direction,
+														  ComponentEffectShape shape, List<BlockPos> particleBlocks)
 	{
 		return createExplosionMessage(world, flaming, damagesTerrain, radius, strength, pos, direction, shape,
 				particleBlocks, false, Collections.emptyList());
@@ -91,9 +91,9 @@ public class MessageExplosion extends IIMessage implements IPositionBoundMessage
 	 * Creates a regular explosion effect message with optional fluid splash data.
 	 */
 	public static MessageExplosion createExplosionMessage(World world, boolean flaming, boolean damagesTerrain,
-	                                                      float radius, float strength, Vec3d pos, Vec3d direction,
-	                                                      ComponentEffectShape shape, List<BlockPos> particleBlocks,
-	                                                      boolean fluidExplosion, List<BlockPos> fluidBlocks)
+														  float radius, float strength, Vec3d pos, Vec3d direction,
+														  ComponentEffectShape shape, List<BlockPos> particleBlocks,
+														  boolean fluidExplosion, List<BlockPos> fluidBlocks)
 	{
 		MessageExplosion message = new MessageExplosion(EffectType.EXPLOSION, world, pos);
 		message.flaming = flaming;
@@ -124,7 +124,7 @@ public class MessageExplosion extends IIMessage implements IPositionBoundMessage
 	 * Creates a white phosphorus effect message.
 	 */
 	public static MessageExplosion createWhitePhosphorusMessage(World world, Vec3d pos, Vec3d direction,
-	                                                            ComponentEffectShape shape, float size)
+																ComponentEffectShape shape, float size)
 	{
 		MessageExplosion message = new MessageExplosion(EffectType.WHITE_PHOSPHORUS, world, pos);
 		message.direction = direction;
@@ -186,7 +186,7 @@ public class MessageExplosion extends IIMessage implements IPositionBoundMessage
 	 * Creates a shrapnel activation effect message.
 	 */
 	public static MessageExplosion createShrapnelMessage(World world, Vec3d pos, IIColor color, float size,
-	                                                     boolean fallsSlowly)
+														 boolean fallsSlowly)
 	{
 		MessageExplosion message = new MessageExplosion(EffectType.SHRAPNEL, world, pos);
 		message.color = color;
