@@ -2,20 +2,27 @@ package pl.pabilo8.immersiveintelligence.common.commands.faction.set;
 
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemBanner;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.server.command.CommandTreeBase;
-import pl.pabilo8.immersiveintelligence.common.util.CommandIIBase;
+import pl.pabilo8.immersiveintelligence.common.commands.faction.CommandFactionBase;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyHandler;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.OwnerIdentity;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.permission.PermissionCategory;
 
-public class CommandFactionSetBanner extends CommandIIBase
+/**
+ * Copy the banner in your main hand to your faction.
+ *
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 04.10.2026
+ */
+public class CommandFactionSetBanner extends CommandFactionBase
 {
 	public CommandFactionSetBanner(CommandTreeBase parent)
 	{
-		super(parent, "banner");
+		super(parent, "banner", PermissionCategory.MODIFY_INSIGNIA);
 	}
 
 	@Override
@@ -27,27 +34,21 @@ public class CommandFactionSetBanner extends CommandIIBase
 	@Override
 	public String getDescription(ICommandSender sender)
 	{
-		return "Set your faction's banner to the banner you are holding";
+		return "Copy the banner in your main hand to your faction";
 	}
 
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
-		if(!(sender instanceof EntityPlayer))
-			throw new CommandException("Player only.");
-
-		EntityPlayer player = (EntityPlayer)sender;
-		ItemStack held = player.getHeldItemMainhand();
-		if(held.isEmpty())
-			throw new CommandException("You must hold a banner.");
-
-		DiplomacyHandler diplomacy = DiplomacyHandler.getInstance(false);
-		OwnerIdentity faction = diplomacy.getOwnerIdentityForEntity(player);
-		if(faction.isInvalid()||!faction.isOwner(player.getUniqueID()))
-			throw new CommandException("You must be an owner.");
-
-		faction.withBanner(held.copy());
-		diplomacy.saveAndSyncIdentity(faction);
+		requireArgumentCount(sender, args, 0);
+		OwnerIdentity faction = getFaction(sender);
+		ItemStack held = getPlayer(sender).getHeldItemMainhand();
+		if(held.isEmpty()||!(held.getItem() instanceof ItemBanner))
+			throw new CommandException("You must hold a banner in your main hand.");
+		ItemStack banner = held.copy();
+		banner.setCount(1);
+		faction.withBanner(banner);
+		DiplomacyHandler.getInstance(false).saveAndSyncIdentity(faction);
 		sender.sendMessage(new TextComponentString("Banner updated."));
 	}
 }

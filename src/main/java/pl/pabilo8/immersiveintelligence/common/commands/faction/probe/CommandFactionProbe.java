@@ -3,6 +3,12 @@ package pl.pabilo8.immersiveintelligence.common.commands.faction.probe;
 import net.minecraft.command.ICommandSender;
 import net.minecraftforge.server.command.CommandTreeBase;
 
+/**
+ * Provides commands to inspect factions and chunk ownership.
+ *
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 04.10.2026
+ */
 public class CommandFactionProbe extends CommandTreeBase
 {
 	public CommandFactionProbe(CommandTreeBase parent)
@@ -11,7 +17,7 @@ public class CommandFactionProbe extends CommandTreeBase
 		addSubcommand(new CommandFactionProbeColor(this));
 		addSubcommand(new CommandFactionProbeAlly(this));
 		addSubcommand(new CommandFactionProbeEnemy(this));
-		addSubcommand(new CommandFactionProbeOwner(this));
+		addSubcommand(new CommandFactionProbeId(this));
 	}
 
 	@Override

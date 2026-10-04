@@ -2,19 +2,25 @@ package pl.pabilo8.immersiveintelligence.common.commands.faction.set;
 
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.server.command.CommandTreeBase;
-import pl.pabilo8.immersiveintelligence.common.util.CommandIIBase;
+import pl.pabilo8.immersiveintelligence.common.commands.faction.CommandFactionBase;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyHandler;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.OwnerIdentity;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.permission.PermissionCategory;
 
-public class CommandFactionSetName extends CommandIIBase
+/**
+ * Rename your faction.
+ *
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 04.10.2026
+ */
+public class CommandFactionSetName extends CommandFactionBase
 {
 	public CommandFactionSetName(CommandTreeBase parent)
 	{
-		super(parent, "name");
+		super(parent, "name", PermissionCategory.MODIFY_INSIGNIA);
 	}
 
 	@Override
@@ -32,19 +38,17 @@ public class CommandFactionSetName extends CommandIIBase
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
-		if(!(sender instanceof EntityPlayer))
-			throw new CommandException("Player only.");
-
-		if(args.length < 1)
+		OwnerIdentity faction = getFaction(sender);
+		if(args.length==0)
 			throw new CommandException("Specify a new name.");
-
-		DiplomacyHandler diplomacy = DiplomacyHandler.getInstance(false);
-		OwnerIdentity faction = diplomacy.getOwnerIdentityForEntity((EntityPlayer)sender);
-		if(faction.isInvalid()||!faction.isOwner(((EntityPlayer)sender).getUniqueID()))
-			throw new CommandException("You must be an owner to rename the faction.");
-
-		faction.withDisplayName(String.join(" ", args));
-		diplomacy.saveAndSyncIdentity(faction);
-		sender.sendMessage(new TextComponentString("Faction renamed to "+args[0]));
+		String name = String.join(" ", args).trim();
+		if(name.isEmpty())
+			throw new CommandException("The faction name cannot be empty.");
+		for(OwnerIdentity other : DiplomacyHandler.getInstance(false).getActivePlayerIdentities())
+			if(!other.equals(faction)&&other.getDisplayName().equalsIgnoreCase(name))
+				throw new CommandException("That faction name is already in use.");
+		faction.withDisplayName(name);
+		DiplomacyHandler.getInstance(false).saveAndSyncIdentity(faction);
+		sender.sendMessage(new TextComponentString("Faction renamed to "+name));
 	}
 }

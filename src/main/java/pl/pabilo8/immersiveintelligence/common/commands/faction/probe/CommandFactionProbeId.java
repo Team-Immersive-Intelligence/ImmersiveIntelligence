@@ -9,16 +9,16 @@ import pl.pabilo8.immersiveintelligence.common.commands.faction.CommandFactionBa
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.OwnerIdentity;
 
 /**
- * Show the faction that owns this chunk.
+ * Show the faction ID of this chunk.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 04.10.2026
  */
-public class CommandFactionProbeName extends CommandFactionBase
+public class CommandFactionProbeId extends CommandFactionBase
 {
-	public CommandFactionProbeName(CommandTreeBase parent)
+	public CommandFactionProbeId(CommandTreeBase parent)
 	{
-		super(parent, "name");
+		super(parent, "id");
 	}
 
 	@Override
@@ -30,7 +30,7 @@ public class CommandFactionProbeName extends CommandFactionBase
 	@Override
 	public String getDescription(ICommandSender sender)
 	{
-		return "Show the faction that owns this chunk";
+		return "Show the faction ID of this chunk";
 	}
 
 	@Override
@@ -38,6 +38,6 @@ public class CommandFactionProbeName extends CommandFactionBase
 	{
 		requireArgumentCount(sender, args, 0);
 		OwnerIdentity owner = getChunkOwner(sender);
-		sender.sendMessage(new TextComponentString("Chunk owned by: "+owner.getDisplayName()));
+		sender.sendMessage(new TextComponentString("Faction ID: "+owner.getStringUUID()));
 	}
 }
