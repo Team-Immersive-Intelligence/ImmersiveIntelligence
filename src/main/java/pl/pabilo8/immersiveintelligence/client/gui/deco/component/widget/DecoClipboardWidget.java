@@ -73,7 +73,8 @@ public class DecoClipboardWidget extends DecoComponentWidgetBase<DecoClipboardWi
 
 		ItemStack stack = getClipboard();
 		withTitleLabel("ii.gui.clipboard.title", DecoAlignment.TOP);
-		clipboardList = new DecoClipboardList(4, 8, ignored -> dirty = true);
+		clipboardList = new DecoClipboardList(4, 8, ignored -> dirty = true)
+				.withPositionSupplier(() -> inventory.player.getPositionVector());
 		addComponent(clipboardList
 				.withSize(width-8, height-14)
 				.withEntries(DecoClipboardUtils.readEntries(ItemIIClipboard.getEntries(stack))));

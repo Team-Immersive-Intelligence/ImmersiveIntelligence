@@ -41,7 +41,7 @@ public class GuiClipboardItem extends DecoItemGui<ContainerClipboardItem>
 				.withBox(DecoTextures.BG_WOODEN, DecoTextures.TEMPLATE_ROUND_WOODEN, 0, 0, 176, 196)
 				.withTitleBar(itemStack)
 				.withNextLayer()
-				.withBox(DecoTextures.BG_PAPER, DecoTextures.TEMPLATE_PAPER, 4, 4, 160+8, 172+8+8)
+				.withBox(DecoTextures.BG_PAPER, DecoTextures.TEMPLATE_PAPER, 4, 4, 168, 188)
 
 				.withNextLayer()
 				.withBox(DecoTextures.BG_WOODEN, DecoTextures.TEMPLATE_ROUND_WOODEN, 0, 196, 176, 92)
@@ -51,7 +51,8 @@ public class GuiClipboardItem extends DecoItemGui<ContainerClipboardItem>
 
 		addComponent((clipboardList = new DecoClipboardList(6, 6, ignored -> {
 				}))
-						.withSize(144+8+8+3, 156+8+16+8-2)
+						.withPositionSupplier(() -> playerContainer.player.getPositionVector())
+						.withSize(163, 186)
 						.withEntries(DecoClipboardUtils.readEntries(ItemIIClipboard.getEntries(itemStack)))
 						.withDropAction(this::entryFromCarriedStack)
 		);
@@ -60,7 +61,7 @@ public class GuiClipboardItem extends DecoItemGui<ContainerClipboardItem>
 	private ClipboardEntry entryFromCarriedStack()
 	{
 		ItemStack carried = playerContainer.getItemStack();
-		return carried.isEmpty()?null: DecoClipboardUtils.createEntry(carried.copy());
+		return carried.isEmpty()?null: DecoClipboardUtils.createEntry(carried);
 	}
 
 	@Override

@@ -4,8 +4,11 @@ import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.JsonToNBT;
+import net.minecraft.nbt.NBTException;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fluids.FluidStack;
@@ -20,6 +23,7 @@ import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoArrows;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoCheckbox;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoEntryPanelBuilder;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoDustTank;
@@ -30,9 +34,9 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoIma
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoColors;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
+import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIIClipboard;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.ILocalizedEnum;
-import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import javax.annotation.Nullable;
 import java.awt.*;
@@ -47,6 +51,7 @@ import java.util.function.Consumer;
  * Extensible, typed copy/paste registry used by Deco components and clipboard entries.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 04.10.2026
  * @since 21.09.2026
  */
 public final class DecoClipboardUtils
@@ -386,6 +391,21 @@ public final class DecoClipboardUtils
 		ClipboardEntry entry = createEntry(value);
 		if(entry==null)
 			return false;
+		return copyEntry(entry);
+	}
+
+	/**
+	 * Copies an entry with its task state. Machine paste reads only its value.
+	 */
+	public static boolean copyEntry(ClipboardEntry entry)
+	{
+		if(entry==null||!entry.isValid())
+			return false;
+		if(!entry.isTodo()&&"plain_text".equals(entry.getTypeId()))
+		{
+			Object value = entry.getValue();
+			return value instanceof String&&copy(value);
+		}
 		NBTTagCompound nbt = entry.toNBT();
 		nbt.setInteger(MAGIC, 1);
 		setClipboardNBT(nbt);
@@ -396,20 +416,20 @@ public final class DecoClipboardUtils
 	{
 		ClipboardEntry firstEntry = createEntry(first);
 		ClipboardEntry secondEntry = createEntry(second);
-		return firstEntry!=null&&secondEntry!=null&&firstEntry.getTypeId().equals(secondEntry.getTypeId())
-				&&firstEntry.getValue().equals(secondEntry.getValue());
+		return firstEntry!=null&&secondEntry!=null&&firstEntry.hasSameValue(secondEntry);
 	}
 
 	@Nullable
 	public static ClipboardEntry pasteEntry()
 	{
-		NBTTagCompound nbt = getClipboardNBT();
+		String text = getClipboardString();
+		NBTTagCompound nbt = getClipboardNBT(text);
 		if(nbt.getInteger(MAGIC)==1&&nbt.hasKey(TYPE, 8)&&nbt.hasKey(VALUE, 10))
 		{
 			ClipboardEntry entry = ClipboardEntry.fromNBT(nbt);
 			return entry!=null&&entry.isValid()?entry: null;
 		}
-		return createEntry(getClipboardString());
+		return createEntry(text);
 	}
 
 	@Nullable
@@ -428,17 +448,20 @@ public final class DecoClipboardUtils
 	public static NBTTagList writeEntries(Collection<ClipboardEntry> entries)
 	{
 		NBTTagList list = new NBTTagList();
-		int count = 0;
 		for(ClipboardEntry entry : entries)
-			if(entry!=null&&entry.isValid()&&count++ < 64)
+			if(entry!=null&&entry.isValid())
+			{
 				list.appendTag(entry.toNBT());
+				if(list.tagCount() >= ItemIIClipboard.MAX_ENTRIES)
+					break;
+			}
 		return list;
 	}
 
 	public static List<ClipboardEntry> readEntries(NBTTagList list)
 	{
 		List<ClipboardEntry> result = new ArrayList<>();
-		for(int i = 0; i < Math.min(64, list.tagCount()); i++)
+		for(int i = 0; i < Math.min(ItemIIClipboard.MAX_ENTRIES, list.tagCount()); i++)
 		{
 			ClipboardEntry entry = ClipboardEntry.fromNBT(list.getCompoundTagAt(i));
 			if(entry!=null&&entry.isValid())
@@ -466,7 +489,7 @@ public final class DecoClipboardUtils
 				.withComponent("text", panel -> new DecoTextArea(2, 2)
 						.withSize(panel.width-4, panel.height-4)
 						.withPadding(2)
-						.withBackgroundLocation(DecoTextures.COMPONENT_BUTTON_PAPER)
+						.withBackgroundLocation(null)
 						.withTextColor(DecoColors.H1)
 						.withOnTextChanged(text -> {
 							ClipboardEntry replacement = createEntry(text);
@@ -504,20 +527,25 @@ public final class DecoClipboardUtils
 						.withTextColor(IIColor.MC_BLUE, IIColor.MC_BLUE)
 						.withOnLMBPressed(() -> activateLink(panel.getCurrentElement())))
 				.withComponent("copy", panel -> actionButton(panel.width-70, DecoTextures.ICON_ACTION_DUPLICATE,
-						"ii.gui.clipboard.action.copy", () -> copy(panel.getCurrentElement().getValue()))
+						"ii.gui.clipboard.action.copy", () -> copyEntry(panel.getCurrentElement()))
 						.withVisibility(panel::isMouseOver))
-				.withComponent("edit", panel -> actionButton(panel.width-60, DecoTextures.ICON_ACTION_EDIT,
-						"ii.gui.clipboard.action.edit", () -> {
-							ClipboardEntry pasted = pasteEntry();
-							if(pasted!=null)
-							{
-								panel.getCurrentElement().replaceWith(pasted);
-								panel.refreshElement(panel.getCurrentElement());
-								if(panel.getCurrentList()!=null)
-									panel.getCurrentList().requestLayout();
-								onChanged.accept(panel.getCurrentElement());
-							}
-						}).withVisibility(panel::isMouseOver))
+				.withComponent("todo_action", panel -> actionButton(panel.width-60, DecoTextures.ICON_ACTION_ACCEPT,
+						"ii.gui.clipboard.action.todo", () -> {
+							ClipboardEntry entry = panel.getCurrentElement();
+							entry.setTodo(true);
+							panel.refreshElement(entry);
+							panel.getCurrentList().requestLayout();
+							onChanged.accept(entry);
+						}).withVisibility(() -> panel.isMouseOver()&&!panel.getCurrentElement().isTodo()))
+				.withComponent("todo", panel -> new DecoCheckbox(panel.width-11, (panel.height-9)/2)
+						.withBackground(DecoTextures.COMPONENT_CHECKBOX_PAPER)
+						.withSize(9, 9)
+						.withTranslatedTooltip("ii.gui.clipboard.todo_completed")
+						.withOnToggle(checked -> {
+							ClipboardEntry entry = panel.getCurrentElement();
+							entry.setChecked(checked);
+							onChanged.accept(entry);
+						}))
 				.withComponent("remove", panel -> actionButton(panel.width-50, DecoTextures.ICON_ACTION_REMOVE,
 						"ii.gui.clipboard.action.remove", () -> onDelete.accept(panel.getCurrentElement()))
 						.withVisibility(panel::isMouseOver))
@@ -530,25 +558,26 @@ public final class DecoClipboardUtils
 					boolean fluid = value instanceof FluidStack;
 					boolean dust = value instanceof DustStack;
 					boolean dataVariable = value instanceof DataVariable;
+					boolean dataType = value instanceof DataType;
+					int contentWidth = panel.width-(entry.isTodo()?13: 0);
 					boolean color = value instanceof IIColor;
 					boolean hasAmount = item||fluid||dust;
 
-					panel.label("preview").x = dataVariable||color?20: 4;
+					panel.label("preview").x = dataVariable||dataType||color?20: 4;
 					panel.label("preview").y = (panel.height-10)/2;
-					panel.label("preview").withWidth(panel.width-(dataVariable||color?24: 8));
-					panel.label("preview").withRawText(entry.getPreview()).withTextColor(DecoColors.H1);
+					panel.label("preview").withSize(contentWidth-(dataVariable||dataType||color?24: 8), 10);
+					panel.label("preview").withRawText(preview(provider, value)).withTextColor(DecoColors.H1);
 					panel.label("preview").visible = !link&&!editableText&&!item&&!fluid&&!dust;
 					panel.label("visual_name").x = 20;
 					panel.label("visual_name").y = 2;
-					panel.label("visual_name").withSize(Math.max(1, panel.width-60), panel.height-4)
+					panel.label("visual_name").withSize(Math.max(1, contentWidth-60), panel.height-4)
 							.withRawText(visualName(value)).withTextColor(DecoColors.H1);
 					panel.label("visual_name").visible = item||fluid||dust;
-					panel.label("amount").x = panel.width-64;
+					panel.label("amount").x = contentWidth-64;
 					panel.label("amount").y = (panel.height-10)/2;
-					panel.label("amount").withWidth(64-12);
+					panel.label("amount").withSize(64-12, 10);
 					panel.label("amount").withRawText(amountText(value)).withTextColor(DecoColors.H1);
 					panel.label("amount").visible = hasAmount;
-					panel.component("color", DecoButton.class);
 					panel.component("color", DecoButton.class).x = 3;
 					panel.component("color", DecoButton.class).y = (panel.height-12)/2;
 					panel.component("color", DecoButton.class).withBackground(DecoTextures.COMPONENT_COLOR);
@@ -557,7 +586,7 @@ public final class DecoClipboardUtils
 					DecoTextArea textField = panel.component("text", DecoTextArea.class);
 					textField.visible = editableText;
 					textField.enabled = editableText;
-					textField.withSize(panel.width-4, panel.height-4);
+					textField.withSize(contentWidth-4, panel.height-4);
 					String text = editableText?(String)value: "";
 					if(!textField.getText().equals(text))
 						textField.withText(text);
@@ -577,19 +606,45 @@ public final class DecoClipboardUtils
 					dustDisplay.withDustTank(dust?dustTank((DustStack)value): null,
 							dust?Math.max(1, ((DustStack)value).amount): 1);
 					DecoImage dataTypeIcon = panel.component("data_type", DecoImage.class);
-					dataTypeIcon.visible = dataVariable;
-					if(dataVariable)
-						dataTypeIcon.withImageLocation(((DataVariable)value).getValue().getTextureLocation(), true);
+					dataTypeIcon.visible = dataVariable||dataType;
+					if(dataVariable||dataType)
+						dataTypeIcon.withImageLocation((dataVariable?((DataVariable)value).getValue(): (DataType)value).getTextureLocation(), true);
 					DecoArrows amountArrows = panel.component("amount_arrows", DecoArrows.class);
-					amountArrows.x = panel.width-10;
+					amountArrows.x = contentWidth-10;
 					amountArrows.y = (panel.height-16)/2;
 					amountArrows.visible = hasAmount;
 					amountArrows.enabled = hasAmount;
 					DecoButton linkButton = panel.component("link", DecoButton.class);
 					linkButton.visible = link;
-					linkButton.withSize(panel.width-4, panel.height-4);
-					linkButton.withRawText(link&&value!=null?TextFormatting.UNDERLINE+entry.getPreview(): "");
+					linkButton.withSize(contentWidth-4, panel.height-4);
+					linkButton.withRawText(link&&value!=null?TextFormatting.UNDERLINE+preview(provider, value): "");
+					DecoCheckbox checkbox = panel.component("todo", DecoCheckbox.class);
+					checkbox.x = panel.width-11;
+					checkbox.y = (panel.height-9)/2;
+					checkbox.visible = entry.isTodo();
+					checkbox.enabled = entry.isTodo();
+					checkbox.withChecked(entry.isChecked());
+					positionButton(panel.component("copy", DecoButton.class), contentWidth-70);
+					positionButton(panel.component("todo_action", DecoButton.class), contentWidth-60);
+					positionButton(panel.component("remove", DecoButton.class), contentWidth-50);
+					linkButton.initialize();
+					panel.component("color", DecoButton.class).initialize();
 				});
+	}
+
+	private static void positionButton(DecoButton button, int x)
+	{
+		if(button.x!=x)
+		{
+			button.x = x;
+			button.initialize();
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private static String preview(ClipboardProvider<?> provider, Object value)
+	{
+		return provider==null||value==null?"": ((ClipboardProvider<Object>)provider).preview(value);
 	}
 
 	private static DecoLabel label(DecoEntryPanelBuilder<ClipboardEntry> panel, int x, int y, int width)
@@ -597,7 +652,7 @@ public final class DecoClipboardUtils
 		return new DecoLabel(IIClientUtils.fontRegular, x, y).withSize(width, 10).withTextColor(DecoColors.H1);
 	}
 
-	private static DecoButton actionButton(int x, net.minecraft.util.ResourceLocation icon, String tooltip, Runnable action)
+	private static DecoButton actionButton(int x, ResourceLocation icon, String tooltip, Runnable action)
 	{
 		return new DecoButton(x, 2).withSize(8, 8).withPadding(0, 0, 0, 0)
 				.withIcon(icon, 8).withBackground(DecoTextures.COMPONENT_BUTTON_PAPER)
@@ -610,12 +665,16 @@ public final class DecoClipboardUtils
 		int fontHeight = IIClientUtils.fontRegular.FONT_HEIGHT;
 		if(value instanceof String)
 		{
-			int lines = ((String)value).split("\\n", -1).length;
+			int lines = 1;
+			String text = (String)value;
+			for(int i = 0; i < text.length()&&lines < 6; i++)
+				if(text.charAt(i)=='\n')
+					lines++;
 			return MathHelper.clamp(8+lines*fontHeight, 18, 8+6*fontHeight);
 		}
-		if(value instanceof ItemStack||value instanceof IngredientStack||value instanceof FluidStack)
+		if(value instanceof ItemStack||value instanceof IngredientStack||value instanceof FluidStack||value instanceof DustStack)
 		{
-			int wrappedHeight = IIClientUtils.fontRegular.getWordWrappedHeight(visualName(value), Math.max(1, width-60));
+			int wrappedHeight = IIClientUtils.fontRegular.getWordWrappedHeight(visualName(value), Math.max(1, width-60-(entry.isTodo()?13: 0)));
 			return MathHelper.clamp(wrappedHeight+4, 18, 4+4*fontHeight);
 		}
 		return 18;
@@ -659,31 +718,38 @@ public final class DecoClipboardUtils
 		int delta = increase?1: -1;
 		if(value instanceof ItemStack)
 		{
-			ItemStack stack = ((ItemStack)value).copy();
+			ItemStack stack = (ItemStack)value;
 			stack.setCount(MathHelper.clamp(stack.getCount()+delta, 1, stack.getMaxStackSize()));
 			value = stack;
 		}
 		else if(value instanceof IngredientStack)
 		{
-			IngredientStack ingredient = IngredientStack.readFromNBT(((IngredientStack)value).writeToNBT(new NBTTagCompound()));
-			ingredient.inputSize = Math.max(1, ingredient.inputSize+delta);
+			IngredientStack ingredient = (IngredientStack)value;
+			ingredient.inputSize = (int)MathHelper.clamp((double)ingredient.inputSize+delta, 1, Integer.MAX_VALUE);
 			value = ingredient;
 		}
 		else if(value instanceof FluidStack)
 		{
-			FluidStack fluid = ((FluidStack)value).copy();
-			fluid.amount = Math.max(1, fluid.amount+delta);
+			FluidStack fluid = (FluidStack)value;
+			fluid.amount = (int)MathHelper.clamp((double)fluid.amount+delta, 1, Integer.MAX_VALUE);
 			value = fluid;
+		}
+		else if(value instanceof DustStack)
+		{
+			DustStack dust = (DustStack)value;
+			dust.amount = (int)MathHelper.clamp((double)dust.amount+delta, 1, Integer.MAX_VALUE);
+			value = dust;
 		}
 		else
 			return;
 
 		ClipboardEntry replacement = createEntry(value);
-		if(replacement!=null)
+		if(replacement!=null&&!entry.hasSameValue(replacement))
 		{
 			entry.replaceWith(replacement);
 			panel.refreshElement(entry);
-			panel.getCurrentList().requestLayout();
+			if(panel.getCurrentList()!=null)
+				panel.getCurrentList().requestLayout();
 			onChanged.accept(entry);
 		}
 	}
@@ -702,11 +768,12 @@ public final class DecoClipboardUtils
 		return tank;
 	}
 
+	@SuppressWarnings("unchecked")
 	private static void activateLink(ClipboardEntry entry)
 	{
 		if(entry==null)
 			return;
-		ClipboardProvider provider = getProvider(entry.getTypeId());
+		ClipboardProvider<Object> provider = (ClipboardProvider<Object>)getProvider(entry.getTypeId());
 		Object value = entry.getValue();
 		if(provider!=null&&provider.isLink()&&value!=null)
 			provider.activate(value);
@@ -799,13 +866,12 @@ public final class DecoClipboardUtils
 	 *
 	 * @return Clipboard NBT
 	 */
-	private static NBTTagCompound getClipboardNBT()
+	private static NBTTagCompound getClipboardNBT(String clipboardString)
 	{
-		String clipboardString = getClipboardString();
 		try
 		{
-			return EasyNBT.parseNBT(clipboardString);
-		} catch(Exception e)
+			return JsonToNBT.getTagFromJson(clipboardString);
+		} catch(NBTException ignored)
 		{
 			return new NBTTagCompound();
 		}

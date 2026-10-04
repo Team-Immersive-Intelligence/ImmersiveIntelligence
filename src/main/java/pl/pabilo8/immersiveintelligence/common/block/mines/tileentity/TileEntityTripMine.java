@@ -1,6 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.block.mines.tileentity;
 
-import blusunrize.immersiveengineering.api.TargetingInfo;
+import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
 import blusunrize.immersiveengineering.api.energy.wires.WireType;
 import net.minecraft.block.material.Material;
@@ -14,29 +14,26 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.Mines;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIITripWireCoil;
 import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIITrenchShovel;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IAdvancedBounds;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
+ * Detonates a mine when an entity touches its tripwire.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 04.10.2026
  * @since 02.02.2021
  */
-public class TileEntityTripMine extends TileEntityMineBase implements IAdvancedBounds
+public class TileEntityTripMine extends TileEntityMineBase implements IAdvancedBounds, ITickable
 {
 	public static final Material[] MATCHING_MATERIALS = new Material[]{Material.GROUND, Material.GRASS, Material.SAND, Material.GOURD};
 
@@ -59,7 +56,7 @@ public class TileEntityTripMine extends TileEntityMineBase implements IAdvancedB
 	public void readCustomNBT(NBTTagCompound nbtTagCompound, boolean b)
 	{
 		grass = nbtTagCompound.getBoolean("grass");
-		digLevel = nbtTagCompound.getInteger("digLevel");
+		digLevel = MathHelper.clamp(nbtTagCompound.getInteger("digLevel"), 0, 15);
 		super.readCustomNBT(nbtTagCompound, b);
 	}
 
@@ -78,34 +75,70 @@ public class TileEntityTripMine extends TileEntityMineBase implements IAdvancedB
 	}
 
 	@Override
-	protected boolean isRelay()
+	public boolean isRelay()
 	{
 		return true;
 	}
 
 	@Override
-	public boolean canConnectCable(WireType cableType, TargetingInfo target, Vec3i offset)
+	public boolean acceptsWireType(WireType cableType)
 	{
 		return ItemIITripWireCoil.TRIPWIRE_CATEGORY.equals(cableType.getCategory());
 	}
 
+	/**
+	 * Checks connected tripwires for entity contact on the server.
+	 */
 	@Override
-	public float getDamageAmount(Entity e, Connection c)
+	public void update()
 	{
-		return 1f;
+		if(world==null||world.isRemote||!armed||isInvalid())
+			return;
+		Set<Connection> connections = ImmersiveNetHandler.INSTANCE.getConnections(world, pos);
+		if(connections==null||connections.isEmpty())
+			return;
+
+		for(Connection connection : connections)
+		{
+			if(!acceptsWireType(connection.cableType)||!world.isBlockLoaded(connection.end))
+				continue;
+			Vec3d[] vertices = connection.getSubVertices(world);
+			double radius = connection.cableType.getRenderDiameter()/2;
+			AxisAlignedBB wireBounds = new AxisAlignedBB(vertices[0], vertices[0]);
+			for(int i = 1; i < vertices.length; i++)
+				wireBounds = wireBounds.union(new AxisAlignedBB(vertices[i-1], vertices[i]));
+			wireBounds = wireBounds.grow(radius).offset(connection.start);
+
+			for(Entity entity : world.getEntitiesWithinAABBExcludingEntity(null, wireBounds))
+			{
+				if(!canTrigger(entity))
+					continue;
+				AxisAlignedBB entityBounds = entity.getEntityBoundingBox().grow(radius)
+						.offset(-connection.start.getX(), -connection.start.getY(), -connection.start.getZ());
+				for(int i = 1; i < vertices.length; i++)
+					if(entityBounds.contains(vertices[i-1])||entityBounds.contains(vertices[i])
+							||entityBounds.calculateIntercept(vertices[i-1], vertices[i])!=null)
+					{
+						triggerConnection(connection);
+						return;
+					}
+			}
+		}
 	}
 
-	@Override
-	public void processDamage(Entity e, float amount, Connection c)
+	private boolean canTrigger(Entity entity)
 	{
-		if(e.doesEntityNotTriggerPressurePlate())
-			return;
-		ResourceLocation key = EntityList.getKey(e instanceof MultiPartEntityPart?(Entity)((MultiPartEntityPart)e).parent: e);
-		if(key!=null&&Arrays.asList(Mines.tripmineBlacklist).contains(key.toString()))
-			return;
+		Entity trigger = entity instanceof MultiPartEntityPart?(Entity)((MultiPartEntityPart)entity).parent: entity;
+		if(!trigger.isEntityAlive()||trigger.noClip||trigger.doesEntityNotTriggerPressurePlate())
+			return false;
+		ResourceLocation key = EntityList.getKey(trigger);
+		return key==null||!Arrays.asList(Mines.tripmineBlacklist).contains(key.toString());
+	}
 
-		TileEntity tileStart = world.getTileEntity(c.start);
-		TileEntity tileEnd = world.getTileEntity(c.end);
+	private void triggerConnection(Connection connection)
+	{
+		TileEntity tileStart = world.getTileEntity(connection.start);
+		TileEntity tileEnd = world.getTileEntity(connection.end);
 		if(tileStart instanceof TileEntityTripMine)
 			((TileEntityTripMine)tileStart).explode();
 		if(tileEnd instanceof TileEntityTripMine)

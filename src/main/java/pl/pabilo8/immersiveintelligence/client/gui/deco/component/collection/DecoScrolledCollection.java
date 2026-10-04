@@ -4,10 +4,12 @@ import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.inventory.Container;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
 import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoTextBasedComponent;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoElementDisplays.DecoElementDisplay;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoElementDisplays.DecoElementSorter;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
@@ -23,8 +25,11 @@ import java.util.*;
 import java.util.function.Supplier;
 
 /**
+ * Displays a scrolled collection with a row of create actions.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
+ * @updated 04.10.2026
  * @since 31.01.2025
  **/
 public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? super E, T>, T> extends DecoTextBasedComponent<E>
@@ -37,12 +42,13 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 	protected Queue<T> toBeAdded = new ArrayDeque<>();
 	protected Queue<T> toBeRemoved = new ArrayDeque<>();
 	protected Runnable onCreate = null;
+	private final List<CreateAction> createActions = new ArrayList<>();
+	private boolean layoutDirty;
 
 	protected List<T> entries = new ArrayList<>();
 	protected int scroll = 0, maxScroll = 0, scrollStep = fontRenderer.FONT_HEIGHT;
 	protected int entriesInGrid = 1;
 	protected int entryMaxWidth;
-	private boolean layoutDirty;
 	protected DecoElementDisplay<T> display = DecoElementDisplays.getDefaultDisplay();
 	protected DecoElementSorter<T> sorter = DecoElementDisplays.getDefaultSorter();
 
@@ -73,6 +79,10 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 	public List<String> getTooltip()
 	{
 		List<String> tooltip = super.getTooltip();
+		if(tooltip.isEmpty()&&hovered)
+			for(CreateAction action : createActions)
+				if(action.button.isMouseOver())
+					return action.button.getTooltip();
 		return (tooltip.isEmpty()&&display!=this)?display.getTooltip(): tooltip;
 	}
 
@@ -188,7 +198,7 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 	 */
 	public E withEntriesInGrid(int entriesInGrid)
 	{
-		this.entriesInGrid = entriesInGrid;
+		this.entriesInGrid = Math.max(1, entriesInGrid);
 		calculateSlideLength();
 		//noinspection unchecked
 		return (E)this;
@@ -202,9 +212,11 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 	 */
 	public E withCreateAction(Supplier<T> onCreate)
 	{
-		this.onCreate = () -> addEntry(onCreate.get());
-		//noinspection unchecked
-		return (E)this;
+		return withCreateLaterAction(() -> {
+			T entry = onCreate.get();
+			if(entry!=null)
+				addEntry(entry);
+		});
 	}
 
 	/**
@@ -217,8 +229,53 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 	public E withCreateLaterAction(Runnable onCreate)
 	{
 		this.onCreate = onCreate;
+		requestLayout();
 		//noinspection unchecked
 		return (E)this;
+	}
+
+	/**
+	 * Adds a create button after the default action in the same row.
+	 */
+	public E addCreateAction(ResourceLocation icon, String tooltip, Supplier<T> onCreate)
+	{
+		return addCreateLaterAction(icon, tooltip, () -> {
+			T entry = onCreate.get();
+			if(entry!=null)
+				addEntry(entry);
+		});
+	}
+
+	/**
+	 * Adds a button for an action that creates or edits an entry later.
+	 */
+	@SuppressWarnings("unchecked")
+	public E addCreateLaterAction(ResourceLocation icon, String tooltip, Runnable onCreate)
+	{
+		DecoButton button = new DecoButton(0, 0).withSize(16, getAddButtonHeight())
+				.withPadding(0, 0, 0, 0).withIcon(icon, 12)
+				.withBackground(DecoTextures.COMPONENT_BUTTON_HANGING).withTranslatedTooltip(tooltip);
+		createActions.add(new CreateAction(button, onCreate));
+		requestLayout();
+		return (E)this;
+	}
+
+	/**
+	 * Requests a layout update on the next draw pass.
+	 */
+	public void requestLayout()
+	{
+		layoutDirty = true;
+	}
+
+	protected final boolean hasCreateActions()
+	{
+		return onCreate!=null||!createActions.isEmpty();
+	}
+
+	private int getCreateActionCount()
+	{
+		return createActions.size()+(onCreate==null?0: 1);
 	}
 
 	/**
@@ -273,10 +330,15 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 	protected int calculateSlideLength()
 	{
 		List<T> filteredEntries = autocomplete();
-		int alreadyDrawnHeight = 0;
+		int alreadyDrawnHeight = 1;
 		for(int i = 0; i < filteredEntries.size(); i += entriesInGrid)
-			alreadyDrawnHeight += display.displayElement(filteredEntries.get(i), width-12, fontRenderer, true);
-		if(onCreate!=null)
+		{
+			int rowHeight = 0;
+			for(int j = i; j < Math.min(i+entriesInGrid, filteredEntries.size()); j++)
+				rowHeight = Math.max(rowHeight, display.displayElement(filteredEntries.get(j), Math.max(1, (width-12)/entriesInGrid), fontRenderer, true));
+			alreadyDrawnHeight += rowHeight;
+		}
+		if(hasCreateActions())
 			alreadyDrawnHeight += getAddButtonHeight();
 
 		this.entryMaxWidth = ((shouldAlwaysHaveScrollbar()||alreadyDrawnHeight > height)?(width-12): width)/entriesInGrid;
@@ -303,10 +365,6 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 		return entries;
 	}
 
-	public void requestLayout()
-	{
-		this.layoutDirty = true;
-	}
 
 	protected final void drawList(int x, int y, int listWidth, int mouseX, int mouseY, float partialTicks)
 	{
@@ -317,21 +375,22 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 			while(!toBeAdded.isEmpty())
 			{
 				entries.add(toBeAdded.poll());
-				entries = sorter.sort(entries);
 			}
 			while(!toBeRemoved.isEmpty())
 			{
 				entries.remove(toBeRemoved.poll());
-				entries = sorter.sort(entries);
 			}
+			entries = sorter.sort(entries);
 			display.onEntriesChanged(entries);
 		}
 
 		//Allow stateful displays to invalidate their cached layout on a controlled cadence.
-		boolean refreshLayout = layoutDirty;
-		layoutDirty = false;
-		if(entriesChanged||refreshLayout||display.onDisplayTick())
+		boolean displayChanged = display.onDisplayTick();
+		if(entriesChanged||layoutDirty||displayChanged)
+		{
+			layoutDirty = false;
 			calculateSlideLength();
+		}
 
 		//Draw list
 		bindAtlas();
@@ -376,7 +435,7 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 		List<T> filteredEntries = autocomplete();
 		List<DisplayedElement<T>> displayedElements = new ArrayList<>(filteredEntries.size());
 		int alreadyDrawnHeight = 0;
-		int currentColumn = 0;
+		int currentColumn = 0, rowHeight = 0;
 		for(T filteredEntry : filteredEntries)
 		{
 			int elementX = x+(currentColumn*entryMaxWidth);
@@ -398,21 +457,44 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 			}
 			displayedElements.add(new DisplayedElement<>(filteredEntry, elementX, elementY-scroll, offset));
 
+			rowHeight = Math.max(rowHeight, offset);
 			currentColumn++;
 			if(currentColumn >= entriesInGrid)
 			{
 				currentColumn = 0;
-				alreadyDrawnHeight += offset;
+				alreadyDrawnHeight += rowHeight;
+				rowHeight = 0;
 			}
 		}
 
-		//Draw the "create" option
-		if(onCreate!=null)
+		alreadyDrawnHeight += rowHeight;
+		// Draw all create actions in one row.
+		if(hasCreateActions())
 		{
-			GlStateManager.pushMatrix();
-			GlStateManager.translate(x, y+alreadyDrawnHeight, 0);
-			display.drawCreateOption(entryMaxWidth, getAddButtonHeight(), fontRenderer, mouseX-x, mouseY+scroll-y-alreadyDrawnHeight);
-			GlStateManager.popMatrix();
+			int rowWidth = entryMaxWidth*entriesInGrid;
+			int count = getCreateActionCount();
+			for(int i = 0; i < count; i++)
+			{
+				int startX = i*rowWidth/count;
+				int slotWidth = (i+1)*rowWidth/count-startX;
+				GlStateManager.pushMatrix();
+				GlStateManager.translate(x+startX, y+1+alreadyDrawnHeight, 0);
+				int localX = mouseX-x-startX, localY = mouseY+scroll-y-1-alreadyDrawnHeight;
+				if(i==0&&onCreate!=null)
+					display.drawCreateOption(slotWidth, getAddButtonHeight(), fontRenderer, localX, localY);
+				else
+				{
+					DecoButton button = createActions.get(i-(onCreate==null?0: 1)).button;
+					int buttonX = (slotWidth-button.width)/2;
+					if(button.x!=buttonX)
+					{
+						button.x = buttonX;
+						button.initialize();
+					}
+					button.drawButton(ClientUtils.mc(), localX, localY, partialTicks);
+				}
+				GlStateManager.popMatrix();
+			}
 		}
 		if(parentGui!=null)
 			parentGui.scissorEnd();
@@ -478,7 +560,7 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 	protected Tuple<Integer, Integer> getClickedEntryIndex(int xx, int yy, int mouseX, int mouseY)
 	{
 		int drawOffset = 0;
-		int currentColumn = 0;
+		int currentColumn = 0, rowHeight = 0;
 		//Filter entries based on search input
 		List<T> entries = autocomplete();
 
@@ -502,18 +584,39 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 					);
 			}
 
+			rowHeight = Math.max(rowHeight, elementHeight);
 			currentColumn++;
 			//There can be multiple entries in one row
 			if(currentColumn >= entriesInGrid)
 			{
 				currentColumn = 0;
-				drawOffset += elementHeight;
+				drawOffset += rowHeight;
+				rowHeight = 0;
 			}
 
 		}
-		if(onCreate!=null&&display.isMouseOverCreateOption(mouseX, mouseY, entryMaxWidth, getAddButtonHeight()))
-			return new Tuple<>(ON_CREATE_OPTION, yy+drawOffset);
-
+		drawOffset += rowHeight;
+		if(hasCreateActions())
+		{
+			int rowWidth = entryMaxWidth*entriesInGrid, count = getCreateActionCount();
+			int localY = mouseY-yy-drawOffset;
+			for(int i = 0; i < count; i++)
+			{
+				int startX = i*rowWidth/count, slotWidth = (i+1)*rowWidth/count-startX;
+				int localX = mouseX-xx-startX;
+				boolean over;
+				if(i==0&&onCreate!=null)
+					over = display.isMouseOverCreateOption(localX, localY, slotWidth, getAddButtonHeight());
+				else
+				{
+					DecoButton button = createActions.get(i-(onCreate==null?0: 1)).button;
+					int buttonX = (slotWidth-button.width)/2;
+					over = localX >= buttonX&&localX < buttonX+button.width&&localY >= 0&&localY < button.height;
+				}
+				if(over)
+					return new Tuple<>(ON_CREATE_OPTION-i, yy+drawOffset);
+			}
+		}
 		return null;
 	}
 
@@ -525,9 +628,31 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 	 */
 	protected boolean runCreateAction()
 	{
-		if(onCreate!=null)
+		return runCreateAction(ON_CREATE_OPTION);
+	}
+
+	protected boolean runCreateAction(int option)
+	{
+		int index = ON_CREATE_OPTION-option;
+		if(index < 0||index >= getCreateActionCount())
+			return false;
+		if(index==0&&onCreate!=null)
 			onCreate.run();
-		return onCreate!=null;
+		else
+			createActions.get(index-(onCreate==null?0: 1)).action.run();
+		return true;
+	}
+
+	private static class CreateAction
+	{
+		private final DecoButton button;
+		private final Runnable action;
+
+		private CreateAction(DecoButton button, Runnable action)
+		{
+			this.button = button;
+			this.action = action;
+		}
 	}
 
 	private static class DisplayedElement<T>

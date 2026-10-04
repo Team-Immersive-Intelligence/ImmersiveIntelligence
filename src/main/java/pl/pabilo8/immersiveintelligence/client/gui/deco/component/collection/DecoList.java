@@ -19,6 +19,10 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 /**
+ * Displays selectable entries and routes input to their panels.
+ *
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 04.10.2026
  * @ii-approved 0.3.1
  * @since 31.01.2025
  **/
@@ -34,17 +38,11 @@ public class DecoList<T> extends DecoScrolledCollection<DecoList<T>, T>
 		super(x, y);
 
 		withOnPressed((gui, mouseButton, mouseX, mouseY) -> {
-			if(mouseButton==MouseButton.LEFT&&droppedEntry!=null)
-			{
-				T dropped = droppedEntry.get();
-				if(dropped!=null)
-					return addEntry(dropped);
-			}
-			Tuple<Integer, Integer> clicked = getClickedEntryIndex(gui.x+2, gui.y-scroll+2, mouseX, mouseY);
+			Tuple<Integer, Integer> clicked = getClickedEntryIndex(gui.x, gui.y-scroll+1, mouseX, mouseY);
 			if(clicked!=null)
 			{
-				if(clicked.getFirst()==ON_CREATE_OPTION)
-					return runCreateAction();
+				if(clicked.getFirst() < 0)
+					return mouseButton==MouseButton.LEFT&&runCreateAction(clicked.getFirst());
 
 				selectedEntry = lastHoveredEntry = entries.get(clicked.getFirst());
 				if(onEntryClicked!=null)
@@ -103,10 +101,10 @@ public class DecoList<T> extends DecoScrolledCollection<DecoList<T>, T>
 	@Override
 	protected void draw(int mouseX, int mouseY, float partialTicks)
 	{
-		Tuple<Integer, Integer> hovered = getClickedEntryIndex(x+2, y-scroll+2, mouseX, mouseY);
+		drawList(x, y, width, mouseX, mouseY, partialTicks);
+		Tuple<Integer, Integer> hovered = isMouseOver()?getClickedEntryIndex(x, y-scroll+1, mouseX, mouseY): null;
 		lastHoveredEntry = hovered!=null&&hovered.getFirst() >= 0&&hovered.getFirst() < entries.size()?
 				entries.get(hovered.getFirst()): null;
-		drawList(x, y, width, mouseX, mouseY, partialTicks);
 	}
 
 	@Override
@@ -129,7 +127,7 @@ public class DecoList<T> extends DecoScrolledCollection<DecoList<T>, T>
 				}
 				break;
 			case PASTE:
-				if(onCreate==null)
+				if(!hasCreateActions())
 					break;
 				Object pasted = DecoClipboardUtils.paste();
 				Class<?> entryType = getClipboardEntryType();
@@ -168,6 +166,15 @@ public class DecoList<T> extends DecoScrolledCollection<DecoList<T>, T>
 	@Override
 	protected DecoMouseCapture decoMousePressedVirtualChild(Minecraft mc, int mouseX, int mouseY, MouseButton button)
 	{
+		if(button==MouseButton.LEFT&&droppedEntry!=null&&mouseX < x+entryMaxWidth*entriesInGrid)
+		{
+			T dropped = droppedEntry.get();
+			if(dropped!=null)
+			{
+				addEntry(dropped);
+				return DecoMouseCapture.of(this);
+			}
+		}
 		Optional<Pair<DecoEntryPanel<T>, Integer>> hovered = getHoveredPanel(mouseX, mouseY);
 		if(!hovered.isPresent())
 			return null;
@@ -202,7 +209,7 @@ public class DecoList<T> extends DecoScrolledCollection<DecoList<T>, T>
 	@Nullable
 	protected T getHoveredEntry()
 	{
-		return lastHoveredEntry;
+		return isMouseOver()&&!toBeRemoved.contains(lastHoveredEntry)?lastHoveredEntry: null;
 	}
 
 	/**
@@ -241,8 +248,8 @@ public class DecoList<T> extends DecoScrolledCollection<DecoList<T>, T>
 
 	private Optional<Pair<DecoEntryPanel<T>, Integer>> getHoveredPanel(int mouseX, int mouseY)
 	{
-		Tuple<Integer, Integer> clicked = getClickedEntryIndex(x+2, y-scroll+2, mouseX, mouseY);
-		if(clicked!=null&&clicked.getFirst()!=ON_CREATE_OPTION)
+		Tuple<Integer, Integer> clicked = getClickedEntryIndex(x, y-scroll+1, mouseX, mouseY);
+		if(clicked!=null&&clicked.getFirst() >= 0)
 		{
 			//Only panels allow more complex interactions
 			if(!(display instanceof DecoEntryPanel))

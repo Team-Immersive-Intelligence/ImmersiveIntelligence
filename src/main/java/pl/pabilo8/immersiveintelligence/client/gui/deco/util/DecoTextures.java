@@ -158,6 +158,7 @@ public class DecoTextures
 	public static final ResLoc ICON_ACTION_ACCEPT = ResLoc.of(RES_TEXTURES_DECO_ICON, "action_accept");
 	public static final ResLoc ICON_ACTION_REJECT = ResLoc.of(RES_TEXTURES_DECO_ICON, "action_reject");
 	public static final ResLoc ICON_ACTION_HELP = ResLoc.of(RES_TEXTURES_DECO_ICON, "action_help");
+	public static final ResLoc ICON_ACTION_PIN = ResLoc.of(RES_TEXTURES_DECO_ICON, "action_pin");
 
 	//--- Custom Deco Component Textures ---//
 	public static final ResLoc COMPONENT_BUTTON_PAPER = ResLoc.of(RES_TEXTURES_DECO, "component/button_paper");
@@ -170,6 +171,7 @@ public class DecoTextures
 	public static final ResLoc COMPONENT_DROPDOWN_DATA_LETTER_PAPER = ResLoc.of(RES_TEXTURES_DECO, "component/data_letter_dropdown_paper");
 	public static final ResLoc COMPONENT_DROPDOWN_SYMBOL_PAPER = ResLoc.of(RES_TEXTURES_DECO, "component/dropdown_paper");
 	public static final ResLoc COMPONENT_TANK_PAPER = ResLoc.of(RES_TEXTURES_DECO, "component/tank_manual");
+	public static final ResLoc COMPONENT_CHECKBOX_PAPER = ResLoc.of(RES_TEXTURES_DECO, "component/checkbox_paper");
 
 	public static final ResLoc MAP_MARKER_ENTITY = ResLoc.of(RES_TEXTURES_DECO, "map/marker/entity");
 	public static final ResLoc MAP_MARKER_VEHICLE = ResLoc.of(RES_TEXTURES_DECO, "map/marker/vehicle");

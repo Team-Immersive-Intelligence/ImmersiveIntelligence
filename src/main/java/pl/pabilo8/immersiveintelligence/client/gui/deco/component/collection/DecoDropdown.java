@@ -25,9 +25,11 @@ import java.util.Optional;
 import java.util.function.BiConsumer;
 
 /**
+ * Displays a selection field and its scrolled entry list.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 08.09.2026
  * @ii-approved 0.3.1
+ * @updated 04.10.2026
  * @since 17.09.2021
  */
 public class DecoDropdown<T> extends DecoScrolledCollection<DecoDropdown<T>, T>
@@ -61,11 +63,11 @@ public class DecoDropdown<T> extends DecoScrolledCollection<DecoDropdown<T>, T>
 						return true;
 					}
 
-					Tuple<Integer, Integer> clicked = getClickedEntryIndex(gui.x+2, gui.y-scroll+height+2, mouseX, mouseY);
+					Tuple<Integer, Integer> clicked = getClickedEntryIndex(gui.x, gui.y-scroll+height+1, mouseX, mouseY);
 					if(clicked!=null)
 					{
-						if(clicked.getFirst()==ON_CREATE_OPTION)
-							gui.runCreateAction();
+						if(clicked.getFirst() < 0)
+							gui.runCreateAction(clicked.getFirst());
 						else
 							changeSelectedEntry(clicked.getFirst());
 						text = "";
@@ -211,17 +213,17 @@ public class DecoDropdown<T> extends DecoScrolledCollection<DecoDropdown<T>, T>
 	protected int calculateSlideLength()
 	{
 		List<T> filteredEntries = autocomplete();
-		int alreadyDrawnHeight = 0;
+		int alreadyDrawnHeight = 1;
 		for(int i = 0; i < filteredEntries.size(); i += entriesInGrid)
 			alreadyDrawnHeight += display.displayElement(filteredEntries.get(i), dropdownWidth-12, fontRenderer, true);
-		if(onCreate!=null)
+		if(hasCreateActions())
 			alreadyDrawnHeight += getAddButtonHeight();
 
 		int clampedDisplayedEntries = Math.min(maxDisplayedEntries, filteredEntries.size());
-		int visibleEntriesHeight = 0;
+		int visibleEntriesHeight = 1;
 		for(int i = 0; i < clampedDisplayedEntries; i += entriesInGrid)
 			visibleEntriesHeight += display.displayElement(filteredEntries.get(i), dropdownWidth-12, fontRenderer, true);
-		if(onCreate!=null)
+		if(hasCreateActions())
 			visibleEntriesHeight += getAddButtonHeight();
 
 		this.entryMaxWidth = ((shouldAlwaysHaveScrollbar()||alreadyDrawnHeight > visibleEntriesHeight)?(dropdownWidth-12): dropdownWidth)/entriesInGrid;
@@ -416,8 +418,8 @@ public class DecoDropdown<T> extends DecoScrolledCollection<DecoDropdown<T>, T>
 		if(!dropped)
 			return Optional.empty();
 
-		Tuple<Integer, Integer> clicked = getClickedEntryIndex(x+2, y-scroll+height+2, mouseX, mouseY);
-		if(clicked==null||clicked.getFirst()==ON_CREATE_OPTION)
+		Tuple<Integer, Integer> clicked = getClickedEntryIndex(x, y-scroll+height+1, mouseX, mouseY);
+		if(clicked==null||clicked.getFirst() < 0)
 			return Optional.empty();
 		T entry = entries.get(clicked.getFirst());
 		DecoEntryPanel<T> panel = ((DecoEntryPanel<T>)display).getElementPanel(entry);
