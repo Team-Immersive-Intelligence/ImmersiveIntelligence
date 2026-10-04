@@ -1876,6 +1876,7 @@ public class IIRecipes
 		OreDictionary.registerOre("logWood", new ItemStack(IIContent.blockRubberLog));
 		OreDictionary.registerOre("woodRubber", new ItemStack(IIContent.blockRubberLog));
 		OreDictionary.registerOre("treeLeaves", new ItemStack(IIContent.blockRubberLeaves));
+		OreDictionary.registerOre("treeSapling", new ItemStack(IIContent.blockRubberSapling));
 
 		OreDictionary.registerOre("tnt", new ItemStack(Blocks.TNT));
 		OreDictionary.registerOre("materialTNT", new ItemStack(Blocks.TNT));
