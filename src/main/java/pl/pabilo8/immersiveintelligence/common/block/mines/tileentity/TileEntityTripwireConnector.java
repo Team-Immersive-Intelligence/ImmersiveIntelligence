@@ -1,8 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.block.mines.tileentity;
 
-import blusunrize.immersiveengineering.api.TargetingInfo;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
-import blusunrize.immersiveengineering.api.energy.wires.TileEntityImmersiveConnectable;
 import blusunrize.immersiveengineering.api.energy.wires.WireType;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IBlockBounds;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IPlayerInteraction;
@@ -13,15 +11,19 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIITripWireCoil;
+import pl.pabilo8.immersiveintelligence.common.util.tile.TileEntityIIConnectable;
+
+import javax.annotation.Nullable;
 
 /**
+ * Provides an anchor for mechanical tripwire connections.
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 02.02.2021
+ * @updated 04.10.2026
  */
-public class TileEntityTripwireConnector extends TileEntityImmersiveConnectable implements IPlayerInteraction, IBlockBounds
+public class TileEntityTripwireConnector extends TileEntityIIConnectable implements IPlayerInteraction, IBlockBounds
 {
 	private static final Vec3d CONN = new Vec3d(0.5, 0.25, 0.5);
 	public boolean grass = false;
@@ -29,6 +31,8 @@ public class TileEntityTripwireConnector extends TileEntityImmersiveConnectable 
 	@Override
 	public void readCustomNBT(NBTTagCompound nbtTagCompound, boolean b)
 	{
+		if(!nbtTagCompound.hasKey("limit_type")&&nbtTagCompound.hasKey("limitType"))
+			nbtTagCompound.setString("limit_type", nbtTagCompound.getString("limitType"));
 		super.readCustomNBT(nbtTagCompound, b);
 		grass = nbtTagCompound.getBoolean("grass");
 	}
@@ -47,15 +51,21 @@ public class TileEntityTripwireConnector extends TileEntityImmersiveConnectable 
 	}
 
 	@Override
-	protected boolean isRelay()
+	public boolean isRelay()
 	{
 		return true;
 	}
 
 	@Override
-	public boolean canConnectCable(WireType cableType, TargetingInfo target, Vec3i offset)
+	public boolean acceptsWireType(WireType cableType)
 	{
 		return ItemIITripWireCoil.TRIPWIRE_CATEGORY.equals(cableType.getCategory());
+	}
+
+	@Override
+	public boolean allowEnergyToPass(@Nullable Connection connection)
+	{
+		return false;
 	}
 
 	@Override

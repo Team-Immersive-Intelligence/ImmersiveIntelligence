@@ -73,15 +73,19 @@ public class TileEntityChemicalBath extends TileEntityMultiblockProductionSingle
 	{
 		super.onUpdate();
 
-		//Handle buckets
-		IIUtils.handleBucketTankInteraction(tank, inventory,
-				MultiblockChemicalBath.BUCKET_IN, MultiblockChemicalBath.BUCKET_OUT, true,
-				BathingRecipe::isValidFluid
-		);
-
 		//Output items
 		if(!world.isRemote)
+		{
+			//Handle buckets
+			boolean updateTank = IIUtils.handleBucketTankInteraction(tank, inventory,
+					MultiblockChemicalBath.BUCKET_IN, MultiblockChemicalBath.BUCKET_OUT, true,
+					BathingRecipe::isValidFluid
+			);
+
 			attemptStackOutput(outputHandler, getDirection("item_output"), getPOI(MultiblockPOI.ITEM_OUTPUT));
+			if(updateTank||world.getTotalWorldTime()%20==0)
+				updateTileForEvent(SyncEvents.TILE_RECIPE_CHANGED);
+		}
 
 		//Handle entities inside the bath
 		if(world.getTotalWorldTime()%4==0&&tank.getFluid()!=null)
@@ -196,7 +200,7 @@ public class TileEntityChemicalBath extends TileEntityMultiblockProductionSingle
 
 	@Override
 	public boolean interact(@Nonnull EnumFacing side, @Nonnull EntityPlayer player, @Nonnull EnumHand hand,
-	                        @Nonnull ItemStack heldItem, float hitX, float hitY, float hitZ)
+							@Nonnull ItemStack heldItem, float hitX, float hitY, float hitZ)
 	{
 		if(!world.isRemote&&this.isPOI("tank_bucket"))
 		{

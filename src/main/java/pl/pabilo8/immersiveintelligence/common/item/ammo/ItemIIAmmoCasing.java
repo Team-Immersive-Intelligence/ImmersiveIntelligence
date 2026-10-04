@@ -74,7 +74,7 @@ public class ItemIIAmmoCasing extends ItemIISubItemsBase<Casing>
 
 		@IIItemProperties(stackSize = 1)
 		ROCKET_6BCAL,
-		@IIItemProperties(stackSize = 1)
+		@IIItemProperties(stackSize = 1, hidden = true)
 		HEAVY_ROCKET_10BCAL,
 		@IIItemProperties(stackSize = 1)
 		GUIDED_MISSILE_6BCAL

@@ -77,7 +77,7 @@ public class EmplacementWeaponTeslaCoil extends EmplacementWeapon
 			return super.onUpdate(te, baseNeeds, currentTarget);
 
 		Vec3d targetPosition = currentTarget.supplyCoordinates();
-		Vec3d origin = te.getWeaponCenter().addVector(0, 3, 0);
+		Vec3d origin = te.getWeaponCenter().addVector(0, 2.5f, 0);
 		if(targetPosition==null||energy.extractEnergy(TeslaCoil.energyUsage, true) < TeslaCoil.energyUsage)
 			return super.onUpdate(te, baseNeeds, currentTarget);
 
@@ -176,6 +176,19 @@ public class EmplacementWeaponTeslaCoil extends EmplacementWeapon
 						.withTemplate(DecoTemplates.BAR_ELECTRIC_ENERGY.apply(energy))
 						.withHeight(panelPlatform.height-8)
 		);
+	}
+
+	@Override
+	public int getArmorForPart(String partName)
+	{
+		return switch(partName)
+		{
+			case "base_child1", "base_child2", "base_child3", "base_child4", "base_child5",
+				 "base_child6", "base_child9", "base_child10", "base_child11", "base_child12",
+				 "base_child13", "base_child14" -> 1;
+			case "base_child0" -> 12;
+			default -> 8;
+		};
 	}
 
 	@Override

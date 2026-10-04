@@ -13,6 +13,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoColors;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoSprite;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.clipboard.DecoClipboardUtils;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
@@ -49,6 +50,7 @@ public class DecoItemStackDisplay extends DecoComponent<DecoItemStackDisplay>
 			() -> new IIColor[]{DecoColors.GRADIENT1, DecoColors.GRADIENT2};
 	private DecoAlignment iconAlignment = DecoAlignment.CENTER;
 	private int iconSize = 16;
+	private boolean renderOverlay = true;
 	private int cachedIconX, cachedIconY;
 	private TooltipFlags tooltipFlag;
 
@@ -110,6 +112,12 @@ public class DecoItemStackDisplay extends DecoComponent<DecoItemStackDisplay>
 	public DecoItemStackDisplay withIconSize(int iconSize)
 	{
 		this.iconSize = iconSize;
+		return this;
+	}
+
+	public DecoItemStackDisplay withRenderOverlay(boolean renderOverlay)
+	{
+		this.renderOverlay = renderOverlay;
 		return this;
 	}
 
@@ -202,7 +210,8 @@ public class DecoItemStackDisplay extends DecoComponent<DecoItemStackDisplay>
 		GlStateManager.color(1.0F, 1.0F, 1.0F);
 		RenderHelper.enableGUIStandardItemLighting();
 		ClientUtils.mc().getRenderItem().renderItemAndEffectIntoGUI(getCurrentlyDisplayedStack(), 0, 0);
-		ClientUtils.mc().getRenderItem().renderItemOverlayIntoGUI(IIClientUtils.fontRegular, getCurrentlyDisplayedStack(), 0, 0, null);
+		if(renderOverlay)
+			ClientUtils.mc().getRenderItem().renderItemOverlayIntoGUI(IIClientUtils.fontRegular, getCurrentlyDisplayedStack(), 0, 0, null);
 		RenderHelper.disableStandardItemLighting();
 		GlStateManager.disableRescaleNormal();
 		GlStateManager.disableDepth();
@@ -213,6 +222,15 @@ public class DecoItemStackDisplay extends DecoComponent<DecoItemStackDisplay>
 	{
 		float progress = AMTUtils.getDebugProgress(maxTimer, 0);
 		return this.stackList.get((int)MathHelper.clamp(progress*this.stackList.size(), 0, stackList.size()-1));
+	}
+
+	@Override
+	public void onGuiEvent(DecoGuiEvent event)
+	{
+		if(event==DecoGuiEvent.COPY&&!getCurrentlyDisplayedStack().isEmpty())
+			DecoClipboardUtils.copy(getCurrentlyDisplayedStack().copy());
+		else
+			super.onGuiEvent(event);
 	}
 
 	@Override

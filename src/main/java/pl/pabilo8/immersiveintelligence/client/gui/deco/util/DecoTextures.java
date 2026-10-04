@@ -60,6 +60,7 @@ public class DecoTextures
 	public static final ResLoc SLOT_IE_BRASS_MARKER = ResLoc.of(RES_TEXTURES_DECO, "slot/brass_marker");
 	public static final ResLoc SLOT_IE_MANUAL = ResLoc.of(RES_TEXTURES_DECO, "slot/manual");
 	public static final ResLoc SLOT_IE_MANUAL_MARKER = ResLoc.of(RES_TEXTURES_DECO, "slot/manual_marker");
+	public static final ResLoc SLOT_VANILLA_STEEL = ResLoc.of(RES_TEXTURES_DECO, "slot/vanilla_steel");
 
 	//--- Label Backgrounds ---//
 	public static final ResLoc LABEL_WOODEN = ResLoc.of(RES_TEXTURES_DECO, "label/label_wooden");
@@ -134,6 +135,14 @@ public class DecoTextures
 	public static final ResLoc ICON_ENERGY_OUTPUT = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_energy_output");
 	public static final ResLoc ICON_ENERGY_INPUT = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_energy_input");
 	public static final ResLoc ICON_ENERGY = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_energy");
+	public static final ResLoc ICON_CASING_OUTPUT = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_casing_output");
+	public static final ResLoc ICON_CASING_INPUT = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_casing_input");
+	public static final ResLoc ICON_CASING = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_casing");
+	public static final ResLoc ICON_AMMO_OUTPUT = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_ammo_output");
+	public static final ResLoc ICON_AMMO_INPUT = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_ammo_input");
+	public static final ResLoc ICON_AMMO = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_ammo");
+	public static final ResLoc ICON_RANGE_VISION = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_range_vision");
+	public static final ResLoc ICON_RANGE_ATTACK = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_range_attack");
 
 	//--- Ammo Icons ---//
 	public static final ResLoc ICON_CONTACT = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_fuse_contact");
@@ -149,6 +158,7 @@ public class DecoTextures
 	public static final ResLoc ICON_ACTION_ACCEPT = ResLoc.of(RES_TEXTURES_DECO_ICON, "action_accept");
 	public static final ResLoc ICON_ACTION_REJECT = ResLoc.of(RES_TEXTURES_DECO_ICON, "action_reject");
 	public static final ResLoc ICON_ACTION_HELP = ResLoc.of(RES_TEXTURES_DECO_ICON, "action_help");
+	public static final ResLoc ICON_ACTION_PIN = ResLoc.of(RES_TEXTURES_DECO_ICON, "action_pin");
 
 	//--- Custom Deco Component Textures ---//
 	public static final ResLoc COMPONENT_BUTTON_PAPER = ResLoc.of(RES_TEXTURES_DECO, "component/button_paper");
@@ -161,6 +171,7 @@ public class DecoTextures
 	public static final ResLoc COMPONENT_DROPDOWN_DATA_LETTER_PAPER = ResLoc.of(RES_TEXTURES_DECO, "component/data_letter_dropdown_paper");
 	public static final ResLoc COMPONENT_DROPDOWN_SYMBOL_PAPER = ResLoc.of(RES_TEXTURES_DECO, "component/dropdown_paper");
 	public static final ResLoc COMPONENT_TANK_PAPER = ResLoc.of(RES_TEXTURES_DECO, "component/tank_manual");
+	public static final ResLoc COMPONENT_CHECKBOX_PAPER = ResLoc.of(RES_TEXTURES_DECO, "component/checkbox_paper");
 
 	public static final ResLoc MAP_MARKER_ENTITY = ResLoc.of(RES_TEXTURES_DECO, "map/marker/entity");
 	public static final ResLoc MAP_MARKER_VEHICLE = ResLoc.of(RES_TEXTURES_DECO, "map/marker/vehicle");

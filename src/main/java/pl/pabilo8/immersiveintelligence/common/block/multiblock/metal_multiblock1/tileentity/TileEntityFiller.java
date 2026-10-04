@@ -70,12 +70,6 @@ public class TileEntityFiller extends TileEntityMultiblockProductionMulti<TileEn
 		}
 	}
 
-
-	private EnumFacing getOutFacing()
-	{
-		return this.mirrored?this.facing.rotateYCCW(): this.facing.rotateY();
-	}
-
 	@Override
 	public void onEntityCollision(World world, Entity entity)
 	{
@@ -95,7 +89,8 @@ public class TileEntityFiller extends TileEntityMultiblockProductionMulti<TileEn
 	@Override
 	public EnumFacing[] sigOutputDirections()
 	{
-		if(isPOI("conveyor_out")) return new EnumFacing[]{getOutFacing()};
+		if(isPOI("conveyor_out"))
+			return new EnumFacing[]{getDirection("output")};
 		return new EnumFacing[0];
 	}
 
@@ -107,7 +102,7 @@ public class TileEntityFiller extends TileEntityMultiblockProductionMulti<TileEn
 			TileEntityFiller master = master();
 			if(master==null) return false;
 			if(isPOI("dust_input")&&facing==EnumFacing.UP) return true;
-			return isPOI("conveyor_in")&&facing==getOutFacing().getOpposite();
+			return isPOI("conveyor_in")&&facing==getDirection("input");
 		}
 		return super.hasCapability(capability, facing);
 	}
@@ -120,7 +115,7 @@ public class TileEntityFiller extends TileEntityMultiblockProductionMulti<TileEn
 
 		if(isPOI("dust_input")&&facing==EnumFacing.UP)
 			return (T)master().insertionHandlerDust;
-		if(isPOI("conveyor_in")&&facing==getOutFacing().getOpposite())
+		if(isPOI("conveyor_in")&&facing==getDirection("input"))
 			return (T)master().insertionHandlerStack;
 		return null;
 	}
@@ -201,7 +196,8 @@ public class TileEntityFiller extends TileEntityMultiblockProductionMulti<TileEn
 	@Override
 	protected void onProductionFinish(IIMultiblockProcess<FillerRecipe> process)
 	{
-		outputOrDrop(process.recipe.itemOutput.copy(), null, getOutFacing().getOpposite(), getPOI(MultiblockPOI.ITEM_OUTPUT));
+		outputOrDrop(process.recipe.itemOutput.copy(), null,
+				getDirection("output").getOpposite(), getPOI(MultiblockPOI.ITEM_OUTPUT));
 	}
 
 	@Override

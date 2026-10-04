@@ -124,6 +124,12 @@ public class ItemIIAmmoRocketHeavy extends ItemIIAmmoBase<EntityAmmoMissile>
 	}
 
 	@Override
+	public boolean requiresAdvancedAssembly()
+	{
+		return true;
+	}
+
+	@Override
 	public float getSupressionRadius()
 	{
 		return 3;

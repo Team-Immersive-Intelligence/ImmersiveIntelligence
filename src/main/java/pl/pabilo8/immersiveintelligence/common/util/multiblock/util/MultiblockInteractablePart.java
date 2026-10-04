@@ -114,23 +114,8 @@ public class MultiblockInteractablePart implements INBTSerializable<NBTTagCompou
 		return opened&&progress==maxProgress;
 	}
 
-	/**
-	 * Reads the state from NBT
-	 *
-	 * @param nbt the NBT to read from
-	 */
-	public void readFromNBT(NBTTagCompound nbt)
-	{
-		opened = nbt.getBoolean("opened");
-		progress = nbt.getFloat("progress");
-	}
-
-	/**
-	 * Writes the state to NBT
-	 *
-	 * @return the NBT to write to
-	 */
-	public NBTTagCompound writeToNBT()
+	@Override
+	public NBTTagCompound serializeNBT()
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
 		nbt.setBoolean("opened", opened);
@@ -139,15 +124,10 @@ public class MultiblockInteractablePart implements INBTSerializable<NBTTagCompou
 	}
 
 	@Override
-	public NBTTagCompound serializeNBT()
-	{
-		return writeToNBT();
-	}
-
-	@Override
 	public void deserializeNBT(NBTTagCompound nbt)
 	{
-		readFromNBT(nbt);
+		this.opened = nbt.getBoolean("opened");
+		this.progress = nbt.getFloat("progress");
 	}
 
 	public int getID()

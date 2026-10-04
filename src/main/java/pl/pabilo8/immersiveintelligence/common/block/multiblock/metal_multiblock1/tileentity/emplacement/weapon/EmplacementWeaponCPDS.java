@@ -34,10 +34,12 @@ public class EmplacementWeaponCPDS extends EmplacementWeaponGunBase<EntityAmmoPr
 		this.ammoFactory.setAmmo(IIContent.itemAmmoMachinegun);
 		this.visionAABB = this.visionAABB.grow(CPDS.detectionRadius);
 		this.attackAABB = this.attackAABB.grow(CPDS.attackRadius);
-		this.chillingState = new ChillingState(200, 240, 144);
+		this.chillingState = new ChillingState(CPDS.minimumIdleTime,
+				CPDS.idleAnimationInterval, CPDS.idleAnimationDuration);
 		setupItemHandlers(te, 8, 4, 4, 4+22, this::isMagazine, this::isMagazine);
 		this.aim.withAimSpeed(CPDS.yawRotateSpeed, CPDS.pitchRotateSpeed)
-				.withPitchLimit(-90, 68.5f);
+				.withYawLimit(CPDS.minYaw, CPDS.maxYaw)
+				.withPitchLimit(CPDS.minPitch, CPDS.maxPitch);
 
 		this.rotateAfterFiring = true;
 		this.gunHandler.withShootSound(IISounds.autocannonShot, 55)
@@ -105,6 +107,17 @@ public class EmplacementWeaponCPDS extends EmplacementWeaponGunBase<EntityAmmoPr
 	}
 
 	@Override
+	public int getArmorForPart(String partName)
+	{
+		return switch(partName)
+		{
+			case "ir_camera", "gun_child0", "gun_child1", "gun_child6" -> 1;
+			case "gun_child2", "gun_child3", "gun_child4", "gun_child5" -> 20;
+			default -> partName.startsWith("turret")?16: 8;
+		};
+	}
+
+	@Override
 	public int getMaxHealth()
 	{
 		return CPDS.maxHealth;
@@ -114,13 +127,13 @@ public class EmplacementWeaponCPDS extends EmplacementWeaponGunBase<EntityAmmoPr
 	@Override
 	protected Float getLoadingPitch()
 	{
-		return 0f;
+		return CPDS.loadingPitch;
 	}
 
 	@Nullable
 	@Override
 	protected Float getHidingPitch()
 	{
-		return -90f;
+		return CPDS.hidingPitch;
 	}
 }

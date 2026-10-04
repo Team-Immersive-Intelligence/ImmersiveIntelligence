@@ -1,0 +1,13 @@
+{
+  "type": "ParticleModel",
+  "models": [
+    "smoke/smoke_trace.obj"
+  ],
+  "max_lifetime": 8,
+  "draw_stage": "custom_smoke_noise_shader",
+  "color": "5cffffff",
+  "programs": [
+    "smoke_transition"
+  ],
+  "size": 0.625
+}

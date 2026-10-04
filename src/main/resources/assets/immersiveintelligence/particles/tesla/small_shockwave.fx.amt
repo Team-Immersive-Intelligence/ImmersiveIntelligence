@@ -1,0 +1,13 @@
+{
+  "type": "ParticleModel",
+  "models": [
+    "ammo/shockwave.obj"
+  ],
+  "max_lifetime": 8,
+  "draw_stage": "custom_additive",
+  "color": "802f7fff",
+  "size": 0.75,
+  "programs": [
+    "shockwave_transition"
+  ]
+}

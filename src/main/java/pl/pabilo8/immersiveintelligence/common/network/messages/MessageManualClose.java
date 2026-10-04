@@ -1,16 +1,18 @@
 package pl.pabilo8.immersiveintelligence.common.network.messages;
 
-import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.NetHandlerPlayServer;
+import net.minecraft.util.EnumHand;
 import net.minecraft.world.WorldServer;
 import pl.pabilo8.immersiveintelligence.common.network.IIMessage;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemUtils;
 
-import java.util.UUID;
+import javax.annotation.Nonnull;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -18,15 +20,17 @@ import java.util.UUID;
  */
 public class MessageManualClose extends IIMessage
 {
-	private String skin;
-
-	public MessageManualClose(String skin)
-	{
-		this.skin = skin;
-	}
+	private EnumHand enumHand;
+	private EasyNBT easyNBT;
 
 	public MessageManualClose()
 	{
+	}
+
+	public MessageManualClose(@Nonnull EnumHand enumHand, @Nonnull EasyNBT easyNBT)
+	{
+		this.enumHand = enumHand;
+		this.easyNBT = easyNBT;
 	}
 
 	@Override
@@ -35,24 +39,14 @@ public class MessageManualClose extends IIMessage
 		if(handler.player==null)
 			return;
 
-		ItemStack mainItem = handler.player.getHeldItemMainhand();
-		ItemStack offItem = handler.player.getHeldItemOffhand();
+		ItemStack manualStack = handler.player.getHeldItem(enumHand);
+		if(!IIItemUtils.isEngineersManual(manualStack))
+			return;
 
-		ItemStack target = isManual(mainItem)?mainItem: isManual(offItem)?offItem: null;
-
-		if(target!=null)
-			if((skin==null||skin.isEmpty())&&ItemNBTHelper.hasKey(target, "lastSkin"))
-				ItemNBTHelper.remove(target, "lastSkin");
-			else if(skin!=null)
-			{
-				UUID uniqueID = handler.player.getUniqueID();
-				ItemNBTHelper.setString(target, "lastSkin", uniqueID+":"+skin);
-			}
-	}
-
-	private boolean isManual(ItemStack stack)
-	{
-		return stack.getItem()==IEContent.itemTool&&stack.getItemDamage()==3;
+		String lastMultiblock = ItemNBTHelper.getString(manualStack, "lastMultiblock");
+		if(!easyNBT.hasKey("lastMultiblock")&&!lastMultiblock.isEmpty()&&!lastMultiblock.startsWith("II"))
+			easyNBT = EasyNBT.newNBT().withString("lastMultiblock", lastMultiblock);
+		manualStack.setTagCompound(easyNBT.unwrap());
 	}
 
 	@Override
@@ -64,12 +58,15 @@ public class MessageManualClose extends IIMessage
 	@Override
 	public void fromBytes(ByteBuf buf)
 	{
-		this.skin = readString(buf);
+		this.enumHand = readEnum(buf, EnumHand.class);
+		this.easyNBT = readEasyNBT(buf);
 	}
+
 
 	@Override
 	public void toBytes(ByteBuf buf)
 	{
-		writeString(buf, skin);
+		writeEnum(buf, enumHand);
+		writeEasyNBT(buf, easyNBT);
 	}
 }

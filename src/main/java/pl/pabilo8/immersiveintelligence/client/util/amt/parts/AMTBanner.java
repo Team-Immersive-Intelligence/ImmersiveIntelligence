@@ -11,6 +11,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
+import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIAnimationCompiledMap;
 import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
@@ -20,6 +21,8 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import javax.annotation.Nonnull;
 
 /**
+ * Renders an animated banner or flag.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 09.10.2023
  */
@@ -28,7 +31,6 @@ public class AMTBanner extends AMT
 	@Nonnull
 	private ItemStack banner = ItemStack.EMPTY;
 	private final TileEntityBanner virtualTile = new TileEntityBanner();
-	private ResourceLocation bannerRes = null;
 	private final AMTModel bannerModel;
 	private IIAnimationCompiledMap animation;
 
@@ -63,22 +65,22 @@ public class AMTBanner extends AMT
 		this.animation = IIAnimationCompiledMap.create(this.bannerModel, IIReference.RES_II.with("banner_wave"));
 	}
 
+	/**
+	 * Sets the banner stack and its pattern data.
+	 */
 	public AMTBanner setBanner(@Nonnull ItemStack banner)
 	{
-		if(banner.isItemEqual(this.banner))
+		if(ItemStack.areItemStacksEqual(banner, this.banner))
 			return this;
-		this.banner = banner;
-		if(banner.isEmpty())
-		{
-			this.bannerRes = null;
-			return this;
-		}
-		this.virtualTile.setItemValues(this.banner, false);
-		this.bannerRes = BannerTextures.BANNER_DESIGNS.getResourceLocation(
-				virtualTile.getPatternResourceLocation(), virtualTile.getPatternList(), virtualTile.getColorList());
+		this.banner = banner.copy();
+		if(!this.banner.isEmpty())
+			this.virtualTile.setItemValues(this.banner, false);
 		return this;
 	}
 
+	/**
+	 * Selects flag or banner mode.
+	 */
 	public AMTBanner setIsFlag(boolean isFlag)
 	{
 		this.isFlag = isFlag;
@@ -88,9 +90,14 @@ public class AMTBanner extends AMT
 	@Override
 	protected void draw(Tessellator tes, BufferBuilder buf)
 	{
-		if(bannerRes==null||bannerModel==null||animation==null)
+		if(banner.isEmpty()||bannerModel==null||animation==null)
 			return;
 
+		//Refresh the cache entry on each draw so active textures remain available.
+		ResourceLocation bannerRes = (isFlag?IIClientUtils.FLAG_DESIGNS: BannerTextures.BANNER_DESIGNS).getResourceLocation(
+				virtualTile.getPatternResourceLocation(), virtualTile.getPatternList(), virtualTile.getColorList());
+		if(bannerRes==null)
+			return;
 		ClientUtils.mc().getTextureManager().bindTexture(bannerRes);
 		GlStateManager.translate(originPos.x, originPos.y, originPos.z);
 		//Flags are banners, just sideways

@@ -37,9 +37,12 @@ public class IIManualCategoryOther extends IIManualCategory
 		addEntry("measuring_cup")
 				.addSource("m_cup", getSourceForItem(new ItemStack(IIContent.itemMeasuringCup)
 				));
-		
+
 		addEntry("carbon_filter")
 				.addSource("co2_filter", getSourceForItem(new ItemStack(IIContent.blockMetalDevice1)
 				));
+
+		addEntry("engineers_clipboard")
+				.addSource("clipboard", getSourceForItem(new ItemStack(IIContent.itemClipboard)));
 	}
 }

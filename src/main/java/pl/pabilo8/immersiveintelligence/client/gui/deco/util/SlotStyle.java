@@ -27,6 +27,8 @@ public enum SlotStyle
 	IE_BRASS_CUSTOM2(IE_BRASS, 5),
 	IE_BRASS_CUSTOM3(IE_BRASS, 6),
 	IE_BRASS_CUSTOM4(IE_BRASS, 7),
+	//A vanilla slot with steel background pre-blended
+	VANILLA_STEEL(DecoTextures.SLOT_VANILLA_STEEL, false, 1),
 	;
 
 	final int borderSize;

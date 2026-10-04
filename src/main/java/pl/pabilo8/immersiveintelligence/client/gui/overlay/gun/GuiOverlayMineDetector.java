@@ -26,15 +26,19 @@ public class GuiOverlayMineDetector extends GuiOverlayBase
 	@Override
 	public boolean shouldDraw(@Nonnull EntityPlayer player, @Nullable RayTraceResult mouseOver)
 	{
-		return player.getHeldItem(EnumHand.MAIN_HAND).getItem()==IIContent.itemMineDetector;
+		return player.getHeldItem(EnumHand.MAIN_HAND).getItem()==IIContent.itemMineDetector
+				||player.getHeldItem(EnumHand.OFF_HAND).getItem()==IIContent.itemMineDetector;
 	}
 
 	@Override
 	public void draw(@Nonnull EntityPlayer player, @Nullable RayTraceResult mouseOver, int width, int height)
 	{
 		ItemStack stack = player.getHeldItem(EnumHand.MAIN_HAND);
+		if(stack.getItem()!=IIContent.itemMineDetector)
+			stack = player.getHeldItem(EnumHand.OFF_HAND);
 
-		float value = MathHelper.clamp(ItemNBTHelper.getFloat(stack, "distance")/Tools.mineDetectorRadius, 0, 1);
+		float value = IIContent.itemMineDetector.hasEnoughEnergy(stack)?
+				MathHelper.clamp(ItemNBTHelper.getFloat(stack, "distance")/Tools.mineDetectorRadius, 0, 1): 0;
 
 		ClientUtils.bindTexture(ImmersiveIntelligence.MODID+":textures/gui/hud_elements.png");
 		GlStateManager.pushMatrix();

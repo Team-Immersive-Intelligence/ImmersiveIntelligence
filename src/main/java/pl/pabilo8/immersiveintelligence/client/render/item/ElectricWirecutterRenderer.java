@@ -1,9 +1,6 @@
 package pl.pabilo8.immersiveintelligence.client.render.item;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
-import blusunrize.immersiveengineering.client.ImmersiveModelRegistry.ItemModelReplacement;
-import blusunrize.immersiveengineering.client.ImmersiveModelRegistry.ItemModelReplacement_OBJ;
-import blusunrize.immersiveengineering.common.util.chickenbones.Matrix4;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -42,38 +39,6 @@ public class ElectricWirecutterRenderer extends IIItemRendererAMT<ItemIIElectric
 	{
 		super(IIContent.itemWirecutter, ResLoc.of(IIReference.RES_ITEM_MODEL, "tools/electric_wirecutter")
 				.withExtension(ResLoc.EXT_OBJ), true);
-	}
-
-	@Override
-	protected ItemModelReplacement setTransforms(ItemModelReplacement_OBJ model)
-	{
-		return model
-				.setTransformations(TransformType.GROUND, new Matrix4()
-						.scale(0.625, 0.625, 0.625)
-						.translate(0.5, 0, 0.5)
-				)
-				.setTransformations(TransformType.THIRD_PERSON_RIGHT_HAND, new Matrix4()
-						.scale(0.625, 0.625, 0.625)
-						.translate(0.5, 0.25, 0.575)
-				)
-				.setTransformations(TransformType.THIRD_PERSON_LEFT_HAND, new Matrix4()
-						.scale(0.625, 0.625, 0.625)
-						.translate(-0.5, 0.25, 0.575)
-				)
-				.setTransformations(TransformType.FIRST_PERSON_RIGHT_HAND, new Matrix4()
-						.scale(1.5, 1.5, 1.5)
-						.translate(1f, -0.5, -1.5f)
-						.rotate(Math.toRadians(90), 0, 1, 0)
-						.rotate(Math.toRadians(-65), 0, 0, 1)
-						.rotate(Math.toRadians(-12.5), 0, 1, 0)
-				)
-				.setTransformations(TransformType.FIRST_PERSON_LEFT_HAND, new Matrix4()
-						.scale(1.5, 1.5, 1.5)
-						.translate(1f, 0, -1.5f)
-						.rotate(Math.toRadians(90), 0, 1, 0)
-						.rotate(Math.toRadians(-65), 0, 0, 1)
-						.rotate(Math.toRadians(-12.5), 0, 1, 0)
-				);
 	}
 
 	@Override

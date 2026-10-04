@@ -36,6 +36,52 @@
           ]
         }
       ]
+    },
+    "fire2": {
+      "alpha": [
+        {
+          "time": 0.0,
+          "alpha": 0.0
+        },
+        {
+          "time": 0.265,
+          "alpha": 1.0
+        },
+        {
+          "time": 0.26667,
+          "alpha": 1.0
+        },
+        {
+          "time": 0.71,
+          "alpha": 1.0
+        },
+        {
+          "time": 0.76,
+          "alpha": 0.0
+        },
+        {
+          "time": 1.0,
+          "alpha": 0.0
+        }
+      ],
+      "property": [
+        {
+          "time": 0.26667,
+          "property": 0.0
+        },
+        {
+          "time": 0.73333,
+          "property": 1.0
+        },
+        {
+          "time": 0.75,
+          "property": 1.0
+        },
+        {
+          "time": 1.0,
+          "property": 0.0
+        }
+      ]
     }
   }
 }

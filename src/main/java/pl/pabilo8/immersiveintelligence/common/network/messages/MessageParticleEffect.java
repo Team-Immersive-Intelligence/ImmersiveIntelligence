@@ -92,4 +92,10 @@ public class MessageParticleEffect extends IIMessage implements IPositionBoundMe
 	{
 		return position;
 	}
+
+	@Override
+	public int getPacketDistance()
+	{
+		return 96;
+	}
 }

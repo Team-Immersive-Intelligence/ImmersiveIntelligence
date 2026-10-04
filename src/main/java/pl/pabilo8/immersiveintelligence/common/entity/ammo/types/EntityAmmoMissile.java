@@ -2,16 +2,14 @@ package pl.pabilo8.immersiveintelligence.common.entity.ammo.types;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.ammo.penetration.IPenetrationHandler;
-import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleProperties;
-import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleRegistry;
+import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageParticleEffect;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
-import pl.pabilo8.immersiveintelligence.common.util.entity.IIEntityUtils;
 
 import javax.vecmath.Vector2f;
 
@@ -65,14 +63,15 @@ public class EntityAmmoMissile extends EntityAmmoProjectile
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	protected void spawnTrailParticles()
+	public void onUpdate()
 	{
+		super.onUpdate();
+
 		//Missile jet particles
-		ParticleRegistry.spawnParticle("ammo/rocket_smoke", getPositionVector(),
-						IIEntityUtils.getEntityMotion(this).scale(-2),
-						new Vector2f((float)Math.toRadians(rotationYaw), (float)Math.toRadians(rotationPitch-90)))
-				.withProperty(ParticleProperties.SIZE, ammoType.getCaliber()/12f);
+		if(!world.isRemote&&isBoosterActive())
+			IIPacketHandler.sendToClient(new MessageParticleEffect("ammo/rocket_smoke", world, getPositionVector(), Vec3d.ZERO, new Vector2f(),
+					EasyNBT.newNBT().withVec3d("stretch", new Vec3d(prevPosX, prevPosY, prevPosZ)))
+			);
 	}
 
 	@Override

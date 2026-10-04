@@ -21,6 +21,8 @@ import pl.pabilo8.immersiveintelligence.common.network.messages.MessageExplosion
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 /**
+ * Applies an EMP discharge from a Tesla ammunition component.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
  * @updated 06.03.2024
  * @ii-approved 0.3.1
@@ -52,7 +54,7 @@ public class AmmoComponentTesla extends AmmoComponent
 
 		IIPacketHandler.sendToClient(MessageExplosion.createEMPMessage(
 				world, pos, radius,
-				IIAmmoUtils.applyEMPEffect(world, blockPos, radius, (int)(4000000*multiplier))
+				IIAmmoUtils.applyEMPEffect(world, blockPos, radius, (int)(4000000*multiplier)), size
 		));
 	}
 }

@@ -1,7 +1,28 @@
 {
   "bounds": {
+    "table_leg1": [12, 0, 1, 15, 13, 4],
+    "table_leg2": [1, 0, 1, 4, 13, 4],
+    "table_leg3": [1, 0, 11, 4, 13, 14],
+    "table_leg4": [12, 0, 12, 15, 13, 15],
+    "table_top": [0, 13, 0, 16, 16, 16],
+    "full_block": [0, 0, 0, 16, 16, 16],
+    "teletype": [1.5, 0, 1, 15.5, 3, 12],
+    "book": [2, 3, 0, 15, 10, 6],
+    "mess1": [2, 0, 6, 9, 7, 15],
+    "mess2": [10.5, 0, 8, 16.5, 5, 14],
+    "mess3": [7.75, 0, 2, 11.75, 5, 6],
+    "data_wirecoil": [14, 0, 0, 17, 4, 5],
+    "drawer": [0, 9, 0, 12, 13, 15],
+    "drawer_copy": [5, 10, 15, 7, 12, 16]
   },
+  "name": "II:DataInputMachine",
+  "master": [0, 1, 0],
   "positions": {
+    "0": ["table_leg3", "table_leg2", "table_top"],
+    "1": ["table_leg4", "table_leg1", "table_top", "drawer", "drawer_copy"],
+    "4": ["mess1", "mess2", "mess3", "data_wirecoil"],
+    "5": ["teletype", "book"],
+    "2,3,6,7,10,11": "full_block"
   },
   "poi": {
     "energy": 11,

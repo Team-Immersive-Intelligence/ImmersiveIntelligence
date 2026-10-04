@@ -19,67 +19,86 @@ import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
-import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Detects configured blocks while the player holds a powered detector.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 28.01.2021
+ * @updated 04.10.2026
  */
 @IIItemProperties(category = IICategory.WARFARE)
-public class ItemIIMineDetector extends ItemIIBase
+public class ItemIIMineDetector extends ItemIIElectricTool
 {
 	public static final List<IngredientStack> detectableBlocks = new ArrayList<>();
 
 	public ItemIIMineDetector()
 	{
-		super("mine_detector", 1);
+		super("mine_detector", "mine_detector");
+	}
+
+	@Override
+	public int getMaxEnergyStored(ItemStack stack)
+	{
+		return Tools.mineDetectorCapacity;
+	}
+
+	@Override
+	protected int getEnergyPerUse(ItemStack stack)
+	{
+		return Tools.mineDetectorEnergyPerTick;
 	}
 
 	@Override
 	public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected)
 	{
 		super.onUpdate(stack, worldIn, entityIn, itemSlot, isSelected);
+		if(!(entityIn instanceof EntityPlayer))
+			return;
 
-		if(isSelected)
+		EntityPlayer player = (EntityPlayer)entityIn;
+		//Unlock the advancement when the detector is worn as a helmet.
+		if(!worldIn.isRemote&&player.getItemStackFromSlot(EntityEquipmentSlot.HEAD).equals(stack))
+			if(!IIUtils.hasUnlockedIIAdvancement(player, "main/secret_carvers_revenge"))
+				IIUtils.unlockIIAdvancement(player, "main/secret_carvers_revenge");
+
+		if(!isSelected&&player.getHeldItemOffhand()!=stack)
+			return;
+
+		ItemNBTHelper.setFloat(stack, "distance", 0);
+		//Drain energy on the server. The client checks charge for the local scan and sound.
+		boolean powered = worldIn.isRemote?hasEnoughEnergy(stack): drainEnergy(stack, getEnergyPerUse(stack), false);
+		if(!powered)
+			return;
+
+		final float blockReachDistance = 4.5f;
+		Vec3d vec3d = entityIn.getPositionEyes(0);
+		Vec3d vec3d1 = entityIn.getLook(0);
+		Vec3d vec3d2 = vec3d.addVector(vec3d1.x*blockReachDistance, vec3d1.y*blockReachDistance, vec3d1.z*blockReachDistance);
+
+		RayTraceResult traceResult = worldIn.rayTraceBlocks(vec3d, vec3d2, false, false, true);
+		if(traceResult!=null&&traceResult.typeOfHit==Type.BLOCK)
 		{
-			final float blockReachDistance = 4.5f;
-
-			Vec3d vec3d = entityIn.getPositionEyes(0);
-			Vec3d vec3d1 = entityIn.getLook(0);
-			Vec3d vec3d2 = vec3d.addVector(vec3d1.x*blockReachDistance, vec3d1.y*blockReachDistance, vec3d1.z*blockReachDistance);
-
-			RayTraceResult traceResult = worldIn.rayTraceBlocks(vec3d, vec3d2, false, false, true);
-			ItemNBTHelper.setFloat(stack, "distance", 0);
-			if(traceResult!=null&&traceResult.typeOfHit==Type.BLOCK)
-			{
-				final BlockPos dPos = new BlockPos(traceResult.getBlockPos().getX(), traceResult.getBlockPos().getY(), traceResult.getBlockPos().getZ());
-				for(int y = 0; y > -Tools.mineDetectorRadius+1; y--)
-					for(int x = -Tools.mineDetectorRadius+1; x < Tools.mineDetectorRadius; x++)
-						for(int z = -Tools.mineDetectorRadius+1; z < Tools.mineDetectorRadius; z++)
+			final BlockPos dPos = new BlockPos(traceResult.getBlockPos().getX(), traceResult.getBlockPos().getY(), traceResult.getBlockPos().getZ());
+			for(int y = 0; y > -Tools.mineDetectorRadius+1; y--)
+				for(int x = -Tools.mineDetectorRadius+1; x < Tools.mineDetectorRadius; x++)
+					for(int z = -Tools.mineDetectorRadius+1; z < Tools.mineDetectorRadius; z++)
+					{
+						IBlockState state = worldIn.getBlockState(dPos.add(x, y+1, z));
+						if(state.getBlock()!=Blocks.AIR&&shouldBeDetected(new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state))))
 						{
-							IBlockState state = worldIn.getBlockState(dPos.add(x, y+1, z));
-							if(state.getBlock()!=Blocks.AIR&&shouldBeDetected(new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state))))
-							{
-								final BlockPos pp = dPos.add(x, 0, z);
-								float dist = Math.max((float)new Vec3d(pp).distanceTo(entityIn.getPositionVector()), 0.125f);
+							final BlockPos pp = dPos.add(x, 0, z);
+							float dist = Math.max((float)new Vec3d(pp).distanceTo(entityIn.getPositionVector()), 0.125f);
 
-								ItemNBTHelper.setFloat(stack, "distance", Math.max(0, Tools.mineDetectorRadius+1-dist));
-								if(worldIn.getTotalWorldTime()%(int)(dist*4)==0)
-									worldIn.playSound(pp.getX(), pp.getY(), pp.getZ(), IISounds.mineDetector, SoundCategory.PLAYERS, 1, 0.5f, false);
-								return;
-							}
+							ItemNBTHelper.setFloat(stack, "distance", Math.max(0, Tools.mineDetectorRadius+1-dist));
+							if(worldIn.getTotalWorldTime()%Math.max(1, (int)(dist*4))==0)
+								worldIn.playSound(pp.getX(), pp.getY(), pp.getZ(), IISounds.mineDetector, SoundCategory.PLAYERS, 1, 0.5f, false);
+							return;
 						}
-			}
-		}
-
-		//if is worn as a helmet
-		if(entityIn instanceof EntityPlayer&&((EntityPlayer)entityIn).getItemStackFromSlot(EntityEquipmentSlot.HEAD).equals(stack))
-		{
-			if(!IIUtils.hasUnlockedIIAdvancement((EntityPlayer)entityIn, "main/secret_carvers_revenge"))
-				IIUtils.unlockIIAdvancement((EntityPlayer)entityIn, "main/secret_carvers_revenge");
+					}
 		}
 	}
 

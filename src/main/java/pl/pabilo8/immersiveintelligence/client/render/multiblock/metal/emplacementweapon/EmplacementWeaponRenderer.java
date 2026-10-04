@@ -110,12 +110,20 @@ public abstract class EmplacementWeaponRenderer<W extends EmplacementWeapon> imp
 
 	protected final void applyAmmoItem(EmplacementWeaponGunBase<?> weapon, BulletState state, AMTCrossVariantReference<AMTBullet> reference)
 	{
-		List<ItemStack> renderAmmo = weapon.getLoadedAmmo();
+		applyAmmoItem(weapon, state, reference, weapon.getLoadedAmmo());
+	}
+
+	protected final void applyAmmoItem(EmplacementWeaponGunBase<?> weapon, BulletState state,
+									   AMTCrossVariantReference<AMTBullet> reference, NonNullList<ItemStack> renderAmmo)
+	{
 		//noinspection SequencedCollectionMethodCanBeUsed
 		ItemStack ammoStack = renderAmmo.isEmpty()?ItemStack.EMPTY: renderAmmo.get(0);
 		AMTBullet amtBullet = reference.get();
 		if(amtBullet!=null)
+		{
+			amtBullet.setVisible(true);
 			amtBullet.withStack(ammoStack, state);
+		}
 	}
 
 	/**

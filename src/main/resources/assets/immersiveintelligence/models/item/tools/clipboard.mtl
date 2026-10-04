@@ -1,0 +1,6 @@
+# Made by Pabilo8 with Blockbench
+
+newmtl clipboard1
+map_Kd immersiveintelligence:items/tools/clipboard1
+newmtl clipboard2
+map_Kd immersiveintelligence:items/tools/clipboard2

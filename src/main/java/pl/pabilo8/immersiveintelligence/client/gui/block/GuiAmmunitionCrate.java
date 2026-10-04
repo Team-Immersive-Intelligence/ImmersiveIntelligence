@@ -7,10 +7,9 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.Dec
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoElementDisplays;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoTitleLabel;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiCategory;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTemplate;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.SlotStyle;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate.TileEntityAmmunitionCrate;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerAmmunitionCrate;
@@ -47,10 +46,10 @@ public class GuiAmmunitionCrate extends DecoTileGui<TileEntityAmmunitionCrate, C
 		startBackground()
 				.withBox(DecoTextures.BG_STEEL_ROUGH, DecoTextures.TEMPLATE_ROUND, 0, 0, 224, 160, backgroundColor)
 				.withTitleBar(tile)
-				.withInventorySlots(SlotStyle.VANILLA, container.inputAmmunition)
-				.withInventorySlots(SlotStyle.VANILLA, container.revolverPattern)
-				.withInventorySlots(SlotStyle.VANILLA, container.spentCasings)
-				.withInventorySlots(SlotStyle.VANILLA, container.spentMagazines)
+				.withInventorySlots(SlotStyle.VANILLA_STEEL, container.inputAmmunition)
+				.withInventorySlots(SlotStyle.VANILLA_STEEL, container.revolverPattern)
+				.withInventorySlots(SlotStyle.VANILLA_STEEL, container.spentCasings)
+				.withInventorySlots(SlotStyle.VANILLA_STEEL, container.spentMagazines)
 				.withNextLayer()
 				.withBox(DecoTextures.BG_WOODEN, DecoTextures.TEMPLATE_ROUND_WOODEN, 24, 160, 176, 92)
 				.withInventorySlots(SlotStyle.VANILLA, container.playerInventory)
@@ -90,5 +89,10 @@ public class GuiAmmunitionCrate extends DecoTileGui<TileEntityAmmunitionCrate, C
 					tile.mode = newMode;
 					refreshGUI();
 				}));
+
+		if(tile.isUpgradeInstalled(IIContent.UPGRADE_INSERTER))
+			addComponent(new DecoBar(168-32-1+32+48, 4+32+8)
+					.withTemplate(DecoTemplates.BAR_ELECTRIC_ENERGY.apply(tile.energyStorage))
+			);
 	}
 }

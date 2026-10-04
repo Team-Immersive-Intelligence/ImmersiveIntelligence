@@ -16,8 +16,11 @@ import java.util.Collections;
 import java.util.function.Function;
 
 /**
+ * Displays an entry panel with interactive child components.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
+ * @updated 04.10.2026
  * @since 10.02.2025
  **/
 public abstract class DecoEntryPanel<T> extends DecoPanel implements DecoElementDisplay<T>
@@ -83,6 +86,20 @@ public abstract class DecoEntryPanel<T> extends DecoPanel implements DecoElement
 	@Override
 	public int displayElement(T t, int width, IIFontRenderer font, int mouseX, int mouseY, float partialTicks, boolean heightProbe)
 	{
+		int elementHeight = Math.max(1, getElementHeight(t, width));
+		if(this.height!=elementHeight)
+		{
+			this.height = elementHeight;
+			if(list!=null)
+				list.requestLayout();
+			if(initialized)
+			{
+				rebuildPanelGeometry();
+				applyElementToChildren(t);
+				updateDisplayedHeight();
+			}
+		}
+
 		//Initialize before probing or drawing. Direct initialize() calls must also update
 		//the component lifecycle flag, otherwise drawButton() rebuilds the children again.
 		if(this.width!=width||!initialized)
@@ -92,19 +109,7 @@ public abstract class DecoEntryPanel<T> extends DecoPanel implements DecoElement
 			if(!(this.initialized = initialize()))
 				return 0;
 
-			//Readjust the height
-			if(children.isEmpty())
-				this.displayedHeight = height;
-			else
-			{
-				int minY = Integer.MAX_VALUE, maxY = Integer.MIN_VALUE;
-				for(DecoComponent<?> child : children)
-				{
-					minY = Math.min(minY, child.y);
-					maxY = Math.max(maxY, child.y+child.height);
-				}
-				this.displayedHeight = Math.max(2+maxY-minY, height);
-			}
+			updateDisplayedHeight();
 		}
 
 		//If the height is being probed, return the height
@@ -116,6 +121,27 @@ public abstract class DecoEntryPanel<T> extends DecoPanel implements DecoElement
 		Minecraft mc = ClientUtils.mc();
 		drawButton(mc, mouseX, mouseY, partialTicks);
 		return displayedHeight;
+	}
+
+	protected int getElementHeight(T element, int width)
+	{
+		return height;
+	}
+
+	private void updateDisplayedHeight()
+	{
+		if(children.isEmpty())
+			this.displayedHeight = height;
+		else
+		{
+			int minY = Integer.MAX_VALUE, maxY = Integer.MIN_VALUE;
+			for(DecoComponent<?> child : children)
+			{
+				minY = Math.min(minY, child.y);
+				maxY = Math.max(maxY, child.y+child.height);
+			}
+			this.displayedHeight = Math.max(2+maxY-minY, height);
+		}
 	}
 
 	@Override
@@ -134,15 +160,20 @@ public abstract class DecoEntryPanel<T> extends DecoPanel implements DecoElement
 	@Override
 	public void drawCreateOption(int width, int height, IIFontRenderer font, int mouseX, int mouseY)
 	{
-		addButton.x = DecoAlignment.CENTER.getAlignX(x, addButton.width, width);
-		addButton.y = y;
+		int buttonX = DecoAlignment.CENTER.getAlignX(0, addButton.width, width);
+		if(addButton.x!=buttonX||addButton.y!=0)
+		{
+			addButton.withPosition(buttonX, 0);
+			addButton.initialize();
+		}
 		addButton.drawButton(ClientUtils.mc(), mouseX, mouseY, 0f);
 	}
 
 	@Override
 	public boolean isMouseOverCreateOption(int mouseX, int mouseY, int width, int height)
 	{
-		return addButton.isMouseOver();
+		int buttonX = DecoAlignment.CENTER.getAlignX(0, addButton.width, width);
+		return mouseX >= buttonX&&mouseX < buttonX+addButton.width&&mouseY >= 0&&mouseY < addButton.height;
 	}
 
 	@Override

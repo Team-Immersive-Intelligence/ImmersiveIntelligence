@@ -49,7 +49,3 @@
 # ammunition_assembler_data
 **Input Variables:**<br>
 |[data_variable]{type:"string", direction:"вход", letter:"f", name:"Предохранитель", description:"Свойства предохранителя. Определяются ключевыми строками 'fuse' и 'fuse_config.'"}|
-# heavy_ammuniton_assembler
-|[multiblock]{mb:"II:HeavyAmmunitionAssembler"}|
-Эта машина собирается [молотком](introduction#introductionHammer) по тяжелому инженерному блоку, расположенному между деревянными лесами.
-|[wip_notice]|

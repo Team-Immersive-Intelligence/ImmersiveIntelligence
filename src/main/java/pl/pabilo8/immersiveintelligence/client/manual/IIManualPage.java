@@ -24,6 +24,7 @@ import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.widget.ManualSystemWrapper;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualObject.ManualObjectInfo;
 import pl.pabilo8.immersiveintelligence.client.manual.objects.*;
+import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageBase;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
@@ -42,7 +43,7 @@ import java.util.stream.Collectors;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 20.03.2022
  */
-public class IIManualPage extends ManualPages
+public class IIManualPage extends IIManualPageBase
 {
 	//--- Statics and Internals ---//
 
@@ -421,6 +422,16 @@ public class IIManualPage extends ManualPages
 	public EasyNBT getDataSource(String name)
 	{
 		return entry.getSource(name);
+	}
+
+	@Nullable
+	@Override
+	public EasyNBT provideManualData()
+	{
+		EasyNBT tag = EasyNBT.newNBT();
+		for(IIManualObject manualObject : this.manualObjects)
+			tag.mergeWith(manualObject.provideManualNBTInfo());
+		return tag.isEmpty()?null: tag;
 	}
 
 	private enum PageTraits implements ISerializableEnum

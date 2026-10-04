@@ -19,10 +19,17 @@ import pl.pabilo8.immersiveintelligence.common.util.amt.AMTModelHeader;
 import javax.annotation.Nonnull;
 import java.util.List;
 
+/**
+ * Renders the Searchlight Emplacement weapon and its conditional light beam.
+ *
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 27.09.2026
+ * @since 19.02.2026
+ */
 @SideOnly(Side.CLIENT)
 public class EWRSearchlight extends EmplacementWeaponRenderer<EmplacementWeaponSearchlight>
 {
-	private IIAnimationCachedMap rotateYaw, rotatePitch, active, chill;
+	private IIAnimationCachedMap rotateYaw, rotatePitch, setup, chill;
 	private AMTCrossVariantReference<AMTParticle> ray;
 
 	public EWRSearchlight()
@@ -39,7 +46,7 @@ public class EWRSearchlight extends EmplacementWeaponRenderer<EmplacementWeaponS
 				new AMTLocator("turret_origin", header),
 				new AMTLocator("projector_origin", header),
 				new AMTParticle("ray", header)
-						.setParticle("light/searchlight")
+						.withParticle("light/searchlight")
 		);
 	}
 
@@ -48,7 +55,7 @@ public class EWRSearchlight extends EmplacementWeaponRenderer<EmplacementWeaponS
 	{
 		this.rotateYaw = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("rotate_yaw"));
 		this.rotatePitch = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("rotate_pitch"));
-		this.active = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("active"));
+		this.setup = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("setup"));
 		this.chill = IIAnimationCachedMap.create(model, ANIMATIONS_DIR.with("chill"));
 		this.ray = new AMTCrossVariantReference<>("ray", model);
 	}
@@ -63,7 +70,7 @@ public class EWRSearchlight extends EmplacementWeaponRenderer<EmplacementWeaponS
 		this.rotatePitch.apply(weapon.aim.getPitchNormalized(-90, 90, partialTicks));
 
 		//Heat-up animation
-		this.active.apply(weapon.setup.getProgress(partialTicks));
+		this.setup.apply(weapon.setup.getProgress(partialTicks));
 
 		//Idle animation
 		float chillProgress = weapon.getChillProgress(partialTicks);
@@ -71,6 +78,11 @@ public class EWRSearchlight extends EmplacementWeaponRenderer<EmplacementWeaponS
 			this.chill.apply(chillProgress);
 
 		//Apply light beam length vector
-		this.ray.get().setParticleProperty(ParticleProperties.STRETCH, weapon.targetPosition);
+		AMTParticle ray = this.ray.get();
+		if(ray!=null)
+		{
+			ray.setVisible(weapon.shouldRenderLightBeam());
+			ray.withParticleProperty(ParticleProperties.STRETCH, weapon.targetPosition);
+		}
 	}
 }

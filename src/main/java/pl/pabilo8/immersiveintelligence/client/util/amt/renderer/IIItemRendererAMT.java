@@ -4,6 +4,7 @@ import blusunrize.immersiveengineering.client.ImmersiveModelRegistry;
 import blusunrize.immersiveengineering.client.ImmersiveModelRegistry.ItemModelReplacement;
 import blusunrize.immersiveengineering.client.ImmersiveModelRegistry.ItemModelReplacement_OBJ;
 import blusunrize.immersiveengineering.client.models.IESmartObjModel;
+import blusunrize.immersiveengineering.common.util.chickenbones.Matrix4;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.ItemRenderer;
@@ -40,6 +41,7 @@ import static blusunrize.immersiveengineering.client.ClientUtils.mc;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 22.09.2026
  * @since 17.09.2022
  */
 public abstract class IIItemRendererAMT<I extends Item> extends TileEntityItemStackRenderer implements IReloadableModelContainer<IIItemRendererAMT<I>>
@@ -81,6 +83,9 @@ public abstract class IIItemRendererAMT<I extends Item> extends TileEntityItemSt
 
 	protected final ItemModelReplacement parseTransforms(ItemModelReplacement_OBJ model, @Nullable AMTModelHeader header)
 	{
+		for(TransformType transform : TransformType.values())
+			if(transform!=TransformType.NONE)
+				model.setTransformations(transform, new Matrix4());
 		if(header!=null)
 			header.applyTransforms(model);
 		return model;
@@ -146,7 +151,10 @@ public abstract class IIItemRendererAMT<I extends Item> extends TileEntityItemSt
 
 	//--- Abstract Methods ---//
 
-	protected abstract ItemModelReplacement setTransforms(ItemModelReplacement_OBJ model);
+	protected ItemModelReplacement setTransforms(ItemModelReplacement_OBJ model)
+	{
+		return parseTransforms(model, AMTLoader.loadHeader(headerRes));
+	}
 
 
 	/**

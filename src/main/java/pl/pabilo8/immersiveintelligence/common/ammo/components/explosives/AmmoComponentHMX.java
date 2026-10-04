@@ -35,6 +35,7 @@ public class AmmoComponentHMX extends AmmoComponent
 	{
 		new IIExplosion(world, owner, pos, dir,
 				10*componentSize, 16*multiplier, shape, false, componentSize > 0.125f, false)
+				.withParticleComponentSize(componentSize)
 				.doExplosion();
 	}
 }

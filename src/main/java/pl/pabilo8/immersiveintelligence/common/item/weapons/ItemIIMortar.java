@@ -17,8 +17,10 @@ import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
 import javax.annotation.Nonnull;
 
 /**
+ * Places a mortar with the user's yaw direction.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 23.05.2026
+ * @updated 03.10.2026
  * @ii-approved 0.3.1
  * @since 23.01.2021
  */
@@ -47,13 +49,18 @@ public class ItemIIMortar extends ItemIIBase implements IItemEntityPlacer<Entity
 		return new AxisAlignedBB(pos).expand(0, 0.5, 0);
 	}
 
+	/**
+	 * Creates a mortar with its body and aim set to the player yaw.
+	 */
 	@Nonnull
 	@Override
 	public EntityMortar getPlacedEntity(World world, double x, double y, double z, ItemStack stack, float playerYaw, float playerPitch)
 	{
 		EntityMortar mortar = new EntityMortar(world);
-		mortar.setPosition(x, y, z);
-		mortar.aim.withCenterYaw(playerYaw);
+		mortar.aim.withCenterYaw(playerYaw).withCurrentAngles(playerYaw, mortar.aim.getPitch(0));
+		mortar.setLocationAndAngles(x, y, z, mortar.aim.getYaw(0), mortar.aim.getPitch(0));
+		mortar.prevRotationYaw = mortar.rotationYaw;
+		mortar.prevRotationPitch = mortar.rotationPitch;
 		return mortar;
 	}
 }

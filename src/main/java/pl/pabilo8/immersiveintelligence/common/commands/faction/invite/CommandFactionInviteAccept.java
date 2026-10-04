@@ -7,16 +7,21 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.server.command.CommandTreeBase;
-import pl.pabilo8.immersiveintelligence.common.util.CommandIIBase;
+import pl.pabilo8.immersiveintelligence.common.commands.faction.CommandFactionBase;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyHandler;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.OwnerIdentity;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
-public class CommandFactionInviteAccept extends CommandIIBase
+/**
+ * Accept a pending faction invitation.
+ *
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 04.10.2026
+ */
+public class CommandFactionInviteAccept extends CommandFactionBase
 {
 	public CommandFactionInviteAccept(CommandTreeBase parent)
 	{
@@ -26,41 +31,36 @@ public class CommandFactionInviteAccept extends CommandIIBase
 	@Override
 	public String getSyntax()
 	{
-		return "<faction>";
+		return "<faction_name|id>";
 	}
 
 	@Override
 	public String getDescription(ICommandSender sender)
 	{
-		return "Accept a pending invitation from a faction";
+		return "Accept a pending faction invitation";
 	}
 
 	@Override
 	public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos)
 	{
-		if(args.length==1)
-			return DiplomacyHandler.getInstance(false)
-					.getPendingInvitationIdentitiesForPlayer(((EntityPlayer)sender).getUniqueID())
-					.stream()
-					.map(OwnerIdentity::getDisplayName)
-					.collect(Collectors.toList());
-		return Collections.emptyList();
+		if(!(sender instanceof EntityPlayer))
+			return Collections.emptyList();
+		return getFactionCompletions(args, 0, DiplomacyHandler.getInstance(false)
+				.getPendingInvitationIdentitiesForPlayer(((EntityPlayer)sender).getUniqueID()));
 	}
 
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
-		if(!(sender instanceof EntityPlayer))
-			throw new CommandException("Player only.");
-		if(args.length < 1)
-			throw new CommandException("Specify faction name.");
-
+		EntityPlayer player = getPlayer(sender);
 		DiplomacyHandler diplomacy = DiplomacyHandler.getInstance(false);
-		OwnerIdentity faction = diplomacy.getIdentityByName(String.join(" ", args));
-		if(faction!=null)
-		{
-			diplomacy.acceptInvitation(faction, ((EntityPlayer)sender).getUniqueID());
-			sender.sendMessage(new TextComponentString("Invitation accepted."));
-		}
+		OwnerIdentity identity = findFaction(args, 0, diplomacy.getPendingInvitationIdentitiesForPlayer(player.getUniqueID()));
+		OwnerIdentity current = getFaction(sender);
+		if(!current.equals(identity)&&current.isOwner(player.getUniqueID())&&current.getMembers().size() > 1
+				&&current.getMembers().stream().noneMatch(member -> !member.equals(player.getUniqueID())&&current.isOwner(member)))
+			throw new CommandException("You are the only owner of your current faction. Assign another owner before accepting.");
+		if(!diplomacy.acceptInvitation(identity, player.getUniqueID()))
+			throw new CommandException("The invitation could not be accepted. Check your current faction ownership and member roles.");
+		sender.sendMessage(new TextComponentString("Invitation accepted from "+identity.getDisplayName()));
 	}
 }

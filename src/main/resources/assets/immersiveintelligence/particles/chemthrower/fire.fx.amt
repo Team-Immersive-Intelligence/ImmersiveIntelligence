@@ -3,17 +3,17 @@
   "max_lifetime": 5,
   "size": 0.75,
   "draw_stage": "custom_additive",
-  "color": "cfcfcf",
+  "color": "897042",
   "textures": [
-    "immersiveintelligence:particle/shrapnel/shrapnel0",
-    "immersiveintelligence:particle/shrapnel/shrapnel1",
-    "immersiveintelligence:particle/shrapnel/shrapnel2",
-    "immersiveintelligence:particle/shrapnel/shrapnel3"
+    "immersiveintelligence:particle/chemthrower/chemthrower0",
+    "immersiveintelligence:particle/chemthrower/chemthrower1",
+    "immersiveintelligence:particle/chemthrower/chemthrower2",
+    "immersiveintelligence:particle/chemthrower/chemthrower3"
   ],
   "programs": [
-    "dust_transition"
+    "dust_transition(0.75)"
   ],
   "properties": {
-    "color": "cfcfcf"
+    "color": "897042"
   }
 }

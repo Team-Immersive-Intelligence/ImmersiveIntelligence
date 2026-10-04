@@ -20,6 +20,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
+import pl.pabilo8.immersiveintelligence.api.rotary.MotorBeltType;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 
@@ -190,9 +191,10 @@ public abstract class TileEntityIIConnectable extends TileEntityIIBase implement
 	}
 
 	@Override
-	public boolean allowEnergyToPass(Connection con)
+	public boolean allowEnergyToPass(@Nullable Connection connection)
 	{
-		return true;
+		//The data and power sockets share an IE network node. Data wires cannot carry power.
+		return connection!=null&&(connection.cableType.isEnergyWire()||connection.cableType instanceof MotorBeltType);
 	}
 
 	@Override

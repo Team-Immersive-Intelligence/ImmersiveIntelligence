@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.client.gui.block.emplacement;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Slot;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTileGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
@@ -11,8 +12,10 @@ import pl.pabilo8.immersiveintelligence.common.gui.ContainerEmplacement;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 /**
+ * Provides the shared layout and navigation for Emplacement GUIs.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 08.09.2026
+ * @updated 27.09.2026
  * @since 16.07.2021
  */
 public abstract class GuiEmplacement extends DecoTileGui<TileEntityEmplacement, ContainerEmplacement>
@@ -25,22 +28,28 @@ public abstract class GuiEmplacement extends DecoTileGui<TileEntityEmplacement, 
 	@Override
 	public void onInit()
 	{
+		int extraHeight = gui==IIGUI.EMPLACEMENT_CONFIG?16: 0;
 		startBackground()
-				.withBox(DecoTextures.BG_STEEL_ROUGH, 0, 0, 152+96, 152+8)
+				.withBox(DecoTextures.BG_STEEL_ROUGH, 0, 0, 152+96, 152+8+extraHeight)
 				.withTitleBar(tile)
 				.withNextLayer()
 				//Bad practicle, I know, but it was a must
 				.conditionally(this instanceof GuiEmplacementStorage, builder -> builder
 						.withBox(DecoTextures.BG_STEEL, DecoTextures.TEMPLATE_SQUARE, 4, 8+8, 152+96-8, 76-8-8)
 						.withTitleBar(IIReference.GUI_LABEL_KEY+"emplacement.platform_inventory", DecoAlignment.TOP_LEFT)
-						.withInventorySlots(SlotStyle.VANILLA, container.slotsPlatformAmmo)
-						.withInventorySlots(SlotStyle.VANILLA, container.slotsPlatformCasings)
+						.withInventorySlots(SlotStyle.VANILLA, getStaticAmmoSlots(
+								container.slotsPlatformAmmo, container.slotsPlatformCasings))
+						.withInventorySlots(SlotStyle.VANILLA, getStaticCasingSlots(
+								container.slotsPlatformAmmo, container.slotsPlatformCasings))
 						.withNextLayer()
 						.withBox(DecoTextures.BG_STEEL, DecoTextures.TEMPLATE_SQUARE, 4, 76+4+8, 152+96-8, 76-8-8)
 						.withTitleBar(IIReference.GUI_LABEL_KEY+"emplacement.base_inventory", DecoAlignment.TOP_LEFT)
-						.withInventorySlots(SlotStyle.VANILLA, container.slotsBaseAmmo))
+						.withInventorySlots(SlotStyle.VANILLA, getStaticAmmoSlots(
+								container.slotsBaseAmmo, container.slotsBaseCasings))
+						.withInventorySlots(SlotStyle.VANILLA, getStaticCasingSlots(
+								container.slotsBaseAmmo, container.slotsBaseCasings)))
 				.withNextLayer()
-				.withBox(DecoTextures.BG_WOODEN, DecoTextures.TEMPLATE_ROUND_WOODEN, 32, 152+8, 176, 92)
+				.withBox(DecoTextures.BG_WOODEN, DecoTextures.TEMPLATE_ROUND_WOODEN, 32, 152+8+extraHeight, 176, 92)
 				.withFrame(DecoTextures.FRAME_WOODEN_THIN, 4, false, new boolean[]{true, false, false, false})
 				.withInventorySlots(SlotStyle.VANILLA, container.playerInventory)
 				.withInventoryTitleBar()
@@ -58,5 +67,15 @@ public abstract class GuiEmplacement extends DecoTileGui<TileEntityEmplacement, 
 
 		if(tile.currentWeapon!=null)
 			tile.currentWeapon.init(tile);
+	}
+
+	private Slot[] getStaticAmmoSlots(Slot[] ammo, Slot[] casings)
+	{
+		return ContainerEmplacement.shouldScrollAmmo(ammo.length, casings.length)?new Slot[0]: ammo;
+	}
+
+	private Slot[] getStaticCasingSlots(Slot[] ammo, Slot[] casings)
+	{
+		return ContainerEmplacement.shouldScrollCasings(ammo.length, casings.length)?new Slot[0]: casings;
 	}
 }

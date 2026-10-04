@@ -70,7 +70,7 @@ public class ItemIIAmmoMortar extends ItemIIAmmoBase<EntityAmmoArtilleryProjecti
 	@Override
 	public float getCasingMass()
 	{
-		return 1.125f;
+		return 0.625f;
 	}
 
 	@Override

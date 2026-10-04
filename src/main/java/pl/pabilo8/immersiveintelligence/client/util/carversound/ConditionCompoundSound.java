@@ -7,7 +7,9 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.common.util.sound.AdvancedSounds.MultiSound;
 
+import javax.annotation.Nullable;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * A repeated sound with a beginning and end which plays while a condition is met
@@ -49,6 +51,23 @@ public class ConditionCompoundSound<T> extends CompoundSound
 	{
 		this(multiSound, SoundCategory.BLOCKS, pos, 1f, 1f, controller, shouldPlay);
 		start();
+	}
+
+
+	@Nullable
+	public static <P> ConditionCompoundSound<P> updateLoopSound(@Nullable ConditionCompoundSound<P> sound, MultiSound loopedSound, Vec3d position, P controller, Predicate<P> condition)
+	{
+		if(!condition.test(controller))
+		{
+			//Release the sound for restart
+			if(sound!=null)
+				sound.forceStop();
+			return null;
+		}
+
+		if(sound==null||sound.isDonePlaying())
+			return new ConditionCompoundSound<P>(loopedSound, position, controller, condition::test);
+		return sound;
 	}
 
 	@Override

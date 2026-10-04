@@ -34,6 +34,8 @@ import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
+import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
+import pl.pabilo8.modworks.annotations.item.GeneratedSubItemModel;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -150,9 +152,12 @@ public class ItemIIRadioTuner extends ItemIISubItemsBase<RadioTuners> implements
 		sendSetFrequencyPacket(player, frequency);
 	}
 
+	@GeneratedItemModels(itemName = "radio_configurator")
 	public enum RadioTuners implements IIItemEnum
 	{
+		@GeneratedSubItemModel(customTexturePath = "tools/radio_tuner_tool")
 		BASIC(IIConfig.radioBasicMaxFrequency),
+		@GeneratedSubItemModel(customTexturePath = "tools/advanced_radio_tuner_tool")
 		ADVANCED(IIConfig.radioAdvancedMaxFrequency);
 
 		final int maxFrequency;

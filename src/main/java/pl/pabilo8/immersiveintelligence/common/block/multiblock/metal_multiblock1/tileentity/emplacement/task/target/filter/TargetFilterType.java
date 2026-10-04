@@ -24,6 +24,7 @@ public enum TargetFilterType
 	MAX_HEALTH("max_health", MaxHealthTargetFilter::new, true),
 	DISTANCE("distance", DistanceTargetFilter::new, true),
 	HORIZONTAL_DISTANCE("horizontal_distance", HorizontalDistanceTargetFilter::new, true),
+	RELATIVE_DIRECTION("relative_direction", RelativeDirectionFilter::new, true),
 	ON_GROUND("on_ground", OnGroundTargetFilter::new, true),
 	IN_WATER("in_water", InWaterTargetFilter::new, true),
 	ON_FIRE("on_fire", OnFireTargetFilter::new, true),

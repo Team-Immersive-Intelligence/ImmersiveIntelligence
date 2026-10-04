@@ -64,7 +64,7 @@ import java.util.stream.Collectors;
  *
  * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
- * @updated 22.07.2026
+ * @updated 04.10.2026
  * @since 03.09.2025
  */
 public class DiplomacyHandler
@@ -494,6 +494,19 @@ public class DiplomacyHandler
 		return ownerIdentities.getOrDefault(uuid, NEUTRAL);
 	}
 
+	/**
+	 * Returns the valid player factions in display name order.
+	 */
+	public List<OwnerIdentity> getActivePlayerIdentities()
+	{
+		return ownerIdentities.values().stream()
+				.filter(identity -> !identity.isInvalid())
+				.filter(identity -> !NEUTRAL_UUID.equals(identity.getUUID())&&!GLOBAL_ENEMY_UUID.equals(identity.getUUID()))
+				.sorted(Comparator.comparing(OwnerIdentity::getDisplayName, String.CASE_INSENSITIVE_ORDER)
+						.thenComparing(OwnerIdentity::getStringUUID))
+				.collect(Collectors.toList());
+	}
+
 	@Nullable
 	public OwnerIdentity getIdentityByName(@Nonnull String name)
 	{
@@ -651,15 +664,8 @@ public class DiplomacyHandler
 
 	public List<OwnerIdentity> getPendingInvitationIdentitiesForPlayer(UUID playerUUID)
 	{
-		return ownerIdentities.values().stream()
-				.filter(oi -> !oi.isInvalid())
-				.filter(oi -> oi.getUUID()!=NEUTRAL_UUID)
-				.filter(oi -> oi.getUUID()!=GLOBAL_ENEMY_UUID)
-				.filter(identity -> !identity.isInvalid())
+		return getActivePlayerIdentities().stream()
 				.filter(identity -> identity.isInvited(playerUUID))
-				.sorted(Comparator
-						.comparing(OwnerIdentity::getDisplayName, String.CASE_INSENSITIVE_ORDER)
-						.thenComparing(identity -> identity.getUUID().toString()))
 				.collect(Collectors.toList());
 	}
 
@@ -669,62 +675,71 @@ public class DiplomacyHandler
 		return faction!=NEUTRAL?faction.getInvitedPlayers(): Collections.emptySet();
 	}
 
+	/**
+	 * Moves an invited player to the target faction and transfers a closed faction's properties.
+	 */
 	public boolean acceptInvitation(OwnerIdentity identity, UUID playerUUID)
 	{
-		if(identity.getUUID()!=NEUTRAL_UUID&&identity.getUUID()!=GLOBAL_ENEMY_UUID&&identity.isInvalid())
-			return false;
-		if(!identity.isInvited(playerUUID))
+		if(isRemote||identity.isInvalid()||NEUTRAL_UUID.equals(identity.getUUID())
+				||GLOBAL_ENEMY_UUID.equals(identity.getUUID())||!identity.isInvited(playerUUID))
 			return false;
 
-		//A stale invitation for an existing member must never overwrite their current role.
 		if(identity.isMember(playerUUID))
 		{
 			identity.removeInvitation(playerUUID);
 			saveAndSyncIdentity(identity);
 			return true;
 		}
+		if(!identity.getAvailableRoles().containsKey(identity.getStartingMemberRole()))
+			return false;
 
-		//Remove from old identity
-		Optional<OwnerIdentity> first = ownerIdentities.values().stream()
-				.filter(oi -> oi!=identity)
-				.filter(oi -> oi.isMember(playerUUID))
-				.findFirst();
-		if(first.isPresent())
-		{
-			//Check if the player is the last remaining player in the faction
-			OwnerIdentity previousIdentity = first.get();
-			boolean isLastOwner = previousIdentity.isOwner(playerUUID)&&previousIdentity.getMembers().size()==1;
-			previousIdentity.removeMember(playerUUID);
+		OwnerIdentity previous = getActivePlayerIdentities().stream()
+				.filter(other -> other.isMember(playerUUID))
+				.findFirst().orElse(null);
+		if(previous!=null&&previous.isOwner(playerUUID)&&previous.getMembers().size() > 1
+				&&previous.getMembers().stream().noneMatch(member -> !member.equals(playerUUID)&&previous.isOwner(member)))
+			return false;
 
-			//Pass all the properties owned by the previous identity to the new identity
-			if(isLastOwner)
-			{
-				IILogger.info("Passed all properties of faction %s to new owner %s after player %s accepted invitation.",
-						previousIdentity.getDisplayName(), identity.getDisplayName(), playerUUID);
-				for(IOwnableProperty value : properties.values())
-				{
-					IOwnableProperty master = value.master();
-					try
-					{
-						assert master!=null;
-						master.setOwnerIdentity(identity);
-					} catch(Exception e)
-					{
-						IILogger.error("Failed to transfer property %s from %s to %s after player %s accepted invitation.",
-								value.getUUID(), previousIdentity.getUUID(), identity.getUUID(), playerUUID);
-					}
-				}
-
-				//Reclaim chunks
-				for(IOwnableProperty value : properties.values())
-					claimChunks(value.master());
-			}
-		}
-
-		//Add first so a damaged role table cannot strand the player between identities.
+		//Add the new membership before removing the old membership.
 		identity.withMember(playerUUID, identity.getStartingMemberRole());
 		if(!identity.isMember(playerUUID))
 			return false;
+		if(previous!=null)
+		{
+			Set<IOwnableProperty> transferred = new HashSet<>();
+			if(previous.getMembers().size()==1)
+			{
+				for(IOwnableProperty property : new ArrayList<>(properties.values()))
+				{
+					IOwnableProperty master = property.master();
+					if(master!=null&&previous.equals(master.getOwnerIdentity()))
+						transferred.add(master);
+				}
+				for(IOwnableProperty master : transferred)
+					try
+					{
+						master.setOwnerIdentity(identity);
+					} catch(RuntimeException exception)
+					{
+						IILogger.error("Failed to transfer property %s from faction %s to faction %s.",
+								master.getUUID(), previous.getUUID(), identity.getUUID());
+					}
+			}
+			previous.removeMember(playerUUID);
+			//Refresh claims after the empty identity is invalidated.
+			for(IOwnableProperty master : transferred)
+				if(identity.equals(master.getOwnerIdentity()))
+					try
+					{
+						claimChunks(master);
+					} catch(RuntimeException exception)
+					{
+						IILogger.error("Failed to refresh claims for transferred property %s.", master.getUUID());
+					}
+			if(!previous.isInvalid())
+				saveAndSyncIdentity(previous);
+		}
+
 		identity.removeInvitation(playerUUID);
 		saveAndSyncIdentity(identity);
 		return true;
@@ -732,7 +747,7 @@ public class DiplomacyHandler
 
 	public boolean denyInvitation(OwnerIdentity identity, UUID playerUUID)
 	{
-		if(identity.getUUID()==NEUTRAL_UUID||identity.getUUID()==GLOBAL_ENEMY_UUID
+		if(isRemote||NEUTRAL_UUID.equals(identity.getUUID())||GLOBAL_ENEMY_UUID.equals(identity.getUUID())
 				||identity.isInvalid()||!identity.isInvited(playerUUID))
 			return false;
 		identity.removeInvitation(playerUUID);

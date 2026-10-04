@@ -35,6 +35,7 @@ public class AmmoComponentTNT extends AmmoComponent
 	{
 		new IIExplosion(world, owner, pos, dir,
 				6*componentSize, 4*multiplier, shape, false, componentSize > 0.125f, false, true)
+				.withParticleComponentSize(componentSize)
 				.doExplosion();
 	}
 }

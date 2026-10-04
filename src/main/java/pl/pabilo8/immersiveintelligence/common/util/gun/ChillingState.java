@@ -145,6 +145,8 @@ public class ChillingState implements INBTSerializable<NBTTagCompound>
 	@Override
 	public void deserializeNBT(NBTTagCompound nbt)
 	{
+		if(nbt==null)
+			nbt = new NBTTagCompound();
 		ticksSinceFireMission = Math.max(0, nbt.getInteger("since_mission"));
 		ticksSinceChill = Math.max(0, nbt.getInteger("since_chill"));
 		animationTick = nbt.hasKey("animation_tick")?nbt.getInteger("animation_tick"): -1;

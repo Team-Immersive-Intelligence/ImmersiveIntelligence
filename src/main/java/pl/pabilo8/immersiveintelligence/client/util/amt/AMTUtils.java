@@ -124,7 +124,6 @@ public class AMTUtils
 		{
 			IILogger.error("Couldn't load model for {}, either the path used is incorrect or a model file may be missing!", res);
 			return EMPTY;
-//			return ((OBJModel)ModelLoaderRegistry.getMissingModel());
 		}
 	}
 

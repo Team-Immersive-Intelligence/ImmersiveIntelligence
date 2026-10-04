@@ -1,0 +1,22 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    " P ",
+    " P ",
+    "PCP"
+  ],
+  "key": {
+    "P": {
+      "type": "forge:ore_dict",
+      "ore": "plateDuraluminium"
+    },
+    "C": {
+      "item": "immersiveengineering:material",
+      "data": 9
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:ammo_casing",
+    "data": 13
+  }
+}

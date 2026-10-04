@@ -18,7 +18,7 @@ import static blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandl
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 19.07.2026
+ * @updated 24.09.2026
  * @since 31.05.2019
  */
 public class DataWireNetwork
@@ -49,7 +49,6 @@ public class DataWireNetwork
 			if(connsAtBlock!=null&&iic!=null)
 				for(Connection c : connsAtBlock)
 					if(Objects.equals(c.cableType.getCategory(), IIDataWireType.DATA_CATEGORY)&&
-							iic.allowEnergyToPass(c)&&
 							!closed.contains(c.end))
 						open.add(c.end);
 		}

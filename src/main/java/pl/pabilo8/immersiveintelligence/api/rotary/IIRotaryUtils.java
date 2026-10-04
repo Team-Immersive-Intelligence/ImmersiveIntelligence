@@ -115,7 +115,7 @@ public class IIRotaryUtils
 	 * @return {@link EnumActionResult#SUCCESS} if the connection was successful, {@link EnumActionResult#FAIL} if the connection failed, {@link EnumActionResult#PASS} if the connection was not attempted
 	 */
 	public static EnumActionResult useCoil(IWireCoil coil, EntityPlayer player, World world, BlockPos pos,
-	                                       EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
+										   EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		TileEntity tileEntity = world.getTileEntity(pos);
 		//Tile entity is not a rotary device
@@ -384,6 +384,18 @@ public class IIRotaryUtils
 	//--- Conversion Methods ---//
 
 	/**
+	 * Converts II rotary energy to the rotation value accepted by an IE dynamo.
+	 *
+	 * @param energy rotary energy in RoF
+	 * @return the IE rotation value, or {@code 0} when conversion is disabled
+	 */
+	public static double IIToIE(float energy)
+	{
+		double conversion = Machines.dynamo_output*rofConversionRatio;
+		return conversion > 0?energy/conversion: 0;
+	}
+
+	/**
 	 * Calculates the torque for a rotary device based on its rotation speed.
 	 *
 	 * @param t        the tile entity of the rotary device
@@ -408,11 +420,11 @@ public class IIRotaryUtils
 	public static float[] IEToII(double rotation, TileEntity device)
 	{
 		float torque = getTorqueForIEDevice(device, 1);
-		int output = (int)(20*Machines.dynamo_output*rotation*rofConversionRatio);
-		float speed = output/torque;
-		torque = output/speed;
+		if(torque <= 0)
+			return new float[]{0, 0};
 
-		return new float[]{speed, torque};
+		float energy = (float)(Machines.dynamo_output*rotation*rofConversionRatio);
+		return new float[]{energy/torque, torque};
 	}
 
 	public static int getMaxWorldRotationTicks()

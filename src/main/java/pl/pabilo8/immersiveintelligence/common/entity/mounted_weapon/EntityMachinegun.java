@@ -39,13 +39,13 @@ import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleContr
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleControls.MouseBinding;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine.Magazines;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponUpgrade;
-import pl.pabilo8.immersiveintelligence.common.util.FilteredFluidTank;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.entity.SyncedDurability;
+import pl.pabilo8.immersiveintelligence.common.util.fluid.FilteredFluidTank;
 import pl.pabilo8.immersiveintelligence.common.util.gun.GunRecoil;
 import pl.pabilo8.immersiveintelligence.common.util.gun.GunShootingHandler;
 import pl.pabilo8.immersiveintelligence.common.util.gun.ammoprovider.GunAmmoProviderAmmoCrate;
@@ -56,8 +56,10 @@ import javax.annotation.Nonnull;
 import java.util.EnumSet;
 
 /**
+ * Operates a mounted machinegun with magazines or a crate-fed ammunition supply.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 06.09.2026
+ * @updated 03.10.2026
  * @ii-approved 0.3.1
  * @since 01.11.2019
  */
@@ -115,6 +117,10 @@ public class EntityMachinegun extends EntityMountedWeapon implements IAdvancedTe
 		this.setPosition(pos.getX()+0.5, pos.getY(), pos.getZ()+0.5);
 		this.aim.withCenterYaw(yaw).withCurrentAngles(yaw, 0);
 		setOriginStack(stack);
+		//Read item magazines only on placement. World NBT restores the providers directly.
+		this.loadingMagazine1.setLoadedStack(ItemNBTHelper.getItemStack(stack, "magazine1"));
+		if(upgrades.contains(WeaponUpgrade.SECOND_MAGAZINE))
+			this.loadingMagazine2.setLoadedStack(ItemNBTHelper.getItemStack(stack, "magazine2"));
 		markOriginStackAuthoritative();
 		if(upgrades.contains(WeaponUpgrade.TRIPOD))
 			this.posY += 0.385f;
@@ -149,8 +155,6 @@ public class EntityMachinegun extends EntityMountedWeapon implements IAdvancedTe
 		this.tank.setCapacity(0);
 		this.setSize(0.77f, 0.65f);
 
-		this.loadingMagazine1.setLoadedStack(ItemNBTHelper.getItemStack(stack, "magazine1"));
-
 		//Set upgrade parameters
 		assert stack.getItem()==IIContent.itemMachinegun;
 		this.upgrades = IIContent.itemMachinegun.listUpgrades(stack, WeaponUpgrade.class);
@@ -169,11 +173,7 @@ public class EntityMachinegun extends EntityMountedWeapon implements IAdvancedTe
 					this.recoil.withCoolantTank(() -> tank, Machinegun.waterCoolingFluidUsage);
 					this.tank.setCapacity(Machinegun.waterCoolingTankCapacity);
 				}
-				case SECOND_MAGAZINE ->
-				{
-					this.gunHandler.withAmmoProvider(loadingMagazine2);
-					this.loadingMagazine2.setLoadedStack(ItemNBTHelper.getItemStack(stack, "magazine2"));
-				}
+				case SECOND_MAGAZINE -> this.gunHandler.withAmmoProvider(loadingMagazine2);
 				case HASTY_BIPOD -> this.maxSetupTime = (int)(this.maxSetupTime*Machinegun.hastyBipodSetupTimeMultiplier);
 				case PRECISE_BIPOD -> this.maxSetupTime = (int)(this.maxSetupTime*Machinegun.preciseBipodSetupTimeMultiplier);
 				case SHIELD -> this.maxSetupTime = (int)(this.maxSetupTime*Machinegun.shieldSetupTimeMultiplier);

@@ -45,9 +45,22 @@ public class DecoTextField extends DecoTextInputBase<DecoTextField>
 	}
 
 	@Override
+	protected void draw(int mouseX, int mouseY, float partialTicks)
+	{
+		updateArrowsPosition();
+		super.draw(mouseX, mouseY, partialTicks);
+	}
+
+	@Override
 	protected int getTrailingDecorationWidth()
 	{
 		return arrows!=null&&children.contains(arrows)?arrows.width: 0;
+	}
+
+	@Override
+	protected int getBackgroundWidth()
+	{
+		return arrows==null?super.getBackgroundWidth(): width-arrows.width;
 	}
 
 	@Override

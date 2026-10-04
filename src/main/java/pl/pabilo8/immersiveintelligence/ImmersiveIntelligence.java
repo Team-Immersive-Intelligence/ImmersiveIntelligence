@@ -20,6 +20,7 @@ import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Factions
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.IISaveData;
 import pl.pabilo8.immersiveintelligence.common.commands.CommandII;
+import pl.pabilo8.immersiveintelligence.common.commands.faction.CommandIIFaction;
 import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
 import pl.pabilo8.immersiveintelligence.common.util.IIReflectionUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler;
@@ -115,6 +116,8 @@ public class ImmersiveIntelligence
 	{
 		IILogger.debug("Registering II Commands");
 		event.registerServerCommand(new CommandII());
+		if(Factions.enableFactions)
+			event.registerServerCommand(new CommandIIFaction());
 
 		if(FMLCommonHandler.instance().getEffectiveSide()==Side.SERVER)
 		{

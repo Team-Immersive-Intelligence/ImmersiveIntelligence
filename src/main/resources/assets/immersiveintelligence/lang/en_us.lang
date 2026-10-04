@@ -294,6 +294,7 @@ desc.immersiveintelligence.toolupgrade.item.autorevolver=Autorevolver
 desc.immersiveintelligence.toolupgrade.item.rifle=Rifle
 
 desc.immersiveintelligence.filled_casing=Filled with Gunpowder
+desc.immersiveintelligence.filled_rocket=Filled with Rocket Propellant
 desc.immersiveintelligence.explosives_programmed=Programmed with a Data Packet
 
 desc.immersiveintelligence.toolupgrade.item.light_engineer_helmet=Engineer's Light Helmet
@@ -477,6 +478,7 @@ item.immersiveintelligence.bullet_magazine.cpds_drum.name=CPDS Drum Magazine
 item.immersiveintelligence.bullet_magazine.rifle.name=Rifle Magazine
 
 item.immersiveintelligence.casing_pouch.name=Spent Casings Pouch
+item.immersiveintelligence.clipboard.name=Engineer's Clipboard
 
 item.immersiveintelligence.motor_gear.copper.name=Copper Gear
 item.immersiveintelligence.motor_gear.brass.name=Brass Gear
@@ -658,6 +660,31 @@ tile.immersiveintelligence.small_crate.metal_crate_wide.name=Small Metal Crate (
 tile.immersiveintelligence.small_crate.reinforced_crate_box.name=Small Reinforced Crate (Box)
 tile.immersiveintelligence.small_crate.reinforced_crate_cube.name=Small Reinforced Crate (Cube)
 tile.immersiveintelligence.small_crate.reinforced_crate_wide.name=Small Reinforced Crate (Wide)
+tile.immersiveintelligence.clipboard.clipboard.name=Engineer's Clipboard
+
+ii.gui.clipboard.title=Engineer's Clipboard
+ii.gui.clipboard.packet_variables=%s data variables
+ii.gui.clipboard.action.copy=Copy entry
+ii.gui.clipboard.action.todo=Turn into a ToDo Entry
+ii.gui.clipboard.add=Add a Text Entry
+ii.gui.clipboard.add_todo=Add a ToDo Entry
+ii.gui.clipboard.add_position=Add Current Position
+ii.gui.clipboard.todo_completed=Task completed
+ii.gui.clipboard.action.remove=Delete entry
+ii.gui.clipboard.type.plain_text=Plain Text
+ii.gui.clipboard.type.data_variable=II Data System Variable
+ii.gui.clipboard.type.data_packet=II Data System Packet
+ii.gui.clipboard.type.item_stack=Item Stack
+ii.gui.clipboard.type.ingredient_stack=Ingredient Stack
+ii.gui.clipboard.type.fluid_stack=Fluid Stack
+ii.gui.clipboard.type.dust_stack=Dust Stack
+ii.gui.clipboard.type.integer=Integer
+ii.gui.clipboard.type.float=Float
+ii.gui.clipboard.type.double=Double
+ii.gui.clipboard.type.enum=Enum Value
+ii.gui.clipboard.type.manual_page=Engineer's Manual Page
+ii.gui_tooltip.widget.clipboard.show.unnamed=Show Engineer's Clipboard
+ii.gui_tooltip.widget.clipboard.show.named=Show Clipboard: %s
 
 tile.immersiveintelligence.metal_fortification.steel_chain_fence.name=Steel Chain Fence
 tile.immersiveintelligence.metal_fortification.brass_chain_fence.name=Brass Chain Fence
@@ -834,6 +861,7 @@ fluid.brine=Brine
 fluid.ammonia=Ammonia
 fluid.hexamine=Hexamine
 fluid.methanol=Methanol
+fluid.rocket_propellant=Rocket Propellant
 
 fluid.latex=Latex
 
@@ -2264,6 +2292,15 @@ datasystem.immersiveintelligence.function.array_create.param.first.desc=
 datasystem.immersiveintelligence.function.array_create.result=Array
 datasystem.immersiveintelligence.function.array_create.result.desc=The new array
 
+datasystem.immersiveintelligence.function.array_join=Join Arrays
+datasystem.immersiveintelligence.function.array_join.desc=Returns a new array with the elements of both input arrays
+datasystem.immersiveintelligence.function.array_join.param.first=First Array
+datasystem.immersiveintelligence.function.array_join.param.first.desc=The array placed first
+datasystem.immersiveintelligence.function.array_join.param.second=Second Array
+datasystem.immersiveintelligence.function.array_join.param.second.desc=The array placed after the first
+datasystem.immersiveintelligence.function.array_join.result=Array
+datasystem.immersiveintelligence.function.array_join.result.desc=The joined array
+
 datasystem.immersiveintelligence.function.array_get=Get
 datasystem.immersiveintelligence.function.array_get.desc=Returns the value at the specified index in the input array
 datasystem.immersiveintelligence.function.array_get.param.array=Array
@@ -3570,6 +3607,7 @@ ii.gui.emplacement.target_tree.filter.tooltip=Select the condition evaluated for
 ii.gui.emplacement.target_tree.entity_id=Entity ID
 ii.gui.emplacement.target_tree.mod_id=Mod ID
 ii.gui.emplacement.target_tree.entity_type=Type
+ii.gui.emplacement.target_tree.direction=Direction
 ii.gui.emplacement.target_tree.name=Name
 ii.gui.emplacement.target_tree.comparison=Test
 ii.gui.emplacement.target_tree.expected=State
@@ -3603,6 +3641,12 @@ ii.gui.emplacement.target_filter.distance=Distance
 ii.gui.emplacement.target_filter.distance.tooltip=Compare distance from the weapon targeting centre with a block threshold.
 ii.gui.emplacement.target_filter.horizontal_distance=Horizontal Distance
 ii.gui.emplacement.target_filter.horizontal_distance.tooltip=Compare X/Z distance from the weapon targeting centre with a block threshold, ignoring height.
+ii.gui.emplacement.target_filter.relative_direction=Relative Direction
+ii.gui.emplacement.target_filter.relative_direction.tooltip=Match the dominant north, east, south or west direction from the weapon targeting centre to the target, ignoring height.
+ii.gui.emplacement.target_filter.relative_direction.north=North
+ii.gui.emplacement.target_filter.relative_direction.east=East
+ii.gui.emplacement.target_filter.relative_direction.south=South
+ii.gui.emplacement.target_filter.relative_direction.west=West
 ii.gui.emplacement.target_filter.on_ground=On Ground
 ii.gui.emplacement.target_filter.on_ground.tooltip=Match whether the target is on the ground.
 ii.gui.emplacement.target_filter.in_water=In Water
@@ -3991,3 +4035,109 @@ item.immersiveintelligence.bullet.component.impetus.name=Impetus
 ie.manual.entry.bullet_component.impetus=Impetus
 ie.manual.entry.bullet_component.impetus.lore=Rift power in a can
 ie.manual.entry.bullet_component.impetus.desc=Dangerous byproduct of Flux Rifts, and not fully understood material or phenomena. "Infusing" the shell with the Impetus energy very significantly magnifies and supercharges its lethality.
+
+#Banner patterns
+
+item.banner.immersiveintelligence_wrench.black=Black Wrench
+item.banner.immersiveintelligence_wrench.red=Red Wrench
+item.banner.immersiveintelligence_wrench.green=Green Wrench
+item.banner.immersiveintelligence_wrench.brown=Brown Wrench
+item.banner.immersiveintelligence_wrench.blue=Blue Wrench
+item.banner.immersiveintelligence_wrench.purple=Purple Wrench
+item.banner.immersiveintelligence_wrench.cyan=Cyan Wrench
+item.banner.immersiveintelligence_wrench.silver=Light Grey Wrench
+item.banner.immersiveintelligence_wrench.gray=Grey Wrench
+item.banner.immersiveintelligence_wrench.pink=Pink Wrench
+item.banner.immersiveintelligence_wrench.lime=Lime Wrench
+item.banner.immersiveintelligence_wrench.yellow=Yellow Wrench
+item.banner.immersiveintelligence_wrench.lightBlue=Light Blue Wrench
+item.banner.immersiveintelligence_wrench.magenta=Magenta Wrench
+item.banner.immersiveintelligence_wrench.orange=Orange Wrench
+item.banner.immersiveintelligence_wrench.white=White Wrench
+
+item.banner.immersiveintelligence_hammer_and_wrench.black=Black Hammer and Wrench
+item.banner.immersiveintelligence_hammer_and_wrench.red=Red Hammer and Wrench
+item.banner.immersiveintelligence_hammer_and_wrench.green=Green Hammer and Wrench
+item.banner.immersiveintelligence_hammer_and_wrench.brown=Brown Hammer and Wrench
+item.banner.immersiveintelligence_hammer_and_wrench.blue=Blue Hammer and Wrench
+item.banner.immersiveintelligence_hammer_and_wrench.purple=Purple Hammer and Wrench
+item.banner.immersiveintelligence_hammer_and_wrench.cyan=Cyan Hammer and Wrench
+item.banner.immersiveintelligence_hammer_and_wrench.silver=Light Grey Hammer and Wrench
+item.banner.immersiveintelligence_hammer_and_wrench.gray=Grey Hammer and Wrench
+item.banner.immersiveintelligence_hammer_and_wrench.pink=Pink Hammer and Wrench
+item.banner.immersiveintelligence_hammer_and_wrench.lime=Lime Hammer and Wrench
+item.banner.immersiveintelligence_hammer_and_wrench.yellow=Yellow Hammer and Wrench
+item.banner.immersiveintelligence_hammer_and_wrench.lightBlue=Light Blue Hammer and Wrench
+item.banner.immersiveintelligence_hammer_and_wrench.magenta=Magenta Hammer and Wrench
+item.banner.immersiveintelligence_hammer_and_wrench.orange=Orange Hammer and Wrench
+item.banner.immersiveintelligence_hammer_and_wrench.white=White Hammer and Wrench
+
+item.banner.immersiveintelligence_electric_hammer.black=Black Electric Hammer
+item.banner.immersiveintelligence_electric_hammer.red=Red Electric Hammer
+item.banner.immersiveintelligence_electric_hammer.green=Green Electric Hammer
+item.banner.immersiveintelligence_electric_hammer.brown=Brown Electric Hammer
+item.banner.immersiveintelligence_electric_hammer.blue=Blue Electric Hammer
+item.banner.immersiveintelligence_electric_hammer.purple=Purple Electric Hammer
+item.banner.immersiveintelligence_electric_hammer.cyan=Cyan Electric Hammer
+item.banner.immersiveintelligence_electric_hammer.silver=Light Grey Electric Hammer
+item.banner.immersiveintelligence_electric_hammer.gray=Grey Electric Hammer
+item.banner.immersiveintelligence_electric_hammer.pink=Pink Electric Hammer
+item.banner.immersiveintelligence_electric_hammer.lime=Lime Electric Hammer
+item.banner.immersiveintelligence_electric_hammer.yellow=Yellow Electric Hammer
+item.banner.immersiveintelligence_electric_hammer.lightBlue=Light Blue Electric Hammer
+item.banner.immersiveintelligence_electric_hammer.magenta=Magenta Electric Hammer
+item.banner.immersiveintelligence_electric_hammer.orange=Orange Electric Hammer
+item.banner.immersiveintelligence_electric_hammer.white=White Electric Hammer
+
+item.banner.immersiveintelligence_electric_wrench.black=Black Electric Wrench
+item.banner.immersiveintelligence_electric_wrench.red=Red Electric Wrench
+item.banner.immersiveintelligence_electric_wrench.green=Green Electric Wrench
+item.banner.immersiveintelligence_electric_wrench.brown=Brown Electric Wrench
+item.banner.immersiveintelligence_electric_wrench.blue=Blue Electric Wrench
+item.banner.immersiveintelligence_electric_wrench.purple=Purple Electric Wrench
+item.banner.immersiveintelligence_electric_wrench.cyan=Cyan Electric Wrench
+item.banner.immersiveintelligence_electric_wrench.silver=Light Grey Electric Wrench
+item.banner.immersiveintelligence_electric_wrench.gray=Grey Electric Wrench
+item.banner.immersiveintelligence_electric_wrench.pink=Pink Electric Wrench
+item.banner.immersiveintelligence_electric_wrench.lime=Lime Electric Wrench
+item.banner.immersiveintelligence_electric_wrench.yellow=Yellow Electric Wrench
+item.banner.immersiveintelligence_electric_wrench.lightBlue=Light Blue Electric Wrench
+item.banner.immersiveintelligence_electric_wrench.magenta=Magenta Electric Wrench
+item.banner.immersiveintelligence_electric_wrench.orange=Orange Electric Wrench
+item.banner.immersiveintelligence_electric_wrench.white=White Electric Wrench
+
+item.banner.immersiveintelligence_engineer_helmet.black=Black Engineer's Helmet
+item.banner.immersiveintelligence_engineer_helmet.red=Red Engineer's Helmet
+item.banner.immersiveintelligence_engineer_helmet.green=Green Engineer's Helmet
+item.banner.immersiveintelligence_engineer_helmet.brown=Brown Engineer's Helmet
+item.banner.immersiveintelligence_engineer_helmet.blue=Blue Engineer's Helmet
+item.banner.immersiveintelligence_engineer_helmet.purple=Purple Engineer's Helmet
+item.banner.immersiveintelligence_engineer_helmet.cyan=Cyan Engineer's Helmet
+item.banner.immersiveintelligence_engineer_helmet.silver=Light Grey Engineer's Helmet
+item.banner.immersiveintelligence_engineer_helmet.gray=Grey Engineer's Helmet
+item.banner.immersiveintelligence_engineer_helmet.pink=Pink Engineer's Helmet
+item.banner.immersiveintelligence_engineer_helmet.lime=Lime Engineer's Helmet
+item.banner.immersiveintelligence_engineer_helmet.yellow=Yellow Engineer's Helmet
+item.banner.immersiveintelligence_engineer_helmet.lightBlue=Light Blue Engineer's Helmet
+item.banner.immersiveintelligence_engineer_helmet.magenta=Magenta Engineer's Helmet
+item.banner.immersiveintelligence_engineer_helmet.orange=Orange Engineer's Helmet
+item.banner.immersiveintelligence_engineer_helmet.white=White Engineer's Helmet
+
+item.banner.immersiveintelligence_infrared_helmet.black=Black Infrared Helmet
+item.banner.immersiveintelligence_infrared_helmet.red=Red Infrared Helmet
+item.banner.immersiveintelligence_infrared_helmet.green=Green Infrared Helmet
+item.banner.immersiveintelligence_infrared_helmet.brown=Brown Infrared Helmet
+item.banner.immersiveintelligence_infrared_helmet.blue=Blue Infrared Helmet
+item.banner.immersiveintelligence_infrared_helmet.purple=Purple Infrared Helmet
+item.banner.immersiveintelligence_infrared_helmet.cyan=Cyan Infrared Helmet
+item.banner.immersiveintelligence_infrared_helmet.silver=Light Grey Infrared Helmet
+item.banner.immersiveintelligence_infrared_helmet.gray=Grey Infrared Helmet
+item.banner.immersiveintelligence_infrared_helmet.pink=Pink Infrared Helmet
+item.banner.immersiveintelligence_infrared_helmet.lime=Lime Infrared Helmet
+item.banner.immersiveintelligence_infrared_helmet.yellow=Yellow Infrared Helmet
+item.banner.immersiveintelligence_infrared_helmet.lightBlue=Light Blue Infrared Helmet
+item.banner.immersiveintelligence_infrared_helmet.magenta=Magenta Infrared Helmet
+item.banner.immersiveintelligence_infrared_helmet.orange=Orange Infrared Helmet
+item.banner.immersiveintelligence_infrared_helmet.white=White Infrared Helmet
+
+# Banners
