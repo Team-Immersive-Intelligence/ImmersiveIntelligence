@@ -1,7 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.block.mines.tileentity;
 
 import blusunrize.immersiveengineering.api.DimensionBlockPos;
-import blusunrize.immersiveengineering.api.TargetingInfo;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
 import blusunrize.immersiveengineering.api.energy.wires.WireType;
 import blusunrize.immersiveengineering.api.energy.wires.redstone.IRedstoneConnector;
@@ -15,7 +14,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.radio.IRadioDevice;
@@ -23,8 +21,10 @@ import pl.pabilo8.immersiveintelligence.api.data.radio.RadioNetwork;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.Mines;
 
 /**
+ * Detonates a mine when it receives a matching radio packet or a redstone signal.
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 06.02.2021
+ * @updated 04.10.2026
  */
 public class TileEntityRadioExplosives extends TileEntityMineBase implements ITickable, IBlockBounds, IDirectionalTile, IRadioDevice, IRedstoneConnector
 {
@@ -197,13 +197,13 @@ public class TileEntityRadioExplosives extends TileEntityMineBase implements ITi
 	}
 
 	@Override
-	protected boolean isRelay()
+	public boolean isRelay()
 	{
 		return true;
 	}
 
 	@Override
-	public boolean canConnectCable(WireType cableType, TargetingInfo target, Vec3i offset)
+	public boolean acceptsWireType(WireType cableType)
 	{
 		return WireType.REDSTONE_CATEGORY.equals(cableType.getCategory());
 	}

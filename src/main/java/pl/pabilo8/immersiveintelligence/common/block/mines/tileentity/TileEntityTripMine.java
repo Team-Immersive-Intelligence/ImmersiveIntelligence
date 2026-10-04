@@ -120,18 +120,26 @@ public class TileEntityTripMine extends TileEntityMineBase implements IAdvancedB
 		//Digging the mine in
 		if(this.digLevel < 15&&heldItem.getItem().getToolClasses(heldItem).contains("shovel"))
 		{
+			if(world.isRemote)
+				return true;
 			heldItem.damageItem(1, player);
 			Material material = world.getBlockState(pos.down()).getMaterial();
 			if(Arrays.stream(MATCHING_MATERIALS).noneMatch(material1 -> material1==material))
 				return true;
-			digLevel += heldItem.getItem() instanceof ItemIITrenchShovel?5: 1;
+			digLevel = MathHelper.clamp(digLevel+(heldItem.getItem() instanceof ItemIITrenchShovel?5: 1), 0, 15);
+			markDirty();
+			world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
 			world.playSound(pos.getX(), pos.getY()+1, pos.getZ(), SoundEvents.BLOCK_GRASS_BREAK, SoundCategory.BLOCKS, 1f, 1f, false);
 			return true;
 		}
 		//Placing grass on top
 		else if(digLevel==15&&heldItem.getItem() instanceof ItemBlock&&((ItemBlock)heldItem.getItem()).getBlock()==Blocks.TALLGRASS)
 		{
+			if(world.isRemote)
+				return true;
 			grass = true;
+			markDirty();
+			world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
 			if(!player.isCreative())
 				heldItem.shrink(1);
 			world.playSound(pos.getX(), pos.getY()+1, pos.getZ(), SoundEvents.BLOCK_GRASS_BREAK, SoundCategory.BLOCKS, 1f, 1f, false);
@@ -159,7 +167,7 @@ public class TileEntityTripMine extends TileEntityMineBase implements IAdvancedB
 	public void onEntityCollision(World world, Entity entity)
 	{
 		super.onEntityCollision(world, entity);
-		if(digLevel > 6||entity.posY > this.getPos().getY())
+		if(canTrigger(entity)&&(digLevel > 6||entity.posY > this.getPos().getY()))
 			this.explode();
 	}
 }

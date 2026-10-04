@@ -5,7 +5,6 @@ import blusunrize.immersiveengineering.api.Lib;
 import blusunrize.immersiveengineering.api.energy.wires.IWireCoil;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
 import blusunrize.immersiveengineering.api.energy.wires.WireType;
-import blusunrize.immersiveengineering.api.tool.IElectricEquipment.ElectricSource;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
@@ -71,6 +70,12 @@ public class ItemIITripWireCoil extends ItemIIBase implements IWireCoil
 		return ApiUtils.doCoilUse(this, player, world, pos, hand, side, hitX, hitY, hitZ);
 	}
 
+	/**
+	 * Defines a wire that can trigger mines without electric damage.
+	 *
+	 * @author Pabilo8 (pabilo@iiteam.net)
+	 * @since 04.10.2026
+	 */
 	public static class IITripWireType extends WireType
 	{
 		public IITripWireType()
@@ -90,7 +95,7 @@ public class ItemIITripWireCoil extends ItemIIBase implements IWireCoil
 		@Override
 		public int getTransferRate()
 		{
-			return 1;
+			return 0;
 		}
 
 		@Override
@@ -139,7 +144,7 @@ public class ItemIITripWireCoil extends ItemIIBase implements IWireCoil
 		@Override
 		public boolean isEnergyWire()
 		{
-			return true;
+			return false;
 		}
 
 		@Override
@@ -151,13 +156,7 @@ public class ItemIITripWireCoil extends ItemIIBase implements IWireCoil
 		@Override
 		public boolean canCauseDamage()
 		{
-			return true;
-		}
-
-		@Override
-		public ElectricSource getElectricSource()
-		{
-			return super.getElectricSource();
+			return false;
 		}
 	}
 }
