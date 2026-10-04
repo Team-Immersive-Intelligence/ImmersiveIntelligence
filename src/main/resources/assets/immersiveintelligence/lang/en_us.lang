@@ -907,6 +907,15 @@ fluid.methanol=Methanol
 
 fluid.latex=Latex
 
+fluid.acetaldol=Acetaldol
+fluid.atropine=Atropine
+fluid.glycerin=Glycerin
+fluid.acetic_acid=Acetic Acid
+fluid.hydrazine=Hydrazine
+fluid.hydrogen_peroxide=Hydrogen Peroxide
+fluid.nitroglycerin=Nitroglycerin
+fluid.sodium_hypochlorite=Sodium Hypochlorite
+
 #Dusts
 dust.gunpowder=Gunpowder
 dust.sulfur=Sulfur

@@ -410,6 +410,7 @@ public class IIContent
 	public static BlockIIFluid blockGasHydrogen, blockGasOxygen, blockGasChlorine, blockGasCO2, blockGasCO;
 	public static BlockIIFluid blockGasMustardGas;
 	public static BlockIIFluid blockFluidLatex;
+	public static BlockIIFluid blockAcetaldol, blockAtropine, blockGlycerin, blockAceticAcid, blockHydrazine, blockNitroglycerin, blockHydrogenPeroxide, blockSodiumHypochlorite;
 	//fluids
 	public static Fluid fluidInkBlack, fluidInkCyan, fluidInkMagenta, fluidInkYellow;
 	public static Fluid fluidEtchingAcid, fluidSulfuricAcid, fluidHydrofluoricAcid, fluidNitricAcid, fluidFormicAcid;
@@ -418,6 +419,7 @@ public class IIContent
 	public static Fluid gasHydrogen, gasOxygen, gasChlorine, gasCO2, gasCO;
 	public static Fluid gasMustardGas;
 	public static Fluid fluidLatex, fluidMilk;
+	public static Fluid fluidAcetaldol, fluidAtropine, fluidGlycerin, fluidAceticAcid, fluidHydrazine, fluidNitroglycerin, fluidHydrogenPeroxide, fluidSodiumHypochlorite;
 	//biomes
 	public static BiomeWasteland biomeWasteland = new BiomeWasteland();
 
@@ -445,6 +447,15 @@ public class IIContent
 		IIContent.gasMustardGas = makeFluid("mustard_gas", IIColor.fromHex("66807551"), true, 127, 340);
 		IIContent.fluidMilk = makeFluid("milk", "item.milk.name", IIColor.fromHex("ffffff"), false, 1000, 1200, 0, 298);
 
+		IIContent.fluidAcetaldol = makeFluid("acetaldol", IIColor.fromHex("fffabf"), false, 1000, 1200);
+		IIContent.fluidAtropine = makeFluid("atropine", IIColor.fromHex("ad7d7"), false, 1000, 1200);
+		IIContent.fluidGlycerin = makeFluid("glycerin", IIColor.fromHex("e6e3e3"), false, 1000, 1200);
+		IIContent.fluidAceticAcid = makeFluid("acetic_acid", IIColor.fromHex("f2f0f0"), false, 1000, 1200);
+		IIContent.fluidHydrazine = makeFluid("hydrazine", IIColor.fromHex("ff7373"), false, 1000, 1200);
+		IIContent.fluidNitroglycerin = makeFluid("nitroglycerin", IIColor.fromHex("97c7fc"), false, 1000, 1200);
+		IIContent.fluidHydrogenPeroxide = makeFluid("hydrogen_peroxide", IIColor.fromHex("97c7fc"), false, 1000, 1200);
+		IIContent.fluidSodiumHypochlorite = makeFluid("sodium_hypochlorite", IIColor.fromHex("97c7fc"), false, 1000, 1200);
+
 		IIContent.blockFluidInkBlack = new BlockIIFluid("ink", IIContent.fluidInkBlack, Material.WATER);
 		IIContent.blockFluidInkCyan = new BlockIIFluid("ink_cyan", IIContent.fluidInkCyan, Material.WATER);
 		IIContent.blockFluidInkMagenta = new BlockIIFluid("ink_magenta", IIContent.fluidInkMagenta, Material.WATER);
@@ -459,6 +470,14 @@ public class IIContent
 
 		IIContent.blockFluidAmmonia = new BlockIIFluid("ammonia", IIContent.fluidAmmonia, Material.WATER);
 		IIContent.blockFluidMethanol = new BlockIIFluid("methanol", IIContent.fluidMethanol, Material.WATER);
+
+		IIContent.blockAcetaldol = new BlockIIFluid("acetaldol", IIContent.fluidAcetaldol, Material.WATER);
+		IIContent.blockAtropine = new BlockIIFluid("atropine", IIContent.fluidAtropine, Material.WATER);
+		IIContent.blockGlycerin = new BlockIIFluid("glycerin", IIContent.fluidGlycerin, Material.WATER);
+		IIContent.blockAceticAcid = new BlockIIFluid("acetic_acid	", IIContent.fluidAceticAcid, Material.WATER);
+		IIContent.blockHydrazine = new BlockIIFluid("hydrazine", IIContent.fluidHydrazine, Material.WATER);
+		IIContent.blockNitroglycerin = new BlockIIFluid("nitroglycerin", IIContent.fluidNitroglycerin, Material.WATER);
+		IIContent.blockHydrogenPeroxide = new BlockIIFluid("hydrogen_peroxide", IIContent.fluidHydrogenPeroxide, Material.WATER);
 
 		IIContent.blockGasHydrogen = new BlockIIFluid("hydrogen", IIContent.gasHydrogen, Material.WATER);
 		IIContent.blockGasOxygen = new BlockIIFluid("oxygen", IIContent.gasOxygen, Material.WATER)
@@ -501,5 +520,13 @@ public class IIContent
 		IIContent.fluidLatex = FluidRegistry.getFluid("latex");
 		IIContent.gasMustardGas = FluidRegistry.getFluid("mustard_gas");
 		IIContent.fluidMilk = FluidRegistry.getFluid("milk");
+		IIContent.fluidAcetaldol = FluidRegistry.getFluid("acetaldol");
+		IIContent.fluidAtropine = FluidRegistry.getFluid("atropine");
+		IIContent.fluidGlycerin = FluidRegistry.getFluid("glycerin");
+		IIContent.fluidAceticAcid = FluidRegistry.getFluid("acetic_acid");
+		IIContent.fluidHydrazine = FluidRegistry.getFluid("hydrazine");
+		IIContent.fluidNitroglycerin = FluidRegistry.getFluid("nitroglycerin");
+		IIContent.fluidHydrogenPeroxide = FluidRegistry.getFluid("hydrogen_peroxide");
+		IIContent.fluidSodiumHypochlorite = FluidRegistry.getFluid("sodium_hypochlorite");
 	}
 }
