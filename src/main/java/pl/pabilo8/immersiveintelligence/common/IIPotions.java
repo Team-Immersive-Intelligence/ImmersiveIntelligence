@@ -34,6 +34,8 @@ import java.util.List;
  */
 public class IIPotions
 {
+	private static boolean initialized;
+
 	public static Potion suppression, brokenArmor, corrosion, infraredVision, ironWill, wellSupplied, concealed;
 	public static Potion exposed, medicalTreatment, undergoingRepairs, radiation, nuclearHeat, movementAssist;
 	public static Potion homeShores, homeland, heartland, foreignShores, enemySoil, enemysNest;
@@ -41,6 +43,10 @@ public class IIPotions
 
 	public static void init()
 	{
+		if(initialized)
+			return;
+		initialized = true;
+
 		suppression = new IIPotion("suppression", true, 0xe3bb19);
 		suppression.registerPotionAttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED, Utils.generateNewUUID().toString(), -0.003921569f, 2);
 		suppression.registerPotionAttributeModifier(SharedMonsterAttributes.LUCK, Utils.generateNewUUID().toString(), -0.007843138f, 2);

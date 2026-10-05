@@ -40,6 +40,34 @@
         }
       }
     ],
+    "sulfuric_acid": [
+      {
+        "custom": {
+          "fluid": "sulfuric_acid"
+        }
+      }
+    ],
+    "hydrofluoric_acid": [
+      {
+        "custom": {
+          "fluid": "hydrofluoric_acid"
+        }
+      }
+    ],
+    "formic_acid": [
+      {
+        "custom": {
+          "fluid": "formic_acid"
+        }
+      }
+    ],
+    "nitric_acid": [
+      {
+        "custom": {
+          "fluid": "nitric_acid"
+        }
+      }
+    ],
     "brine": [
       {
         "custom": {
@@ -61,24 +89,31 @@
         }
       }
     ],
+    "carbon_dioxide": [
+      {
+        "custom": {
+          "fluid": "carbon_dioxide"
+        }
+      }
+    ],
+    "carbon_monoxide": [
+      {
+        "custom": {
+          "fluid": "carbon_monoxide"
+        }
+      }
+    ],
+    "carbon_oxide": [
+      {
+        "custom": {
+          "fluid": "carbon_monoxide"
+        }
+      }
+    ],
     "chlorine": [
       {
         "custom": {
           "fluid": "chlorine"
-        }
-      }
-    ],
-    "hydrofluoric_acid": [
-      {
-        "custom": {
-          "fluid": "hydrofluoric_acid"
-        }
-      }
-    ],
-    "sulfuric_acid": [
-      {
-        "custom": {
-          "fluid": "sulfuric_acid"
         }
       }
     ],
@@ -96,10 +131,10 @@
         }
       }
     ],
-    "nitric_acid": [
+    "rocket_propellant": [
       {
         "custom": {
-          "fluid": "nitric_acid"
+          "fluid": "rocket_propellant"
         }
       }
     ],
@@ -117,31 +152,157 @@
         }
       }
     ],
-    "carbon_dioxide": [
-      {
-        "custom": {
-          "fluid": "carbon_dioxide"
-        }
-      }
-    ],
-    "carbon_monoxide": [
-      {
-        "custom": {
-          "fluid": "carbon_monoxide"
-        }
-      }
-    ],
-    "formic_acid": [
-      {
-        "custom": {
-          "fluid": "formic_acid"
-        }
-      }
-    ],
     "mustard_gas": [
       {
         "custom": {
           "fluid": "mustard_gas"
+        }
+      }
+    ],
+    "tear_gas": [
+      {
+        "custom": {
+          "fluid": "tear_gas"
+        }
+      }
+    ],
+    "phosgene_gas": [
+      {
+        "custom": {
+          "fluid": "phosgene"
+        }
+      }
+    ],
+    "tuban": [
+      {
+        "custom": {
+          "fluid": "tuban"
+        }
+      }
+    ],
+    "sarin_gas": [
+      {
+        "custom": {
+          "fluid": "sarin"
+        }
+      }
+    ],
+    "vx": [
+      {
+        "custom": {
+          "fluid": "vx"
+        }
+      }
+    ],
+    "butadiene": [
+      {
+        "custom": {
+          "fluid": "butadiene"
+        }
+      }
+    ],
+    "sulfur_dioxide": [
+      {
+        "custom": {
+          "fluid": "sulfur_dioxide"
+        }
+      }
+    ],
+    "sulfur_trioxide": [
+      {
+        "custom": {
+          "fluid": "sulfur_trioxide"
+        }
+      }
+    ],
+    "hydrogen_sulfide": [
+      {
+        "custom": {
+          "fluid": "hydrogen_sulfide"
+        }
+      }
+    ],
+    "argon": [
+      {
+        "custom": {
+          "fluid": "argon"
+        }
+      }
+    ],
+    "nitrogen": [
+      {
+        "custom": {
+          "fluid": "nitrogen"
+        }
+      }
+    ],
+    "acetaldol": [
+      {
+        "custom": {
+          "fluid": "acetaldol"
+        }
+      }
+    ],
+    "atropine": [
+      {
+        "custom": {
+          "fluid": "atropine"
+        }
+      }
+    ],
+    "glycerin": [
+      {
+        "custom": {
+          "fluid": "glycerin"
+        }
+      }
+    ],
+    "acetic_acid": [
+      {
+        "custom": {
+          "fluid": "acetic_acid"
+        }
+      }
+    ],
+    "hydrazine": [
+      {
+        "custom": {
+          "fluid": "hydrazine"
+        }
+      }
+    ],
+    "monomethylhydrazine": [
+      {
+        "custom": {
+          "fluid": "monomethylhydrazine"
+        }
+      }
+    ],
+    "nitroglycerin": [
+      {
+        "custom": {
+          "fluid": "nitroglycerin"
+        }
+      }
+    ],
+    "hydrogen_peroxide": [
+      {
+        "custom": {
+          "fluid": "hydrogen_peroxide"
+        }
+      }
+    ],
+    "nitrogen_tetroxide": [
+      {
+        "custom": {
+          "fluid": "nitrogen_tetroxide"
+        }
+      }
+    ],
+    "sodium_hypochlorite": [
+      {
+        "custom": {
+          "fluid": "sodium_hypochlorite"
         }
       }
     ]
