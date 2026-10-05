@@ -85,6 +85,12 @@
         "type": "none"
       }
     ],
+    "mortar_origin": [
+      {
+        "offset": [-7.325, -16.5, -1],
+        "type": "none"
+      }
+    ],
     "mortar": [
       {
         "offset": [-7.325, -16.5, -1],
@@ -107,6 +113,12 @@
       {
         "offset": [0.02895, -16.99161, 0.1783],
         "type": "barrel_bottom"
+      }
+    ],
+    "fire": [
+      {
+        "offset": [0, 0, 0],
+        "type": "none"
       }
     ]
   }

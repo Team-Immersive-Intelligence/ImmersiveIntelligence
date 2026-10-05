@@ -10,6 +10,8 @@ import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoTab;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.clipboard.DecoClipboardUtils;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.clipboard.ManualPageReference;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
@@ -114,6 +116,31 @@ public class DecoManualWidget extends DecoComponentWidgetBase<DecoManualWidget>
 		ieManualGUI.selectedCategory = wrapper.selectedCategory;
 		ieManualGUI.previousSelectedEntry = wrapper.previousSelectedEntry;
 		ieManualGUI.page = wrapper.page;
+	}
+
+	@Override
+	public void onGuiEvent(DecoGuiEvent event)
+	{
+		switch(event)
+		{
+			case COPY:
+				String entry = wrapper.getSelectedEntry();
+				if(entry!=null&&!entry.isEmpty())
+					DecoClipboardUtils.copy(new ManualPageReference(entry, wrapper.page,
+							"ie.manual.entry."+entry+".name"));
+				break;
+			case PASTE:
+				Object pasted = DecoClipboardUtils.paste();
+				if(pasted instanceof ManualPageReference)
+				{
+					ManualPageReference reference = (ManualPageReference)pasted;
+					setCurrentPage(reference.entry, reference.page);
+					wrapper.initGui();
+				}
+				break;
+			default:
+				super.onGuiEvent(event);
+		}
 	}
 
 	@Override

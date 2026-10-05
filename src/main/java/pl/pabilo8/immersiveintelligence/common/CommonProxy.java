@@ -13,12 +13,14 @@ import blusunrize.immersiveengineering.api.tool.ConveyorHandler.IConveyorTile;
 import blusunrize.immersiveengineering.api.tool.ExcavatorHandler;
 import blusunrize.immersiveengineering.api.tool.ExcavatorHandler.MineralMix;
 import blusunrize.immersiveengineering.common.Config.IEConfig.Tools;
+import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
 import blusunrize.immersiveengineering.common.blocks.ItemBlockIEBase;
 import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityChargingStation;
 import blusunrize.immersiveengineering.common.blocks.wooden.TileEntityWatermill;
 import blusunrize.immersiveengineering.common.blocks.wooden.TileEntityWindmill;
+import blusunrize.immersiveengineering.common.crafting.RecipeBannerAdvanced;
 import blusunrize.immersiveengineering.common.items.IEItemInterfaces.IGuiItem;
 import blusunrize.immersiveengineering.common.util.ChatUtils;
 import blusunrize.immersiveengineering.common.util.IEPotions;
@@ -32,11 +34,13 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.tileentity.BannerPattern;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -49,6 +53,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.event.RegistryEvent.Register;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -61,6 +66,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.oredict.DyeUtils;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.registries.IForgeRegistryModifiable;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
@@ -155,6 +161,8 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
+import java.util.function.Predicate;
 
 import static blusunrize.immersiveengineering.api.energy.wires.WireApi.registerFeedthroughForWiretype;
 
@@ -334,6 +342,23 @@ public class CommonProxy implements IGuiHandler
 	{
 		IILogger.info("Registering Recipes");
 
+		//Banner patterns use one banner, one dye and the specified equipment.
+		event.getRegistry().register(createBannerRecipe("wrench", "wrn",
+				stack -> stack.getItem()==IIContent.itemWrench));
+		event.getRegistry().register(createBannerRecipe("hammer_and_wrench", "hmw",
+				stack -> stack.getItem()==IEContent.itemTool&&stack.getMetadata()==0,
+				stack -> stack.getItem()==IIContent.itemWrench));
+		event.getRegistry().register(createBannerRecipe("electric_hammer", "ehm",
+				stack -> stack.getItem()==IIContent.itemHammer));
+		event.getRegistry().register(createBannerRecipe("electric_wrench", "ewr",
+				stack -> stack.getItem()==IIContent.itemElectricWrench));
+		event.getRegistry().register(createBannerRecipe("engineer_helmet", "ehl",
+				stack -> stack.getItem()==IIContent.itemLightEngineerHelmet
+						&&!IIContent.itemLightEngineerHelmet.hasUpgrade(stack, "engineer_gear")));
+		event.getRegistry().register(createBannerRecipe("infrared_helmet", "irh",
+				stack -> stack.getItem()==IIContent.itemLightEngineerHelmet
+						&&IIContent.itemLightEngineerHelmet.hasUpgrade(stack, "engineer_gear")));
+
 		String sulfur = OreDictionary.doesOreNameExist("oreSulfur")?"oreSulfur": "dustSulfur";
 
 		MineralMix mineralFluorite = ExcavatorHandler.addMineral("Fluorite", 25, .65f, new String[]{"oreFluorite", "oreQuartz"}, new float[]{.5f, .25f});
@@ -400,11 +425,64 @@ public class CommonProxy implements IGuiHandler
 		{
 			if(!(state.getBlock()==IIContent.blockAdvancedExplosives))
 				return false;
-			IIContent.blockAdvancedExplosives.explode(world, pos, igniter);
-			world.setBlockToAir(pos);
+			if(!world.isRemote)
+			{
+				world.setBlockToAir(pos);
+				IIContent.blockAdvancedExplosives.explode(world, pos, state, igniter);
+			}
 			return true;
 		});
 
+	}
+
+	/**
+	 * Creates a banner pattern recipe that checks each equipment item.
+	 */
+	@SafeVarargs
+	private static IRecipe createBannerRecipe(String name, String id, Predicate<ItemStack>... ingredients)
+	{
+		String patternName = ImmersiveIntelligence.MODID+"_"+name;
+		BannerPattern pattern = EnumHelper.addEnum(BannerPattern.class, patternName.toUpperCase(Locale.ROOT),
+				new Class<?>[]{String.class, String.class, ItemStack.class}, patternName, "ii_"+id, ItemStack.EMPTY);
+
+		//Use IE's base recipe to retain the pattern limit, output NBT and container items.
+		return new RecipeBannerAdvanced()
+		{
+			@Nullable
+			@Override
+			protected BannerPattern matchPatterns(InventoryCrafting inventory)
+			{
+				boolean[] matched = new boolean[ingredients.length];
+				boolean hasDye = false;
+				int matchedCount = 0;
+				for(int slot = 0; slot < inventory.getSizeInventory(); slot++)
+				{
+					ItemStack stack = inventory.getStackInSlot(slot);
+					if(stack.isEmpty()||stack.getItem()==Items.BANNER)
+						continue;
+					if(DyeUtils.isDye(stack))
+					{
+						if(hasDye)
+							return null;
+						hasDye = true;
+						continue;
+					}
+
+					boolean found = false;
+					for(int ingredient = 0; ingredient < ingredients.length; ingredient++)
+						if(!matched[ingredient]&&ingredients[ingredient].test(stack))
+						{
+							matched[ingredient] = true;
+							matchedCount++;
+							found = true;
+							break;
+						}
+					if(!found)
+						return null;
+				}
+				return hasDye&&matchedCount==ingredients.length?pattern: null;
+			}
+		}.setRegistryName(ImmersiveIntelligence.MODID, "banner_"+name);
 	}
 
 	//--- Main Loading Events ---//
@@ -780,7 +858,8 @@ public class CommonProxy implements IGuiHandler
 
 		registerEntity(i++, EntityIIChemthrowerShot.class, "chemthrower_shot", 64, 1, true);
 		registerEntity(i++, EntityAMTTactile.class, "tactile", 64, 1, true);
-		registerEntity(i, EntityTactileLivingBase.class, "tactile_living", 64, 1, true);
+		registerEntity(i++, EntityTactileLivingBase.class, "tactile_living", 64, 1, true);
+		registerEntity(i, EntityEmplacementSmoke.class, "emplacement_smoke", 64, 1, false);
 
 		for(IMultiblock mb : IIContent.MULTIBLOCKS)
 			if(mb instanceof MultiblockStuctureBase)

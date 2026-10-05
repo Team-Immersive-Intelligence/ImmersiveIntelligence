@@ -10,7 +10,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoPart;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
+import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -22,7 +24,7 @@ import java.util.Locale;
  * @ii-approved 0.3.1
  * @since 05.09.2026
  */
-public abstract class IIManualPageAmmoPart<T extends AmmoPart> extends IIManualPages
+public abstract class IIManualPageAmmoPart<T extends AmmoPart> extends IIManualPageBase
 {
 	private static final int PAGE_WIDTH = 120;
 	private static final int HEADER_X = 40;
@@ -195,5 +197,12 @@ public abstract class IIManualPageAmmoPart<T extends AmmoPart> extends IIManualP
 	public boolean listForSearch(String searchTag)
 	{
 		return stack.getDisplayName().toLowerCase(Locale.ENGLISH).contains(searchTag);
+	}
+
+	@Nullable
+	@Override
+	public EasyNBT provideManualData()
+	{
+		return EasyNBT.newNBT().withString("lastAmmoCore", this.part.getName());
 	}
 }

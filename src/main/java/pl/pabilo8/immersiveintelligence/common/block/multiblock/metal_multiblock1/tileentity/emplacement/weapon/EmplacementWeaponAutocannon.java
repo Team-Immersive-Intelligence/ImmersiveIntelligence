@@ -12,6 +12,8 @@ import pl.pabilo8.immersiveintelligence.common.util.gun.ChillingState;
 import pl.pabilo8.immersiveintelligence.common.util.gun.ammoprovider.GunAmmoProviderItemHandler;
 import pl.pabilo8.immersiveintelligence.common.util.gun.ammoprovider.GunAmmoProviderMagazineItemHandler;
 
+import javax.annotation.Nullable;
+
 /**
  * Implements the four-barrel Autocannon Emplacement weapon.
  *
@@ -33,9 +35,11 @@ public class EmplacementWeaponAutocannon extends EmplacementWeaponGunBase<Entity
 		this.ammoFactory.setAmmo(IIContent.itemAmmoAutocannon);
 		this.visionAABB = this.visionAABB.grow(Autocannon.detectionRadius);
 		this.attackAABB = this.attackAABB.grow(Autocannon.attackRadius);
-		this.chillingState = new ChillingState(200, 240, 80);
+		this.chillingState = new ChillingState(Autocannon.minimumIdleTime,
+				Autocannon.idleAnimationInterval, Autocannon.idleAnimationDuration);
 		this.aim.withAimSpeed(Autocannon.yawRotateSpeed, Autocannon.pitchRotateSpeed)
-				.withPitchLimit(-90, 55);
+				.withYawLimit(Autocannon.minYaw, Autocannon.maxYaw)
+				.withPitchLimit(Autocannon.minPitch, Autocannon.maxPitch);
 
 		setupItemHandlers(te, 8, 4, 8, 16, this::isMagazine, this::isMagazine);
 
@@ -105,10 +109,30 @@ public class EmplacementWeaponAutocannon extends EmplacementWeaponGunBase<Entity
 	}
 
 	@Override
+	public int getArmorForPart(String partName)
+	{
+		if(partName.startsWith("cannon"))
+			return 20;
+		return switch(partName)
+		{
+			case "turret_child0", "turret_child1" -> 1;
+			case "turret_child2", "turret_child3", "turret_child4", "turret_child5",
+				 "turret_child6", "turret_child7" -> 24;
+			case "base" -> 12;
+			default -> 8;
+		};
+	}
+
+	@Override
 	public int getMaxHealth()
 	{
 		return Autocannon.maxHealth;
 	}
 
-
+	@Nullable
+	@Override
+	protected Float getLoadingPitch()
+	{
+		return 0f;
+	}
 }

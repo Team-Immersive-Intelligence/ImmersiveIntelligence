@@ -2,10 +2,8 @@ package pl.pabilo8.immersiveintelligence.client;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.Config.IEConfig;
-import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.lib.manual.IManualPage;
-import blusunrize.lib.manual.ManualInstance;
 import blusunrize.lib.manual.ManualInstance.ManualEntry;
 import blusunrize.lib.manual.gui.GuiManual;
 import com.google.common.collect.ListMultimap;
@@ -97,7 +95,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.overlay.GuiOverlayTripodPeris
 import pl.pabilo8.immersiveintelligence.client.gui.overlay.GuiOverlayZoom;
 import pl.pabilo8.immersiveintelligence.client.gui.overlay.gun.*;
 import pl.pabilo8.immersiveintelligence.client.gui.tooltip.*;
-import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageContributorSkin;
+import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageBase;
 import pl.pabilo8.immersiveintelligence.client.model.IIModelRegistry;
 import pl.pabilo8.immersiveintelligence.client.render.IPassengerAnimationsRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.item.BinocularsRenderer;
@@ -127,6 +125,7 @@ import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemUtils;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradeableArmor;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IAdvancedBounds;
 
@@ -142,6 +141,7 @@ import static pl.pabilo8.immersiveintelligence.api.ammo.utils.PenetrationCache.b
  * Handles events for client side.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 03.10.2026
  * @since 27.09.2019
  */
 @SideOnly(Side.CLIENT)
@@ -152,7 +152,9 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	private static final ArrayList<TextOverlayBase> TEXT_OVERLAYS = new ArrayList<>();
 	private static final ArrayList<InWorldOverlayBase> IN_WORLD_OVERLAYS = new ArrayList<>();
 	private static final ArrayList<ScreenShake> SCREEN_SHAKE_EFFECTS = new ArrayList<>();
-	private static float cameraFov = 70f;
+	private static IIManualPageBase lastManualPage = null;
+	private static float cameraFov = 70f, terrainFov = 70f;
+	private static boolean terrainZoomChanged = false;
 	public static GuiScreen lastGui = null;
 	//Whether the Light Engineer Armor is worn
 	public static boolean gotTheDrip = false, nightVisionActive = false;
@@ -213,13 +215,11 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 			if(vehicle!=null)
 			{
 				Render<Entity> renderer = mc.getRenderManager().getEntityClassRenderObject(vehicle.getClass());
+				//noinspection rawtypes
+				//noinspection unchecked
 				if(renderer instanceof IPassengerAnimationsRenderer par)
-				{
-					//noinspection rawtypes
-					//noinspection unchecked
 					if(par.handleBipedRotations(model, vehicle, living, mc.getRenderPartialTicks()))
 						return;
-				}
 			}
 		}
 
@@ -581,21 +581,20 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	}
 
 	/**
-	 * Handling zoom for camera (in vehicles/mounted weapons)
-	 * we do a little bypassing of the default IE zoom cap (0.1f) by using the forge one instead, since theres no cap to it
+	 * Sets the camera FOV and records zoom state changes for the next terrain pass.
 	 */
 	@SubscribeEvent
 	public void onFOVCamera(FOVModifier event)
 	{
-		CameraHandler.handleZoom();
+		boolean wasZooming = CameraHandler.zoom!=null;
+		boolean zooming = CameraHandler.handleZoom();
 
 		float newFOV = event.getFOV();
-		if(CameraHandler.zoom!=null)
-		{
+		if(zooming)
 			newFOV *= CameraHandler.fovZoom;
-			event.setFOV(newFOV);
-		}
-		cameraFov = newFOV;
+		event.setFOV(newFOV);
+		cameraFov = event.getFOV();
+		terrainZoomChanged |= wasZooming!=zooming;
 	}
 
 	@SubscribeEvent
@@ -736,8 +735,11 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		Entity lowestRidden = ridden==null?null: ridden.getLowestRidingEntity();
 
 		//--- Camera Handling ---//
+		//mc.gameSettings.thirdPersonView = -1;
+		//			CameraHandler.setCameraPos(mg.posX, mg.posY+0.75, mg.posZ);
+		//			CameraHandler.setCameraAngle(mg.rotationYaw, 1+(1f-mg.rotationPitch/-90f)*-1.5f, 0);
+		//			CameraHandler.setEnabled(mg.shootingProgress==0);
 		if(lowestRidden instanceof ICameraEntity cameraEntity)
-		{
 			if(!cameraEntity.isCameraEnabled(player))
 				CameraHandler.setEnabled(false);
 			else
@@ -753,14 +755,6 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 				);
 				CameraHandler.setEnabled(true);
 			}
-
-
-//mc.gameSettings.thirdPersonView = -1;
-
-//			CameraHandler.setCameraPos(mg.posX, mg.posY+0.75, mg.posZ);
-//			CameraHandler.setCameraAngle(mg.rotationYaw, 1+(1f-mg.rotationPitch/-90f)*-1.5f, 0);
-//			CameraHandler.setEnabled(mg.shootingProgress==0);
-		}
 		else
 			CameraHandler.setEnabled(false);
 	}
@@ -778,6 +772,8 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 
 		if(ItemNBTHelper.hasKey(stack, "ii_FilledCasing"))
 			event.getToolTip().add(TextFormatting.DARK_GRAY+I18n.format(IIReference.DESCRIPTION_KEY+"filled_casing"));
+		else if(ItemNBTHelper.hasKey(stack, "ii_FilledRocket"))
+			event.getToolTip().add(TextFormatting.RED+I18n.format(IIReference.DESCRIPTION_KEY+"filled_rocket"));
 
 		if(stack.getItem() instanceof IAmmoTypeItem)
 			IIAmmoUtils.createAmmoTooltip((IAmmoTypeItem<?, ?>)stack.getItem(), stack, event.getEntity().world, event.getToolTip());
@@ -831,10 +827,8 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 				event.setCanceled(true);
 		}
 		else if(ridingEntity instanceof EntityMountedWeapon weapon)
-		{
 			if(weapon.controls!=null&&weapon.controls.passMouseButtonEvent(event)&&event.isButtonstate())
 				event.setCanceled(true);
-		}
 	}
 
 	/**
@@ -857,9 +851,20 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		GlStateManager.popMatrix();
 	}
 
+	/**
+	 * Refreshes terrain visibility after projection setup and applies camera effects.
+	 */
 	@SubscribeEvent
 	public void cameraSetup(CameraSetup event)
 	{
+		//The world projection is set before this event and before terrain culling.
+		if(terrainZoomChanged||Float.compare(cameraFov, terrainFov)!=0)
+		{
+			ClientUtils.mc().renderGlobal.setDisplayListEntitiesDirty();
+			terrainFov = cameraFov;
+			terrainZoomChanged = false;
+		}
+
 		EntityPlayer player = ClientUtils.mc().player;
 		double partialTicks = event.getRenderPartialTicks();
 
@@ -979,40 +984,37 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 			IISkinHandler.getManualPages();
 		else if(ClientEventHandler.lastGui instanceof GuiManual gui)
 		{
-			String name = null;
-
-			ManualInstance inst = gui.getManual();
-			if(inst!=null)
+			EasyNBT easyNBT = null;
+			if(gui.getManual()!=null)
 			{
-				ManualEntry entry = inst.getEntry(gui.getSelectedEntry());
+				ManualEntry entry = gui.getManual().getEntry(gui.getSelectedEntry());
 				if(entry!=null)
 				{
 					IManualPage page = entry.getPages()[gui.page];
-					if(page instanceof IIManualPageContributorSkin)
-						name = ((IIManualPageContributorSkin)page).skin.name;
+					if(page instanceof IIManualPageBase)
+					{
+						easyNBT = ((IIManualPageBase)page).provideManualData();
+						lastManualPage = page instanceof IIManualPageBase?((IIManualPageBase)page): null;
+					}
 				}
 			}
-			EntityPlayer p = ClientUtils.mc().player;
 
+			EntityPlayer p = ClientUtils.mc().player;
 			ItemStack mainItem = p.getHeldItemMainhand();
 			ItemStack offItem = p.getHeldItemOffhand();
 
-			boolean main = !mainItem.isEmpty()&&mainItem.getItem()==IEContent.itemTool&&mainItem.getItemDamage()==3;
-			boolean off = !offItem.isEmpty()&&offItem.getItem()==IEContent.itemTool&&offItem.getItemDamage()==3;
-			ItemStack target = main?mainItem: offItem;
+			boolean main = IIItemUtils.isEngineersManual(mainItem);
+			boolean off = IIItemUtils.isEngineersManual(offItem);
 
 			if(main||off)
 			{
-				IIPacketHandler.sendToServer(new MessageManualClose(name==null?"": name));
-
-				if(name==null&&ItemNBTHelper.hasKey(target, "lastSkin"))
-					ItemNBTHelper.remove(target, "lastSkin");
-				else if(name!=null)
-					ItemNBTHelper.setString(target, "lastSkin", name);
+				IIPacketHandler.sendToServer(new MessageManualClose(main?EnumHand.MAIN_HAND: EnumHand.OFF_HAND,
+						easyNBT==null?EasyNBT.newNBT(): easyNBT
+				));
 			}
 		}
 
-		ClientEventHandler.lastGui = event.getGui();
+		lastGui = event.getGui();
 	}
 
 	@SubscribeEvent
@@ -1020,7 +1022,6 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	{
 		GuiScreen gui = event.getGui();
 		if(Factions.enableFactions&&gui instanceof GuiInventory&&Factions.inventoryButtonPosition[0]!=-1&&Factions.inventoryButtonPosition[1]!=-1)
-		{
 			try
 			{
 				event.getButtonList().add(new GuiButtonFactionInvitations(
@@ -1031,7 +1032,6 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 			{
 				IILogger.warn("Failed to add faction invitation button to inventory");
 			}
-		}
 		//Add creative menu subtabs
 		if(gui instanceof GuiContainerCreative creative&&IIConfig.australianCreativeTabs)
 		{

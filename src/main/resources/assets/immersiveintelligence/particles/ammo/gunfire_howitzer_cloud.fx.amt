@@ -1,0 +1,22 @@
+{
+  "type": "ParticleVanilla",
+  "textures": [
+    "immersiveintelligence:particle/gunfire/gunfire_cloud0",
+    "immersiveintelligence:particle/gunfire/gunfire_cloud1",
+    "immersiveintelligence:particle/gunfire/gunfire_cloud2",
+    "immersiveintelligence:particle/gunfire/gunfire_cloud3",
+    "immersiveintelligence:particle/gunfire/gunfire_cloud4",
+    "immersiveintelligence:particle/gunfire/gunfire_cloud5",
+    "immersiveintelligence:particle/gunfire/gunfire_cloud6"
+  ],
+  "max_lifetime": 8,
+  "draw_stage": "custom",
+  "aabb": 0.0625,
+  "programs": [
+    "lifetime_retexture",
+    "shockwave_transition(0.25)"
+  ],
+  "size": 0.65,
+  "color": "FFDDF7FF",
+  "alpha": 0.25
+}

@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multibloc
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -33,6 +34,7 @@ public class TargetEvaluationContext
 	private static final int ON_FIRE = 1<<8;
 	private static final int DIPLOMACY = 1<<9;
 	private static final int HORIZONTAL_DISTANCE = 1<<10;
+	private static final int RELATIVE_DIRECTION = 1<<11;
 
 	@Nullable
 	private World world;
@@ -50,12 +52,14 @@ public class TargetEvaluationContext
 	private double health, maxHealth, distanceSq, horizontalDistanceSq;
 	private boolean onGround, inWater, onFire;
 	private DiplomaticStatus diplomaticStatus;
+	@Nullable
+	private EnumFacing relativeDirection;
 
 	/**
 	 * Sets the candidate and clears all lazily computed values.
 	 */
 	public TargetEvaluationContext reset(@Nullable World world, @Nullable OwnerIdentity ownerIdentity,
-	                                     @Nonnull Vec3d origin, @Nonnull Entity rawEntity)
+										 @Nonnull Vec3d origin, @Nonnull Entity rawEntity)
 	{
 		return resetNormalized(world, ownerIdentity, origin, rawEntity, TargetEntityProperties.normalize(rawEntity));
 	}
@@ -64,8 +68,8 @@ public class TargetEvaluationContext
 	 * Sets an already normalised candidate and clears all lazily computed values.
 	 */
 	public TargetEvaluationContext resetNormalized(@Nullable World world, @Nullable OwnerIdentity ownerIdentity,
-	                                               @Nonnull Vec3d origin, @Nonnull Entity rawEntity,
-	                                               @Nonnull Entity normalizedEntity)
+												   @Nonnull Vec3d origin, @Nonnull Entity rawEntity,
+												   @Nonnull Entity normalizedEntity)
 	{
 		this.world = world;
 		this.ownerIdentity = ownerIdentity;
@@ -172,6 +176,23 @@ public class TargetEvaluationContext
 			horizontalDistanceSq = dx*dx+dz*dz;
 		}
 		return horizontalDistanceSq;
+	}
+
+	/**
+	 * Returns the dominant horizontal direction from the weapon origin to the candidate.
+	 * Candidates directly above or below the origin have no horizontal direction.
+	 */
+	@Nullable
+	public EnumFacing getRelativeDirection()
+	{
+		if((computed&RELATIVE_DIRECTION)==0)
+		{
+			computed |= RELATIVE_DIRECTION;
+			double dx = entity.posX-origin.x;
+			double dz = entity.posZ-origin.z;
+			relativeDirection = dx==0&&dz==0?null: EnumFacing.getFacingFromVector((float)dx, 0, (float)dz);
+		}
+		return relativeDirection;
 	}
 
 	public boolean isOnGround()

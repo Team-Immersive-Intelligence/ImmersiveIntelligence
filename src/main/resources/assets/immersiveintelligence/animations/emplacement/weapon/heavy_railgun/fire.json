@@ -18,6 +18,20 @@
       ]
     },
     "turret_chargeup": {
+      "scale": [
+        {
+          "time": 0,
+          "transform": [1, 1, 1]
+        },
+        {
+          "time": 0.5,
+          "transform": [1.0125, 1.0125, 1.0125]
+        },
+        {
+          "time": 0.6666,
+          "transform": [1, 1, 1]
+        }
+      ],
       "visibility": [
         {
           "time": 0,
@@ -32,26 +46,40 @@
           "visibility": true
         },
         {
-          "time": 1.0,
+          "time": 1,
           "visibility": false
         }
       ],
       "energy": [
         {
-          "time": 0.0,
-          "energy": [0.0, 0.0]
+          "time": 0,
+          "energy": [0, 0]
         },
         {
           "time": 0.5,
-          "energy": [1.0, 1.0]
+          "energy": [1, 1]
         },
         {
           "time": 0.6666,
-          "energy": [0.0, 0.0]
+          "energy": [0, 0]
         }
       ]
     },
     "gun_chargeup": {
+      "scale": [
+        {
+          "time": 0,
+          "transform": [1, 1, 1]
+        },
+        {
+          "time": 0.5,
+          "transform": [1.025, 1.025, 1.025]
+        },
+        {
+          "time": 0.6666,
+          "transform": [1, 1, 1]
+        }
+      ],
       "visibility": [
         {
           "time": 0,
@@ -66,22 +94,470 @@
           "visibility": true
         },
         {
-          "time": 1.0,
+          "time": 1,
           "visibility": false
         }
       ],
       "energy": [
         {
-          "time": 0.0,
-          "energy": [0.0, 0.0]
+          "time": 0,
+          "energy": [0, 0]
         },
         {
           "time": 0.5,
-          "energy": [1.0, 1.0]
+          "energy": [1, 1]
         },
         {
           "time": 0.6666,
-          "energy": [0.0, 0.0]
+          "energy": [0, 0]
+        }
+      ]
+    },
+    "gun_fire1": {
+      "scale": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.1666,
+          "transform": [1.1, 1.1, 1.1]
+        },
+        {
+          "time": 0.25,
+          "transform": [1.1, 1.1, 1.1]
+        },
+        {
+          "time": 0.4166,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "visibility": [
+        {
+          "time": 0,
+          "visibility": false
+        },
+        {
+          "time": 0.0001,
+          "visibility": true
+        },
+        {
+          "time": 0.4166,
+          "visibility": false
+        },
+        {
+          "time": 1,
+          "visibility": false
+        }
+      ],
+      "energy": [
+        {
+          "time": 0,
+          "energy": [0, 0]
+        },
+        {
+          "time": 0.1666,
+          "energy": [1, 0.399904]
+        },
+        {
+          "time": 0.25,
+          "energy": [1, 0.600096]
+        },
+        {
+          "time": 0.4166,
+          "energy": [0, 1]
+        }
+      ]
+    },
+    "gun_fire2": {
+      "scale": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.1666,
+          "transform": [1.1, 1.1, 1.1]
+        },
+        {
+          "time": 0.25,
+          "transform": [1.1, 1.1, 1.1]
+        },
+        {
+          "time": 0.4166,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "visibility": [
+        {
+          "time": 0,
+          "visibility": false
+        },
+        {
+          "time": 0.0001,
+          "visibility": true
+        },
+        {
+          "time": 0.4166,
+          "visibility": false
+        },
+        {
+          "time": 1,
+          "visibility": false
+        }
+      ],
+      "energy": [
+        {
+          "time": 0,
+          "energy": [0, 0]
+        },
+        {
+          "time": 0.1666,
+          "energy": [1, 0.399904]
+        },
+        {
+          "time": 0.25,
+          "energy": [1, 0.600096]
+        },
+        {
+          "time": 0.4166,
+          "energy": [0, 1]
+        }
+      ]
+    },
+    "gun_fire3": {
+      "scale": [
+        {
+          "time": 0.1666,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.25,
+          "transform": [1.2, 1.2, 1.2]
+        },
+        {
+          "time": 0.3334,
+          "transform": [1.2, 1.2, 1.2]
+        },
+        {
+          "time": 0.5834,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "visibility": [
+        {
+          "time": 0,
+          "visibility": false
+        },
+        {
+          "time": 0.1666,
+          "visibility": true
+        },
+        {
+          "time": 0.5834,
+          "visibility": false
+        },
+        {
+          "time": 1,
+          "visibility": false
+        }
+      ],
+      "energy": [
+        {
+          "time": 0.1666,
+          "energy": [0, 0]
+        },
+        {
+          "time": 0.25,
+          "energy": [1, 0.200096]
+        },
+        {
+          "time": 0.3334,
+          "energy": [1, 0.400192]
+        },
+        {
+          "time": 0.5834,
+          "energy": [0, 1]
+        }
+      ]
+    },
+    "gun_fire4": {
+      "scale": [
+        {
+          "time": 0.1666,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.25,
+          "transform": [1.2, 1.2, 1.2]
+        },
+        {
+          "time": 0.3334,
+          "transform": [1.2, 1.2, 1.2]
+        },
+        {
+          "time": 0.5834,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "visibility": [
+        {
+          "time": 0,
+          "visibility": false
+        },
+        {
+          "time": 0.1666,
+          "visibility": true
+        },
+        {
+          "time": 0.5834,
+          "visibility": false
+        },
+        {
+          "time": 1,
+          "visibility": false
+        }
+      ],
+      "energy": [
+        {
+          "time": 0.1666,
+          "energy": [0, 0]
+        },
+        {
+          "time": 0.25,
+          "energy": [1, 0.200096]
+        },
+        {
+          "time": 0.3334,
+          "energy": [1, 0.400192]
+        },
+        {
+          "time": 0.5834,
+          "energy": [0, 1]
+        }
+      ]
+    },
+    "gun_fire5": {
+      "scale": [
+        {
+          "time": 0.25,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.3334,
+          "transform": [1.3, 1.3, 1.3]
+        },
+        {
+          "time": 0.4166,
+          "transform": [1.2, 1.2, 1.1]
+        },
+        {
+          "time": 0.6666,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "visibility": [
+        {
+          "time": 0,
+          "visibility": false
+        },
+        {
+          "time": 0.25,
+          "visibility": true
+        },
+        {
+          "time": 0.6666,
+          "visibility": false
+        },
+        {
+          "time": 1,
+          "visibility": false
+        }
+      ],
+      "energy": [
+        {
+          "time": 0.25,
+          "energy": [0, 0]
+        },
+        {
+          "time": 0.3334,
+          "energy": [1, 0.200192]
+        },
+        {
+          "time": 0.4166,
+          "energy": [1, 0.399904]
+        },
+        {
+          "time": 0.6666,
+          "energy": [0, 1]
+        }
+      ]
+    },
+    "gun_fire6": {
+      "scale": [
+        {
+          "time": 0.25,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.3334,
+          "transform": [1.3, 1.3, 1.3]
+        },
+        {
+          "time": 0.4166,
+          "transform": [1.2, 1.2, 1.1]
+        },
+        {
+          "time": 0.6666,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "visibility": [
+        {
+          "time": 0,
+          "visibility": false
+        },
+        {
+          "time": 0.25,
+          "visibility": true
+        },
+        {
+          "time": 0.6666,
+          "visibility": false
+        },
+        {
+          "time": 1,
+          "visibility": false
+        }
+      ],
+      "energy": [
+        {
+          "time": 0.25,
+          "energy": [0, 0]
+        },
+        {
+          "time": 0.3334,
+          "energy": [1, 0.200192]
+        },
+        {
+          "time": 0.4166,
+          "energy": [1, 0.399904]
+        },
+        {
+          "time": 0.6666,
+          "energy": [0, 1]
+        }
+      ]
+    },
+    "gun_fire7": {
+      "scale": [
+        {
+          "time": 0.3334,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.4166,
+          "transform": [1.5, 1.5, 1.5]
+        },
+        {
+          "time": 0.5,
+          "transform": [1.5, 1.5, 1.5]
+        },
+        {
+          "time": 0.75,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "visibility": [
+        {
+          "time": 0,
+          "visibility": false
+        },
+        {
+          "time": 0.3334,
+          "visibility": true
+        },
+        {
+          "time": 0.75,
+          "visibility": false
+        },
+        {
+          "time": 1,
+          "visibility": false
+        }
+      ],
+      "energy": [
+        {
+          "time": 0.3334,
+          "energy": [0, 0]
+        },
+        {
+          "time": 0.4166,
+          "energy": [1, 0.199712]
+        },
+        {
+          "time": 0.5,
+          "energy": [1, 0.399904]
+        },
+        {
+          "time": 0.75,
+          "energy": [0, 1]
+        }
+      ]
+    },
+    "gun_fire8": {
+      "scale": [
+        {
+          "time": 0.4166,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.5,
+          "transform": [1.5, 1.5, 1.5]
+        },
+        {
+          "time": 0.5834,
+          "transform": [1.5, 1.5, 1.5]
+        },
+        {
+          "time": 0.8334,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "visibility": [
+        {
+          "time": 0,
+          "visibility": false
+        },
+        {
+          "time": 0.4166,
+          "visibility": true
+        },
+        {
+          "time": 0.8334,
+          "visibility": false
+        },
+        {
+          "time": 1,
+          "visibility": false
+        }
+      ],
+      "energy": [
+        {
+          "time": 0.4166,
+          "energy": [0, 0]
+        },
+        {
+          "time": 0.5,
+          "energy": [1, 0.200096]
+        },
+        {
+          "time": 0.5834,
+          "energy": [1, 0.400192]
+        },
+        {
+          "time": 0.8334,
+          "energy": [0, 1]
         }
       ]
     },
@@ -100,26 +576,26 @@
           "visibility": false
         },
         {
-          "time": 1.0,
+          "time": 1,
           "visibility": false
         }
       ],
       "property": [
         {
           "time": 0.5,
-          "property": 0.0
+          "property": 0
         },
         {
           "time": 0.66,
-          "property": 1.0
+          "property": 1
         },
         {
           "time": 0.85,
-          "property": 1.0
+          "property": 1
         },
         {
-          "time": 1.0,
-          "property": 0.0
+          "time": 1,
+          "property": 0
         }
       ]
     }

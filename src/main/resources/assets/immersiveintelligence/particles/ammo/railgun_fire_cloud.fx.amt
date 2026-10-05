@@ -1,0 +1,13 @@
+{
+  "type": "ParticleVanilla",
+  "textures": ["immersiveintelligence:particle/smoke/smoke_small"],
+  "max_lifetime": 8,
+  "draw_stage": "custom",
+  "aabb": 0.0625,
+  "programs": [
+    "shockwave_transition(0.25)"
+  ],
+  "size": 0.45,
+  "color": "FFDDF7FF",
+  "alpha": 0.25
+}

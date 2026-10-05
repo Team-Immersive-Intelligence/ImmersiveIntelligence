@@ -502,4 +502,11 @@ public class IIManualMultiblock extends IIManualObject
 			return blockIndex;
 		}
 	}
+
+	@Nullable
+	@Override
+	public EasyNBT provideManualNBTInfo()
+	{
+		return EasyNBT.newNBT().withString("lastMultiblock", this.multiblock.getUniqueName());
+	}
 }

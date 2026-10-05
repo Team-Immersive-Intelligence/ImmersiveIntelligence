@@ -32,6 +32,7 @@ public class AMTParticle extends AMT
 {
 	private final FloatBuffer modelView = BufferUtils.createFloatBuffer(16);
 	private AbstractParticle particle;
+	private Vec3d baseRotation = Vec3d.ZERO;
 	private boolean correctRotation;
 
 	public AMTParticle(String name, Vec3d originPos)
@@ -51,9 +52,9 @@ public class AMTParticle extends AMT
 	 * @param <T>             Particle type
 	 * @return this
 	 */
-	public <T extends AbstractParticle> AMTParticle setParticle(ParticleFactory<T> particleFactory)
+	public <T extends AbstractParticle> AMTParticle withParticle(ParticleFactory<T> particleFactory)
 	{
-		return setParticle(particleFactory, tParticleBuilder -> {
+		return withParticle(particleFactory, tParticleBuilder -> {
 		});
 	}
 
@@ -65,7 +66,7 @@ public class AMTParticle extends AMT
 	 * @param <T>               Particle type
 	 * @return this
 	 */
-	public <T extends AbstractParticle> AMTParticle setParticle(ParticleFactory<T> particleFactory, Consumer<ParticleFactory<T>> additionalOptions)
+	public <T extends AbstractParticle> AMTParticle withParticle(ParticleFactory<T> particleFactory, Consumer<ParticleFactory<T>> additionalOptions)
 	{
 		additionalOptions.accept(particleFactory);
 		this.particle = particleFactory.create(Vec3d.ZERO, Vec3d.ZERO, 0, 0);
@@ -78,9 +79,9 @@ public class AMTParticle extends AMT
 	 * @param particleName Name of the particle
 	 * @return this
 	 */
-	public AMTParticle setParticle(String particleName)
+	public AMTParticle withParticle(String particleName)
 	{
-		return setParticle(ParticleRegistry.getParticle(particleName));
+		return withParticle(ParticleRegistry.getParticle(particleName));
 	}
 
 	/**
@@ -89,18 +90,24 @@ public class AMTParticle extends AMT
 	 * @param correctRotation whether the particle uses camera-space rotation
 	 * @return this
 	 */
-	public AMTParticle setCorrectRotation(boolean correctRotation)
+	public AMTParticle withCorrectRotation(boolean correctRotation)
 	{
 		this.correctRotation = correctRotation;
 		return this;
 	}
 
-	public AMTParticle setParticleProperty(ParticleProperties property, Object value)
+	public AMTParticle withParticleProperty(ParticleProperties property, Object value)
 	{
 		if(particle!=null)
 			particle.setProperty(property, value);
 		else
 			IILogger.error("[AMTParticle] Could not set particle property "+property+", particle is null");
+		return this;
+	}
+
+	public AMTParticle withBaseRotation(Vec3d baseRotation)
+	{
+		this.baseRotation = baseRotation;
 		return this;
 	}
 
@@ -115,6 +122,13 @@ public class AMTParticle extends AMT
 
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(originPos.x, originPos.y, originPos.z);
+
+		if(baseRotation!=null)
+		{
+			GlStateManager.rotate((float)baseRotation.y, 0, 1, 0);
+			GlStateManager.rotate((float)baseRotation.z, 0, 0, 1);
+			GlStateManager.rotate((float)-baseRotation.x, 1, 0, 0);
+		}
 
 		float x = ActiveRenderInfo.getRotationX();
 		float xz = ActiveRenderInfo.getRotationXZ();
@@ -200,8 +214,9 @@ public class AMTParticle extends AMT
 	public void applyProperties(EasyNBT nbt)
 	{
 		super.applyProperties(nbt);
-		nbt.checkSetString("particle", this::setParticle);
-		nbt.checkSetBoolean("correct_rotation", this::setCorrectRotation);
+		nbt.checkSetString("particle", this::withParticle);
+		nbt.checkSetBoolean("correct_rotation", this::withCorrectRotation);
+		nbt.checkSetVec3D("base_rotation", this::withBaseRotation);
 	}
 
 	@Override
@@ -218,6 +233,7 @@ public class AMTParticle extends AMT
 	{
 		AMTParticle particle = new AMTParticle(newName, originPos);
 		particle.particle = this.particle;
+		particle.baseRotation = baseRotation;
 		particle.correctRotation = this.correctRotation;
 		return particle;
 	}

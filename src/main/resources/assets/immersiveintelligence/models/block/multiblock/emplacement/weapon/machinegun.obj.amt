@@ -37,8 +37,8 @@
     "lid1_origin": [18.5, -25, 25.5],
     "lid2_origin": [-1.5, -25, 25.5],
     "style": [9, -25, 23],
-    "fire1": [5.5, -29, -6.5],
-    "fire2": [11.5, -29, -6.5]
+    "fire1": [5.5, -29, -9.0],
+    "fire2": [11.5, -29, -9.0]
   },
   "hierarchy": {
     "turret": "turret_origin",
@@ -82,13 +82,11 @@
   },
   "properties": {
     "fire1": {
-      "rotation": [180.0, 0.0, 0.0],
-      "position": [0.0, 0.0, -0.5],
+      "base_rotation": [180.0, 0.0, 0.0],
       "particle": "ammo/gunfire"
     },
     "fire2": {
-      "rotation": [180.0, 0.0, 0.0],
-      "position": [0.0, 0.0, -0.5],
+      "base_rotation": [180.0, 0.0, 0.0],
       "particle": "ammo/gunfire"
     },
     "shell_l1": {

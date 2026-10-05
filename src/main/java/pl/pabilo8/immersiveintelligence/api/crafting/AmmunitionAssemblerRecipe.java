@@ -20,7 +20,7 @@ import java.util.function.BiFunction;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 08.06.2025
+ * @updated 24.09.2026
  * @ii-approved 0.3.1
  * @since 08.08.2019
  */
@@ -31,9 +31,9 @@ public class AmmunitionAssemblerRecipe extends IIMultiblockRecipe
 	public final IngredientStack coreInput, casingInput;
 	public final boolean advanced;
 
-	public AmmunitionAssemblerRecipe(BiFunction<ItemStack, ItemStack, ItemStack> process, Object coreInput, Object casingInput, int energy, int time, boolean advanced)
+	public AmmunitionAssemblerRecipe(BiFunction<ItemStack, ItemStack, ItemStack> process, Object coreInput, Object casingInput, int energy, int time)
 	{
-		super(coreInput, casingInput, advanced);
+		super(coreInput, casingInput, requiresAdvancedAssembly(coreInput));
 		this.process = process;
 		this.coreInput = ApiUtils.createIngredientStack(coreInput);
 		this.casingInput = ApiUtils.createIngredientStack(casingInput);
@@ -42,7 +42,12 @@ public class AmmunitionAssemblerRecipe extends IIMultiblockRecipe
 		this.setTimeAndEnergy(time, energy);
 		this.inputList = Lists.newArrayList(this.coreInput, this.casingInput);
 		this.outputList = getExampleItems();
-		this.advanced = advanced;
+		this.advanced = ammoItem.requiresAdvancedAssembly();
+	}
+
+	private static boolean requiresAdvancedAssembly(Object coreInput)
+	{
+		return ((IAmmoTypeItem<?, ?>)ApiUtils.createIngredientStack(coreInput).getExampleStack().getItem()).requiresAdvancedAssembly();
 	}
 
 	private NonNullList<ItemStack> getExampleItems()

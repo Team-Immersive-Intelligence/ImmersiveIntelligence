@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
  * Stores upgrade relationships and preview models for an upgradable device.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 29.09.2026
  * @ii-approved 0.3.1
  * @since 29.08.2025
  */
@@ -66,7 +67,14 @@ public class UpgradeTechTree
 
 		//Add dependency
 		if(toNode!=null&&fromNode!=null)
-			toNode.dependencies.add(fromNode);
+		{
+			Set<UpgradeTreeNode> dependencies = new HashSet<>();
+			fromNode.collectDependencies(dependencies);
+			if(fromNode==toNode||dependencies.contains(toNode))
+				IILogger.warn("[Upgrade System] Could not add dependency from "+from.getName()+" to "+to.getName()+" because it creates a cycle");
+			else
+				toNode.dependencies.add(fromNode);
+		}
 		return this;
 	}
 
@@ -145,6 +153,20 @@ public class UpgradeTechTree
 		return nodes.stream().filter(n -> n.upgrade==upgrade).findFirst().orElse(null);
 	}
 
+	private Set<UpgradeTreeNode> getAllDependentNodes(Collection<UpgradeTreeNode> roots)
+	{
+		Set<UpgradeTreeNode> resultNodes = new LinkedHashSet<>(roots);
+		Deque<UpgradeTreeNode> queue = new ArrayDeque<>(resultNodes);
+		while(!queue.isEmpty())
+		{
+			UpgradeTreeNode current = queue.removeFirst();
+			for(UpgradeTreeNode candidate : nodes)
+				if(candidate.dependencies.contains(current)&&resultNodes.add(candidate))
+					queue.addLast(candidate);
+		}
+		return resultNodes;
+	}
+
 	/**
 	 * @param upgrade upgrade to check for
 	 * @return whether the upgrade is present in this tech tree
@@ -195,19 +217,9 @@ public class UpgradeTechTree
 			return Collections.emptyList();
 
 		//Include direct lockouts + all their dependent (child) nodes
-		Set<UpgradeTreeNode> lockedRoots = new HashSet<>(node.locksOut);
-		Set<UpgradeTreeNode> resultNodes = new HashSet<>(lockedRoots);
-
-		Deque<UpgradeTreeNode> queue = new ArrayDeque<>(lockedRoots);
-		while(!queue.isEmpty())
-		{
-			UpgradeTreeNode current = queue.removeFirst();
-			for(UpgradeTreeNode candidate : nodes)
-				if(candidate.dependencies.contains(current)&&resultNodes.add(candidate))
-					queue.addLast(candidate);
-		}
-
-		return resultNodes.stream().map(n -> n.upgrade).distinct().collect(Collectors.toList());
+		Set<UpgradeTreeNode> resultNodes = getAllDependentNodes(node.locksOut);
+		resultNodes.remove(node);
+		return resultNodes.stream().map(UpgradeTreeNode::getUpgrade).distinct().collect(Collectors.toList());
 	}
 
 	/**
@@ -217,21 +229,29 @@ public class UpgradeTechTree
 	public List<Upgrade> getAllParents(@Nonnull Upgrade upgrade)
 	{
 		UpgradeTreeNode node = getUpgradeNodeFor(upgrade);
-		return node.getDependenciesRecursive(new ArrayList<>());
+		if(node==null)
+			return Collections.emptyList();
+
+		Set<UpgradeTreeNode> resultNodes = new LinkedHashSet<>();
+		resultNodes.add(node);
+		node.collectDependencies(resultNodes);
+		resultNodes.remove(node);
+		return resultNodes.stream().map(UpgradeTreeNode::getUpgrade).distinct().collect(Collectors.toList());
 	}
 
 	/**
-	 *
 	 * @param upgrade upgrade to check for
 	 * @return all upgrades that can be installed after the given upgrade is installed
 	 */
 	public List<Upgrade> getAllChildren(@Nonnull Upgrade upgrade)
 	{
-		final UpgradeTreeNode node = getUpgradeNodeFor(upgrade);
-		return nodes.stream()
-				.filter(n -> getAllUpgrades().contains(node))
-				.map(n -> n.upgrade)
-				.collect(Collectors.toList());
+		UpgradeTreeNode node = getUpgradeNodeFor(upgrade);
+		if(node==null)
+			return Collections.emptyList();
+
+		Set<UpgradeTreeNode> resultNodes = getAllDependentNodes(Collections.singleton(node));
+		resultNodes.remove(node);
+		return resultNodes.stream().map(UpgradeTreeNode::getUpgrade).distinct().collect(Collectors.toList());
 	}
 
 	/**
@@ -239,7 +259,7 @@ public class UpgradeTechTree
 	 */
 	public List<UpgradeTreeNode> getAllUpgrades()
 	{
-		return nodes;
+		return Collections.unmodifiableList(nodes);
 	}
 
 	/**
@@ -282,10 +302,8 @@ public class UpgradeTechTree
 		private final Upgrade upgrade;
 		@Getter
 		private final UpgradeTier tier;
-		@Getter
-		private final Set<UpgradeTreeNode> dependencies = new HashSet<>();
-		@Getter
-		private final Set<UpgradeTreeNode> locksOut = new HashSet<>();
+		private final Set<UpgradeTreeNode> dependencies = new LinkedHashSet<>();
+		private final Set<UpgradeTreeNode> locksOut = new LinkedHashSet<>();
 		@Nullable
 		private ResLoc modelLocation = null;
 
@@ -301,14 +319,27 @@ public class UpgradeTechTree
 			return this;
 		}
 
-		private List<Upgrade> getDependenciesRecursive(ArrayList<Upgrade> list)
+		/**
+		 * @return nodes that must be installed before this node
+		 */
+		public Set<UpgradeTreeNode> getDependencies()
+		{
+			return Collections.unmodifiableSet(dependencies);
+		}
+
+		/**
+		 * @return nodes that cannot be installed together with this node
+		 */
+		public Set<UpgradeTreeNode> getLocksOut()
+		{
+			return Collections.unmodifiableSet(locksOut);
+		}
+
+		private void collectDependencies(Set<UpgradeTreeNode> result)
 		{
 			for(UpgradeTreeNode dependency : dependencies)
-			{
-				list.add(dependency.upgrade);
-				dependency.getDependenciesRecursive(list);
-			}
-			return list;
+				if(result.add(dependency))
+					dependency.collectDependencies(result);
 		}
 
 		/**
@@ -324,4 +355,3 @@ public class UpgradeTechTree
 
 	}
 }
-

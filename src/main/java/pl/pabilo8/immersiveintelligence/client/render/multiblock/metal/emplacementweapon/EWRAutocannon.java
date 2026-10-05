@@ -11,6 +11,7 @@ import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIAnimationCac
 import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTCachedModel;
 import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
 import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTLocator;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTParticle;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon.EmplacementWeaponAutocannon;
@@ -47,7 +48,11 @@ public class EWRAutocannon extends EmplacementWeaponRenderer<EmplacementWeaponAu
 				super.provideModel(header, style, upgrades),
 				new AMTModel(
 						new AMTLocator("base", header),
-						new AMTLocator("gun_origin", header)
+						new AMTLocator("gun_origin", header),
+						new AMTParticle("fire1", header),
+						new AMTParticle("fire2", header),
+						new AMTParticle("fire3", header),
+						new AMTParticle("fire4", header)
 				)
 		);
 	}
@@ -86,6 +91,8 @@ public class EWRAutocannon extends EmplacementWeaponRenderer<EmplacementWeaponAu
 			this.load.apply(weapon.getReloadProgress(partialTicks));
 
 		//Firing animation for each barrel
+		for(IIAnimationCachedMap fireAnimation : fire)
+			fireAnimation.apply(0f);
 		this.fire[getFireAnimationVariant(weapon)].apply(getFireAnimationTime(weapon, partialTicks));
 
 		//Idle animation

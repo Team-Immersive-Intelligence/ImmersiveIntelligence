@@ -118,6 +118,12 @@
         "offset": [0, 2.5, 0],
         "type": "none"
       }
+    ],
+    "fire": [
+      {
+        "offset": [0, 0, 0],
+        "type": "none"
+      }
     ]
   }
 }

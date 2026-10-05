@@ -6,7 +6,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
@@ -24,6 +23,7 @@ import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.vecmath.Vector2f;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -275,7 +275,7 @@ public class IIDataHandlingUtils
 	 * @param yawPitch consumer for the yaw and pitch parameters, can be null to avoid checking
 	 * @return true if the packet contains a valid vector or yaw+pitch parameter, false otherwise
 	 */
-	public static boolean expectingVectorParam(DataPacket packet, @Nullable Consumer<Vec3d> vector, @Nullable Consumer<Vec2f> yawPitch)
+	public static boolean expectingVectorParam(DataPacket packet, @Nullable Consumer<Vec3d> vector, @Nullable Consumer<Vector2f> yawPitch)
 	{
 		if(vector!=null)
 		{
@@ -315,7 +315,7 @@ public class IIDataHandlingUtils
 			DataType p = packet.get('p');
 			if(y instanceof NumericDataType&&p instanceof NumericDataType)
 			{
-				yawPitch.accept(new Vec2f(
+				yawPitch.accept(new Vector2f(
 						//yaw
 						((NumericDataType)y).floatValue(),
 						//pitch

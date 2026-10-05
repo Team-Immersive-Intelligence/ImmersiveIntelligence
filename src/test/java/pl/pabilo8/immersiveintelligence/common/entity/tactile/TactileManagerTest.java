@@ -4,7 +4,6 @@ import com.google.gson.JsonParser;
 import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.junit.jupiter.api.Test;
@@ -39,9 +38,9 @@ class TactileManagerTest extends GameTestWorld
 
 		assertNull(manager.getPart("missing"));
 		assertEquals(Vec3d.ZERO, manager.getPosition("missing"));
-		Vec2f missingRotation = manager.getRotation("missing");
-		assertEquals(0f, missingRotation.x);
-		assertEquals(0f, missingRotation.y);
+		float[] missingRotation = manager.getRotation("missing");
+		assertEquals(0f, missingRotation[0]);
+		assertEquals(0f, missingRotation[0]);
 	}
 
 	@Test

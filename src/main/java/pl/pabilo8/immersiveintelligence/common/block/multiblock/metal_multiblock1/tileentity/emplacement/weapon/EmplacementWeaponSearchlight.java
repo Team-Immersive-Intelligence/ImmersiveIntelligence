@@ -18,7 +18,7 @@ import java.util.WeakHashMap;
  * Exposes hostile targets, combines overlapping searchlights, and forces airborne targets down.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 08.09.2026
+ * @updated 27.09.2026
  * @since 01.01.2026
  */
 public class EmplacementWeaponSearchlight extends EmplacementWeaponLightBase
@@ -28,7 +28,7 @@ public class EmplacementWeaponSearchlight extends EmplacementWeaponLightBase
 	public EmplacementWeaponSearchlight()
 	{
 		super();
-		this.setup = new MultiblockInteractablePart(20);
+		this.setup = new MultiblockInteractablePart(Searchlight.setupTime);
 	}
 
 	@Override
@@ -37,14 +37,23 @@ public class EmplacementWeaponSearchlight extends EmplacementWeaponLightBase
 		super.onInit(te);
 		this.visionAABB = this.visionAABB.grow(Searchlight.detectionRadius);
 		this.attackAABB = this.attackAABB.grow(Searchlight.attackRadius);
-		this.chillingState = new ChillingState(200, 240, 80);
-		this.aim.withAimSpeed(Searchlight.yawRotateSpeed, Searchlight.pitchRotateSpeed);
+		this.chillingState = new ChillingState(Searchlight.minimumIdleTime,
+				Searchlight.idleAnimationInterval, Searchlight.idleAnimationDuration);
+		this.aim.withAimSpeed(Searchlight.yawRotateSpeed, Searchlight.pitchRotateSpeed)
+				.withYawLimit(Searchlight.minYaw, Searchlight.maxYaw)
+				.withPitchLimit(Searchlight.minPitch, Searchlight.maxPitch);
 	}
 
 	@Override
 	public String getName()
 	{
 		return "searchlight";
+	}
+
+	@Override
+	protected String getSetupAnimationName()
+	{
+		return "setup";
 	}
 
 	@Override
@@ -70,6 +79,14 @@ public class EmplacementWeaponSearchlight extends EmplacementWeaponLightBase
 	public void initializeGUI(DecoPanel panelBase, DecoPanel panelPlatform)
 	{
 
+	}
+
+	@Override
+	public int getArmorForPart(String partName)
+	{
+		if(partName.startsWith("projector"))
+			return 1;
+		return partName.startsWith("base")?12: 8;
 	}
 
 	@Override

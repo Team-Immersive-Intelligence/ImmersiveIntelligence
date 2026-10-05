@@ -1,10 +1,12 @@
 package pl.pabilo8.immersiveintelligence.client.gui.deco.component.data_editor;
 
+import pl.pabilo8.immersiveintelligence.api.data.DataVariable;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataTypeUtils;
 import pl.pabilo8.immersiveintelligence.api.data.types.*;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType.TypeMetaInfo;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPanel;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.clipboard.DecoClipboardUtils;
 
 import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
@@ -107,6 +109,30 @@ public abstract class DecoDataEditor<T extends DataType> extends DecoPanel
 	}
 
 	public abstract T outputType();
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public void onGuiEvent(DecoGuiEvent event)
+	{
+		switch(event)
+		{
+			case COPY:
+				DecoClipboardUtils.copy(outputType());
+				break;
+			case PASTE:
+				Object pasted = DecoClipboardUtils.paste();
+				if(pasted instanceof DataVariable)
+					pasted = ((DataVariable)pasted).getValue();
+				if(pasted instanceof DataType&&dataType.getClass().isInstance(pasted))
+				{
+					this.dataType = (T)((DataType)pasted).clone();
+					cleanup();
+				}
+				break;
+			default:
+				super.onGuiEvent(event);
+		}
+	}
 
 	/**
 	 * Standard constructor interface for DecoDataEditor.

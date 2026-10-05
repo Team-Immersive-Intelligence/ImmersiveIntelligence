@@ -11,6 +11,7 @@ import pl.pabilo8.immersiveintelligence.api.protection.protection.capability.Pro
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradeableArmor;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -92,5 +93,22 @@ public abstract class ItemIILightEngineerArmorBase extends ItemIIUpgradeableArmo
 	public String getSkinnableDefaultTextureLocation()
 	{
 		return ImmersiveIntelligence.MODID+":textures/armor/";
+	}
+
+	//--- Container Item ---//
+
+	@Override
+	public boolean hasContainerItem(ItemStack stack)
+	{
+		return true;
+	}
+
+	@Nonnull
+	@Override
+	public ItemStack getContainerItem(@Nonnull ItemStack stack)
+	{
+		ItemStack damaged = stack.copy();
+		damaged.setItemDamage(stack.getItemDamage()+1);
+		return damaged.getItemDamage() >= damaged.getMaxDamage()?ItemStack.EMPTY: damaged;
 	}
 }

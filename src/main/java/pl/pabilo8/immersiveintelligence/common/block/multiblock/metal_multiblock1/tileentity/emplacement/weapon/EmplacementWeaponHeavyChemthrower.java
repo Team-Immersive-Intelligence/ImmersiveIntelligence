@@ -41,7 +41,7 @@ import java.util.Arrays;
  * Implements direct Platform-fluid firing and Base-to-Platform supply for the Heavy Chemthrower.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 08.09.2026
+ * @updated 27.09.2026
  * @since 01.01.2026
  */
 public class EmplacementWeaponHeavyChemthrower extends EmplacementWeaponTurretBase
@@ -67,9 +67,11 @@ public class EmplacementWeaponHeavyChemthrower extends EmplacementWeaponTurretBa
 		super.onInit(te);
 		this.visionAABB = this.visionAABB.grow(HeavyChemthrower.detectionRadius);
 		this.attackAABB = this.attackAABB.grow(HeavyChemthrower.attackRadius);
-		this.chillingState = new ChillingState(200, 240, 80);
+		this.chillingState = new ChillingState(HeavyChemthrower.minimumIdleTime,
+				HeavyChemthrower.idleAnimationInterval, HeavyChemthrower.idleAnimationDuration);
 		this.aim.withAimSpeed(HeavyChemthrower.yawRotateSpeed, HeavyChemthrower.pitchRotateSpeed)
-				.withPitchLimit(-90, 22.5f)
+				.withYawLimit(HeavyChemthrower.minYaw, HeavyChemthrower.maxYaw)
+				.withPitchLimit(HeavyChemthrower.minPitch, HeavyChemthrower.maxPitch)
 				.withAimCorrectionFunction(this::getAnglePrediction);
 	}
 
@@ -137,6 +139,12 @@ public class EmplacementWeaponHeavyChemthrower extends EmplacementWeaponTurretBa
 	{
 		FluidStack available = baseTank.drain(1, false);
 		return available!=null&&platformTank.fill(available, false) > 0;
+	}
+
+	@Override
+	public boolean shouldLoopReloadSound()
+	{
+		return isResupplying()&&canTransferFluid();
 	}
 
 	private int transferFluid(int maxAmount)
@@ -252,6 +260,19 @@ public class EmplacementWeaponHeavyChemthrower extends EmplacementWeaponTurretBa
 		panelPlatform.addComponent(new DecoFluidTank(4, 6)
 				.withFluidTank(platformTank)
 				.withHeight(panelPlatform.height-8));
+	}
+
+	@Override
+	public int getArmorForPart(String partName)
+	{
+		if(partName.startsWith("gun")||partName.startsWith("stage2")||partName.startsWith("stage3"))
+			return 20;
+		return switch(partName)
+		{
+			case "turret_child1", "turret_child2", "turret_child3" -> 1;
+			case "turret_child0" -> 12;
+			default -> 8;
+		};
 	}
 
 	@Override

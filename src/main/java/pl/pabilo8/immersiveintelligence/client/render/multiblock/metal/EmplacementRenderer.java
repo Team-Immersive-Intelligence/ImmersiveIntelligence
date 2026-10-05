@@ -40,6 +40,7 @@ public class EmplacementRenderer extends IIMultiblockRenderer<TileEntityEmplacem
 		//Apply mirroring and style customization (variant)
 		applyStandardMirroring(te, true);
 		model.getVariant(te, te.style, te.currentWeapon==null?"": te.currentWeapon.getName(), te.upgradeManager);
+		model.defaultize();
 
 		//Apply platform and door animation
 		animationOpen.apply(te.door.getProgress(partialTicks));

@@ -42,6 +42,9 @@ import pl.pabilo8.immersiveintelligence.api.LogisticTag;
 import pl.pabilo8.immersiveintelligence.api.PackerHandler;
 import pl.pabilo8.immersiveintelligence.api.PackerHandler.CapacitorChargeHandler;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseType;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.crafting.*;
 import pl.pabilo8.immersiveintelligence.api.crafting.PrintingRecipe.PrintFunction;
@@ -98,7 +101,7 @@ import java.util.stream.Collectors;
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @author Avalon (avalon@iiteam.net)
- * @updated 29.4.2026
+ * @updated 24.09.2026
  * @since 22.03.2020
  * @since 28.11.2024
  */
@@ -368,7 +371,9 @@ public class IIRecipes
 		new ElectrolyzerRecipe(new FluidStack(IIContent.gasCO2, 750), new FluidStack(IIContent.gasCO, 500),
 				new FluidStack(IIContent.gasOxygen, 250), 160, 160);
 		RefineryRecipe.addRecipe(new FluidStack(IIContent.fluidFormicAcid, 16), new FluidStack(IIContent.fluidMethanol, 8),
-				new FluidStack(IIContent.gasCO, 8), 65);
+				new FluidStack(IIContent.gasCO, 8), 512);
+		RefineryRecipe.addRecipe(new FluidStack(IIContent.fluidRocketPropellant, 8),
+				new FluidStack(IIContent.gasOxygen, 4), new FluidStack(IIContent.gasHydrogen, 4), 1024);
 
 	}
 
@@ -1416,6 +1421,7 @@ public class IIRecipes
 		new FillerRecipe(IIContent.itemAmmoRevolver, 50, 50*128);
 
 		//Projectiles
+		int time;
 		for(ItemIIAmmoBase<?> item : new ItemIIAmmoBase[]{IIContent.itemAmmoHeavyArtillery, IIContent.itemAmmoMediumArtillery, IIContent.itemAmmoLightArtillery,
 				IIContent.itemAmmoLightGun, IIContent.itemAmmoMortar,
 				IIContent.itemAmmoAutocannon,
@@ -1424,7 +1430,7 @@ public class IIRecipes
 			ItemStack casingStack = item.getCasingStack(1);
 			ItemNBTHelper.setBoolean(casingStack, "ii_FilledCasing", true);
 
-			int time = (item.getCaliber() > 3?140: 70)+(25*Math.max(0, item.getCaliber()-1));
+			time = (item.getCaliber() > 3?140: 70)+(25*Math.max(0, item.getCaliber()-1));
 			new AmmunitionAssemblerRecipe(
 					(core, casing) -> {
 						ItemStack stack = item.getStack(AmmoParts.BULLET);
@@ -1434,16 +1440,37 @@ public class IIRecipes
 					new IngredientStack(item.getAmmoCoreStack(IIContent.ammoCoreBrass, item.getAllowedCoreTypes()[0])),
 					new IngredientStack(casingStack).setUseNBT(true),
 					time*128*item.getCaliber(),
-					time, false
+					time
 			);
 		}
+
+		//Revolver bullets require a special "bullet" key
+		ItemStack revolverCasingStack = IIContent.itemAmmoRevolver.getCasingStack(1);
+		time = 70;
+		ItemNBTHelper.setBoolean(revolverCasingStack, "ii_FilledCasing", true);
+		new AmmunitionAssemblerRecipe(
+				(core, casing) -> {
+					AmmoCore ammoCore = IIContent.itemAmmoRevolver.getCore(core);
+					CoreType coreType = IIContent.itemAmmoRevolver.getCoreType(core);
+					FuseType fuse = IIContent.itemAmmoRevolver.getFuseType(core);
+					return IIContent.itemAmmoRevolver.getAmmoStack(ammoCore, coreType, fuse);
+				},
+				new IngredientStack(IIContent.itemAmmoRevolver.getAmmoCoreStack(IIContent.ammoCoreBrass,
+						IIContent.itemAmmoRevolver.getAllowedCoreTypes()[0])),
+				new IngredientStack(revolverCasingStack).setUseNBT(true),
+				time*128, time
+		);
 
 		//IIContent.itemAmmoRocketHeavy not included, as it's too big for the Ammunition Assembler
 		for(ItemIIAmmoBase<?> item : new ItemIIAmmoBase[]{IIContent.itemAmmoRocketLight, IIContent.itemAmmoGuidedMissile})
 		{
 			assert item!=null;
 			ItemStack casingStack = item.getCasingStack(1);
-			int time = 140+(25*Math.max(0, item.getCaliber()-1));
+			ItemStack filledCasingStack = casingStack.copy();
+			ItemNBTHelper.setBoolean(filledCasingStack, "ii_FilledRocket", true);
+			BottlingMachineRecipe.addRecipe(filledCasingStack, new IngredientStack(casingStack).setUseNBT(true),
+					new FluidStack(IIContent.fluidRocketPropellant, 500));
+			time = 140+(25*Math.max(0, item.getCaliber()-1));
 			new AmmunitionAssemblerRecipe(
 					(core, casing) -> {
 						ItemStack stack = item.getStack(AmmoParts.BULLET);
@@ -1451,9 +1478,9 @@ public class IIRecipes
 						return stack;
 					},
 					new IngredientStack(item.getAmmoCoreStack(IIContent.ammoCoreBrass, item.getAllowedCoreTypes()[0])),
-					new IngredientStack(casingStack).setUseNBT(true),
+					new IngredientStack(filledCasingStack).setUseNBT(true),
 					time*128*item.getCaliber(),
-					time, false
+					time
 			);
 		}
 
@@ -1472,7 +1499,7 @@ public class IIRecipes
 					new IngredientStack(bullet.getAmmoCoreStack(IIContent.ammoCoreBrass, bullet.getAllowedCoreTypes()[0])),
 					new IngredientStack(bullet.getCasingStack(1)).setUseNBT(true),
 					512*480,
-					480, false
+					480
 			);
 		}
 
@@ -1485,7 +1512,7 @@ public class IIRecipes
 					return stack;
 				},
 				new IngredientStack(IIContent.itemGrenade.getAmmoCoreStack(IIContent.ammoCoreBrass, IIContent.itemGrenade.getAllowedCoreTypes()[0])),
-				new IngredientStack("stickTreatedWood"), 384*480, 480, false
+				new IngredientStack("stickTreatedWood"), 384*480, 480
 		);
 
 		new AmmunitionAssemblerRecipe(
@@ -1495,7 +1522,7 @@ public class IIRecipes
 					return stack;
 				},
 				new IngredientStack(IIContent.itemRailgunGrenade.getAmmoCoreStack(IIContent.ammoCoreBrass, IIContent.itemRailgunGrenade.getAllowedCoreTypes()[0])),
-				new IngredientStack("stickSteel"), 384*480, 540, false
+				new IngredientStack("stickSteel"), 384*480, 540
 		);
 
 		//Advanced Ammunition

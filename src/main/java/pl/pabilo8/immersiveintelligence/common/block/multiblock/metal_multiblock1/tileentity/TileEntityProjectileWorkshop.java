@@ -50,7 +50,7 @@ import java.util.Optional;
  * Machine that handles ammunition core production and filling.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 09.07.2024
+ * @updated 24.09.2026
  * @ii-approved 0.3.1
  * @since 04.03.2021
  */
@@ -119,6 +119,13 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 		lid2.update();
 		upgrades.update();
 
+		//Discard processes restored from a save if their ammunition now needs an advanced workshop.
+		if(!world.isRemote&&currentProcess!=null&&isAdvancedProcess(currentProcess))
+		{
+			currentProcess = null;
+			updateTileForEvent(SyncEvents.TILE_RECIPE_CHANGED);
+		}
+
 		//Fill the internal ammunition component store from both item and fluid input.
 		if(isUpgradeInstalled(IIContent.UPGRADE_CORE_FILLER)&&!world.isRemote)
 		{
@@ -131,6 +138,17 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 			return;
 
 		super.onUpdate();
+	}
+
+	private boolean isAdvancedProcess(IIMultiblockProcess<ProjectileWorkshopRecipe> process)
+	{
+		if(process.recipe.advanced)
+			return true;
+		if(!process.recipe.isFilling)
+			return false;
+		ItemStack effect = process.processData.getItemStack("effect");
+		return effect.getItem() instanceof IAmmoTypeItem
+				&&((IAmmoTypeItem<?, ?>)effect.getItem()).requiresAdvancedAssembly();
 	}
 
 	//--- NBT ---//
@@ -197,7 +215,9 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 		else if(slot==MultiblockProjectileWorkshop.SLOT_INPUT)
 		{
 			if(isUpgradeInstalled(IIContent.UPGRADE_CORE_FILLER))
-				return stack.getItem() instanceof IAmmoTypeItem&&((IAmmoTypeItem<?, ?>)stack.getItem()).isBulletCore(stack);
+				return stack.getItem() instanceof IAmmoTypeItem
+						&&!((IAmmoTypeItem<?, ?>)stack.getItem()).requiresAdvancedAssembly()
+						&&((IAmmoTypeItem<?, ?>)stack.getItem()).isBulletCore(stack);
 			else
 				return AmmoRegistry.getAllCores().stream().anyMatch(core -> core.getMaterial().matchesItemStackIgnoringSize(stack));
 		}
@@ -398,6 +418,8 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 
 		validateCoreType();
 		ProjectileWorkshopRecipe recipe = getOrCreateCoreProductionRecipe(producedAmmo, first.get(), coreType);
+		if(recipe.advanced)
+			return null;
 		stack.shrink(producedAmmo.getCoreMaterialNeeded());
 		return new IIMultiblockProcess<>(recipe);
 	}
@@ -409,7 +431,7 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 			return null;
 
 		IAmmoTypeItem<?, ?> ammo = (IAmmoTypeItem<?, ?>)stack.getItem();
-		if(!ammo.isBulletCore(stack))
+		if(ammo.requiresAdvancedAssembly()||!ammo.isBulletCore(stack))
 			return null;
 
 		if(componentInside.isEmpty()||componentInside.component==null)

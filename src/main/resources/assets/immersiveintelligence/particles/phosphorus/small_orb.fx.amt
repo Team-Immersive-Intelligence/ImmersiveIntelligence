@@ -1,0 +1,47 @@
+{
+  "type": "ParticleModel",
+  "models": [
+    "smoke/smoke_trace.obj"
+  ],
+  "max_lifetime": 8,
+  "draw_stage": "custom_smoke_noise_shader",
+  "color": "5cffffff",
+  "programs": [
+    "smoke_transition"
+  ],
+  "size": 0.625,
+  "scheduled": [
+    {
+      "time": 0,
+      "generator": "same",
+      "distance": 0,
+      "speed": 0,
+      "amount": 1,
+      "type": "phosphorus/small_glow"
+    },
+    {
+      "time": 2,
+      "generator": "same",
+      "distance": 0,
+      "speed": 0,
+      "amount": 1,
+      "type": "phosphorus/small_cloud"
+    },
+    {
+      "time": 0,
+      "generator": "sphere",
+      "distance": 0.125,
+      "speed": 0.125,
+      "amount": 10,
+      "type": "phosphorus/small_spark"
+    },
+    {
+      "time": 2,
+      "generator": "sphere",
+      "distance": 0.2,
+      "speed": 0.04,
+      "amount": 6,
+      "type": "phosphorus/small_spark"
+    }
+  ]
+}

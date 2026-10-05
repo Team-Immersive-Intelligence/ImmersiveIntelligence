@@ -1,7 +1,6 @@
 package pl.pabilo8.immersiveintelligence.client.gui.deco.component.button;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.ResourceLocation;
@@ -9,6 +8,7 @@ import net.minecraft.util.math.MathHelper;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoTextBasedComponent;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.clipboard.DecoClipboardUtils;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
@@ -169,11 +169,12 @@ public class DecoSlider extends DecoTextBasedComponent<DecoSlider>
 		switch(event)
 		{
 			case COPY:
-				GuiScreen.setClipboardString(String.format("%.2f", value));
+				DecoClipboardUtils.copy(Float.valueOf(value));
 				break;
 			case PASTE:
 			{
-				String text = GuiScreen.getClipboardString();
+				Object pasted = DecoClipboardUtils.paste();
+				String text = pasted instanceof Number?String.valueOf(((Number)pasted).floatValue()): String.valueOf(pasted);
 				try
 				{
 					withValue(Float.parseFloat(text));

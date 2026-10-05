@@ -1,7 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.block.rotary_device.tileentity;
 
 import blusunrize.immersiveengineering.api.energy.IRotationAcceptor;
-import blusunrize.immersiveengineering.common.Config.IEConfig;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IDirectionalTile;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IHammerInteraction;
 import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
@@ -21,8 +20,6 @@ import javax.annotation.Nullable;
 import java.util.Map.Entry;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
-
-import static pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.MechanicalDevices.rofConversionRatio;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -117,7 +114,7 @@ public class TileEntityTransmissionBox extends TileEntityIEBase implements ITick
 			tile = world.getTileEntity(pos.offset(facing.getOpposite()));
 
 			if(energy.getTorque() > 0&&tile instanceof IRotationAcceptor)
-				((IRotationAcceptor)tile).inputRotation(energy.getEnergy()/rofConversionRatio/IEConfig.Machines.dynamo_output, facing.getOpposite());
+				((IRotationAcceptor)tile).inputRotation(IIRotaryUtils.IIToIE(energy.getEnergy()), facing.getOpposite());
 		}
 	}
 
@@ -127,13 +124,8 @@ public class TileEntityTransmissionBox extends TileEntityIEBase implements ITick
 		if(side==facing.getOpposite()&&!world.isRemote)
 		{
 			tick = 10;
-			TileEntity t = world.getTileEntity(pos.offset(facing));
-			float torque = IIRotaryUtils.getTorqueForIEDevice(t, 1);
-			int output = (int)(20*IEConfig.Machines.dynamo_output*rotation*rofConversionRatio);
-			float speed = output/torque;
-			torque = output/speed;
-
-			energy.grow(Math.round(speed), Math.round(torque), 0.98f);
+			float[] speedTorque = IIRotaryUtils.IEToII(rotation, world.getTileEntity(pos.offset(facing)));
+			energy.grow(speedTorque[0], speedTorque[1], 0.98f);
 			if(world.getTotalWorldTime()%20==0)
 				IIPacketHandler.sendToClient(new MessageRotaryPowerSync(world, pos, 0, energy));
 

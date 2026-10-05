@@ -16,9 +16,9 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
-import pl.pabilo8.immersiveintelligence.common.util.FilteredFluidTank;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
+import pl.pabilo8.immersiveintelligence.common.util.fluid.FilteredFluidTank;
 import pl.pabilo8.immersiveintelligence.common.util.gun.ChillingState;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
 
@@ -53,11 +53,13 @@ public class EmplacementWeaponMachinegun extends EmplacementWeaponGunBase<Entity
 		this.ammoFactory.setAmmo(IIContent.itemAmmoMachinegun);
 		this.visionAABB = this.visionAABB.grow(Machinegun.detectionRadius);
 		this.attackAABB = this.attackAABB.grow(Machinegun.attackRadius);
-		this.chillingState = new ChillingState(160, 200, 60);
+		this.chillingState = new ChillingState(Machinegun.minimumIdleTime,
+				Machinegun.idleAnimationInterval, Machinegun.idleAnimationDuration);
 
 		setupItemHandlers(te, 16, 2, 8, 8,
 				this.ammoFactory::isValidAmmo, this.ammoFactory::isValidAmmo);
 		this.aim.withAimSpeed(Machinegun.yawRotateSpeed, Machinegun.pitchRotateSpeed)
+				.withYawLimit(Machinegun.minYaw, Machinegun.maxYaw)
 				.withPitchLimit(Machinegun.minPitch, Machinegun.maxPitch);
 
 		this.rotateAfterFiring = true;
@@ -164,7 +166,20 @@ public class EmplacementWeaponMachinegun extends EmplacementWeaponGunBase<Entity
 	@Override
 	protected Float getHidingPitch()
 	{
-		return 0f;
+		return Machinegun.hidingPitch;
+	}
+
+	@Override
+	public int getArmorForPart(String partName)
+	{
+		if(partName.startsWith("gun1")||partName.startsWith("gun2"))
+			return 20;
+		return switch(partName)
+		{
+			case "turret" -> 10;
+			case "base" -> 12;
+			default -> 8;
+		};
 	}
 
 	@Override

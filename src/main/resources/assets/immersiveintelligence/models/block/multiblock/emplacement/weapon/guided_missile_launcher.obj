@@ -3,7 +3,7 @@
 mtllib guided_missile_launcher.mtl
 
 
-o base
+o turret
 v 0.25 -2.53125 0.5625
 v -0.375 -1.375 1.703125
 v -0.375 -1.375 1.046875

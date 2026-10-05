@@ -20,6 +20,13 @@ import pl.pabilo8.immersiveintelligence.common.util.amt.AMTModelHeader;
 import javax.annotation.Nonnull;
 import java.util.List;
 
+/**
+ * Renders the Spotlight Tower Emplacement weapon and its conditional light beam.
+ *
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 27.09.2026
+ * @since 19.02.2026
+ */
 @SideOnly(Side.CLIENT)
 public class EWRSpotlightTower extends EmplacementWeaponRenderer<EmplacementWeaponSpotlightTower>
 {
@@ -69,6 +76,11 @@ public class EWRSpotlightTower extends EmplacementWeaponRenderer<EmplacementWeap
 		this.rotatePitch.apply(weapon.aim.getPitchNormalized(-90, 90, partialTicks));
 
 		//Apply light beam length vector
-		this.ray.get().setParticleProperty(ParticleProperties.STRETCH, weapon.targetPosition);
+		AMTParticle ray = this.ray.get();
+		if(ray!=null)
+		{
+			ray.setVisible(weapon.shouldRenderLightBeam());
+			ray.withParticleProperty(ParticleProperties.STRETCH, weapon.targetPosition);
+		}
 	}
 }

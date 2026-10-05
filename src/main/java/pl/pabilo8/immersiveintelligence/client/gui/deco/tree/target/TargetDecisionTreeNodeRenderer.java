@@ -87,6 +87,9 @@ public class TargetDecisionTreeNodeRenderer extends AbstractTreeNodeRenderer<Tar
 
 	private String getFilterValue(TargetFilter filter)
 	{
+		if(filter instanceof RelativeDirectionFilter)
+			return I18n.format("ii.gui.emplacement.target_filter.relative_direction."+
+					((RelativeDirectionFilter)filter).getDirection().getName());
 		if(filter instanceof EntityTypeTargetFilter)
 			return I18n.format("ii.gui.emplacement.target_filter.entity_type."+
 					((EntityTypeTargetFilter)filter).getTargetType().getName());

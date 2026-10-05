@@ -179,7 +179,7 @@ public class GunAmmoProviderItemHandler extends GunAmmoProvider
 	{
 		if(loadingState==GunLoadingState.LOAD)
 			return copyAmmoList(loadingAmmo, getCurrentStageCapacity());
-		return copyAmmoList(loadedAmmo, loadedAmmo.size());
+		return copyAmmoList(loadedAmmo);
 	}
 
 	/**

@@ -1,6 +1,7 @@
 {
   "origins": {
     "base": [8, -28, 24],
+    "turret": [8, -28, 24],
     "launcher3": [18, -38, 24],
     "launcher2": [17.5, -30, 23.5],
     "launcher": [17, -23.75, 23],
@@ -19,27 +20,28 @@
     "missile_door1": [22.07143, -28.5, 23.71429]
   },
   "hierarchy": {
-    "style": "base",
-    "launcher3": "base",
+    "turret": "base",
+    "style": "turret",
+    "launcher3": "turret",
     "launcher2": "launcher3",
     "launcher": "launcher2",
     "gun": "launcher",
     "rocket": "gun",
     "coil": "gun",
-    "turen": "base",
-    "turntable": "base",
+    "turen": "turret",
+    "turntable": "turret",
     "lower": "turntable",
     "upper": "lower",
     "pickerLeft": "upper",
     "pickerLeft2": "pickerLeft",
     "pickerRight": "upper",
     "pickerRight2": "pickerRight",
-    "missile_door2": "base",
-    "missile_door1": "base"
+    "missile_door2": "turret",
+    "missile_door1": "turret"
   },
   "properties": {
     "rocket": {
-      "rotation": [90.0, 0.0, 0.0]
+      "base_rotation": [90.0, 0.0, 0.0]
     }
   }
 }

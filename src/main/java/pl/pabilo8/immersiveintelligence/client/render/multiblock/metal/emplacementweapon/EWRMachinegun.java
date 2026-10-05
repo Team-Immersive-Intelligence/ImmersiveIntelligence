@@ -156,7 +156,7 @@ public class EWRMachinegun extends EmplacementWeaponRenderer<EmplacementWeaponMa
 		applyAmmoItems(weapon, allAmmo, BulletState.BULLET_UNUSED, bulletsRight);
 		applyAmmoItems(weapon, allAmmo, BulletState.BULLET_UNUSED, bulletsLeft);
 
-		float shotDelay = weapon.gunHandler.getShotDelay(partialTicks);
+		float shotDelay = 1f-(weapon.gunHandler.getShotDelay(partialTicks)/weapon.getShotDelay());
 
 		this.install.apply(weapon.setup.getProgress(partialTicks));
 

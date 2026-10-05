@@ -15,16 +15,14 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 
 /**
  * Defines offsets and hierarchy for an animated model's parts
  *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 22.09.2026
  * @since 09.04.2022
  */
 public class AMTModelHeader
@@ -94,9 +92,9 @@ public class AMTModelHeader
 							matrix.scale(vec.x, vec.y, vec.z);
 						}
 					}
-					if(transform.has("rotate"))
+					JsonElement rotate = transform.has("rotate")?transform.get("rotate"): transform.get("rotation");
+					if(rotate!=null)
 					{
-						JsonElement rotate = transform.get("rotate");
 						if(rotate.isJsonArray())
 						{
 							Vec3d vec = IIFileUtils.jsonToVec3d(rotate.getAsJsonArray());
@@ -105,16 +103,16 @@ public class AMTModelHeader
 							matrix.rotate(Math.toRadians(vec.z), 0, 0, 1);
 						}
 					}
-					if(transform.has("translate"))
+					JsonElement translate = transform.has("translate")?transform.get("translate"): transform.get("translation");
+					if(translate!=null)
 					{
-						JsonElement translate = transform.get("translate");
 						if(translate.isJsonArray())
 						{
 							Vec3d vec = IIFileUtils.jsonToVec3d(translate.getAsJsonArray());
 							matrix.translate(vec.x, vec.y, vec.z);
 						}
 					}
-					transforms.put(entry.getKey().toUpperCase(), matrix);
+					transforms.put(entry.getKey(), matrix);
 				}
 			}
 		}
@@ -169,9 +167,6 @@ public class AMTModelHeader
 		if(property!=null)
 			properties.put(newName, property);
 
-		Matrix4 transform = transforms.remove(oldName);
-		if(transform!=null)
-			transforms.put(newName, transform);
 	}
 
 	/**
@@ -224,6 +219,12 @@ public class AMTModelHeader
 	public void applyTransforms(ItemModelReplacement_OBJ model)
 	{
 		for(Entry<String, Matrix4> entry : transforms.entrySet())
-			model.setTransformations(TransformType.valueOf(entry.getKey()), entry.getValue());
+			try
+			{
+				model.setTransformations(TransformType.valueOf(entry.getKey().toUpperCase(Locale.ROOT)), entry.getValue());
+			} catch(IllegalArgumentException ignored)
+			{
+				//The current Minecraft version can omit newer Blockbench transform slots.
+			}
 	}
 }

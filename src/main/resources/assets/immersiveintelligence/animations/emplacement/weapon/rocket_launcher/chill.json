@@ -1,6 +1,26 @@
 {
   "comment": "Made by Pabilo8 with Blockbench",
   "groups": {
+    "turret_origin": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.25,
+          "transform": [0, -5, 0]
+        },
+        {
+          "time": 0.75,
+          "transform": [0, 5, 0]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
     "projector_origin": {
       "rotation": [
         {
@@ -25,26 +45,6 @@
         },
         {
           "time": 0.84723,
-          "transform": [0, 0, 0]
-        }
-      ]
-    },
-    "turen_origin": {
-      "rotation": [
-        {
-          "time": 0,
-          "transform": [0, 0, 0]
-        },
-        {
-          "time": 0.25,
-          "transform": [0, -5, 0]
-        },
-        {
-          "time": 0.75,
-          "transform": [0, 5, 0]
-        },
-        {
-          "time": 1,
           "transform": [0, 0, 0]
         }
       ]

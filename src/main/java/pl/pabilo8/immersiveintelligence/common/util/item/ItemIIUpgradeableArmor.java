@@ -7,7 +7,6 @@ import blusunrize.immersiveengineering.common.gui.IESlot;
 import blusunrize.immersiveengineering.common.gui.IESlot.Upgrades;
 import blusunrize.immersiveengineering.common.util.IELogger;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
-import blusunrize.immersiveengineering.common.util.Utils;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.client.gui.FontRenderer;
@@ -17,15 +16,12 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.network.play.server.SPacketSetSlot;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IRarity;
@@ -251,24 +247,6 @@ public abstract class ItemIIUpgradeableArmor extends ItemArmor implements IUpgra
 			IELogger.warn("No valid inventory handler found for "+stack);
 	}
 
-	public NonNullList<ItemStack> getContainedItems(ItemStack stack)
-	{
-		IItemHandler handler = stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-		if(handler instanceof IIArmorItemStackHandler)
-			return ((IIArmorItemStackHandler)handler).getContainedItems();
-		else if(handler!=null)
-		{
-			IELogger.warn("Inefficiently getting contained items. Why does "+stack+" have a non-IE IItemHandler?");
-			NonNullList<ItemStack> inv = NonNullList.withSize(handler.getSlots(), ItemStack.EMPTY);
-			for(int i = 0; i < handler.getSlots(); i++)
-				inv.set(i, handler.getStackInSlot(i));
-			return inv;
-		}
-		else
-			IELogger.info("No valid inventory handler found for "+stack);
-		return NonNullList.create();
-	}
-
 	/**
 	 * Called each tick as long the item is on a player inventory. Uses by maps to check if is on a player hand and update
 	 * it's contents.
@@ -277,15 +255,6 @@ public abstract class ItemIIUpgradeableArmor extends ItemArmor implements IUpgra
 	public void onUpdate(@Nonnull ItemStack stack, @Nonnull World worldIn, @Nonnull Entity entityIn, int itemSlot, boolean isSelected)
 	{
 		super.onUpdate(stack, worldIn, entityIn, itemSlot, isSelected);
-		if(ItemNBTHelper.hasKey(stack, "Inv"))
-		{
-			NBTTagList list = ItemNBTHelper.getTag(stack).getTagList("Inv", 10);
-			setContainedItems(stack, Utils.readInventory(list, getSlotCount()));
-			ItemNBTHelper.remove(stack, "Inv");
-			//Sync the changes
-			if(entityIn instanceof EntityPlayerMP&&!worldIn.isRemote)
-				((EntityPlayerMP)entityIn).connection.sendPacket(new SPacketSetSlot(-2, itemSlot, stack));
-		}
 	}
 
 	@Nonnull

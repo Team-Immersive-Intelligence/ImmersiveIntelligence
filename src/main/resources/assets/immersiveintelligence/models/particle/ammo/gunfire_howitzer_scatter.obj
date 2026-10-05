@@ -1,0 +1,43 @@
+# Made by Pabilo8 with Blockbench
+# Exported with IIToolkit Plugin on 02/10/2026
+mtllib gunfire_howitzer_scatter.mtl
+
+o gunfire_howitzer_scatter
+v 1 -1 0.625
+v 1 1 0.625
+v -1 -1 0.625
+v -1 1 0.625
+v 1 0 0.4375
+v -1 0 0.4375
+v 0 0 -0.0625
+v 0 -1 0.4375
+v 0 1 0.4375
+vt 1 0.5
+vt 0.5 0.5
+vt 0.5 1
+vt 1 1
+vt 0 1
+vt 0.5 1
+vt 0.5 0.5
+vt 0 0.5
+vt 0 0.5
+vt 0.5 0.5
+vt 0.5 0
+vt 0 0
+vt 1 0
+vt 0.5 0
+vt 0.5 0.5
+vt 1 0.5
+vn 0.41 -0.41 0.82
+vn 0.17 0.44 0.88
+vn -0.41 0.41 0.82
+vn -0.17 -0.44 0.88
+usemtl howitzer_scatter0
+f 6/1/1 7/2/1 9/3/1
+f 6/1/1 9/3/1 4/4/1
+f 3/5/2 8/6/2 7/7/2
+f 3/5/2 7/7/2 6/8/2
+f 5/9/3 7/10/3 8/11/3
+f 5/9/3 8/11/3 1/12/3
+f 2/13/4 9/14/4 7/15/4
+f 2/13/4 7/15/4 5/16/4

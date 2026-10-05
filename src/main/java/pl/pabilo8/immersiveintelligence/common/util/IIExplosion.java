@@ -64,11 +64,12 @@ public class IIExplosion extends Explosion
 	private final boolean doDrops, stoppedByFluid;
 	private final Set<BlockPos> affectedFluidPositions = new LinkedHashSet<>();
 	private int delay;
+	private boolean smallParticles;
 
 	public IIExplosion(World world, @Nonnull Entity exploder,
-	                   Vec3d position, @Nullable Vec3d direction,
-	                   float size, float power, ComponentEffectShape shape,
-	                   boolean flaming, boolean damagesTerrain, boolean doDrops
+					   Vec3d position, @Nullable Vec3d direction,
+					   float size, float power, ComponentEffectShape shape,
+					   boolean flaming, boolean damagesTerrain, boolean doDrops
 	)
 	{
 		this(world, exploder, position, direction, size, power, shape, flaming, damagesTerrain, doDrops, false);
@@ -80,9 +81,9 @@ public class IIExplosion extends Explosion
 	 * @param stoppedByFluid true to stop each explosion trace at its first fluid block
 	 */
 	public IIExplosion(World world, @Nonnull Entity exploder,
-	                   Vec3d position, @Nullable Vec3d direction,
-	                   float size, float power, ComponentEffectShape shape,
-	                   boolean flaming, boolean damagesTerrain, boolean doDrops, boolean stoppedByFluid
+					   Vec3d position, @Nullable Vec3d direction,
+					   float size, float power, ComponentEffectShape shape,
+					   boolean flaming, boolean damagesTerrain, boolean doDrops, boolean stoppedByFluid
 	)
 	{
 		super(world, exploder, position.x, position.y, position.z, size, flaming, damagesTerrain);
@@ -93,6 +94,21 @@ public class IIExplosion extends Explosion
 		this.doDrops = doDrops;
 		this.stoppedByFluid = stoppedByFluid;
 		this.delay = 2;
+	}
+
+	/**
+	 * Selects particle effects from the ammunition payload size without changing explosion damage.
+	 * Machinegun and autocannon payloads are 0.125; light artillery payloads are 0.65.
+	 */
+	public IIExplosion withParticleComponentSize(float componentSize)
+	{
+		this.smallParticles = isSmallComponentSize(componentSize);
+		return this;
+	}
+
+	public static boolean isSmallComponentSize(float componentSize)
+	{
+		return componentSize <= 0.2f;
 	}
 
 	/**
@@ -312,7 +328,7 @@ public class IIExplosion extends Explosion
 	}
 
 	private Set<BlockPos> generateOrbBlockPosParallel(final int steps, final int maxTraceSteps, final float basePower,
-	                                                  final float yawStep, final float pitchStep)
+													  final float yawStep, final float pitchStep)
 	{
 		final int pitchCount = steps;
 		final int rayCount = 2*steps*pitchCount;
@@ -342,7 +358,7 @@ public class IIExplosion extends Explosion
 	}
 
 	private Set<BlockPos> generateConeBlockPosParallel(final int steps, final int maxTraceSteps, final float step,
-	                                                   final float basePower, final Vec3d dir)
+													   final float basePower, final Vec3d dir)
 	{
 		final int rayCount = steps*steps;
 
@@ -440,7 +456,7 @@ public class IIExplosion extends Explosion
 					!fluidExplosion&&this.size > PARTICLE_SURFACE_SAMPLE_SIZE_THRESHOLD?
 							getParticleEffectBlocks(MAX_PARTICLE_SURFACE_SAMPLES): Collections.emptyList(),
 					fluidExplosion, fluidExplosion?new ArrayList<>(affectedFluidPositions): Collections.emptyList()
-			));
+			).withSmallParticles(smallParticles));
 		}
 
 		EventHandler.pendingExplosions.add(this);

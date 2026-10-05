@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.client.util;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -15,8 +16,10 @@ import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedZoom;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityCamera;
 
 /**
+ * Controls the client camera and item or entity zoom.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 08.09.2026
+ * @updated 03.10.2026
  * @since 10.11.2019
  */
 @SideOnly(Side.CLIENT)
@@ -27,6 +30,8 @@ public class CameraHandler
 	public static ZoomType type = null;
 	public static IAdvancedZoom zoom;
 	public static ItemStack stack = ItemStack.EMPTY;
+	private static float previousZoomFactor = 1;
+	private static boolean previousZooming = false;
 
 	//--- CameraHandler ---//
 	private static EntityCamera camera;
@@ -42,21 +47,28 @@ public class CameraHandler
 		setCameraPos(pos.getX()+0.5, pos.getY(), pos.getZ()+0.5);
 	}
 
+	/**
+	 * Sets the camera position for the current render frame.
+	 */
 	public static void setCameraPos(double x, double y, double z)
 	{
 		ensureExists();
-		camera.posX = x;
-		camera.posY = y;
-		camera.posZ = z;
+		//The provider has already applied partial ticks to this position.
+		camera.setPosition(x, y, z);
+		camera.prevPosX = camera.lastTickPosX = x;
+		camera.prevPosY = camera.lastTickPosY = y;
+		camera.prevPosZ = camera.lastTickPosZ = z;
 	}
 
+	/**
+	 * Sets the camera angles for the current render frame.
+	 */
 	public static void setCameraAngle(float yaw, float pitch, float roll)
 	{
 		ensureExists();
-		camera.prevRotationYaw = camera.rotationYaw;
-		camera.rotationYaw = yaw;
-		camera.prevRotationPitch = camera.rotationPitch;
-		camera.rotationPitch = pitch;
+		//Do not interpolate the provider's render angles a second time.
+		camera.prevRotationYaw = camera.rotationYaw = yaw;
+		camera.prevRotationPitch = camera.rotationPitch = pitch;
 		camera.rotationRoll = roll;
 	}
 
@@ -65,13 +77,21 @@ public class CameraHandler
 		return enabled;
 	}
 
+	/**
+	 * Selects the custom camera or restores the player view.
+	 */
 	public static void setEnabled(boolean enabled)
 	{
-		ensureExists();
+		Minecraft mc = ClientUtils.mc();
 		if(enabled)
-			ClientUtils.mc().setRenderViewEntity(camera);
-		else if(CameraHandler.enabled)
-			ClientUtils.mc().setRenderViewEntity(null);
+			ensureExists();
+
+		Entity viewEntity = enabled?camera: mc.player;
+		if((enabled||CameraHandler.enabled)&&mc.getRenderViewEntity()!=viewEntity)
+		{
+			mc.setRenderViewEntity(viewEntity);
+			mc.renderGlobal.setDisplayListEntitiesDirty();
+		}
 
 		CameraHandler.enabled = enabled;
 	}
@@ -91,14 +111,28 @@ public class CameraHandler
 		return camera.rotationRoll;
 	}
 
+	/**
+	 * Updates the zoom provider and refreshes terrain visibility when zoom changes.
+	 */
 	public static boolean handleZoom()
 	{
-		if(handleZoomLogic())
-			return true;
-		type = null;
-		zoom = null;
-		stack = ItemStack.EMPTY;
-		return false;
+		boolean zooming = handleZoomLogic();
+		if(!zooming)
+		{
+			type = null;
+			zoom = null;
+			stack = ItemStack.EMPTY;
+		}
+
+		float zoomFactor = zooming?fovZoom: 1;
+		if(zooming!=previousZooming||Float.compare(zoomFactor, previousZoomFactor)!=0)
+		{
+			//Terrain visibility does not update for an FOV change alone.
+			ClientUtils.mc().renderGlobal.setDisplayListEntitiesDirty();
+			previousZoomFactor = zoomFactor;
+		}
+		previousZooming = zooming;
+		return zooming;
 	}
 
 	private static boolean handleZoomLogic()
@@ -158,10 +192,8 @@ public class CameraHandler
 	private static void ensureExists()
 	{
 		if(camera==null||camera.getEntityWorld()!=ClientUtils.mc().world)
-		{
+			//Keep the render camera outside the world tick and collision systems.
 			camera = new EntityCamera(ClientUtils.mc().world);
-			ClientUtils.mc().world.spawnEntity(camera);
-		}
 	}
 
 	public static RayTraceResult rayTrace(double blockReachDistance, float partialTicks)

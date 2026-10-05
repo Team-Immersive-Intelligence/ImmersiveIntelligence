@@ -14,23 +14,28 @@ import java.util.function.Function;
  */
 public class AxisAlignedFacingBB
 {
-	private final AxisAlignedBB[] facings = new AxisAlignedBB[4], facingsMirrored = new AxisAlignedBB[4];
+	private final AxisAlignedBB[] facings = new AxisAlignedBB[EnumFacing.values().length];
+	private final AxisAlignedBB[] facingsMirrored = new AxisAlignedBB[EnumFacing.values().length];
+
+	public AxisAlignedFacingBB(double minX, double minY, double minZ, double maxX, double maxY, double maxZ)
+	{
+		this(new AxisAlignedBB(minX, minY, minZ, maxX, maxY, maxZ));
+	}
 
 	public AxisAlignedFacingBB(AxisAlignedBB north)
 	{
 		//North
-		facings[0] = north;
-		facingsMirrored[0] = mirrorX(north);
+		setFacing(EnumFacing.NORTH, north, true);
 		//South
-		facings[1] = new AxisAlignedBB(1-north.maxX, north.minY, 1-north.maxZ, 1-north.minX, north.maxY, 1-north.minZ);
-		facingsMirrored[1] = mirrorX(facings[1]);
-		//East
-		facings[2] = new AxisAlignedBB(north.minZ, north.minY, 1-north.maxX, north.maxZ, north.maxY, 1-north.minX);
-		facingsMirrored[2] = mirrorZ(facings[2]);
+		setFacing(EnumFacing.SOUTH, rotateClockwise(rotateClockwise(north)), true);
 		//West
-		facings[3] = new AxisAlignedBB(1-north.maxZ, north.minY, north.minX, 1-north.minZ, north.maxY, north.maxX);
-		facingsMirrored[3] = mirrorZ(facings[3]);
-
+		setFacing(EnumFacing.WEST, rotateClockwise(north), false);
+		//East
+		setFacing(EnumFacing.EAST, rotateCounterClockwise(north), false);
+		//Up
+		setFacing(EnumFacing.UP, rotateUp(north), true);
+		//Down
+		setFacing(EnumFacing.DOWN, rotateDown(north), true);
 	}
 
 	public AxisAlignedFacingBB(JsonArray array)
@@ -47,6 +52,11 @@ public class AxisAlignedFacingBB
 	}
 
 	//--- Transforms ---//
+	private void setFacing(EnumFacing facing, AxisAlignedBB aabb, boolean mirrorAlongX)
+	{
+		facings[facing.ordinal()] = aabb;
+		facingsMirrored[facing.ordinal()] = mirrorAlongX?mirrorX(aabb): mirrorZ(aabb);
+	}
 
 	private static AxisAlignedBB mirrorX(AxisAlignedBB aabb)
 	{
@@ -68,15 +78,34 @@ public class AxisAlignedFacingBB
 		return new AxisAlignedBB(1-aabb.maxZ, aabb.minY, aabb.minX, 1-aabb.minZ, aabb.maxY, aabb.maxX);
 	}
 
+	private static AxisAlignedBB rotateUp(AxisAlignedBB aabb)
+	{
+		return new AxisAlignedBB(aabb.minX, 1-aabb.maxZ, aabb.minY, aabb.maxX, 1-aabb.minZ, aabb.maxY);
+	}
+
+	private static AxisAlignedBB rotateDown(AxisAlignedBB aabb)
+	{
+		return new AxisAlignedBB(aabb.minX, aabb.minZ, 1-aabb.maxY, aabb.maxX, aabb.maxZ, 1-aabb.minY);
+	}
+
 	//--- Outputs ---//
 
 	public AxisAlignedFacingBB transform(Function<AxisAlignedBB, AxisAlignedBB> function)
 	{
-		return new AxisAlignedFacingBB(function.apply(facings[0]));
+		return new AxisAlignedFacingBB(function.apply(facings[EnumFacing.NORTH.ordinal()]));
 	}
 
 	public AxisAlignedBB getFacing(EnumFacing facing, boolean mirrored)
 	{
-		return (mirrored?facingsMirrored: facings)[(facing.ordinal()-2)%4];
+		return (mirrored?facingsMirrored: facings)[facing.ordinal()];
+	}
+
+	public float[] getFacingBounds(EnumFacing facing, boolean mirrored)
+	{
+		AxisAlignedBB aabb = getFacing(facing, mirrored);
+		return new float[]{
+				(float)aabb.minX, (float)aabb.minY, (float)aabb.minZ,
+				(float)aabb.maxX, (float)aabb.maxY, (float)aabb.maxZ
+		};
 	}
 }

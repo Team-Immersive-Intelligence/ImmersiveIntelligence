@@ -13,6 +13,7 @@ import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoFactory;
 import pl.pabilo8.immersiveintelligence.api.data.types.*;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPanel;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Emplacement;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.EmplacementStateNeeds;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
@@ -23,6 +24,8 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.TargetCoordinateRefe
 import pl.pabilo8.immersiveintelligence.common.util.gun.GunRecoil;
 import pl.pabilo8.immersiveintelligence.common.util.gun.GunShootingHandler;
 import pl.pabilo8.immersiveintelligence.common.util.gun.ammoprovider.GunAmmoProviderItemHandler;
+import pl.pabilo8.immersiveintelligence.common.util.sound.IISoundAnimation;
+import pl.pabilo8.immersiveintelligence.common.util.sound.SoundHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -33,7 +36,7 @@ import java.util.function.Predicate;
  * Implements Platform ammunition loading, casing storage, and Base servicing for Emplacement guns.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 08.09.2026
+ * @updated 27.09.2026
  * @since 04.09.2025
  */
 public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> extends EmplacementWeaponTurretBase
@@ -62,6 +65,8 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 	private int itemTransferTicker = 0;
 	private transient int clientFireTimeCounter = 0;
 	private transient boolean fireTimeCounterChanged = false;
+	@Nullable
+	private transient IISoundAnimation[] loadingSoundAnimations, unloadingSoundAnimations;
 
 	@SyncNBT(time = 0, events = SyncEvents.WEAPON_RELOAD)
 	public GunShootingHandler gunHandler = new GunShootingHandler();
@@ -90,6 +95,17 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 		this.aim.withAimCorrectionFunction(ammoFactory::getAnglePrediction);
 		if(te.getWorld().isRemote)
 			this.clientFireTimeCounter = this.fireTimeCounter;
+	}
+
+	@Override
+	protected void onInitComplete(TileEntityEmplacement te)
+	{
+		super.onInitComplete(te);
+		if(te.getWorld().isRemote)
+		{
+			this.loadingSoundAnimations = compileSoundAnimations(createLoadingSoundAnimations());
+			this.unloadingSoundAnimations = compileSoundAnimations(createUnloadingSoundAnimations());
+		}
 	}
 
 	@Override
@@ -126,11 +142,13 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 	@Override
 	public EmplacementStateNeeds onUpdate(TileEntityEmplacement te, EmplacementStateNeeds baseNeeds, TargetCoordinateReference currentTarget)
 	{
+		ensureShootingComponents();
 		this.ammoFactory.setUseArtilleryAngles(te.shouldUseBallisticFire(currentTarget));
+		if(platformAmmoProvider!=null&&platformAmmoProvider.isLoaded())
+			this.ammoFactory.setStack(platformAmmoProvider.peekLoadedAmmo());
 //		if(te.getOwnerIdentity()!=null)
 //			ammoFactory.setOwner(te.getOwnerIdentity().getFirstResponsibleMember(te.getWorld()));
 
-		ensureShootingComponents();
 		if(currentTarget!=null)
 			returnToLastFiringAngles = false;
 
@@ -145,7 +163,7 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 				Float loadingYaw = getLoadingYaw();
 				Float loadingPitch = getLoadingPitch();
 				setAimTargetAngles(te, loadingYaw, loadingPitch);
-				if(wantsReload&&isAtAngles(loadingYaw, loadingPitch, 1.5f))
+				if(wantsReload&&isAtAngles(loadingYaw, loadingPitch, Emplacement.aimingTolerance))
 				{
 					platformAmmoProvider.prepareReload();
 					if(gunHandler.startReloading())
@@ -157,7 +175,7 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 		if(returnToLastFiringAngles&&currentTarget==null)
 		{
 			setAimTargetAngles(te, lastFiringYaw, lastFiringPitch);
-			if(isAtAngles(lastFiringYaw, lastFiringPitch, 1.5f))
+			if(isAtAngles(lastFiringYaw, lastFiringPitch, Emplacement.aimingTolerance))
 				returnToLastFiringAngles = false;
 		}
 
@@ -174,11 +192,28 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 		super.onClientUpdate(te);
 	}
 
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void handleClientSounds(SoundHandler soundHandler)
+	{
+		super.handleClientSounds(soundHandler);
+		if(!isReloading())
+			return;
+
+		IISoundAnimation[] animations = isUnloading()?unloadingSoundAnimations: loadingSoundAnimations;
+		if(animations==null||animations.length==0)
+			return;
+		IISoundAnimation animation = animations[Math.min(Math.max(0, getReloadStage()), animations.length-1)];
+		if(animation!=null)
+			animation.handleSounds(soundHandler,
+					Math.round(getReloadAnimationProgress(0)*Math.max(1, getReloadDelay())), 1f);
+	}
+
 	@Override
 	protected boolean canChill(TileEntityEmplacement te)
 	{
 		ensureShootingComponents();
-		return super.canChill(te)&&gunHandler.canShoot()&&!returnToLastFiringAngles&&aim.isAimed(1.5f)
+		return super.canChill(te)&&gunHandler.canShoot()&&!returnToLastFiringAngles&&aim.isAimed(Emplacement.aimingTolerance)
 				&&(platformAmmoProvider==null||!platformAmmoProvider.isReloading());
 	}
 
@@ -212,6 +247,34 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 	protected int[] getReloadStages()
 	{
 		return new int[]{Integer.MAX_VALUE};
+	}
+
+	/**
+	 * @return optional loading sound animations indexed by reload stage
+	 */
+	@Nullable
+	protected IISoundAnimation[] createLoadingSoundAnimations()
+	{
+		return null;
+	}
+
+	/**
+	 * @return optional unloading sound animations indexed by reload stage
+	 */
+	@Nullable
+	protected IISoundAnimation[] createUnloadingSoundAnimations()
+	{
+		return null;
+	}
+
+	@Nullable
+	private IISoundAnimation[] compileSoundAnimations(@Nullable IISoundAnimation[] animations)
+	{
+		if(animations!=null)
+			for(IISoundAnimation animation : animations)
+				if(animation!=null)
+					animation.compile(Math.max(1, getReloadDelay()));
+		return animations;
 	}
 
 	/**
@@ -281,6 +344,12 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 	}
 
 	@Override
+	protected boolean canFollowFacingCommand(TileEntityEmplacement te)
+	{
+		return platformAmmoProvider!=null&&!platformAmmoProvider.isReloading()&&!returnToLastFiringAngles;
+	}
+
+	@Override
 	public boolean canShoot(TileEntityEmplacement te)
 	{
 		ensureShootingComponents();
@@ -302,7 +371,7 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 		ammoFactory.setPositionAndVelocity(getAimOrigin(te), this.aim, 0.25f, 1f)
 				.setShooterAndGun(baseEntity, baseEntity)
 				.setIgnoredEntities(te.tactileHandler.getEntities());
-		boolean fired = gunHandler.fire(projectile -> configureProjectile(projectile, target));
+		boolean fired = gunHandler.fire(projectile -> configureProjectile(te, projectile, target));
 		if(fired)
 		{
 			fireTimeCounter++;
@@ -319,7 +388,7 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 	/**
 	 * Allows a weapon to add per-shot state before its projectile is spawned.
 	 */
-	protected void configureProjectile(EntityAmmoProjectile projectile, TargetCoordinateReference target)
+	protected void configureProjectile(TileEntityEmplacement te, EntityAmmoProjectile projectile, TargetCoordinateReference target)
 	{
 
 	}
@@ -393,6 +462,13 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 			if(changed)
 				te.updateTileForEvent(SyncEvents.TILE_RECIPE_CHANGED);
 		});
+	}
+
+	@Override
+	public boolean shouldLoopReloadSound()
+	{
+		return isResupplying()&&(transferOneItem(platformCasingHandler, baseCasingHandler, true)
+				||transferOneItem(baseAmmoHandler, platformAmmoHandler, true));
 	}
 
 	private boolean requiresPlatformResupply()

@@ -31,7 +31,7 @@ import java.util.*;
  *
  * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
- * @updated 22.07.2026
+ * @updated 04.10.2026
  * @since 03.09.2025
  */
 public class OwnerIdentity implements INBTSerializable<NBTTagCompound>
@@ -209,10 +209,20 @@ public class OwnerIdentity implements INBTSerializable<NBTTagCompound>
 		disband(false);
 	}
 
+	/**
+	 * Changes the law form and assigns its owner or starting role to each member.
+	 */
 	public OwnerIdentity withLawForm(LawForm lawForm)
 	{
+		if(this.lawForm==lawForm)
+			return this;
+		Set<UUID> owners = new HashSet<>();
+		for(UUID member : memberRoles.keySet())
+			if(isOwner(member))
+				owners.add(member);
 		this.lawForm = lawForm;
 		initAvailableRoles();
+		memberRoles.replaceAll((member, role) -> owners.contains(member)?lawForm.getOwnerRole(): startingMemberRole);
 		return this;
 	}
 
@@ -488,7 +498,7 @@ public class OwnerIdentity implements INBTSerializable<NBTTagCompound>
 				.withTag("activeTargetAgreements", targetTag)
 				.withTag("pendingOutgoing", outTag)
 				.withTag("pendingIncoming", inTag)
-				.withList("invitedPlayers", invitedPlayers.toArray())
+				.withList("invitedPlayers", playerUUID -> new NBTTagString(playerUUID.toString()), invitedPlayers)
 				.unwrap();
 	}
 

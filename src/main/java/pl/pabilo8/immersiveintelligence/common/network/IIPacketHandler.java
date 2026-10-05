@@ -40,6 +40,7 @@ public class IIPacketHandler
 	public static void preInit()
 	{
 		registerMessage(MessageItemScrollableSwitch.class, false, true);
+		registerMessage(MessageClipboardItemSync.class, false, true);
 		registerMessage(MessageBooleanAnimatedPartsSync.class, true, true);
 		registerMessage(MessageChatInfo.class, true, false);
 		registerMessage(MessageIITileSync.class, true, true);
@@ -59,6 +60,7 @@ public class IIPacketHandler
 		registerMessage(MessageIIGameruleUpdate.class, true, false);
 		registerMessage(MessageIIChunkClaimData.class, true, false);
 		registerMessage(MessageIIRequestChunkClaimData.class, false, true);
+		registerMessage(MessageTactileSync.class, true, false);
 	}
 
 	private static <T extends IIMessage> void registerMessage(Class<T> message, boolean clientSide, boolean serverSide)

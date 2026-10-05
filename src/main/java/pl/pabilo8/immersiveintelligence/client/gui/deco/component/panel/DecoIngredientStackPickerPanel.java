@@ -2,7 +2,6 @@ package pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel;
 
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
@@ -22,9 +21,9 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.DecoTextF
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.util.TextFilter;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoSprite;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.clipboard.DecoClipboardUtils;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
@@ -703,16 +702,16 @@ public class DecoIngredientStackPickerPanel extends DecoPanel
 		switch(event)
 		{
 			case COPY:
-				DecoGuiUtils.setClipboardNBT(getIngredientReference().serializeNBT());
+				DecoClipboardUtils.copy(getIngredientReference());
 				break;
 			case CUT:
-				DecoGuiUtils.setClipboardNBT(getIngredientReference().serializeNBT());
+				DecoClipboardUtils.copy(getIngredientReference());
 				withIngredientReference(new IngredientReference());
 				break;
 			case PASTE:
-				NBTTagCompound nbt = DecoGuiUtils.getClipboardNBT();
-				if(!nbt.hasNoTags())
-					withIngredientReference(IngredientReference.readFromNBT(nbt));
+				Object pasted = DecoClipboardUtils.paste();
+				if(pasted instanceof IngredientStack)
+					withIngredientReference(IngredientReference.fromIngredientStack((IngredientStack)pasted));
 				break;
 			default:
 				super.onGuiEvent(event);

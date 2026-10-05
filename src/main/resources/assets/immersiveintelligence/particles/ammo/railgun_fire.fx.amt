@@ -1,0 +1,24 @@
+{
+  "type": "ParticleVanilla",
+  "textures": ["immersiveintelligence:particle/smoke/smoke_small"],
+  "max_lifetime": 8,
+  "draw_stage": "custom_additive",
+  "aabb": 0.0625,
+  "programs": [
+    "shockwave_transition(0.25)"
+  ],
+  "size": 0.45,
+  "color": "FF2F7FFF",
+  "alpha": 0.25,
+  "scheduled": [
+    {
+      "time": 1,
+      "generator": "cone_toward_25",
+      "distance": 0.25,
+      "speed": 0.25,
+      "min_amount": 5,
+      "max_amount": 8,
+      "type": "ammo/railgun_fire_cloud"
+    }
+  ]
+}

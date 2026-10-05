@@ -14,6 +14,13 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 public class IIItemUtils
 {
+	public static boolean isEngineersManual(ItemStack stack)
+	{
+		if(stack.isEmpty())
+			return false;
+		return stack.getItem()==IEContent.itemTool&&stack.getItemDamage()==3;
+	}
+
 	public static boolean isWrench(ItemStack stack)
 	{
 		if(stack.isEmpty())

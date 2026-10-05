@@ -4,6 +4,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
@@ -18,11 +19,13 @@ import javax.vecmath.Vector3f;
  * Applies hostile-only exposure around the point illuminated by an Emplacement light.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 27.09.2026
  * @since 08.09.2026
  */
 public abstract class EmplacementWeaponLightBase extends EmplacementWeaponTurretBase
 {
 	public final transient Vector3f targetPosition = new Vector3f();
+	private transient boolean renderLightBeam;
 
 	@Override
 	public final boolean canShoot(TileEntityEmplacement te)
@@ -57,7 +60,11 @@ public abstract class EmplacementWeaponLightBase extends EmplacementWeaponTurret
 	{
 		super.onClientUpdate(te);
 
-		if(this.setup!=null&&this.setup.isFullyOpened())
+		this.renderLightBeam = this.setup!=null&&this.setup.isFullyOpened()
+				&&(te.getWorld().getLight(new BlockPos(te.getWeaponCenter()), true)*
+				te.getWorld().getSunBrightnessFactor(0) < 13
+		);
+		if(renderLightBeam)
 		{
 			//Calculate where the spotlight falls
 			Vec3d origin = getAimOrigin(te);
@@ -72,12 +79,22 @@ public abstract class EmplacementWeaponLightBase extends EmplacementWeaponTurret
 			this.targetPosition.z = 0;
 	}
 
+	/**
+	 * @return true when the client must render the light beam
+	 */
+	public boolean shouldRenderLightBeam()
+	{
+		return renderLightBeam;
+	}
+
 	private void applyExposure(TileEntityEmplacement te, Vec3d targetPosition)
 	{
 		OwnerIdentity owner = te.getOwnerIdentity();
 		double radius = Math.max(0d, getExposureRadius());
 		double radiusSq = radius*radius;
-		AxisAlignedBB area = new AxisAlignedBB(targetPosition, targetPosition).grow(radius);
+		AxisAlignedBB area = new AxisAlignedBB(targetPosition.x, targetPosition.y, targetPosition.z,
+				targetPosition.x, targetPosition.y, targetPosition.z)
+				.grow(radius);
 
 		//Select all around the targeted position
 		for(EntityLivingBase entity : te.getWorld().getEntitiesWithinAABB(EntityLivingBase.class, area,

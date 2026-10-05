@@ -12,6 +12,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.resources.Locale;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualEntry;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -47,12 +48,13 @@ public class IIManualPageFolder extends ManualPages
 			((IEManualInstance)ManualHelper.getManual()).hideEntry(name);
 		}
 
-		//TODO: 07.08.2023 somehow convince IE's FontRenderer to render II symbols, or fully replace it with II's renderer
 		Locale locale = I18n.i18nLocale;
 		if(I18n.i18nLocale!=null)
 		{
-			locale.properties.put("ie.manual.entry."+name+".name", "\u2348 "+I18n.format("ie.manual.folder."+name)); //title
-			locale.properties.put("ie.manual.entry."+name+".subtitle", ""); //subtitle
+			//title
+			locale.properties.put("ie.manual.entry."+name+".name", IIReference.CHARICON_FOLDER+" "+I18n.format("ie.manual.folder."+name));
+			//subtitle
+			locale.properties.put("ie.manual.entry."+name+".subtitle", "");
 		}
 
 	}

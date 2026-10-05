@@ -11,7 +11,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTLoader;
@@ -36,6 +35,7 @@ import java.util.stream.Collectors;
  * Designed to support multiblocks.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 27.09.2026
  * @since 11.10.2023
  */
 public class TactileManager
@@ -194,6 +194,7 @@ public class TactileManager
 		entities.forEach(EntityAMTTactile::defaultizeAnimation);
 		applyAnimationPositions(true);
 		addedAll.forEach(getWorld()::spawnEntity);
+		synchronizeEntities();
 
 		return true;
 	}
@@ -421,18 +422,23 @@ public class TactileManager
 	}
 
 	/**
-	 * Applies two animation channels before recalculating the hierarchy once.
+	 * Applies a complete animation set from the default pose, then recalculates the hierarchy once.
+	 *
+	 * @param animationLocations animation resource locations; entries may be null
+	 * @param animationTimes     matching animation progress values
 	 */
-	public void update(@Nullable ResLoc firstAnimation, float firstTime,
-					   @Nullable ResLoc secondAnimation, float secondTime)
+	public void update(@Nonnull ResLoc[] animationLocations, @Nonnull float[] animationTimes)
 	{
 		if(worldSupplier.get().isRemote)
 			return;
+		if(animationLocations.length!=animationTimes.length)
+			throw new IllegalArgumentException("Animation and time arrays must have equal lengths");
 		if(!initialized&&!(initialized = init()))
 			return;
 
-		applyAnimation(firstAnimation, firstTime);
-		applyAnimation(secondAnimation, secondTime);
+		entities.forEach(EntityAMTTactile::defaultizeAnimation);
+		for(int i = 0; i < animationLocations.length; i++)
+			applyAnimation(animationLocations[i], animationTimes[i]);
 		applyAnimationPositions();
 	}
 
@@ -550,6 +556,15 @@ public class TactileManager
 		ANIMATIONS.clear();
 	}
 
+	/**
+	 * Sends a complete snapshot after the entity model has been rebuilt.
+	 */
+	public void synchronizeEntities()
+	{
+		if(!getWorld().isRemote)
+			entities.forEach(EntityAMTTactile::synchronize);
+	}
+
 	private void resetEntities()
 	{
 		this.initialized = false;
@@ -654,10 +669,10 @@ public class TactileManager
 	 * Gets a tactile's current yaw and pitch, or zero rotation when it is unavailable.
 	 */
 	@Nonnull
-	public Vec2f getRotation(String partName)
+	public float[] getRotation(String partName)
 	{
 		EntityAMTTactile part = getPart(partName);
-		return part==null?new Vec2f(0, 0): new Vec2f(part.rotationYaw, part.rotationPitch);
+		return part==null?new float[]{0, 0}: new float[]{part.rotationYaw, part.rotationPitch};
 	}
 
 	/**

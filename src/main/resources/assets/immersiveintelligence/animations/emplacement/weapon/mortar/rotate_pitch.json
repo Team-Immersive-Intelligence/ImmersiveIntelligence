@@ -40,6 +40,22 @@
           "transform": [180, 0, 0]
         }
       ]
+    },
+    "shell_loaded": {
+      "visibility": [
+        {
+          "time": 0,
+          "visibility": false
+        }
+      ]
+    },
+    "piston": {
+      "visibility": [
+        {
+          "time": 0,
+          "visibility": false
+        }
+      ]
     }
   }
 }

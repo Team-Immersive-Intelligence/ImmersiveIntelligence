@@ -124,7 +124,6 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityChemicalBath;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityPrecisionAssembler;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.BlockIIMetalMultiblock1.MetalMultiblocks1;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityVehicleWorkshop;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityVulcanizer;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySkyCartStation;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySkyCratePost;
@@ -416,6 +415,7 @@ public class ClientProxy extends CommonProxy
 
 		registerEntityRenderer(EntityAtomicBoom.class, EntityRenderNone::new);
 		registerEntityRenderer(EntityGasCloud.class, EntityRenderNone::new);
+		registerEntityRenderer(EntityEmplacementSmoke.class, EntityRenderNone::new);
 		registerEntityRenderer(EntityFlare.class, EntityRenderNone::new);
 
 		registerEntityRenderer(EntityHans.class, HansRenderer::new);
@@ -437,6 +437,7 @@ public class ClientProxy extends CommonProxy
 		new ElectricWrenchRenderer();
 		new ElectricWirecutterRenderer();
 		//TODO: 22.09.2024 mine detector renderer
+		new ClipboardRenderer();
 
 		for(IAmmoTypeItem<?, ?> bullet : AmmoRegistry.getAllAmmoItems())
 		{
@@ -528,7 +529,6 @@ public class ClientProxy extends CommonProxy
 		registerTileRenderer(FillerRenderer.class);
 
 		//Ammunition production multiblocks renderers
-		registerTileRenderer(HeavyAmmunitionAssemblerRenderer.class);
 		registerTileRenderer(AmmunitionAssemblerRenderer.class);
 		registerTileRenderer(ProjectileWorkshopRenderer.class);
 
@@ -556,8 +556,6 @@ public class ClientProxy extends CommonProxy
 
 		//Vehicle multiblocks renderers
 		registerTileRenderer(FuelStationRenderer.class);
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityVehicleWorkshop.class, new VehicleWorkshopRenderer().subscribeToList("multiblock/vehicle_workshop"));
-
 
 		//Rubber processing machines renderers
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityVulcanizer.class, new VulcanizerRenderer().subscribeToList("multiblock/vulcanizer"));

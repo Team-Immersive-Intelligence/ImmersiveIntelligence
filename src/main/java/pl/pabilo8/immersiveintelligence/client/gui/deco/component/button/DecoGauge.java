@@ -5,6 +5,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoTextBasedComponent;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoColors;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.clipboard.DecoClipboardUtils;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
@@ -26,6 +27,7 @@ public class DecoGauge extends DecoTextBasedComponent<DecoGauge>
 	private float minAngle = -180f;
 	private float maxAngle = 180f;
 	private boolean displayCross = true, displayValues = true;
+	private boolean inverted = false;
 	private IIColor crossColor = DecoColors.H2;
 	private IIColor angleColor = IIReference.COLOR_IMMERSIVE_ORANGE;
 	@Nullable
@@ -68,7 +70,7 @@ public class DecoGauge extends DecoTextBasedComponent<DecoGauge>
 		float dy = centerY-mouseY;
 		if(dx==0f&&dy==0f)
 			return;
-		setAngle((float)Math.toDegrees(Math.atan2(dy, dx)));
+		setAngle((inverted?-1f: 1f)*(float)Math.toDegrees(Math.atan2(dy, dx)));
 		if(onValueChanged!=null)
 			onValueChanged.accept(angle);
 	}
@@ -92,6 +94,15 @@ public class DecoGauge extends DecoTextBasedComponent<DecoGauge>
 		this.minAngle = Math.min(minAngle, maxAngle);
 		this.maxAngle = Math.max(minAngle, maxAngle);
 		setAngle(angle);
+		return this;
+	}
+
+	/**
+	 * Reverses the needle, labels and mouse input without changing stored angle values.
+	 */
+	public DecoGauge withInverted(boolean inverted)
+	{
+		this.inverted = inverted;
 		return this;
 	}
 
@@ -173,7 +184,7 @@ public class DecoGauge extends DecoTextBasedComponent<DecoGauge>
 		if(displayCross)
 			drawCross(centerX, centerY, radius);
 		GlStateManager.glLineWidth(2f);
-		double radians = Math.toRadians(angle);
+		double radians = Math.toRadians(inverted?-angle: angle);
 		IIDrawUtils.startColoredLines()
 				.drawColorLine(centerX, centerY,
 						centerX+(float)Math.cos(radians)*radius,
@@ -193,9 +204,9 @@ public class DecoGauge extends DecoTextBasedComponent<DecoGauge>
 		IIDrawUtils draw = IIDrawUtils.startColoredLines();
 		if(contains(0f))
 			draw.drawColorLine(centerX, centerY, centerX+radius, centerY, crossColor);
-		if(contains(90f))
+		if(contains(inverted?-90f: 90f))
 			draw.drawColorLine(centerX, centerY, centerX, centerY-radius, crossColor);
-		if(contains(-90f))
+		if(contains(inverted?90f: -90f))
 			draw.drawColorLine(centerX, centerY, centerX, centerY+radius, crossColor);
 		if(contains(180f)||contains(-180f))
 			draw.drawColorLine(centerX, centerY, centerX-radius, centerY, crossColor);
@@ -206,10 +217,10 @@ public class DecoGauge extends DecoTextBasedComponent<DecoGauge>
 	{
 		if(contains(0f))
 			drawRight("0", x+width, Math.round(centerY)-fontRenderer.FONT_HEIGHT/2);
-		if(contains(90f))
-			drawCentered("90", Math.round(centerX), y);
-		if(contains(-90f))
-			drawCentered("-90", Math.round(centerX), y+gaugeHeight-fontRenderer.FONT_HEIGHT);
+		if(contains(inverted?-90f: 90f))
+			drawCentered(inverted?"-90": "90", Math.round(centerX), y);
+		if(contains(inverted?90f: -90f))
+			drawCentered(inverted?"90": "-90", Math.round(centerX), y+gaugeHeight-fontRenderer.FONT_HEIGHT);
 		if(contains(180f)||contains(-180f))
 			fontRenderer.drawString("180", x, Math.round(centerY)-fontRenderer.FONT_HEIGHT/2,
 					getTextColor(false).getPackedARGB());
@@ -241,6 +252,29 @@ public class DecoGauge extends DecoTextBasedComponent<DecoGauge>
 	{
 		int rounded = Math.round(value);
 		return Math.abs(value-rounded) < 0.05f?String.valueOf(rounded): String.format(java.util.Locale.ROOT, "%.1f", value);
+	}
+
+	@Override
+	public void onGuiEvent(DecoGuiEvent event)
+	{
+		switch(event)
+		{
+			case COPY:
+				DecoClipboardUtils.copy(angle);
+				break;
+			case PASTE:
+				Object pasted = DecoClipboardUtils.paste();
+				if(pasted instanceof Number)
+				{
+					float oldAngle = angle;
+					setAngle(((Number)pasted).floatValue());
+					if(onValueChanged!=null&&oldAngle!=angle)
+						onValueChanged.accept(angle);
+				}
+				break;
+			default:
+				super.onGuiEvent(event);
+		}
 	}
 
 	@Override

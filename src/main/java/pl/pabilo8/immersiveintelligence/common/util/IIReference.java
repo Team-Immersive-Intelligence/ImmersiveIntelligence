@@ -138,6 +138,7 @@ public class IIReference
 
 	public static final IIColor COLOR_ENGINEERS_BLUE = IIColor.fromPackedRGB(0x486c94);
 	public static final IIColor COLOR_IMMERSIVE_ORANGE = IIColor.fromPackedRGB(0xf78034);
+	public static final IIColor COLOR_IMMERSIVE_ORANGE_DARK = IIColor.fromPackedRGB(0xa46642);
 	public static final IIColor COLOR_GOLD = IIColor.fromPackedRGB(0xFFAA00);
 	public static final IIColor COLOR_LIGHT_BLUE = IIColor.fromPackedRGB(0x5555FF);
 

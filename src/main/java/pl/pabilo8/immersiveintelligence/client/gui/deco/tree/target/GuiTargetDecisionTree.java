@@ -4,7 +4,10 @@ import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
 import blusunrize.immersiveengineering.common.util.inventory.IIEInventory;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTileGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
@@ -33,6 +36,7 @@ import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIITileBase;
 
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * Provides a shared target decision-tree editor for target-detecting devices.
@@ -298,7 +302,10 @@ public abstract class GuiTargetDecisionTree<T extends TileEntityIEBase & IIEInve
 				List<String> ids = getRegisteredEntityIds();
 				if(!idFilter.getEntityId().isEmpty()&&!ids.contains(idFilter.getEntityId()))
 					ids.add(0, idFilter.getEntityId());
-				addStringDropdown(y, TREE_KEY+"entity_id", ids, idFilter.getEntityId(), idFilter::setEntityId);
+				addStringDropdown(y, TREE_KEY+"entity_id", ids, idFilter.getEntityId(), idFilter::setEntityId)
+						.withDisplayFunction(DecoElementDisplays.getSimpleTextDisplay(s -> ForgeRegistries.ENTITIES.getValue(new ResourceLocation(s))
+								.getName()
+						));
 			}
 			break;
 			case MOD_ID:
@@ -307,7 +314,9 @@ public abstract class GuiTargetDecisionTree<T extends TileEntityIEBase & IIEInve
 				List<String> ids = getRegisteredModIds();
 				if(!modFilter.getModId().isEmpty()&&!ids.contains(modFilter.getModId()))
 					ids.add(0, modFilter.getModId());
-				addStringDropdown(y, TREE_KEY+"mod_id", ids, modFilter.getModId(), modFilter::setModId);
+				final Map<String, ModContainer> modMap = Loader.instance().getIndexedModList();
+				addStringDropdown(y, TREE_KEY+"mod_id", ids, modFilter.getModId(), modFilter::setModId)
+						.withDisplayFunction(DecoElementDisplays.getSimpleTextDisplay(modname -> modMap.get(modname).getName()));
 			}
 			break;
 			case ENTITY_TYPE:
@@ -324,6 +333,26 @@ public abstract class GuiTargetDecisionTree<T extends TileEntityIEBase & IIEInve
 							if(newValue!=null)
 							{
 								typeFilter.setTargetType(newValue);
+								saveTargetConfiguration();
+							}
+						}));
+			}
+			break;
+			case RELATIVE_DIRECTION:
+			{
+				RelativeDirectionFilter directionFilter = (RelativeDirectionFilter)filter;
+				editorPanel.addLabel(TREE_KEY+"direction", 4, y).withSize(44, 14).withAlign(DecoAlignment.LEFT);
+				editorPanel.addComponent(new DecoDropdown<EnumFacing>(48, y)
+						.withSize(editorPanel.width-52, 14)
+						.withDropdownWidth(editorPanel.width-52)
+						.withEntries(EnumFacing.NORTH, EnumFacing.EAST, EnumFacing.SOUTH, EnumFacing.WEST)
+						.withDisplayFunction(DecoElementDisplays.getSimpleTextDisplay(direction ->
+								I18n.format(FILTER_KEY+"relative_direction."+direction.getName())))
+						.withSelectedEntry(directionFilter.getDirection())
+						.withOnSelectedEntry((oldValue, newValue) -> {
+							if(newValue!=null)
+							{
+								directionFilter.setDirection(newValue);
 								saveTargetConfiguration();
 							}
 						}));
@@ -391,13 +420,13 @@ public abstract class GuiTargetDecisionTree<T extends TileEntityIEBase & IIEInve
 		}
 	}
 
-	private void addStringDropdown(int y, String labelKey, List<String> entries, String selected,
-								   java.util.function.Consumer<String> onSelected)
+	private DecoDropdown<String> addStringDropdown(int y, String labelKey, List<String> entries, String selected,
+												   Consumer<String> onSelected)
 	{
 		editorPanel.addLabel(labelKey, 4, y).withSize(44, 14).withAlign(DecoAlignment.LEFT);
-		editorPanel.addComponent(new DecoDropdown<String>(48, y)
-				.withSize(editorPanel.width-52, 14)
-				.withDropdownWidth(Math.max(96, editorPanel.width-52))
+		return editorPanel.addComponent(new DecoDropdown<String>(4, y+12)
+				.withSize(editorPanel.width-8, 14)
+				.withDropdownWidth(Math.max(96, editorPanel.width-8))
 				.withMaxDisplayedEntries(7)
 				.withSortFunction(createStringSorter())
 				.withEntries(entries)

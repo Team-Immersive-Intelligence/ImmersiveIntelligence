@@ -21,6 +21,8 @@ import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
+import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
+import pl.pabilo8.modworks.annotations.item.ItemModelType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -31,6 +33,7 @@ import java.util.Set;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 30.05.2019
  */
+@GeneratedItemModels(itemName = "tachometer", type = ItemModelType.ITEM_SIMPLE_TOOL, texturePath = "tools/tachometer_tool")
 @IIItemProperties(category = IICategory.TOOLS)
 public class ItemIITachometer extends ItemIIBase implements ITool
 {

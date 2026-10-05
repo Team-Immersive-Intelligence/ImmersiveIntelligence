@@ -47,7 +47,7 @@ public class EWRRocketLauncher extends EmplacementWeaponRenderer<EmplacementWeap
 		return new AMTModel(
 				super.provideModel(header, style, upgrades),
 				new AMTModel(
-						new AMTLocator("turen_origin", header),
+						new AMTLocator("turret_origin", header),
 						new AMTLocator("projector_origin", header),
 						new AMTBullet("rocket1", header, AmmoRegistry.getGenericModel(IIContent.itemAmmoRocketLight)),
 						new AMTBullet("rocket2", header, AmmoRegistry.getGenericModel(IIContent.itemAmmoRocketLight)),
@@ -103,7 +103,6 @@ public class EWRRocketLauncher extends EmplacementWeaponRenderer<EmplacementWeap
 
 		//Idle animation
 		float chillProgress = weapon.getChillProgress(partialTicks);
-		if(chillProgress > 0)
-			this.chill.apply(chillProgress);
+		this.chill.apply(chillProgress);
 	}
 }

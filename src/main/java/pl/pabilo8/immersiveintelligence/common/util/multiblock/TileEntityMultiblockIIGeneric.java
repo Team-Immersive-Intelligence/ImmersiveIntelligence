@@ -71,7 +71,8 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 	{
 		inventory = null;
 		energyStorage = null;
-		wrapper = null;
+		if(!this.isPOI(MultiblockPOI.ENERGY))
+			wrapper = null;
 	}
 
 	//--- Redstone ---//
@@ -120,14 +121,6 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 	public NonNullList<ItemStack> getInventory()
 	{
 		return inventory;
-	}
-
-	@Override
-	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
-	{
-		if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY&&isPOI(MultiblockPOI.ITEM_INPUT))
-			return true;
-		return super.hasCapability(capability, facing);
 	}
 
 	@Override
@@ -203,6 +196,14 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 				((EntityItem)entity).setItem(stack);
 			}
 		}
+	}
+
+	@Override
+	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
+	{
+		if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY&&isPOI(MultiblockPOI.ITEM_INPUT))
+			return true;
+		return super.hasCapability(capability, facing);
 	}
 
 	//--- Fluids ---//
