@@ -579,10 +579,10 @@ public class CommonProxy implements IGuiHandler
 		fl.setTemperature(temperature);
 		fl.setGaseous(gas);
 
-		//Register fluid
-		FluidRegistry.addBucketForFluid(fl);
+		//Register fluid in the master registry before any bucket registration.
 		if(!FluidRegistry.registerFluid(fl))
 			fl = FluidRegistry.getFluid(fl.getName());
+		FluidRegistry.addBucketForFluid(fl);
 
 		//Add fluid to creative menu
 		IICreativeTab.fluidBucketMap.add(fl);
@@ -607,6 +607,7 @@ public class CommonProxy implements IGuiHandler
 		CapabilityChunkOwnership.register();
 		IEApi.prefixToIngotMap.put("spring", new Integer[]{2, 1});
 
+		IIPotions.init();
 		IIContent.init();
 
 		IIDataTypeUtils.registerDataTypes();

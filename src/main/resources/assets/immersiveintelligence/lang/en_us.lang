@@ -936,8 +936,8 @@ fluid.nitrogen=Nitrogen
 fluid.tear_gas=Tear Gas
 fluid.phosgene=Phosgene
 fluid.sarin=Sarin
-fluid.tuban=Turban Gas
-fluid.vx=VX Gas
+fluid.tuban=Tuban
+fluid.vx=VX
 
 fluid.brine=Brine
 
@@ -1757,7 +1757,12 @@ potion.immersiveintelligence.enemys_nest=Enemy's Nest
 potion.immersiveintelligence.home_shores=Home Shores
 potion.immersiveintelligence.homeland=Homeland
 potion.immersiveintelligence.heartland=Heartland
-
+potion.immersiveintelligence.neuroparalitic=Neuroparalysis
+potion.immersiveintelligence.fullparalysis=Paralyzed
+potion.immersiveintelligence.poisonIrritant=Irritant
+potion.immersiveintelligence.suffocator=Suffocation
+potion.immersiveintelligence.suffocatordelayed1=Suffocation (Delayed)
+potion.immersiveintelligence.suffocatordelayed2=Suffocation (Accumulation)
 #Chat info / debug
 info.immersiveintelligence.frequency_set=Radio frequency has been set to %s
 info.immersiveintelligence.frequency_invalid=Invalid frequency, basic devices can use frequencies up to %s!
