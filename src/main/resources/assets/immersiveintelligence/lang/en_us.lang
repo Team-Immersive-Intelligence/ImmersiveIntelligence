@@ -187,7 +187,8 @@ item.immersiveintelligence.material.opriment.name=Opriment
 item.immersiveintelligence.material.silicon_dioxide.name=Silicon Dioxide
 item.immersiveintelligence.material.sodium_carbonate.name=Sodium Carbonate
 item.immersiveintelligence.material.dust_slag.name=Slag Dust
-item.immersiveintelligence.material.solid_propellant.name=Solid Propellant
+item.immersiveintelligence.material.nitrocellulose.name=Nitrocellulose
+item.immersiveintelligence.material.cordite.name=Cordite
 item.immersiveintelligence.material.sodium_hydroxide.name=Sodium Hydroxide
 item.immersiveintelligence.material.zinc_sulfide.name=Zinc Sulfide
 item.immersiveintelligence.material.thermite.name=Thermite
@@ -924,8 +925,10 @@ fluid.atropine=Atropine
 fluid.glycerin=Glycerin
 fluid.acetic_acid=Acetic Acid
 fluid.hydrazine=Hydrazine
+fluid.monomethylhydrazine=Monomethylhydrazine
 fluid.hydrogen_peroxide=Hydrogen Peroxide
 fluid.nitroglycerin=Nitroglycerin
+fluid.nitrogen_tetroxide=Nitrogen Tetroxide
 fluid.sodium_hypochlorite=Sodium Hypochlorite
 
 #Dusts
