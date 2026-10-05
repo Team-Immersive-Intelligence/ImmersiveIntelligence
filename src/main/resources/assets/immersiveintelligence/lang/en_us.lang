@@ -899,6 +899,18 @@ fluid.carbon_dioxide=Carbon Dioxide
 fluid.carbon_monoxide=Carbon Monoxide
 fluid.mustard_gas=Mustard Gas
 
+fluid.butadiene=Butadiene
+fluid.sulfur_dioxide=Sulfur Dioxide
+fluid.sulfur_trioxide=Sulfur Trioxide
+fluid.hydrogen_sulfide=Hydrogen Sulfide
+fluid.argon=Argon
+fluid.nitrogen=Nitrogen
+fluid.tear_gas=Tear Gas
+fluid.phosgene=Phosgene
+fluid.sarin=Sarin
+fluid.tuban=Turban Gas
+fluid.vx=VX Gas
+
 fluid.brine=Brine
 
 fluid.ammonia=Ammonia

@@ -411,6 +411,7 @@ public class IIContent
 	public static BlockIIFluid blockGasMustardGas;
 	public static BlockIIFluid blockFluidLatex;
 	public static BlockIIFluid blockAcetaldol, blockAtropine, blockGlycerin, blockAceticAcid, blockHydrazine, blockNitroglycerin, blockHydrogenPeroxide, blockSodiumHypochlorite;
+	public static BlockIIFluid blockButadiene, blockSulfurDioxide, blockSulfurTrioxide, blockHydrogenSulfide, blockArgon, blockNitrogen, blockTearGas, blockPhosgene, blockSarin, blockTuban, blockVX;
 	//fluids
 	public static Fluid fluidInkBlack, fluidInkCyan, fluidInkMagenta, fluidInkYellow;
 	public static Fluid fluidEtchingAcid, fluidSulfuricAcid, fluidHydrofluoricAcid, fluidNitricAcid, fluidFormicAcid;
@@ -420,6 +421,7 @@ public class IIContent
 	public static Fluid gasMustardGas;
 	public static Fluid fluidLatex, fluidMilk;
 	public static Fluid fluidAcetaldol, fluidAtropine, fluidGlycerin, fluidAceticAcid, fluidHydrazine, fluidNitroglycerin, fluidHydrogenPeroxide, fluidSodiumHypochlorite;
+	public static Fluid gasButadiene, gasSulfurDioxide, gasSulfurTrioxide, gasHydrogenSulfide, gasArgon, gasNitrogen, gasTearGas, gasPhosgene, gasSarin, gasTuban, gasVX;
 	//biomes
 	public static BiomeWasteland biomeWasteland = new BiomeWasteland();
 
@@ -456,6 +458,18 @@ public class IIContent
 		IIContent.fluidHydrogenPeroxide = makeFluid("hydrogen_peroxide", IIColor.fromHex("97c7fc"), false, 1000, 1200);
 		IIContent.fluidSodiumHypochlorite = makeFluid("sodium_hypochlorite", IIColor.fromHex("97c7fc"), false, 1000, 1200);
 
+		IIContent.gasButadiene = makeFluid("butadiene", IIColor.fromHex("f0f2d0"), true, -1000+100, 88);
+		IIContent.gasSulfurDioxide = makeFluid("sulfur_dioxide", IIColor.fromHex("f4f5f0"), true, -1000+100, 88);
+		IIContent.gasSulfurTrioxide = makeFluid("sulfur_trioxide", IIColor.fromHex("f4f5f0"), true, -1000+100, 88);
+		IIContent.gasHydrogenSulfide = makeFluid("hydrogen_sulfide", IIColor.fromHex("dadea4"), true, -1000+100, 88);
+		IIContent.gasArgon = makeFluid("argon", IIColor.fromHex("11ffffff"), true, -1000+100, 88);
+		IIContent.gasNitrogen = makeFluid("nitrogen", IIColor.fromHex("11ffffff"), true, -1000+100, 88);
+		IIContent.gasTearGas = makeFluid("tear_gas", IIColor.fromHex("fffffc"), true, -1000+100, 88);
+		IIContent.gasPhosgene = makeFluid("phosgene", IIColor.fromHex("fffffc"), true, -1000+100, 88);
+		IIContent.gasSarin = makeFluid("sarin", IIColor.fromHex("fffffc"), true, -1000+100, 88);
+		IIContent.gasTuban = makeFluid("tuban", IIColor.fromHex("fffffc"), true, -1000+100, 88);
+		IIContent.gasVX = makeFluid("vx", IIColor.fromHex("fffffc"), true, -1000+100, 88);
+
 		IIContent.blockFluidInkBlack = new BlockIIFluid("ink", IIContent.fluidInkBlack, Material.WATER);
 		IIContent.blockFluidInkCyan = new BlockIIFluid("ink_cyan", IIContent.fluidInkCyan, Material.WATER);
 		IIContent.blockFluidInkMagenta = new BlockIIFluid("ink_magenta", IIContent.fluidInkMagenta, Material.WATER);
@@ -478,6 +492,7 @@ public class IIContent
 		IIContent.blockHydrazine = new BlockIIFluid("hydrazine", IIContent.fluidHydrazine, Material.WATER);
 		IIContent.blockNitroglycerin = new BlockIIFluid("nitroglycerin", IIContent.fluidNitroglycerin, Material.WATER);
 		IIContent.blockHydrogenPeroxide = new BlockIIFluid("hydrogen_peroxide", IIContent.fluidHydrogenPeroxide, Material.WATER);
+		IIContent.blockSodiumHypochlorite = new BlockIIFluid("sodium_hypochlorite", IIContent.fluidSodiumHypochlorite, Material.WATER);
 
 		IIContent.blockGasHydrogen = new BlockIIFluid("hydrogen", IIContent.gasHydrogen, Material.WATER);
 		IIContent.blockGasOxygen = new BlockIIFluid("oxygen", IIContent.gasOxygen, Material.WATER)
