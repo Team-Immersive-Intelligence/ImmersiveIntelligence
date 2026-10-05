@@ -414,7 +414,7 @@ public class IIContent
 	public static BlockIIFluid blockGasMustardGas;
 	public static BlockIIFluid blockFluidLatex;
 	public static BlockIIFluid blockAcetaldol, blockAtropine, blockGlycerin, blockAceticAcid, blockHydrazine, blockMonomethylHydrazine, blockNitroglycerin, blockHydrogenPeroxide, blockNitrogenTetroxide, blockSodiumHypochlorite;
-	public static BlockIIFluid blockButadiene, blockSulfurDioxide, blockSulfurTrioxide, blockHydrogenSulfide, blockArgon, blockNitrogen, blockTearGas, blockPhosgene, blockSarin, blockTuban, blockVX;
+	public static BlockIIFluid blockButadiene, blockSulfurDioxide, blockSulfurTrioxide, blockHydrogenSulfide, blockArgon, blockNitrogen, blockTearGas, blockPhosgene, blockSarin, blocktabun, blockVX;
 	//fluids
 	public static Fluid fluidInkBlack, fluidInkCyan, fluidInkMagenta, fluidInkYellow;
 	public static Fluid fluidEtchingAcid, fluidSulfuricAcid, fluidHydrofluoricAcid, fluidNitricAcid, fluidFormicAcid;
@@ -425,7 +425,7 @@ public class IIContent
 	public static Fluid gasMustardGas;
 	public static Fluid fluidLatex, fluidMilk;
 	public static Fluid fluidAcetaldol, fluidAtropine, fluidGlycerin, fluidAceticAcid, fluidHydrazine, fluidMonomethylHydrazine, fluidNitroglycerin, fluidHydrogenPeroxide, fluidNitrogenTetroxide, fluidSodiumHypochlorite;
-	public static Fluid gasButadiene, gasSulfurDioxide, gasSulfurTrioxide, gasHydrogenSulfide, gasArgon, gasNitrogen, gasTearGas, gasPhosgene, gasSarin, gasTuban, gasVX;
+	public static Fluid gasButadiene, gasSulfurDioxide, gasSulfurTrioxide, gasHydrogenSulfide, gasArgon, gasNitrogen, gasTearGas, gasPhosgene, gasSarin, gastabun, gasVX;
 	//biomes
 	public static BiomeWasteland biomeWasteland = new BiomeWasteland();
 
@@ -453,7 +453,7 @@ public class IIContent
 		IIContent.fluidLatex = makeFluid("latex", IIColor.fromHex("cccccc"), false, 4300, 3500);
 		IIContent.gasMustardGas = makeFluid("mustard_gas", IIColor.fromHex("66807551"), true, 127, 340);
 		IIContent.gasPhosgene = makeFluid("phosgene", IIColor.fromHex("fffffc"), true, -200+100, 120);
-		IIContent.gasTuban = makeFluid("tuban", IIColor.fromHex("fffffc"), false, 250, 140);
+		IIContent.gastabun = makeFluid("tabun", IIColor.fromHex("fffffc"), false, 250, 140);
 		IIContent.gasSarin = makeFluid("sarin", IIColor.fromHex("fffffc"), true, 320, 80);
 		IIContent.fluidMilk = makeFluid("milk", "item.milk.name", IIColor.fromHex("ffffff"), false, 1000, 1200, 0, 298);
 
@@ -519,7 +519,7 @@ public class IIContent
 				.setPotionEffects(new PotionEffect(IIPotions.poisonirritant, 40, 0));
 		IIContent.blockPhosgene = new BlockIIFluid("phosgene_gas", IIContent.gasPhosgene, Material.WATER)
 				.setPotionEffects(new PotionEffect(IIPotions.suffocatordelayed1, 60, 0), new PotionEffect(IIPotions.poisonirritant, 120, 0));
-		IIContent.blockTuban = new BlockIIFluid("tuban", IIContent.gasTuban, Material.WATER)
+		IIContent.blocktabun = new BlockIIFluid("tabun", IIContent.gastabun, Material.WATER)
 				.setPotionEffects(new PotionEffect(IIPotions.suffocator, 120, 0), new PotionEffect(IIPotions.neuroparalitic, 480, 0), new PotionEffect(MobEffects.HUNGER, 360, 4));
 		IIContent.blockSarin = new BlockIIFluid("sarin_gas", IIContent.gasSarin, Material.WATER)
 				.setPotionEffects(new PotionEffect(MobEffects.NAUSEA, 120, 0), new PotionEffect(IIPotions.neuroparalitic, 240, 2));
@@ -558,7 +558,7 @@ public class IIContent
 		IIContent.gasMustardGas = FluidRegistry.getFluid("mustard_gas");
 		IIContent.gasPhosgene = FluidRegistry.getFluid("phosgene");
 		IIContent.gasSarin = FluidRegistry.getFluid("sarin");
-		IIContent.gasTuban = FluidRegistry.getFluid("tuban");
+		IIContent.gastabun = FluidRegistry.getFluid("tabun");
 		IIContent.gasVX = FluidRegistry.getFluid("vx");
 		IIContent.fluidMilk = FluidRegistry.getFluid("milk");
 		IIContent.fluidAcetaldol = FluidRegistry.getFluid("acetaldol");
