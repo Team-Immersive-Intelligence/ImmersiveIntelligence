@@ -470,11 +470,11 @@ public class IIContent
 		IIContent.gasHydrogenSulfide = makeFluid("hydrogen_sulfide", IIColor.fromHex("dadea4"), true, -1000+100, 88);
 		IIContent.gasArgon = makeFluid("argon", IIColor.fromHex("11ffffff"), true, -1000+100, 88);
 		IIContent.gasNitrogen = makeFluid("nitrogen", IIColor.fromHex("11ffffff"), true, -1000+100, 88);
-		IIContent.gasTearGas = makeFluid("tear_gas", IIColor.fromHex("fffffc"), true, -1000+100, 88);
-		IIContent.gasPhosgene = makeFluid("phosgene", IIColor.fromHex("fffffc"), true, -1000+100, 88);
-		IIContent.gasSarin = makeFluid("sarin", IIColor.fromHex("fffffc"), true, -1000+100, 88);
-		IIContent.gasTuban = makeFluid("tuban", IIColor.fromHex("fffffc"), true, -1000+100, 88);
-		IIContent.gasVX = makeFluid("vx", IIColor.fromHex("fffffc"), true, -1000+100, 88);
+		IIContent.gasTearGas = makeFluid("tear_gas", IIColor.fromHex("fffffc"), true, -500+100, 240);
+		IIContent.gasPhosgene = makeFluid("phosgene", IIColor.fromHex("fffffc"), true, -200+100, 120);
+		IIContent.gasSarin = makeFluid("sarin", IIColor.fromHex("fffffc"), true, 320, 80);
+		IIContent.gasTuban = makeFluid("tuban", IIColor.fromHex("fffffc"), true, 250, 140);
+		IIContent.gasVX = makeFluid("vx", IIColor.fromHex("fffffc"), true, 300, 180);
 
 		IIContent.blockFluidInkBlack = new BlockIIFluid("ink", IIContent.fluidInkBlack, Material.WATER);
 		IIContent.blockFluidInkCyan = new BlockIIFluid("ink_cyan", IIContent.fluidInkCyan, Material.WATER);
