@@ -83,8 +83,10 @@ public class ItemIIMaterial extends ItemIISubItemsBase<Materials>
 		SODIUM_HYDROXIDE,
 		@IIItemProperties(oreDict = "SyntheticRubberCrumbs")
 		SYNTHETIC_RUBBER_CRUMBS,
-		@IIItemProperties(oreDict = "SolidPropellant")
-		SOLID_PROPELLANT,
+		@IIItemProperties(oreDict = {"dustNitrocellulose", "nitrocellulose"})
+		NITROCELLULOSE,
+		@IIItemProperties(oreDict = {"dustCordite", "cordite"})
+		CORDITE,
 		@IIItemProperties(oreDict = "dustPotassiumHydroxide")
 		POTASSIUM_HYDROXIDE,
 		@IIItemProperties(oreDict = "Opriment")
