@@ -2,6 +2,7 @@ package pl.pabilo8.immersiveintelligence.common;
 
 import blusunrize.immersiveengineering.api.Lib;
 import blusunrize.immersiveengineering.common.items.IEItemInterfaces.IItemDamageableIE;
+import blusunrize.immersiveengineering.common.util.IEPotions;
 import blusunrize.immersiveengineering.common.util.IEPotions.IEPotion;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.immersiveengineering.common.util.Utils;
@@ -10,6 +11,7 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AbstractAttributeMap;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
@@ -35,6 +37,7 @@ public class IIPotions
 	public static Potion suppression, brokenArmor, corrosion, infraredVision, ironWill, wellSupplied, concealed;
 	public static Potion exposed, medicalTreatment, undergoingRepairs, radiation, nuclearHeat, movementAssist;
 	public static Potion homeShores, homeland, heartland, foreignShores, enemySoil, enemysNest;
+	public static Potion neuroparalyticGas, neuroparalitic, suffocationGas, suffocator, fullparalysis, poisonIrritant, poisonirritant, poisonsuffocation, suffocatordelayed1, suffocatordelayed2;
 
 	public static void init()
 	{
@@ -192,6 +195,169 @@ public class IIPotions
 		nuclearHeat.registerPotionAttributeModifier(SharedMonsterAttributes.FOLLOW_RANGE, Utils.generateNewUUID().toString(), -1, 2);
 		nuclearHeat.registerPotionAttributeModifier(SharedMonsterAttributes.FLYING_SPEED, Utils.generateNewUUID().toString(), -1, 2);
 
+		neuroparalyticGas = neuroparalitic = new IIPotion("neuroparalitic", true, 0x7d1b19)
+		{
+			@Override
+			public void performEffect(EntityLivingBase living, int amplifier)
+			{
+				if(living.ticksExisted%10!=0)
+					return;
+				if(!ProtectionHandler.isProtectedFromGas(living)&&!ProtectionHandler.isProtectedFromRadiation(living))
+				{
+					living.hurtResistantTime = 0;
+					living.motionX *= 0.5D;
+					living.motionZ *= 0.5D;
+					if(living instanceof EntityPlayer)
+					{
+						EntityPlayer player = (EntityPlayer)living;
+						player.moveForward = 0.0F;
+						player.moveStrafing = 0.0F;
+					}
+					living.attackEntityFrom(IIDamageSources.NEUROPARALITIC_GAS, 2+amplifier);
+				}
+			}
+
+			@Override
+			public List<ItemStack> getCurativeItems()
+			{
+				return new ArrayList<>();
+			}
+		};
+		neuroparalitic.registerPotionAttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED, Utils.generateNewUUID().toString(), -0.62342342f, 2);
+		neuroparalitic.registerPotionAttributeModifier(SharedMonsterAttributes.FOLLOW_RANGE, Utils.generateNewUUID().toString(), -0.003921569f, 2);
+		neuroparalitic.registerPotionAttributeModifier(SharedMonsterAttributes.FLYING_SPEED, Utils.generateNewUUID().toString(), -1f, 2);
+		neuroparalitic.registerPotionAttributeModifier(SharedMonsterAttributes.ATTACK_SPEED, Utils.generateNewUUID().toString(), -1f, 2);
+		neuroparalitic.registerPotionAttributeModifier(SharedMonsterAttributes.KNOCKBACK_RESISTANCE, Utils.generateNewUUID().toString(), -1f, 2);
+		neuroparalitic.registerPotionAttributeModifier(SharedMonsterAttributes.MAX_HEALTH, Utils.generateNewUUID().toString(), -0.2f, 2);
+
+		fullparalysis = new IIPotion("fullparalysis", true, 0x7d1b19)
+		{
+			@Override
+			public void performEffect(EntityLivingBase living, int amplifier)
+			{
+				if(living.ticksExisted%20!=0)
+					return;
+				if(!ProtectionHandler.isProtectedFromGas(living)&&!ProtectionHandler.isProtectedFromRadiation(living))
+				{
+					living.motionX = 0.0D;
+					living.motionZ = 0.0D;
+					if(living instanceof EntityPlayer)
+					{
+						EntityPlayer player = (EntityPlayer)living;
+						player.moveForward = 0;
+						player.moveStrafing = 0;
+					}
+				}
+			}
+
+			@Override
+			public List<ItemStack> getCurativeItems()
+			{
+				return new ArrayList<>();
+			}
+		};
+
+		poisonIrritant = poisonirritant = new IIPotion("irritant", true, 0x948d13)
+		{
+			@Override
+			public void performEffect(EntityLivingBase living, int amplifier)
+			{
+				if(living.ticksExisted%20!=0)
+					return;
+				boolean apply = !ProtectionHandler.isProtectedFromGas(living);
+				boolean apply2 = !ProtectionHandler.isProtectedFromRadiation(living);
+				if(apply)
+				{
+					living.hurtResistantTime = 0;
+					living.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 180, 10));
+					living.addPotionEffect(new PotionEffect(MobEffects.POISON, 640, amplifier));
+					living.addPotionEffect(new PotionEffect(IEPotions.stunned, 380, amplifier));
+					living.addPotionEffect(new PotionEffect(IIPotions.suppression, 380, amplifier));
+				}
+				if(apply2)
+				{
+					living.addPotionEffect(new PotionEffect(IEPotions.stunned, 120, amplifier));
+					living.addPotionEffect(new PotionEffect(IIPotions.suppression, 380, amplifier));
+				}
+			}
+
+			@Override
+			public List<ItemStack> getCurativeItems()
+			{
+				return new ArrayList<>();
+			}
+		};
+		poisonirritant.registerPotionAttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED, Utils.generateNewUUID().toString(), -0.4921569f, 2);
+		poisonirritant.registerPotionAttributeModifier(SharedMonsterAttributes.FOLLOW_RANGE, Utils.generateNewUUID().toString(), -0.8921569f, 2);
+		poisonirritant.registerPotionAttributeModifier(SharedMonsterAttributes.ATTACK_SPEED, Utils.generateNewUUID().toString(), -0.53921569f, 2);
+		poisonirritant.registerPotionAttributeModifier(SharedMonsterAttributes.FLYING_SPEED, Utils.generateNewUUID().toString(), -0.23921569f, 2);
+		poisonirritant.registerPotionAttributeModifier(SharedMonsterAttributes.MAX_HEALTH, Utils.generateNewUUID().toString(), -0.2f, 2);
+
+		suffocationGas = suffocator = new IIPotion("suffocating", true, 0x1e9413)
+		{
+			@Override
+			public void performEffect(EntityLivingBase living, int amplifier)
+			{
+				if(living.ticksExisted%20!=0)
+					return;
+				if(!ProtectionHandler.isProtectedFromGas(living))
+				{
+					living.hurtResistantTime = 0;
+					living.attackEntityFrom(IIDamageSources.SUFFOCATION_GAS, 2*amplifier);
+				}
+			}
+
+			@Override
+			public List<ItemStack> getCurativeItems()
+			{
+				return new ArrayList<>();
+			}
+		};
+		suffocator.registerPotionAttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED, Utils.generateNewUUID().toString(), -0.2921569f, 2);
+		suffocator.registerPotionAttributeModifier(SharedMonsterAttributes.FOLLOW_RANGE, Utils.generateNewUUID().toString(), -0.003921569f, 2);
+		suffocator.registerPotionAttributeModifier(SharedMonsterAttributes.FLYING_SPEED, Utils.generateNewUUID().toString(), -0.003921569f, 2);
+		suffocator.registerPotionAttributeModifier(SharedMonsterAttributes.MAX_HEALTH, Utils.generateNewUUID().toString(), -0.2f, 2);
+
+		suffocatordelayed1 = new IIPotion("suffocating_delayed_onset", true, 0x1e9413)
+		{
+			@Override
+			public void performEffect(EntityLivingBase living, int amplifier)
+			{
+				if(living.ticksExisted%40!=0)
+					return;
+				if(!ProtectionHandler.isProtectedFromGas(living))
+					living.addPotionEffect(new PotionEffect(IIPotions.suffocatordelayed2, 288000, 0));
+			}
+
+			@Override
+			public List<ItemStack> getCurativeItems()
+			{
+				return new ArrayList<>();
+			}
+		};
+
+		suffocatordelayed2 = new IIPotion("suffocating_delayed_accumulating", true, 0x1e9413)
+		{
+			@Override
+			public void performEffect(EntityLivingBase living, int amplifier)
+			{
+				if(living.ticksExisted%288000!=0)
+					return;
+				if(!ProtectionHandler.isProtectedFromGas(living))
+					living.addPotionEffect(new PotionEffect(IIPotions.suffocator, 4000, 4));
+			}
+
+			@Override
+			public List<ItemStack> getCurativeItems()
+			{
+				return new ArrayList<>();
+			}
+		};
+		suffocatordelayed2.registerPotionAttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED, Utils.generateNewUUID().toString(), -0.121569f, 2);
+		suffocatordelayed2.registerPotionAttributeModifier(SharedMonsterAttributes.FOLLOW_RANGE, Utils.generateNewUUID().toString(), -0.1921569f, 2);
+		suffocatordelayed2.registerPotionAttributeModifier(SharedMonsterAttributes.ATTACK_SPEED, Utils.generateNewUUID().toString(), -0.23921569f, 2);
+		suffocatordelayed2.registerPotionAttributeModifier(SharedMonsterAttributes.FLYING_SPEED, Utils.generateNewUUID().toString(), -0.23921569f, 2);
+
 		IIPotion.iconID = 13;
 		movementAssist = new IIPotion("movement_assist", false, 0x9d5919);
 		movementAssist.registerPotionAttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED, Utils.generateNewUUID().toString(), 0.5, 1);
@@ -246,3 +412,4 @@ public class IIPotions
 		}
 	}
 }
+
