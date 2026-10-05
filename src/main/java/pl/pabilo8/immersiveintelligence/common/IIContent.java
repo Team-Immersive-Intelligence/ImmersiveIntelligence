@@ -414,7 +414,6 @@ public class IIContent
 	public static BlockIIFluid blockGasMustardGas;
 	public static BlockIIFluid blockFluidLatex;
 	public static BlockIIFluid blockAcetaldol, blockAtropine, blockGlycerin, blockAceticAcid, blockHydrazine, blockMonomethylHydrazine, blockNitroglycerin, blockHydrogenPeroxide, blockNitrogenTetroxide, blockSodiumHypochlorite;
-	public static BlockIIFluid blockButadiene, blockSulfurDioxide, blockSulfurTrioxide, blockHydrogenSulfide, blockArgon, blockNitrogen, blockTearGas, blockPhosgene, blockSarin, blockTuban, blockVX;
 	//fluids
 	public static Fluid fluidInkBlack, fluidInkCyan, fluidInkMagenta, fluidInkYellow;
 	public static Fluid fluidEtchingAcid, fluidSulfuricAcid, fluidHydrofluoricAcid, fluidNitricAcid, fluidFormicAcid;
