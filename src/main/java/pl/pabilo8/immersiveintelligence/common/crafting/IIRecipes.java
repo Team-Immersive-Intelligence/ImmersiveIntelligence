@@ -781,8 +781,8 @@ public class IIRecipes
 	public static void addMiscIERecipes()
 	{
 		//Cheaper treated planks
-		new BathingRecipe(new ItemStack(IEContent.blockTreatedWood, 12),
-				new IngredientStack("plankWood", 8),
+		new BathingRecipe(new ItemStack(IEContent.blockTreatedWood, 8),
+				new IngredientStack("plankWood", 1),
 				new FluidStack(IEContent.fluidCreosote, 1000),
 				3200, 120, false
 		);
