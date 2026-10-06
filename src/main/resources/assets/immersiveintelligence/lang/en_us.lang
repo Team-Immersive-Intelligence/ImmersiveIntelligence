@@ -283,6 +283,7 @@ desc.immersiveintelligence.wrench=Installs upgrades on compatible machines.
 desc.immersiveintelligence.tachometer=Measures speed and torque of rotary devices.
 desc.immersiveintelligence.binoculars=Allows to see distant things.
 desc.immersiveintelligence.casing_pouch=Stores spent casings and empty magazines.
+desc.immersiveintelligence.mine_detector=Detects buried mines and magnetic metals.
 
 desc.immersiveintelligence.toolupgrade.item.revolver=Revolver
 desc.immersiveintelligence.toolupgrade.item.railgun=Railgun
