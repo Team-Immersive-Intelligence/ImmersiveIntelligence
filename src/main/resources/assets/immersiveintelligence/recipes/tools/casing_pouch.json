@@ -2,18 +2,22 @@
   "type": "minecraft:crafting_shaped",
   "pattern": [
     " d ",
-    "fcf",
-    "fff"
+    "lpl",
+    "lll"
   ],
   "key": {
-    "c": {
-      "item": "immersiveengineering:wooden_device0",
-      "data": 5
-    },
-    "f": {
-      "type": "forge:ore_dict",
-      "ore": "fabricHemp"
-    },
+    "p": [
+      { "type": "forge:ore_dict", "ore": "plateIron" },
+      { "type": "forge:ore_dict", "ore": "plateBrass" }
+    ],
+
+
+    "l": [
+      { "type": "forge:ore_dict", "ore": "leather" },
+      { "type": "forge:ore_dict", "ore": "leatherArtificial" }
+    ],
+
+
     "d": {
       "type": "forge:ore_dict",
       "ore": "dyeGreen"
