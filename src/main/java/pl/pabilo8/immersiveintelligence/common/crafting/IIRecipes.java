@@ -1005,8 +1005,8 @@ public class IIRecipes
 		);
 
 		addBathingCleaningRecipe(
-				new ItemStack(Blocks.BED, 1),
-				new IngredientStack(new ItemStack(Blocks.BED, 1, OreDictionary.WILDCARD_VALUE)),
+				new ItemStack(Items.BED, 1),
+				new IngredientStack(new ItemStack(Items.BED, 1, OreDictionary.WILDCARD_VALUE)),
 				2000,
 				256*240, 240, true, false, false
 		);
