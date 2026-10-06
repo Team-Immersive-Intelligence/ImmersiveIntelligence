@@ -17,6 +17,7 @@ import pl.pabilo8.immersiveintelligence.api.ammo.penetration.*;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIConcreteDecoration.ConcreteDecorations;
 import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 
 import java.util.Arrays;
@@ -135,17 +136,92 @@ public class PenetrationRegistry
 				IIContent.blockMetalDecoration);
 
 		//Concrete
-		registerState(iBlockState -> IIUtils.compareBlockstateOredict(iBlockState, "uberConcrete"),
+		registerState(state -> state.getBlock()==IIContent.blockConcreteDecoration&&state.getValue(IIContent.blockConcreteDecoration.property)==ConcreteDecorations.UBERCONCRETE,
 				PenetrationHandler.builder(PenetrationHardness.UBERCONCRETE, 3f, 350, PARTICLE_DEBRIS_BRICK_BIG)
 						.withHitSound(IISounds.hitStone)
 						.build()
 		);
-		registerState(iBlockState -> IIUtils.compareBlockstateOredict(iBlockState, "sturdyBricksConcrete"),
+		registerState(state -> state.getBlock()==IIContent.blockConcreteSlabs&&state.getValue(IIContent.blockConcreteSlabs.property)==ConcreteDecorations.UBERCONCRETE,
+				PenetrationHandler.builder(PenetrationHardness.UBERCONCRETE, 3f, 350, PARTICLE_DEBRIS_BRICK_BIG)
+						.withHitSound(IISounds.hitStone)
+						.build()
+		);
+		registerState(state -> state.getBlock()==IIContent.blockIIConcreteStairs[ConcreteDecorations.UBERCONCRETE.ordinal()],
+				PenetrationHandler.builder(PenetrationHardness.UBERCONCRETE, 3f, 350, PARTICLE_DEBRIS_BRICK_BIG)
+						.withHitSound(IISounds.hitStone)
+						.build()
+		);
+		registerState(state -> state.getBlock()==IIContent.blockConcreteDecoration&&state.getValue(IIContent.blockConcreteDecoration.property)==ConcreteDecorations.UBERCONCRETE_GRAY,
+				PenetrationHandler.builder(PenetrationHardness.UBERCONCRETE, 3f, 350, PARTICLE_DEBRIS_BRICK_BIG)
+						.withHitSound(IISounds.hitStone)
+						.build()
+		);
+		registerState(state -> state.getBlock()==IIContent.blockConcreteSlabs&&state.getValue(IIContent.blockConcreteSlabs.property)==ConcreteDecorations.UBERCONCRETE_GRAY,
+				PenetrationHandler.builder(PenetrationHardness.UBERCONCRETE, 3f, 350, PARTICLE_DEBRIS_BRICK_BIG)
+						.withHitSound(IISounds.hitStone)
+						.build()
+		);
+		registerState(state -> state.getBlock()==IIContent.blockIIConcreteStairs[ConcreteDecorations.UBERCONCRETE_GRAY.ordinal()],
+				PenetrationHandler.builder(PenetrationHardness.UBERCONCRETE, 3f, 350, PARTICLE_DEBRIS_BRICK_BIG)
+						.withHitSound(IISounds.hitStone)
+						.build()
+		);
+		registerState(state -> state.getBlock()==IIContent.blockConcreteDecoration&&state.getValue(IIContent.blockConcreteDecoration.property)==ConcreteDecorations.STURDY_CONCRETE_BRICKS,
 				PenetrationHandler.builder(PenetrationHardness.PANZERCONCRETE, 2f, 250, PARTICLE_DEBRIS_BRICK_BIG)
 						.withHitSound(IISounds.hitStone)
 						.build()
 		);
-		registerState(iBlockState -> IIUtils.compareBlockstateOredict(iBlockState, "bricksConcrete"),
+		registerState(state -> state.getBlock()==IIContent.blockConcreteSlabs&&state.getValue(IIContent.blockConcreteSlabs.property)==ConcreteDecorations.STURDY_CONCRETE_BRICKS,
+				PenetrationHandler.builder(PenetrationHardness.PANZERCONCRETE, 2f, 250, PARTICLE_DEBRIS_BRICK_BIG)
+						.withHitSound(IISounds.hitStone)
+						.build()
+		);
+		registerState(state -> state.getBlock()==IIContent.blockIIConcreteStairs[ConcreteDecorations.STURDY_CONCRETE_BRICKS.ordinal()],
+				PenetrationHandler.builder(PenetrationHardness.PANZERCONCRETE, 2f, 250, PARTICLE_DEBRIS_BRICK_BIG)
+						.withHitSound(IISounds.hitStone)
+						.build()
+		);
+		registerState(state -> state.getBlock()==IIContent.blockConcreteDecoration&&state.getValue(IIContent.blockConcreteDecoration.property)==ConcreteDecorations.STURDY_CONCRETE_BRICKS_GRAY,
+				PenetrationHandler.builder(PenetrationHardness.PANZERCONCRETE, 2f, 250, PARTICLE_DEBRIS_BRICK_BIG)
+						.withHitSound(IISounds.hitStone)
+						.build()
+		);
+		registerState(state -> state.getBlock()==IIContent.blockConcreteSlabs&&state.getValue(IIContent.blockConcreteSlabs.property)==ConcreteDecorations.STURDY_CONCRETE_BRICKS_GRAY,
+				PenetrationHandler.builder(PenetrationHardness.PANZERCONCRETE, 2f, 250, PARTICLE_DEBRIS_BRICK_BIG)
+						.withHitSound(IISounds.hitStone)
+						.build()
+		);
+		registerState(state -> state.getBlock()==IIContent.blockIIConcreteStairs[ConcreteDecorations.STURDY_CONCRETE_BRICKS_GRAY.ordinal()],
+				PenetrationHandler.builder(PenetrationHardness.PANZERCONCRETE, 2f, 250, PARTICLE_DEBRIS_BRICK_BIG)
+						.withHitSound(IISounds.hitStone)
+						.build()
+		);
+		registerState(state -> state.getBlock()==IIContent.blockConcreteDecoration&&state.getValue(IIContent.blockConcreteDecoration.property)==ConcreteDecorations.CONCRETE_BRICKS,
+				PenetrationHandler.builder(PenetrationHardness.CONCRETE, 1.33f, 200, PARTICLE_DEBRIS_BRICK)
+						.withHitSound(IISounds.hitStone)
+						.build()
+		);
+		registerState(state -> state.getBlock()==IIContent.blockConcreteSlabs&&state.getValue(IIContent.blockConcreteSlabs.property)==ConcreteDecorations.CONCRETE_BRICKS,
+				PenetrationHandler.builder(PenetrationHardness.CONCRETE, 1.33f, 200, PARTICLE_DEBRIS_BRICK)
+						.withHitSound(IISounds.hitStone)
+						.build()
+		);
+		registerState(state -> state.getBlock()==IIContent.blockIIConcreteStairs[ConcreteDecorations.CONCRETE_BRICKS.ordinal()],
+				PenetrationHandler.builder(PenetrationHardness.CONCRETE, 1.33f, 200, PARTICLE_DEBRIS_BRICK)
+						.withHitSound(IISounds.hitStone)
+						.build()
+		);
+		registerState(state -> state.getBlock()==IIContent.blockConcreteDecoration&&state.getValue(IIContent.blockConcreteDecoration.property)==ConcreteDecorations.CONCRETE_BRICKS_GRAY,
+				PenetrationHandler.builder(PenetrationHardness.CONCRETE, 1.33f, 200, PARTICLE_DEBRIS_BRICK)
+						.withHitSound(IISounds.hitStone)
+						.build()
+		);
+		registerState(state -> state.getBlock()==IIContent.blockConcreteSlabs&&state.getValue(IIContent.blockConcreteSlabs.property)==ConcreteDecorations.CONCRETE_BRICKS_GRAY,
+				PenetrationHandler.builder(PenetrationHardness.CONCRETE, 1.33f, 200, PARTICLE_DEBRIS_BRICK)
+						.withHitSound(IISounds.hitStone)
+						.build()
+		);
+		registerState(state -> state.getBlock()==IIContent.blockIIConcreteStairs[ConcreteDecorations.CONCRETE_BRICKS_GRAY.ordinal()],
 				PenetrationHandler.builder(PenetrationHardness.CONCRETE, 1.33f, 200, PARTICLE_DEBRIS_BRICK)
 						.withHitSound(IISounds.hitStone)
 						.build()
@@ -162,12 +238,14 @@ public class PenetrationRegistry
 		);
 
 		//Bricks, Stone, Rocks
-		registerState(state -> state.getBlock()==Blocks.BRICK_BLOCK||state.getBlock()==Blocks.BRICK_STAIRS,
+		registerState(state -> state.getBlock()==Blocks.BRICK_BLOCK||state.getBlock()==Blocks.BRICK_STAIRS||
+				(state.getBlock().getRegistryName()!=null&&(state.getBlock().getRegistryName().toString().equals("minecraft:brick_slab")||state.getBlock().getRegistryName().toString().equals("minecraft:brick_slab2"))),
 				PenetrationHandler.builder(PenetrationHardness.BRICKS, 1f, 250, PARTICLE_DEBRIS_BRICK)
 						.withHitSound(IISounds.hitStone)
 						.build()
 		);
-		registerState(state -> state.getBlock()==Blocks.STONEBRICK||state.getBlock()==Blocks.STONE_BRICK_STAIRS,
+		registerState(state -> state.getBlock()==Blocks.STONEBRICK||state.getBlock()==Blocks.STONE_BRICK_STAIRS||
+				(state.getBlock().getRegistryName()!=null&&(state.getBlock().getRegistryName().toString().equals("minecraft:stone_brick_slab")||state.getBlock().getRegistryName().toString().equals("minecraft:stone_brick_slab2"))),
 				PenetrationHandler.builder(PenetrationHardness.BRICKS, 1f, 250, PARTICLE_DEBRIS_BRICK)
 						.withHitSound(IISounds.hitStone)
 						.build()
@@ -176,11 +254,35 @@ public class PenetrationRegistry
 				.withHitSound(IISounds.hitStone)
 				.build()
 		);
+		registerOre("slabStone", PenetrationHandler.builder(PenetrationHardness.ROCK, 1f, 200, PARTICLE_DEBRIS_PEBBLE)
+				.withHitSound(IISounds.hitStone)
+				.build()
+		);
+		registerOre("stairStone", PenetrationHandler.builder(PenetrationHardness.ROCK, 1f, 200, PARTICLE_DEBRIS_PEBBLE)
+				.withHitSound(IISounds.hitStone)
+				.build()
+		);
 		registerOre("cobblestone", PenetrationHandler.builder(PenetrationHardness.ROCK, 1f, 200, PARTICLE_DEBRIS_PEBBLE)
 				.withHitSound(IISounds.hitStone)
 				.build()
 		);
+		registerOre("slabCobblestone", PenetrationHandler.builder(PenetrationHardness.ROCK, 1f, 200, PARTICLE_DEBRIS_PEBBLE)
+				.withHitSound(IISounds.hitStone)
+				.build()
+		);
+		registerOre("stairCobblestone", PenetrationHandler.builder(PenetrationHardness.ROCK, 1f, 200, PARTICLE_DEBRIS_PEBBLE)
+				.withHitSound(IISounds.hitStone)
+				.build()
+		);
 		registerOre("sandstone", PenetrationHandler.builder(PenetrationHardness.ROCK, 1f, 200, PARTICLE_DEBRIS_PEBBLE)
+				.withHitSound(IISounds.hitStone)
+				.build()
+		);
+		registerOre("slabSandstone", PenetrationHandler.builder(PenetrationHardness.ROCK, 1f, 200, PARTICLE_DEBRIS_PEBBLE)
+				.withHitSound(IISounds.hitStone)
+				.build()
+		);
+		registerOre("stairSandstone", PenetrationHandler.builder(PenetrationHardness.ROCK, 1f, 200, PARTICLE_DEBRIS_PEBBLE)
 				.withHitSound(IISounds.hitStone)
 				.build()
 		);
