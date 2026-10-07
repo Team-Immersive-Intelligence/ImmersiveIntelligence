@@ -441,20 +441,20 @@ public class IIContent
 		IIContent.fluidFormicAcid = makeFluid("formic_acid", IIColor.fromHex("a3b1b1"), false, 1221, 1784);
 		IIContent.fluidNitricAcid = makeFluid("nitric_acid", IIColor.fromHex("cbcbc2"), false, 1510, 2500);
 		IIContent.fluidBrine = makeFluid("brine", IIColor.fromHex("757cbd"), false, 1030, 1002);
-		IIContent.gasHydrogen = makeFluid("hydrogen", IIColor.fromHex("11eecdcd"), true, -1000+100, 88);
-		IIContent.gasOxygen = makeFluid("oxygen", IIColor.fromHex("11ffffff"), true, -1000+200, 204);
+		IIContent.gasHydrogen = makeFluid("hydrogen", IIColor.fromHex("97e2fc"), true, -1000+100, 88);
+		IIContent.gasOxygen = makeFluid("oxygen", IIColor.fromHex("97e2fc"), true, -1000+200, 204);
 		IIContent.gasCO2 = makeFluid("carbon_dioxide", IIColor.fromHex("22000000"), true, -1000+100, 147);
 		IIContent.gasCO = makeFluid("carbon_monoxide", IIColor.fromHex("55000000"), true, -1000+145, 166);
 //		IIContent.fluidHexamine = makeFluid("hexamine", IIColor.fromHex("788d8d"), true, -1000+100, 132);
-		IIContent.gasChlorine = makeFluid("chlorine", IIColor.fromHex("557b7a72"), true, -1000+100, 132);
+		IIContent.gasChlorine = makeFluid("chlorine", IIColor.fromHex("cdfaaf"), true, -1000+100, 132);
 		IIContent.fluidAmmonia = makeFluid("ammonia", IIColor.fromHex("f0e5d1"), false, 771, 1007);
 		IIContent.fluidMethanol = makeFluid("methanol", IIColor.fromHex("806d94"), false, 792, 553);
 		IIContent.fluidRocketPropellant = makeFluid("rocket_propellant", IIColor.fromHex("c98461"), false, 860, 1450);
 		IIContent.fluidLatex = makeFluid("latex", IIColor.fromHex("cccccc"), false, 4300, 3500);
-		IIContent.gasMustardGas = makeFluid("mustard_gas", IIColor.fromHex("66807551"), true, 127, 340);
-		IIContent.gasPhosgene = makeFluid("phosgene", IIColor.fromHex("fffffc"), true, -200+100, 120);
-		IIContent.gastabun = makeFluid("tabun", IIColor.fromHex("fffffc"), false, 250, 140);
-		IIContent.gasSarin = makeFluid("sarin", IIColor.fromHex("fffffc"), true, 320, 80);
+		IIContent.gasMustardGas = makeFluid("mustard_gas", IIColor.fromHex("e6e6e6"), true, 127, 340);
+		IIContent.gasPhosgene = makeFluid("phosgene", IIColor.fromHex("e6e6e6"), true, -200+100, 120);
+		IIContent.gastabun = makeFluid("tabun", IIColor.fromHex("e6e6e6"), false, 250, 140);
+		IIContent.gasSarin = makeFluid("sarin", IIColor.fromHex("e6e6e6"), true, 320, 80);
 		IIContent.fluidMilk = makeFluid("milk", "item.milk.name", IIColor.fromHex("ffffff"), false, 1000, 1200, 0, 298);
 
 		IIContent.fluidAcetaldol = makeFluid("acetaldol", IIColor.fromHex("fffabf"), false, 1000, 1200);
@@ -469,13 +469,13 @@ public class IIContent
 		IIContent.fluidSodiumHypochlorite = makeFluid("sodium_hypochlorite", IIColor.fromHex("97c7fc"), false, 1000, 1200);
 
 		IIContent.gasButadiene = makeFluid("butadiene", IIColor.fromHex("f0f2d0"), true, -1000+100, 88);
-		IIContent.gasSulfurDioxide = makeFluid("sulfur_dioxide", IIColor.fromHex("f4f5f0"), true, -1000+100, 88);
-		IIContent.gasSulfurTrioxide = makeFluid("sulfur_trioxide", IIColor.fromHex("f4f5f0"), true, -1000+100, 88);
-		IIContent.gasHydrogenSulfide = makeFluid("hydrogen_sulfide", IIColor.fromHex("dadea4"), true, -1000+100, 88);
-		IIContent.gasArgon = makeFluid("argon", IIColor.fromHex("11ffffff"), true, -1000+100, 88);
-		IIContent.gasNitrogen = makeFluid("nitrogen", IIColor.fromHex("11ffffff"), true, -1000+100, 88);
+		IIContent.gasSulfurDioxide = makeFluid("sulfur_dioxide", IIColor.fromHex("e6faaf"), true, -1000+100, 88);
+		IIContent.gasSulfurTrioxide = makeFluid("sulfur_trioxide", IIColor.fromHex("e6faaf"), true, -1000+100, 88);
+		IIContent.gasHydrogenSulfide = makeFluid("hydrogen_sulfide", IIColor.fromHex("e6e6e6"), true, -1000+100, 88);
+		IIContent.gasArgon = makeFluid("argon", IIColor.fromHex("e6e6e6"), true, -1000+100, 88);
+		IIContent.gasNitrogen = makeFluid("nitrogen", IIColor.fromHex("e6e6e6"), true, -1000+100, 88);
 		IIContent.gasTearGas = makeFluid("tear_gas", IIColor.fromHex("fffffc"), true, -500+100, 240);
-		IIContent.gasVX = makeFluid("vx", IIColor.fromHex("fffffc"), false, 300, 180);
+		IIContent.gasVX = makeFluid("vx", IIColor.fromHex("ffb77d"), false, 300, 180);
 
 		IIContent.blockFluidInkBlack = new BlockIIFluid("ink", IIContent.fluidInkBlack, Material.WATER);
 		IIContent.blockFluidInkCyan = new BlockIIFluid("ink_cyan", IIContent.fluidInkCyan, Material.WATER);
