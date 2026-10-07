@@ -504,27 +504,31 @@ public class IIContent
 		IIContent.blockNitrogenTetroxide = new BlockIIFluid("nitrogen_tetroxide", IIContent.fluidNitrogenTetroxide, Material.WATER);
 		IIContent.blockSodiumHypochlorite = new BlockIIFluid("sodium_hypochlorite", IIContent.fluidSodiumHypochlorite, Material.WATER);
 
-		IIContent.blockGasHydrogen = new BlockIIFluid("hydrogen", IIContent.gasHydrogen, Material.WATER);
+		IIContent.blockGasHydrogen = new BlockIIFluid("hydrogen", IIContent.gasHydrogen, Material.WATER)
+				.setPotionEffects(new PotionEffect(IIPotions.suffocator, 60, 1));
 		IIContent.blockGasOxygen = new BlockIIFluid("oxygen", IIContent.gasOxygen, Material.WATER)
-				.setPotionEffects(new PotionEffect(MobEffects.WATER_BREATHING, 20, 0));
+				.setPotionEffects(new PotionEffect(MobEffects.WATER_BREATHING, 20, 0), new PotionEffect(MobEffects.WEAKNESS, 60, 0), new PotionEffect(IIPotions.corrosion, 60, 0));
 		IIContent.blockGasChlorine = new BlockIIFluid("chlorine", IIContent.gasChlorine, Material.WATER)
-				.setPotionEffects(new PotionEffect(IIPotions.poisonirritant, 60, 0), new PotionEffect(IIPotions.suffocator, 60, 1));
+				.setPotionEffects(new PotionEffect(IIPotions.suffocator, 60, 1), new PotionEffect(MobEffects.BLINDNESS, 60, 0));
 		IIContent.blockGasCO2 = new BlockIIFluid("carbon_dioxide", IIContent.gasCO2, Material.WATER)
-				.setPotionEffects(new PotionEffect(MobEffects.BLINDNESS, 60, 0));
+				.setPotionEffects(new PotionEffect(IIPotions.suffocator, 60, 1), new PotionEffect(MobEffects.BLINDNESS, 60, 0));
 		IIContent.blockGasCO = new BlockIIFluid("carbon_oxide", IIContent.gasCO, Material.WATER)
-				.setPotionEffects(new PotionEffect(MobEffects.BLINDNESS, 60, 0));
+				.setPotionEffects(new PotionEffect(IIPotions.suffocator, 60, 1), new PotionEffect(MobEffects.BLINDNESS, 60, 0));
 		IIContent.blockGasMustardGas = new BlockIIFluid("mustard_gas", IIContent.gasMustardGas, Material.WATER)
-				.setPotionEffects(new PotionEffect(MobEffects.POISON, 60, 0), new PotionEffect(IIPotions.poisonirritant, 60, 2));
+				.setPotionEffects(new PotionEffect(IIPotions.suffocator, 60, 1), new PotionEffect(MobEffects.POISON, 60, 0), new PotionEffect(IIPotions.poisonirritant, 60, 2));
+		IIContent.blockHydrogenSulfide = new BlockIIFluid("hydrogen_sulfide", IIContent.gasHydrogenSulfide, Material.WATER)
+				.setPotionEffects(new PotionEffect(IIPotions.suffocator, 60, 1), new PotionEffect(IIPotions.corrosion, 60, 0))
+				.setFlammability(20, 5);
 		IIContent.blockTearGas = new BlockIIFluid("tear_gas", IIContent.gasTearGas, Material.WATER)
-				.setPotionEffects(new PotionEffect(IIPotions.poisonirritant, 40, 0));
+				.setPotionEffects(new PotionEffect(IIPotions.suffocator, 60, 1), new PotionEffect(IIPotions.poisonirritant, 40, 0), new PotionEffect(MobEffects.BLINDNESS, 40, 0));
 		IIContent.blockPhosgene = new BlockIIFluid("phosgene_gas", IIContent.gasPhosgene, Material.WATER)
-				.setPotionEffects(new PotionEffect(IIPotions.suffocatordelayed1, 60, 0), new PotionEffect(IIPotions.poisonirritant, 120, 0));
+				.setPotionEffects(new PotionEffect(IIPotions.suffocator, 60, 1), new PotionEffect(IIPotions.suffocatordelayed1, 60, 0), new PotionEffect(IIPotions.poisonirritant, 120, 0));
 		IIContent.blocktabun = new BlockIIFluid("tabun", IIContent.gastabun, Material.WATER)
-				.setPotionEffects(new PotionEffect(IIPotions.suffocator, 120, 0), new PotionEffect(IIPotions.neuroparalitic, 480, 0), new PotionEffect(MobEffects.HUNGER, 360, 4));
+				.setPotionEffects(new PotionEffect(IIPotions.suffocator, 60, 1), new PotionEffect(IIPotions.neuroparalitic, 480, 0), new PotionEffect(MobEffects.HUNGER, 360, 4));
 		IIContent.blockSarin = new BlockIIFluid("sarin_gas", IIContent.gasSarin, Material.WATER)
-				.setPotionEffects(new PotionEffect(MobEffects.NAUSEA, 120, 0), new PotionEffect(IIPotions.neuroparalitic, 240, 2));
+				.setPotionEffects(new PotionEffect(IIPotions.suffocator, 60, 1), new PotionEffect(MobEffects.NAUSEA, 120, 0), new PotionEffect(IIPotions.neuroparalitic, 240, 2));
 		IIContent.blockVX = new BlockIIFluid("vx", IIContent.gasVX, Material.WATER)
-				.setPotionEffects(new PotionEffect(MobEffects.NAUSEA, 180, 0), new PotionEffect(MobEffects.BLINDNESS, 120, 0), new PotionEffect(IIPotions.neuroparalitic, 360, 3));
+				.setPotionEffects(new PotionEffect(IIPotions.suffocator, 60, 1), new PotionEffect(MobEffects.NAUSEA, 180, 0), new PotionEffect(MobEffects.BLINDNESS, 120, 0), new PotionEffect(IIPotions.neuroparalitic, 360, 3));
 
 	}
 
