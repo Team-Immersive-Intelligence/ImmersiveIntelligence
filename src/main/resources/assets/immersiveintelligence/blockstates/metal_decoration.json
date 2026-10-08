@@ -69,6 +69,14 @@
         }
       }
     ],
+    "inventory,type=chemical_engineering": [
+      {
+        "textures": {
+          "block_all": "immersiveintelligence:blocks/metal_decoration/chemical_engineering",
+          "overlay_all": "immersiveintelligence:blocks/metal_decoration/steel_overlay"
+        }
+      }
+    ],
     "type": {
       "coil_data": {
         "model": "immersiveengineering:ie_pillar",
@@ -114,6 +122,12 @@
         "textures": {
           "block_all": "immersiveintelligence:blocks/metal_decoration/computer_engineering",
           "overlay_all": "immersiveintelligence:blocks/metal_decoration/iron_overlay"
+        }
+      },
+      "chemical_engineering": {
+        "textures": {
+          "block_all": "immersiveintelligence:blocks/metal_decoration/chemical_engineering",
+          "overlay_all": "immersiveintelligence:blocks/metal_decoration/steel_overlay"
         }
       }
     }
