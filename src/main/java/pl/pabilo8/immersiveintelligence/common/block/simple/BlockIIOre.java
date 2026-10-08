@@ -39,10 +39,12 @@ public class BlockIIOre extends BlockIIBase<Ores>
 		switch(state.getValue(property))
 		{
 			case FLUORITE:
+			case OVERWORLDFLUORITE:
 				drops.add(IIContent.itemMaterialGem.getStack(MaterialsGem.FLUORITE,
 						(1+Math.round((float)Math.random()))*(1+fortune)));
 				break;
 			case PHOSPHORUS:
+			case OVERWORLDPHOSPHORUS:
 				drops.add(IIContent.itemMaterialGem.getStack(MaterialsGem.PHOSPHORUS,
 						(2+Math.round((float)Math.random()))*(1+fortune)));
 				break;
