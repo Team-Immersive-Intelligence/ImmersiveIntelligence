@@ -1,0 +1,17 @@
+{
+  "type": "forge:ore_shapeless",
+  "result": {
+    "item": "immersiveintelligence:material_plate",
+    "data": 9
+  },
+  "ingredients": [
+    {
+      "type": "forge:ore_dict",
+      "ore": "ingotStainlessSteel"
+    },
+    {
+      "item": "immersiveengineering:tool",
+      "data": 0
+    }
+  ]
+}
