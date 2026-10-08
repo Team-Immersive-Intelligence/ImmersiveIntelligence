@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.client.render.multiblock.metal;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.model.obj.OBJModel;
 import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil.Shaders;
@@ -13,12 +14,13 @@ import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTItem;
 import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIMultiblockRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IITileRenderer.RegisteredTileRenderer;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityChemicalPainter;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 29.08.2025
+ * @updated 05.10.2026
  * @ii-approved 0.3.1
  * @since 21.06.2019
  */
@@ -38,13 +40,17 @@ public class ChemicalPainterRenderer extends IIMultiblockRenderer<TileEntityChem
 		//Apply animations
 		if(te.currentProcess!=null)
 		{
-			item.setStack(te.recipeStack, te.resultStack);
-			itemPaint.setStack(te.resultStack);
+			ItemStack input = te.currentProcess.processData.getItemStack("effect");
+			IIColor color = te.currentProcess.processData.getColor("color");
+			ItemStack result = te.currentProcess.processData.unwrap().hasKey("result")?
+					te.currentProcess.processData.getItemStack("result"): te.resultStack;
+			item.setStack(input, result);
+			itemPaint.setStack(result);
 
 			float productionProgress = te.getProductionProgress(te.currentProcess, partialTicks);
 			animationProduction.apply(productionProgress);
 
-			Float[] colors = new Float[]{te.color.red/255f, te.color.green/255f, te.color.blue/255f};
+			Float[] colors = new Float[]{color.red/255f, color.green/255f, color.blue/255f};
 			paintSmall.setShader(Shaders.COLOR, colors);
 			paintBig.setShader(Shaders.COLOR, colors);
 			paintAtomizer.setShader(Shaders.COLOR, colors);

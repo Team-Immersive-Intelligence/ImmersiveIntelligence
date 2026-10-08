@@ -1,9 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity;
 
-import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IPlayerInteraction;
 import blusunrize.immersiveengineering.common.util.Utils;
-import blusunrize.immersiveengineering.common.util.inventory.MultiFluidTank;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -15,7 +13,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -31,6 +28,7 @@ import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockFuelStation;
+import pl.pabilo8.immersiveintelligence.common.util.IIEnergyStorage;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EntityReference;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
@@ -41,17 +39,19 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultibl
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 import javax.annotation.Nullable;
+
 import java.util.List;
 import java.util.Optional;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 28.06.2019
+ * @updated 07.10.2026
  */
 public class TileEntityFuelStation extends TileEntityMultiblockIIGeneric<TileEntityFuelStation> implements IIIGuiMultiblockTile, IPlayerInteraction, IAdvancedTextOverlay, IStyleCustomizable
 {
 	@SyncNBT(events = {SyncEvents.TILE_RECIPE_CHANGED, SyncEvents.TILE_GUI_OPENED})
-	public MultiFluidTank tank = new FilteredMultiFluidTank(FuelStation.fluidCapacity)
+	public FilteredMultiFluidTank tank = new FilteredMultiFluidTank(FuelStation.fluidCapacity)
 			.withInputFilter(VehicleFuelHandler::isValidFluid);
 	@SyncNBT(events = {SyncEvents.TILE_UPGRADES_MODIFIED, SyncEvents.TILE_CLIENT_MESSAGE})
 	public StyleCustomization style;
@@ -71,7 +71,7 @@ public class TileEntityFuelStation extends TileEntityMultiblockIIGeneric<TileEnt
 		super(MultiblockFuelStation.INSTANCE);
 
 		this.style = new StyleCustomization(MultiblockFuelStation.STYLE_CONSTRAINTS);
-		this.energyStorage = new FluxStorageAdvanced(FuelStation.energyCapacity);
+		this.energyStorage = new IIEnergyStorage(FuelStation.energyCapacity);
 		this.inventory = NonNullList.withSize(2, ItemStack.EMPTY);
 		this.focusedEntity = new EntityReference<>(this::getWorld);
 	}
@@ -276,7 +276,10 @@ public class TileEntityFuelStation extends TileEntityMultiblockIIGeneric<TileEnt
 		if(isPOI(MultiblockPOI.FLUID_INPUT))
 		{
 			TileEntityFuelStation master = master();
-			return master!=null&&FluidUtil.interactWithFluidHandler(player, hand, master.tank);
+			return master!=null&&!master.tank.interactWithItem(player, hand, heldItem, () -> {
+				master.markDirty();
+				master.updateTileForEvent(SyncEvents.TILE_RECIPE_CHANGED);
+			});
 		}
 		return false;
 	}

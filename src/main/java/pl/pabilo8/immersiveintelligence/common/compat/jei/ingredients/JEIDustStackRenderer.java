@@ -17,21 +17,32 @@ import java.util.List;
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
+ * @updated 07.10.2026
  * @since 14.03.2026
  */
 public class JEIDustStackRenderer implements IIngredientRenderer<DustStack>
 {
 	private final int width, height;
+	private final double capacity;
 
 	public JEIDustStackRenderer()
 	{
-		this.width = this.height = 16;
+		this(16, 16);
 	}
 
 	public JEIDustStackRenderer(int width, int height)
 	{
+		this(width, height, 0);
+	}
+
+	/**
+	 * A positive capacity scales recipe tanks; zero retains the half-filled ingredient icon.
+	 */
+	public JEIDustStackRenderer(int width, int height, double capacity)
+	{
 		this.width = width;
 		this.height = height;
+		this.capacity = Math.max(0, capacity);
 	}
 
 	@Override
@@ -39,12 +50,14 @@ public class JEIDustStackRenderer implements IIngredientRenderer<DustStack>
 	{
 		if(ingredient==null)
 			return;
-		if(ingredient.name.isEmpty())
+		if(ingredient.name.isEmpty()||ingredient.amount <= 0)
 			return;
 
+		int filledHeight = capacity==0?height/2:
+				Math.min(height, Math.max(1, (int)Math.ceil(height*(double)ingredient.amount/capacity)));
 		ClientUtils.bindAtlas();
 		IIDrawUtils.startTexturedColored()
-				.drawRepeatedTexColorRect(xPosition, yPosition+(height/2), width, height/2,
+				.drawRepeatedTexColorRect(xPosition, yPosition+height-filledHeight, width, filledHeight,
 						DustUtils.getColor(ingredient), DecoTextures.COMPONENT_TANK_DUST, 16)
 				.finish();
 	}

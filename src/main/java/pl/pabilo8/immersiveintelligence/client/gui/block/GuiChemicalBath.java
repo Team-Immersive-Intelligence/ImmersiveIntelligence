@@ -17,6 +17,7 @@ import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 08.10.2026
  * @since 10.07.2019
  */
 @DecoTemplate(name = "chemical_bath", category = DecoGuiCategory.PRODUCTION_TILE)
@@ -86,6 +87,6 @@ public class GuiChemicalBath extends DecoTileGui<TileEntityChemicalBath, Contain
 	public void onInitJEICompat()
 	{
 		for(DecoImage progressArrow : this.progressArrows)
-			JEIHelper.addRecipesDecoGuiLink(progressArrow, "ii.bathing");
+			JEIHelper.addRecipesDecoGuiLink(progressArrow, "ii.bathing", "ii.washing");
 	}
 }

@@ -37,8 +37,18 @@ import pl.pabilo8.immersiveintelligence.common.item.ammo.gun.ItemIIAmmoRevolver.
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
 
 import javax.annotation.Nonnull;
-import java.util.Collections;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+/**
+ * Registers II recipe categories and ingredients in JEI.
+ *
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 06.10.2026
+ * @since 05.10.2026
+ */
 @JEIPlugin
 @SuppressWarnings("unused")
 public class JEIHelper implements IModPlugin
@@ -60,17 +70,27 @@ public class JEIHelper implements IModPlugin
 	@SideOnly(Side.CLIENT)
 	public static void addRecipesDecoGuiLink(DecoComponent<?> gui, String categoryName)
 	{
-		if(jeiRuntime==null)
+		addRecipesDecoGuiLink(gui, new String[]{categoryName});
+	}
+
+	/**
+	 * Adds a recipe link which can open all relevant categories for a machine.
+	 */
+	@SideOnly(Side.CLIENT)
+	public static void addRecipesDecoGuiLink(DecoComponent<?> gui, String... categoryNames)
+	{
+		if(jeiRuntime==null||gui==null||categoryNames.length==0)
 			return;
 		IRecipesGui recipesGui = jeiRuntime.getRecipesGui();
 		if(recipesGui==null)
 			return;
+		List<String> categories = Arrays.asList(categoryNames.clone());
 
 		gui.withTranslatedTooltip("jei.tooltip.show.recipes")
 				.withOnPressed((g, mouseButton, mouseX, mouseY) -> {
 					if(mouseButton==MouseButton.LEFT)
 					{
-						recipesGui.showCategories(Collections.singletonList(categoryName));
+						recipesGui.showCategories(categories);
 						return true;
 					}
 					return false;
@@ -105,9 +125,9 @@ public class JEIHelper implements IModPlugin
 		IGuiHelper guiHelper = jeiHelpers.getGuiHelper();
 		slotDrawable = guiHelper.getSlotDrawable();
 		categories.clear();
-		categories.put(BathingRecipe.class, new IIRecipeJEICategory<>(BathingRecipe.class,
+		categories.put(ChemicalBathRecipe.class, new IIRecipeJEICategory<>(ChemicalBathRecipe.class,
 				IIContent.blockMetalMultiblock0.getStack(MetalMultiblocks0.CHEMICAL_BATH)));
-		categories.put(BathingRecipe.class, new IIRecipeJEICategory<>(BathingRecipe.class,
+		categories.put(ChemicalBathRecipe.class, new IIRecipeJEICategory<>(ChemicalBathRecipe.class,
 				IIContent.blockMetalMultiblock0.getStack(MetalMultiblocks0.CHEMICAL_BATH), "washing"));
 		categories.put(ElectrolyzerRecipe.class, new IIRecipeJEICategory<>(ElectrolyzerRecipe.class,
 				IIContent.blockMetalMultiblock0.getStack(MetalMultiblocks0.ELECTROLYZER)));
@@ -121,11 +141,20 @@ public class JEIHelper implements IModPlugin
 				IIContent.blockMetalMultiblock1.getStack(MetalMultiblocks1.VULCANIZER)));
 		categories.put(FillerRecipe.class, new IIRecipeJEICategory<>(FillerRecipe.class,
 				IIContent.blockMetalMultiblock1.getStack(MetalMultiblocks1.FILLER)));
-		categories.put(PaintingRecipe.class, new IIRecipeJEICategory<>(PaintingRecipe.class,
-				IIContent.blockMetalMultiblock1.getStack(MetalMultiblocks1.CHEMICAL_PAINTER)));
+		categories.put(ChemicalPainterRecipe.class, new IIRecipeJEICategory<>(ChemicalPainterRecipe.class,
+				IIContent.blockMetalMultiblock1.getStack(MetalMultiblocks1.CHEMICAL_PAINTER))
+				.withDisplayRecipes(() -> ChemicalPainterRecipe.streamRecipes(ChemicalPainterRecipe.class)
+						.flatMap(recipe -> recipe.getDisplayRecipes().stream()).collect(java.util.stream.Collectors.toList())));
 		categories.put(AmmunitionAssemblerRecipe.class, new IIRecipeJEICategory<>(AmmunitionAssemblerRecipe.class,
 				IIContent.blockMetalMultiblock1.getStack(MetalMultiblocks1.AMMUNITION_ASSEMBLER)));
 
+		ProjectileWorkshopRecipe.registerCoreRecipes();
+		categories.put(ProjectileWorkshopRecipe.class, new IIRecipeJEICategory<>(ProjectileWorkshopRecipe.class,
+				IIContent.blockMetalMultiblock1.getStack(MetalMultiblocks1.PROJECTILE_WORKSHOP), "projectile_workshop")
+				.withDisplayRecipes(ProjectileWorkshopRecipe::getProductionDisplays));
+		categories.put(ProjectileWorkshopRecipe.class, new IIRecipeJEICategory<>(ProjectileWorkshopRecipe.class,
+				IIContent.blockMetalMultiblock1.getStack(MetalMultiblocks1.PROJECTILE_WORKSHOP), "projectile_filling")
+				.withDisplayRecipes(ProjectileWorkshopRecipe::getFillingDisplays));
 		registry.addRecipeCategories(categories.values().toArray(new IRecipeCategory[0]));
 	}
 

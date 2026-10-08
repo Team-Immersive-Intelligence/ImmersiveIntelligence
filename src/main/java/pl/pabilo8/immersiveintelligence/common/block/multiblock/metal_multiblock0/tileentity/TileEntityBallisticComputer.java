@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity;
 
-import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IPlayerInteraction;
 import blusunrize.immersiveengineering.common.util.Utils;
 import lombok.Value;
@@ -30,6 +29,7 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockBallisticComputer;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
+import pl.pabilo8.immersiveintelligence.common.util.IIEnergyStorage;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
@@ -41,7 +41,7 @@ import java.util.Arrays;
  * Machine that converts 3D coordinates into artillery angles. Also makes good cocoa.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 15.08.2026
+ * @updated 05.10.2026
  * @since 28.06.2019
  */
 public class TileEntityBallisticComputer extends TileEntityMultiblockIIGeneric<TileEntityBallisticComputer> implements IPlayerInteraction
@@ -53,7 +53,7 @@ public class TileEntityBallisticComputer extends TileEntityMultiblockIIGeneric<T
 	{
 		super(MultiblockBallisticComputer.INSTANCE);
 
-		this.energyStorage = new FluxStorageAdvanced(BallisticComputer.energyCapacity);
+		this.energyStorage = new IIEnergyStorage(BallisticComputer.energyCapacity);
 		inventory = NonNullList.withSize(0, ItemStack.EMPTY);
 	}
 

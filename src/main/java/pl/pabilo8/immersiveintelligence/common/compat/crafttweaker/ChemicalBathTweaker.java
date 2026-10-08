@@ -11,7 +11,7 @@ import crafttweaker.api.minecraft.CraftTweakerMC;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.crafting.BathingRecipe;
+import pl.pabilo8.immersiveintelligence.api.crafting.ChemicalBathRecipe;
 import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIMultiblockRecipe;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
@@ -83,7 +83,7 @@ public class ChemicalBathTweaker
 		@Override
 		public void apply()
 		{
-			new BathingRecipe(itemOutput, itemInput, fluidInputStack, energy, time, washing);
+			new ChemicalBathRecipe(itemOutput, itemInput, fluidInputStack, energy, time, washing);
 		}
 
 		@Override
@@ -96,7 +96,7 @@ public class ChemicalBathTweaker
 	private static class Remove implements IAction
 	{
 		private final ItemStack output;
-		List<BathingRecipe> removedRecipes;
+		List<ChemicalBathRecipe> removedRecipes;
 
 		public Remove(ItemStack output)
 		{
@@ -106,7 +106,7 @@ public class ChemicalBathTweaker
 		@Override
 		public void apply()
 		{
-			removedRecipes = IIMultiblockRecipe.removeRecipesByFilter(BathingRecipe.class, bathingRecipe -> bathingRecipe.itemOutput.isItemEqual(output));
+			removedRecipes = IIMultiblockRecipe.removeRecipesByFilter(ChemicalBathRecipe.class, bathingRecipe -> bathingRecipe.itemOutput.isItemEqual(output));
 		}
 
 		@Override

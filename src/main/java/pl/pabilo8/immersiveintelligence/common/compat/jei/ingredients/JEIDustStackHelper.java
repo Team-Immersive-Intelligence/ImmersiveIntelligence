@@ -8,6 +8,7 @@ import pl.pabilo8.immersiveintelligence.api.crafting.DustStack;
 import pl.pabilo8.immersiveintelligence.api.crafting.DustUtils;
 
 import javax.annotation.Nullable;
+
 import java.awt.*;
 import java.util.Collections;
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.List;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
  * @since 14.03.2026
+ * @updated 05.10.2026
  */
 public class JEIDustStackHelper implements IIngredientHelper<DustStack>
 {
@@ -23,6 +25,11 @@ public class JEIDustStackHelper implements IIngredientHelper<DustStack>
 	@Override
 	public DustStack getMatch(Iterable<DustStack> ingredients, DustStack ingredientToMatch)
 	{
+		if(ingredientToMatch==null||ingredientToMatch.isEmpty())
+			return null;
+		for(DustStack ingredient : ingredients)
+			if(ingredient!=null&&!ingredient.isEmpty()&&ingredient.name.equals(ingredientToMatch.name))
+				return ingredient;
 		return null;
 	}
 

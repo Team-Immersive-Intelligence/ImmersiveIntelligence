@@ -818,7 +818,6 @@ public class ClientProxy extends CommonProxy
 	@Override
 	public void reloadManual()
 	{
-		IIManualCategory.cleanFolderEntries();
 		IIManualCategoryData.INSTANCE.addPages();
 		IIManualCategoryLogistics.INSTANCE.addPages();
 		IIManualCategoryWarfare.INSTANCE.addPages();

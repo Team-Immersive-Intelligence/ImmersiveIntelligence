@@ -19,7 +19,7 @@ import javax.annotation.Nullable;
  * Vulcanizer production recipe.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 10.05.2026
+ * @updated 05.10.2026
  * @ii-approved 0.3.1
  * @since 20.06.2021
  */
@@ -48,6 +48,7 @@ public class VulcanizerRecipe extends IIMultiblockRecipe
 
 		this.resIn = resIn;
 		this.resOut = resOut;
+		completeRegistration(this.mold.stack, this.input, this.compoundInput, this.sulfurInput, this.output);
 	}
 
 	public VulcanizerRecipe(ItemStack output, ComparableItemStack mold, IngredientStack mainInput, IngredientStack compoundInput, IngredientStack sulfurInput, int energy)
@@ -72,7 +73,7 @@ public class VulcanizerRecipe extends IIMultiblockRecipe
 				.withSlot(4, 4, input, IOType.INPUT, "frame")
 				.withSlot(4, 24, compoundInput, IOType.INPUT, "frame_none")
 				.withSlot(4, 44, sulfurInput, IOType.INPUT, "frame_none")
-				.withSlot(156/2-9, 44, mold.stack.copy(), IOType.INPUT)
+				.withToolSlot(156/2-9, 44, mold.stack.copy())
 				.withSlot(138-4, 24, output, IOType.OUTPUT, "frame")
 				.withMultiblockModel(32+8, -8, 80, 80, "")
 				.withTimeInfo()

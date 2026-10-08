@@ -8,6 +8,7 @@ import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIRecipeLayout.Compo
 import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIRecipeLayout.IOType;
 
 import javax.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +17,7 @@ import java.util.List;
  *
  * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
+ * @updated 05.10.2026
  * @since 06.12.2025
  */
 public class IIRecipeLayoutBuilder
@@ -36,6 +38,14 @@ public class IIRecipeLayoutBuilder
 		this.recipeWidth = recipeWidth;
 		this.recipeHeight = recipeHeight;
 		this.earlyGame = earlyGame;
+	}
+
+	//--- Generic Component ---//
+
+	public IIRecipeLayoutBuilder withComponent(LayoutComponent component)
+	{
+		components.add(component);
+		return this;
 	}
 
 	//--- Item slot methods ---//
@@ -81,6 +91,13 @@ public class IIRecipeLayoutBuilder
 		return withSlot(x, y, item, IOType.INPUT, "frame");
 	}
 
+	public IIRecipeLayoutBuilder withOutputSlot(int x, int y, List<ItemStack> stacks)
+	{
+		components.add(LayoutComponent.builder(ComponentType.SLOT, x, y)
+				.output().data(stacks).subtype("frame").build());
+		return this;
+	}
+
 	public IIRecipeLayoutBuilder withOutputSlot(int x, int y, IngredientStack stack)
 	{
 		return withSlot(x, y, stack, IOType.OUTPUT, "frame");
@@ -89,6 +106,28 @@ public class IIRecipeLayoutBuilder
 	public IIRecipeLayoutBuilder withOutputSlot(int x, int y, ItemStack stack)
 	{
 		return withSlot(x, y, stack, IOType.OUTPUT, "frame");
+	}
+
+	public IIRecipeLayoutBuilder withToolSlot(int x, int y, IngredientStack item)
+	{
+		return withToolSlot(x, y, item, "frame");
+	}
+
+	public IIRecipeLayoutBuilder withToolSlot(int x, int y, ItemStack item)
+	{
+		return withToolSlot(x, y, new IngredientStack(item), "frame");
+	}
+
+	public IIRecipeLayoutBuilder withToolSlot(int x, int y, ItemStack item, String style)
+	{
+		return withToolSlot(x, y, new IngredientStack(item), style);
+	}
+
+	public IIRecipeLayoutBuilder withToolSlot(int x, int y, IngredientStack item, String style)
+	{
+		components.add(LayoutComponent.builder(ComponentType.SLOT, x, y)
+				.input().data(item).subtype(style).toolSlot().build());
+		return this;
 	}
 
 	//--- Fluid tank methods ---//
@@ -129,6 +168,13 @@ public class IIRecipeLayoutBuilder
 				.subtype("dust")
 				.data(dust)
 				.build());
+		return this;
+	}
+
+	public IIRecipeLayoutBuilder withInfo(int x, int y, int width, String translationKey)
+	{
+		components.add(LayoutComponent.builder(ComponentType.INFO_DISPLAY, x, y)
+				.size(width, 10).subtype("note").data(translationKey).build());
 		return this;
 	}
 

@@ -1,7 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity;
 
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
-import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
 import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
 import net.minecraft.item.ItemStack;
@@ -21,6 +20,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIAssemblyScheme;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
+import pl.pabilo8.immersiveintelligence.common.util.IIEnergyStorage;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionSingle;
@@ -29,23 +29,24 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPO
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
 import java.util.ArrayList;
 
 /**
  * Multiblock machine producing items according to {@link PrecisionAssemblerRecipe recipes} by using {@link IPrecisionTool tools}.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 07.08.2026
+ * @updated 05.10.2026
  * @since 28.06.2019
  */
 public class TileEntityPrecisionAssembler extends TileEntityMultiblockProductionSingle<TileEntityPrecisionAssembler, PrecisionAssemblerRecipe>
 		implements IBooleanAnimatedPartsBlock
 {
-	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_GUI_OPENED})
+	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_RECIPE_CHANGED})
 	public MultiblockInteractablePart drawer1, drawer2;
-	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED})
+	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_RECIPE_CHANGED})
 	public String toolHash = "";
-	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED})
+	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_RECIPE_CHANGED})
 	public String toolOrder = "";
 	private IEInventoryHandler outputMainHandler, outputSecondaryHandler, inputHandler;
 	private IEInventoryHandler[] toolInputHandlers;
@@ -54,7 +55,7 @@ public class TileEntityPrecisionAssembler extends TileEntityMultiblockProduction
 	{
 		super(MultiblockPrecisionAssembler.INSTANCE);
 		this.inventory = NonNullList.withSize(10, ItemStack.EMPTY);
-		this.energyStorage = new FluxStorageAdvanced(PrecisionAssembler.energyCapacity);
+		this.energyStorage = new IIEnergyStorage(PrecisionAssembler.energyCapacity);
 		this.drawer1 = new MultiblockInteractablePart(0, 8, 0.75f);
 		this.drawer2 = new MultiblockInteractablePart(1, 8, 0.75f);
 
@@ -79,15 +80,14 @@ public class TileEntityPrecisionAssembler extends TileEntityMultiblockProduction
 	@Override
 	protected void onUpdate()
 	{
-		super.onUpdate();
 
 		//Fix for scheme disappearing when process finishes and output is blocked
-		if(currentProcess!=null&&inventory.get(MultiblockPrecisionAssembler.SLOT_SCHEME).isEmpty())
+		if(!world.isRemote&&currentProcess!=null&&inventory.get(MultiblockPrecisionAssembler.SLOT_SCHEME).isEmpty())
 		{
 			//Give back ingredients
 			if(!world.isRemote)
 				for(int i = 0; i < currentProcess.recipe.inputs.length; i++)
-					Utils.dropStackAtPos(world, getPOIPos("item_in"), inputHandler.insertItem(i, currentProcess.recipe.inputs[i].getExampleStack(), false),
+					Utils.dropStackAtPos(world, getPOIPos("item_in"), inputHandler.insertItem(i, getProcessInput(currentProcess, i), false),
 							getDirection("item_input")
 					);
 			currentProcess = null;
@@ -95,9 +95,11 @@ public class TileEntityPrecisionAssembler extends TileEntityMultiblockProduction
 				updateTileForEvent(SyncEvents.TILE_RECIPE_CHANGED);
 		}
 
-		//Populate the slot-preserving key for tiles saved before this field existed.
-		if(!world.isRemote&&toolOrder.isEmpty()&&!toolHash.isEmpty())
+		//Check the current tool slots before processing.
+		if(!world.isRemote)
 			rebuildToolConfiguration();
+
+		super.onUpdate();
 
 		//Handle drawer animations
 		this.drawer1.update();
@@ -127,7 +129,7 @@ public class TileEntityPrecisionAssembler extends TileEntityMultiblockProduction
 				if(recipe==null)
 					return false;
 				IngredientStack[] stacks = recipe.inputs;
-				return stacks.length > slot-4&&stacks[slot-4].matchesItemStack(stack);
+				return stacks.length > slot-4&&stacks[slot-4].matchesItemStackIgnoringSize(stack);
 			}
 		}
 		return true;
@@ -147,7 +149,7 @@ public class TileEntityPrecisionAssembler extends TileEntityMultiblockProduction
 			return null;
 
 		//Check tools
-		if(!this.toolHash.contains(recipe.toolHash))
+		if(!recipe.hasTools(this.toolHash))
 			return null;
 
 		//Check ingredients
@@ -159,14 +161,18 @@ public class TileEntityPrecisionAssembler extends TileEntityMultiblockProduction
 				return null;
 		}
 
+		IIMultiblockProcess<PrecisionAssemblerRecipe> process = new IIMultiblockProcess<>(recipe);
 		//Shrink ingredient stacks
 		for(int i = 0; i < recipe.inputs.length; i++)
 		{
 			IngredientStack ingredient = recipe.inputs[i];
+			ItemStack input = inventory.get(MultiblockPrecisionAssembler.SLOT_INGREDIENT1+i).copy();
+			input.setCount(ingredient.inputSize);
+			process.processData.withItemStack("input"+i, input);
 			inventory.get(MultiblockPrecisionAssembler.SLOT_INGREDIENT1+i).shrink(ingredient.inputSize);
 		}
 
-		return new IIMultiblockProcess<>(recipe);
+		return process;
 	}
 
 	@Override
@@ -179,20 +185,16 @@ public class TileEntityPrecisionAssembler extends TileEntityMultiblockProduction
 	@Override
 	public float getProductionStep(IIMultiblockProcess<PrecisionAssemblerRecipe> process, boolean simulate)
 	{
-		if(energyStorage.extractEnergy(process.recipe.getEnergyPerTick(), true) < process.recipe.getEnergyPerTick())
+		if(!process.recipe.hasTools(this.toolHash))
 			return 0;
-		if(!this.toolHash.contains(process.recipe.toolHash))
-			return 0;
-
-		energyStorage.extractEnergy(process.recipe.getEnergyPerTick(), simulate);
-		return 1f;
+		return energyStorage.tryConsumeEnergy(process.recipe.getEnergyPerTick(), simulate)?1: 0;
 	}
 
 	@Override
 	protected boolean attemptProductionOutput(IIMultiblockProcess<PrecisionAssemblerRecipe> process)
 	{
 		//Attempt output
-		return outputMainHandler.insertItem(0, process.recipe.output, true).isEmpty()&&
+		return process.recipe.hasTools(this.toolHash)&&outputMainHandler.insertItem(0, process.recipe.output, true).isEmpty()&&
 				outputSecondaryHandler.insertItem(0, process.recipe.trashOutput, true).isEmpty();
 	}
 
@@ -205,8 +207,9 @@ public class TileEntityPrecisionAssembler extends TileEntityMultiblockProduction
 
 		//Bump up produced items count in scheme
 		ItemStack schemeStack = inventory.get(MultiblockPrecisionAssembler.SLOT_SCHEME);
-		((ItemIIAssemblyScheme)schemeStack.getItem()).increaseCreatedItems(schemeStack, process.recipe.trashOutput.getCount());
+		((ItemIIAssemblyScheme)schemeStack.getItem()).increaseCreatedItems(schemeStack, process.recipe.output.getCount());
 
+		ArrayList<String> requiredTools = new ArrayList<>(java.util.Arrays.asList(process.recipe.tools));
 		//Damage tools
 		for(int i = MultiblockPrecisionAssembler.SLOT_TOOL1; i <= MultiblockPrecisionAssembler.SLOT_TOOL3; i++)
 		{
@@ -214,10 +217,11 @@ public class TileEntityPrecisionAssembler extends TileEntityMultiblockProduction
 			if(toolStack.getItem() instanceof IPrecisionTool)
 			{
 				IPrecisionTool tool = (IPrecisionTool)toolStack.getItem();
-				if(process.recipe.toolHash.contains(tool.getToolID(toolStack)))
+				if(requiredTools.remove(tool.getToolID(toolStack)))
 					tool.damageTool(toolStack, 1);
 			}
 		}
+		rebuildToolConfiguration();
 	}
 
 	@Override
@@ -229,6 +233,17 @@ public class TileEntityPrecisionAssembler extends TileEntityMultiblockProduction
 			if(!world.isRemote)
 				updateTileForEvent(SyncEvents.TILE_GUI_OPENED);
 		}
+	}
+
+	public static ItemStack getProcessInput(IIMultiblockProcess<PrecisionAssemblerRecipe> process, int slot)
+	{
+		if(slot >= process.recipe.inputs.length)
+			return ItemStack.EMPTY;
+		if(process.processData.unwrap().hasKey("input"+slot))
+			return process.processData.getItemStack("input"+slot);
+		ItemStack fallback = process.recipe.inputs[slot].getExampleStack().copy();
+		fallback.setCount(process.recipe.inputs[slot].inputSize);
+		return fallback;
 	}
 
 	private void rebuildToolConfiguration()

@@ -3,7 +3,6 @@ package pl.pabilo8.immersiveintelligence.common.util.multiblock;
 import blusunrize.immersiveengineering.api.IEEnums.SideConfig;
 import blusunrize.immersiveengineering.api.Lib;
 import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorage;
-import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IComparatorOverride;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IHammerInteraction;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IRedstoneOutput;
@@ -27,6 +26,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.items.CapabilityItemHandler;
 import pl.pabilo8.immersiveintelligence.api.data.device.IDataDevice;
+import pl.pabilo8.immersiveintelligence.common.util.IIEnergyStorage;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IIIInventory;
@@ -34,6 +34,7 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPO
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
 import java.util.function.Function;
 
 /**
@@ -44,6 +45,7 @@ import java.util.function.Function;
  *
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 04.08.2022
+ * @updated 05.10.2026
  */
 @SuppressWarnings("unused")
 public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblockIIGeneric<T>> extends TileEntityMultiblockIIBase<T>
@@ -52,7 +54,7 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 	@SyncNBT(name = "inventory", events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_RECIPE_CHANGED})
 	public NonNullList<ItemStack> inventory;
 	@SyncNBT(name = "ifluxEnergy", events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_RECIPE_CHANGED, SyncEvents.TILE_ENERGY_CHANGED})
-	public FluxStorageAdvanced energyStorage;
+	public IIEnergyStorage energyStorage;
 	@SyncNBT(name = "redstone_control")
 	public boolean redstoneControlInverted = false;
 	private IEForgeEnergyWrapper wrapper = new IEForgeEnergyWrapper(this, null);
@@ -63,7 +65,7 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 	{
 		super(multiblock);
 		inventory = NonNullList.create();
-		energyStorage = new FluxStorageAdvanced(1);
+		energyStorage = new IIEnergyStorage(1);
 	}
 
 	@Override

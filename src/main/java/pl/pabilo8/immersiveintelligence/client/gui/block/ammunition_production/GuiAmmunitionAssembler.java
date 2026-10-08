@@ -4,6 +4,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.fml.common.Optional.Method;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseType;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTileGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoDropdown;
@@ -19,6 +20,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoIma
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityAmmunitionAssembler;
+import pl.pabilo8.immersiveintelligence.common.compat.jei.JEIHelper;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerAmmunitionAssembler;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
@@ -35,6 +37,7 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
  * @author Avalon (avalon@iiteam.net)
  * @since 10.07.2019
  * @since 29.10.2025
+ * @updated 08.10.2026
  */
 
 @DecoTemplate(name = "ammunition_assembler", category = DecoGuiCategory.PRODUCTION_TILE)
@@ -46,6 +49,7 @@ public class GuiAmmunitionAssembler extends DecoTileGui<TileEntityAmmunitionAsse
 	public FuseType fuseType;
 	@SyncNBT(events = SyncEvents.TILE_CLIENT_MESSAGE)
 	public int fuseConfig;
+	private final DecoImage[] progressArrows = new DecoImage[2];
 
 	public GuiAmmunitionAssembler(EntityPlayer player, TileEntityAmmunitionAssembler tile)
 	{
@@ -78,11 +82,11 @@ public class GuiAmmunitionAssembler extends DecoTileGui<TileEntityAmmunitionAsse
 						.withTemplate(DecoTemplates.BAR_ELECTRIC_ENERGY.apply(tile.energyStorage)),
 
 				//Progress
-				new DecoImage(8+64+8+2+1-48-2-4+24-1, 28+4+4+4+1-16)
+				progressArrows[0] = new DecoImage(8+64+8+2+1-48-2-4+24-1, 28+4+4+4+1-16)
 						.withSize(64, 32)
 						.withImageLocation(TEXTURE, true)
 						.withUV(64, 0, 0, 64, 32),
-				new DecoImage(8+64+8+2+1-48-2-4+1+24-1, 28+4+4+4+1-16+1)
+				progressArrows[1] = new DecoImage(8+64+8+2+1-48-2-4+1+24-1, 28+4+4+4+1-16+1)
 						.withSize(64, 30)
 						.withImageLocation(TEXTURE, true)
 						.withUV(64, 0, 34, 64, 34+30)
@@ -153,6 +157,14 @@ public class GuiAmmunitionAssembler extends DecoTileGui<TileEntityAmmunitionAsse
 		);
 		addValueListener(() -> this.fuseConfig)
 				.addObserver(value -> syncFuseConfiguration());
+	}
+
+	@Override
+	@Method(modid = "jei")
+	public void onInitJEICompat()
+	{
+		for(DecoImage progressArrow : progressArrows)
+			JEIHelper.addRecipesDecoGuiLink(progressArrow, "ii.ammunition_assembler");
 	}
 
 	private void setFuseConfig(DecoTextField textField, int value)

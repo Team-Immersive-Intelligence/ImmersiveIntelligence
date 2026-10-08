@@ -32,13 +32,16 @@ import pl.pabilo8.immersiveintelligence.common.util.amt.IIAnimationBuilder;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionBase.IIMultiblockProcess;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Renders the Precision Assembler and composes tool-slot-specific work animations.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 07.08.2026
+ * @updated 05.10.2026
  * @ii-approved 0.3.1
  * @since 21.06.2019
  */
@@ -94,7 +97,7 @@ public class PrecisionAssemblerRenderer extends IIMultiblockRenderer<TileEntityP
 			{
 				float productionProgress = te.getProductionProgress(te.currentProcess, partialTicks);
 				animation.apply(productionProgress);
-				getSlotStatesForRecipe(recipe, toolOrder).apply(productionProgress);
+				getSlotStatesForRecipe(recipe, toolOrder).apply(productionProgress, te.currentProcess);
 			}
 
 			//Output slot is now handled by SlotItemStates, so we don't set it here
@@ -188,7 +191,7 @@ public class PrecisionAssemblerRenderer extends IIMultiblockRenderer<TileEntityP
 			return this.workAnimations.lookup(hash);
 
 		//Invalid tool hash, don't attempt to create animation
-		if(!recipe.toolHash.equals(toolHash))
+		if(!recipe.hasTools(toolHash))
 			return null;
 
 		PrecisionToolInfo[] tools = getToolsBySlot(toolOrder);
@@ -198,7 +201,7 @@ public class PrecisionAssemblerRenderer extends IIMultiblockRenderer<TileEntityP
 				orderMap.put(tools[i].getToolName(), i);
 
 		IIAnimationBuilder builder = new IIAnimationBuilder(IIReference.RES_II.with(
-				"precision_assembler/production/"+recipe.getName()+"_"+Integer.toHexString(toolOrder.hashCode())
+				"precision_assembler/production/"+Integer.toHexString(recipe.getName().hashCode())+"_"+Integer.toHexString(toolOrder.hashCode())
 		));
 
 		//Opening animation
@@ -207,19 +210,9 @@ public class PrecisionAssemblerRenderer extends IIMultiblockRenderer<TileEntityP
 		builder.addAnimation(0, recipe.getTotalProcessTime(), AMTLoader.loadAnimation(IIReference.RES_II.with("precision_assembler/tools")));
 		int processDuration = PrecisionAssembler.hatchTime;
 
-		//Initial slot stacks from recipe inputs (output slot starts empty)
-		ItemStack[] initialSlots = new ItemStack[5];
-		for(int i = 0; i < 4; i++)
-			initialSlots[i] = i < recipe.inputs.length?recipe.inputs[i].getExampleStack().copy(): ItemStack.EMPTY;
-		initialSlots[4] = ItemStack.EMPTY; //output slot
-
-		SlotItemStates slotStates = new SlotItemStates(initialSlots);
-
-		//Current state simulation (5 slots: 0-3 ingredients, 4 output)
-		ItemStack[] slotStacks = new ItemStack[5];
-		for(int i = 0; i < 5; i++) slotStacks[i] = initialSlots[i].copy();
-		ItemStack[] heldStacks = new ItemStack[3];
-		Arrays.fill(heldStacks, ItemStack.EMPTY);
+		SlotItemStates slotStates = new SlotItemStates();
+		int[] slotStacks = {0, 1, 2, 3, -1};
+		int[] heldStacks = {-1, -1, -1};
 
 		//Pending normalizations (absolute tick -> normalized time)
 		List<Runnable> pendingNormalizations = new ArrayList<>();
@@ -311,14 +304,14 @@ public class PrecisionAssemblerRenderer extends IIMultiblockRenderer<TileEntityP
 								builder.addAnimation(processDuration, PrecisionAssembler.toolMoveTime, toolWorkAnimation, 1);
 
 							//Source slot (0-4)
-							ItemStack picked = slotStacks[target].copy();
-							slotStacks[target] = ItemStack.EMPTY;
-							heldStacks[toolIdx] = picked.copy();
+							int picked = slotStacks[target];
+							slotStacks[target] = -1;
+							heldStacks[toolIdx] = picked;
 
 							pendingNormalizations.add(() -> {
 								float t = transferMoment/recipe.getTotalProcessTime();
-								slotStates.addSlotChange(target, t, ItemStack.EMPTY);
-								slotStates.addHeldChange(toolIdx, t, picked.copy());
+								slotStates.addSlotChange(target, t, -1);
+								slotStates.addHeldChange(toolIdx, t, picked);
 							});
 							break;
 						}
@@ -327,17 +320,17 @@ public class PrecisionAssemblerRenderer extends IIMultiblockRenderer<TileEntityP
 							if(toolWorkAnimation!=null)
 								builder.addAnimation(processDuration, PrecisionAssembler.toolMoveTime, toolWorkAnimation.getReversedAnimation(), 1);
 
-							ItemStack dropped = heldStacks[toolIdx].copy();
-							heldStacks[toolIdx] = ItemStack.EMPTY;
+							int dropped = heldStacks[toolIdx];
+							heldStacks[toolIdx] = -1;
 
 							//Only replace if the slot is currently empty
-							if(slotStacks[target].isEmpty())
+							if(slotStacks[target] < 0)
 							{
-								slotStacks[target] = dropped.copy();
+								slotStacks[target] = dropped;
 								pendingNormalizations.add(() -> {
 									float t = transferMoment/recipe.getTotalProcessTime();
-									slotStates.addSlotChange(target, t, dropped.copy());
-									slotStates.addHeldChange(toolIdx, t, ItemStack.EMPTY);
+									slotStates.addSlotChange(target, t, dropped);
+									slotStates.addHeldChange(toolIdx, t, -1);
 								});
 							}
 							else
@@ -345,7 +338,7 @@ public class PrecisionAssemblerRenderer extends IIMultiblockRenderer<TileEntityP
 								//Slot not empty, just clear held
 								pendingNormalizations.add(() -> {
 									float t = transferMoment/recipe.getTotalProcessTime();
-									slotStates.addHeldChange(toolIdx, t, ItemStack.EMPTY);
+									slotStates.addHeldChange(toolIdx, t, -1);
 								});
 							}
 							break;
@@ -370,7 +363,7 @@ public class PrecisionAssemblerRenderer extends IIMultiblockRenderer<TileEntityP
 		{
 			pendingNormalizations.add(() -> {
 				float t = 1.0f; //end of process
-				slotStates.addSlotChange(4, t, recipe.output.copy());
+				slotStates.addSlotChange(4, t, 4);
 			});
 		}
 
@@ -466,18 +459,8 @@ public class PrecisionAssemblerRenderer extends IIMultiblockRenderer<TileEntityP
 
 	private ItemStack getDisplayedItem(@Nullable IIMultiblockProcess<PrecisionAssemblerRecipe> process, TileEntityPrecisionAssembler te, int id)
 	{
-		if(process==null)
-			return te.inventory.get(MultiblockPrecisionAssembler.SLOT_INGREDIENT1+id);
-		else
-		{
-			PrecisionAssemblerRecipe recipe = process.recipe;
-			if(id > recipe.inputs.length-1)
-				return ItemStack.EMPTY;
-			else if(!recipe.inputs[id].matchesItemStack(te.inventory.get(MultiblockPrecisionAssembler.SLOT_INGREDIENT1+id)))
-				return recipe.inputs[id].getExampleStack();
-			else
-				return te.inventory.get(MultiblockPrecisionAssembler.SLOT_INGREDIENT1+id);
-		}
+		return process==null?te.inventory.get(MultiblockPrecisionAssembler.SLOT_INGREDIENT1+id):
+				TileEntityPrecisionAssembler.getProcessInput(process, id);
 	}
 
 	private class SlotItemStates
@@ -485,65 +468,70 @@ public class PrecisionAssemblerRenderer extends IIMultiblockRenderer<TileEntityP
 		private class TimedChange
 		{
 			final float time;
-			final ItemStack stack;
+			final int sourceSlot;
 
-			TimedChange(float time, ItemStack stack)
+			TimedChange(float time, int sourceSlot)
 			{
 				this.time = time;
-				this.stack = stack;
+				this.sourceSlot = sourceSlot;
 			}
 		}
 
 		private final List<TimedChange>[] slotChanges = new List[5]; //now includes output slot (index 4)
 		private final List<TimedChange>[] heldChanges = new List[3];
-		private final ItemStack[] initialSlots = new ItemStack[5];
+		private final int[] initialSlots = {0, 1, 2, 3, -1};
 
 		@SuppressWarnings("unchecked")
-		SlotItemStates(ItemStack[] initialSlotStacks)
+		SlotItemStates()
 		{
 			for(int i = 0; i < 5; i++)
 			{
 				slotChanges[i] = new ArrayList<>();
-				initialSlots[i] = initialSlotStacks[i].copy();
 			}
 			for(int i = 0; i < 3; i++)
 				heldChanges[i] = new ArrayList<>();
 		}
 
-		void addSlotChange(int slot, float time, ItemStack stack)
+		void addSlotChange(int slot, float time, int sourceSlot)
 		{
 			if(slot < 0||slot >= 5) return;
-			slotChanges[slot].add(new TimedChange(time, stack));
+			slotChanges[slot].add(new TimedChange(time, sourceSlot));
 		}
 
-		void addHeldChange(int heldIndex, float time, ItemStack stack)
+		void addHeldChange(int heldIndex, float time, int sourceSlot)
 		{
 			if(heldIndex < 0||heldIndex >= 3) return;
-			heldChanges[heldIndex].add(new TimedChange(time, stack));
+			heldChanges[heldIndex].add(new TimedChange(time, sourceSlot));
 		}
 
-		void apply(float progress)
+		private ItemStack resolve(IIMultiblockProcess<PrecisionAssemblerRecipe> process, int sourceSlot)
+		{
+			return sourceSlot < 0?ItemStack.EMPTY: sourceSlot==4?process.recipe.output:
+					TileEntityPrecisionAssembler.getProcessInput(process, sourceSlot);
+		}
+
+		void apply(float progress, IIMultiblockProcess<PrecisionAssemblerRecipe> process)
 		{
 			//Apply slot changes (0-3 ingredients, 4 output)
 			for(int i = 0; i < 5; i++)
 			{
-				ItemStack stack = initialSlots[i];
+				int sourceSlot = initialSlots[i];
 				for(TimedChange change : slotChanges[i])
 					if(progress >= change.time)
-						stack = change.stack;
+						sourceSlot = change.sourceSlot;
 				if(i < 4)
-					items[i].get().setStack(stack);
+					items[i].get().setStack(resolve(process, sourceSlot));
 				else
-					itemOutput.get().setStack(stack);
+					itemOutput.get().setStack(resolve(process, sourceSlot));
 			}
 			//Apply held changes
 			for(int i = 0; i < 3; i++)
 			{
-				ItemStack stack = ItemStack.EMPTY;
+				int sourceSlot = -1;
 				for(TimedChange change : heldChanges[i])
 					if(progress >= change.time)
-						stack = change.stack;
-				itemsHeld[i].get().setStack(stack);
+						sourceSlot = change.sourceSlot;
+				itemsHeld[i].get().setStack(resolve(process, sourceSlot));
 			}
 		}
 	}

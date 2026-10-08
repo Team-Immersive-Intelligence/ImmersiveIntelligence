@@ -1,7 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity;
 
 import blusunrize.immersiveengineering.api.DimensionBlockPos;
-import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.radio.IRadioDevice;
@@ -9,6 +8,7 @@ import pl.pabilo8.immersiveintelligence.api.data.radio.RadioNetwork;
 import pl.pabilo8.immersiveintelligence.api.utils.MultiblockConstructionManager;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.RadioStation;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockRadioStation;
+import pl.pabilo8.immersiveintelligence.common.util.IIEnergyStorage;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IConstructionRequiringDevice;
@@ -19,7 +19,7 @@ import java.util.ArrayList;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 30.08.2025
+ * @updated 05.10.2026
  * @ii-approved 0.3.1
  * @since 20.06.2019
  */
@@ -36,7 +36,7 @@ public class TileEntityRadioStation extends TileEntityMultiblockIIGeneric<TileEn
 	public TileEntityRadioStation()
 	{
 		super(MultiblockRadioStation.INSTANCE);
-		this.energyStorage = new FluxStorageAdvanced(RadioStation.energyCapacity);
+		this.energyStorage = new IIEnergyStorage(RadioStation.energyCapacity);
 		this.construction = new MultiblockConstructionManager(this, RadioStation.constructionEnergy);
 	}
 

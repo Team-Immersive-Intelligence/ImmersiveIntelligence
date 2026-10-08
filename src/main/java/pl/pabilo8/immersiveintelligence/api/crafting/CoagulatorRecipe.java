@@ -12,6 +12,7 @@ import pl.pabilo8.immersiveintelligence.common.IILogger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +20,7 @@ import java.util.Optional;
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 08.08.2019
+ * @updated 05.10.2026
  */
 public class CoagulatorRecipe extends IIMultiblockRecipe
 {
@@ -34,6 +36,7 @@ public class CoagulatorRecipe extends IIMultiblockRecipe
 		this.coagulantInput = coagulantInput;
 		setTimeAndEnergy(mixingTime, energy);
 		setDryingTime(this.itemOutput, Coagulator.bucketTime);
+		completeRegistration(this.itemOutput, this.fluidInput, this.coagulantInput);
 	}
 
 	public CoagulatorRecipe(ItemStack itemOutput, FluidStack fluidInput, FluidStack coagulantInput, int energy, int mixingTime, int dryingTime)

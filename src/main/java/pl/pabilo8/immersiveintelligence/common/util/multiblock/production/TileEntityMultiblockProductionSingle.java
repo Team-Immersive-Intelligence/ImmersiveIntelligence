@@ -11,12 +11,12 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEn
 
 import javax.annotation.Nullable;
 
-
 /**
  * A standard II production multiblock.<br>
  * Counterpart to {@link TileEntityMultiblockMetal}<br>
  *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 05.10.2026
  * @since 13.04.2023
  */
 
@@ -29,10 +29,15 @@ public abstract class TileEntityMultiblockProductionSingle<T extends TileEntityM
 	@Nullable
 	public IIMultiblockProcess<R> currentProcess;
 	@SyncNBT(name = "current_process", events = {SyncEvents.TILE_RECIPE_CHANGED, SyncEvents.TILE_GUI_OPENED})
-	public EasyNullableSyncMechanism<IIMultiblockProcess<R>, NBTTagCompound> currentProcessSync = new EasyNullableSyncMechanism<>(
+	public EasyNullableSyncMechanism<IIMultiblockProcess<R>, NBTTagCompound> currentProcessSync = new EasyNullableSyncMechanism<IIMultiblockProcess<R>, NBTTagCompound>(
 			() -> currentProcess, p -> this.currentProcess = p, nbt ->
-			getProcessByName(nbt.getString("recipe")).withNBT(easyNBT -> easyNBT.mergeWith(nbt))
-	);
+	{
+		IIMultiblockProcess<R> process = getProcessByName(nbt.getString("recipe"));
+		if(process!=null)
+			process.deserializeNBT(nbt);
+		return process;
+	}
+	).withAlwaysRegenerate(true);
 
 	public TileEntityMultiblockProductionSingle(MultiblockStuctureBase<T> multiblock)
 	{
@@ -59,7 +64,7 @@ public abstract class TileEntityMultiblockProductionSingle<T extends TileEntityM
 			//Do process output
 			if(currentProcess.ticks >= currentProcess.maxTicks)
 			{
-				if(attemptProductionOutput(currentProcess))
+				if(!world.isRemote&&attemptProductionOutput(currentProcess))
 				{
 					onProductionFinish(currentProcess);
 					currentProcess = existingProcess = null;
@@ -68,7 +73,7 @@ public abstract class TileEntityMultiblockProductionSingle<T extends TileEntityM
 			}
 			else
 			{
-				float progress = getProductionStep(currentProcess, false);
+				float progress = getProductionStep(currentProcess, world.isRemote);
 				if(progress > 0)
 				{
 					currentProcess.ticks += progress;

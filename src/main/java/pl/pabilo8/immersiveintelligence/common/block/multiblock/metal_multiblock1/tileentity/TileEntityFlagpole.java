@@ -1,7 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity;
 
 import blusunrize.immersiveengineering.api.DimensionBlockPos;
-import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
 import blusunrize.immersiveengineering.api.energy.wires.WireType;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IPlayerInteraction;
@@ -45,6 +44,7 @@ import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockFlagpole;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageExplosion;
+import pl.pabilo8.immersiveintelligence.common.util.IIEnergyStorage;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyHandler;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.OwnerIdentity;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.property.IOwnableProperty;
@@ -67,7 +67,7 @@ import static blusunrize.immersiveengineering.api.energy.wires.WireType.MV_CATEG
  * Multiblock responsible for claiming terrain and chunkloading.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 30.08.2025
+ * @updated 05.10.2026
  * @ii-approved 0.3.1
  * @since 04.03.2021
  */
@@ -86,7 +86,7 @@ public class TileEntityFlagpole extends TileEntityMultiblockIIConnectable<TileEn
 	@SyncNBT(events = SyncEvents.TILE_OWNERSHIP_MODIFIED)
 	public OwnerIdentity ownerIdentity;
 	@SyncNBT(name = "ifluxEnergy", events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_ENERGY_CHANGED})
-	public FluxStorageAdvanced energyStorage;
+	public IIEnergyStorage energyStorage;
 
 	//Settings
 	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CLIENT_MESSAGE})
@@ -112,7 +112,7 @@ public class TileEntityFlagpole extends TileEntityMultiblockIIConnectable<TileEn
 		this.ownerIdentity = DiplomacyHandler.NEUTRAL;
 		this.style = new StyleCustomization(MultiblockFlagpole.STYLE_CONSTRAINTS);
 		this.health = new MultiblockHealth(this, Flagpole.baseHealth);
-		this.energyStorage = new FluxStorageAdvanced(Flagpole.energyCapacity);
+		this.energyStorage = new IIEnergyStorage(Flagpole.energyCapacity);
 	}
 
 	@Override
@@ -557,7 +557,7 @@ public class TileEntityFlagpole extends TileEntityMultiblockIIConnectable<TileEn
 
 	@Override
 	public boolean interact(@Nonnull EnumFacing side, @Nonnull EntityPlayer player, @Nonnull EnumHand hand,
-	                        @Nonnull ItemStack heldItem, float hitX, float hitY, float hitZ)
+							@Nonnull ItemStack heldItem, float hitX, float hitY, float hitZ)
 	{
 		TileEntityFlagpole master = master();
 		if(!world.isRemote&&master!=null&&isPOI("pole"))

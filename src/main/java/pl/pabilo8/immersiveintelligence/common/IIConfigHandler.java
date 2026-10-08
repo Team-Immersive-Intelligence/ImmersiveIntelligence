@@ -29,7 +29,7 @@ import java.util.Map;
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @author Avalon (avalon@iiteam.net)
- * @updated 08.09.2026
+ * @updated 07.10.2026
  * @since 12.05.2019
  */
 @Mod.EventBusSubscriber
@@ -425,6 +425,10 @@ public class IIConfigHandler
 
 		public static class Tools
 		{
+			@Comment({"Prevent held-item use and GUI opening at multiblock tank interaction points when holding a fluid container, even if the transfer fails.",
+					"Disable to allow normal interaction after failed transfers. Successful transfers always consume the interaction."})
+			public static boolean fluidContainersBlockInteraction = true;
+
 			@SubConfig
 			@LangKey("item.immersiveintelligence.skycrate_mount.mechanical.name")
 			@Comment("Config for Skycrate Mounts, allows for changes to speed multipliers and energy consumption")

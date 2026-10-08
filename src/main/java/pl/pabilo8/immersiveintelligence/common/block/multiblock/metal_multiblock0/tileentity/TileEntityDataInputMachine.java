@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity;
 
-import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
 import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -19,6 +18,7 @@ import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockDataInputMachine;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
+import pl.pabilo8.immersiveintelligence.common.util.IIEnergyStorage;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionSingle;
@@ -26,11 +26,11 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockIn
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 import javax.annotation.Nonnull;
-import java.util.Optional;
+
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 11.04.2026
+ * @updated 05.10.2026
  * @ii-approved 0.3.1
  * @since 28.06.2019
  */
@@ -73,7 +73,7 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockProductionSi
 	{
 		super(MultiblockDataInputMachine.INSTANCE);
 		//Init basics
-		this.energyStorage = new FluxStorageAdvanced(DataInputMachine.energyCapacity);
+		this.energyStorage = new IIEnergyStorage(DataInputMachine.energyCapacity);
 		this.inventory = NonNullList.withSize(26, ItemStack.EMPTY);
 		this.upgradeManager = new UpgradeManager<>(this);
 
@@ -239,10 +239,13 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockProductionSi
 	@Override
 	protected IIMultiblockProcess<DataProgrammingRecipe> findNewProductionProcess()
 	{
-		Optional<DataProgrammingRecipe> found = DataProgrammingRecipe.streamRecipes(DataProgrammingRecipe.class)
-				.filter(recipe -> recipe.input.matchesItemStack(inventory.get(MultiblockDataInputMachine.SLOT_INPUT)))
-				.findFirst();
-		return found.map(IIMultiblockProcess::new).orElse(null);
+		return DataProgrammingRecipe.streamRecipes(DataProgrammingRecipe.class)
+				.filter(recipe -> recipe.operationFrom!=null&&recipe.input.matchesItemStack(inputHandler.getStackInSlot(0)))
+				.findFirst().map(recipe -> {
+					ItemStack input = inputHandler.extractItem(0, recipe.input.inputSize, false);
+					return new IIMultiblockProcess<>(recipe).withNBT(nbt -> nbt.withItemStack("displayInput", input)
+							.withTag("inputData", storedData.serializeNBT()).withInt("dataSlot", selectedDataSlot));
+				}).orElse(null);
 	}
 
 	@Override
@@ -256,30 +259,54 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockProductionSi
 	public float getProductionStep(IIMultiblockProcess<DataProgrammingRecipe> process, boolean simulate)
 	{
 		int perTick = process.recipe.getTotalProcessEnergy()/process.maxTicks;
-		if(energyStorage.extractEnergy(perTick, simulate) < perTick)
-			return 0;
-		return 1;
+		return energyStorage.tryConsumeEnergy(perTick, simulate)?1: 0;
 	}
 
 	@Override
 	protected boolean attemptProductionOutput(IIMultiblockProcess<DataProgrammingRecipe> process)
 	{
-		if(!world.isRemote)
+		if(!process.processData.unwrap().hasKey("prepared"))
 		{
-			DataProgrammingRecipe recipe = process.recipe;
-			//Skip the recipe if input is invalid
-			if(!recipe.input.matchesItemStack(inventory.get(MultiblockDataInputMachine.SLOT_INPUT)))
+			ItemStack input = process.processData.getItemStack("displayInput");
+			if(!process.processData.unwrap().hasKey("displayInput"))
+			{
+				//Reserve input for a process saved before input snapshots existed.
+				if(!process.recipe.input.matchesItemStack(inputHandler.getStackInSlot(0)))
+					return true;
+				input = inputHandler.extractItem(0, process.recipe.input.inputSize, false);
+				process.processData.withInt("dataSlot", selectedDataSlot);
+				process.processData.withItemStack("displayInput", input);
+			}
+			if(process.recipe.operationFrom==null)
 				return true;
-
-			//Take a copy of the original item and apply recipe
-			ItemStack output = recipe.operationFrom.apply(inputHandler.extractItem(MultiblockDataInputMachine.SLOT_INPUT, 1, true),
-					storedData, dataTypes -> storedData = dataTypes);
-			setStoredDataPacket(storedData);
-			//Try to output
-			return outputHandler.insertItem(0, output, false).isEmpty()&&
-					!inputHandler.extractItem(0, 1, false).isEmpty();
+			DataPacket workingData = new DataPacket();
+			if(process.processData.unwrap().hasKey("inputData"))
+				workingData.deserializeNBT(process.processData.unwrap().getCompoundTag("inputData"));
+			else
+				workingData = storedData.clone();
+			NBTTagCompound originalData = workingData.serializeNBT();
+			ItemStack result = process.recipe.operationFrom.apply(input.copy(), workingData, data ->
+					process.processData.withTag("resultData", data.serializeNBT()));
+			if(!process.processData.unwrap().hasKey("resultData")&&!originalData.equals(workingData.serializeNBT()))
+				process.processData.withTag("resultData", workingData.serializeNBT());
+			process.processData.withItemStack("result", result).withBoolean("prepared", true);
+			markDirty();
 		}
-		return false;
+		ItemStack result = process.processData.getItemStack("result");
+		if(!outputHandler.insertItem(0, result.copy(), true).isEmpty())
+			return false;
+		if(!outputHandler.insertItem(0, result.copy(), false).isEmpty())
+			return false;
+		if(process.processData.unwrap().hasKey("resultData"))
+		{
+			DataPacket data = new DataPacket();
+			data.deserializeNBT(process.processData.unwrap().getCompoundTag("resultData"));
+			int slot = clampDataSlot(process.processData.unwrap().getInteger("dataSlot"));
+			setDataPacket(slot, data);
+			if(slot==selectedDataSlot)
+				storedData = data;
+		}
+		return true;
 	}
 
 	@Override

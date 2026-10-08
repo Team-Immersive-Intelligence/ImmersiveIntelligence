@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity;
 
-import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -26,6 +25,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.item.data.ItemIIFunctionalCircuit;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
+import pl.pabilo8.immersiveintelligence.common.util.IIEnergyStorage;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyCollection;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
@@ -35,15 +35,16 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockIn
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @author Avalon (avalon@iiteam.net)
- * @updated 08.01.2024
+ * @updated 05.10.2026
  * @ii-approved 0.3.1
- * @updated 03.30.2026
+ * @updated 05.10.2026
  * @since 28.06.2019
  */
 public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockIIGeneric<TileEntityArithmeticLogicMachine>
@@ -67,7 +68,7 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockIIGene
 	{
 		super(MultiblockArithmeticLogicMachine.INSTANCE);
 		//basic machine properties
-		this.energyStorage = new FluxStorageAdvanced(ArithmeticLogicMachine.energyCapacity);
+		this.energyStorage = new IIEnergyStorage(ArithmeticLogicMachine.energyCapacity);
 		this.inventory = NonNullList.withSize(MultiblockArithmeticLogicMachine.CIRCUITS_UPGRADED+MultiblockArithmeticLogicMachine.STORAGE_SLOTS, ItemStack.EMPTY);
 		this.upgradeManager = new UpgradeManager<>(this);
 		this.memory = new DataPacket();

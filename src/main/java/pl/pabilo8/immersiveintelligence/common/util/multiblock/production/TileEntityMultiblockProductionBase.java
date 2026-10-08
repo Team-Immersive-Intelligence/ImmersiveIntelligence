@@ -21,10 +21,10 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultibl
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionBase.IIIMultiblockRecipe;
 
 import javax.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.function.Consumer;
-
 
 /**
  * A standard II production multiblock.<br>
@@ -32,6 +32,7 @@ import java.util.function.Consumer;
  *
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 13.04.2023
+ * @updated 05.10.2026
  */
 
 public abstract class TileEntityMultiblockProductionBase<T extends TileEntityMultiblockProductionBase<T, R>, R extends IIIMultiblockRecipe>
@@ -201,7 +202,7 @@ public abstract class TileEntityMultiblockProductionBase<T extends TileEntityMul
 
 	//--- Production Utils ---//
 
-	public static class IIMultiblockProcess<R extends IIIMultiblockRecipe> implements INBTSerializable<NBTTagCompound>
+	public static final class IIMultiblockProcess<R extends IIIMultiblockRecipe> implements INBTSerializable<NBTTagCompound>
 	{
 		public R recipe;
 		/**
@@ -234,22 +235,22 @@ public abstract class TileEntityMultiblockProductionBase<T extends TileEntityMul
 		@Override
 		public NBTTagCompound serializeNBT()
 		{
-			EasyNBT nbt = EasyNBT.newNBT()
-					.withString("recipe", recipe.getName())
-					.withFloat("ticks", ticks)
-					.withInt("maxTicks", maxTicks);
+			EasyNBT nbt = EasyNBT.newNBT();
 			if(processData!=null)
 				nbt.mergeWith(processData);
+			nbt.withString("recipe", recipe.getName())
+					.withFloat("ticks", ticks)
+					.withInt("maxTicks", maxTicks);
 			return nbt.unwrap();
 		}
 
 		@Override
 		public void deserializeNBT(NBTTagCompound nbt)
 		{
-			processData = EasyNBT.wrapNBT(nbt)
+			processData = EasyNBT.wrapNBT(nbt.copy())
 					.checkSetFloat("ticks", f -> ticks = f)
 					.checkSetInt("maxTicks", i -> maxTicks = i)
-					.without("ticks", "maxTicks");
+					.without("recipe", "ticks", "maxTicks");
 		}
 	}
 
@@ -259,7 +260,7 @@ public abstract class TileEntityMultiblockProductionBase<T extends TileEntityMul
 	 * @param <T> TileEntity type
 	 * @param <R> Recipe type
 	 */
-	public static class ProcessQueue<T extends TileEntityMultiblockProductionBase<T, R>, R extends IIIMultiblockRecipe>
+	public static final class ProcessQueue<T extends TileEntityMultiblockProductionBase<T, R>, R extends IIIMultiblockRecipe>
 			extends ArrayList<IIMultiblockProcess<R>> implements INBTSerializable<NBTTagList>
 	{
 		TileEntityMultiblockProductionBase<T, R> tile;
