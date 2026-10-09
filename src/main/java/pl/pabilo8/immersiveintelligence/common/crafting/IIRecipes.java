@@ -77,6 +77,7 @@ import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIPrecisionTool
 import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIVulcanizerMold.VulcanizerMolds;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMaterialBoule.MaterialsBoule;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMaterialDust.MaterialsDust;
+import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMaterialGem.MaterialsGem;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMaterialIngot.MaterialsIngot;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMaterialNugget.MaterialsNugget;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMaterialPlate.MaterialsPlate;
@@ -101,6 +102,7 @@ import java.util.stream.Collectors;
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @author Avalon (avalon@iiteam.net)
+ * @updated 09.10.2026
  * @updated 24.09.2026
  * @since 22.03.2020
  * @since 28.11.2024
@@ -575,6 +577,19 @@ public class IIRecipes
 				1f
 		);
 
+
+
+		CrusherRecipe.addRecipe(
+				IIContent.itemMaterialGem.getStack(MaterialsGem.PHOSPHORUS, 2),
+				new IngredientStack("oreOverworldphosphorus"),
+				3200
+		);
+
+		CrusherRecipe.addRecipe(
+				IIContent.itemMaterialGem.getStack(MaterialsGem.FLUORITE, 2),
+				new IngredientStack("oreOverworldfluorite"),
+				3200
+		);
 
 		CrusherRecipe.removeRecipesForInput(new ItemStack(Items.QUARTZ));
 		CrusherRecipe.addRecipe(
