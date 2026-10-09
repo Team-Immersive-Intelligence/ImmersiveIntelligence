@@ -13,18 +13,18 @@ import javax.annotation.Nullable;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 10.12.2025
+ * @updated 05.10.2026
  * @ii-approved 0.3.1
  * @since 08.08.2019
  */
-public class BathingRecipe extends IIMultiblockRecipe
+public class ChemicalBathRecipe extends IIMultiblockRecipe
 {
 	public final IngredientStack itemInput;
 	public final FluidStack fluidInput;
 	public final ItemStack itemOutput;
 	public final boolean isWashing;
 
-	public BathingRecipe(ItemStack itemOutput, Object itemInput, FluidStack fluidInput, int energy, int time, boolean isWashing)
+	public ChemicalBathRecipe(ItemStack itemOutput, Object itemInput, FluidStack fluidInput, int energy, int time, boolean isWashing)
 	{
 		super(isWashing?"washing": "bathing", itemOutput, fluidInput);
 		setTimeAndEnergy(time, energy);
@@ -33,16 +33,17 @@ public class BathingRecipe extends IIMultiblockRecipe
 		this.itemInput = ApiUtils.createIngredientStack(itemInput);
 		this.fluidInput = fluidInput;
 		this.isWashing = isWashing;
+		completeRegistration(isWashing?"washing": "bathing", this.itemInput, this.itemOutput, this.fluidInput);
 	}
 
-	public static BathingRecipe addRecipe(ItemStack itemOutput, IngredientStack itemInput, FluidStack fluidInput, int energy, int time)
+	public static ChemicalBathRecipe addRecipe(ItemStack itemOutput, IngredientStack itemInput, FluidStack fluidInput, int energy, int time)
 	{
-		return new BathingRecipe(itemOutput, itemInput, fluidInput, energy, time, false);
+		return new ChemicalBathRecipe(itemOutput, itemInput, fluidInput, energy, time, false);
 	}
 
 	public static boolean isValidFluid(FluidStack fluidStack)
 	{
-		return getRecipes(BathingRecipe.class).stream()
+		return getRecipes(ChemicalBathRecipe.class).stream()
 				.anyMatch(recipe -> recipe.fluidInput.isFluidEqual(fluidStack));
 	}
 

@@ -10,7 +10,7 @@ import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.crafting.PaintingRecipe;
+import pl.pabilo8.immersiveintelligence.api.crafting.ChemicalPainterRecipe;
 import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIMultiblockRecipe;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
@@ -36,7 +36,7 @@ public class ChemicalPainterTweaker
 			return;
 		}
 
-		PaintingRecipe r = new PaintingRecipe((rgb, stack) ->
+		ChemicalPainterRecipe r = new ChemicalPainterRecipe((rgb, stack) ->
 				CraftTweakerMC.getItemStack(function.process(CraftTweakerMC.getIItemStack(stack),
 						rgb.getPackedRGB(),
 						rgb.getDyeColor().getColorValue())),
@@ -60,9 +60,9 @@ public class ChemicalPainterTweaker
 
 	private static class Add implements IAction
 	{
-		private final PaintingRecipe recipe;
+		private final ChemicalPainterRecipe recipe;
 
-		public Add(PaintingRecipe recipe)
+		public Add(ChemicalPainterRecipe recipe)
 		{
 			this.recipe = recipe;
 		}
@@ -83,7 +83,7 @@ public class ChemicalPainterTweaker
 	private static class Remove implements IAction
 	{
 		private final ItemStack input;
-		List<PaintingRecipe> removedRecipes;
+		List<ChemicalPainterRecipe> removedRecipes;
 
 		public Remove(ItemStack output)
 		{
@@ -93,7 +93,7 @@ public class ChemicalPainterTweaker
 		@Override
 		public void apply()
 		{
-			removedRecipes = IIMultiblockRecipe.removeRecipesByFilter(PaintingRecipe.class,
+			removedRecipes = IIMultiblockRecipe.removeRecipesByFilter(ChemicalPainterRecipe.class,
 					paintingRecipe -> paintingRecipe.itemInput.matches(input));
 		}
 

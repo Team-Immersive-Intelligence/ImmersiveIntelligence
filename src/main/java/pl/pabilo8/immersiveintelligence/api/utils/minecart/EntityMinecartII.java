@@ -91,12 +91,25 @@ public abstract class EntityMinecartII extends EntityMinecart implements IMineca
 		NBTTagCompound nbt2 = new NBTTagCompound();
 		this.writeEntityToNBT(nbt2);
 
-		this.setDead();
-
+		if(world.isRemote)
+			return new Tuple<>(ItemStack.EMPTY, this);
 		EntityMinecart ent = new EntityMinecartEmpty(this.world);
 		ent.readFromNBT(nbt2);
-		world.spawnEntity(ent);
-		ent.readFromNBT(nbt2);
+		ent.setPosition(posX, posY, posZ);
+		ent.rotationYaw = rotationYaw;
+		ent.rotationPitch = rotationPitch;
+		ent.motionX = motionX;
+		ent.motionY = motionY;
+		ent.motionZ = motionZ;
+		if(hasCustomName())
+			ent.setCustomNameTag(getCustomNameTag());
+		if(!world.spawnEntity(ent))
+		{
+			ent.setDead();
+			return new Tuple<>(ItemStack.EMPTY, this);
+		}
+		dismountRidingEntity();
+		setDead();
 
 		return new Tuple<>(stack, ent);
 	}

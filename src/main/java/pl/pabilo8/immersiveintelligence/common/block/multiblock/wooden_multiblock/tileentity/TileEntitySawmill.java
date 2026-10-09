@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity;
 
-import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -31,6 +30,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multibloc
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 import pl.pabilo8.immersiveintelligence.common.util.IIDamageSources;
+import pl.pabilo8.immersiveintelligence.common.util.IIEnergyStorage;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionSingle;
@@ -47,6 +47,7 @@ import static pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_mu
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 05.10.2026
  * @since 13.04.2020
  */
 public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<TileEntitySawmill, SawmillRecipe> implements IBooleanAnimatedPartsBlock, IManagedUpgradableDevice<TileEntitySawmill>
@@ -75,7 +76,7 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 	{
 		super(MultiblockSawmill.INSTANCE);
 
-		this.energyStorage = new FluxStorageAdvanced(0);
+		this.energyStorage = new IIEnergyStorage(0);
 		this.inventory = NonNullList.withSize(4, ItemStack.EMPTY);
 		this.vise = new MultiblockInteractablePart(22);
 		this.upgradeManager = new UpgradeManager<>(this);
@@ -224,6 +225,7 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 	@Override
 	protected IIMultiblockProcess<SawmillRecipe> findNewProductionProcess()
 	{
+
 		ItemStack stackSawblade = inventory.get(SLOT_SAWBLADE);
 
 		if(stackSawblade.isEmpty()||!(stackSawblade.getItem() instanceof ISawblade))
@@ -232,7 +234,7 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 
 		final int sawHardness = saw.getHardness(stackSawblade);
 		List<SawmillRecipe> recipes = SawmillRecipe.streamRecipes(SawmillRecipe.class)
-				.filter(recipe -> recipe.itemInput.matchesItemStackIgnoringSize(inventory.get(SLOT_INPUT)))
+				.filter(recipe -> recipe.itemInput.matchesItemStack(inventory.get(SLOT_INPUT)))
 				.filter(recipe -> recipe.getHardness() <= sawHardness)
 				.collect(Collectors.toList());
 		if(recipes.isEmpty())

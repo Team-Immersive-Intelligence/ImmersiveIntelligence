@@ -21,11 +21,12 @@ import pl.pabilo8.immersiveintelligence.common.util.lambda.IngredientStackCollec
 import pl.pabilo8.immersiveintelligence.common.util.sound.IISoundAnimation;
 
 import javax.annotation.Nullable;
+
 import java.util.HashMap;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 08.06.2025
+ * @updated 05.10.2026
  * @ii-approved 0.3.1
  * @since 14.04.2020
  */
@@ -62,6 +63,7 @@ public class SawmillRecipe extends IIMultiblockRecipe implements RotaryMachineRe
 				.filter(e -> e.getFirst().getHardness(e.getSecond()) >= hardness)
 				.map(Tuple::getSecond)
 				.collect(IngredientStackCollector.collect());
+		completeRegistration(this.itemInput, this.itemOutput, this.itemSecondaryOutput, hardness);
 	}
 
 	public SawmillRecipe(ItemStack itemOutput, Object itemInput, ItemStack itemSecondaryOutput, int torque, int time, int hardness)
@@ -105,7 +107,7 @@ public class SawmillRecipe extends IIMultiblockRecipe implements RotaryMachineRe
 				.withSlot(2, 20-8, itemInput, IOType.INPUT, "frame")
 				.withSlot(114+2, 20-8, itemOutput, IOType.OUTPUT, "frame")
 				.withSlot(134+2, 20-8, itemSecondaryOutput, IOType.OUTPUT, "frame_red")
-				.withSlot(64+2, 20-12-4, validSaws, IOType.INPUT)
+				.withToolSlot(64+2, 20-12-4, validSaws)
 				.withMultiblockModel(32+8+4-8-2, -16, 80, 80, "")
 				.withMechanicalPowerInfo()
 				.withTimeInfo()

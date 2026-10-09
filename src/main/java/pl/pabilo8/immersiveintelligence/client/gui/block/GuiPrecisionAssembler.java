@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.client.gui.block;
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.Optional.Method;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTileGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage;
@@ -19,7 +20,7 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockIn
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @author Avalon (avalon@iiteam.net)
- * @updated 30.80.2025
+ * @updated 08.10.2026
  * @since 10.07.2019
  */
 
@@ -84,6 +85,7 @@ public class GuiPrecisionAssembler extends DecoTileGui<TileEntityPrecisionAssemb
 	}
 
 	@Override
+	@Method(modid = "jei")
 	public void onInitJEICompat()
 	{
 		super.onInitJEICompat();

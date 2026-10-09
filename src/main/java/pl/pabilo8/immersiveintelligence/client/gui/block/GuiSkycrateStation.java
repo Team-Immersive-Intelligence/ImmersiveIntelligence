@@ -53,7 +53,7 @@ public class GuiSkycrateStation extends DecoTileGui<TileEntitySkyCrateStation, C
 
 	private String[] getRatio()
 	{
-		float torqueRatio = IIRotaryUtils.getGearTorqueRatio(tile.getInventory());
+		float torqueRatio = IIRotaryUtils.getGearTorqueRatio(tile.getInventory(), 0, TileEntitySkyCrateStation.GEAR_SLOTS);
 
 		//speed : torque
 		float speed = torqueRatio < 1&&torqueRatio!=0?1f/torqueRatio: 1;

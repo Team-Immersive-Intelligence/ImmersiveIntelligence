@@ -1,7 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity;
 
 import blusunrize.immersiveengineering.api.DimensionBlockPos;
-import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -30,6 +29,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.EntityAMTTactile;
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileManager;
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileManager.ITactileListener;
+import pl.pabilo8.immersiveintelligence.common.util.IIEnergyStorage;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyHandler;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.OwnerIdentity;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.property.IOwnableProperty;
@@ -45,6 +45,7 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPO
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -53,7 +54,7 @@ import java.util.List;
  * Scans for entities and upgraded radio contacts and sends their positions through data.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 24.09.2026
+ * @updated 05.10.2026
  * @ii-approved 0.3.1
  * @since 04.03.2021
  */
@@ -90,7 +91,7 @@ public class TileEntityRadar extends TileEntityMultiblockIIGeneric<TileEntityRad
 	public TileEntityRadar()
 	{
 		super(MultiblockRadar.INSTANCE);
-		this.energyStorage = new FluxStorageAdvanced(Radar.energyCapacity);
+		this.energyStorage = new IIEnergyStorage(Radar.energyCapacity);
 		this.upgrades = new UpgradeManager<>(this);
 		this.construction = new MultiblockConstructionManager(this, Radar.constructionEnergy);
 		this.health = new MultiblockHealth(this, Radar.baseHealth);

@@ -16,11 +16,12 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityAmmunitionAssembler;
 
 import javax.annotation.Nullable;
+
 import java.util.function.BiFunction;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 24.09.2026
+ * @updated 05.10.2026
  * @ii-approved 0.3.1
  * @since 08.08.2019
  */
@@ -43,6 +44,7 @@ public class AmmunitionAssemblerRecipe extends IIMultiblockRecipe
 		this.inputList = Lists.newArrayList(this.coreInput, this.casingInput);
 		this.outputList = getExampleItems();
 		this.advanced = ammoItem.requiresAdvancedAssembly();
+		completeRegistration(this.coreInput, this.casingInput, advanced);
 	}
 
 	private static boolean requiresAdvancedAssembly(Object coreInput)
@@ -61,26 +63,41 @@ public class AmmunitionAssemblerRecipe extends IIMultiblockRecipe
 	public NonNullList<ItemStack> getActualItemOutputs(TileEntity te)
 	{
 		if(te instanceof TileEntityAmmunitionAssembler)
-			return NonNullList.from(ItemStack.EMPTY, process.apply(((TileEntityAmmunitionAssembler)te).inventory.get(0), ((TileEntityAmmunitionAssembler)te).inventory.get(1).copy()));
+		{
+			TileEntityAmmunitionAssembler machine = (TileEntityAmmunitionAssembler)te;
+			ItemStack core = machine.inventory.get(0).copy(), casing = machine.inventory.get(1).copy();
+			core.setCount(coreInput.inputSize);
+			casing.setCount(casingInput.inputSize);
+			return NonNullList.from(ItemStack.EMPTY, process.apply(core, casing));
+		}
 		return NonNullList.from(ItemStack.EMPTY);
+	}
+
+	@Override
+	public boolean matchesSubCategory(String subCategory)
+	{
+		return !advanced;
 	}
 
 	@Nullable
 	@Override
 	protected IIRecipeLayout initRecipeLayout()
 	{
-		ItemStack casingStack = casingInput.getExampleStack();
+		ItemStack casingStack = casingInput.getExampleStack().copy();
+		casingStack.setCount(casingInput.inputSize);
 		NonNullList<ItemStack> cores = NonNullList.create(), outputs = NonNullList.create();
 		for(CoreType allowedCoreType : this.ammoItem.getAllowedCoreTypes())
 		{
-			cores.add(ammoItem.getAmmoCoreStack(IIContent.ammoCoreIron, allowedCoreType));
-			outputs.add(process.apply(cores.get(cores.size()-1), casingStack.copy()));
+			ItemStack core = ammoItem.getAmmoCoreStack(IIContent.ammoCoreIron, allowedCoreType);
+			core.setCount(coreInput.inputSize);
+			cores.add(core);
+			outputs.add(process.apply(core.copy(), casingStack.copy()));
 		}
 
 		return new IIRecipeLayoutBuilder(144, 64)
-				.withSlot(8+2, 5+1, new IngredientStack(cores), IOType.INPUT, "frame_input")
+				.withSlot(8+2, 5+1, new IngredientStack(cores, coreInput.inputSize), IOType.INPUT, "frame_input")
 				.withSlot(8+2, 9+4-1+20, this.casingInput, IOType.INPUT, "frame_input")
-				.withSlot(134-12-4, 9+20-8, new IngredientStack(outputs), IOType.OUTPUT, "frame_output")
+				.withOutputSlot(134-12-4, 9+20-8, outputs)
 				.withMultiblockModel(30, -2)
 				.withTimeInfo()
 				.withPowerInfo()

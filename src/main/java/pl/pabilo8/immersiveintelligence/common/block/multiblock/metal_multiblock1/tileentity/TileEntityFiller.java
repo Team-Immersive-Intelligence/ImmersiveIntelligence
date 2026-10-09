@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity;
 
-import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
 import blusunrize.immersiveengineering.api.tool.ConveyorHandler.IConveyorAttachable;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
@@ -20,6 +19,7 @@ import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIMultiblockRecipe;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Filler;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockFiller;
+import pl.pabilo8.immersiveintelligence.common.util.IIEnergyStorage;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionMulti;
@@ -28,6 +28,7 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPO
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 04.03.2021
+ * @updated 05.10.2026
  */
 public class TileEntityFiller extends TileEntityMultiblockProductionMulti<TileEntityFiller, FillerRecipe> implements IConveyorAttachable
 {
@@ -38,7 +39,7 @@ public class TileEntityFiller extends TileEntityMultiblockProductionMulti<TileEn
 	public TileEntityFiller()
 	{
 		super(MultiblockFiller.INSTANCE);
-		this.energyStorage = new FluxStorageAdvanced(Filler.energyCapacity);
+		this.energyStorage = new IIEnergyStorage(Filler.energyCapacity);
 		this.inventory = NonNullList.withSize(2, ItemStack.EMPTY);
 		this.dustStorage = new DustTank(Filler.dustCapacity);
 		this.insertionHandlerDust = getSingleInventoryHandler(MultiblockFiller.SLOT_DUST, true, false);
@@ -59,11 +60,12 @@ public class TileEntityFiller extends TileEntityMultiblockProductionMulti<TileEn
 		super.onUpdate();
 
 		//Insert dust into the tank
-		if(world.getTotalWorldTime()%4==0&&!inventory.get(MultiblockFiller.SLOT_DUST).isEmpty())
+		if(!world.isRemote&&world.getTotalWorldTime()%4==0&&!inventory.get(MultiblockFiller.SLOT_DUST).isEmpty())
 		{
 			DustStack dustStack = DustUtils.fromItemStack(ItemHandlerHelper.copyStackWithSize(inventory.get(MultiblockFiller.SLOT_DUST), 1));
-			if(!dustStack.isEmpty()&&dustStorage.fill(dustStack, true) > 0)
+			if(!dustStack.isEmpty()&&dustStorage.fill(dustStack, false)==dustStack.amount)
 			{
+				dustStorage.fill(dustStack, true);
 				inventory.get(MultiblockFiller.SLOT_DUST).shrink(1);
 				updateTileForEvent(SyncEvents.ENTITY_CUSTOM1);
 			}
@@ -163,13 +165,14 @@ public class TileEntityFiller extends TileEntityMultiblockProductionMulti<TileEn
 				.filter(recipe -> recipe.itemInput.matchesItemStack(inventory.get(MultiblockFiller.SLOT_INPUT))&&
 						!dustStorage.drain(recipe.dust, false).isEmpty())
 				.findFirst().map(recipe -> {
+					ItemStack displayInput = ItemHandlerHelper.copyStackWithSize(inventory.get(MultiblockFiller.SLOT_INPUT), recipe.itemInput.inputSize);
 					//Consume item and dust
 					inventory.get(MultiblockFiller.SLOT_INPUT).shrink(recipe.itemInput.inputSize);
 					dustStorage.drain(recipe.dust, true);
 
 					//Sync with clients
 					updateTileForEvent(SyncEvents.TILE_RECIPE_CHANGED);
-					return new IIMultiblockProcess<>(recipe);
+					return new IIMultiblockProcess<>(recipe).withNBT(nbt -> nbt.withItemStack("displayInput", displayInput));
 				}).orElse(null);
 	}
 
@@ -184,7 +187,7 @@ public class TileEntityFiller extends TileEntityMultiblockProductionMulti<TileEn
 	public float getProductionStep(IIMultiblockProcess<FillerRecipe> process, boolean simulate)
 	{
 		int perTick = process.recipe.getTotalProcessEnergy()/process.maxTicks;
-		return energyStorage.extractEnergy(perTick, simulate)==perTick?1: 0;
+		return energyStorage.tryConsumeEnergy(perTick, simulate)?1: 0;
 	}
 
 	@Override

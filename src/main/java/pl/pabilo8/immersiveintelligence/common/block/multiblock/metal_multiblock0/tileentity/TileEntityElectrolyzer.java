@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity;
 
-import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IPlayerInteraction;
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.entity.player.EntityPlayer;
@@ -9,8 +8,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -21,38 +19,39 @@ import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockElectrolyzer;
+import pl.pabilo8.immersiveintelligence.common.util.IIEnergyStorage;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
+import pl.pabilo8.immersiveintelligence.common.util.fluid.FilteredFluidTank;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionSingle;
-
 import static pl.pabilo8.immersiveintelligence.common.IIUtils.handleBucketTankInteraction;
 import static pl.pabilo8.immersiveintelligence.common.IIUtils.outputFluidToTank;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 08.06.2025
+ * @updated 07.10.2026
  * @ii-approved 0.3.1
  * @since 28.06.2019
  */
 public class TileEntityElectrolyzer extends TileEntityMultiblockProductionSingle<TileEntityElectrolyzer, ElectrolyzerRecipe> implements IPlayerInteraction, IAdvancedTextOverlay
 {
 	@SyncNBT(name = "tank0", events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_RECIPE_CHANGED, SyncEvents.TILE_CUSTOM1})
-	public FluidTank tankInput;
+	public FilteredFluidTank tankInput;
 	@SyncNBT(name = "tank1", events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_RECIPE_CHANGED, SyncEvents.TILE_CUSTOM1})
-	public FluidTank tankOutput1;
+	public FilteredFluidTank tankOutput1;
 	@SyncNBT(name = "tank2", events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_RECIPE_CHANGED, SyncEvents.TILE_CUSTOM1})
-	public FluidTank tankOutput2;
+	public FilteredFluidTank tankOutput2;
 
 	public TileEntityElectrolyzer()
 	{
 		super(MultiblockElectrolyzer.INSTANCE);
 
-		this.tankInput = new FluidTank(Electrolyzer.fluidCapacity);
-		this.tankOutput1 = new FluidTank(Electrolyzer.fluidCapacity);
-		this.tankOutput2 = new FluidTank(Electrolyzer.fluidCapacity);
+		this.tankInput = new FilteredFluidTank(Electrolyzer.fluidCapacity);
+		this.tankOutput1 = new FilteredFluidTank(Electrolyzer.fluidCapacity);
+		this.tankOutput2 = new FilteredFluidTank(Electrolyzer.fluidCapacity);
 
 		this.inventory = NonNullList.withSize(6, ItemStack.EMPTY);
-		this.energyStorage = new FluxStorageAdvanced(Electrolyzer.energyCapacity);
+		this.energyStorage = new IIEnergyStorage(Electrolyzer.energyCapacity);
 	}
 
 	@Override
@@ -65,7 +64,7 @@ public class TileEntityElectrolyzer extends TileEntityMultiblockProductionSingle
 	@Override
 	protected IFluidTank[] getFluidTanks(int pos, EnumFacing side)
 	{
-		return new FluidTank[]{tankInput, tankOutput1, tankOutput2};
+		return new FilteredFluidTank[]{tankInput, tankOutput1, tankOutput2};
 	}
 
 	@Override
@@ -123,14 +122,14 @@ public class TileEntityElectrolyzer extends TileEntityMultiblockProductionSingle
 	@Override
 	protected IIMultiblockProcess<ElectrolyzerRecipe> findNewProductionProcess()
 	{
-		if(tankInput.getFluidAmount() > 0&&energyStorage.getEnergyStored() > 0)
-		{
-			return ElectrolyzerRecipe.streamRecipes(ElectrolyzerRecipe.class)
-					.filter(recipe -> recipe.fluidInput.isFluidStackIdentical(tankInput.drain(recipe.fluidInput, false)))
-					.findFirst()
-					.map(IIMultiblockProcess::new).orElse(null);
-		}
-		return null;
+		if(getRedstoneAtPos(0))
+			return null;
+		return ElectrolyzerRecipe.streamRecipes(ElectrolyzerRecipe.class)
+				.filter(recipe -> recipe.fluidInput.isFluidStackIdentical(tankInput.drain(recipe.fluidInput, false)))
+				.findFirst().map(recipe -> {
+					IIMultiblockProcess<ElectrolyzerRecipe> process = new IIMultiblockProcess<>(recipe);
+					return reserveInput(process, false)?process: null;
+				}).orElse(null);
 	}
 
 	@Override
@@ -143,15 +142,18 @@ public class TileEntityElectrolyzer extends TileEntityMultiblockProductionSingle
 	@Override
 	public float getProductionStep(IIMultiblockProcess<ElectrolyzerRecipe> process, boolean simulate)
 	{
-		if(energyStorage.extractEnergy(process.recipe.getEnergyPerTick(), true)!=process.recipe.getEnergyPerTick())
+		if(getRedstoneAtPos(0))
 			return 0;
-		energyStorage.extractEnergy(process.recipe.getEnergyPerTick(), simulate);
-		return 1f;
+		if(!reserveInput(process, simulate)||!energyStorage.hasEnergy(process.recipe.getEnergyPerTick()))
+			return 0;
+		return energyStorage.tryConsumeEnergy(process.recipe.getEnergyPerTick(), simulate)?1: 0;
 	}
 
 	@Override
 	protected boolean attemptProductionOutput(IIMultiblockProcess<ElectrolyzerRecipe> process)
 	{
+		if(!reserveInput(process, false))
+			return false;
 		//Cannot fill tanks
 		ElectrolyzerRecipe recipe = process.recipe;
 
@@ -165,9 +167,26 @@ public class TileEntityElectrolyzer extends TileEntityMultiblockProductionSingle
 	protected void onProductionFinish(IIMultiblockProcess<ElectrolyzerRecipe> process)
 	{
 		ElectrolyzerRecipe recipe = process.recipe;
-		tankInput.drain(recipe.fluidInput, true);
+
 		tankOutput1.fill(recipe.fluidOutputs[0], true);
-		tankOutput2.fill(recipe.fluidOutputs[1], true);
+		if(recipe.fluidOutputs[1]!=null)
+			tankOutput2.fill(recipe.fluidOutputs[1], true);
+	}
+
+	private boolean reserveInput(IIMultiblockProcess<ElectrolyzerRecipe> process, boolean simulate)
+	{
+		if(process.processData.unwrap().getBoolean("inputReserved"))
+			return true;
+		FluidStack input = process.recipe.fluidInput;
+		if(!input.isFluidStackIdentical(tankInput.drain(input, false)))
+			return false;
+		if(!simulate)
+		{
+			tankInput.drain(input, true);
+			process.processData.withBoolean("inputReserved", true);
+			markDirty();
+		}
+		return true;
 	}
 
 	//--- IPlayerInteraction ---//
@@ -178,7 +197,10 @@ public class TileEntityElectrolyzer extends TileEntityMultiblockProductionSingle
 		if(isPOI("visible_tank"))
 		{
 			TileEntityElectrolyzer master = master();
-			return master!=null&&FluidUtil.interactWithFluidHandler(player, hand, master.tankInput);
+			return master!=null&&!master.tankInput.interactWithItem(player, hand, heldItem, () -> {
+				master.markDirty();
+				master.updateTileForEvent(SyncEvents.TILE_CUSTOM1);
+			});
 		}
 		return false;
 	}

@@ -68,7 +68,6 @@ import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleSystem;
 import pl.pabilo8.immersiveintelligence.client.gui.block.GuiTileUpgrade;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.client.gui.entity.GuiEntityUpgrade;
-import pl.pabilo8.immersiveintelligence.client.manual.IIManualCategory;
 import pl.pabilo8.immersiveintelligence.client.manual.categories.*;
 import pl.pabilo8.immersiveintelligence.client.model.IIModelRegistry;
 import pl.pabilo8.immersiveintelligence.client.model.TextureRecoloringRegistry;
@@ -819,13 +818,12 @@ public class ClientProxy extends CommonProxy
 	@Override
 	public void reloadManual()
 	{
-		IIManualCategory.cleanFolderEntries();
 		IIManualCategoryData.INSTANCE.addPages();
 		IIManualCategoryLogistics.INSTANCE.addPages();
 		IIManualCategoryWarfare.INSTANCE.addPages();
 		IIManualCategoryMotorworks.INSTANCE.addPages();
 		IIManualCategoryIntelligence.INSTANCE.addPages();
-		IIManualCategoryOther.INSTANCE.addPages();
+		IIManualCategoryIEDefaults.INSTANCE.addPages();
 	}
 
 	@Override

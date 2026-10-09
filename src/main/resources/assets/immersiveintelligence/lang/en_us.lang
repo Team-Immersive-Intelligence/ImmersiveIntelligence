@@ -1642,7 +1642,15 @@ desc.immersiveintelligence.bullets.armor_penetration=Armor Penetration:
 desc.immersiveintelligence.bullet_magazine.remaining=Remaining Bullets: %s
 desc.immersiveintelligence.bullet_magazine.empty=Empty
 
+# Recipe layout information
+desc.immersiveintelligence.recipe.tool_slot=Tool item, it will be damaged in the process.
 desc.immersiveintelligence.jei.washing_recipe=Chemical Washing
+desc.immersiveintelligence.jei.projectile_workshop_recipe=Projectile Workshop
+desc.immersiveintelligence.jei.projectile_filling_recipe=Projectile Filling
+desc.immersiveintelligence.recipe.filling=Requires Core Filler
+desc.immersiveintelligence.recipe.filling_inserter=Requires Core Filler and Inserter
+desc.immersiveintelligence.recipe.component_units=%s units, %s per item
+desc.immersiveintelligence.recipe.fluid_component_units=%s component units
 
 #Potion effects
 potion.immersiveintelligence.suppression=Suppressed
@@ -4141,4 +4149,3 @@ item.banner.immersiveintelligence_infrared_helmet.magenta=Magenta Infrared Helme
 item.banner.immersiveintelligence_infrared_helmet.orange=Orange Infrared Helmet
 item.banner.immersiveintelligence_infrared_helmet.white=White Infrared Helmet
 
-# Banners

@@ -14,7 +14,7 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import pl.pabilo8.immersiveintelligence.api.MachinegunCoolantHandler;
-import pl.pabilo8.immersiveintelligence.api.crafting.BathingRecipe;
+import pl.pabilo8.immersiveintelligence.api.crafting.ChemicalBathRecipe;
 import pl.pabilo8.immersiveintelligence.api.crafting.ElectrolyzerRecipe;
 import pl.pabilo8.immersiveintelligence.api.crafting.SawmillRecipe;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Sawmill;
@@ -104,17 +104,17 @@ public class TerrafirmaHelper extends IICompatModule
 			Fluid fluid = FluidRegistry.getFluid(fluidName+"_dye");
 
 			int outputColor = value.ordinal();
-			new BathingRecipe(new ItemStack(Blocks.WOOL, 1, outputColor),
+			new ChemicalBathRecipe(new ItemStack(Blocks.WOOL, 1, outputColor),
 					new ItemStack(Blocks.WOOL, 1, 0), new FluidStack(fluid, 125), 1024, 160, false);
-			new BathingRecipe(new ItemStack(Blocks.CARPET, 1, outputColor),
+			new ChemicalBathRecipe(new ItemStack(Blocks.CARPET, 1, outputColor),
 					new ItemStack(Blocks.CARPET, 1, 0), new FluidStack(fluid, 25), 1024, 160, false);
-			new BathingRecipe(new ItemStack(Blocks.STAINED_GLASS, 1, outputColor),
+			new ChemicalBathRecipe(new ItemStack(Blocks.STAINED_GLASS, 1, outputColor),
 					new ItemStack(Blocks.STAINED_GLASS, 1, 0), new FluidStack(fluid, 125), 1024, 160, false);
-			new BathingRecipe(new ItemStack(Blocks.STAINED_GLASS_PANE, 1, outputColor),
+			new ChemicalBathRecipe(new ItemStack(Blocks.STAINED_GLASS_PANE, 1, outputColor),
 					new ItemStack(Blocks.STAINED_GLASS_PANE, 1, 0), new FluidStack(fluid, 125), 1024, 160, false);
-			new BathingRecipe(new ItemStack(Blocks.STAINED_HARDENED_CLAY, 1, outputColor),
+			new ChemicalBathRecipe(new ItemStack(Blocks.STAINED_HARDENED_CLAY, 1, outputColor),
 					new ItemStack(Blocks.STAINED_HARDENED_CLAY, 1, 0), new FluidStack(fluid, 125), 1024, 160, false);
-			new BathingRecipe(new ItemStack(Items.BED, 1, outputColor),
+			new ChemicalBathRecipe(new ItemStack(Items.BED, 1, outputColor),
 					new ItemStack(Items.BED, 1, 0), new FluidStack(fluid, 125), 1024, 160, false);
 		}
 		MachinegunCoolantHandler.addCoolant(FluidRegistry.getFluid("fresh_water"), 2);

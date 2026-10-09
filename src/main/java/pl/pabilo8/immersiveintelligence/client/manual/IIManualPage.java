@@ -41,6 +41,7 @@ import java.util.stream.Collectors;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @ii-approved 0.3.1
  * @since 20.03.2022
  */
 public class IIManualPage extends IIManualPageBase
@@ -115,7 +116,7 @@ public class IIManualPage extends IIManualPageBase
 	public void initPage(GuiManual gui, int x, int y, List<GuiButton> pageButtons)
 	{
 		if(gui.previousSelectedEntry.isEmpty()&&entry.getFolder()!=null)
-			gui.previousSelectedEntry.push(entry.getFolder().getName());
+			gui.previousSelectedEntry.push(entry.getFolder().getEntryName());
 
 		highlighted = ItemStack.EMPTY;
 		String file = entry.fetchPage(text); //get text for this page

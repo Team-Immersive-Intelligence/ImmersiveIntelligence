@@ -19,6 +19,7 @@ import pl.pabilo8.immersiveintelligence.common.util.sound.IISoundAnimation;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Objects;
@@ -26,6 +27,7 @@ import java.util.Objects;
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 08.08.2019
+ * @updated 05.10.2026
  */
 public class PrecisionAssemblerRecipe extends IIMultiblockRecipe
 {
@@ -64,9 +66,10 @@ public class PrecisionAssemblerRecipe extends IIMultiblockRecipe
 		//Sort the tools for easier detection
 		this.toolHash = buildToolHash(tools);
 		this.animations = animations;
-		this.tools = tools;
+		this.tools = tools.clone();
 
 		setTimeAndEnergy((int)(processDuration*timeMultiplier), energy);
+		completeRegistration(output, trashOutput, inputs, this.tools, animations);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -83,11 +86,21 @@ public class PrecisionAssemblerRecipe extends IIMultiblockRecipe
 
 	public static String buildToolHash(String[] tools)
 	{
+		tools = tools.clone();
 		Arrays.sort(tools, String.CASE_INSENSITIVE_ORDER);
 		StringBuilder sb = new StringBuilder();
 		for(String tool : tools)
 			sb.append(tool).append(";");
 		return sb.toString();
+	}
+
+	public boolean hasTools(String availableTools)
+	{
+		java.util.List<String> remaining = new java.util.ArrayList<>(Arrays.asList(availableTools.split(";")));
+		for(String required : tools)
+			if(!remaining.remove(required))
+				return false;
+		return true;
 	}
 
 	public static PrecisionToolInfo[] toolsFromHash(String toolHash)
@@ -124,7 +137,7 @@ public class PrecisionAssemblerRecipe extends IIMultiblockRecipe
 		IIRecipeLayoutBuilder builder = new IIRecipeLayoutBuilder(156, 74);
 
 		//Input Slots
-		builder.withSlot(20, 20, inputs[0], IOType.INPUT, "frame");
+		builder.withSlot(20, 20, inputs.length > 0?inputs[0]: new IngredientStack(ItemStack.EMPTY), IOType.INPUT, "frame");
 		for(int i = 1; i < 4; i++)
 			builder.withSlot(0, (i-1)*20, inputs.length > i?inputs[i]: new IngredientStack(ItemStack.EMPTY), IOType.INPUT, "frame_none");
 
@@ -137,11 +150,11 @@ public class PrecisionAssemblerRecipe extends IIMultiblockRecipe
 			ItemStack tool = ItemStack.EMPTY;
 			if(tools.length > i&&PrecisionAssemblerRecipe.TOOL_MAP.containsKey(tools[i]))
 				tool = getExampleToolStack(tools[i]);
-			builder.withSlot(50+i*20, 44, tool, IOType.INPUT, "frame"+i);
+			builder.withToolSlot(50+i*20, 44, tool, "frame"+i);
 		}
 
 		//Scheme slot
-		builder.withSlot(71, 17, IIContent.itemAssemblyScheme.getSchemeStackForRecipe(this), IOType.INPUT, "frame_none");
+		builder.withToolSlot(71, 17, IIContent.itemAssemblyScheme.getSchemeStackForRecipe(this), "frame_none");
 
 		return builder
 				.withTimeInfo()

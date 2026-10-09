@@ -7,10 +7,13 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySkyCrateStation;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySkyCartStation;
 
 /**
+ * Holds a station minecart at its synchronised position.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 08.10.2026
  * @since 10.11.2019
  */
 public class EntitySkycrateInternal extends Entity
@@ -20,6 +23,7 @@ public class EntitySkycrateInternal extends Entity
 	private static final DataParameter<Float> dataMarkerRidingZ = EntityDataManager.createKey(EntitySkycrateInternal.class, DataSerializers.FLOAT);
 	public float riding_x = 0, riding_y = 0, riding_z = 0;
 	public BlockPos origin_pos = new BlockPos(0, 0, 0);
+
 	public EntitySkycrateInternal(World worldIn)
 	{
 		super(worldIn);
@@ -28,7 +32,12 @@ public class EntitySkycrateInternal extends Entity
 	public EntitySkycrateInternal(World worldIn, BlockPos pos)
 	{
 		super(worldIn);
+		origin_pos = pos;
 		setPosition(pos.getX(), pos.getY(), pos.getZ());
+		riding_x = pos.getX()+.5f;
+		riding_y = pos.getY()+.125f;
+		riding_z = pos.getZ()+.5f;
+		updateValues();
 	}
 
 	@Override
@@ -50,14 +59,25 @@ public class EntitySkycrateInternal extends Entity
 			riding_y = dataManager.get(dataMarkerRidingY);
 			riding_z = dataManager.get(dataMarkerRidingZ);
 		}
-		else
+		else if(ticksExisted%20==0&&world.isBlockLoaded(origin_pos))
 		{
-			if(ticksExisted==20)
-			{
-				if(!(world.getTileEntity(origin_pos) instanceof TileEntitySkyCrateStation))
-					setDead();
-			}
+			net.minecraft.tileentity.TileEntity owner = world.getTileEntity(origin_pos);
+			if(!(owner instanceof TileEntitySkyCartStation)||!((TileEntitySkyCartStation)owner).formed)
+				setDead();
 		}
+	}
+
+	@Override
+	public void setDead()
+	{
+		if(!world.isRemote)
+			for(Entity passenger : new java.util.ArrayList<>(getPassengers()))
+			{
+				passenger.dismountRidingEntity();
+				if(passenger instanceof net.minecraft.entity.item.EntityMinecart)
+					((net.minecraft.entity.item.EntityMinecart)passenger).setCanUseRail(true);
+			}
+		super.setDead();
 	}
 
 	@Override
@@ -97,6 +117,7 @@ public class EntitySkycrateInternal extends Entity
 			origin_pos = new BlockPos(x, y, z);
 		}
 
+		updateValues();
 	}
 
 	@Override
@@ -114,13 +135,9 @@ public class EntitySkycrateInternal extends Entity
 	@Override
 	public void updatePassenger(Entity passenger)
 	{
-		//super.updatePassenger(passenger);
-		//IILogger.info(riding_pos);
-		//passenger.setPosition(origin_pos.getX(),origin_pos.getY()+3,origin_pos.getZ());
 		if(this.isPassenger(passenger))
 		{
 			passenger.setPosition(riding_x, riding_y, riding_z);
-			//passenger.setPosition(this.posX-1, this.posY, this.posZ);
 		}
 	}
 

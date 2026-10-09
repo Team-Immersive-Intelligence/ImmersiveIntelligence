@@ -727,13 +727,23 @@ public class CommonProxy implements IGuiHandler
 		ConveyorHandler.registerConveyorHandler(new ResourceLocation(ImmersiveIntelligence.MODID, "rubber_extractcovered"), ConveyorRubberCoveredExtract.class, (tileEntity) -> new ConveyorRubberCoveredExtract(tileEntity instanceof IConveyorTile?((IConveyorTile)tileEntity).getFacing(): EnumFacing.NORTH));
 
 		if(Factions.enableFactions)
-		{
 			MinecraftForge.EVENT_BUS.register(DiplomacyHandler.getInstance(false));
-			ForgeChunkManager.setForcedChunkLoadingCallback(
-					ImmersiveIntelligence.INSTANCE,
-					(tickets, world) -> DiplomacyHandler.getInstance(world.isRemote).onTicketsLoaded(tickets, world)
-			);
-		}
+		ForgeChunkManager.setForcedChunkLoadingCallback(ImmersiveIntelligence.INSTANCE, (tickets, world) -> {
+			List<ForgeChunkManager.Ticket> propertyTickets = new ArrayList<>();
+			for(ForgeChunkManager.Ticket ticket : tickets)
+			{
+				if(ticket.getEntity() instanceof EntityAmmoChunkLoadingProjectile)
+					((EntityAmmoChunkLoadingProjectile)ticket.getEntity()).restoreChunkLoadingTicket(ticket);
+				else if(ticket.getEntity() instanceof EntitySkyCrate)
+					((EntitySkyCrate)ticket.getEntity()).restoreChunkLoadingTicket(ticket);
+				else
+					propertyTickets.add(ticket);
+			}
+			if(Factions.enableFactions)
+				DiplomacyHandler.getInstance(world.isRemote).onTicketsLoaded(propertyTickets, world);
+			else
+				propertyTickets.forEach(ForgeChunkManager::releaseTicket);
+		});
 		IICompatModule.doModulesPreInit(event);
 	}
 

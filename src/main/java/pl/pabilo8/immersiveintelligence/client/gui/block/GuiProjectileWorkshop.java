@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.fml.common.Optional.Method;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseType;
@@ -44,6 +45,7 @@ import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.ammo.components.factory.AmmoComponentFluid;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityProjectileWorkshop;
+import pl.pabilo8.immersiveintelligence.common.compat.jei.JEIHelper;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerProjectileWorkshop;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
@@ -61,7 +63,7 @@ import java.util.stream.Collectors;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 24.09.2026
+ * @updated 08.10.2026
  * @ii-approved 0.3.1
  * @since 10.07.2019
  */
@@ -97,6 +99,7 @@ public class GuiProjectileWorkshop extends DecoTileGui<TileEntityProjectileWorks
 
 	private MultiblockInteractablePart openedPart;
 	boolean hasFillerUpgrade;
+	private DecoImage[] progressArrows = new DecoImage[0];
 
 	//Non-upgraded
 	private DecoPanel fillerInfoPanel;
@@ -125,6 +128,8 @@ public class GuiProjectileWorkshop extends DecoTileGui<TileEntityProjectileWorks
 	@Override
 	public void onInit()
 	{
+		hasFillerUpgrade = tile.isUpgradeInstalled(IIContent.UPGRADE_CORE_FILLER);
+		progressArrows = new DecoImage[hasFillerUpgrade?6: 4];
 		syncAnimatedParts(openedPart = Utils.RAND.nextGaussian() > 0.5f?tile.lid1: tile.lid2, true);
 
 		//Add background
@@ -172,6 +177,15 @@ public class GuiProjectileWorkshop extends DecoTileGui<TileEntityProjectileWorks
 				.addObserver(hasFillerUpgrade -> refreshGUI());
 	}
 
+	@Override
+	@Method(modid = "jei")
+	public void onInitJEICompat()
+	{
+		String category = hasFillerUpgrade?"ii.projectile_filling": "ii.projectile_workshop";
+		for(DecoImage progressArrow : progressArrows)
+			JEIHelper.addRecipesDecoGuiLink(progressArrow, category);
+	}
+
 	private void addCoreFillerComponents()
 	{
 		//Upgraded
@@ -209,31 +223,31 @@ public class GuiProjectileWorkshop extends DecoTileGui<TileEntityProjectileWorks
 						.withBackgroundTexture(DecoSprite.atlasSprite(DecoTextures.SLOT_IE, 32, true)),
 
 				//Progress bar background
-				new DecoImage(33, 41)
+				progressArrows[0] = new DecoImage(33, 41)
 						.withSize(48, 8)
 						.withImageLocation(PROGRESS_BAR, true)
 						.withUV(64, 16, 11, 64, 19),
-				new DecoImage(83, 36)
+				progressArrows[1] = new DecoImage(83, 36)
 						.withSize(8, 19)
 						.withImageLocation(PROGRESS_BAR, true)
 						.withUV(64, 37, 19, 45, 38),
-				new DecoImage(93, 40)
+				progressArrows[2] = new DecoImage(93, 40)
 						.withSize(48, 10)
 						.withImageLocation(PROGRESS_BAR, true)
 						.withUV(64, 16, 0, 64, 10),
 
 				//Progress bar
-				new DecoImage(35, 42)
+				progressArrows[3] = new DecoImage(35, 42)
 						.withSize(44, 6)
 						.withImageLocation(PROGRESS_BAR, true)
 						.withUV(64, 0, 47, 44, 53)
 						.withAnimation(ImageAnimationDirection.LEFT_TO_RIGHT, DecoGuiUtils.getMultiblockProductionSingleProgress(tile, 0f, 0.45f)),
-				new DecoImage(83, 36)
+				progressArrows[4] = new DecoImage(83, 36)
 						.withSize(8, 19)
 						.withImageLocation(PROGRESS_BAR, true)
 						.withUV(64, 45, 19, 53, 38)
 						.withAnimation(ImageAnimationDirection.LEFT_TO_RIGHT, DecoGuiUtils.getMultiblockProductionSingleProgress(tile, 0.45f, 0.55f)),
-				new DecoImage(95, 42)
+				progressArrows[5] = new DecoImage(95, 42)
 						.withSize(44, 6)
 						.withImageLocation(PROGRESS_BAR, true)
 						.withUV(64, 0, 39, 44, 45)
@@ -437,21 +451,21 @@ public class GuiProjectileWorkshop extends DecoTileGui<TileEntityProjectileWorks
 						.withTemplate(DecoTemplates.BAR_ELECTRIC_ENERGY.apply(tile.energyStorage)),
 
 				//Progress bar background
-				new DecoImage(8, 28)
+				progressArrows[0] = new DecoImage(8, 28)
 						.withSize(16, 29)
 						.withImageLocation(PROGRESS_BAR, true)
 						.withUV(64, 0, 0, 16, 29),
-				new DecoImage(8, 57)
+				progressArrows[1] = new DecoImage(8, 57)
 						.withSize(37, 10)
 						.withImageLocation(PROGRESS_BAR, true)
 						.withUV(64, 0, 29, 37, 39),
 				//Progress bar
-				new DecoImage(10, 30)
+				progressArrows[2] = new DecoImage(10, 30)
 						.withSize(12, 27)
 						.withImageLocation(PROGRESS_BAR, true)
 						.withUV(64, 52, 26, 64, 53)
 						.withAnimation(ImageAnimationDirection.TOP_TO_BOTTOM, DecoGuiUtils.getMultiblockProductionSingleProgress(tile, 0f, 0.6f)),
-				new DecoImage(14, 58)
+				progressArrows[3] = new DecoImage(14, 58)
 						.withSize(29, 7)
 						.withImageLocation(PROGRESS_BAR, true)
 						.withUV(64, 35, 57, 64, 64)

@@ -34,6 +34,7 @@ import java.util.Arrays;
  * @author fastdelaspeed
  * @updated 24.03.2023
  * @updated 06.09.2024
+ * @ii-approved 0.3.2
  * @since 18.01.2020
  */
 public class IIManualCategoryWarfare extends IIManualCategory
@@ -49,6 +50,7 @@ public class IIManualCategoryWarfare extends IIManualCategory
 	@Override
 	public void addPages()
 	{
+		super.addPages();
 		addEntry("warfare_main");
 		addEntry("bullet_production")
 				.addSource("bullet_twoparts", getSourceForItems(
@@ -83,11 +85,11 @@ public class IIManualCategoryWarfare extends IIManualCategory
 			if(entry.showInManual()&&!entry.getMaterial().getExampleStack().isEmpty())
 				bullet_components.add(new IIManualPageAmmoComponent(ManualHelper.getManual(), entry));
 
-		ManualHelper.addEntry("bullet_cores", getCategory(),
+		addEntry("bullet_cores", getCategory(),
 				bullet_cores.toArray(new ManualPages[]{})
 		);
 
-		ManualHelper.addEntry("bullet_components", getCategory(),
+		addEntry("bullet_components", getCategory(),
 				bullet_components.toArray(new ManualPages[]{})
 		);
 
