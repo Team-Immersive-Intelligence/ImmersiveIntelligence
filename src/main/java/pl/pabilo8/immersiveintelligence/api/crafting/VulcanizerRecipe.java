@@ -19,21 +19,21 @@ import javax.annotation.Nullable;
  * Vulcanizer production recipe.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 05.10.2026
+ * @updated 09.10.2026
  * @ii-approved 0.3.1
  * @since 20.06.2021
  */
 public class VulcanizerRecipe extends IIMultiblockRecipe
 {
-	public static final ResourceLocation TEXTURE_LATEX = new ResourceLocation(ImmersiveIntelligence.MODID, "textures/blocks/multiblock/vulcanizer/latex_strip.png");
-	public static final ResourceLocation TEXTURE_RUBBER = new ResourceLocation(ImmersiveIntelligence.MODID, "textures/blocks/multiblock/vulcanizer/rubber_strip.png");
+	public static final ResourceLocation MODEL_TIRE = new ResourceLocation(ImmersiveIntelligence.MODID, "models/block/multiblock/vulcanizer/output_tire.obj");
+	public static final ResourceLocation MODEL_BELT = new ResourceLocation(ImmersiveIntelligence.MODID, "models/block/multiblock/vulcanizer/output_belt.obj");
 
 	public final IngredientStack input, compoundInput, sulfurInput;
-	public final ResourceLocation resIn, resOut;
+	public final ResourceLocation model;
 	public final ComparableItemStack mold;
 	public final ItemStack output;
 
-	public VulcanizerRecipe(ItemStack output, ComparableItemStack mold, IngredientStack mainInput, IngredientStack compoundInput, IngredientStack sulfurInput, int energy, ResourceLocation resIn, ResourceLocation resOut)
+	public VulcanizerRecipe(ItemStack output, ComparableItemStack mold, IngredientStack mainInput, IngredientStack compoundInput, IngredientStack sulfurInput, int energy, ResourceLocation model)
 	{
 		super(mold.stack, mainInput);
 		this.output = output;
@@ -46,14 +46,13 @@ public class VulcanizerRecipe extends IIMultiblockRecipe
 		this.inputList = Lists.newArrayList(this.input, this.compoundInput, this.sulfurInput, new IngredientStack(this.mold.stack));
 		this.outputList = ListUtils.fromItem(this.output);
 
-		this.resIn = resIn;
-		this.resOut = resOut;
+		this.model = model;
 		completeRegistration(this.mold.stack, this.input, this.compoundInput, this.sulfurInput, this.output);
 	}
 
 	public VulcanizerRecipe(ItemStack output, ComparableItemStack mold, IngredientStack mainInput, IngredientStack compoundInput, IngredientStack sulfurInput, int energy)
 	{
-		this(output, mold, mainInput, compoundInput, sulfurInput, energy, TEXTURE_LATEX, TEXTURE_RUBBER);
+		this(output, mold, mainInput, compoundInput, sulfurInput, energy, MODEL_TIRE);
 	}
 
 	public static boolean isValidMold(ItemStack itemStack)

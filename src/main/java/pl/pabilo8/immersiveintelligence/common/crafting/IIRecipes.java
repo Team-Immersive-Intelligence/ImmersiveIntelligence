@@ -1542,7 +1542,7 @@ public class IIRecipes
 				new IngredientStack("plateRubberRaw", 10),
 				new IngredientStack("dustVulcanizationCompound", 3),
 				new IngredientStack("dustSulfur", 2),
-				24000
+				24000, VulcanizerRecipe.MODEL_BELT
 		).setName("rubber_belts");
 
 		new VulcanizerRecipe(IIContent.itemMaterial.getStack(Materials.RUBBER_TIRE, 3),
@@ -1550,7 +1550,7 @@ public class IIRecipes
 				new IngredientStack("plateRubberRaw", 10),
 				new IngredientStack("dustVulcanizationCompound", 8),
 				new IngredientStack("dustSulfur", 3),
-				32000
+				32000, VulcanizerRecipe.MODEL_TIRE
 		).setName("rubber_tires");
 
 		//Rubber is a slow pace industry ^^
