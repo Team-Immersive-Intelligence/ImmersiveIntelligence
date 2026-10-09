@@ -1,0 +1,30 @@
+{
+  "bounds": {
+    "full": [
+      0,
+      0,
+      0,
+      16,
+      16,
+      16
+    ]
+  },
+  "positions": {
+    "0,1,2,3,4,5,6,7,8,13,14,16,17,19,20,22,23": "full"
+  },
+  "poi": {
+    "wire": 19,
+    "rotary": 6,
+    "mount": 7,
+    "redstone": 8,
+    "flag": 20,
+    "cart_io": 2,
+    "cart_cradle": 1
+  },
+  "rotations": {
+    "rotary": "counterclockwise_90",
+    "mount": "none",
+    "redstone": "clockwise_90",
+    "cart_io": "clockwise_90"
+  }
+}

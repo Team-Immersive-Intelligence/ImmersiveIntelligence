@@ -1,19 +1,15 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity;
 
 import blusunrize.immersiveengineering.api.TargetingInfo;
-import blusunrize.immersiveengineering.api.crafting.IMultiblockRecipe;
 import blusunrize.immersiveengineering.api.energy.wires.IImmersiveConnectable;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
 import blusunrize.immersiveengineering.api.energy.wires.WireType;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IPlayerInteraction;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityConveyorBelt;
 import blusunrize.immersiveengineering.common.util.Utils;
-import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -22,15 +18,11 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
-import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.api.rotary.*;
@@ -41,563 +33,297 @@ import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.multiblock.MultiblockSkyCrateStation;
 import pl.pabilo8.immersiveintelligence.common.entity.EntitySkyCrate;
-import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
-import pl.pabilo8.immersiveintelligence.common.network.messages.MessageRotaryPowerSync;
-import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
-import pl.pabilo8.immersiveintelligence.common.util.item.IIItemUtils;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IAdvancedBounds;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockConnectable;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IIIGuiMultiblockTile;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIConnectable;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 import static blusunrize.immersiveengineering.api.energy.wires.WireType.STRUCTURE_CATEGORY;
 
 /**
+ * Transfers containers between conveyors and Skycrate mounts.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
  * @author Avalon
+ * @updated 08.10.2026
  * @since 28.06.2019
  * @since 27.08.2025
  */
-public class TileEntitySkyCrateStation extends TileEntityMultiblockConnectable<TileEntitySkyCrateStation, IMultiblockRecipe> implements IAdvancedBounds, ISkyCrateConnector, IPlayerInteraction, IGuiTile, IRotationalEnergyBlock
+public class TileEntitySkyCrateStation extends TileEntityMultiblockIIConnectable<TileEntitySkyCrateStation>
+		implements ISkyCrateConnector, IPlayerInteraction, IIIGuiMultiblockTile
 {
-	//none, crate, crate in, crate out, crate load, crate unload
 	public static final int GEAR_SLOTS = 3;
+	//Idle, holding, conveyor input, conveyor output, zipline input, zipline output.
+	@SyncNBT(time = 0, events = {SyncEvents.TILE_CUSTOM1, SyncEvents.TILE_CUSTOM2, SyncEvents.TILE_GUI_OPENED})
 	public int animation = 0;
+	@SyncNBT(time = 0, events = {SyncEvents.TILE_CUSTOM1, SyncEvents.TILE_CUSTOM2, SyncEvents.TILE_GUI_OPENED})
 	public float progress = 0;
+	@SyncNBT(time = 0, events = {SyncEvents.TILE_CUSTOM1, SyncEvents.TILE_CUSTOM2, SyncEvents.TILE_GUI_OPENED})
 	public RotaryStorage rotation = new RotaryStorage(0, 0)
 	{
 		@Override
-		public RotationSide getSide(@Nullable EnumFacing facing)
+		public RotationSide getSide(@Nullable EnumFacing side)
 		{
-			return facing==getFacing().rotateYCCW()?RotationSide.INPUT: RotationSide.NONE;
+			return side==transportDirection("rotary")?RotationSide.INPUT: RotationSide.NONE;
+		}
+	};
+	@SyncNBT(time = 0, events = {SyncEvents.TILE_CUSTOM2, SyncEvents.TILE_GUI_OPENED})
+	public NonNullList<ItemStack> inventory = NonNullList.withSize(6, ItemStack.EMPTY);
+	private float lastSyncedSpeed, lastSyncedTorque;
+	private IItemHandler insertionHandler = new IItemHandler()
+	{
+		private void validateSlotIndex(int slot)
+		{
+			if(slot!=0)
+				throw new IndexOutOfBoundsException("Invalid cargo slot: "+slot);
+		}
+
+		@Override
+		public int getSlots()
+		{
+			return 1;
+		}
+
+		@Override
+		@Nonnull
+		public ItemStack getStackInSlot(int slot)
+		{
+			validateSlotIndex(slot);
+			return inventory!=null?inventory.get(3): ItemStack.EMPTY;
+		}
+
+		@Override
+		@Nonnull
+		public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate)
+		{
+			validateSlotIndex(slot);
+			if(!isValid()||!formed||world.isRemote||animation!=0||!inventory.get(3).isEmpty()||!isStackValid(3, stack))
+				return stack;
+			ItemStack remainder = stack.copy();
+			remainder.shrink(1);
+			if(!simulate)
+			{
+				inventory.set(3, stack.copy());
+				inventory.get(3).setCount(1);
+				syncTransportState(true);
+			}
+			return remainder;
+		}
+
+		@Override
+		@Nonnull
+		public ItemStack extractItem(int slot, int amount, boolean simulate)
+		{
+			validateSlotIndex(slot);
+			return ItemStack.EMPTY;
+		}
+
+		@Override
+		public int getSlotLimit(int slot)
+		{
+			return 1;
 		}
 	};
 
-	//Crate, Mount, Banner
-	NonNullList<ItemStack> inventory = NonNullList.withSize(6, ItemStack.EMPTY);
-
-	IItemHandler insertionHandler = new IEInventoryHandler(1, this, 3, true, false);
-
 	public TileEntitySkyCrateStation()
 	{
-		super(MultiblockSkyCrateStation.INSTANCE, new int[]{3, 3, 3}, 0, true);
+		super(MultiblockSkyCrateStation.INSTANCE);
 	}
 
 	@Override
-	public void readCustomNBT(NBTTagCompound nbt, boolean descPacket)
+	protected void dummyCleanup()
 	{
-		super.readCustomNBT(nbt, descPacket);
-		if(!isDummy())
+		inventory = null;
+		rotation = null;
+		insertionHandler = null;
+	}
+
+	@Override
+	protected void onUpdate()
+	{
+		if(!formed)
+			return;
+		if(world.isRemote)
 		{
-			if(!descPacket&&nbt.hasKey("inventory"))
-				inventory = Utils.readInventory(nbt.getTagList("inventory", 10), 6);
-
-			animation = nbt.getInteger("animation");
-			progress = nbt.getFloat("progress");
-			if(nbt.hasKey("rotation"))
-				rotation.deserializeNBT(nbt.getCompoundTag("rotation"));
-		}
-	}
-
-	@Override
-	public void onChunkUnload()
-	{
-		super.onChunkUnload();
-	}
-
-	@Override
-	public void writeCustomNBT(NBTTagCompound nbt, boolean descPacket)
-	{
-		super.writeCustomNBT(nbt, descPacket);
-		if(!isDummy())
-		{
-			if(!descPacket)
-				nbt.setTag("inventory", Utils.writeInventory(getInventory()));
-
-			nbt.setInteger("animation", animation);
-			nbt.setFloat("progress", progress);
-			nbt.setTag("rotation", rotation.serializeNBT());
-		}
-	}
-
-	@Override
-	public void receiveMessageFromServer(NBTTagCompound message)
-	{
-		if(message.hasKey("inventory"))
-			inventory = Utils.readInventory(message.getTagList("inventory", 10), 6);
-
-		if(message.hasKey("animation"))
-			animation = message.getInteger("animation");
-		if(message.hasKey("progress"))
-			progress = message.getFloat("progress");
-		if(message.hasKey("rotation"))
-			rotation.deserializeNBT(message.getCompoundTag("rotation"));
-
-		super.receiveMessageFromServer(message);
-	}
-
-	@Override
-	public void update()
-	{
-		super.update();
-
-		if(!isDummy()&&!world.isRemote)
-		{
-			handleRotation();
-
-			if(animation==0)
-			{
-				if(!inventory.get(3).isEmpty())
-				{
-					animation = 2;
-					progress = 0;
-					sendUpdate(1);
-					sendUpdate(2);
-				}
-			}
-			else if(animation==1)
-			{
-				if(getInventory().get(4).isEmpty()&&world.getTotalWorldTime()%4==0)
-				{
-					TileEntity te = world.getTileEntity(getBlockPosForPos(7).offset(facing));
-
-					if(te!=null&&te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite()))
-					{
-						IItemHandler cap = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite());
-						for(int i = 0; i < cap.getSlots(); i += 1)
-							if(cap.getStackInSlot(i).getItem() instanceof ISkycrateMount)
-							{
-								getInventory().set(4, cap.extractItem(i, 1, false));
-								break;
-							}
-					}
-				}
-				if(world.getRedstonePower(getBlockPosForPos(8).offset(mirrored?this.facing.rotateYCCW(): this.facing.rotateY()), (mirrored?this.facing.rotateY(): this.facing.rotateYCCW())) > 0)
-				{
-					animation = 3;
-					progress = 0;
-					sendUpdate(1);
-					sendUpdate(2);
-				}
-				else if(!inventory.get(3).isEmpty()&&!inventory.get(4).isEmpty())
-				{
-					animation = 5;
-					progress = 0;
-					sendUpdate(1);
-					sendUpdate(2);
-				}
-			}
-		}
-
-		if(!isDummy())
 			if(animation > 1)
-				if(progress < getAnimationLength())
-					progress += IIRotaryUtils.getEffectiveEnergy(rotation,
-							SkyCrateStation.speedMin, SkyCrateStation.speedEfficient,
-							SkyCrateStation.torqueMin, SkyCrateStation.torqueEfficient)*
-							IIRotaryUtils.getGearEfficiency(IIItemUtils.trimInventory(inventory, 0, 3));
-				else
-					switch(animation)
-					{
-						case 2:
-						{
-							animation = 1;
-							progress = 0;
-						}
-						break;
-						case 3:
-						{
-							animation = 0;
-							if(!world.isRemote)
-							{
-								ItemStack crate = Utils.insertStackIntoInventory(world.getTileEntity(getBlockPosForPos(9).offset((mirrored?this.facing.rotateY(): this.facing.rotateYCCW()))), inventory.get(3), mirrored?this.facing.rotateYCCW(): this.facing.rotateY());
-								if(!crate.isEmpty())
-									Utils.dropStackAtPos(world, getBlockPosForPos(9).offset(facing), crate);
-								inventory.set(3, ItemStack.EMPTY);
-							}
-							progress = 0;
-						}
-						break;
-						case 4:
-						{
-							if(!world.isRemote)
-							{
-								TileEntity te = world.getTileEntity(getBlockPosForPos(7).offset(facing));
-								inventory.set(4, Utils.insertStackIntoInventory(te, inventory.get(4), facing.getOpposite()));
-								if(!inventory.get(4).isEmpty())
-									Utils.dropStackAtPos(world, getBlockPosForPos(7).offset(facing), inventory.get(4), facing);
-								inventory.set(4, ItemStack.EMPTY);
-
-								doGraphicalUpdates(1);
-								doGraphicalUpdates(2);
-
-							}
-
-							animation = 3;
-							progress = 0;
-						}
-						break;
-						case 5:
-						{
-							out:
-							if(!world.isRemote)
-							{
-
-								Set<Connection> conns = ImmersiveNetHandler.INSTANCE.getConnections(getWorld(), getBlockPosForPos(getConnectionPos()[0]));
-								if(conns!=null&&conns.size() > 0)
-								{
-									for(Connection c : conns)
-									{
-										if(c==null)
-											break out;
-										animation = 0;
-										EntitySkyCrate s = new EntitySkyCrate(world, c, inventory.get(4).copy(), inventory.get(3).copy(), getBlockPosForPos(getConnectionPos()[0]));
-										world.spawnEntity(s);
-										inventory.set(3, ItemStack.EMPTY);
-										inventory.set(4, ItemStack.EMPTY);
-										progress = 0;
-										sendUpdate(1);
-										sendUpdate(2);
-										break;
-									}
-									progress = getAnimationLength();
-								}
-							}
-						}
-						break;
-					}
-	}
-
-	private void handleRotation()
-	{
-		boolean b = false;
-		if(rotation.getRotationSpeed() > SkyCrateStation.speedBreaking||rotation.getTorque() > SkyCrateStation.torqueBreaking)
-			selfDestruct();
-
-		if(world.getTileEntity(getBlockPosForPos(6).offset((mirrored?this.facing.rotateY(): this.facing.rotateYCCW())))!=null)
+				progress = Math.min(getAnimationLength(), progress+getAnimationSpeed());
+			return;
+		}
+		if(!handleRotation())
+			return;
+		if(animation==0&&!inventory.get(3).isEmpty())
+			setAnimation(2);
+		else if(animation==1)
 		{
-			TileEntity te = world.getTileEntity(getBlockPosForPos(6).offset((mirrored?this.facing.rotateY(): this.facing.rotateYCCW())));
-			if(te.hasCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, mirrored?this.facing.rotateYCCW(): this.facing.rotateY()))
+			if(inventory.get(4).isEmpty()&&world.getTotalWorldTime()%4==0)
 			{
-				IRotaryEnergy cap = te.getCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, mirrored?this.facing.rotateYCCW(): this.facing.rotateY());
-				if(rotation.handleRotation(cap, mirrored?this.facing.rotateYCCW(): this.facing.rotateY()))
-					IIPacketHandler.sendToClient(new MessageRotaryPowerSync(world, master().getPos(), 0, rotation));
+				ItemStack extracted = extractMount();
+				if(!extracted.isEmpty())
+				{
+					inventory.set(4, extracted);
+					syncTransportState(true);
+				}
 			}
-			else
-				b = true;
-
+			if(shouldEject())
+				setAnimation(3);
+			else if(!inventory.get(3).isEmpty()&&!inventory.get(4).isEmpty())
+				setAnimation(5);
 		}
-		else
-			b = true;
-
-		// TODO: 26.12.2021 investigate
-		if((rotation.getTorque() > 0||rotation.getRotationSpeed() > 0))
+		if(animation > 1)
 		{
-			if(b)
-				rotation.grow(0, 0, 0.98f);
-			IIPacketHandler.sendToClient(new MessageRotaryPowerSync(world, master().getPos(), 0, rotation));
+			progress = Math.min(getAnimationLength(), progress+getAnimationSpeed());
+			markDirty();
+			if(progress >= getAnimationLength())
+				finishAnimation();
+		}
+		if(world.getTotalWorldTime()%5==0&&(animation > 1||lastSyncedSpeed!=rotation.getRotationSpeed()||lastSyncedTorque!=rotation.getTorque()))
+			syncTransportState(false);
+	}
+
+	private void finishAnimation()
+	{
+		switch(animation)
+		{
+			case 2:
+				setAnimation(1);
+				break;
+			case 3:
+				if(!returnMount())
+					return;
+				EnumFacing outputSide = transportDirection("cargo_output");
+				BlockPos outputPos = getPOIPos(MultiblockPOI.ITEM_OUTPUT).offset(outputSide);
+				if(!world.isBlockLoaded(outputPos))
+					return;
+				ItemStack remainder = Utils.insertStackIntoInventory(world.getTileEntity(outputPos), inventory.get(3), outputSide.getOpposite());
+				if(!remainder.isEmpty())
+					Utils.dropStackAtPos(world, outputPos, remainder, outputSide);
+				inventory.set(3, ItemStack.EMPTY);
+				setAnimation(0);
+				break;
+			case 4:
+				if(!returnMount())
+					return;
+				setAnimation(3);
+				break;
+			case 5:
+				if(launchSkycrate())
+					setAnimation(0);
+				break;
 		}
 	}
 
-	private void selfDestruct()
+	private boolean returnMount()
 	{
-		world.createExplosion(null, getPos().getX(), getPos().getY(), getPos().getZ(), 4, true);
+		BlockPos mountPos = getPOIPos("mount").offset(transportDirection("mount"));
+		if(!world.isBlockLoaded(mountPos))
+			return false;
+		ItemStack remainder = Utils.insertStackIntoInventory(getMountInventory(), inventory.get(4), transportDirection("mount").getOpposite());
+		if(!remainder.isEmpty())
+			Utils.dropStackAtPos(world, mountPos, remainder, transportDirection("mount"));
+		inventory.set(4, ItemStack.EMPTY);
+		return true;
 	}
 
-	@Override
-	public void onEntityCollision(World world, Entity entity)
+	private boolean launchSkycrate()
 	{
-		super.onEntityCollision(world, entity);
-		//
-	}
-
-	@Override
-	public float[] getBlockBounds()
-	{
-		return new float[]{0, 0, 0, 1, 1, 1};
-	}
-
-	@Override
-	public int[] getEnergyPos()
-	{
-		return new int[]{};
-	}
-
-	@Override
-	public int[] getRedstonePos()
-	{
-		return new int[]{};
-	}
-
-	@Override
-	public int[] getConnectionPos()
-
-	{
-		return new int[]{19};
-	}
-
-	@Override
-	public boolean isInWorldProcessingMachine()
-	{
+		if(inventory.get(3).isEmpty()||!(inventory.get(4).getItem() instanceof ISkycrateMount))
+			return false;
+		BlockPos wirePos = getPOIPos(MultiblockPOI.SKYCRATE_WIRE_MOUNT);
+		Set<Connection> connections = ImmersiveNetHandler.INSTANCE.getConnections(world, wirePos);
+		if(connections!=null)
+			for(Connection connection : connections)
+				if(connection!=null&&connection.length > 0&&isMatchingCable(connection.cableType)
+						&&world.isBlockLoaded(connection.start)&&world.isBlockLoaded(connection.end))
+				{
+					EntitySkyCrate skycrate = new EntitySkyCrate(world, connection, inventory.get(4), inventory.get(3), wirePos);
+					if(skycrate.isDead||skycrate.connection==null||!world.spawnEntity(skycrate))
+					{
+						skycrate.setDead();
+						return false;
+					}
+					inventory.set(3, ItemStack.EMPTY);
+					inventory.set(4, ItemStack.EMPTY);
+					return true;
+				}
 		return false;
-	}
-
-	@Override
-	public void doProcessOutput(ItemStack output)
-	{
-
-	}
-
-	@Override
-	public void doProcessFluidOutput(FluidStack output)
-	{
-	}
-
-	@Override
-	public void onProcessFinish(MultiblockProcess<IMultiblockRecipe> process)
-	{
-
-	}
-
-	@Override
-	public int getMaxProcessPerTick()
-	{
-		return 1;
-	}
-
-	@Override
-	public int getProcessQueueMaxLength()
-	{
-		return 1;
-	}
-
-	@Override
-	public float getMinProcessDistance(MultiblockProcess<IMultiblockRecipe> process)
-	{
-		return 0;
-	}
-
-	@Override
-	public NonNullList<ItemStack> getInventory()
-	{
-		return master().inventory;
 	}
 
 	@Override
 	public boolean isStackValid(int slot, ItemStack stack)
 	{
-		if(slot < 3)
-			return stack.getItem() instanceof IMotorGear;
-		if(slot==3)
-			return MinecartBlockHelper.blocks.keySet().stream().anyMatch(itemStackPredicate -> itemStackPredicate.test(stack));
-		return false;
-	}
-
-	@Override
-	public int getSlotLimit(int slot)
-	{
-		return 1;
-	}
-
-	@Override
-	public int[] getOutputSlots()
-	{
-		return new int[]{};
-	}
-
-	@Override
-	public int[] getOutputTanks()
-	{
-		return new int[]{};
-	}
-
-	@Override
-	public boolean additionalCanProcessCheck(MultiblockProcess<IMultiblockRecipe> process)
-	{
-		return false;
-	}
-
-	@Override
-	public IFluidTank[] getInternalTanks()
-	{
-		return new IFluidTank[]{};
-	}
-
-	@Override
-	protected IFluidTank[] getAccessibleFluidTanks(EnumFacing side)
-	{
-		return new FluidTank[0];
-	}
-
-	@Override
-	protected boolean canFillTankFrom(int iTank, EnumFacing side, FluidStack resource)
-	{
-		return false;
-	}
-
-	@Override
-	protected boolean canDrainTankFrom(int iTank, EnumFacing side)
-	{
-		return false;
-	}
-
-	@Override
-	public void doGraphicalUpdates(int slot)
-	{
-		this.markDirty();
-		this.markContainingBlockForUpdate(null);
-	}
-
-	public void sendUpdate(int id)
-	{
-		EasyNBT tag = EasyNBT.newNBT();
-
-		switch(id)
-		{
-			case 0:
-				tag.withTag("inventory", Utils.writeInventory(inventory));
-				break;
-			case 1:
-				tag.withInt("animation", animation).withFloat("progress", progress);
-				break;
-			case 2:
-				tag.withTag("rotation", rotation.serializeNBT()).withTag("inventory", Utils.writeInventory(inventory));
-				break;
-		}
-
-		if(tag.size() > 0)
-			IIPacketHandler.sendToClient(this, new MessageIITileSync(this, tag));
-	}
-
-	@Override
-	public IMultiblockRecipe findRecipeForInsertion(ItemStack inserting)
-	{
-		return null;
-	}
-
-	@Override
-	protected IMultiblockRecipe readRecipeFromNBT(NBTTagCompound tag)
-	{
-		return null;
-	}
-
-	@Override
-	public List<AxisAlignedBB> getBounds(boolean collision)
-	{
-		List<AxisAlignedBB> list = new ArrayList<>();
-		list.add(new AxisAlignedBB(0, 0, 0, 1, 1, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
-		return list;
-	}
-
-	@Override
-	public boolean hasCapability(Capability<?> capability, EnumFacing facing)
-	{
-		if(pos==6&&capability==CapabilityRotaryEnergy.ROTARY_ENERGY&&facing==(mirrored?this.facing.rotateY(): this.facing.rotateYCCW()))
-			return true;
-		if(pos==2&&capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY&&facing==(mirrored?this.facing.rotateYCCW(): this.facing.rotateY()))
-			return true;
-		return super.hasCapability(capability, facing);
-	}
-
-	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing)
-	{
-		TileEntitySkyCrateStation master = master();
-		if(master==null)
-			return super.getCapability(capability, facing);
-
-		if(pos==6&&capability==CapabilityRotaryEnergy.ROTARY_ENERGY&&facing==(mirrored?this.facing.rotateY(): this.facing.rotateYCCW()))
-			return (T)rotation;
-		if(pos==2&&master.animation==0&&capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY&&facing==(mirrored?this.facing.rotateYCCW(): this.facing.rotateY()))
-			return (T)insertionHandler;
-		return super.getCapability(capability, facing);
-	}
-
-	@Override
-	public boolean canConnectCable(WireType cableType, TargetingInfo target, Vec3i offset)
-	{
-		if(!STRUCTURE_CATEGORY.equals(cableType.getCategory()))
+		if(stack.isEmpty())
 			return false;
-		return limitType==null;
+		if(slot >= 0&&slot < GEAR_SLOTS)
+			return stack.getItem() instanceof IMotorGear;
+		return slot==3&&MinecartBlockHelper.blocks.keySet().stream().anyMatch(predicate -> predicate.test(stack));
 	}
 
 	@Override
-	public Vec3d getConnectionOffset(Connection con)
-	{
-		return new Vec3d(.5, .625, .5);
-	}
-
-	@Override
-	public Set<BlockPos> getIgnored(IImmersiveConnectable other)
-	{
-		return ImmutableSet.of(getPos(), getPos().offset(facing.getOpposite(), 1));
-	}
-
-	@Override
-	public boolean isEnergyOutput()
-	{
-		return false;
-	}
-
-	@Override
-	public void connectCable(WireType cableType, TargetingInfo target, IImmersiveConnectable other)
-	{
-		super.connectCable(cableType, target, other);
-		if(!world.isRemote)
-			if(!(other instanceof ISkyCrateConnector))
-			{
-				Set<Connection> conns = ImmersiveNetHandler.INSTANCE.getConnections(world, getPos());
-				if(conns!=null)
-					for(Connection conn : conns)
-						ImmersiveNetHandler.INSTANCE.removeConnectionAndDrop(conn, world, getBlockPosForPos(10));
-			}
-	}
-
-	@Override
-	public boolean interact(EnumFacing side, EntityPlayer player, EnumHand hand, ItemStack heldItem, float hitX, float hitY, float hitZ)
+	public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing side)
 	{
 		TileEntitySkyCrateStation master = master();
-		if(pos==20&&master!=null&&!world.isRemote)
-			if(master.getInventory().get(5).isEmpty()&&heldItem.getItem()==Items.BANNER)
-			{
-				master.getInventory().set(5, heldItem.copy());
-				master.getInventory().get(5).setCount(1);
-				heldItem.shrink(1);
-				master.sendUpdate(0);
+		if(master!=null&&master.isValid()&&master.formed)
+		{
+			if(isPOI(MultiblockPOI.ROTARY_INPUT)&&capability==CapabilityRotaryEnergy.ROTARY_ENERGY&&side==transportDirection("rotary"))
 				return true;
-			}
-			else if(!master.getInventory().get(5).isEmpty()&&Utils.isWirecutter(heldItem))
-			{
-				player.inventory.addItemStackToInventory(master.getInventory().get(5).copy());
-				master.getInventory().set(5, ItemStack.EMPTY);
-				master.sendUpdate(0);
+			if(isPOI(MultiblockPOI.ITEM_INPUT)&&capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY&&side==transportDirection("cargo_input"))
 				return true;
-			}
-
-		return false;
-	}
-
-	@Override
-	public boolean canOpenGui()
-	{
-		return true;
-	}
-
-	@Override
-	public int getGuiID()
-	{
-		return IIGUI.SKYCRATE_STATION.ordinal();
+		}
+		return super.hasCapability(capability, side);
 	}
 
 	@Nullable
 	@Override
-	public TileEntity getGuiMaster()
+	@SuppressWarnings("unchecked")
+	public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing side)
 	{
-		return master();
+		TileEntitySkyCrateStation master = master();
+		if(master!=null&&master.isValid()&&master.formed)
+		{
+			if(isPOI(MultiblockPOI.ROTARY_INPUT)&&capability==CapabilityRotaryEnergy.ROTARY_ENERGY&&side==transportDirection("rotary"))
+				return (T)master.rotation;
+			if(isPOI(MultiblockPOI.ITEM_INPUT)&&capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY&&side==transportDirection("cargo_input"))
+				return (T)master.insertionHandler;
+		}
+		return super.getCapability(capability, side);
+	}
+
+	@Override
+	public boolean interact(@Nonnull EnumFacing side, @Nonnull EntityPlayer player, @Nonnull EnumHand hand, @Nonnull ItemStack heldItem, float hitX, float hitY, float hitZ)
+	{
+		TileEntitySkyCrateStation master = master();
+		if(!isPOI(MultiblockPOI.MISC_FLAGPOLE)||master==null||!master.isValid()||!master.formed)
+			return false;
+		if(master.inventory.get(5).isEmpty()&&heldItem.getItem()==Items.BANNER)
+		{
+			if(!world.isRemote)
+			{
+				master.inventory.set(5, heldItem.copy());
+				master.inventory.get(5).setCount(1);
+				heldItem.shrink(1);
+				master.syncTransportState(true);
+			}
+			return true;
+		}
+		if(!master.inventory.get(5).isEmpty()&&Utils.isWirecutter(heldItem))
+		{
+			if(!world.isRemote)
+			{
+				ItemStack banner = master.inventory.get(5).copy();
+				if(!player.inventory.addItemStackToInventory(banner))
+					player.dropItem(banner, false);
+				master.inventory.set(5, ItemStack.EMPTY);
+				master.syncTransportState(true);
+			}
+			return true;
+		}
+		return false;
 	}
 
 	public int getAnimationLength()
@@ -612,49 +338,193 @@ public class TileEntitySkyCrateStation extends TileEntityMultiblockConnectable<T
 				return SkyCrateStation.inputTime;
 			case 5:
 				return SkyCrateStation.outputTime;
-
+			default:
+				return 0;
 		}
-		return 0;
 	}
 
 	@Override
-	public boolean onSkycrateMeeting(EntitySkyCrate skyCrate)
+	public boolean onSkycrateMeeting(EntitySkyCrate skycrate)
 	{
 		TileEntitySkyCrateStation master = master();
-		if(master!=null&&master.animation==0&&master.getInventory().get(3).isEmpty())
-		{
-			master.getInventory().set(3, skyCrate.crate.copy());
-			master.getInventory().set(4, skyCrate.mount.copy());
-			master.animation = 4;
-			master.progress = 0;
-			master.sendUpdate(1);
-			master.sendUpdate(2);
-			skyCrate.crate = ItemStack.EMPTY;
-			skyCrate.mount = ItemStack.EMPTY;
-			skyCrate.setDead();
+		if(world==null||world.isRemote||master==null||!master.isValid()||!master.formed)
 			return false;
+		if(master.animation!=0||!master.inventory.get(3).isEmpty()||!master.inventory.get(4).isEmpty())
+			return true;
+		master.inventory.set(3, skycrate.crate.copy());
+		master.inventory.set(4, skycrate.mount.copy());
+		master.setAnimation(4);
+		skycrate.crate = ItemStack.EMPTY;
+		skycrate.mount = ItemStack.EMPTY;
+		skycrate.setDead();
+		return false;
+	}
+
+	@Override
+	public void replaceStructureBlock(@Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull ItemStack stack, int h, int l, int w)
+	{
+		super.replaceStructureBlock(pos, state, stack, h, l, w);
+		TileEntity tile = world.getTileEntity(pos);
+		if(tile instanceof TileEntityConveyorBelt)
+			((TileEntityConveyorBelt)tile).setFacing(transportDirection("cargo_output"));
+	}
+
+	@Nonnull
+	@Override
+	public NonNullList<ItemStack> getInventory()
+	{
+		TileEntitySkyCrateStation master = master();
+		return master!=null&&master.isValid()&&master.inventory!=null?master.inventory: NonNullList.create();
+	}
+
+	@Override
+	public int getSlotLimit(int slot)
+	{
+		return 1;
+	}
+
+	@Override
+	public void doGraphicalUpdates(int slot)
+	{
+		TileEntitySkyCrateStation master = master();
+		if(master!=null&&master.isValid()&&!world.isRemote)
+			master.syncTransportState(true);
+	}
+
+	void syncTransportState(boolean payloadChanged)
+	{
+		markDirty();
+		updateTileForEvent(payloadChanged?SyncEvents.TILE_CUSTOM2: SyncEvents.TILE_CUSTOM1);
+		lastSyncedSpeed = rotation.getRotationSpeed();
+		lastSyncedTorque = rotation.getTorque();
+	}
+
+	@Nonnull
+	private EnumFacing transportDirection(String name)
+	{
+		return java.util.Objects.requireNonNull(getDirection(name));
+	}
+
+	private boolean handleRotation()
+	{
+		EnumFacing inputSide = transportDirection("rotary");
+		BlockPos inputPos = getPOIPos(MultiblockPOI.ROTARY_INPUT).offset(inputSide);
+		TileEntity neighbour = world.isBlockLoaded(inputPos)?world.getTileEntity(inputPos): null;
+		IRotaryEnergy input = neighbour==null?null: neighbour.getCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, inputSide.getOpposite());
+		if(input!=null&&input.getSide(inputSide.getOpposite()).canOutput())
+			rotation.handleRotation(input, inputSide.getOpposite());
+		else
+			rotation.grow(0, 0, 0.98f);
+		return !IIRotaryUtils.destroyIfOverloaded(this, rotation, SkyCrateStation.speedBreaking, SkyCrateStation.torqueBreaking);
+	}
+
+	public float getAnimationSpeed()
+	{
+		return IIRotaryUtils.getEffectiveEnergy(rotation, SkyCrateStation.speedMin, SkyCrateStation.speedEfficient,
+				SkyCrateStation.torqueMin, SkyCrateStation.torqueEfficient)*IIRotaryUtils.getGearEfficiency(inventory, 0, GEAR_SLOTS);
+	}
+
+	public float getAnimationProgress(float partialTicks)
+	{
+		int duration = getAnimationLength();
+		return duration > 0?MathHelper.clamp((progress+partialTicks*getAnimationSpeed())/duration, 0, 1): 0;
+	}
+
+	private void setAnimation(int next)
+	{
+		animation = next;
+		progress = 0;
+		syncTransportState(true);
+	}
+
+	private boolean shouldEject()
+	{
+		EnumFacing side = transportDirection("redstone");
+		return world.getRedstonePower(getPOIPos(MultiblockPOI.REDSTONE_INPUT).offset(side), side.getOpposite()) > 0;
+	}
+
+	private TileEntity getMountInventory()
+	{
+		BlockPos mountPos = getPOIPos("mount").offset(transportDirection("mount"));
+		return world.isBlockLoaded(mountPos)?world.getTileEntity(mountPos): null;
+	}
+
+	private ItemStack extractMount()
+	{
+		TileEntity neighbour = getMountInventory();
+		IItemHandler handler = neighbour==null?null: neighbour.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, transportDirection("mount").getOpposite());
+		if(handler!=null)
+			for(int slot = 0; slot < handler.getSlots(); slot++)
+				if(handler.getStackInSlot(slot).getItem() instanceof ISkycrateMount)
+				{
+					ItemStack extracted = handler.extractItem(slot, 1, false);
+					if(!extracted.isEmpty())
+						return extracted;
+				}
+		return ItemStack.EMPTY;
+	}
+
+	@Override
+	protected boolean isMatchingCable(WireType cableType)
+	{
+		return STRUCTURE_CATEGORY.equals(cableType.getCategory());
+	}
+
+	@Override
+	public boolean canConnectCable(WireType cableType, TargetingInfo target, Vec3i offset)
+	{
+		Set<Connection> connections = world==null?null: ImmersiveNetHandler.INSTANCE.getConnections(world, getPos());
+		return formed&&canConnect()&&isMatchingCable(cableType)&&(connections==null||connections.isEmpty())
+				&&(limitType==null||limitType==cableType);
+	}
+
+	@Override
+	public void connectCable(WireType cableType, TargetingInfo target, IImmersiveConnectable other)
+	{
+		super.connectCable(cableType, target, other);
+		markDirty();
+		if(!world.isRemote&&!(other instanceof ISkyCrateConnector))
+		{
+			Set<Connection> connections = ImmersiveNetHandler.INSTANCE.getConnections(world, getPos());
+			if(connections!=null)
+				for(Connection connection : new ArrayList<>(connections))
+					if(connection.cableType==cableType&&connection.end.equals(other.getConnectionMaster(cableType, target)))
+						ImmersiveNetHandler.INSTANCE.removeConnectionAndDrop(connection, world, getPos());
 		}
+	}
+
+	@Override
+	public Vec3d getConnectionOffset(Connection connection)
+	{
+		return new Vec3d(.5, .625, .5);
+	}
+
+	@Override
+	public Set<BlockPos> getIgnored(IImmersiveConnectable other)
+	{
+		return ImmutableSet.of(getPos(), getPos().offset(facing.getOpposite()));
+	}
+
+	@Override
+	public void receiveMessageFromClient(NBTTagCompound message)
+	{
+		//Transport state is controlled by the server.
+	}
+
+	@Override
+	public boolean canOpenGui()
+	{
+		TileEntitySkyCrateStation master = master();
+		if(master==null||!master.isValid()||!master.formed)
+			return false;
+		if(!world.isRemote)
+			master.updateTileForEvent(SyncEvents.TILE_GUI_OPENED);
 		return true;
 	}
 
 	@Override
-	public void updateRotationStorage(float speed, float torque, int partID)
+	public IIGUI getGUI()
 	{
-		if(world.isRemote)
-			if(partID==0)
-			{
-				rotation.setRotationSpeed(speed);
-				rotation.setTorque(torque);
-			}
-	}
-
-	@Override
-	public void replaceStructureBlock(BlockPos pos, IBlockState state, ItemStack stack, int h, int l, int w)
-	{
-		super.replaceStructureBlock(pos, state, stack, h, l, w);
-
-		TileEntity tile = world.getTileEntity(pos);
-		if(tile instanceof TileEntityConveyorBelt)
-			((TileEntityConveyorBelt)tile).setFacing((mirrored?this.facing.rotateY(): this.facing.rotateYCCW()));
+		return IIGUI.SKYCRATE_STATION;
 	}
 }

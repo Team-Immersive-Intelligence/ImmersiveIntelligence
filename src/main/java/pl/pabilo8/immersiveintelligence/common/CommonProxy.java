@@ -734,6 +734,8 @@ public class CommonProxy implements IGuiHandler
 			{
 				if(ticket.getEntity() instanceof EntityAmmoChunkLoadingProjectile)
 					((EntityAmmoChunkLoadingProjectile)ticket.getEntity()).restoreChunkLoadingTicket(ticket);
+				else if(ticket.getEntity() instanceof EntitySkyCrate)
+					((EntitySkyCrate)ticket.getEntity()).restoreChunkLoadingTicket(ticket);
 				else
 					propertyTickets.add(ticket);
 			}
