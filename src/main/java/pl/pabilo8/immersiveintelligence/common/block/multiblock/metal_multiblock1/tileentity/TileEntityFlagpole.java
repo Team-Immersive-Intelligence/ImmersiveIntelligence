@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity;
 
 import blusunrize.immersiveengineering.api.DimensionBlockPos;
+import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
 import blusunrize.immersiveengineering.api.energy.wires.WireType;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IPlayerInteraction;
@@ -55,6 +56,7 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInter
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IManagedDamageResistantMultiblock;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.MultiblockHealth;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIConnectable;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -67,7 +69,7 @@ import static blusunrize.immersiveengineering.api.energy.wires.WireType.MV_CATEG
  * Multiblock responsible for claiming terrain and chunkloading.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 05.10.2026
+ * @updated 08.10.2026
  * @ii-approved 0.3.1
  * @since 04.03.2021
  */
@@ -124,6 +126,14 @@ public class TileEntityFlagpole extends TileEntityMultiblockIIConnectable<TileEn
 		this.style = null;
 		this.health = null;
 		this.energyStorage = null;
+	}
+
+	@Override
+	public void onBeforeFirstTick()
+	{
+		super.onBeforeFirstTick();
+		if(!world.isRemote&&isUpgradeInstalled(IIContent.UPGRADE_FLAGPOLE_DISTRESS_SIGNAL))
+			RadioNetwork.INSTANCE.addDevice(this);
 	}
 
 	@Override
@@ -240,19 +250,24 @@ public class TileEntityFlagpole extends TileEntityMultiblockIIConnectable<TileEn
 		if(distressAlarmActive==active)
 			return;
 		distressAlarmActive = active;
-		updateTileForEvent(SyncEvents.TILE_CUSTOM1);
+		if(!world.isRemote)
+		{
+			markDirty();
+			updateTileForEvent(SyncEvents.TILE_CUSTOM1);
+		}
 	}
 
 	@SideOnly(Side.CLIENT)
 	private void updateDistressAlarmSound()
 	{
-		if(!distressAlarmActive)
+		if(!distressAlarmActive||!isUpgradeInstalled(IIContent.UPGRADE_FLAGPOLE_DISTRESS_SIGNAL))
 			return;
 		if(distressAlarmSound==null||distressAlarmSound.isDonePlaying())
 		{
 			distressAlarmSound = new ConditionCompoundSound<>(IISounds.siren,
 					new Vec3d(getPos()).addVector(0.5, 0.5, 0.5), this,
-					tile -> !tile.isInvalid()&&tile.distressAlarmActive);
+					tile -> !tile.isInvalid()&&tile.distressAlarmActive&&
+							tile.isUpgradeInstalled(IIContent.UPGRADE_FLAGPOLE_DISTRESS_SIGNAL));
 			distressAlarmSound.setMaxRange(Flagpole.distressAlarmSoundRange);
 		}
 	}
@@ -260,14 +275,16 @@ public class TileEntityFlagpole extends TileEntityMultiblockIIConnectable<TileEn
 	@Override
 	public void onChunkUnload()
 	{
-		RadioNetwork.INSTANCE.removeDevice(this);
+		if(hasWorld()&&!world.isRemote&&!isDummy())
+			RadioNetwork.INSTANCE.removeDevice(this);
 		super.onChunkUnload();
 	}
 
 	@Override
 	public void invalidate()
 	{
-		RadioNetwork.INSTANCE.removeDevice(this);
+		if(hasWorld()&&!world.isRemote&&!isDummy())
+			RadioNetwork.INSTANCE.removeDevice(this);
 		super.invalidate();
 	}
 
@@ -320,7 +337,7 @@ public class TileEntityFlagpole extends TileEntityMultiblockIIConnectable<TileEn
 	public int outputEnergy(int amount, boolean simulate, int energyType)
 	{
 		TileEntityFlagpole master = isDummy()?master(): this;
-		return master==null||master.energyStorage==null?0: master.energyStorage.receiveEnergy(amount, simulate);
+		return master==null||master.energyStorage==null||!canConnect()?0: master.energyStorage.receiveEnergy(amount, simulate);
 	}
 
 	@Override
@@ -343,26 +360,48 @@ public class TileEntityFlagpole extends TileEntityMultiblockIIConnectable<TileEn
 	@Override
 	public boolean removeUpgrade(Upgrade upgrade)
 	{
-		boolean success = IManagedUpgradableDevice.super.removeUpgrade(upgrade);
-		//Remove from current radio network
-		if(success&upgrade==IIContent.UPGRADE_FLAGPOLE_DISTRESS_SIGNAL)
+		if(isDummy())
+		{
+			TileEntityFlagpole master = master();
+			return master!=null&&master.removeUpgrade(upgrade);
+		}
+		if(!IManagedUpgradableDevice.super.removeUpgrade(upgrade))
+			return false;
+		if(world.isRemote)
+			return true;
+
+		//Use the remaining upgrades, because removal can include dependent upgrades.
+		if(!isUpgradeInstalled(IIContent.UPGRADE_FLAGPOLE_DISTRESS_SIGNAL))
 		{
 			RadioNetwork.INSTANCE.removeDevice(this);
+			radioCooldown = distressPacketCooldown = 0;
 			setDistressAlarmActive(false);
 		}
-		//Remove from wired network
-		if(success&upgrade==IIContent.UPGRADE_FLAGPOLE_TASER_LOCKS||upgrade==IIContent.UPGRADE_FLAGPOLE_DISTRESS_SIGNAL)
-			removeCable(null);
-
-		return success;
+		if(!isUpgradeInstalled(IIContent.UPGRADE_FLAGPOLE_TASER_LOCKS)&&
+				!isUpgradeInstalled(IIContent.UPGRADE_FLAGPOLE_DISTRESS_SIGNAL))
+			for(int wirePos : getPOI(MultiblockPOI.WIRE_MOUNT))
+			{
+				if(world.getTileEntity(getBlockPosForPos(wirePos)) instanceof TileEntityFlagpole wireTile)
+				{
+					ImmersiveNetHandler.INSTANCE.clearAllConnectionsFor(wireTile.getPos(), world,
+							world.getGameRules().getBoolean("doTileDrops"));
+					wireTile.removeCable(null);
+				}
+			}
+		return true;
 	}
 
 	@Override
 	public boolean addUpgrade(Upgrade upgrade, UpgradeOperation operation)
 	{
+		if(isDummy())
+		{
+			TileEntityFlagpole master = master();
+			return master!=null&&master.addUpgrade(upgrade, operation);
+		}
 		boolean success = IManagedUpgradableDevice.super.addUpgrade(upgrade, operation);
-		//Register new radio receiver to the network
-		if(success&&operation==UpgradeOperation.INSTALL&&upgrade==IIContent.UPGRADE_FLAGPOLE_DISTRESS_SIGNAL)
+		if(success&&!world.isRemote&&operation==UpgradeOperation.FORCE_ADD&&
+				upgrade==IIContent.UPGRADE_FLAGPOLE_DISTRESS_SIGNAL)
 			RadioNetwork.INSTANCE.addDevice(this);
 		return success;
 	}
@@ -397,6 +436,14 @@ public class TileEntityFlagpole extends TileEntityMultiblockIIConnectable<TileEn
 			if(!world.isRemote)
 				master.updateTileForEvent(SyncEvents.TILE_CUSTOM1);
 		}
+	}
+
+	@Override
+	public boolean isRadioAvailable()
+	{
+		return hasWorld()&&!world.isRemote&&!isInvalid()&&!isDummy()&&
+				isUpgradeInstalled(IIContent.UPGRADE_FLAGPOLE_DISTRESS_SIGNAL)&&
+				IRadioDevice.super.isRadioAvailable();
 	}
 
 	@Override
