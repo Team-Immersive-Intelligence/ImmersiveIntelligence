@@ -527,6 +527,8 @@ public class ClientProxy extends CommonProxy
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPrecisionAssembler.class, new PrecisionAssemblerRenderer().subscribeToList("multiblock/precision_assembler"));
 		registerTileRenderer(FillerRenderer.class);
 
+		registerTileRenderer(CokeBatteryRenderer.class);
+
 		//Ammunition production multiblocks renderers
 		registerTileRenderer(AmmunitionAssemblerRenderer.class);
 		registerTileRenderer(ProjectileWorkshopRenderer.class);
