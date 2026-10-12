@@ -14,6 +14,7 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
@@ -100,11 +101,24 @@ public class ItemIILightEngineerChestplate extends ItemIILightEngineerArmorBase 
 		boolean hasHeatCoat = getUpgrades(stack).hasKey("heatcoat");
 		boolean hasReinforcement = hasReinforcement(player);
 
-
-		if(hasHeatCoat&&hasReinforcement)
+		if(hasHeatCoat)
 		{
-			player.addPotionEffect(new PotionEffect(MobEffects.FIRE_RESISTANCE, 20, 0, true, false)); // Give fire resistance for 1 second
-			return;
+			if(hasReinforcement)
+			{
+				//Heatcoat and reinforced boots: no fire, lava, and magma damage.
+				player.addPotionEffect(new PotionEffect(MobEffects.FIRE_RESISTANCE, 20, 0, true, false));
+			}
+			else
+			{
+
+				//No fire damage.
+				boolean inLava = world.getBlockState(player.getPosition()).getMaterial()==Material.LAVA
+						|| world.getBlockState(player.getPosition().down()).getMaterial()==Material.LAVA;
+				boolean onMagma = world.getBlockState(player.getPosition().down()).getBlock()==Blocks.MAGMA;
+
+				if(!inLava&&!onMagma)
+					player.addPotionEffect(new PotionEffect(MobEffects.FIRE_RESISTANCE, 2, 0, true, false));
+			}
 		}
 
 		super.onArmorTick(world, player, stack);
