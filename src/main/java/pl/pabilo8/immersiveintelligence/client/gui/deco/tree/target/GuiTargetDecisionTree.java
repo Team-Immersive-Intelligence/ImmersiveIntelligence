@@ -25,6 +25,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.DecoTextF
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.util.TextFilter;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.tree.TreeLayout.Orientation;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoColors;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTemplates;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
@@ -113,9 +114,11 @@ public abstract class GuiTargetDecisionTree<T extends TileEntityIEBase & IIEInve
 		if(topBar==null)
 			return;
 		topBar.cleanup();
-		DecoDropdown<TargetDecisionTreePreset> presets = new DecoDropdown<TargetDecisionTreePreset>(2, 2)
-				.withSize(140, 16)
-				.withDropdownWidth(140)
+		DecoDropdown<TargetDecisionTreePreset> presets = new DecoDropdown<TargetDecisionTreePreset>(1, 1)
+				.withSize(122, 16)
+				.withBackground(DecoTextures.COMPONENT_BUTTON_PAPER)
+				.withDropdownSymbol(DecoTextures.COMPONENT_DROPDOWN_SYMBOL_PAPER)
+				.withDropdownWidth(122)
 				.withMaxDisplayedEntries(8)
 				.withSortFunction(createPresetSorter())
 				.withEntries(configuration.getPresets())
@@ -126,13 +129,17 @@ public abstract class GuiTargetDecisionTree<T extends TileEntityIEBase & IIEInve
 
 		topBar.addComponents(
 				presets,
-				new DecoButton(144, 2)
-						.withSize(31, 14)
+				new DecoButton(144-20, 2)
+						.withSize(34, 14)
+						.withBackground(DecoTextures.COMPONENT_BUTTON_PAPER)
+						.withTextColor(DecoColors.H2, DecoColors.H2)
+						.withTextHoveredColor(DecoColors.H2)
 						.withText(PRESET_KEY+"reset")
 						.withTranslatedTooltip(PRESET_KEY+"reset.tooltip")
 						.withOnLMBPressed(this::resetSelectedPreset)
 						.withDisabled(selectedPreset==null),
-				currentTaskCheckbox = new DecoCheckbox(178, 4)
+				currentTaskCheckbox = new DecoCheckbox(178-20+2, 3)
+						.withBackground(DecoTextures.COMPONENT_CHECKBOX_PAPER)
 						.withRawText(I18n.format(PRESET_KEY+"current"))
 						.withSize(64, 11)
 						.withTranslatedTooltip(PRESET_KEY+"current.tooltip")

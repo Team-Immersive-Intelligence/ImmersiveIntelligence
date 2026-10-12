@@ -3739,6 +3739,10 @@ ii.gui.emplacement.target.shells=Shells
 ii.gui.emplacement.target.team=Team
 ii.gui.emplacement.target.name=Name
 
+ii.gui.map_display.zoom_in=Zoom in
+ii.gui.map_display.zoom_out=Zoom out
+ii.gui.map_display.center=Center
+
 ii.gui.map_display.color_mapper.terrain=Terrain
 ii.gui.map_display.color_mapper.grayscale=Grayscale
 ii.gui.map_display.color_mapper.topographic=Topographic

@@ -159,6 +159,7 @@ public class DecoTextures
 	public static final ResLoc ICON_ACTION_REJECT = ResLoc.of(RES_TEXTURES_DECO_ICON, "action_reject");
 	public static final ResLoc ICON_ACTION_HELP = ResLoc.of(RES_TEXTURES_DECO_ICON, "action_help");
 	public static final ResLoc ICON_ACTION_PIN = ResLoc.of(RES_TEXTURES_DECO_ICON, "action_pin");
+	public static final ResLoc ICON_ACTION_CENTER = ResLoc.of(RES_TEXTURES_DECO_ICON, "action_center");
 
 	//--- Custom Deco Component Textures ---//
 	public static final ResLoc COMPONENT_BUTTON_PAPER = ResLoc.of(RES_TEXTURES_DECO, "component/button_paper");
