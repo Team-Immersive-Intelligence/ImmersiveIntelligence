@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity;
 
-import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IPlayerInteraction;
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,14 +16,14 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.crafting.CokeBatteryRecipe;
 import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIMultiblockRecipe;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedTextOverlay;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Electrolyzer;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.CokeBattery;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockCokeBattery;
+import pl.pabilo8.immersiveintelligence.common.util.IIEnergyStorage;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionSingle;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 import static pl.pabilo8.immersiveintelligence.common.IIUtils.handleBucketTankInteraction;
 import static pl.pabilo8.immersiveintelligence.common.IIUtils.outputFluidToTank;
@@ -34,7 +33,8 @@ import static pl.pabilo8.immersiveintelligence.common.IIUtils.outputFluidToTank;
  * @updated 25.05.2026
  * @since 25.05.2026
  */
-public class TileCokeBattery extends TileEntityMultiblockProductionSingle<pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileCokeBattery, CokeBatteryRecipe> implements IPlayerInteraction, IAdvancedTextOverlay
+public class TileEntityCokeBattery extends TileEntityMultiblockProductionSingle<TileEntityCokeBattery, CokeBatteryRecipe>
+		implements IPlayerInteraction, IAdvancedTextOverlay
 {
 	@SyncNBT(name = "tank0", events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_RECIPE_CHANGED, SyncEvents.TILE_CUSTOM1})
 	public FluidTank tankInput;
@@ -43,16 +43,16 @@ public class TileCokeBattery extends TileEntityMultiblockProductionSingle<pl.pab
 	@SyncNBT(name = "tank2", events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_RECIPE_CHANGED, SyncEvents.TILE_CUSTOM1})
 	public FluidTank tankOutput2;
 
-	public TileCokeBattery()
+	public TileEntityCokeBattery()
 	{
 		super(MultiblockCokeBattery.INSTANCE);
 
-		this.tankInput = new FluidTank(Electrolyzer.fluidCapacity);
-		this.tankOutput1 = new FluidTank(Electrolyzer.fluidCapacity);
-		this.tankOutput2 = new FluidTank(Electrolyzer.fluidCapacity);
+		this.tankInput = new FluidTank(CokeBattery.fluidCapacity);
+		this.tankOutput1 = new FluidTank(CokeBattery.fluidCapacity);
+		this.tankOutput2 = new FluidTank(CokeBattery.fluidCapacity);
 
 		this.inventory = NonNullList.withSize(6, ItemStack.EMPTY);
-		this.energyStorage = new FluxStorageAdvanced(Electrolyzer.energyCapacity);
+		this.energyStorage = new IIEnergyStorage(CokeBattery.energyCapacity);
 	}
 
 	@Override
@@ -60,23 +60,6 @@ public class TileCokeBattery extends TileEntityMultiblockProductionSingle<pl.pab
 	{
 		super.dummyCleanup();
 		this.tankInput = tankOutput1 = tankOutput2 = null;
-	}
-
-	@Override
-	protected int[] listAllPOI(MultiblockPOI poi)
-	{
-		switch(poi)
-		{
-			case ENERGY_INPUT:
-				return getPOI("energy_input");
-			case REDSTONE_INPUT:
-				return getPOI("redstone_input");
-			case FLUID_INPUT:
-				return getPOI("fluid_input");
-			case FLUID_OUTPUT:
-				return getPOI("fluid_output");
-		}
-		return new int[0];
 	}
 
 	@Override
@@ -122,7 +105,6 @@ public class TileCokeBattery extends TileEntityMultiblockProductionSingle<pl.pab
 			if(update)
 				updateTileForEvent(SyncEvents.TILE_CUSTOM1);
 		}
-
 	}
 
 	@Override
@@ -134,7 +116,7 @@ public class TileCokeBattery extends TileEntityMultiblockProductionSingle<pl.pab
 	@Override
 	public IIGUI getGUI()
 	{
-		return IIGUI.ELECTROLYZER;
+		return null;
 	}
 
 	@Override
@@ -194,7 +176,7 @@ public class TileCokeBattery extends TileEntityMultiblockProductionSingle<pl.pab
 	{
 		if(isPOI("visible_tank"))
 		{
-			pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileCokeBattery master = master();
+			TileEntityCokeBattery master = master();
 			return master!=null&&FluidUtil.interactWithFluidHandler(player, hand, master.tankInput);
 		}
 		return false;
@@ -209,7 +191,7 @@ public class TileCokeBattery extends TileEntityMultiblockProductionSingle<pl.pab
 		if(!Utils.isFluidRelatedItemStack(player.getHeldItem(EnumHand.MAIN_HAND)))
 			return new String[0];
 
-		pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileCokeBattery master = master();
+		TileEntityCokeBattery master = master();
 		if(master!=null&&isPOI("visible_tank"))
 			return new String[]{IIUtils.getFluidNameOverlayText(master.tankInput.getFluid())};
 

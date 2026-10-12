@@ -702,6 +702,10 @@ public class IIConfigHandler
 			@Comment("Config for the Coagulator, allows for changes to processing time, energy and fluid capacity")
 			public static Coagulator coagulator;
 			@SubConfig
+			@LangKey("tile.immersiveintelligence.metal_multiblock1.coke_battery.name")
+			@Comment("Config for the Coke Battery, allows for changes to the energy and fluid capacity")
+			public static CokeBattery cokeBattery;
+			@SubConfig
 			@LangKey("tile.immersiveintelligence.metal_multiblock1.vulcanizer.name")
 			@Comment("Config for the Vulcanize, allows for changes to energy capacity")
 			public static Vulcanizer vulcanizer;
@@ -1435,6 +1439,15 @@ public class IIConfigHandler
 
 				@Comment({"Duration of crane bucket actions (in ticks)."})
 				public static int craneBucketActionTime = 100;
+			}
+
+			public static class CokeBattery
+			{
+				@Comment({"Energy capacity of the coke battery (in IF)."})
+				public static int energyCapacity = 16000;
+
+				@Comment({"Fluid capacity of a coke battery tank (in mB)."})
+				public static int fluidCapacity = 12000;
 			}
 
 			public static class AmmunitionAssembler

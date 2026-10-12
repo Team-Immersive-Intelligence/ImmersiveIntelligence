@@ -52,7 +52,7 @@ public class BlockIIMetalMultiblock1 extends BlockIIMultiblock<MetalMultiblocks1
 		COAGULATOR,
 
 		@IIBlockProperties(needsCustomState = true)
-		@EnumMultiblockProvider(multiblock = MultiblockCokeBattery.class, tile = TileCokeBattery.class)
+		@EnumMultiblockProvider(multiblock = MultiblockCokeBattery.class, tile = TileEntityCokeBattery.class)
 		COKE_BATTERY,
 
 		@IIBlockProperties(needsCustomState = true)
