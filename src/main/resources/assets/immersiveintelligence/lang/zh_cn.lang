@@ -622,7 +622,7 @@ item.immersiveintelligence.naval_mine.bullet.name=水雷
 item.immersiveintelligence.naval_mine.core.name=水雷战斗部
 item.immersiveintelligence.ammo_casing.naval_mine.name=水雷壳体
 
-item.immersiveintelligence.placeholder_icon.name=Placeholder
+item.immersiveintelligence.placeholder_icon.name=占位符
 
 tile.immersiveintelligence.stone_decoration.sandbags.name=沙袋
 
@@ -660,31 +660,31 @@ tile.immersiveintelligence.small_crate.metal_crate_wide.name=小型金属储存�
 tile.immersiveintelligence.small_crate.reinforced_crate_box.name=小型强化储存箱(盒状)
 tile.immersiveintelligence.small_crate.reinforced_crate_cube.name=小型强化储存箱(块状)
 tile.immersiveintelligence.small_crate.reinforced_crate_wide.name=小型强化储存箱(扁状)
-tile.immersiveintelligence.clipboard.clipboard.name=Engineer's Clipboard
+tile.immersiveintelligence.clipboard.clipboard.name=工程师剪切板
 
-ii.gui.clipboard.title=Engineer's Clipboard
-ii.gui.clipboard.packet_variables=%s data variables
-ii.gui.clipboard.action.copy=Copy entry
-ii.gui.clipboard.action.todo=Turn into a ToDo Entry
-ii.gui.clipboard.add=Add a Text Entry
-ii.gui.clipboard.add_todo=Add a ToDo Entry
-ii.gui.clipboard.add_position=Add Current Position
-ii.gui.clipboard.todo_completed=Task completed
-ii.gui.clipboard.action.remove=Delete entry
-ii.gui.clipboard.type.plain_text=Plain Text
-ii.gui.clipboard.type.data_variable=II Data System Variable
-ii.gui.clipboard.type.data_packet=II Data System Packet
-ii.gui.clipboard.type.item_stack=Item Stack
-ii.gui.clipboard.type.ingredient_stack=Ingredient Stack
-ii.gui.clipboard.type.fluid_stack=Fluid Stack
-ii.gui.clipboard.type.dust_stack=Dust Stack
-ii.gui.clipboard.type.integer=Integer
-ii.gui.clipboard.type.float=Float
-ii.gui.clipboard.type.double=Double
-ii.gui.clipboard.type.enum=Enum Value
-ii.gui.clipboard.type.manual_page=Engineer's Manual Page
-ii.gui_tooltip.widget.clipboard.show.unnamed=Show Engineer's Clipboard
-ii.gui_tooltip.widget.clipboard.show.named=Show Clipboard: %s
+ii.gui.clipboard.title=工程师剪切板
+ii.gui.clipboard.packet_variables=%s 数据变量
+ii.gui.clipboard.action.copy=复制条目
+ii.gui.clipboard.action.todo=转为待办条目
+ii.gui.clipboard.add=增加文本条目
+ii.gui.clipboard.add_todo=增加待办条目
+ii.gui.clipboard.add_position=增加当前位置
+ii.gui.clipboard.todo_completed=任务完成
+ii.gui.clipboard.action.remove=删除条目
+ii.gui.clipboard.type.plain_text=纯文本
+ii.gui.clipboard.type.data_variable=II数据系统变量
+ii.gui.clipboard.type.data_packet=II数据系统包
+ii.gui.clipboard.type.item_stack=物品堆栈
+ii.gui.clipboard.type.ingredient_stack=原料堆栈
+ii.gui.clipboard.type.fluid_stack=流体堆栈
+ii.gui.clipboard.type.dust_stack=灰尘堆栈
+ii.gui.clipboard.type.integer=整数
+ii.gui.clipboard.type.float=浮点数
+ii.gui.clipboard.type.double=双浮点数
+ii.gui.clipboard.type.enum=枚举值
+ii.gui.clipboard.type.manual_page=工程师手册页
+ii.gui_tooltip.widget.clipboard.show.unnamed=展示工程师剪切板
+ii.gui_tooltip.widget.clipboard.show.named=展示剪切板: %s
 
 tile.immersiveintelligence.metal_fortification.steel_chain_fence.name=钢链栅栏
 tile.immersiveintelligence.metal_fortification.brass_chain_fence.name=黄铜链栅栏
@@ -692,12 +692,12 @@ tile.immersiveintelligence.metal_fortification.aluminium_chain_fence.name=硬化
 
 tile.immersiveintelligence.wooden_fortification.wooden_steel_chain_fence.name=木钢复合链状栅栏
 tile.immersiveintelligence.wooden_fortification.wooden_brass_chain_fence.name=木黄铜复合链状栅栏
-tile.immersiveintelligence.wooden_fortification.wooden_aluminum_chain_fence.name=Wooden Aluminium Chain Fence
+tile.immersiveintelligence.wooden_fortification.wooden_aluminum_chain_fence.name=木铝符合链状栅栏
 
 #Harbor Decorations
-tile.immersiveintelligence.harbor.wooden_pier.name=Wooden Pier
-tile.immersiveintelligence.harbor.wooden_quay.name=Wooden Quay
-tile.immersiveintelligence.harbor_support.wooden_pier_support.name=Wooden Pier Support
+tile.immersiveintelligence.harbor.wooden_pier.name=木码头
+tile.immersiveintelligence.harbor.wooden_quay.name=木石码头
+tile.immersiveintelligence.harbor_support.wooden_pier_support.name=木码头支撑
 
 tile.immersiveintelligence.metal_fortification1.tank_trap.name=捷克刺猬
 
@@ -788,7 +788,7 @@ desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.cmyk.m=M洋�
 desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.cmyk.y=Y黄色
 desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.cmyk.k=k黑色
 
-desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.hsv=Display in HSV
+desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.hsv=以 HSV 显示
 desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.hsv.h=Hue
 desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.hsv.s=Saturation
 desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.hsv.v=Value
@@ -861,7 +861,7 @@ fluid.brine=盐水
 fluid.ammonia=氨气
 fluid.hexamine=乌洛托品
 fluid.methanol=甲醇
-fluid.rocket_propellant=Rocket Propellant
+fluid.rocket_propellant=火箭燃料
 
 fluid.latex=乳胶
 
@@ -974,11 +974,11 @@ subtitle.immersiveintelligence.motor_belt=传动皮带旋转
 subtitle.immersiveintelligence.track_break=金属传动带断裂
 subtitle.immersiveintelligence.track=金属传动带旋转
 
-subtitle.immersiveintelligence.heavy_railgun_shot=Heavy Railgun Firing
-subtitle.immersiveintelligence.heavy_railgun_shot_distant=Heavy Railgun Firing in Distance
+subtitle.immersiveintelligence.heavy_railgun_shot=重型磁轨炮射击
+subtitle.immersiveintelligence.heavy_railgun_shot_distant=重型电磁炮远距离开火
 
-subtitle.immersiveintelligence.missile_shot=Missile being Fired
-subtitle.immersiveintelligence.missile_shot_distant=Missile being Fired in Distance
+subtitle.immersiveintelligence.missile_shot=导弹发射
+subtitle.immersiveintelligence.missile_shot_distant=导弹远距离发射
 
 subtitle.immersiveintelligence.autocannon_shot=机炮开火
 subtitle.immersiveintelligence.autocannon_shot_distant=机炮远距离开火
@@ -1015,11 +1015,11 @@ entity.minecart_barrel_creative.name=创造储存桶矿车
 entity.minecart_steel_barrel.name=钢桶矿车
 entity.minecart_open_barrel.name=开放式金属桶矿车
 
-entity.skycrate.name=Skycrate
+entity.skycrate.name=天车
 
-entity.bullet.name=Bullet
-entity.shrapnel.name=Shrapnel
-entity.flare.name=Flare
+entity.bullet.name=子弹
+entity.shrapnel.name=弹片
+entity.flare.name=闪光弹
 entity.gas_cloud.name=气体云
 entity.white_phosphorus.name=白磷爆炸
 entity.atomic_boom.name=核爆
@@ -1634,7 +1634,7 @@ desc.immersiveintelligence.bullets.damage_dealt=造成的伤害: %s
 desc.immersiveintelligence.bullets.standard_velocity=标准速度: %s b/t
 desc.immersiveintelligence.bullets.max_artillery_range=最大炮火射程: %s 块
 desc.immersiveintelligence.bullets.max_artillery_height=到达最高高度: %s 块
-desc.immersiveintelligence.bullets.max_direct_range=最大直接范围: %s 块
+desc.immersiveintelligence.bullets.max_direct_range=最大直射范围: %s 块
 desc.immersiveintelligence.bullets.max_range=最大距离: %s 块
 desc.immersiveintelligence.bullets.armor_penetration=护甲穿透:
 
@@ -2832,7 +2832,7 @@ key.immersiveintelligence.armorExosuit=切换工程师轻甲外骨骼
 
 key.immersiveintelligence.mgScope=放大/机枪瞄准镜
 
-key.categories.iivehicle=Vehicles (Immersive Intelligence)
+key.categories.iivehicle=载具 (沉浸智能)
 key.immersiveintelligence.vehicle.engine.toggle=切换引擎
 key.immersiveintelligence.vehicle.engine.start=发动引擎
 key.immersiveintelligence.vehicle.engine.stop=关闭引擎
@@ -3141,7 +3141,7 @@ ie.manual.entry.traits.decorations=可修饰的
 ie.manual.entry.traits.paintable=可涂漆的
 
 ie.manual.entry.wip_warning0=警告! 开发中内容.
-ie.manual.entry.wip_warning1=工程部正在努力将它推到前面!
+ie.manual.entry.wip_warning1=工程部正在努力将它完成!
 ie.manual.entry.wip_warning.upgrade=该功能可能缺乏视觉效果或没有任何功能，不要报告此问题.
 ie.manual.entry.upgrade_notice=用扳手进行升级.
 
@@ -3193,7 +3193,7 @@ ie.manual.entry.tf=True/False
 ie.manual.entry.false=False
 ie.manual.entry.true=True
 
-ie.manual.entry.callback_returns=Returns:
+ie.manual.entry.callback_returns=返回:
 
 #Bullet cores & components
 ie.manual.entry.bullet_cores.name=弹芯材料
@@ -3409,7 +3409,7 @@ ii.config.Mines=地雷
 ii.config.Light_Engineer_Armor=工程师轻型装甲
 
 #GUI Labels
-ii.gui.editor.editor_style=Visual/POL Editor
+ii.gui.editor.editor_style=视觉/POL编辑器
 
 ii.gui.task_editor.jobs=工作
 ii.gui.task_editor.jobs.tooltip=工作是可以无限重复的任务.
@@ -3939,39 +3939,39 @@ ii.gui_tooltip.widget.manual.hide=隐藏侧边手册
 ii.gui_tooltip.widget.manual.page=在工程师手册中打开
 ii.gui_tooltip.widget.manual=工程师手册
 
-ii.gui_tooltip.energy.stored=Energy Stored: %s/%s IF
-ii.gui_tooltip.energy.input=Energy Consumed: %s IF/t
-ii.gui_tooltip.energy.required=Energy Required: %s IH/t
-ii.gui_tooltip.energy.output=Energy Output: %s IF/t
+ii.gui_tooltip.energy.stored=储存的能量: %s/%s IF
+ii.gui_tooltip.energy.input=消耗的能量: %s IF/t
+ii.gui_tooltip.energy.required=需要的能量: %s IH/t
+ii.gui_tooltip.energy.output=输出的能量: %s IF/t
 
-ii.gui_tooltip.heat.stored=Heat %s/%s IH
-ii.gui_tooltip.heat.input=Heat Consumed: %s IH/t
-ii.gui_tooltip.heat.required=Heat Required: %s IH /t
-ii.gui_tooltip.heat.output=Heat Output: %s IH/t
+ii.gui_tooltip.heat.stored=热量 %s/%s IH
+ii.gui_tooltip.heat.input=消耗的热量: %s IH/t
+ii.gui_tooltip.heat.required=需要的热量: %s IH /t
+ii.gui_tooltip.heat.output=输出的热量: %s IH/t
 
-ii.gui_tooltip.pressure.stored=Pressure: %s/%s IP
-ii.gui_tooltip.pressure.input=Pressure Intake: %s IP
-ii.gui_tooltip.pressure.required=Pressure Required: %s IP /t
-ii.gui_tooltip.pressure.output=Pressure Output: %s IP
+ii.gui_tooltip.pressure.stored=压力: %s/%s IP
+ii.gui_tooltip.pressure.input=输入的压力: %s IP
+ii.gui_tooltip.pressure.required=需要的压力: %s IP /t
+ii.gui_tooltip.pressure.output=输出的压力: %s IP
 
-ii.gui_tooltip.mech_torque.message.basic=Input: 速度 %s D/t | 扭矩 %s IT.
-ii.gui_tooltip.mech_torque.message.advanced=Input: 速度 %s D/t | 扭矩 %s IT. 输出: Speed %s D/t | 扭矩 %s IT.
-ii.gui_tooltip.mech_torque.stored=Torque: %s/%s IT
-ii.gui_tooltip.mech_torque.input=Torque Input: %s IT
-ii.gui_tooltip.mech_torque.required=Torque Required: %s IT/t
-ii.gui_tooltip.mech_torque.output=Torque Output: %s IT
+ii.gui_tooltip.mech_torque.message.basic=输入: 速度 %s D/t | 扭矩 %s IT.
+ii.gui_tooltip.mech_torque.message.advanced=输入: 速度 %s D/t | 扭矩 %s IT. 输出: 速度 %s D/t | 扭矩 %s IT.
+ii.gui_tooltip.mech_torque.stored=扭矩: %s/%s IT
+ii.gui_tooltip.mech_torque.input=输入的扭矩: %s IT
+ii.gui_tooltip.mech_torque.required=需要的扭矩: %s IT/t
+ii.gui_tooltip.mech_torque.output=输出的扭矩: %s IT
 
-ii.gui_tooltip.mech_speed.stored=Speed: %s/%s D/t
-ii.gui_tooltip.mech_speed.input=Speed Input: %s D/t
-ii.gui_tooltip.mech_speed.required=Speed Required: %s D/t
-ii.gui_tooltip.mech_speed.output=Speed Output: %s D/t
+ii.gui_tooltip.mech_speed.stored=速度: %s/%s D/t
+ii.gui_tooltip.mech_speed.input=输入的速度: %s D/t
+ii.gui_tooltip.mech_speed.required=需要的速度: %s D/t
+ii.gui_tooltip.mech_speed.output=输出的速度: %s D/t
 
 ii.gui_tooltip.fluid.stored=%s - %s mB
-ii.gui_tooltip.fluid.input=%s Intake: %s mB
-ii.gui_tooltip.fluid.output=%s Output: %s mB
+ii.gui_tooltip.fluid.input=%s 输入: %s mB
+ii.gui_tooltip.fluid.output=%s 输出: %s mB
 
-ii.gui_tooltip.time.stored=Time Remaining: %s/%s t
-ii.gui_tooltip.time.required=Time Required: %s t
+ii.gui_tooltip.time.stored=剩余时间: %s/%s t
+ii.gui_tooltip.time.required=需要时间: %s t
 
 ii.gui_tooltip.structural_integrity=Structural Integrity: %s/%s 生命值
 ii.gui_tooltip.structural_integrity.repair=Repair Threshold: 低于 %s 生命值
