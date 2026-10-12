@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.client.gui.deco.tree.target;
 import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
 import blusunrize.immersiveengineering.common.util.inventory.IIEInventory;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -37,6 +38,7 @@ import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIITileBase;
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * Provides a shared target decision-tree editor for target-detecting devices.
@@ -302,10 +304,8 @@ public abstract class GuiTargetDecisionTree<T extends TileEntityIEBase & IIEInve
 				List<String> ids = getRegisteredEntityIds();
 				if(!idFilter.getEntityId().isEmpty()&&!ids.contains(idFilter.getEntityId()))
 					ids.add(0, idFilter.getEntityId());
-				addStringDropdown(y, TREE_KEY+"entity_id", ids, idFilter.getEntityId(), idFilter::setEntityId)
-						.withDisplayFunction(DecoElementDisplays.getSimpleTextDisplay(s -> ForgeRegistries.ENTITIES.getValue(new ResourceLocation(s))
-								.getName()
-						));
+				addStringDropdown(y, TREE_KEY+"entity_id", ids, idFilter.getEntityId(), idFilter::setEntityId,
+						this::getEntityDisplayName);
 			}
 			break;
 			case MOD_ID:
@@ -315,8 +315,10 @@ public abstract class GuiTargetDecisionTree<T extends TileEntityIEBase & IIEInve
 				if(!modFilter.getModId().isEmpty()&&!ids.contains(modFilter.getModId()))
 					ids.add(0, modFilter.getModId());
 				final Map<String, ModContainer> modMap = Loader.instance().getIndexedModList();
-				addStringDropdown(y, TREE_KEY+"mod_id", ids, modFilter.getModId(), modFilter::setModId)
-						.withDisplayFunction(DecoElementDisplays.getSimpleTextDisplay(modname -> modMap.get(modname).getName()));
+				addStringDropdown(y, TREE_KEY+"mod_id", ids, modFilter.getModId(), modFilter::setModId, id -> {
+					ModContainer mod = modMap.get(id);
+					return mod==null?id: mod.getName();
+				});
 			}
 			break;
 			case ENTITY_TYPE:
@@ -420,15 +422,19 @@ public abstract class GuiTargetDecisionTree<T extends TileEntityIEBase & IIEInve
 		}
 	}
 
-	private DecoDropdown<String> addStringDropdown(int y, String labelKey, List<String> entries, String selected,
-												   Consumer<String> onSelected)
+	private void addStringDropdown(int y, String labelKey, List<String> entries, String selected,
+								   Consumer<String> onSelected, Function<String, String> displayName)
 	{
+		Map<String, String> displayNames = new HashMap<>();
+		for(String entry : entries)
+			displayNames.put(entry, displayName.apply(entry));
 		editorPanel.addLabel(labelKey, 4, y).withSize(44, 14).withAlign(DecoAlignment.LEFT);
-		return editorPanel.addComponent(new DecoDropdown<String>(4, y+12)
+		editorPanel.addComponent(new DecoDropdown<String>(4, y+12)
 				.withSize(editorPanel.width-8, 14)
 				.withDropdownWidth(Math.max(96, editorPanel.width-8))
 				.withMaxDisplayedEntries(7)
-				.withSortFunction(createStringSorter())
+				.withSortFunction(createStringSorter(displayNames))
+				.withDisplayFunction(DecoElementDisplays.getSimpleTextDisplay(id -> displayNames.getOrDefault(id, id)))
 				.withEntries(entries)
 				.withSelectedEntry(selected)
 				.withOnSelectedEntry((oldValue, newValue) -> {
@@ -440,7 +446,16 @@ public abstract class GuiTargetDecisionTree<T extends TileEntityIEBase & IIEInve
 				}));
 	}
 
-	private DecoElementSorter<String> createStringSorter()
+	private String getEntityDisplayName(String id)
+	{
+		String translationName = EntityList.getTranslationName(new ResourceLocation(id));
+		if(translationName==null||translationName.isEmpty())
+			return id;
+		String key = "entity."+translationName+".name";
+		return I18n.hasKey(key)?I18n.format(key): id;
+	}
+
+	private DecoElementSorter<String> createStringSorter(Map<String, String> displayNames)
 	{
 		return new DecoElementSorter<String>()
 		{
@@ -457,7 +472,8 @@ public abstract class GuiTargetDecisionTree<T extends TileEntityIEBase & IIEInve
 				String searched = input==null?"": input.toLowerCase(Locale.ENGLISH);
 				List<String> result = new ArrayList<>();
 				for(String element : elements)
-					if(element.toLowerCase(Locale.ENGLISH).contains(searched))
+					if(element.toLowerCase(Locale.ENGLISH).contains(searched)
+							||displayNames.getOrDefault(element, element).toLowerCase(Locale.ENGLISH).contains(searched))
 						result.add(element);
 				return result;
 			}

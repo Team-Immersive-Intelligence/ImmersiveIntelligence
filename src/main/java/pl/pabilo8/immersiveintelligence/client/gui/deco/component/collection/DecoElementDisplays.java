@@ -7,7 +7,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent;
 import pl.pabilo8.immersiveintelligence.client.util.font.IIFontRenderer;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
-import pl.pabilo8.immersiveintelligence.common.util.ILocalizedEnum;
+import pl.pabilo8.immersiveintelligence.common.util.ILocalizedString;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -39,8 +39,8 @@ public class DecoElementDisplays
 				String localizedText;
 				if(t instanceof EnumFacing)
 					localizedText = I18n.format(IIReference.DESCRIPTION_KEY+"side."+((EnumFacing)t).getName());
-				else if(t instanceof ILocalizedEnum)
-					localizedText = ((ILocalizedEnum)t).getLocalizedName();
+				else if(t instanceof ILocalizedString)
+					localizedText = ((ILocalizedString)t).getLocalizedName();
 				else
 					localizedText = t.toString();
 
@@ -203,8 +203,8 @@ public class DecoElementDisplays
 						String localizedText;
 						if(element instanceof EnumFacing)
 							localizedText = I18n.format(IIReference.DESCRIPTION_KEY+"side."+((EnumFacing)element).getName());
-						else if(element instanceof ILocalizedEnum)
-							localizedText = ((ILocalizedEnum)element).getLocalizedName();
+						else if(element instanceof ILocalizedString)
+							localizedText = ((ILocalizedString)element).getLocalizedName();
 						else
 							localizedText = element.toString();
 						return localizedText.toLowerCase().startsWith(input.toLowerCase());

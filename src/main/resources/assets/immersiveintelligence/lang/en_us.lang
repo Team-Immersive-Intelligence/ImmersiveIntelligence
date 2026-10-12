@@ -1009,6 +1009,7 @@ entity.minecart_metal_barrel.name=Minecart with Metal Barrel
 entity.minecart_capacitor_lv.name=Minecart with LV Capacitor
 entity.minecart_capacitor_mv.name=Minecart with MV Capacitor
 entity.minecart_capacitor_hv.name=Minecart with HV Capacitor
+entity.minecart_capacitor.name=Minecart with HV Capacitor
 entity.minecart_capacitor_creative.name=Minecart with Creative Capacitor
 #Immersive Technology Compat
 entity.minecart_crate_creative.name=Minecart with Creative Storage Crate
@@ -1017,23 +1018,40 @@ entity.minecart_steel_barrel.name=Minecart with Steel Barrel
 entity.minecart_open_barrel.name=Minecart with Open Metal Barrel
 
 entity.skycrate.name=Skycrate
+entity.skycrate_internal.name=Skycrate Internal Part
 
 entity.bullet.name=Bullet
+entity.projectile.name=Projectile
+entity.artillery_projectile.name=Artillery Projectile
+entity.grenade.name=Grenade
+entity.missile.name=Missile
+entity.guided_missile.name=Guided Missile
+entity.naval_mine.name=Naval Mine
+entity.naval_mine_anchor.name=Naval Mine Anchor
 entity.shrapnel.name=Shrapnel
 entity.flare.name=Flare
 entity.gas_cloud.name=Gas Cloud
 entity.white_phosphorus.name=White Phosphorus Explosion
 entity.atomic_boom.name=Nuclear Explosion
+entity.chemthrower_shot.name=Chemical Thrower Shot
+entity.emplacement_smoke.name=Emplacement Smoke
 
 entity.machinegun.name=Machinegun
 entity.mortar.name=Mortar
 entity.motorbike.name=Motorbike
+entity.tracked_motorbike.name=Tracked Motorbike
 entity.wheel.name=Wheel
 entity.seat.name=Seat
 entity.field_howitzer.name=Field Howitzer
+entity.field_flak.name=Field Flak
+entity.field_gun.name=Field Gun
 entity.tripod_periscope.name=Tripod Periscope
 
 entity.hans.name=Hans
+entity.parachute.name=Parachute
+entity.drone.name=Drone
+entity.tactile.name=Tactile
+entity.tactile_living.name=Tactile
 
 #Skins
 skin.immersiveintelligence.anno_1880.name=Anno 1880
