@@ -1,8 +1,10 @@
 package pl.pabilo8.immersiveintelligence.common.network.messages;
 
+import blusunrize.immersiveengineering.client.ClientUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.network.NetHandlerPlayClient;
+import net.minecraft.entity.Entity;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -27,7 +29,7 @@ import java.util.List;
  * Sends an explosion visual effect to nearby clients.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 23.08.2026
+ * @updated 14.10.2026
  * @ii-approved 0.3.1
  * @since 01.09.2022
  */
@@ -209,12 +211,13 @@ public class MessageExplosion extends IIMessage implements IPositionBoundMessage
 			case WHITE_PHOSPHORUS -> ParticleRegistry.spawnWhitePhosphorusFX(world, pos, direction, shape, size);
 			case NUKE ->
 			{
-				ClientEventHandler.addScreenshakeSource(pos, MathHelper.clamp(size*2f, 1f, 4f), 20, 0);
+				addScreenShake(MathHelper.clamp(size*2f, 1f, 4f), 20, 0,
+						NUKE_MESSAGE_DISTANCE*MathHelper.clamp(size, 0f, 1f));
 				ParticleRegistry.spawnAtomicExplosionFX(world, pos, size);
 			}
 			case EMP, SMALL_EMP ->
 			{
-				ClientEventHandler.addScreenshakeSource(pos, MathHelper.clamp(radius/10f, 0.5f, 2f), 8, 0);
+				addScreenShake(MathHelper.clamp(radius/10f, 0.5f, 2f), 8, 0, radius*4f);
 				if(effectType==EffectType.SMALL_EMP)
 					ParticleRegistry.spawnSmallTeslaFX(pos, effectTargets);
 				else
@@ -227,14 +230,38 @@ public class MessageExplosion extends IIMessage implements IPositionBoundMessage
 			case SHRAPNEL -> ParticleRegistry.spawnShrapnelFX(pos, color, size, fallsSlowly);
 			default ->
 			{
-				ClientEventHandler.addScreenshakeSource(pos, MathHelper.clamp(strength/4f, 0.25f, 3f), 4, 2);
 				if(effectType==EffectType.SMALL_EXPLOSION)
+				{
+					addScreenShake(MathHelper.clamp(strength/2f, 0.0625f, 0.125f), 2, 2, 24f);
 					ParticleRegistry.spawnSmallExplosionFX(pos, direction, radius, strength, fluidExplosion);
+				}
 				else
+				{
+					addScreenShake(MathHelper.clamp(strength/2f, 0.25f, 3f), 4, 2, 96f);
 					ParticleRegistry.spawnExplosionBoomFX(world, pos, direction, radius, strength, shape,
 							particleBlocks, fluidExplosion, fluidBlocks);
+				}
 			}
 		}
+	}
+
+	@SideOnly(Side.CLIENT)
+	private void addScreenShake(float shakeStrength, float duration, float delay, float range)
+	{
+		Entity camera = ClientUtils.mc().getRenderViewEntity();
+		if(camera==null)
+			return;
+		float scaledStrength = getScreenShakeStrength(shakeStrength, range, pos.distanceTo(camera.getPositionVector()));
+		if(scaledStrength > 0)
+			ClientEventHandler.addScreenshakeSource(pos, scaledStrength, duration, delay);
+	}
+
+	static float getScreenShakeStrength(float strength, float range, double distance)
+	{
+		if(strength <= 0||range <= 0||distance >= range)
+			return 0;
+		double attenuation = MathHelper.clamp(1d-distance/range, 0d, 1d);
+		return (float)(strength*attenuation*attenuation);
 	}
 
 	@Override

@@ -301,6 +301,7 @@ public class EntityMachinegun extends EntityMountedWeapon implements IAdvancedTe
 		if(controls!=null)
 		{
 			controls.setKey("fire", false);
+			controls.setKey("reload", false);
 			controls.setKey("aim", false);
 		}
 		super.removePassenger(passenger);

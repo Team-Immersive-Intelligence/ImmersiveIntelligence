@@ -1644,6 +1644,7 @@ desc.immersiveintelligence.bullets.core=Fitted with %1$s %2$s Core
 desc.immersiveintelligence.bullets.fuse=%s Fuse
 desc.immersiveintelligence.bullets.mass=Mass: %s
 desc.immersiveintelligence.bullets.component_slots=Free Component Slots: %s
+desc.immersiveintelligence.bullets.no_component_slots=No available component slots.
 desc.immersiveintelligence.bullets.caliber=Caliber: %s bCal
 
 desc.immersiveintelligence.bullets.components=Components:

@@ -2755,6 +2755,9 @@ public class IIConfigHandler
 
 		public static class Ammunition
 		{
+			@Comment({"Use German codes and names for creative ammunition. Set to false for short English names."})
+			public static boolean useGermanCreativeAmmoNames = true;
+
 			@Comment({"Whether explosive ammo components can break blocks"})
 			public static boolean blockDamage = true;
 
