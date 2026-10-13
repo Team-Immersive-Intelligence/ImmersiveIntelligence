@@ -283,6 +283,7 @@ desc.immersiveintelligence.wrench=Устанавливает улучшения 
 desc.immersiveintelligence.tachometer=Измеряет скорость и крутящий момент вращающихся устройств.
 desc.immersiveintelligence.binoculars=Позволяет видеть отдаленные вещи.
 desc.immersiveintelligence.casing_pouch=Хранит потраченные гильзы и пустые магазины.
+desc.immersiveintelligence.mine_detector=Обнаруживает закопанные мины и магнитные металлы.
 
 desc.immersiveintelligence.toolupgrade.item.revolver=Револьвер
 desc.immersiveintelligence.toolupgrade.item.railgun=Рельсотрон
@@ -334,7 +335,7 @@ desc.immersiveintelligence.toolupgrade.gasmask=Защищает носителя
 desc.immersiveintelligence.toolupgrade.infiltrator_gear=Обеспечивает ночное видение и приближение, для работы требуется энергия.
 desc.immersiveintelligence.toolupgrade.technician_gear=Отображает дополнительную информацию о машинах, требует энергии.
 desc.immersiveintelligence.toolupgrade.engineer_gear=Объединяет инфракрасные и технические очки, требует больше энергии.
-desc.immersiveintelligence.toolupgrade.steel_armor_plates=Увеличивает толщину брони. Может отражать стрелы и другие легкие снаряды. На один элемент брони можно установить до 3 бронепластин.
+desc.immersiveintelligence.toolupgrade.steel_armor_plates=Увеличивает толщину брони. Может отражать стрелы и другие лёгкие снаряды. На один элемент брони можно установить до 3 бронепластин.
 desc.immersiveintelligence.toolupgrade.composite_armor_plates=Значительно увеличивает толщину брони. Отклоняет снаряды и повреждает оружие ближнего боя противника, если оно не способно нанести достаточного урона владельцу брони. На один элемент брони можно установить до 3 бронепластин.
 desc.immersiveintelligence.toolupgrade.hazmat_coating=Делает броню устойчивой к радиации и коррозии.
 desc.immersiveintelligence.toolupgrade.heat_resistant_coating=В сочетании с усиленными ботинками позволяет плавать в горячих жидкостях.
@@ -390,9 +391,9 @@ item.immersiveintelligence.ammo_casing.medium_artillery_6bcal.name=Гильза 
 item.immersiveintelligence.artillery_6bcal_long.core.name=Сердечник среднего артиллерийского снаряда
 item.immersiveintelligence.artillery_6bcal_long.bullet.name=Средней артиллерийский снаряд
 
-item.immersiveintelligence.ammo_casing.light_artillery_6bcal.name=Гильза легкого артиллерийского снаряда
-item.immersiveintelligence.artillery_6bcal.core.name=Сердечник легкого артиллерийского снаряда
-item.immersiveintelligence.artillery_6bcal.bullet.name=Легкий артиллерийский снаряд
+item.immersiveintelligence.ammo_casing.light_artillery_6bcal.name=Гильза лёгкого артиллерийского снаряда
+item.immersiveintelligence.artillery_6bcal.core.name=Сердечник лёгкого артиллерийского снаряда
+item.immersiveintelligence.artillery_6bcal.bullet.name=Лёгкий артиллерийский снаряд
 
 item.immersiveintelligence.ammo_casing.light_gun_4bcal.name=Гильза лёгкой пушки
 item.immersiveintelligence.gun_4bcal.core.name=Сердечник лёгкой пушки
@@ -478,6 +479,7 @@ item.immersiveintelligence.bullet_magazine.cpds_drum.name=Барабанный �
 item.immersiveintelligence.bullet_magazine.rifle.name=Винтовочный магазин
 
 item.immersiveintelligence.casing_pouch.name=Подсумок для гильз
+item.immersiveintelligence.clipboard.name=Блокнот инженера
 
 item.immersiveintelligence.motor_gear.copper.name=Медная шестерня
 item.immersiveintelligence.motor_gear.brass.name=Латунная шестерня
@@ -530,11 +532,11 @@ tile.immersiveintelligence.storage.duraluminium.name=Дюралюминиевы�
 tile.immersiveintelligence.sheetmetal_slab.duraluminium.name=Плита дюралюминиевого листового металла
 tile.immersiveintelligence.storage_slab.duraluminium.name=Дюралюминиевая плита
 
-tile.immersiveintelligence.fence_brass.name=Латунный Забор
-tile.immersiveintelligence.fence_tungsten.name=Вольфрамовый Забор
-tile.immersiveintelligence.fence_zinc.name=Цинковый Забор
-tile.immersiveintelligence.fence_platinum.name=Платиновый Забор
-tile.immersiveintelligence.fence_duraluminium.name=Дюралюминиевый Забор
+tile.immersiveintelligence.fence_brass.name=Латунный забор
+tile.immersiveintelligence.fence_tungsten.name=Вольфрамовый забор
+tile.immersiveintelligence.fence_zinc.name=Цинковый забор
+tile.immersiveintelligence.fence_platinum.name=Платиновый забор
+tile.immersiveintelligence.fence_duraluminium.name=Дюралюминиевый забор
 
 tile.immersiveintelligence.rubber_log.raw.name=Бревно гевеи
 tile.immersiveintelligence.rubber_log.rebbur.name=Место для полостчитого разреза
@@ -557,7 +559,7 @@ tile.immersiveintelligence.concrete_decoration_stairs_sturdy_concrete_bricks.nam
 
 tile.immersiveintelligence.concrete_decoration.uberconcrete.name=Убербетонные кирпичи
 tile.immersiveintelligence.concrete_decoration_slab.uberconcrete.name=Плита из убербетонных кирпичей
-tile.immersiveintelligence.concrete_decoration_stairs_uberconcrete.name=Ступеньки из убербетонные кирпичей
+tile.immersiveintelligence.concrete_decoration_stairs_uberconcrete.name=Ступеньки из убербетонных кирпичей
 
 tile.immersiveintelligence.concrete_decoration.concrete_bricks_gray.name=Серые бетонные кирпичи
 tile.immersiveintelligence.concrete_decoration_slab.concrete_bricks_gray.name=Плита из серых бетонных кирпичей
@@ -595,8 +597,8 @@ tile.immersiveengineering.conveyor.immersiveintelligence:rubber_vertical.name=В
 tile.immersiveengineering.conveyor.immersiveintelligence:rubber_splitter.name=Разделяющий резиновый конвейер
 tile.immersiveengineering.conveyor.immersiveintelligence:rubber_covered.name=Крытый резиновый конвейер
 tile.immersiveengineering.conveyor.immersiveintelligence:rubber_verticalcovered.name=Крытый вертикальный резиновый конвейер
-tile.immersiveengineering.conveyor.immersiveintelligence:rubber_extract.name=Извлекающый резиновый конвейер
-tile.immersiveengineering.conveyor.immersiveintelligence:rubber_extractcovered.name=Крытый извлекающый резиновый конвейер
+tile.immersiveengineering.conveyor.immersiveintelligence:rubber_extract.name=Извлекающий резиновый конвейер
+tile.immersiveengineering.conveyor.immersiveintelligence:rubber_extractcovered.name=Крытый извлекающий резиновый конвейер
 
 #due to how IE's base classes are designed, I had to use a "main" as only value in IIBlockTypes_Mine
 #redundant? yes, works? yes
@@ -659,6 +661,31 @@ tile.immersiveintelligence.small_crate.metal_crate_wide.name=Маленький 
 tile.immersiveintelligence.small_crate.reinforced_crate_box.name=Маленький усиленный ящик (коробка)
 tile.immersiveintelligence.small_crate.reinforced_crate_cube.name=Маленький усиленный ящик (куб)
 tile.immersiveintelligence.small_crate.reinforced_crate_wide.name=Маленький усиленный ящик (широкий)
+tile.immersiveintelligence.clipboard.clipboard.name=Блокнот инженера
+
+ii.gui.clipboard.title=Блокнот инженера
+ii.gui.clipboard.packet_variables=%s переменная данных
+ii.gui.clipboard.action.copy=Копировать
+ii.gui.clipboard.action.todo=Преобразовать в задачу
+ii.gui.clipboard.add=Создать записку
+ii.gui.clipboard.add_todo=Создать задачу
+ii.gui.clipboard.add_position=Создать нынешнию позицию
+ii.gui.clipboard.todo_completed=Выполнить задачу
+ii.gui.clipboard.action.remove=Удалить
+ii.gui.clipboard.type.plain_text=Plain Text
+ii.gui.clipboard.type.data_variable=Система переменных данных
+ii.gui.clipboard.type.data_packet=Система пакетов данных
+ii.gui.clipboard.type.item_stack=Item Stack
+ii.gui.clipboard.type.ingredient_stack=Ingredient Stack
+ii.gui.clipboard.type.fluid_stack=Fluid Stack
+ii.gui.clipboard.type.dust_stack=Dust Stack
+ii.gui.clipboard.type.integer=Integer
+ii.gui.clipboard.type.float=Float
+ii.gui.clipboard.type.double=Double
+ii.gui.clipboard.type.enum=Enum Value
+ii.gui.clipboard.type.manual_page=Страница руководства инженера
+ii.gui_tooltip.widget.clipboard.show.unnamed=Показать блокнот инженера
+ii.gui_tooltip.widget.clipboard.show.named=Показать блокнот: %s
 
 tile.immersiveintelligence.metal_fortification.steel_chain_fence.name=Забор из стальной сетки
 tile.immersiveintelligence.metal_fortification.brass_chain_fence.name=Забор из латунной сетки
@@ -669,8 +696,8 @@ tile.immersiveintelligence.wooden_fortification.wooden_brass_chain_fence.name=Д
 tile.immersiveintelligence.wooden_fortification.wooden_aluminum_chain_fence.name=Деревянный забор из алюминиевой сетки
 
 #Harbor Decorations
-tile.immersiveintelligence.harbor.wooden_pier.name=Деревянный Пирс
-tile.immersiveintelligence.harbor.wooden_quay.name=Деревянный Причал
+tile.immersiveintelligence.harbor.wooden_pier.name=Деревянный пирс
+tile.immersiveintelligence.harbor.wooden_quay.name=Деревянный причал
 tile.immersiveintelligence.harbor_support.wooden_pier_support.name=Деревянная опора пирса
 
 tile.immersiveintelligence.metal_fortification1.tank_trap.name=Противотанковый ёж
@@ -835,6 +862,7 @@ fluid.brine=Рассол
 fluid.ammonia=Аммиак
 fluid.hexamine=Уротропин
 fluid.methanol=Метанол
+fluid.rocket_propellant=Ракетное топливо
 
 fluid.latex=Латекс
 
@@ -1081,7 +1109,7 @@ machineupgrade.immersiveintelligence.inserter=Манипулятор
 machineupgrade.immersiveintelligence.inserter.desc=Добавление манипулятора в ящик позволяет ему автоматически работать в радиусе 3 блоков при наличии питания.
 
 machineupgrade.immersiveintelligence.mg_loader=Ленточный питатель
-machineupgrade.immersiveintelligence.mg_loader.desc=Расширение отсеков для боеприпасов позволяет после некоторых модификаций загружать патроны непосредственно в пулемет. Ящик с боеприпасами должен быть открыт.
+machineupgrade.immersiveintelligence.mg_loader.desc=Расширение отсеков для боеприпасов позволяет после некоторых модификаций загружать патроны непосредственно в пулемёт. Ящик с боеприпасами должен быть открыт.
 
 machineupgrade.immersiveintelligence.sovereignty=Проектор суверенитета
 machineupgrade.immersiveintelligence.sovereignty.desc=Позволяет сооружению захватывать территорию вокруг себя для фракции владельца.
@@ -1126,20 +1154,20 @@ machineupgrade.immersiveintelligence.emplacement.autocannon.desc=Четыре а
 machineupgrade.immersiveintelligence.emplacement.heavy_chemthrower=Тяжёлый жидкомёт
 machineupgrade.immersiveintelligence.emplacement.heavy_chemthrower.desc=Более тяжелая версия хорошо известного химического жидкомёта с более высоким давлением позволяет атаковать врагов на расстоянии в 4 раза большем, чем у портативного.
 machineupgrade.immersiveintelligence.emplacement.heavy_railgun=Тяжёлый рельсотрон
-machineupgrade.immersiveintelligence.emplacement.heavy_railgun.desc=Тяжелый рельсотрон обеспечивает прямую огневую поддержку. Он может запускать металлические стержни или гранаты с высокой скоростью, что позволяет пробивать врагов и боевую технику.
+machineupgrade.immersiveintelligence.emplacement.heavy_railgun.desc=Тяжёлый рельсотрон обеспечивает прямую огневую поддержку. Он может запускать металлические стержни или гранаты с высокой скоростью, что позволяет пробивать врагов и боевую технику.
 
 machineupgrade.immersiveintelligence.emplacement.machinegun=Пулемётное гнездо
-machineupgrade.immersiveintelligence.emplacement.machinegun.desc=Пулеметное гнездо может вести подавляющий автоматический огонь, что позволяет сдерживать толпу. Из-за своей конструкции оно не может сражаться с воздушными врагами.
-machineupgrade.immersiveintelligence.emplacement.machinegun.heavy_barrel=Тяжелый ствол
-machineupgrade.immersiveintelligence.emplacement.machinegun.heavy_barrel.desc=Тяжелый ствол обеспечивает гораздо более высокую скорострельность.
+machineupgrade.immersiveintelligence.emplacement.machinegun.desc=Пулемётное гнездо может вести подавляющий автоматический огонь, что позволяет сдерживать толпу. Из-за своей конструкции оно не может сражаться с воздушными врагами.
+machineupgrade.immersiveintelligence.emplacement.machinegun.heavy_barrel=Тяжёлый ствол
+machineupgrade.immersiveintelligence.emplacement.machinegun.heavy_barrel.desc=Тяжёлый ствол обеспечивает гораздо более высокую скорострельность.
 machineupgrade.immersiveintelligence.emplacement.machinegun.watercooled=Ствол с водяным охлаждением
 machineupgrade.immersiveintelligence.emplacement.machinegun.watercooled.desc=Замена стандартного ствола. Когда установлено, стволы не перегреваются при подаче охлаждающей жидкости.
 
 machineupgrade.immersiveintelligence.emplacement.mortar=Миномёт
-machineupgrade.immersiveintelligence.emplacement.mortar.desc=Миномет обеспечивает непрямую огневую поддержку с близкого расстояния, вертикальный угол обстрела и большой калибр снаряда позволяют ему пробивать крыши домов и уничтожать врагов сверху.
+machineupgrade.immersiveintelligence.emplacement.mortar.desc=Миномёт обеспечивает непрямую огневую поддержку с близкого расстояния, вертикальный угол обстрела и большой калибр снаряда позволяют ему пробивать крыши домов и уничтожать врагов сверху.
 
-machineupgrade.immersiveintelligence.emplacement.light_howitzer=Легкая гаубица
-machineupgrade.immersiveintelligence.emplacement.light_howitzer.desc=Легкая гаубица обеспечивает непрямую огневую поддержку на средней дистанции, ее мобильность позволяет быстро и точно обстреливать позиции противника.
+machineupgrade.immersiveintelligence.emplacement.light_howitzer=Лёгкая гаубица
+machineupgrade.immersiveintelligence.emplacement.light_howitzer.desc=Лёгкая гаубица обеспечивает непрямую огневую поддержку на средней дистанции, ее мобильность позволяет быстро и точно обстреливать позиции противника.
 
 machineupgrade.immersiveintelligence.emplacement.rocket_launcher=Ракетная установка (РСЗО)
 machineupgrade.immersiveintelligence.emplacement.rocket_launcher.desc=Ракетная установка обеспечивает разрушительную бомбардировку местности с использованием шести неуправляемых ракет, что отлично подходит для атаки укрепленных позиций.
@@ -1602,7 +1630,7 @@ desc.immersiveintelligence.bullets.caliber=Калибр: %s bCal
 
 desc.immersiveintelligence.bullets.components=Компоненты:
 desc.immersiveintelligence.bullets.ballistics=%s - Баллистика
-desc.immersiveintelligence.bullets.performance=Представление:
+desc.immersiveintelligence.bullets.performance=Характеристики:
 desc.immersiveintelligence.bullets.damage_dealt=Наносимый урон: %s
 desc.immersiveintelligence.bullets.standard_velocity=Стандартная скорость: %s b/t
 desc.immersiveintelligence.bullets.max_artillery_range=Максимальная артиллерийская дальность: %s блоков
@@ -2264,6 +2292,15 @@ datasystem.immersiveintelligence.function.array_create.param.first=Первый 
 datasystem.immersiveintelligence.function.array_create.param.first.desc=
 datasystem.immersiveintelligence.function.array_create.result=Массив
 datasystem.immersiveintelligence.function.array_create.result.desc=Новый массив
+
+datasystem.immersiveintelligence.function.array_join=Join Arrays
+datasystem.immersiveintelligence.function.array_join.desc=Returns a new array with the elements of both input arrays
+datasystem.immersiveintelligence.function.array_join.param.first=Первый массив
+datasystem.immersiveintelligence.function.array_join.param.first.desc=The array placed first
+datasystem.immersiveintelligence.function.array_join.param.second=Второй массив
+datasystem.immersiveintelligence.function.array_join.param.second.desc=The array placed after the first
+datasystem.immersiveintelligence.function.array_join.result=Массив
+datasystem.immersiveintelligence.function.array_join.result.desc=The joined array
 
 datasystem.immersiveintelligence.function.array_get=Получить
 datasystem.immersiveintelligence.function.array_get.desc=Возвращает значение по указанному индексу во входном массиве
@@ -3017,7 +3054,7 @@ advancement.immersiveintelligence.emplacement=Маленькая турель т
 advancement.immersiveintelligence.emplacement.desc=Постройте огневую точку - оборонительное сооружение, которое может быть оснащено тяжёлым вооружением.
 
 advancement.immersiveintelligence.emplacement_machinegun=Смерть, полностью автоматизированная
-advancement.immersiveintelligence.emplacement_machinegun.desc=Установите пулемет на огневую точку.
+advancement.immersiveintelligence.emplacement_machinegun.desc=Установите пулемёт на огневую точку.
 
 #Reference to Advance Wars: Black Hole Rising
 advancement.immersiveintelligence.emplacement_autocannon=Flak Attack
@@ -3029,21 +3066,21 @@ advancement.immersiveintelligence.emplacement_cpds.desc=Установите С�
 
 #How come you don't know this mod, hm?
 advancement.immersiveintelligence.emplacement_heavy_railgun=Immersive Rail...gunning, да
-advancement.immersiveintelligence.emplacement_heavy_railgun.desc=Установите тяжелый рельсотрон на огневую точку.
+advancement.immersiveintelligence.emplacement_heavy_railgun.desc=Установите тяжёлый рельсотрон на огневую точку.
 
 #Reference to a song by Sabaton  
 advancement.immersiveintelligence.emplacement_heavy_chemthrower=Father of Toxic Gas and Chemical Warfare
-advancement.immersiveintelligence.emplacement_heavy_chemthrower.desc=Установите тяжелый жидкомёт на огневую точку.
+advancement.immersiveintelligence.emplacement_heavy_chemthrower.desc=Установите тяжёлый жидкомёт на огневую точку.
 
 #Reference to an old movie "Evil Brain from Outer Space"
 advancement.immersiveintelligence.emplacement_infrared_observer=Я знаю, что ждет меня впереди...
 advancement.immersiveintelligence.emplacement_infrared_observer.desc=Установите инфракрасный наблюдатель на огневую точку.
 
 advancement.immersiveintelligence.emplacement_light_howitzer=[Бертаjr]
-advancement.immersiveintelligence.emplacement_light_howitzer.desc=Установите легкую гаубицу на огневую точку.
+advancement.immersiveintelligence.emplacement_light_howitzer.desc=Установите лёгкую гаубицу на огневую точку.
 
 advancement.immersiveintelligence.emplacement_mortar=Без пестика
-advancement.immersiveintelligence.emplacement_mortar.desc=Установите миномет на огневую точку.
+advancement.immersiveintelligence.emplacement_mortar.desc=Установите миномёт на огневую точку.
 
 #Reference to the folk song "Katyusha"
 advancement.immersiveintelligence.emplacement_rocket_launcher=Зацвели яблони и груши
@@ -3122,8 +3159,8 @@ ie.manual.entry.data_variable.allowed_values=Допустимые значени
 ie.manual.entry.data_variable.required_variables=Необходимые переменные:
 
 #manual multiblock forming block position text
-ie.manual.entry.multiblock_forming=%1$s можно сформировать с использованием %2$s на %3$s %4$s
-ie.manual.entry.multiblock_forming_short=Это может быть сформировано с использованием %2$s на %3$s %4$s
+ie.manual.entry.multiblock_forming=%1$s можно сформировать с использованием %2$s по %3$s %4$s
+ie.manual.entry.multiblock_forming_short=Это может быть сформировано с использованием %2$s по %3$s %4$s
 #y axis
 ie.manual.entry.multiblock_forming.up=верхний
 ie.manual.entry.multiblock_forming.middle=средний
@@ -3406,7 +3443,7 @@ ii.gui.ammunition_crate.mode.revolver=Револьвер
 ii.gui.ammunition_crate.mode.submachinegun=Пистолет-пулемёт
 ii.gui.ammunition_crate.mode.assault_rifle=Автомат
 ii.gui.ammunition_crate.mode.rifle_bullets=Винтовка (болтовка)
-ii.gui.ammunition_crate.mode.rifle_magazines=Винтовка (магазинный)
+ii.gui.ammunition_crate.mode.rifle_magazines=Винтовка (магазинная)
 ii.gui.ammunition_crate.mode.machinegun_magazines=Пулемёт (магазинный)
 ii.gui.ammunition_crate.mode.machinegun_belt_fed=Пулемёт (ленточный)
 
@@ -3571,6 +3608,7 @@ ii.gui.emplacement.target_tree.filter.tooltip=Выберите условие, �
 ii.gui.emplacement.target_tree.entity_id=ID сущности
 ii.gui.emplacement.target_tree.mod_id=ID мода
 ii.gui.emplacement.target_tree.entity_type=Тип
+ii.gui.emplacement.target_tree.direction=Направление
 ii.gui.emplacement.target_tree.name=Имя
 ii.gui.emplacement.target_tree.comparison=Тест
 ii.gui.emplacement.target_tree.expected=Состояние
@@ -3604,6 +3642,12 @@ ii.gui.emplacement.target_filter.distance=Дистанция
 ii.gui.emplacement.target_filter.distance.tooltip=Compare distance from the weapon targeting centre with a block threshold.
 ii.gui.emplacement.target_filter.horizontal_distance=Горизонтальная дистанция
 ii.gui.emplacement.target_filter.horizontal_distance.tooltip=Compare X/Z distance from the weapon targeting centre with a block threshold, ignoring height.
+ii.gui.emplacement.target_filter.relative_direction=Relative Direction
+ii.gui.emplacement.target_filter.relative_direction.tooltip=Match the dominant north, east, south or west direction from the weapon targeting centre to the target, ignoring height.
+ii.gui.emplacement.target_filter.relative_direction.north=Север
+ii.gui.emplacement.target_filter.relative_direction.east=Восток
+ii.gui.emplacement.target_filter.relative_direction.south=Юг
+ii.gui.emplacement.target_filter.relative_direction.west=Запад
 ii.gui.emplacement.target_filter.on_ground=На земле
 ii.gui.emplacement.target_filter.on_ground.tooltip=Match whether the target is on the ground.
 ii.gui.emplacement.target_filter.in_water=В воде
@@ -3876,10 +3920,10 @@ ii.gui_tooltip.button.factions=Фракции
 ii.gui_tooltip.widget.style.show=Показывать кастомизацию
 ii.gui_tooltip.widget.style.hide=Скрыть кастомизацию
 ii.gui_tooltip.widget.style=Кастомизация
-ii.gui_tooltip.widget.style.main=Это %s нельзя кастомизиовать.
-ii.gui_tooltip.widget.style.main.variants=Это %s можно кастомизиовать.
+ii.gui_tooltip.widget.style.main=Это %s нельзя кастомизировать.
+ii.gui_tooltip.widget.style.main.variants=Это %s можно кастомизировать.
 ii.gui_tooltip.widget.style.main.color=Это %s можно покрасить.
-ii.gui_tooltip.widget.style.main.variants.color=Это %s можно кастомизиовать и покрасить.
+ii.gui_tooltip.widget.style.main.variants.color=Это %s можно кастомизировать и покрасить.
 ii.gui_tooltip.widget.style.main.tile=машина
 ii.gui_tooltip.widget.style.main.multiblock=мультиблок
 ii.gui_tooltip.widget.style.main.vehicle=техника
@@ -3984,7 +4028,7 @@ ie.manual.entry.bullet_core.core_thaumium.desc=A result of infusing iron with ra
 # Void metal is Disturbingly slick and warm to the touch, easy to work like gold, becoming as hard as tungsten and harder when struck 
 item.immersiveintelligence.bullet.component.core_voidmetal=Пустотный металл
 ie.manual.entry.bullet_core.core_voidmetal=Пустотнометаллческий сердечник пули
-ie.manual.entry.bullet_core.core_voidmetal.lore=Тауматургиталлургия
+ie.manual.entry.bullet_core.core_voidmetal.lore=Промышленный военнопромышленный комплекс
 ie.manual.entry.bullet_core.core_voidmetal.desc=Disturbingly slick and warm to the touch, easy to work like gold, becoming as hard as tungsten and harder when struck - Void Metal is an excellent choice for bullets. However, properties of the metal make it somewhat difficult for conventional explosives to detonate with proper force. Furthermore, you cannot retrieve this metal core despite its regenerative properties, as it becomes unuseable after hitting the target.
 
 # Thaumic Augmentation Compat
@@ -3994,39 +4038,40 @@ ie.manual.entry.bullet_component.impetus.lore=Rift power in a can
 ie.manual.entry.bullet_component.impetus.desc=Dangerous byproduct of Flux Rifts, and not fully understood material or phenomena, full range of usages for Impetus is shrouded in mystery. However, "infusing" the shell with the Impetus energy very significantly magnifies and supercharges its lethality.
 
 #Banner patterns
+
 item.banner.immersiveintelligence_wrench.black=Чёрный гаечный ключ
 item.banner.immersiveintelligence_wrench.red=Красный гаечный ключ
 item.banner.immersiveintelligence_wrench.green=Зелёный гаечный ключ
 item.banner.immersiveintelligence_wrench.brown=Коричневый гаечный ключ
 item.banner.immersiveintelligence_wrench.blue=Синий гаечный ключ
 item.banner.immersiveintelligence_wrench.purple=Фиолетовый гаечный ключ
-item.banner.immersiveintelligence_wrench.cyan=Голубой гаечный ключ
+item.banner.immersiveintelligence_wrench.cyan=Бирюзовый гаечный ключ
 item.banner.immersiveintelligence_wrench.silver=Светло-серый гаечный ключ
 item.banner.immersiveintelligence_wrench.gray=Серый гаечный ключ
 item.banner.immersiveintelligence_wrench.pink=Розовый гаечный ключ
 item.banner.immersiveintelligence_wrench.lime=Салатовый гаечный ключ
 item.banner.immersiveintelligence_wrench.yellow=Жёлтый гаечный ключ
-item.banner.immersiveintelligence_wrench.lightBlue=Светло-синий гаечный ключ
+item.banner.immersiveintelligence_wrench.lightBlue=Голубой гаечный ключ
 item.banner.immersiveintelligence_wrench.magenta=Пурпурный гаечный ключ
 item.banner.immersiveintelligence_wrench.orange=Оранжевый гаечный ключ
 item.banner.immersiveintelligence_wrench.white=Белый гаечный ключ
 
-item.banner.immersiveintelligence_hammer_and_wrench.black=Чёрный молот и гаечный ключ
-item.banner.immersiveintelligence_hammer_and_wrench.red=Красный молот и гаечный ключ
-item.banner.immersiveintelligence_hammer_and_wrench.green=Зелёный молот и гаечный ключ
-item.banner.immersiveintelligence_hammer_and_wrench.brown=Коричневый молот и гаечный ключ
-item.banner.immersiveintelligence_hammer_and_wrench.blue=Синий молот и гаечный ключ
-item.banner.immersiveintelligence_hammer_and_wrench.purple=Фиолетовый молот и гаечный ключ
-item.banner.immersiveintelligence_hammer_and_wrench.cyan=Голубой молот и гаечный ключ
-item.banner.immersiveintelligence_hammer_and_wrench.silver=Светло-серый молот и гаечный ключ
-item.banner.immersiveintelligence_hammer_and_wrench.gray=Серый молот и гаечный ключ
-item.banner.immersiveintelligence_hammer_and_wrench.pink=Розовый молот и гаечный ключ
-item.banner.immersiveintelligence_hammer_and_wrench.lime=Салатовый молот и гаечный ключ
-item.banner.immersiveintelligence_hammer_and_wrench.yellow=Жёлтый молот и гаечный ключ
-item.banner.immersiveintelligence_hammer_and_wrench.lightBlue=Светло-синий молот и гаечный ключ
-item.banner.immersiveintelligence_hammer_and_wrench.magenta=Пурпурный молот и гаечный ключ
-item.banner.immersiveintelligence_hammer_and_wrench.orange=Оранжевый молот и гаечный ключ
-item.banner.immersiveintelligence_hammer_and_wrench.white=Белый молот и гаечный ключ
+item.banner.immersiveintelligence_hammer_and_wrench.black=Чёрный молоток и гаечный ключ
+item.banner.immersiveintelligence_hammer_and_wrench.red=Красный молоток и гаечный ключ
+item.banner.immersiveintelligence_hammer_and_wrench.green=Зелёный молоток и гаечный ключ
+item.banner.immersiveintelligence_hammer_and_wrench.brown=Коричневый молоток и гаечный ключ
+item.banner.immersiveintelligence_hammer_and_wrench.blue=Синий молоток и гаечный ключ
+item.banner.immersiveintelligence_hammer_and_wrench.purple=Фиолетовый молоток и гаечный ключ
+item.banner.immersiveintelligence_hammer_and_wrench.cyan=Бирюзовый молоток и гаечный ключ
+item.banner.immersiveintelligence_hammer_and_wrench.silver=Светло-серый молоток и гаечный ключ
+item.banner.immersiveintelligence_hammer_and_wrench.gray=Серый молоток и гаечный ключ
+item.banner.immersiveintelligence_hammer_and_wrench.pink=Розовый молоток и гаечный ключ
+item.banner.immersiveintelligence_hammer_and_wrench.lime=Салатовый молоток и гаечный ключ
+item.banner.immersiveintelligence_hammer_and_wrench.yellow=Жёлтый молоток и гаечный ключ
+item.banner.immersiveintelligence_hammer_and_wrench.lightBlue=Голубой молоток и гаечный ключ
+item.banner.immersiveintelligence_hammer_and_wrench.magenta=Пурпурный молоток и гаечный ключ
+item.banner.immersiveintelligence_hammer_and_wrench.orange=Оранжевый молоток и гаечный ключ
+item.banner.immersiveintelligence_hammer_and_wrench.white=Белый молоток и гаечный ключ
 
 item.banner.immersiveintelligence_electric_hammer.black=Чёрный электрический молоток
 item.banner.immersiveintelligence_electric_hammer.red=Красный электрический молоток
@@ -4034,13 +4079,13 @@ item.banner.immersiveintelligence_electric_hammer.green=Зелёный элек�
 item.banner.immersiveintelligence_electric_hammer.brown=Коричневый электрический молоток
 item.banner.immersiveintelligence_electric_hammer.blue=Синий электрический молоток
 item.banner.immersiveintelligence_electric_hammer.purple=Фиолетовый электрический молоток
-item.banner.immersiveintelligence_electric_hammer.cyan=Голубой электрический молоток
+item.banner.immersiveintelligence_electric_hammer.cyan=Бирюзовый электрический молоток
 item.banner.immersiveintelligence_electric_hammer.silver=Светло-серый электрический молоток
 item.banner.immersiveintelligence_electric_hammer.gray=Серый электрический молоток
 item.banner.immersiveintelligence_electric_hammer.pink=Розовый электрический молоток
 item.banner.immersiveintelligence_electric_hammer.lime=Салатовый электрический молоток
 item.banner.immersiveintelligence_electric_hammer.yellow=Жёлтый электрический молоток
-item.banner.immersiveintelligence_electric_hammer.lightBlue=Светло-синий электрический молоток
+item.banner.immersiveintelligence_electric_hammer.lightBlue=Голубой электрический молоток
 item.banner.immersiveintelligence_electric_hammer.magenta=Пурпурный электрический молоток
 item.banner.immersiveintelligence_electric_hammer.orange=Оранжевый электрический молоток
 item.banner.immersiveintelligence_electric_hammer.white=Белый электрический молоток
@@ -4051,13 +4096,13 @@ item.banner.immersiveintelligence_electric_wrench.green=Зелёный элек�
 item.banner.immersiveintelligence_electric_wrench.brown=Коричневый электрический гаечный ключ
 item.banner.immersiveintelligence_electric_wrench.blue=Синий электрический гаечный ключ
 item.banner.immersiveintelligence_electric_wrench.purple=Фиолетовый электрический гаечный ключ
-item.banner.immersiveintelligence_electric_wrench.cyan=Голубой электрический гаечный ключ
+item.banner.immersiveintelligence_electric_wrench.cyan=Бирюзовый электрический гаечный ключ
 item.banner.immersiveintelligence_electric_wrench.silver=Светло-серый электрический гаечный ключ
 item.banner.immersiveintelligence_electric_wrench.gray=Серый электрический гаечный ключ
 item.banner.immersiveintelligence_electric_wrench.pink=Розовый электрический гаечный ключ
 item.banner.immersiveintelligence_electric_wrench.lime=Салатовый электрический гаечный ключ
 item.banner.immersiveintelligence_electric_wrench.yellow=Жёлтый электрический гаечный ключ
-item.banner.immersiveintelligence_electric_wrench.lightBlue=Светло-синий электрический гаечный ключ
+item.banner.immersiveintelligence_electric_wrench.lightBlue=Голубой электрический гаечный ключ
 item.banner.immersiveintelligence_electric_wrench.magenta=Пурпурный электрический гаечный ключ
 item.banner.immersiveintelligence_electric_wrench.orange=Оранжевый электрический гаечный ключ
 item.banner.immersiveintelligence_electric_wrench.white=Белый электрический гаечный ключ
@@ -4068,13 +4113,13 @@ item.banner.immersiveintelligence_engineer_helmet.green=Зелёный шлем 
 item.banner.immersiveintelligence_engineer_helmet.brown=Коричневый шлем инженера
 item.banner.immersiveintelligence_engineer_helmet.blue=Синий шлем инженера
 item.banner.immersiveintelligence_engineer_helmet.purple=Фиолетовый шлем инженера
-item.banner.immersiveintelligence_engineer_helmet.cyan=Голубой шлем инженера
+item.banner.immersiveintelligence_engineer_helmet.cyan=Бирюзовый шлем инженера
 item.banner.immersiveintelligence_engineer_helmet.silver=Светло-серый шлем инженера
 item.banner.immersiveintelligence_engineer_helmet.gray=Серый шлем инженера
 item.banner.immersiveintelligence_engineer_helmet.pink=Розовый шлем инженера
 item.banner.immersiveintelligence_engineer_helmet.lime=Салатовый шлем инженера
 item.banner.immersiveintelligence_engineer_helmet.yellow=Жёлтый шлем инженера
-item.banner.immersiveintelligence_engineer_helmet.lightBlue=Светло-синий шлем инженера
+item.banner.immersiveintelligence_engineer_helmet.lightBlue=Голубой шлем инженера
 item.banner.immersiveintelligence_engineer_helmet.magenta=Пурпурный шлем инженера
 item.banner.immersiveintelligence_engineer_helmet.orange=Оранжевый шлем инженера
 item.banner.immersiveintelligence_engineer_helmet.white=Белый шлем инженера
@@ -4085,13 +4130,15 @@ item.banner.immersiveintelligence_infrared_helmet.green=Зелёный инфр�
 item.banner.immersiveintelligence_infrared_helmet.brown=Коричневый инфракрасный шлем
 item.banner.immersiveintelligence_infrared_helmet.blue=Синий инфракрасный шлем
 item.banner.immersiveintelligence_infrared_helmet.purple=Фиолетовый инфракрасный шлем
-item.banner.immersiveintelligence_infrared_helmet.cyan=Голубой инфракрасный шлем
+item.banner.immersiveintelligence_infrared_helmet.cyan=Бирюзовый инфракрасный шлем
 item.banner.immersiveintelligence_infrared_helmet.silver=Светло-серый инфракрасный шлем
 item.banner.immersiveintelligence_infrared_helmet.gray=Серый инфракрасный шлем
 item.banner.immersiveintelligence_infrared_helmet.pink=Розовый инфракрасный шлем
 item.banner.immersiveintelligence_infrared_helmet.lime=Салатовый инфракрасный шлем
 item.banner.immersiveintelligence_infrared_helmet.yellow=Жёлтый инфракрасный шлем
-item.banner.immersiveintelligence_infrared_helmet.lightBlue=Светло-синий инфракрасный шлем
+item.banner.immersiveintelligence_infrared_helmet.lightBlue=Голубой инфракрасный шлем
 item.banner.immersiveintelligence_infrared_helmet.magenta=Пурпурный инфракрасный шлем
 item.banner.immersiveintelligence_infrared_helmet.orange=Оранжевый инфракрасный шлем
 item.banner.immersiveintelligence_infrared_helmet.white=Белый инфракрасный шлем
+
+# Banners
