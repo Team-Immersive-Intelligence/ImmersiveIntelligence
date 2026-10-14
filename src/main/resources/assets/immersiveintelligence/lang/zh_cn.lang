@@ -3601,7 +3601,7 @@ ii.gui.emplacement.target_preset.current=当前任务
 ii.gui.emplacement.target_preset.current.tooltip=使用这个预设作为自动目标任务.关闭它以禁用自动目标.
 
 ii.gui.emplacement.target_tree.node=目标状态
-ii.gui.emplacement.target_tree.weight=重量
+ii.gui.emplacement.target_tree.weight=权重
 ii.gui.emplacement.target_tree.weight.tooltip=当条件及其父分支匹配时,添加这个标记的值.
 ii.gui.emplacement.target_tree.filter=过滤器
 ii.gui.emplacement.target_tree.filter.tooltip=选择评估此目标树节点的条件.
@@ -3833,7 +3833,7 @@ ii.gui.projectile_workshop.tooltip.penetration_depth.tooltip=弹射物能够穿�
 ii.gui.projectile_workshop.tooltip.flat_trajectory_range=直射射程
 ii.gui.projectile_workshop.tooltip.flat_trajectory_range.tooltip=以 0 度角发射的弹射物在下落整整一个方块高度前所飞行的距离.
 ii.gui.projectile_workshop.tooltip.max_artillery_range=最大射程
-ii.gui.projectile_workshop.tooltip.max_artillery_range.tooltip=以 45 度角发射的弹射物在下落前所飞行的水平距离..
+ii.gui.projectile_workshop.tooltip.max_artillery_range.tooltip=以 45 度角发射的弹射物在下落前所飞行的水平距离.
 ii.gui.projectile_workshop.unit.blocks=%s 块
 ii.gui.projectile_workshop.unit.blocks_per_tick=%s 块/时减
 ii.gui.projectile_workshop.value.penetration_hardness=%s @ %s
