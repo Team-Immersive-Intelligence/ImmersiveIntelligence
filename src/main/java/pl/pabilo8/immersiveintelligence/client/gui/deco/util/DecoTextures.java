@@ -190,6 +190,8 @@ public class DecoTextures
 	public static final ResLoc MAP_MARKER_MISSILE_SILO = ResLoc.of(RES_TEXTURES_DECO, "map/marker/missile_silo");
 	public static final ResLoc MAP_MARKER_RADAR = ResLoc.of(RES_TEXTURES_DECO, "map/marker/radar");
 	public static final ResLoc MAP_MARKER_RADIO_STATION = ResLoc.of(RES_TEXTURES_DECO, "map/marker/radio_station");
+	public static final ResLoc MAP_MARKER_WEATHER = ResLoc.of(RES_TEXTURES_DECO, "map/marker/weather");
+	public static final ResLoc MAP_MARKER_RADIO_CONTACT = ResLoc.of(RES_TEXTURES_DECO, "map/marker/radio_contact");
 
 	public static final ResLoc ICON_INVENTORY_FACTION_INVITES = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_faction_invites");
 	public static final ResLoc ICON_INVENTORY_FACTION_INVITES_ACTIVE = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_faction_invites_active");
