@@ -384,6 +384,8 @@ public class CommonProxy implements IGuiHandler
 		ExcavatorHandler.addMineral("Rich Auricupride", 15, .15f, new String[]{"oreGold", "oreCopper"}, new float[]{.6f, .4f});
 		ExcavatorHandler.addMineral("Emerald Geode", 15, .15f, new String[]{"terracotta", "sand", "gemEmerald"}, new float[]{.4f, .4f, .2f});
 		ExcavatorHandler.addMineral("Uranite", 15, .15f, new String[]{"oreUranium", "oreLead"}, new float[]{.4f, .6f});
+		ExcavatorHandler.addMineral("Cassiterite", 15, .15f, new String[]{"oreTin"}, new float[]{1.0f});
+		ExcavatorHandler.addMineral("Chromite", 15, .15f, new String[]{"oreChromium"}, new float[]{1.0f});
 
 		LighterFuelHandler.addFuel(FluidRegistry.getFluid("creosote"), 100);
 		LighterFuelHandler.addFuel(FluidRegistry.getFluid("ethanol"), 20);
