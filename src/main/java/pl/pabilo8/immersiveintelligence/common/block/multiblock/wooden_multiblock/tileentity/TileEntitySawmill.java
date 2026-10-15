@@ -102,9 +102,7 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 
 	}
 
-
 	//--- Capabilities ---//
-
 
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
