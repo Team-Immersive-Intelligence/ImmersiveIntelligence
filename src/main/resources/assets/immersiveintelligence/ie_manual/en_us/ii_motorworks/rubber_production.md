@@ -14,5 +14,4 @@ To produce formic acid, a [Refinery](refinery) is required. Combine [carbon mono
 Carbon monoxide can be produced through [electrolysis](electrolyzer.md) of carbon dioxide, a pollutant and byproduct collected by the [Carbon Dioxide Filter](carbon_filter.md).
 Methanol can be produced by mixing nickel or platinum with hydrogen, created through [electrolysis](electrolyzer.md) of water. The last step is to combine both using the [Refinery](refinery).
 # processing
-When latex and formic acid are acquired, it's time for some coagulation. Use the [Coagulator](coagulator.md) to create [raw rubber balls]
-and then press them into sheets using a plate mold in the [Metal Press](metalPress). The last step is vulcanization of raw rubber sheets. Use the [Vulcanizer](vulcanizer.md) to produce rubber tires or belts.
+When latex and formic acid are acquired, it's time for some coagulation. Use the [Coagulator](coagulator.md) to create [raw rubber balls] and then press them into sheets using a plate mold in the [Metal Press](metalPress). The last step is vulcanization of raw rubber sheets. Use the [Vulcanizer](vulcanizer.md) to produce rubber tires or belts.
