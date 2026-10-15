@@ -89,8 +89,15 @@ public class IICreativeTab extends CreativeTabs
 			list.add(ItemStack.EMPTY);
 	}
 
+	private static String creativeAmmoName(String german, String english)
+	{
+		return IIConfig.Ammunition.useGermanCreativeAmmoNames?german: english;
+	}
+
 	private static ItemStack getMagazine(Magazines magazine, String name, ItemStack... bullets)
 	{
+		//Exclude unsupported ammunition before the pattern fills the magazine.
+		bullets = Arrays.stream(bullets).filter(bullet -> !bullet.isEmpty()).toArray(ItemStack[]::new);
 		return IIContent.itemBulletMagazine.getMagazine(magazine, bullets).setStackDisplayName(name);
 	}
 
@@ -101,7 +108,7 @@ public class IICreativeTab extends CreativeTabs
 		{
 			//get bullet stack
 			ItemStack stack = magazine.ammo.getAmmoStack(IIContent.ammoCoreIron, CoreType.PIERCING, FuseType.CONTACT, IIContent.ammoComponentTracerPowder)
-					.setStackDisplayName(getGermanColorName(colors[i])+"markierungspatrone");
+					.setStackDisplayName(getTracerBulletName(colors[i]));
 			//set tracer color
 			magazine.ammo.setComponentNBT(stack, EasyNBT.parseNBT("{colour: %s}", colors[i]));
 			//set paint color
@@ -111,47 +118,56 @@ public class IICreativeTab extends CreativeTabs
 		return getMagazine(magazine, name, bullets);
 	}
 
+	private static String getTracerBulletName(IIColor color)
+	{
+		if(IIConfig.Ammunition.useGermanCreativeAmmoNames)
+			return getGermanColorName(color)+"markierungspatrone";
+
+		return switch(color.getDyeColor())
+		{
+			case WHITE -> "White Tracer";
+			case ORANGE -> "Orange Tracer";
+			case MAGENTA -> "Magenta Tracer";
+			case LIGHT_BLUE -> "Light Blue Tracer";
+			case YELLOW -> "Yellow Tracer";
+			case LIME -> "Lime Tracer";
+			case PINK -> "Pink Tracer";
+			case GRAY -> "Grey Tracer";
+			case SILVER -> "Light Grey Tracer";
+			case CYAN -> "Cyan Tracer";
+			case PURPLE -> "Purple Tracer";
+			case BLUE -> "Blue Tracer";
+			case BROWN -> "Brown Tracer";
+			case GREEN -> "Green Tracer";
+			case RED -> "Red Tracer";
+			default -> "Black Tracer";
+		};
+	}
+
 	/**
 	 * Deutsche Qualität
 	 */
 	private static String getGermanColorName(IIColor color)
 	{
-		switch(color.getDyeColor())
+		return switch(color.getDyeColor())
 		{
-			case WHITE:
-				return "Weiß";
-			case ORANGE:
-				return "Orange";
-			case MAGENTA:
-				return "Magenta";
-			case LIGHT_BLUE:
-				return "Hellblau";
-			case YELLOW:
-				return "Gelb";
-			case LIME:
-				return "Lime";
-			case PINK:
-				return "Rosa";
-			case GRAY:
-				return "Grau";
-			case SILVER:
-				return "Silber";
-			case CYAN:
-				return "Cyan";
-			case PURPLE:
-				return "Purpur";
-			case BLUE:
-				return "Blau";
-			case BROWN:
-				return "Braun";
-			case GREEN:
-				return "Grün";
-			case RED:
-				return "Rot";
-			default:
-			case BLACK:
-				return "Schwarz";
-		}
+			case WHITE -> "Weiß";
+			case ORANGE -> "Orange";
+			case MAGENTA -> "Magenta";
+			case LIGHT_BLUE -> "Hellblau";
+			case YELLOW -> "Gelb";
+			case LIME -> "Lime";
+			case PINK -> "Rosa";
+			case GRAY -> "Grau";
+			case SILVER -> "Silber";
+			case CYAN -> "Cyan";
+			case PURPLE -> "Purpur";
+			case BLUE -> "Blau";
+			case BROWN -> "Braun";
+			case GREEN -> "Grün";
+			case RED -> "Rot";
+			default -> "Schwarz";
+		};
 	}
 
 	@Override
@@ -161,6 +177,7 @@ public class IICreativeTab extends CreativeTabs
 		return IIContent.blockMetalDecoration.getStack(IIBlockTypes_MetalDecoration.COIL_DATA, 1);
 	}
 
+	@Nonnull
 	@Override
 	public ResourceLocation getBackgroundImage()
 	{
@@ -169,6 +186,7 @@ public class IICreativeTab extends CreativeTabs
 		return selectedCategory.getCreativeTabTexture();
 	}
 
+	@Nonnull
 	@SideOnly(Side.CLIENT)
 	@Override
 	public String getTranslatedTabLabel()
@@ -204,11 +222,9 @@ public class IICreativeTab extends CreativeTabs
 
 		for(Item item : Item.REGISTRY)
 		{
-			if(item instanceof ItemBlockIIBase)
+			if(item instanceof ItemBlockIIBase itemBlock)
 			{
-				ItemBlockIIBase itemBlock = (ItemBlockIIBase)item;
 				BlockIIBase<?> block = itemBlock.getBlock();
-
 				for(IIBlockEnum subItem : block.enumValues)
 				{
 					if(block.isHidden(subItem.getMeta())||block.getCategory(subItem.getMeta())!=selectedCategory)
@@ -503,154 +519,154 @@ public class IICreativeTab extends CreativeTabs
 	public void addExampleAmmo(NonNullList<ItemStack> list)
 	{
 		LinkedHashMap<String, IAmmoTypeItem<?, ?>> items = new LinkedHashMap<>();
-		items.put("AH8", IIContent.itemAmmoHeavyArtillery);
-		items.put("AH6L", IIContent.itemAmmoMediumArtillery);
-		items.put("AH6K", IIContent.itemAmmoLightArtillery);
-		items.put("AG4", IIContent.itemAmmoLightGun);
-		items.put("G4", IIContent.itemRailgunGrenade);
-		items.put("AH6M", IIContent.itemAmmoMortar);
+		items.put(creativeAmmoName("AH8", "HA8"), IIContent.itemAmmoHeavyArtillery);
+		items.put(creativeAmmoName("AH6L", "MA6"), IIContent.itemAmmoMediumArtillery);
+		items.put(creativeAmmoName("AH6K", "LA6"), IIContent.itemAmmoLightArtillery);
+		items.put(creativeAmmoName("AG4", "LG4"), IIContent.itemAmmoLightGun);
+		items.put(creativeAmmoName("G4", "RG4"), IIContent.itemRailgunGrenade);
+		items.put(creativeAmmoName("AH6M", "M6"), IIContent.itemAmmoMortar);
 
 		//Guns and Howitzers
 		items.forEach((name, item) -> {
 			tabNewLine(list);
-			addAmmo(list, item, name+"/P1 Panzergranate",
+			addAmmo(list, item, name+creativeAmmoName("/P1 Panzergranate", "/APHE-L Shell"),
 					IIContent.ammoCoreLead, CoreType.PIERCING, FuseType.CONTACT, IIContent.ammoComponentTNT);
-			addAmmo(list, item, name+"/P2 Panzergranate",
+			addAmmo(list, item, name+creativeAmmoName("/P2 Panzergranate", "/APHE-S Shell"),
 					IIContent.ammoCoreSteel, CoreType.PIERCING, FuseType.CONTACT, IIContent.ammoComponentTNT);
-			addAmmo(list, item, name+"/P3 Panzergranate",
+			addAmmo(list, item, name+creativeAmmoName("/P3 Panzergranate", "/APHE-W Shell"),
 					IIContent.ammoCoreTungsten, CoreType.PIERCING, FuseType.CONTACT, IIContent.ammoComponentTNT);
 
-			addAmmo(list, item, name+"/P5 Hochladungsgranate",
+			addAmmo(list, item, name+creativeAmmoName("/P5 Hochladungsgranate", "/HEAT-T Shell"),
 					IIContent.ammoCoreCopper, CoreType.SHAPED, FuseType.CONTACT, IIContent.ammoComponentRDX, IIContent.ammoComponentTracerPowder);
-			addAmmo(list, item, name+"/P6 Hochladungsgranate",
+			addAmmo(list, item, name+creativeAmmoName("/P6 Hochladungsgranate", "/HEAT-DS Shell"),
 					IIContent.ammoCoreBrass, CoreType.SHAPED_SABOT, FuseType.CONTACT, IIContent.ammoComponentHMX);
 
-			addAmmo(list, item, name+"/P7 KE-Geschoss",
+			addAmmo(list, item, name+creativeAmmoName("/P7 KE-Geschoss", "/APDS-W Sabot"),
 					IIContent.ammoCoreTungsten, CoreType.PIERCING_SABOT, FuseType.CONTACT);
-			addAmmo(list, item, name+"/P8 KE-Geschoss",
+			addAmmo(list, item, name+creativeAmmoName("/P8 KE-Geschoss", "/APDS-DU Sabot"),
 					IIContent.ammoCoreUranium, CoreType.PIERCING_SABOT, FuseType.CONTACT);
 
-			addAmmo(list, item, name+"/W1 Flakgranate",
+			addAmmo(list, item, name+creativeAmmoName("/W1 Flakgranate", "/AA-T Shell"),
 					IIContent.ammoCoreBrass, CoreType.CANISTER, FuseType.PROXIMITY,
 					IIContent.ammoComponentWhitePhosphorus, AmmoRegistry.getComponent("shrapnel_steel"), IIContent.ammoComponentTracerPowder);
-			addAmmo(list, item, name+"/W4 Napalmgranate",
+			addAmmo(list, item, name+creativeAmmoName("/W4 Napalmgranate", "/NAP-T Shell"),
 					IIContent.ammoCoreBrass, CoreType.CANISTER, FuseType.PROXIMITY, getFluidComponent("napalm"), IIContent.ammoComponentTracerPowder);
-			addAmmo(list, item, name+"/W6 Elektrobrandgranate",
+			addAmmo(list, item, name+creativeAmmoName("/W6 Elektrobrandgranate", "/EI Shell"),
 					IIContent.ammoCoreBrass, CoreType.CANISTER, FuseType.PROXIMITY, IIContent.ammoComponentTesla, IIContent.ammoComponentWhitePhosphorus);
-			addAmmo(list, item, name+"/W7 Industriestörunggranate",
+			addAmmo(list, item, name+creativeAmmoName("/W7 Industriestörunggranate", "/CHEM Shell"),
 					IIContent.ammoCoreBrass, CoreType.CANISTER, FuseType.PROXIMITY,
 					getFluidComponent("hydrofluoric_acid"), getFluidComponent("mustard_gas"), IIContent.ammoComponentTesla);
 
-			addAmmo(list, item, name+"/A1 Sprenggranate",
+			addAmmo(list, item, name+creativeAmmoName("/A1 Sprenggranate", "/HE-T Shell"),
 					IIContent.ammoCoreBrass, CoreType.CANISTER, FuseType.CONTACT, IIContent.ammoComponentHMX, IIContent.ammoComponentTracerPowder);
-			addAmmo(list, item, name+"/A7 Sprenggranate",
+			addAmmo(list, item, name+creativeAmmoName("/A7 Sprenggranate", "/CL-HE-T Cluster Shell"),
 					IIContent.ammoCoreIron, CoreType.CLUSTER, FuseType.CONTACT, IIContent.ammoComponentHMX, IIContent.ammoComponentTracerPowder);
-			addAmmo(list, item, name+"/A2 Phosphorgranate",
+			addAmmo(list, item, name+creativeAmmoName("/A2 Phosphorgranate", "/WP-T Shell"),
 					IIContent.ammoCoreIron, CoreType.CANISTER, FuseType.CONTACT, IIContent.ammoComponentWhitePhosphorus, IIContent.ammoComponentTracerPowder);
-			addAmmo(list, item, name+"/A16 \"Geburtstagsgranate\"",
+			addAmmo(list, item, name+creativeAmmoName("/A16 \"Geburtstagsgranate\"", "/NUKE-T Shell"),
 					IIContent.ammoCoreBrass, CoreType.CANISTER, FuseType.CONTACT, IIContent.ammoComponentNuke, IIContent.ammoComponentTracerPowder);
 		});
 
 		//Missiles
 		items.clear();
-		items.put("AR6", IIContent.itemAmmoRocketLight);
+		items.put(creativeAmmoName("AR6", "R6"), IIContent.itemAmmoRocketLight);
 //		items.put("AR10", IIContent.itemAmmoRocketHeavy);
-		items.put("AR6F", IIContent.itemAmmoGuidedMissile);
+		items.put(creativeAmmoName("AR6F", "GM6"), IIContent.itemAmmoGuidedMissile);
 
 		items.forEach((name, item) -> {
 			tabNewLine(list);
-			addAmmo(list, item, name+"/P2 Panzerabwehrrakete",
+			addAmmo(list, item, name+creativeAmmoName("/P2 Panzerabwehrrakete", "/APHE-S Rocket"),
 					IIContent.ammoCoreSteel, CoreType.PIERCING, FuseType.CONTACT, IIContent.ammoComponentTNT);
-			addAmmo(list, item, name+"/P3 Panzerabwehrrakete",
+			addAmmo(list, item, name+creativeAmmoName("/P3 Panzerabwehrrakete", "/APHE-W Rocket"),
 					IIContent.ammoCoreTungsten, CoreType.PIERCING, FuseType.CONTACT, IIContent.ammoComponentTNT);
-			addAmmo(list, item, name+"/P4 Panzerabwehrrakete",
+			addAmmo(list, item, name+creativeAmmoName("/P4 Panzerabwehrrakete", "/APHE-DU Rocket"),
 					IIContent.ammoCoreUranium, CoreType.PIERCING, FuseType.CONTACT, IIContent.ammoComponentTNT);
 
-			addAmmo(list, item, name+"/P3 Hochladungsrakete",
+			addAmmo(list, item, name+creativeAmmoName("/P3 Hochladungsrakete", "/HEAT Rocket"),
 					IIContent.ammoCoreCopper, CoreType.SHAPED, FuseType.CONTACT, IIContent.ammoComponentRDX);
-			addAmmo(list, item, name+"/P4 Hochladungsrakete",
+			addAmmo(list, item, name+creativeAmmoName("/P4 Hochladungsrakete", "/HEAT-DS Rocket"),
 					IIContent.ammoCoreBrass, CoreType.SHAPED_SABOT, FuseType.CONTACT, IIContent.ammoComponentHMX);
 
-			//Some trivia, during the germans actually called them the nonsensical name "Flakraketen"
-			addAmmo(list, item, name+"/W1 Flugabwehrrakete",
+			//Some trivia: during the 2nd World War, Germans actually called them the nonsensical name "Flakraketen"
+			addAmmo(list, item, name+creativeAmmoName("/W1 Flugabwehrrakete", "/AA-T Rocket"),
 					IIContent.ammoCoreBrass, CoreType.CANISTER, FuseType.PROXIMITY,
 					IIContent.ammoComponentWhitePhosphorus, AmmoRegistry.getComponent("shrapnel_steel"), IIContent.ammoComponentTracerPowder);
 
-			addAmmo(list, item, name+"/W4 Napalmrakete",
+			addAmmo(list, item, name+creativeAmmoName("/W4 Napalmrakete", "/NAP-T Rocket"),
 					IIContent.ammoCoreBrass, CoreType.CANISTER, FuseType.PROXIMITY, getFluidComponent("napalm"), IIContent.ammoComponentTracerPowder);
-			addAmmo(list, item, name+"/W6 Elektrobrandrakete",
+			addAmmo(list, item, name+creativeAmmoName("/W6 Elektrobrandrakete", "/EI Rocket"),
 					IIContent.ammoCoreBrass, CoreType.CANISTER, FuseType.PROXIMITY, IIContent.ammoComponentTesla, IIContent.ammoComponentWhitePhosphorus);
 
-			addAmmo(list, item, name+"/A1 Sprengrakete",
+			addAmmo(list, item, name+creativeAmmoName("/A1 Sprengrakete", "/HE Rocket"),
 					IIContent.ammoCoreBrass, CoreType.CANISTER, FuseType.CONTACT, IIContent.ammoComponentHMX);
-			addAmmo(list, item, name+"/A7 Sprengrakete",
+			addAmmo(list, item, name+creativeAmmoName("/A7 Sprengrakete", "/CL-HE Rocket"),
 					IIContent.ammoCoreIron, CoreType.CLUSTER, FuseType.CONTACT, IIContent.ammoComponentHMX);
-			addAmmo(list, item, name+"/A3 Brandrakete",
+			addAmmo(list, item, name+creativeAmmoName("/A3 Brandrakete", "/WP Rocket"),
 					IIContent.ammoCoreIron, CoreType.CANISTER, FuseType.CONTACT, IIContent.ammoComponentWhitePhosphorus);
 
 		});
 
 		//Grenades
 		tabNewLine(list);
-		addAmmo(list, IIContent.itemGrenade, "G5/A1 Stielhandgranate",
+		addAmmo(list, IIContent.itemGrenade, creativeAmmoName("G5/A1 Stielhandgranate", "HG5/HE Grenade"),
 				IIContent.ammoCoreBrass, CoreType.CANISTER, FuseType.TIMED, IIContent.ammoComponentTNT);
-		addAmmo(list, IIContent.itemGrenade, "G5/A7 Phosphorhandgranate",
+		addAmmo(list, IIContent.itemGrenade, creativeAmmoName("G5/A7 Phosphorhandgranate", "HG5/WP Grenade"),
 				IIContent.ammoCoreBrass, CoreType.CANISTER, FuseType.TIMED, IIContent.ammoComponentWhitePhosphorus);
-		addAmmo(list, IIContent.itemGrenade, "G3/A3 Sprenghandgranate",
+		addAmmo(list, IIContent.itemGrenade, creativeAmmoName("G3/A3 Sprenghandgranate", "HG3/HE-RDX Grenade"),
 				IIContent.ammoCoreBrass, CoreType.CANISTER, FuseType.TIMED, IIContent.ammoComponentRDX);
-		addAmmo(list, IIContent.itemGrenade, "G4/A4 Sprenghandgranate",
+		addAmmo(list, IIContent.itemGrenade, creativeAmmoName("G4/A4 Sprenghandgranate", "HG4/HE-HMX Grenade"),
 				IIContent.ammoCoreBrass, CoreType.CANISTER, FuseType.TIMED, IIContent.ammoComponentHMX);
-		addAmmo(list, IIContent.itemGrenade, "G5/A11 Chemhandgranate",
+		addAmmo(list, IIContent.itemGrenade, creativeAmmoName("G5/A11 Chemhandgranate", "HG5/CHEM Grenade"),
 				IIContent.ammoCoreBrass, CoreType.CANISTER, FuseType.TIMED, getFluidComponent("chlorine"));
-		addAmmo(list, IIContent.itemGrenade, "G5/A5 Schockhandgranate",
+		addAmmo(list, IIContent.itemGrenade, creativeAmmoName("G5/A5 Schockhandgranate", "HG5/STUN Grenade"),
 				IIContent.ammoCoreBrass, CoreType.CANISTER, FuseType.TIMED, IIContent.ammoComponentFirework);
 
 		//Revolver
 
 		//Magazine fed weapons
 		items.clear();
-		items.put("AM1P", IIContent.itemAmmoSubmachinegun);
-		items.put("AM1M", IIContent.itemAmmoAssaultRifle);
-		items.put("AM2", IIContent.itemAmmoMachinegun);
-		items.put("AM3", IIContent.itemAmmoAutocannon);
+		items.put(creativeAmmoName("AM1P", "SMG1"), IIContent.itemAmmoSubmachinegun);
+		items.put(creativeAmmoName("AM1M", "AR1"), IIContent.itemAmmoAssaultRifle);
+		items.put(creativeAmmoName("AM2", "MG2"), IIContent.itemAmmoMachinegun);
+		items.put(creativeAmmoName("AM3", "AC3"), IIContent.itemAmmoAutocannon);
 
 		items.forEach((name, item) -> {
 			tabNewLine(list);
 
 			//Regular Ammo
-			ItemStack stackP1 = addAmmo(list, item, name+"/P1 Rundkopfgeschoss",
+			ItemStack stackP1 = addAmmo(list, item, name+creativeAmmoName("/P1 Rundkopfgeschoss", "/SP Soft Point"),
 					IIContent.ammoCoreLead, CoreType.SOFTPOINT, FuseType.CONTACT);
-			ItemStack stackP2 = addAmmo(list, item, name+"/P2 Spitzkopfgeschoss",
+			ItemStack stackP2 = addAmmo(list, item, name+creativeAmmoName("/P2 Spitzkopfgeschoss", "/AP Armor Piercing"),
 					IIContent.ammoCoreSteel, CoreType.PIERCING, FuseType.CONTACT);
-			ItemStack stackP5 = addAmmo(list, item, name+"/P5 Phosphorpatrone",
+			ItemStack stackP5 = addAmmo(list, item, name+creativeAmmoName("/P5 Phosphorpatrone", "/API Incendiary"),
 					IIContent.ammoCoreBrass, CoreType.PIERCING, FuseType.CONTACT, IIContent.ammoComponentWhitePhosphorus);
-			ItemStack stackW1 = addAmmo(list, item, name+"/W1 Flakpatrone",
+			ItemStack stackW1 = addAmmo(list, item, name+creativeAmmoName("/W1 Flakpatrone", "/AA-T Round"),
 					IIContent.ammoCoreBrass, CoreType.CANISTER, FuseType.PROXIMITY,
 					IIContent.ammoComponentWhitePhosphorus, AmmoRegistry.getComponent("shrapnel_steel"), IIContent.ammoComponentTracerPowder);
-			ItemStack stackW6 = addAmmo(list, item, name+"/W6 Elektrobrandpatrone",
+			ItemStack stackW6 = addAmmo(list, item, name+creativeAmmoName("/W6 Elektrobrandpatrone", "/EI Round"),
 					IIContent.ammoCoreBrass, CoreType.CANISTER, FuseType.PROXIMITY, IIContent.ammoComponentTesla, IIContent.ammoComponentWhitePhosphorus);
-			ItemStack stackA1 = addAmmo(list, item, name+"/A1 Sprengpatrone",
+			ItemStack stackA1 = addAmmo(list, item, name+creativeAmmoName("/A1 Sprengpatrone", "/HE Round"),
 					IIContent.ammoCoreBrass, CoreType.SOFTPOINT, FuseType.CONTACT, IIContent.ammoComponentHMX);
-			ItemStack stackT = addAmmo(list, item, name+"/T Gummigeschoss",
+			ItemStack stackT = addAmmo(list, item, name+creativeAmmoName("/T Gummigeschoss", "/RB Round"),
 					IIContent.ammoCoreRubber, CoreType.SOFTPOINT, FuseType.CONTACT);
 
 			//Color tracer bullets
-			ItemStack stackM1 = addAmmo(list, item, name+"/P14 Blaumarkierungpatrone",
+			ItemStack stackM1 = addAmmo(list, item, name+creativeAmmoName("/P14 Blaumarkierungpatrone", "/TR-B Blue Tracer"),
 					IIContent.ammoCoreIron, CoreType.PIERCING, FuseType.CONTACT, IIContent.ammoComponentTracerPowder);
 			item.setComponentNBT(stackM1, EasyNBT.parseNBT("{colour: %s}", IIColor.MC_DARK_BLUE));
 			item.setPaintColor(stackM1, IIColor.MC_DARK_BLUE);
 
-			ItemStack stackM2 = addAmmo(list, item, name+"/P15 Grünmarkierungpatrone",
+			ItemStack stackM2 = addAmmo(list, item, name+creativeAmmoName("/P15 Grünmarkierungpatrone", "/TR-G Green Tracer"),
 					IIContent.ammoCoreIron, CoreType.PIERCING, FuseType.CONTACT, IIContent.ammoComponentTracerPowder);
 			item.setComponentNBT(stackM2, EasyNBT.parseNBT("{colour: %s}", IIColor.MC_DARK_GREEN));
 			item.setPaintColor(stackM2, IIColor.MC_DARK_GREEN);
 
-			ItemStack stackM3 = addAmmo(list, item, name+"/P16 Rotmarkierungpatrone",
+			ItemStack stackM3 = addAmmo(list, item, name+creativeAmmoName("/P16 Rotmarkierungpatrone", "/TR-R Red Tracer"),
 					IIContent.ammoCoreIron, CoreType.PIERCING, FuseType.CONTACT, IIContent.ammoComponentTracerPowder);
 			item.setComponentNBT(stackM3, EasyNBT.parseNBT("{colour: %s}", IIColor.MC_DARK_RED));
 			item.setPaintColor(stackM3, IIColor.MC_DARK_RED);
 
-			ItemStack stackM4 = addAmmo(list, item, name+"/P17 Gelbmarkierungpatrone",
+			ItemStack stackM4 = addAmmo(list, item, name+creativeAmmoName("/P17 Gelbmarkierungpatrone", "/TR-Y Yellow Tracer"),
 					IIContent.ammoCoreIron, CoreType.PIERCING, FuseType.CONTACT, IIContent.ammoComponentTracerPowder);
 			item.setComponentNBT(stackM4, EasyNBT.parseNBT("{colour: %s}", IIColor.MC_GOLD));
 			item.setPaintColor(stackM4, IIColor.MC_GOLD);
@@ -660,33 +676,33 @@ public class IICreativeTab extends CreativeTabs
 			for(Magazines magazine : Magazines.values())
 				if(magazine.ammo==item)
 				{
-					list.add(getMagazine(magazine, name+"/SP1P2 Magazine", stackP1, stackP2));
-					list.add(getMagazine(magazine, name+"/SP1P5W6 Magazine", stackP1, stackP5, stackW6));
-					list.add(getMagazine(magazine, name+"/SW1W6 Magazine", stackW1, stackA1));
-					list.add(getMagazine(magazine, name+"/ST Magazine", stackT));
+					list.add(getMagazine(magazine, name+creativeAmmoName("/SP1P2 Magazine", "/SP+AP Magazine"), stackP1, stackP2));
+					list.add(getMagazine(magazine, name+creativeAmmoName("/SP1P5W6 Magazine", "/SP+API+EI Magazine"), stackP1, stackP5, stackW6));
+					list.add(getMagazine(magazine, name+creativeAmmoName("/SW1W6 Magazine", "/AA+HE Magazine"), stackW1, stackA1));
+					list.add(getMagazine(magazine, name+creativeAmmoName("/ST Magazine", "/RB Magazine"), stackT));
 				}
 
 			//Magazines
 			Arrays.stream(Magazines.values())
 					.filter(m -> m.ammo==item)
-					.map(m -> getColorMagazine(m, name+"/SP14-17 Markierungmagazine", IIColor.MC_DARK_BLUE, IIColor.MC_DARK_GREEN, IIColor.MC_DARK_RED, IIColor.MC_GOLD))
+					.map(m -> getColorMagazine(m, name+creativeAmmoName("/SP14-17 Markierungmagazine", "/TR-BGRY Tracer Magazine"), IIColor.MC_DARK_BLUE, IIColor.MC_DARK_GREEN, IIColor.MC_DARK_RED, IIColor.MC_GOLD))
 					.forEach(list::add);
 		});
 
 		items.clear();
-		items.put("D8E%sfunkladung", ((ItemBlockMineBase)IIContent.blockRadioExplosives.itemBlock));
-		items.put("D8T%stellermine", ((ItemBlockMineBase)IIContent.blockTellermine.itemBlock));
-		items.put("D8S%sspringmine", ((ItemBlockMineBase)IIContent.blockTripmine.itemBlock));
-		items.put("D8M%sseemine", IIContent.itemNavalMine);
+		items.put(creativeAmmoName("D8E%sfunkladung", "RC8%sRadio Explosives"), ((ItemBlockMineBase)IIContent.blockRadioExplosives.itemBlock));
+		items.put(creativeAmmoName("D8T%stellermine", "AT8%sLandmine"), ((ItemBlockMineBase)IIContent.blockTellermine.itemBlock));
+		items.put(creativeAmmoName("D8S%sspringmine", "AP8%sTripmine"), ((ItemBlockMineBase)IIContent.blockTripmine.itemBlock));
+		items.put(creativeAmmoName("D8M%sseemine", "NM8%sNaval Mine"), IIContent.itemNavalMine);
 		items.forEach((name, item) -> {
 			tabNewLine(list);
-			addAmmo(list, item, String.format(name, "/P1 Spreng"),
+			addAmmo(list, item, String.format(name, creativeAmmoName("/P1 Spreng", "/HE ")),
 					IIContent.ammoCoreBrass, CoreType.CANISTER, FuseType.CONTACT, IIContent.ammoComponentTNT);
-			addAmmo(list, item, String.format(name, "/P2 Phosphor"),
+			addAmmo(list, item, String.format(name, creativeAmmoName("/P2 Phosphor", "/WP ")),
 					IIContent.ammoCoreBrass, CoreType.CANISTER, FuseType.CONTACT, IIContent.ammoComponentWhitePhosphorus);
-			addAmmo(list, item, String.format(name, "/P3 Elektro"),
+			addAmmo(list, item, String.format(name, creativeAmmoName("/P3 Elektro", "/EL ")),
 					IIContent.ammoCoreBrass, CoreType.CANISTER, FuseType.CONTACT, IIContent.ammoComponentTesla);
-			addAmmo(list, item, String.format(name, "/P4 Nuklear"),
+			addAmmo(list, item, String.format(name, creativeAmmoName("/P4 Nuklear", "/NUKE ")),
 					IIContent.ammoCoreBrass, CoreType.CANISTER, FuseType.CONTACT, IIContent.ammoComponentNuke);
 		});
 	}

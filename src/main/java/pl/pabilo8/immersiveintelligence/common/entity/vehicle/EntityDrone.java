@@ -235,8 +235,8 @@ public class EntityDrone extends EntityFlying implements ISyncNBTEntity<EntityDr
 			if(ticksExisted%2==0)
 			{
 				Vec3d smokeDir = this.getVectorForRotation(0, this.rotationYaw).scale(-0.25);
-				ParticleRegistry.spawnParticle("vehicle/exhaust_light", exhaust1.getPositionVector(), smokeDir, new Vector2f(0, 0));
-				ParticleRegistry.spawnParticle("vehicle/exhaust_light", exhaust2.getPositionVector(), smokeDir, new Vector2f(0, 0));
+				ParticleRegistry.spawnParticle("smoke/exhaust/diesel_light", exhaust1.getPositionVector(), smokeDir, new Vector2f(0, 0));
+				ParticleRegistry.spawnParticle("smoke/exhaust/diesel_light", exhaust2.getPositionVector(), smokeDir, new Vector2f(0, 0));
 			}
 		}
 	}

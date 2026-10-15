@@ -1,11 +1,15 @@
 package pl.pabilo8.immersiveintelligence.common.compat.crafttweaker;
 
 import crafttweaker.annotations.ZenRegister;
+import crafttweaker.api.block.IBlock;
 import crafttweaker.api.block.IBlockState;
 import crafttweaker.api.block.IMaterial;
 import crafttweaker.api.minecraft.CraftTweakerMC;
+import lombok.NonNull;
+import net.minecraft.block.Block;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.ammo.PenetrationRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.PenetrationHardness;
@@ -16,11 +20,13 @@ import stanhebben.zenscript.annotations.Optional;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
+import javax.annotation.Nullable;
+
 /**
  * Adds CraftTweaker registration methods for penetration handlers.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 24.08.2026
+ * @updated 13.10.2026
  * @ii-approved 0.3.1
  * @since 06.01.2022
  */
@@ -32,18 +38,84 @@ public class BlockPenetrationTweaker
 	@ZenMethod
 	public static void addMaterial(IMaterial material, String hardnessTier, float thickness, float integrity, @Optional String sound)
 	{
-		PenetrationBuilder builder = PenetrationBuilder.create(hardnessTier, thickness, integrity);
-		if(sound!=null)
-			builder.setSound(sound);
+		createBuilder(hardnessTier, thickness, integrity, sound).registerMaterial(material);
+	}
+
+	/**
+	 * Registers a material with a fixed burnt block.
+	 */
+	@ZenMethod
+	public static void addMaterial(IMaterial material, String hardnessTier, float thickness, float integrity,
+								   IBlock flammableVariant, @Optional String sound)
+	{
+		PenetrationBuilder builder = createBuilder(hardnessTier, thickness, integrity, sound);
+		builder.setFlammableVariant(flammableVariant);
+		builder.registerMaterial(material);
+	}
+
+	/**
+	 * Registers a material with a fixed burnt block state.
+	 */
+	@ZenMethod
+	public static void addMaterial(IMaterial material, String hardnessTier, float thickness, float integrity,
+								   IBlockState flammableVariant, @Optional String sound)
+	{
+		PenetrationBuilder builder = createBuilder(hardnessTier, thickness, integrity, sound);
+		builder.setFlammableVariant(flammableVariant);
+		builder.registerMaterial(material);
+	}
+
+	/**
+	 * Registers a material with a burnt-state function.
+	 */
+	@ZenMethod
+	public static void addMaterial(IMaterial material, String hardnessTier, float thickness, float integrity,
+								   IFlammableVariantFunction flammableVariant, @Optional String sound)
+	{
+		PenetrationBuilder builder = createBuilder(hardnessTier, thickness, integrity, sound);
+		builder.setFlammableVariant(flammableVariant);
 		builder.registerMaterial(material);
 	}
 
 	@ZenMethod
 	public static void addBlock(IBlockState state, String hardnessTier, float thickness, float integrity, @Optional String sound)
 	{
-		PenetrationBuilder builder = PenetrationBuilder.create(hardnessTier, thickness, integrity);
-		if(sound!=null)
-			builder.setSound(sound);
+		createBuilder(hardnessTier, thickness, integrity, sound).registerBlock(state);
+	}
+
+	/**
+	 * Registers a block state with a fixed burnt block.
+	 */
+	@ZenMethod
+	public static void addBlock(IBlockState state, String hardnessTier, float thickness, float integrity,
+								IBlock flammableVariant, @Optional String sound)
+	{
+		PenetrationBuilder builder = createBuilder(hardnessTier, thickness, integrity, sound);
+		builder.setFlammableVariant(flammableVariant);
+		builder.registerBlock(state);
+	}
+
+	/**
+	 * Registers a block state with a fixed burnt block state.
+	 */
+	@ZenMethod
+	public static void addBlock(IBlockState state, String hardnessTier, float thickness, float integrity,
+								IBlockState flammableVariant, @Optional String sound)
+	{
+		PenetrationBuilder builder = createBuilder(hardnessTier, thickness, integrity, sound);
+		builder.setFlammableVariant(flammableVariant);
+		builder.registerBlock(state);
+	}
+
+	/**
+	 * Registers a block state with a burnt-state function.
+	 */
+	@ZenMethod
+	public static void addBlock(IBlockState state, String hardnessTier, float thickness, float integrity,
+								IFlammableVariantFunction flammableVariant, @Optional String sound)
+	{
+		PenetrationBuilder builder = createBuilder(hardnessTier, thickness, integrity, sound);
+		builder.setFlammableVariant(flammableVariant);
 		builder.registerBlock(state);
 	}
 
@@ -62,13 +134,40 @@ public class BlockPenetrationTweaker
 		return SoundEvent.REGISTRY.getObject(new ResourceLocation(sound));
 	}
 
+	private static PenetrationBuilder createBuilder(String hardnessTier, float thickness, float integrity, @Nullable String sound)
+	{
+		PenetrationBuilder builder = PenetrationBuilder.create(hardnessTier, thickness, integrity);
+		if(sound!=null)
+			builder.setSound(sound);
+		return builder;
+	}
+
+	/**
+	 * Selects a burnt replacement for the current block state.
+	 *
+	 * @author Pabilo8 (pabilo@iiteam.net)
+	 * @since 13.10.2026
+	 */
+	@FunctionalInterface
+	@ZenClass("mods."+ImmersiveIntelligence.MODID+".IFlammableVariantFunction")
+	@ZenRegister
+	public interface IFlammableVariantFunction
+	{
+		/**
+		 * Returns the replacement state, or null to prevent burning this state.
+		 */
+		@Nullable
+		@ZenMethod
+		IBlockState getFlammableVariant(IBlockState previousState);
+	}
+
 	/**
 	 * Builds and registers custom penetration handlers from CraftTweaker.
 	 *
 	 * @author Pabilo8 (pabilo@iiteam.net)
 	 * @since 24.08.2026
 	 */
-	@ZenClass("mods."+ImmersiveIntelligence.MODID+".BlockPenetration.Builder")
+	@ZenClass("mods."+ImmersiveIntelligence.MODID+".BlockPenetrationBuilder")
 	@ZenRegister
 	public static class PenetrationBuilder
 	{
@@ -154,6 +253,38 @@ public class BlockPenetrationTweaker
 		public void setDamageable(boolean damageable)
 		{
 			builder.withDamageable(damageable);
+		}
+
+		/**
+		 * Sets the burnt replacement from a block and its metadata.
+		 */
+		@ZenMethod
+		public void setFlammableVariant(@NonNull IBlock variant)
+		{
+			Block block = CraftTweakerMC.getBlock(variant);
+			int metadata = variant.getMeta();
+			setFlammableVariant(CraftTweakerMC.getBlockState(metadata < 0||metadata==OreDictionary.WILDCARD_VALUE?
+					block.getDefaultState(): block.getStateFromMeta(metadata)));
+		}
+
+		/**
+		 * Sets a fixed burnt replacement state.
+		 */
+		@ZenMethod
+		public void setFlammableVariant(@NonNull IBlockState variant)
+		{
+			net.minecraft.block.state.IBlockState replacement = CraftTweakerMC.getBlockState(variant);
+			builder.withFlammableVariant(state -> replacement);
+		}
+
+		/**
+		 * Sets a function that selects the burnt replacement state.
+		 */
+		@ZenMethod
+		public void setFlammableVariant(@NonNull IFlammableVariantFunction variant)
+		{
+			builder.withFlammableVariant(state -> CraftTweakerMC.getBlockState(
+					variant.getFlammableVariant(CraftTweakerMC.getBlockState(state))));
 		}
 
 		/**

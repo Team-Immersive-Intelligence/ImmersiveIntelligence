@@ -59,6 +59,7 @@ import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.ins
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.*;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.*;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntityDieselEngine;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySawmill;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySkyCartStation;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySkyCrateStation;
@@ -186,7 +187,8 @@ public enum IIGUI implements ISerializableEnum
 	RADAR_TARGETS(TileEntityRadar.class, ContainerRadar::new),
 	FACTION_INVITATIONS(ContainerPlayerGui::new),
 	CLIPBOARD_ITEM(ContainerClipboardItem::new),
-	CLIPBOARD_BLOCK(TileEntityClipboard.class, ContainerClipboardTile::new);
+	CLIPBOARD_BLOCK(TileEntityClipboard.class, ContainerClipboardTile::new),
+	DIESEL_ENGINE(TileEntityDieselEngine.class, ContainerDieselEngine::new);
 
 	public final Class<? extends TileEntity> teClass;
 	public final Class<? extends Entity> entityClass;
@@ -291,6 +293,7 @@ public enum IIGUI implements ISerializableEnum
 		IIGUI.PACKER.setClientTileGui(GuiPacker::new);
 		IIGUI.PACKER_LABELER.setClientTileGui(GuiPackerLabeler::new);
 		IIGUI.GEARBOX.setClientTileGui(GuiGearbox::new);
+		IIGUI.DIESEL_ENGINE.setClientTileGui(GuiDieselEngine::new);
 
 		IIGUI.DATA_REDSTONE_INTERFACE_DATA
 				.setClientTileGui(GuiDataRedstoneInterface::getDataGUI);

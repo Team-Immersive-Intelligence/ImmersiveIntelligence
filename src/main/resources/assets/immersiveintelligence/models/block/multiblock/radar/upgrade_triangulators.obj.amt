@@ -1,0 +1,20 @@
+{
+  "origins": {
+    "upgrade_triangulators3": [
+      67.6532,
+      18.3739,
+      63.4033
+    ],
+    "upgrade_triangulators2": [
+      7.1689,
+      15.2875,
+      85.6657
+    ],
+    "upgrade_triangulators1": [
+      -5.5727,
+      18.416,
+      8.0666
+    ]
+  },
+  "hierarchy": {}
+}

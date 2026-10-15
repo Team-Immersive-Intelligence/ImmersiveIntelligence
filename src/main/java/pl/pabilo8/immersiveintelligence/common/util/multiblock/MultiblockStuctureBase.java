@@ -33,6 +33,7 @@ import net.minecraft.util.Tuple;
 import net.minecraft.util.datafix.DataFixesManager;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.structure.template.Template;
@@ -43,12 +44,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIMultiblockRenderer;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
-import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileManager;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
+import pl.pabilo8.immersiveintelligence.common.util.amt.AMTModelHeader;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyHandler;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.property.IOwnableProperty;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.FacedVec3d;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 import pl.pabilo8.immersiveintelligence.common.util.raytracer.AxisAlignedFacingBB;
 
@@ -56,6 +58,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
@@ -64,7 +67,7 @@ import java.util.stream.Collectors;
  * Stores the definition of a multiblock structure.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 09.08.2026
+ * @updated 15.10.2026
  * @since 31.05.2021
  */
 public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<T>> implements IMultiblock
@@ -138,6 +141,7 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 	 */
 	private final EnumMap<MultiblockPOI, int[]> resolvedPOIs = new EnumMap<>(MultiblockPOI.class);
 	private final HashMap<String, Rotation> rotations = new HashMap<>();
+	private final Map<String, FacedVec3d> localVectors = new HashMap<>();
 	/**
 	 * Whether this structure requires an infinite bounding box in rendering due to its size
 	 */
@@ -199,6 +203,7 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 
 	public void updateMultiblockInfo()
 	{
+		localVectors.clear();
 		//Collect from file
 		JsonObject file = loadAABBFromJSON();
 		if(file==null)
@@ -211,7 +216,7 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 		updateAABB(file);
 		updatePOI(file);
 		updateRotations(file);
-		updateTactiles(file);
+		updateLocalVectors(file);
 	}
 
 	/**
@@ -342,14 +347,43 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 			}
 	}
 
-	/**
-	 * Does not actually load tactiles info. It's handled by {@link TactileManager}
-	 *
-	 * @param file json file
-	 */
-	private void updateTactiles(@Nonnull JsonObject file)
+	private void updateLocalVectors(@Nonnull JsonObject file)
 	{
+		if(!file.has("tactile")||!file.get("tactile").isJsonObject())
+			return;
+		JsonObject tactile = file.getAsJsonObject("tactile");
+		if(!tactile.has("_schema"))
+			return;
 
+		try
+		{
+			ResourceLocation schema = new ResourceLocation(tactile.get("_schema").getAsString());
+			try(InputStream stream = MultiblockStuctureBase.class.getResourceAsStream("/assets/"+schema.getResourceDomain()+"/"+schema.getResourcePath()))
+			{
+				if(stream==null)
+					throw new IllegalArgumentException("Missing header "+schema);
+				AMTModelHeader header = new AMTModelHeader(new JsonStreamParser(new InputStreamReader(stream, StandardCharsets.UTF_8))
+						.next().getAsJsonObject());
+				for(String name : header.getAffectedElements())
+					localVectors.put(name, new FacedVec3d(header.getOffset(name)));
+			}
+		} catch(Exception e)
+		{
+			localVectors.clear();
+			IILogger.warn("Could not load multiblock locators for "+loc+": "+e.getMessage());
+		}
+	}
+
+	/**
+	 * Gets a static AMT origin relative to the master block, in block units.
+	 *
+	 * @return the oriented origin, or null if the locator is absent
+	 */
+	@Nullable
+	public Vec3d getLocalVector(TileEntityMultiblockIIBase<?> masterTile, String name)
+	{
+		FacedVec3d vector = localVectors.get(name);
+		return vector==null?null: vector.getFacing(masterTile.facing, masterTile.mirrored);
 	}
 
 	private JsonObject loadAABBFromJSON()

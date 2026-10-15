@@ -13,6 +13,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBa
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoMapDisplay;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.map.DecoMapDefaultColorMapper;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.map.scanners.EntityScanner;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.map.scanners.RadarContactScanner;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.map.scanners.RadarDirectionScanner;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Radar;
@@ -29,7 +30,10 @@ import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 
 /**
+ * Shows radar contacts on a map.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 12.10.2026
  * @since 28.04.2023
  */
 @DecoTemplate(name = "radar", category = DecoGuiCategory.TERRITORY_CONTROL_TILE)
@@ -66,7 +70,7 @@ public class GuiRadar extends DecoTileGui<TileEntityRadar, ContainerRadar>
 		addLinkTab(IIGUI.RADAR_CONFIG, DecoTextures.ICON_CONFIG, "configuration_module");
 		addLinkTab(IIGUI.RADAR_TARGETS, DecoTextures.ICON_TARGETS, "targets_module");
 
-		BlockPos pos = tile.getPos();
+		BlockPos pos = new BlockPos(tile.getRadarCenter());
 		addComponents(
 				new DecoMapDisplay(4, 4)
 						.withSize(152-8, 152-8)
@@ -80,6 +84,10 @@ public class GuiRadar extends DecoTileGui<TileEntityRadar, ContainerRadar>
 								.withNoiseShader()
 								.withScanRange(Radar.detectionRadius)
 						)
+						.withScanner(new RadarContactScanner("radio_contacts", () -> tile.radioContacts)
+								.withMarkerStyle(DecoTextures.MAP_MARKER_RADIO_CONTACT, 3, IIReference.COLOR_IMMERSIVE_ORANGE))
+						.withScanner(new RadarContactScanner("weather_contacts", () -> tile.weatherContacts)
+								.withMarkerStyle(DecoTextures.MAP_MARKER_WEATHER, 4, IIReference.COLOR_IMMERSIVE_ORANGE))
 						.withScanner(new RadarDirectionScanner("radar", () -> tile.dishRotation, () -> tile.active))
 		);
 		registerFilters();

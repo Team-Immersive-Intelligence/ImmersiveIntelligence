@@ -1,0 +1,80 @@
+{
+  "bounds": {
+    "table1": [0, 0, 0, 16, 16, 16],
+    "rotary1": [0, 0, 0, 16, 16, 16],
+    "fuel_pipe1": [0, 0, 0, 16, 16, 16],
+    "rotary2": [0, 0, 0, 16, 16, 3],
+    "rotary3": [0, 0, 3, 4, 16, 15],
+    "rotary4": [4, 0, 3, 16, 10, 15],
+    "rotary_deco1": [8, 10, 23, 15, 16, 27],
+    "rotary_transmission1": [13, 0, 0, 16, 15, 3],
+    "rotary_transmission2": [0, 0, 0, 3, 15, 3],
+    "rotary_transmission3": [0, 0, 13, 3, 15, 16],
+    "rotary_transmission4": [13, 0, 13, 16, 15, 16],
+    "rotary_transmission5": [0, 3, 3, 16, 13, 13],
+    "engine1": [0, 0, 2, 16, 16, 15],
+    "fuel_pipe2": [0, 0, 1, 16, 16, 15],
+    "locker": [0, 0, 3, 16, 16, 14],
+    "exhaust1": [1, 2, 4, 15, 11, 13],
+    "fuel_pipe3": [0, 0, 1, 16, 2, 15],
+    "exhaust2": [11, 11, 23, 14, 14, 26],
+    "engine2": [0, 0, 4, 14, 11, 14],
+    "engine3": [3, 0, 4, 16, 11, 14],
+    "engine_deco1": [23, 11, -13, 29, 15, -2],
+    "engine_deco2": [-2, 11, -13, 3, 15, -2],
+    "engine_deco3": [4, 11, -13, 10, 15, -2]
+  },
+  "name": "II:diesel_engine",
+  "master": [1, 1, 1],
+  "positions": {
+    "5": "fuel_pipe1",
+    "9": ["rotary2", "rotary3", "rotary4"],
+    "12": ["rotary1", "rotary_deco1"],
+    "13": "locker",
+    "14": "fuel_pipe2",
+    "15": ["rotary_transmission1", "rotary_transmission3", "rotary_transmission2", "rotary_transmission4", "rotary_transmission5"],
+    "22": ["locker", "engine_deco1", "engine_deco3"],
+    "23": ["exhaust1", "fuel_pipe3", "engine_deco2"],
+    "25": "engine3",
+    "26": ["exhaust2", "engine2"],
+    "1,2,4,7,8": "table1",
+    "3,6": "rotary1",
+    "16,17": "engine1"
+  },
+  "poi": {
+    "input": 5,
+    "rotary_output": 0,
+    "redstone": 15,
+    "maintenance_hatch": [13, 22]
+  },
+  "rotations": {
+    "input": "counterclockwise_90",
+    "rotary_output": "clockwise_90",
+    "redstone": "clockwise_90"
+  },
+  "tactile_transforms": {
+    "all": {
+      "offset": [0, 0, 0]
+    },
+    "south": {
+      "rotation": [0, 0, 0],
+      "flip_xz_size": false
+    },
+    "west": {
+      "rotation": [0, 90, 0],
+      "flip_xz_size": true
+    },
+    "north": {
+      "rotation": [0, 180, 0],
+      "flip_xz_size": false
+    },
+    "east": {
+      "rotation": [0, 270, 0],
+      "flip_xz_size": true
+    },
+    "mirrored": {}
+  },
+  "tactile": {
+    "_schema": "immersiveintelligence:models/block/multiblock/diesel_engine/diesel_engine.obj.amt"
+  }
+}

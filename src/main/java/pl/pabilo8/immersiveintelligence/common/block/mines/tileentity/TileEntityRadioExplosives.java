@@ -20,11 +20,14 @@ import pl.pabilo8.immersiveintelligence.api.data.radio.IRadioDevice;
 import pl.pabilo8.immersiveintelligence.api.data.radio.RadioNetwork;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.Mines;
 
+import javax.annotation.Nonnull;
+
 /**
  * Detonates a mine when it receives a matching radio packet or a redstone signal.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 13.10.2026
  * @since 06.02.2021
- * @updated 04.10.2026
  */
 public class TileEntityRadioExplosives extends TileEntityMineBase implements ITickable, IBlockBounds, IDirectionalTile, IRadioDevice, IRedstoneConnector
 {
@@ -36,6 +39,7 @@ public class TileEntityRadioExplosives extends TileEntityMineBase implements ITi
 
 	protected RedstoneWireNetwork wireNetwork = new RedstoneWireNetwork().add(this);
 	private boolean refreshWireNetwork = false;
+	private boolean primed = false;
 
 	@Override
 	public void readCustomNBT(NBTTagCompound nbtTagCompound, boolean b)
@@ -58,31 +62,25 @@ public class TileEntityRadioExplosives extends TileEntityMineBase implements ITi
 
 	public void explode()
 	{
-		if(!armed)
+		if(!hasWorld()||world.isRemote||!armed)
 			return;
 		RadioNetwork.INSTANCE.removeDevice(this);
 		super.explode();
 	}
 
+	@Nonnull
 	@Override
 	public float[] getBlockBounds()
 	{
-		switch(facing)
+		return switch(facing)
 		{
-			case NORTH:
-				return new float[]{1/16f, 2/16f, 0, 15/16f, 14/16f, 9/16f};
-			case SOUTH:
-				return new float[]{1/16f, 2/16f, 1-9/16f, 15/16f, 14/16f, 1};
-			case EAST:
-				return new float[]{1-9/16f, 2/16f, 1/16f, 1, 14/16f, 15/16f};
-			case WEST:
-				return new float[]{0, 2/16f, 1/16f, 9/16f, 14/16f, 15/16f};
-			case UP:
-				return new float[]{1/16f, 1-9/16f, 2/16f, 15/16f, 1, 14/16f};
-			case DOWN:
-				return new float[]{1/16f, 0, 2/16f, 15/16f, 9/16f, 14/16f};
-		}
-		return new float[]{0, 0, 0, 1, 1, 1};
+			case NORTH -> new float[]{1/16f, 2/16f, 0, 15/16f, 14/16f, 9/16f};
+			case SOUTH -> new float[]{1/16f, 2/16f, 1-9/16f, 15/16f, 14/16f, 1};
+			case EAST -> new float[]{1-9/16f, 2/16f, 1/16f, 1, 14/16f, 15/16f};
+			case WEST -> new float[]{0, 2/16f, 1/16f, 9/16f, 14/16f, 15/16f};
+			case UP -> new float[]{1/16f, 1-9/16f, 2/16f, 15/16f, 1, 14/16f};
+			case DOWN -> new float[]{1/16f, 0, 2/16f, 15/16f, 9/16f, 14/16f};
+		};
 	}
 
 	@Override
@@ -93,6 +91,7 @@ public class TileEntityRadioExplosives extends TileEntityMineBase implements ITi
 			this.programmedPacket = new DataPacket(ItemNBTHelper.getTagCompound(stack, "programmed_data"));
 	}
 
+	@Nonnull
 	@Override
 	public EnumFacing getFacing()
 	{
@@ -100,7 +99,7 @@ public class TileEntityRadioExplosives extends TileEntityMineBase implements ITi
 	}
 
 	@Override
-	public void setFacing(EnumFacing facing)
+	public void setFacing(@Nonnull EnumFacing facing)
 	{
 		this.facing = facing;
 	}
@@ -112,19 +111,19 @@ public class TileEntityRadioExplosives extends TileEntityMineBase implements ITi
 	}
 
 	@Override
-	public boolean mirrorFacingOnPlacement(EntityLivingBase placer)
+	public boolean mirrorFacingOnPlacement(@Nonnull EntityLivingBase placer)
 	{
 		return true;
 	}
 
 	@Override
-	public boolean canHammerRotate(EnumFacing side, float hitX, float hitY, float hitZ, EntityLivingBase entity)
+	public boolean canHammerRotate(@Nonnull EnumFacing side, float hitX, float hitY, float hitZ, @Nonnull EntityLivingBase entity)
 	{
 		return false;
 	}
 
 	@Override
-	public boolean canRotate(EnumFacing axis)
+	public boolean canRotate(@Nonnull EnumFacing axis)
 	{
 		return false;
 	}
@@ -138,12 +137,10 @@ public class TileEntityRadioExplosives extends TileEntityMineBase implements ITi
 	@Override
 	public boolean onRadioReceive(DataPacket packet)
 	{
-		if(!isRadioAvailable())
+		if(!hasWorld()||world.isRemote||!armed||!isRadioAvailable())
 			return false;
 		if(packet.equals(this.programmedPacket))
-		{
-			explode();
-		}
+			primed = true;
 		return false;
 	}
 
@@ -242,14 +239,20 @@ public class TileEntityRadioExplosives extends TileEntityMineBase implements ITi
 	@Override
 	public void update()
 	{
-		if(hasWorld()&&!world.isRemote)
-			tickRadioCooldown();
-		if(hasWorld()&&!world.isRemote&&!refreshWireNetwork)
+		if(!hasWorld()||world.isRemote)
+			return;
+		if(primed)
+		{
+			primed = false;
+			explode();
+			return;
+		}
+		tickRadioCooldown();
+		if(!refreshWireNetwork)
 		{
 			refreshWireNetwork = true;
 			wireNetwork.removeFromNetwork(null);
 		}
-		if(hasWorld()&&!world.isRemote)
-			wireNetwork.updateValues();
+		wireNetwork.updateValues();
 	}
 }

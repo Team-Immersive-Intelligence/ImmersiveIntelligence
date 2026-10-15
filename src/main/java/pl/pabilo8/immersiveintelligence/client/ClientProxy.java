@@ -457,6 +457,7 @@ public class ClientProxy extends CommonProxy
 
 		//Mechanical
 		registerTileRenderer(SawmillRenderer.class);
+		registerTileRenderer(DieselEngineRenderer.class);
 		registerTileRenderer(MechanicalPumpRenderer.class);
 		registerTileRenderer(WheelRenderer.class);
 		new BeltModelStorage().subscribeToList("mechanical/belt");

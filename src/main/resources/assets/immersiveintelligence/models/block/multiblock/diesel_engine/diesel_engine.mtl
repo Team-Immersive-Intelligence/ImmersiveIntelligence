@@ -1,0 +1,14 @@
+# Made by Pabilo8 with Blockbench
+
+newmtl common_table
+map_Kd immersiveintelligence:blocks/common/common_table
+newmtl diesel_engine1
+map_Kd immersiveintelligence:blocks/multiblock/diesel_engine1
+newmtl diesel_engine2
+map_Kd immersiveintelligence:blocks/multiblock/diesel_engine2
+newmtl diesel_engine3
+map_Kd immersiveintelligence:blocks/multiblock/diesel_engine3
+newmtl common_cable_and_pipe
+map_Kd immersiveintelligence:blocks/common/common_cable_and_pipe
+newmtl common_thingies
+map_Kd immersiveintelligence:blocks/common/common_thingies

@@ -1,12 +1,13 @@
 package pl.pabilo8.immersiveintelligence.client.fx;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.math.Vec3d;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
- * @updated 29.12.2024
+ * @updated 14.10.2026
  * @since 03.04.2024
  */
 public class ScreenShake implements Comparable<ScreenShake>
@@ -41,8 +42,8 @@ public class ScreenShake implements Comparable<ScreenShake>
 	 */
 	public ScreenShake(float strength, float duration, float delay, Vec3d position)
 	{
-		double distance = ClientUtils.mc().player==null?0:
-				position.distanceTo(ClientUtils.mc().player.getPositionVector());
+		Entity camera = ClientUtils.mc().getRenderViewEntity();
+		double distance = camera==null?0: position.distanceTo(camera.getPositionVector());
 		this.strength = Math.max(0, strength)/(1d+distance/32d)*8;
 		this.duration = Math.max(1, duration);
 		this.age = -Math.max(0, delay);

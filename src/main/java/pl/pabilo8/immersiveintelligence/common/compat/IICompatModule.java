@@ -63,6 +63,7 @@ public abstract class IICompatModule
 		moduleClasses.put("cfb", CratesFeltBlueHelper.class);
 		moduleClasses.put("fluidlogged_api", FluidloggedAPIHelper.class);
 		moduleClasses.put("srparasites", ParasitesHelper.class);
+		moduleClasses.put("weather2remaster", Weather2CompatHandler.class);
 	}
 
 	public static void doModulesPreInit(FMLPreInitializationEvent event)
