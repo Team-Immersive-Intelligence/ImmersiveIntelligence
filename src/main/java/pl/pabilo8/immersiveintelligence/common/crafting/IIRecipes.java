@@ -1372,6 +1372,16 @@ public class IIRecipes
 				0.5F);
 
 		FurnaceRecipes.instance().addSmeltingRecipe(
+				IIContent.blockOre.getStack(Ores.TIN),
+				IIContent.itemMaterialIngot.getStack(MaterialsIngot.TIN),
+				0.5F);
+
+		FurnaceRecipes.instance().addSmeltingRecipe(
+				IIContent.itemMaterialDust.getStack(MaterialsDust.TIN),
+				IIContent.itemMaterialIngot.getStack(MaterialsIngot.TIN),
+				0.5F);
+
+		FurnaceRecipes.instance().addSmeltingRecipe(
 				IIContent.itemMaterialDust.getStack(MaterialsDust.BRASS),
 				IIContent.itemMaterialIngot.getStack(MaterialsIngot.BRASS),
 				0.5F);
