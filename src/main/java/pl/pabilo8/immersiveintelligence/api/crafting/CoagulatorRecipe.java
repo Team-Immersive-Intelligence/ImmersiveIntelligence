@@ -86,7 +86,7 @@ public class CoagulatorRecipe extends IIMultiblockRecipe
 				.withFluidTank(4, 2, fluidInput)
 				.withFluidTank(4+22, 2, coagulantInput)
 				.withOutputSlot(144-22, (64-16)/2-9, itemOutput)
-				.withMultiblockModel(32+8, 0)
+				.withMultiblockModel(32+16, -5)
 				.withTimeInfo()
 				.withPowerInfo()
 				.build();
