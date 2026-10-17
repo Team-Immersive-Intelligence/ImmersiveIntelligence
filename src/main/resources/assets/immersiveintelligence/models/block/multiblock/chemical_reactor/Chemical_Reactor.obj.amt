@@ -1,0 +1,27 @@
+{
+	"origins": {
+		"chemreactor_le_dernier": [0, 0, 0],
+		"conputer": [-70.3736, 5, -77.3021],
+		"tank2": [-16, 0, 0],
+		"tank3": [-72, 0, 64],
+		"grand_tank": [0, 0, 0],
+		"true_distiller_1": [48, 0, -64],
+		"pipes": [11, 4, -76],
+		"platforms": [0, 0, 0],
+		"Perkele_Power_Bridge": [-28, 74, -42],
+		"true_distiller_2": [80, 0, 32],
+		"true_distiller_3": [-80, 0, -16]
+	},
+	"hierarchy": {
+		"conputer": "chemreactor_le_dernier",
+		"tank2": "chemreactor_le_dernier",
+		"tank3": "chemreactor_le_dernier",
+		"grand_tank": "chemreactor_le_dernier",
+		"true_distiller_1": "chemreactor_le_dernier",
+		"pipes": "chemreactor_le_dernier",
+		"platforms": "chemreactor_le_dernier",
+		"Perkele_Power_Bridge": "chemreactor_le_dernier",
+		"true_distiller_2": "chemreactor_le_dernier",
+		"true_distiller_3": "chemreactor_le_dernier"
+	}
+}
