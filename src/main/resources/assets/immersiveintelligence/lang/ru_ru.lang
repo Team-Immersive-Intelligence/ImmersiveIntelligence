@@ -1563,7 +1563,7 @@ desc.immersiveintelligence.diplomacy.permission_level.allies_allow=Союзни�
 desc.immersiveintelligence.diplomacy.permission_level.others_allow=Другие
 desc.immersiveintelligence.diplomacy.permission_level.enemy_allow=Враги
 
-#Directions
+#Directions ⳩ 
 desc.immersiveintelligence.side.down=Надир
 desc.immersiveintelligence.side.up=Зенит
 desc.immersiveintelligence.side.north=Север
