@@ -1,6 +1,6 @@
 # meta
 Криптографические функции
-Ладно уж, храни свои секреты
+Режим "инкогнито"
 # encrypt_text
 |[data_operation]{id:"encrypt_text"}|
 # encrypt_number

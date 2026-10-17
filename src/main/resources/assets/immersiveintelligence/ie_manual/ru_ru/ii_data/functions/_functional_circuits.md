@@ -1,8 +1,8 @@
 # meta
 Функциональные платы
-Бип-Буп, но пока ещё не совсем
+Пока ещё не совсем Бип-Буп
 # intro
-Универсальная конструкция [печатных плат](electronic_components) позволяет легко [переустанавливать] их для выполнения различных специализированных операций с помощью [верстака инженера](workbench).<br>
+Универсальная конструкция [печатных плат](electronic_components) позволяет легко [перепрофилировать] их для выполнения различных специализированных операций с помощью [верстака инженера](workbench).<br>
 |[crafting]{source:"circuit_blueprints"}|
 # arithmetic
 |[item_display]{source:"%SECTION%"}|
@@ -37,12 +37,12 @@
 # itemstack
 |[item_display]{source:"%SECTION%"}|
 |[text]{source:"%SECTION%",bold:1b}|
-*Выполняет операции над объектом [ItemStacks](data_types.md#itemstack).*
+*Выполняет операции над [ItemStacks](data_types.md#itemstack).*
 |[data_circuit]{circuit:"%SECTION%"}|
 # fluidstack
 |[item_display]{source:"%SECTION%"}|
 |[text]{source:"%SECTION%",bold:1b}|
-*Выполняет операции над объектом [FluidStacks](data_types.md#fluidstack).*
+*Выполняет операции над [FluidStacks](data_types.md#fluidstack).*
 |[data_circuit]{circuit:"%SECTION%"}|
 # array
 |[item_display]{source:"%SECTION%"}|
@@ -52,7 +52,7 @@
 # map
 |[item_display]{source:"%SECTION%"}|
 |[text]{source:"%SECTION%",bold:1b}|
-*Выполняет операции со [словарём](data_types.md#map).*
+*Выполняет операции со [словарями](data_types.md#map).*
 |[data_circuit]{circuit:"%SECTION%"}|
 # entity
 |[item_display]{source:"%SECTION%"}|
@@ -67,7 +67,7 @@
 # type_conversion
 |[item_display]{source:"%SECTION%"}|
 |[text]{source:"%SECTION%",bold:1b}|
-*Преобразует данные между [их типами](data_types.md).*
+*Преобразует между [типами данных](data_types.md).*
 |[data_circuit]{circuit:"%SECTION%"}|
 # vector_arithmetic
 |[item_display]{source:"%SECTION%"}|

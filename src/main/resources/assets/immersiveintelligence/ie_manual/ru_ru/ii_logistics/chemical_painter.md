@@ -5,7 +5,7 @@
 @hammer;level_advanced_industrial
 |[multiblock]{mb:"II:ChemicalPainter"}|
 **Химический маляр** - машина, используемая для окрашивания предметов в точно заданный цвет с помощью чернил.
-|[text]{mb:"II:ChemicalPainter"}|
+Для сборки используйте [молот инженера] по **лёгкому инженерному блоку**
 # details
 Раскрашивать предметы вручную утомительно и не очень аккуратно, можно потратить много краски впустую, просто пытаясь добиться нужного цвета.
 [Химический маляр] устраняет эту проблему.
@@ -23,14 +23,14 @@
 
 Если требуется управление данными, следующая страница содержит описания необходимых переменных.
 # data_output
-**Data input:**<br>
+**Вход данных:**<br>
 |[data_variable]{type:"integer", direction:"вход", letter:"p", name:"Цвет окрашивания", description:"Число, представляющее цвет краски RGB. В шестнадцатеричном виде его цифры должны быть в виде RRGGBB, где R - красный, G - зеленый и B - синий"}|
-|[data_variable]{type:"string", direction:"вход", letter:"p", name:"Цвет окрашивания", description:"Строковый шестнадцатеричный код цвета"}|
+|[data_variable]{type:"string", direction:"вход", letter:"p", name:"Цвет окрашивания", description:"Строковый шестнадцатеричный код цвета без каких-либо дополнительных ведущих или замыкающих символов"}|
 # data_callback
-Callback Variables
-|[data_callback]{type:"integer", name:"get_energy", label:"Energy Stored", returns:"Stored energy amount (IF)"}|
-|[data_callback]{type:"integer", name:"get_progress", label:"Production Progress", returns:"Progress value 0:1"}|
-|[data_callback]{type:"integer", name:"get_color", label:"Цвет", returns:"Currently used color as a RGB integer"}|
+Переменные обратного вызова
+|[data_callback]{type:"integer", name:"get_energy", label:"Запасённая энергия", returns:"Кол-во запасённой энергии (IF)"}|
+|[data_callback]{type:"integer", name:"get_progress", label:"Прогресс производства", returns:"Значение прогресса 0:1"}|
+|[data_callback]{type:"integer", name:"get_color", label:"Цвет", returns:"Текущий используемый цвет как RGB-число"}|
 |[data_callback]{type:"integer", name:"get_ink", label:"Чернила(Ч)", returns:"Кол-во чёрных чернил (mB)"}|
 |[data_callback]{type:"integer", name:"get_ink_cyan", label:"Чернила(Б)", returns:"Кол-во бирюзовых чернил (mB)"}|
 |[data_callback]{type:"integer", name:"get_ink_yellow", label:"Чернила(Ж)", returns:"Кол-во жёлтых чернил (mB)"}|
