@@ -183,7 +183,7 @@ item.immersiveintelligence.material.ammonium_nitrate.name=Ammonium Nitrate
 item.immersiveintelligence.material.potassium_hydroxide.name=Potassium Hydroxide
 item.immersiveintelligence.material.potassium_carbonate.name=Potassium Carbonate
 item.immersiveintelligence.material.synthetic_rubber_crumbs.name=Synthetic Rubber Crumbs
-item.immersiveintelligence.material.opriment.name=Opriment
+item.immersiveintelligence.material.orpiment.name=Orpiment
 item.immersiveintelligence.material.silicon_dioxide.name=Silicon Dioxide
 item.immersiveintelligence.material.sodium_carbonate.name=Sodium Carbonate
 item.immersiveintelligence.material.dust_slag.name=Slag Dust
@@ -196,7 +196,7 @@ item.immersiveintelligence.material.thermite.name=Thermite
 item.immersiveintelligence.material.copper_catalyst.name=Copper Catalyst
 item.immersiveintelligence.material.iron_catalyst.name=Iron Catalyst
 item.immersiveintelligence.material.platinum_catalyst.name=Platinum Catalyst
-item.immersiveintelligence.material.nickel_catalyst.name=Nickle Catalyst
+item.immersiveintelligence.material.nickel_catalyst.name=Nickel Catalyst
 
 item.immersiveintelligence.material.red_chemical_dye.name=Red Chemical Dye
 item.immersiveintelligence.material.blue_chemical_dye.name=Blue Chemical Dye
@@ -568,9 +568,8 @@ tile.immersiveintelligence.ore.salt.name=Salt Ore
 
 tile.immersiveintelligence.ore.fluorite.name=Nether Fluorite Ore
 tile.immersiveintelligence.ore.phosphorus.name=Nether Phosphorus Ore
-tile.immersiveintelligence.ore.potash.name=Potash Ore
-tile.immersiveintelligence.ore.overworldfluorite.name=Overworld Fluorite Ore
-tile.immersiveintelligence.ore.overworldphosphorus.name=Overworld Phosphorus Ore
+tile.immersiveintelligence.ore.fluorite_overworld.name=Fluorite Ore
+tile.immersiveintelligence.ore.phosphorus_overworld.name=Phosphorus Ore
 
 tile.immersiveintelligence.sheetmetal.brass.name=Brass Sheetmetal
 tile.immersiveintelligence.storage.brass.name=Brass Block

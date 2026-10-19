@@ -72,7 +72,7 @@
     "inventory,type=chemical_engineering": [
       {
         "textures": {
-          "block_all": "immersiveintelligence:blocks/metal_decoration/chemical_engineering",
+          "block_all": "immersiveintelligence:blocks/metal_decoration/absolutelly_unconnected/chemical_engineering",
           "overlay_all": "immersiveintelligence:blocks/metal_decoration/steel_overlay"
         }
       }

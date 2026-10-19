@@ -69,62 +69,6 @@ public class ItemIIMaterial extends ItemIISubItemsBase<Materials>
 		@IIItemProperties(oreDict = "dustSalt")
 		DUST_SALT,
 
-		@IIItemProperties(oreDict = "dustSodium")
-		SODIUM,
-		@IIItemProperties(oreDict = "dustPotassium")
-		POTASSIUM,
-		@IIItemProperties(oreDict = "dustAmmoniumNitrate")
-		AMMONIUM_NITRATE,
-		@IIItemProperties(oreDict = "dustSiliconDioxide")
-		SILICON_DIOXIDE,
-		@IIItemProperties(oreDict = "dustSodiumCarbonate")
-		SODIUM_CARBONATE,
-		@IIItemProperties(oreDict = "dustSodiumHydroxide")
-		SODIUM_HYDROXIDE,
-		@IIItemProperties(oreDict = "SyntheticRubberCrumbs")
-		SYNTHETIC_RUBBER_CRUMBS,
-		@IIItemProperties(oreDict = {"dustNitrocellulose", "nitrocellulose"})
-		NITROCELLULOSE,
-		@IIItemProperties(oreDict = {"dustCordite", "cordite"})
-		CORDITE,
-		@IIItemProperties(oreDict = "dustPotassiumHydroxide")
-		POTASSIUM_HYDROXIDE,
-		@IIItemProperties(oreDict = "Opriment")
-		OPRIMENT,
-		@IIItemProperties(oreDict = "dustSlag")
-		DUST_SLAG,
-		@IIItemProperties(oreDict = "Thermite")
-		THERMITE,
-		@IIItemProperties(oreDict = "ZincSulfide")
-		ZINC_SULFIDE,
-
-		@IIItemProperties(oreDict = "CopperCatalyst")
-		COPPER_CATALYST,
-		@IIItemProperties(oreDict = "IronCatalyst")
-		IRON_CATALYST,
-		@IIItemProperties(oreDict = "NickelCatalyst")
-		NICKEL_CATALYST,
-		@IIItemProperties(oreDict = "PlatinumCatalyst")
-		PLATINUM_CATALYST,
-
-
-		@IIItemProperties(oreDict = {"dye", "dyeRed","RedChemicalDye"})
-		RED_CHEMICAL_DYE,
-		@IIItemProperties(oreDict = {"dye", "dyeGreen", "GreenChemicalDye"})
-		GREEN_CHEMICAL_DYE,
-		@IIItemProperties(oreDict = {"dye", "dyeBlue", "BlueChemicalDye"})
-		BLUE_CHEMICAL_DYE,
-		@IIItemProperties(oreDict = {"dye", "dyeCyan", "CyanChemicalDye"})
-		CYAN_CHEMICAL_DYE,
-		@IIItemProperties(oreDict = {"dye", "dyeYellow", "YellowChemicalDye"})
-		YELLOW_CHEMICAL_DYE,
-		@IIItemProperties(oreDict = {"dye", "dyeMagenta", "MagentaChemicalDye"})
-		MAGENTA_CHEMICAL_DYE,
-		@IIItemProperties(oreDict = {"dye", "dyeBlack", "BlackChemicalDye"})
-		BLACK_CHEMICAL_DYE,
-
-
-
 		@IIItemProperties(oreDict = "brushCarbon")
 		CARBON_BRUSH,
 		@IIItemProperties(hidden = true)
@@ -188,6 +132,60 @@ public class ItemIIMaterial extends ItemIISubItemsBase<Materials>
 		@IIItemProperties(oreDict = "lens")
 		LENS,
 		@IIItemProperties(oreDict = "lensInfrared")
-		INFRARED_LENS
+		INFRARED_LENS,
+
+		@IIItemProperties(oreDict = "dustSodium")
+		SODIUM,
+		@IIItemProperties(oreDict = "dustPotassium")
+		POTASSIUM,
+		@IIItemProperties(oreDict = "dustAmmoniumNitrate")
+		AMMONIUM_NITRATE,
+		@IIItemProperties(oreDict = "dustSiliconDioxide")
+		SILICON_DIOXIDE,
+		@IIItemProperties(oreDict = "dustSodiumCarbonate")
+		SODIUM_CARBONATE,
+		@IIItemProperties(oreDict = "dustSodiumHydroxide")
+		SODIUM_HYDROXIDE,
+		@IIItemProperties(oreDict = "nuggetSyntheticRubber")
+		SYNTHETIC_RUBBER_CRUMBS,
+		@IIItemProperties(oreDict = {"dustNitrocellulose", "nitrocellulose"})
+		NITROCELLULOSE,
+		@IIItemProperties(oreDict = {"dustCordite", "cordite"})
+		CORDITE,
+		@IIItemProperties(oreDict = "dustPotassiumHydroxide")
+		POTASSIUM_HYDROXIDE,
+		@IIItemProperties(oreDict = "gemOrpiment")
+		ORPIMENT,
+		@IIItemProperties(oreDict = "dustSlag")
+		DUST_SLAG,
+		@IIItemProperties(oreDict = "dustThermite")
+		THERMITE,
+		@IIItemProperties(oreDict = "dustZincSulfide")
+		ZINC_SULFIDE,
+
+		@IIItemProperties(oreDict = "catalystCopper")
+		COPPER_CATALYST,
+		@IIItemProperties(oreDict = "catalystIron")
+		IRON_CATALYST,
+		@IIItemProperties(oreDict = "catalystNickel")
+		NICKEL_CATALYST,
+		@IIItemProperties(oreDict = "catalystPlatinum")
+		PLATINUM_CATALYST,
+
+
+		@IIItemProperties(oreDict = {"dye", "dyeRed", "dyeRedChemical"})
+		RED_CHEMICAL_DYE,
+		@IIItemProperties(oreDict = {"dye", "dyeGreen", "dyeGreenChemical"})
+		GREEN_CHEMICAL_DYE,
+		@IIItemProperties(oreDict = {"dye", "dyeBlue", "dyeBlueChemical"})
+		BLUE_CHEMICAL_DYE,
+		@IIItemProperties(oreDict = {"dye", "dyeCyan", "dyeCyanChemical"})
+		CYAN_CHEMICAL_DYE,
+		@IIItemProperties(oreDict = {"dye", "dyeYellow", "dyeYellowChemical"})
+		YELLOW_CHEMICAL_DYE,
+		@IIItemProperties(oreDict = {"dye", "dyeMagenta", "dyeMagentaChemical"})
+		MAGENTA_CHEMICAL_DYE,
+		@IIItemProperties(oreDict = {"dye", "dyeBlack", "dyeBlackChemical"})
+		BLACK_CHEMICAL_DYE
 	}
 }

@@ -39,12 +39,12 @@ public class BlockIIOre extends BlockIIBase<Ores>
 		switch(state.getValue(property))
 		{
 			case FLUORITE:
-			case OVERWORLDFLUORITE:
+			case FLUORITE_OVERWORLD:
 				drops.add(IIContent.itemMaterialGem.getStack(MaterialsGem.FLUORITE,
 						(1+Math.round((float)Math.random()))*(1+fortune)));
 				break;
 			case PHOSPHORUS:
-			case OVERWORLDPHOSPHORUS:
+			case PHOSPHORUS_OVERWORLD:
 				drops.add(IIContent.itemMaterialGem.getStack(MaterialsGem.PHOSPHORUS,
 						(2+Math.round((float)Math.random()))*(1+fortune)));
 				break;
@@ -73,10 +73,10 @@ public class BlockIIOre extends BlockIIBase<Ores>
 		TIN,
 		@IIBlockProperties(harvestLevel = 5)
 		CHROMIUM,
-		@IIBlockProperties(harvestLevel = 3)
-		OVERWORLDPHOSPHORUS,
-		@IIBlockProperties(harvestLevel = 3)
-		OVERWORLDFLUORITE,
+		@IIBlockProperties(harvestLevel = 3, oreDict = "orePhosphorus")
+		PHOSPHORUS_OVERWORLD,
+		@IIBlockProperties(harvestLevel = 3, oreDict = "oreFluorite")
+		FLUORITE_OVERWORLD,
 
 	}
 }
