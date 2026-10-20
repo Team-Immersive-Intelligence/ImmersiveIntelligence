@@ -156,6 +156,8 @@ public enum IIGUI implements ISerializableEnum
 	PACKER_LABELER(TileEntityPacker.class, ContainerPacker::new),
 	SAWMILL(TileEntitySawmill.class, ContainerSawmill::new),
 
+	CHEMICAL_REACTOR(TileEntityChemicalReactor.class, ContainerChemicalReactor::new),
+
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	UPGRADE_TILE(TileEntityIEBase.class,
 			(player, te) -> new ContainerTileUpgrade(player, te)

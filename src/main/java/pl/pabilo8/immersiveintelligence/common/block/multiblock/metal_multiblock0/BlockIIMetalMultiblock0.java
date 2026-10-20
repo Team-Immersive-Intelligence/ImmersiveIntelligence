@@ -88,6 +88,10 @@ public class BlockIIMetalMultiblock0 extends BlockIIMultiblock<MetalMultiblocks0
 		PACKER,
 
 		@IIBlockProperties(hidden = TernaryValue.TRUE)
-		MISSILE_SILO //not implemented
+		MISSILE_SILO, //not implemented
+
+		@EnumMultiblockProvider(tile = TileEntityChemicalReactor.class, multiblock = MultiblockChemicalReactor.class)
+		@IIBlockProperties(needsCustomState = true)
+		CHEMICAL_REACTOR
 	}
 }

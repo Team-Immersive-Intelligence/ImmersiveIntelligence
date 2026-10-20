@@ -216,13 +216,23 @@ public abstract class TileEntityMultiblockProductionBase<T extends TileEntityMul
 		 * Additional process data
 		 */
 		public EasyNBT processData;
+		/**
+		 * Process set identifier (for multiset machines)
+		 */
+		public int processSet;
 
 		public IIMultiblockProcess(R recipe)
+		{
+			this(recipe, 0);
+		}
+
+		public IIMultiblockProcess(R recipe, int processSet)
 		{
 			this.recipe = recipe;
 			this.ticks = 0;
 			this.maxTicks = recipe.getTotalProcessTime();
 			this.processData = EasyNBT.newNBT();
+			this.processSet = processSet;
 		}
 
 		public IIMultiblockProcess<R> withNBT(Consumer<EasyNBT> consumer)

@@ -785,6 +785,10 @@ public class IIConfigHandler
 			@LangKey("desc.immersiveengineering.info.multiblock.II:VehicleWorkshop")
 			@Comment("Config for the Vehicle Workshop, allows for changes to energy and fuel capacity")
 			public static VehicleWorkshop vehicleWorkshop;
+			@SubConfig
+			@LangKey("tile.immersiveintelligence.metal_multiblock.chemical_reactor.name")
+			@Comment("Config for the Chemical Reactor, allows for changes to the energy and fluid capacity")
+			public static ChemicalReactor chemicalReactor;
 
 			@Comment({"The interval (in ticks) at which the multiblock machines will synchronize recipes with the client.",
 					"Setting to 0 will disable this feature.",
@@ -818,6 +822,16 @@ public class IIConfigHandler
 				@RequiresWorldRestart
 				@Comment({"Dust capacity of the the Filler (in mB, 1 dustStack is 100mB)."})
 				public static int dustCapacity = 32000;
+			}
+
+			public static class ChemicalReactor
+			{
+				@Comment({"Energy capacity of the chemical reactor."})
+				public static int energyCapacity = 16000;
+
+				@RequiresWorldRestart
+				@Comment({"Fluid capacity of the chemical reactor."})
+				public static int fluidCapacity = 12000;
 			}
 
 			public static class VehicleWorkshop
