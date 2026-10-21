@@ -525,6 +525,7 @@ public class ClientProxy extends CommonProxy
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityChemicalBath.class, new ChemicalBathRenderer().subscribeToList("multiblock/chemical_bath"));
 		registerTileRenderer(ElectrolyzerRenderer.class);
 		registerTileRenderer(ChemicalPainterRenderer.class);
+		registerTileRenderer(ChemicalReactorRenderer.class);
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPrecisionAssembler.class, new PrecisionAssemblerRenderer().subscribeToList("multiblock/precision_assembler"));
 		registerTileRenderer(FillerRenderer.class);
 

@@ -14,9 +14,16 @@
 			{
 				"model": "immersiveintelligence:multiblock/chemical_reactor/chemical_reactor_inv.obj",
 				"transform": {
-					"scale": 1,
+					"scale": 0.1,
 					"translation": [0, 0, 0],
-					"rotation": []
+					"rotation": [
+						{
+							"x": 20
+						},
+						{
+							"y": -225
+						}
+					]
 				}
 			}
 		],
@@ -53,16 +60,6 @@
 				}
 			}
 		},
-		"_0multiblockslave": {
-			"false": {},
-			"true": {
-				"model": "immersiveengineering:ie_empty"
-			}
-		},
-		"_1dynamicrender": {
-			"false": {},
-			"true": {}
-		},
 		"boolean0": {
 			"false": {
 				"model": "immersiveintelligence:multiblock/chemical_reactor/chemical_reactor_base.obj"
@@ -74,6 +71,18 @@
 		"boolean1": {
 			"false": {},
 			"true": {}
+		},
+		"_0multiblockslave": {
+			"false": {},
+			"true": {
+				"model": "immersiveengineering:ie_empty"
+			}
+		},
+		"_1dynamicrender": {
+			"false": {},
+			"true": {
+				"model": "immersiveintelligence:multiblock/chemical_reactor/chemical_reactor.obj.ie"
+			}
 		}
 	}
 }
