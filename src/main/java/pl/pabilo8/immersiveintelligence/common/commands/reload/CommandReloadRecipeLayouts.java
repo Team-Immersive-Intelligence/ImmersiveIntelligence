@@ -18,7 +18,7 @@ public class CommandReloadRecipeLayouts extends CommandIIBase
 {
 	public CommandReloadRecipeLayouts(CommandTreeBase parent)
 	{
-		super(parent, "layouts");
+		super(parent, "recipelayouts");
 	}
 
 	@Nullable

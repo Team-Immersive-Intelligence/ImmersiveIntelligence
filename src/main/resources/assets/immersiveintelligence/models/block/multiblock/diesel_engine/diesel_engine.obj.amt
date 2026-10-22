@@ -1,0 +1,84 @@
+{
+  "origins": {
+    "door": [
+      15.625,
+      17.75,
+      3
+    ],
+    "pipe": [
+      -6.5179,
+      22.5714,
+      20.8393
+    ],
+    "engine_cylinde1": [
+      -0.5,
+      21.3125,
+      23.95
+    ],
+    "rocker1": [
+      -0.5,
+      30,
+      24.05
+    ],
+    "pushrod1": [
+      -0.5,
+      22.5,
+      18.5
+    ],
+    "intake_valve1": [
+      -0.5,
+      28.5,
+      26.5
+    ],
+    "discharge_valve1": [
+      -0.5,
+      28.5,
+      21.5
+    ],
+    "engine_cylinde2": [
+      -0.6,
+      25.2542,
+      23.075
+    ],
+    "pushrod2": [
+      -0.6,
+      22.4,
+      18.5
+    ],
+    "discharge_valve2": [
+      -0.6,
+      28.4,
+      21.5
+    ],
+    "intake_valve2": [
+      -0.6,
+      28.4,
+      26.5
+    ],
+    "rocker2": [
+      -0.6,
+      29.9,
+      24.05
+    ],
+    "rotary": [
+      24,
+      8,
+      19
+    ],
+    "chimney": [
+      -12.5,
+      30,
+      7.5
+    ]
+  },
+  "hierarchy": {
+    "rocker1": "engine_cylinde1",
+    "pushrod1": "engine_cylinde1",
+    "intake_valve1": "engine_cylinde1",
+    "discharge_valve1": "engine_cylinde1",
+    "pushrod2": "engine_cylinde2",
+    "discharge_valve2": "engine_cylinde2",
+    "intake_valve2": "engine_cylinde2",
+    "rocker2": "engine_cylinde2"
+  }
+}

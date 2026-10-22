@@ -478,6 +478,7 @@ item.immersiveintelligence.bullet_magazine.cpds_drum.name=CPDS弹鼓
 item.immersiveintelligence.bullet_magazine.rifle.name=步枪弹匣
 
 item.immersiveintelligence.casing_pouch.name=废弃包装袋
+item.immersiveintelligence.clipboard.name=工程师剪贴板
 
 item.immersiveintelligence.motor_gear.copper.name=铜质齿轮
 item.immersiveintelligence.motor_gear.brass.name=黄铜齿轮
@@ -621,6 +622,8 @@ item.immersiveintelligence.naval_mine.bullet.name=水雷
 item.immersiveintelligence.naval_mine.core.name=水雷战斗部
 item.immersiveintelligence.ammo_casing.naval_mine.name=水雷壳体
 
+item.immersiveintelligence.placeholder_icon.name=占位符
+
 tile.immersiveintelligence.stone_decoration.sandbags.name=沙袋
 
 tile.immersiveintelligence.metal_device.metal_crate.name=钢质储存箱
@@ -657,6 +660,31 @@ tile.immersiveintelligence.small_crate.metal_crate_wide.name=小型金属储存�
 tile.immersiveintelligence.small_crate.reinforced_crate_box.name=小型强化储存箱(盒状)
 tile.immersiveintelligence.small_crate.reinforced_crate_cube.name=小型强化储存箱(块状)
 tile.immersiveintelligence.small_crate.reinforced_crate_wide.name=小型强化储存箱(扁状)
+tile.immersiveintelligence.clipboard.clipboard.name=工程师剪切板
+
+ii.gui.clipboard.title=工程师剪切板
+ii.gui.clipboard.packet_variables=%s 数据变量
+ii.gui.clipboard.action.copy=复制条目
+ii.gui.clipboard.action.todo=转为待办条目
+ii.gui.clipboard.add=增加文本条目
+ii.gui.clipboard.add_todo=增加待办条目
+ii.gui.clipboard.add_position=增加当前位置
+ii.gui.clipboard.todo_completed=任务完成
+ii.gui.clipboard.action.remove=删除条目
+ii.gui.clipboard.type.plain_text=纯文本
+ii.gui.clipboard.type.data_variable=II数据系统变量
+ii.gui.clipboard.type.data_packet=II数据系统包
+ii.gui.clipboard.type.item_stack=物品堆栈
+ii.gui.clipboard.type.ingredient_stack=原料堆栈
+ii.gui.clipboard.type.fluid_stack=流体堆栈
+ii.gui.clipboard.type.dust_stack=灰尘堆栈
+ii.gui.clipboard.type.integer=整数
+ii.gui.clipboard.type.float=浮点数
+ii.gui.clipboard.type.double=双浮点数
+ii.gui.clipboard.type.enum=枚举值
+ii.gui.clipboard.type.manual_page=工程师手册页
+ii.gui_tooltip.widget.clipboard.show.unnamed=展示工程师剪切板
+ii.gui_tooltip.widget.clipboard.show.named=展示剪切板: %s
 
 tile.immersiveintelligence.metal_fortification.steel_chain_fence.name=钢链栅栏
 tile.immersiveintelligence.metal_fortification.brass_chain_fence.name=黄铜链栅栏
@@ -664,6 +692,12 @@ tile.immersiveintelligence.metal_fortification.aluminium_chain_fence.name=硬化
 
 tile.immersiveintelligence.wooden_fortification.wooden_steel_chain_fence.name=木钢复合链状栅栏
 tile.immersiveintelligence.wooden_fortification.wooden_brass_chain_fence.name=木黄铜复合链状栅栏
+tile.immersiveintelligence.wooden_fortification.wooden_aluminum_chain_fence.name=木铝符合链状栅栏
+
+#Harbor Decorations
+tile.immersiveintelligence.harbor.wooden_pier.name=木码头
+tile.immersiveintelligence.harbor.wooden_quay.name=木石码头
+tile.immersiveintelligence.harbor_support.wooden_pier_support.name=木码头支撑
 
 tile.immersiveintelligence.metal_fortification1.tank_trap.name=捷克刺猬
 
@@ -754,7 +788,7 @@ desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.cmyk.m=M洋�
 desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.cmyk.y=Y黄色
 desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.cmyk.k=k黑色
 
-desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.hsv=Display in HSV
+desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.hsv=以 HSV 显示
 desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.hsv.h=Hue
 desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.hsv.s=Saturation
 desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.hsv.v=Value
@@ -827,6 +861,7 @@ fluid.brine=盐水
 fluid.ammonia=氨气
 fluid.hexamine=乌洛托品
 fluid.methanol=甲醇
+fluid.rocket_propellant=火箭燃料
 
 fluid.latex=乳胶
 
@@ -939,6 +974,12 @@ subtitle.immersiveintelligence.motor_belt=传动皮带旋转
 subtitle.immersiveintelligence.track_break=金属传动带断裂
 subtitle.immersiveintelligence.track=金属传动带旋转
 
+subtitle.immersiveintelligence.heavy_railgun_shot=重型磁轨炮射击
+subtitle.immersiveintelligence.heavy_railgun_shot_distant=重型电磁炮远距离开火
+
+subtitle.immersiveintelligence.missile_shot=导弹发射
+subtitle.immersiveintelligence.missile_shot_distant=导弹远距离发射
+
 subtitle.immersiveintelligence.autocannon_shot=机炮开火
 subtitle.immersiveintelligence.autocannon_shot_distant=机炮远距离开火
 subtitle.immersiveintelligence.autocannon_reload=机炮装填
@@ -974,11 +1015,11 @@ entity.minecart_barrel_creative.name=创造储存桶矿车
 entity.minecart_steel_barrel.name=钢桶矿车
 entity.minecart_open_barrel.name=开放式金属桶矿车
 
-entity.skycrate.name=Skycrate
+entity.skycrate.name=天车
 
-entity.bullet.name=Bullet
-entity.shrapnel.name=Shrapnel
-entity.flare.name=Flare
+entity.bullet.name=子弹
+entity.shrapnel.name=弹片
+entity.flare.name=闪光弹
 entity.gas_cloud.name=气体云
 entity.white_phosphorus.name=白磷爆炸
 entity.atomic_boom.name=核爆
@@ -1081,7 +1122,7 @@ machineupgrade.immersiveintelligence.saw_unregulator.desc=调节锯以获得更�
 #Flagpole
 machineupgrade.immersiveintelligence.flagpole.capture_defiance=反占领
 machineupgrade.immersiveintelligence.flagpole.capture_defiance.desc=强化旗杆,提高其结构完整性以及主动占领所需的部队数量.
-machineupgrade.immersiveintelligence.flagpole.taser_locks=泰瑟锁
+machineupgrade.immersiveintelligence.flagpole.taser_locks=特斯拉线圈
 machineupgrade.immersiveintelligence.flagpole.taser_locks.desc=增加一个防御特斯拉线圈,会攻击试图夺取旗杆的敌人.
 machineupgrade.immersiveintelligence.flagpole.distress_signal=求救信号
 machineupgrade.immersiveintelligence.flagpole.distress_signal.desc=添加一个无线电连接的警报器,当敌方部队靠近时会启动.
@@ -1117,7 +1158,7 @@ machineupgrade.immersiveintelligence.emplacement.heavy_railgun.desc=重型磁轨
 machineupgrade.immersiveintelligence.emplacement.machinegun=机枪巢
 machineupgrade.immersiveintelligence.emplacement.machinegun.desc=机枪巢可以提供压制性的自动射击,适合用以压制成群的敌人.由于其结构所限,它无法攻击空中目标.
 machineupgrade.immersiveintelligence.emplacement.machinegun.heavy_barrel=重型枪管
-machineupgrade.immersiveintelligence.emplacement.machinegun.heavy_barrel.desc=重型枪管提供更高的射速,同时略微增加能承受的最大热量.
+machineupgrade.immersiveintelligence.emplacement.machinegun.heavy_barrel.desc=重型枪管提供更高的射速.
 machineupgrade.immersiveintelligence.emplacement.machinegun.watercooled=水冷枪管
 machineupgrade.immersiveintelligence.emplacement.machinegun.watercooled.desc=替换原装枪管。安装后，在提供冷却液的情况下，枪管不会过热。
 
@@ -1138,7 +1179,7 @@ machineupgrade.immersiveintelligence.emplacement.tesla.desc=特斯拉塔使用�
 
 #Data Input Machine
 machineupgrade.immersiveintelligence.advanced_data=高级输入设备
-machineupgrade.immersiveintelligence.advanced_data.desc=将转换后的打字机替换为一个真正的全电子控制面板，允许用户输入高级数据类型，如向量、映射和数组。
+machineupgrade.immersiveintelligence.advanced_data.desc=将转换后的打字机替换为一个真正的全电子控制面板,允许用户输入高级数据类型,如向量,物流标签.
 
 #Arithmetic-Logic Machine
 machineupgrade.immersiveintelligence.memory=内置存储
@@ -1229,41 +1270,66 @@ desc.immersiveintelligence.infrared_disabled=§c红外§r 视野关闭!
 desc.immersiveintelligence.assembly_scheme.used_to_create=用于创建: %s
 desc.immersiveintelligence.assembly_scheme.items_created=已创建的项目: %s
 
-desc.immersiveintelligence.info.holdControl=Hold [Ctrl]
-desc.immersiveintelligence.info.holdShift=Hold [Shift]
-desc.immersiveintelligence.info.holdAlt=Hold [Alt]
-desc.immersiveintelligence.info.holdTab=Hold [Tab]
+desc.immersiveintelligence.info.holdControl=按住 [Ctrl]
+desc.immersiveintelligence.info.holdShift=按住 [Shift]
+desc.immersiveintelligence.info.holdAlt=按住 [Alt]
+desc.immersiveintelligence.info.holdTab=按住 [Tab]
 
 desc.immersiveintelligence.assembly_scheme.info_hold1=%s - 使用的材料
 desc.immersiveintelligence.assembly_scheme.info_hold2=%s - 使用的工具
 desc.immersiveintelligence.assembly_scheme.materials=使用的材料:
 desc.immersiveintelligence.assembly_scheme.tools=使用的工具:
 
-desc.immersiveintelligence.weapon.magazine1=%s - 弹匣甲
-desc.immersiveintelligence.weapon.magazine2=%s - 弹匣乙
+desc.immersiveintelligence.weapon.magazine1=%s - 弹匣1
+desc.immersiveintelligence.weapon.magazine2=%s - 弹匣2
 
 
 desc.immersiveintelligence.storage_module=存储
+desc.immersiveintelligence.storage_module.tooltip=访问机器的库存
 desc.immersiveintelligence.variables_module=变量
+desc.immersiveintelligence.variables_module.tooltip=管理与编辑数据变量
 desc.immersiveintelligence.memory_in_module=输入内存
+desc.immersiveintelligence.memory_in_module.tooltip=管理机器操作前的内存加载规则
 desc.immersiveintelligence.memory_out_module=输出内存
+desc.immersiveintelligence.memory_out_module.tooltip=管理机器操作后节省内存的规则
 desc.immersiveintelligence.data_module=数据
+desc.immersiveintelligence.data_module.tooltip=配置输入数据如何转换为红石信号
 desc.immersiveintelligence.redstone_module=红石
+desc.immersiveintelligence.redstone_module.tooltip=配置输入红石信号如何转换为数据
 desc.immersiveintelligence.data_to_redstone_module=数据转红石
+desc.immersiveintelligence.data_to_redstone_module.tooltip=配置输入数据如何转换为红石信号
 desc.immersiveintelligence.redstone_to_data_module=红石转数据
+desc.immersiveintelligence.redstone_to_data_module.tooltip=配置输入红石信号如何转换为数据
 desc.immersiveintelligence.tasks_module=任务
+desc.immersiveintelligence.tasks_module.tooltip=添加和修改机器的任务
 desc.immersiveintelligence.status_module=状态
+desc.immersiveintelligence.status_module.tooltip=检查机器状态
 desc.immersiveintelligence.labeler_module=标签
+desc.immersiveintelligence.labeler_module.tooltip=配置标签如何应用到容器
 
 desc.immersiveintelligence.map_module=地图
+desc.immersiveintelligence.map_module.tooltip=查看周边地图
 desc.immersiveintelligence.radar_module=雷达
+desc.immersiveintelligence.radar_module.tooltip=查看雷达界面
 desc.immersiveintelligence.faction_module=派系管理
+desc.immersiveintelligence.faction_module.tooltip=管理你的派系
 
 desc.immersiveintelligence.configuration_module=配置
+desc.immersiveintelligence.configuration_module.tooltip=改变机器设置
 desc.immersiveintelligence.targets_module=目标
+desc.immersiveintelligence.targets_module.tooltip=管理目标分类
 desc.immersiveintelligence.fire_missions_module=射击任务
+desc.immersiveintelligence.fire_missions_module.tooltip=添加和修改射击任务
 
 desc.immersiveintelligence.tooltip.armor=装甲 %f%%
+
+desc.immersiveintelligence.coagulator.input_tank=输入储罐
+desc.immersiveintelligence.coagulator.coagulant_tank=凝结储罐
+
+desc.immersiveintelligence.chemical_painter.tank_cyan=青色墨水罐
+desc.immersiveintelligence.chemical_painter.tank_magenta=品红墨水罐
+desc.immersiveintelligence.chemical_painter.tank_yellow=黄色墨水罐
+desc.immersiveintelligence.chemical_painter.tank_black=黑色墨水罐
 
 desc.immersiveintelligence.upgrade_gui.title=升级机器
 desc.immersiveintelligence.upgrade_gui.tech_tree=科技树
@@ -1276,12 +1342,24 @@ desc.immersiveintelligence.variable_add_desc=添加一个新变量
 desc.immersiveintelligence.variable_set=设置
 desc.immersiveintelligence.variable_set_desc=改变变量的值
 desc.immersiveintelligence.variable_send_packet=发送数据包
-desc.immersiveintelligence.variable_send_packet.tooltip=将当前数据包发送到数据网络
+desc.immersiveintelligence.variable_send_packet=将当前数据包发送到数据网络
 desc.immersiveintelligence.variable_remove_desc=移除变量
 desc.immersiveintelligence.variable_properties=属性
 desc.immersiveintelligence.variable_properties.tooltip=编辑表达式属性，例如条件变量。
 desc.immersiveintelligence.variable_value=数值:
+desc.immersiveintelligence.variable_value.boolean=数值
+desc.immersiveintelligence.variable_value.integer_vector=整数向量
+desc.immersiveintelligence.variable_value.integer_vector.tooltip=整数向量不允许有小数点
 desc.immersiveintelligence.operation=操作:
+
+desc.immersiveintelligence.text_filter.none=无
+desc.immersiveintelligence.text_filter.alphanumeric=字母数字
+desc.immersiveintelligence.text_filter.lowercase=小写
+desc.immersiveintelligence.text_filter.uppercase=大写
+desc.immersiveintelligence.text_filter.decimal=十进制
+desc.immersiveintelligence.text_filter.hexadecimal=十六进制
+desc.immersiveintelligence.text_filter.binary=二进制
+desc.immersiveintelligence.text_filter.float=浮点数
 
 desc.immersiveintelligence.conditional_variable=条件变量:
 desc.immersiveintelligence.conditional_variable.enabled=使用条件
@@ -1296,6 +1374,45 @@ desc.immersiveintelligence.variable=变量:
 desc.immersiveintelligence.variable_apply=应用
 desc.immersiveintelligence.variable_remove=移除
 desc.immersiveintelligence.no_editor=没有可用的编辑器.
+
+desc.immersiveintelligence.diplomacy.rolename.owner=所有者
+desc.immersiveintelligence.diplomacy.rolename.trusted=被信任的
+
+desc.immersiveintelligence.diplomacy.rolename.member=成员
+desc.immersiveintelligence.diplomacy.rolename.citizen=公民
+
+desc.immersiveintelligence.diplomacy.rolename.ceo=CEO
+desc.immersiveintelligence.diplomacy.rolename.cfo=CFO
+desc.immersiveintelligence.diplomacy.rolename.shareholder=股东
+desc.immersiveintelligence.diplomacy.rolename.manager=经理
+desc.immersiveintelligence.diplomacy.rolename.employee=员工
+
+desc.immersiveintelligence.diplomacy.rolename.president=总统
+desc.immersiveintelligence.diplomacy.rolename.minister=部长
+desc.immersiveintelligence.diplomacy.rolename.representative=代表
+#desc.immersiveintelligence.diplomacy.rolename.citizen=
+
+#desc.immersiveintelligence.diplomacy.rolename.member=
+
+desc.immersiveintelligence.diplomacy.rolename.supreme_commissar=最高专员
+desc.immersiveintelligence.diplomacy.rolename.comissar=委员
+desc.immersiveintelligence.diplomacy.rolename.officer=军官
+desc.immersiveintelligence.diplomacy.rolename.enforcer=执行者
+#desc.immersiveintelligence.diplomacy.rolename.citizen=
+desc.immersiveintelligence.diplomacy.rolename.sub_citizen=二等公民
+
+desc.immersiveintelligence.diplomacy.rolename.mayor=市长
+desc.immersiveintelligence.diplomacy.rolename.councilor_industry=工业顾问
+desc.immersiveintelligence.diplomacy.rolename.councilor_agriculture=农业顾问
+desc.immersiveintelligence.diplomacy.rolename.councilor_trade=贸易顾问
+desc.immersiveintelligence.diplomacy.rolename.councilor_logistics=后勤顾问
+desc.immersiveintelligence.diplomacy.rolename.councilor_military=军事顾问
+#desc.immersiveintelligence.diplomacy.rolename.citizen=
+
+desc.immersiveintelligence.diplomacy.rolename.ruler=统治者
+desc.immersiveintelligence.diplomacy.rolename.heir=继承人
+desc.immersiveintelligence.diplomacy.rolename.noble=贵族
+desc.immersiveintelligence.diplomacy.rolename.commoner=平民
 
 desc.immersiveintelligence.diplomacy.ownedby=属于 %s
 desc.immersiveintelligence.diplomacy.noowner=废弃地产
@@ -1413,18 +1530,31 @@ desc.immersiveintelligence.diplomacy.action.declare_war=宣布战争
 desc.immersiveintelligence.diplomacy.action.declare_alliance=宣布联盟
 
 desc.immersiveintelligence.diplomacy.permission.disband=解散
+desc.immersiveintelligence.diplomacy.permission.disband.tooltip=允许解散并更改派系的法律形式.
 desc.immersiveintelligence.diplomacy.permission.merge=合并
+desc.immersiveintelligence.diplomacy.permission.merge.tooltip=允许发送或接受涉及将该派系与另一个派系合并的外交请求.
 desc.immersiveintelligence.diplomacy.permission.foreign_affairs=外交
-desc.immersiveintelligence.diplomacy.permission.modify_insignia=修改徽章
-desc.immersiveintelligence.diplomacy.permission.invite_members=添加成员
+desc.immersiveintelligence.diplomacy.permission.foreign_affairs.tooltip=允许发送和接受来自其他派系的外交请求.
+desc.immersiveintelligence.diplomacy.permission.modify_insignia=修改标志
+desc.immersiveintelligence.diplomacy.permission.modify_insignia.tooltip=允许更改派系的名称,颜色和旗帜.
+desc.immersiveintelligence.diplomacy.permission.invite_members=加入成员
+desc.immersiveintelligence.diplomacy.permission.invite_members.tooltip=允许邀请新成员加入派系.
 desc.immersiveintelligence.diplomacy.permission.remove_members=移除成员
+desc.immersiveintelligence.diplomacy.permission.remove_members.tooltip=允许从派系中移除成员.
 desc.immersiveintelligence.diplomacy.permission.military_aid=军事援助
-desc.immersiveintelligence.diplomacy.permission.transit=运输
+desc.immersiveintelligence.diplomacy.permission.military_aid.tooltip=该派系的部队和防御设施会在战斗中守护并帮助任何持有此许可的人.
+desc.immersiveintelligence.diplomacy.permission.transit=交通
+desc.immersiveintelligence.diplomacy.permission.transit.tooltip=允许自由穿越该派系的领地.
 desc.immersiveintelligence.diplomacy.permission.trade=贸易
+desc.immersiveintelligence.diplomacy.permission.trade.tooltip=允许与该派系的设施进行贸易.
 desc.immersiveintelligence.diplomacy.permission.research=研究
+desc.immersiveintelligence.diplomacy.permission.research.tooltip=允许访问该派系的研究进度.
 desc.immersiveintelligence.diplomacy.permission.logistics=物流
+desc.immersiveintelligence.diplomacy.permission.logistics.tooltip=允许使用该派系的物流网络.
 desc.immersiveintelligence.diplomacy.permission.container_access=容器访问
-desc.immersiveintelligence.diplomacy.permission.breaking_structures=破坏结构
+desc.immersiveintelligence.diplomacy.permission.container_access.tooltip=允许打开并使用该派系的容器.
+desc.immersiveintelligence.diplomacy.permission.breaking_structures=破坏建筑
+desc.immersiveintelligence.diplomacy.permission.breaking_structures.tooltip=允许破坏该派系的建筑.
 
 desc.immersiveintelligence.diplomacy.permission_level.owner_allow=所有者
 desc.immersiveintelligence.diplomacy.permission_level.member_allow=成员
@@ -1494,6 +1624,7 @@ desc.immersiveintelligence.bullets.details=详情:
 desc.immersiveintelligence.bullets.core=装有 %1$s %2$s
 desc.immersiveintelligence.bullets.fuse=%s 引信
 desc.immersiveintelligence.bullets.mass=质量: %s
+desc.immersiveintelligence.bullets.component_slots=空闲组件槽: %s
 desc.immersiveintelligence.bullets.caliber=口径: %s bCal
 
 desc.immersiveintelligence.bullets.components=组件:
@@ -1503,18 +1634,12 @@ desc.immersiveintelligence.bullets.damage_dealt=造成的伤害: %s
 desc.immersiveintelligence.bullets.standard_velocity=标准速度: %s b/t
 desc.immersiveintelligence.bullets.max_artillery_range=最大炮火射程: %s 块
 desc.immersiveintelligence.bullets.max_artillery_height=到达最高高度: %s 块
-desc.immersiveintelligence.bullets.max_direct_range=最大直接范围: %s 块
+desc.immersiveintelligence.bullets.max_direct_range=最大直射范围: %s 块
 desc.immersiveintelligence.bullets.max_range=最大距离: %s 块
 desc.immersiveintelligence.bullets.armor_penetration=护甲穿透:
 
 desc.immersiveintelligence.bullet_magazine.remaining=剩余子弹: %s
 desc.immersiveintelligence.bullet_magazine.empty=空
-
-ii.gui.medical_crate.heal=治愈受伤的实体
-ii.gui.medical_crate.boost=将效果应用于实体
-
-ii.gui.repair_crate.repair_armor=修理磨损的装甲
-ii.gui.repair_crate.repair_vehicles=修理载具
 
 desc.immersiveintelligence.jei.washing_recipe=化学浸洗
 
@@ -2168,6 +2293,15 @@ datasystem.immersiveintelligence.function.array_create.param.first.desc=
 datasystem.immersiveintelligence.function.array_create.result=Array
 datasystem.immersiveintelligence.function.array_create.result.desc=The new array
 
+datasystem.immersiveintelligence.function.array_join=Join Arrays
+datasystem.immersiveintelligence.function.array_join.desc=Returns a new array with the elements of both input arrays
+datasystem.immersiveintelligence.function.array_join.param.first=First Array
+datasystem.immersiveintelligence.function.array_join.param.first.desc=The array placed first
+datasystem.immersiveintelligence.function.array_join.param.second=Second Array
+datasystem.immersiveintelligence.function.array_join.param.second.desc=The array placed after the first
+datasystem.immersiveintelligence.function.array_join.result=Array
+datasystem.immersiveintelligence.function.array_join.result.desc=The joined array
+
 datasystem.immersiveintelligence.function.array_get=Get
 datasystem.immersiveintelligence.function.array_get.desc=Returns the value at the specified index in the input array
 datasystem.immersiveintelligence.function.array_get.param.array=Array
@@ -2698,7 +2832,7 @@ key.immersiveintelligence.armorExosuit=切换工程师轻甲外骨骼
 
 key.immersiveintelligence.mgScope=放大/机枪瞄准镜
 
-key.categories.iivehicle=Vehicles (Immersive Intelligence)
+key.categories.iivehicle=载具 (沉浸智能)
 key.immersiveintelligence.vehicle.engine.toggle=切换引擎
 key.immersiveintelligence.vehicle.engine.start=发动引擎
 key.immersiveintelligence.vehicle.engine.stop=关闭引擎
@@ -2738,6 +2872,17 @@ advancement.immersiveintelligence.root.desc=RTFM?
 advancement.immersiveintelligence.connect_belt=强力输送
 advancement.immersiveintelligence.connect_belt.desc=用传动带线圈连接两个机械轮
 
+#Reference to Wallace Hammering meme
+advancement.immersiveintelligence.craft_electric_hammer=华莱士, 不-
+advancement.immersiveintelligence.craft_electric_hammer.desc=制作工程师电动锤.
+
+advancement.immersiveintelligence.craft_wrench=扭”转“局面
+advancement.immersiveintelligence.craft_wrench.desc=制作工程师扳手.
+
+#Reference to ROTATO FASTER BANANA
+advancement.immersiveintelligence.craft_electric_wrench=我们已到达最大速度
+advancement.immersiveintelligence.craft_electric_wrench.desc=制作工程师电扳手.
+
 advancement.immersiveintelligence.craft_gun_barrel_iron=你滴,枪匠滴干活?
 advancement.immersiveintelligence.craft_gun_barrel_iron.desc=制作铁质枪管,让你可以制造基本的枪支.
 
@@ -2776,9 +2921,6 @@ advancement.immersiveintelligence.infinite_power.desc=为冲锋枪安装底部�
 
 advancement.immersiveintelligence.the_silent_unseen=未知静谧
 advancement.immersiveintelligence.the_silent_unseen.desc=为冲锋枪安装折叠式枪托与消音器
-
-advancement.immersiveintelligence.craft_cpds=开火十二秒的代价
-advancement.immersiveintelligence.craft_cpds.desc=制作CPDS弹鼓
 
 #Reference to Tiger 1 tank memes
 advancement.immersiveintelligence.craft_steel_belt=Hans, ze Transmission Works!
@@ -2887,13 +3029,13 @@ advancement.immersiveintelligence.secret_nuclear_tripmine=爆心播种
 advancement.immersiveintelligence.secret_nuclear_tripmine.desc=部署核子绊雷
 
 #Reference to C&C
-advancement.immersiveintelligence.rad_cannon=展开末日与根除
+advancement.immersiveintelligence.rad_cannon=传播末日与根除
 advancement.immersiveintelligence.rad_cannon.desc=成为对环境稳定的公然冒犯
 
 #Reference to an old Polish meme, in which a certain cocoa brand is actually a story-rich book!
 #The cocoa was once put into a shop's shelf, mistaken as a book, that's where it started.
-advancement.immersiveintelligence.secret_cocoa=Stories of Deco Morreno
-advancement.immersiveintelligence.secret_cocoa.desc=The supreme quality has been achieved
+advancement.immersiveintelligence.secret_cocoa=Deco Morreno的故事
+advancement.immersiveintelligence.secret_cocoa.desc=已经达到了最高品质
 
 #Reference to Carver and C&C, though I left the mind control feature optional, was kinda op
 advancement.immersiveintelligence.secret_carvers_revenge=Carver的复仇
@@ -2909,11 +3051,63 @@ advancement.immersiveintelligence.secret_sorry_for_ceiling.desc=使用榴弹炮�
 
 #Reference to the russian II tutorial video by Ocelot
 advancement.immersiveintelligence.emplacement=小小的也很可爱
-advancement.immersiveintelligence.emplacement.desc=创建武器站-一种可以装备大型杀伤性武器的防御性建筑
+advancement.immersiveintelligence.emplacement.desc=建造武器站-一种可以装备大型杀伤性武器的防御性建筑
+
+advancement.immersiveintelligence.emplacement_machinegun=死亡,全自动化
+advancement.immersiveintelligence.emplacement_machinegun.desc=在武器站安装机枪.
+
+#Reference to Advance Wars: Black Hole Rising
+advancement.immersiveintelligence.emplacement_autocannon=Flak Attack
+advancement.immersiveintelligence.emplacement_autocannon.desc=在武器站安装机炮.
+
+#Reference to Team Fortress 2
+advancement.immersiveintelligence.emplacement_cpds=开火12秒的花费-
+advancement.immersiveintelligence.emplacement_cpds.desc=在武器站安装CPDS.
+
+#How come you don't know this mod, hm?
+advancement.immersiveintelligence.emplacement_heavy_railgun=沉浸轨道...炮,对吧?
+advancement.immersiveintelligence.emplacement_heavy_railgun.desc=在武器站安装重型磁轨炮.
+
+#Reference to a song by Sabaton
+advancement.immersiveintelligence.emplacement_heavy_chemthrower=毒气与化学战
+advancement.immersiveintelligence.emplacement_heavy_chemthrower.desc=在武器站安装重型化学喷射器.
+
+#Reference to an old movie "Evil Brain from Outer Space"
+advancement.immersiveintelligence.emplacement_infrared_observer=我知道前面会发生什么…
+advancement.immersiveintelligence.emplacement_infrared_observer.desc=在武器站安装红外观察器.
+
+advancement.immersiveintelligence.emplacement_light_howitzer=小贝沙.
+advancement.immersiveintelligence.emplacement_light_howitzer.desc=在武器站安装轻型火炮.
+
+advancement.immersiveintelligence.emplacement_mortar=没有杵
+advancement.immersiveintelligence.emplacement_mortar.desc=在武器站安装迫击炮.
+
+#Reference to the folk song "Katyusha"
+advancement.immersiveintelligence.emplacement_rocket_launcher=正当梨花开遍了天涯
+advancement.immersiveintelligence.emplacement_rocket_launcher.desc=在武器站安装火箭发射器.
+
+#Reference to the game Witch's House
+advancement.immersiveintelligence.emplacement_guided_missile_launcher=缠绕的线
+advancement.immersiveintelligence.emplacement_guided_missile_launcher.desc=在武器站安装线导导弹发射器.
+
+#Reference to Company of Heroes 1
+advancement.immersiveintelligence.emplacement_searchlight=比咖啡更提神
+advancement.immersiveintelligence.emplacement_searchlight.desc=在武器站安装探照灯.
+
+#Reference to Lord of The Rings
+advancement.immersiveintelligence.emplacement_spotlight_tower=巴拉都的残余 
+advancement.immersiveintelligence.emplacement_spotlight_tower.desc=在武器站安装聚光灯塔.
+
+#Reference to Command and Conquer: Red Alert 2
+advancement.immersiveintelligence.emplacement_tesla=电极就绪
+advancement.immersiveintelligence.emplacement_tesla.desc=在武器站安装特斯拉塔.
 
 advancement.immersiveintelligence.flagpole=全体起立!
 advancement.immersiveintelligence.flagpole.desc=建造旗杆,装饰性地标与区块加载器
 
+#Reference to one worker song, that almost sounded like a march
+advancement.immersiveintelligence.flagpole_unit_post=现在,左转,二,三!
+advancement.immersiveintelligence.flagpole_unit_post.desc=为旗杆升级单位岗位.
 
 #Manual Categories
 
@@ -2931,6 +3125,7 @@ ie.manual.folder.computers=电脑
 ie.manual.folder.weaponry=武器
 ie.manual.folder.armortools=装甲与工具
 ie.manual.folder.staticdefense=防御建筑
+ie.manual.folder.terrain_control=地形控制
 
 ie.manual.entry.traits.level_beginner=复杂性:前工业时代
 ie.manual.entry.traits.level_early_industrial=复杂性:早期工业时代
@@ -2946,8 +3141,9 @@ ie.manual.entry.traits.decorations=可修饰的
 ie.manual.entry.traits.paintable=可涂漆的
 
 ie.manual.entry.wip_warning0=警告! 开发中内容.
-ie.manual.entry.wip_warning1=工程部正在努力将它推到前面!
+ie.manual.entry.wip_warning1=工程部正在努力将它完成!
 ie.manual.entry.wip_warning.upgrade=该功能可能缺乏视觉效果或没有任何功能，不要报告此问题.
+ie.manual.entry.upgrade_notice=用扳手进行升级.
 
 ie.manual.entry.data_operation.inputs=输入
 ie.manual.entry.data_operation.output=输出
@@ -2997,7 +3193,7 @@ ie.manual.entry.tf=True/False
 ie.manual.entry.false=False
 ie.manual.entry.true=True
 
-ie.manual.entry.callback_returns=Returns:
+ie.manual.entry.callback_returns=返回:
 
 #Bullet cores & components
 ie.manual.entry.bullet_cores.name=弹芯材料
@@ -3009,7 +3205,7 @@ ie.manual.entry.bullet_core.core_brass.desc=黄铜是一种穿透能力较差的
 
 ie.manual.entry.bullet_core.core_copper=铜制弹芯
 ie.manual.entry.bullet_core.core_copper.lore=每一分钱都很重要
-ie.manual.entry.bullet_core.core_copper.desc=铜是一种便宜的子弹材料,它的穿透能力不如黄铜,但有其成分效果.
+ie.manual.entry.bullet_core.core_copper.desc=铜是一种便宜的子弹材料.它的穿透能力不如黄铜,但其综合效果略好一些.
 
 ie.manual.entry.bullet_core.core_lead=铅质弹芯
 ie.manual.entry.bullet_core.core_lead.lore=又丑又好用
@@ -3037,11 +3233,12 @@ ie.manual.entry.bullet_core.core_rubber.desc=橡胶弹芯比金属弹芯致命�
 
 ie.manual.entry.bullet_components.name=战斗部装药
 ie.manual.entry.bullet_components.subtext=装填尾翼稳定脱壳高速高爆硬芯穿甲弹!
-ie.manual.entry.bullet_components.dmg_mod=伤害: %sx
-ie.manual.entry.bullet_components.pen_mod=穿透力: %s vBH
-ie.manual.entry.bullet_components.blast_mod=爆炸半径: %sx
 ie.manual.entry.bullet_components.density=密度: %s
+ie.manual.entry.bullet_components.damage_modifier=伤害修正: %sx
+ie.manual.entry.bullet_components.component_efficiency_modifier=组件效率修正: %sx
+ie.manual.entry.bullet_components.penetration_hardness=穿透硬度: %s
 ie.manual.entry.bullet_components.type=类型: %s
+ie.manual.entry.bullet_components.slots_taken=已使用的槽位: %s
 
 #A quote from World in Conflict
 ie.manual.entry.bullet_component.firework=烟花
@@ -3076,7 +3273,7 @@ ie.manual.entry.bullet_component.tnt.desc=三硝基甲苯(TNT)是一种威力一
 #CoH2 Reference
 ie.manual.entry.bullet_component.rdx=黑索金
 ie.manual.entry.bullet_component.rdx.lore=有得必有失
-ie.manual.entry.bullet_component.rdx.desc=RDX,又名 §shexogen§r 或环三亚甲基三硝胺,是一种强大的高能爆炸物.它的威力是TNT的两倍,甚至可以摧毁最坚固的阵地.
+ie.manual.entry.bullet_component.rdx.desc=RDX,又名 §lhexogen§r 或环三亚甲基三硝胺,是一种强大的高能爆炸物.它的威力是TNT的两倍,甚至可以摧毁最坚固的阵地.
 
 #There are many variants of HMX's full name, one of them is Her Majesty's Explosive
 ie.manual.entry.bullet_component.hmx=奥克托金
@@ -3133,7 +3330,7 @@ ie.manual.entry.bullet_component.shrapnel_electrum.desc=琥珀金擅长导电,�
 
 #Reference to a post-ww2 poster for inter-country help in Western Europe
 ie.manual.entry.bullet_component.shrapnel_constantan=康铜弹片
-ie.manual.entry.bullet_component.shrapnel_constantan.lore=<br>Whatever the weather, we kill enemies together.
+ie.manual.entry.bullet_component.shrapnel_constantan.lore=无论天气如何,我们都必须共同前进.
 ie.manual.entry.bullet_component.shrapnel_constantan.desc=康铜以其导热性而闻名,被击中的敌人在一段时间内容易受到火焰伤害.
 
 #Reference to words by Otto von Bismarck
@@ -3192,6 +3389,7 @@ death.attack.iiVehiclenoRider=%1$s 被碾过
 death.attack.iiVehicleSuicide=%1$s 决定从移动的车上跳下
 
 #Additional stuff for the Config Panel
+ii.config.Overrides=覆盖
 ii.config.Graphics=画质
 ii.config.Ores=矿物
 ii.config.Machines=机器
@@ -3200,6 +3398,7 @@ ii.config.Weapons=武器
 ii.config.Wires=线缆
 ii.config.Tools=工具
 ii.config.Vehicles=载具
+ii.config.Factions=派系
 ii.config.EffectCrates=效果箱
 
 #Weapon Configs
@@ -3210,7 +3409,7 @@ ii.config.Mines=地雷
 ii.config.Light_Engineer_Armor=工程师轻型装甲
 
 #GUI Labels
-ii.gui.editor.editor_style=Visual/POL Editor
+ii.gui.editor.editor_style=视觉/POL编辑器
 
 ii.gui.task_editor.jobs=工作
 ii.gui.task_editor.jobs.tooltip=工作是可以无限重复的任务.
@@ -3235,6 +3434,24 @@ ii.gui.inserter.tasks.into_minecart=到矿车
 ii.gui.inserter.tasks.fluid=流体
 ii.gui.inserter.tasks.fluid_milk_cow=奶牛
 ii.gui.inserter.tasks.fluid_latex_collector=收集乳胶
+
+ii.gui.ammunition_crate.mode=模式:
+ii.gui.ammunition_crate.section.ammunition=子弹
+ii.gui.ammunition_crate.section.spent_casings=用过的弹壳
+ii.gui.ammunition_crate.section.spent_magazines=用过的弹匣
+ii.gui.ammunition_crate.mode.revolver=左轮
+ii.gui.ammunition_crate.mode.submachinegun=冲锋枪
+ii.gui.ammunition_crate.mode.assault_rifle=突击步枪
+ii.gui.ammunition_crate.mode.rifle_bullets=步枪 (弹药)
+ii.gui.ammunition_crate.mode.rifle_magazines=步枪 (弹匣)
+ii.gui.ammunition_crate.mode.machinegun_magazines=机枪 (弹匣)
+ii.gui.ammunition_crate.mode.machinegun_belt_fed=机枪 (弹链)
+
+ii.gui.repair_crate.repair_armor=修复损坏的盔甲
+ii.gui.repair_crate.repair_vehicles=修复载具
+
+ii.gui.medical_crate.heal=治疗受伤的实体
+ii.gui.medical_crate.boost=对实体施加效果
 
 ii.gui.packer.task=转移:
 ii.gui.packer.task.item=物品
@@ -3278,11 +3495,12 @@ ii.gui.packer.picker.logitag.tooltip=给容器的物流标签.
 
 ii.gui.itemstack_editor.count=数量:
 ii.gui.itemstack_editor.count.tooltip=堆叠中的物品数量
-ii.gui.itemstack_editor.damage=损坏:
-ii.gui.itemstack_editor.damage.tooltip=物品的损坏值(留空表示通配符)
+ii.gui.itemstack_editor.metadata=元数据:
+ii.gui.itemstack_editor.metadata.tooltip=物品的元数据值,通常表示物品的耐久度 (留空表示通配符)
 ii.gui.itemstack_editor.nbt=NBT
-ii.gui.itemstack_editor.nbt.item.tooltip=激活时，该物品将根据其NBT数据进行匹配
-ii.gui.itemstack_editor.nbt.fluid.tooltip=激活时，该流体将根据其NBT数据进行匹配
+ii.gui.itemstack_editor.nbt.item.tooltip=激活时,该物品将根据其NBT数据进行匹配
+ii.gui.itemstack_editor.nbt.fluid.tooltip=激活时,该流体将根据其NBT数据进行匹配
+ii.gui.itemstack_editor.nbt.data_type.tooltip=激活,该变量会存储物品的NBT数据.
 ii.gui.itemstack_editor.oredict=矿物词典
 ii.gui.itemstack_editor.oredict.tooltip=激活时，该物品将根据其矿物词典数据进行匹配
 ii.gui.itemstack_editor.energy=IF
@@ -3302,10 +3520,22 @@ ii.gui.data_editor.logistics_tag.color=颜色
 
 ii.gui.data_input_machine.storage=打孔纸带存储
 ii.gui.data_input_machine.memory=内置存储
-ii.gui.data_input_machine.memory.switch=切换
-ii.gui.data_input_machine.memory.switch.tooltip=切换当前内存槽
+ii.gui.data_input_machine.memory.page=内存页 #%s
+ii.gui.data_input_machine.memory.page.tooltip=允许选择机器将要操作的内存页
 
 ii.gui.arithmetic_logic_machine.storage=电路存储
+ii.gui.arithmetic_logic_machine.memory.transfer=内存传输规则编辑器
+ii.gui.arithmetic_logic_machine.memory.into=进入
+ii.gui.arithmetic_logic_machine.memory.mode.overwrite=(覆写)
+ii.gui.arithmetic_logic_machine.memory.mode.supplement=(补充)
+ii.gui.arithmetic_logic_machine.memory.load_rule_properties=从内存加载
+ii.gui.arithmetic_logic_machine.memory.save_rule_properties=存储进内存
+ii.gui.arithmetic_logic_machine.memory.memory_variable=内存变量
+ii.gui.arithmetic_logic_machine.memory.packet_variable=数据包变量
+ii.gui.arithmetic_logic_machine.memory.overwrite_existing=覆盖现有
+ii.gui.arithmetic_logic_machine.memory.overwrite_existing.tooltip=如果不勾选,内存中的值只会在数据包缺少该变量时加载.
+ii.gui.arithmetic_logic_machine.memory.usage_limit=使用限制
+ii.gui.arithmetic_logic_machine.memory.usage_limit.tooltip=设置后,内存变量会在处理指定数量的数据包后被删除.
 
 ii.gui.packer.tasks=任务
 ii.gui.packer.labeling=标签规则
@@ -3316,6 +3546,10 @@ ii.gui.flagpole.faction=派系管理
 ii.gui.radar.map=雷达显示
 ii.gui.radar.configuration=配置
 ii.gui.radar.targets=目标
+ii.gui.radar.config.reacts_redstone=对红石反应
+ii.gui.radar.config.reacts_redstone.tooltip=启用后,雷达只在接收到红石信号时工作.
+ii.gui.radar.config.data_output=数据输出
+ii.gui.radar.config.data_output.tooltip=通过雷达数据端口发送过滤后的可见接触.
 
 ii.gui.emplacement.platform_inventory=平台库存
 ii.gui.emplacement.base_inventory=基本库存
@@ -3325,7 +3559,13 @@ ii.gui.emplacement.config.reacts_redstone=红石控制
 ii.gui.emplacement.config.reacts_redstone.tooltip=启用时,只有在红石供能时,武器才会出现.
 ii.gui.emplacement.config.reacts_data=数据控制
 ii.gui.emplacement.config.reacts_data.tooltip=当关闭时,武器站将不会对数据做出反应.
-ii.gui.emplacement.config.hide_health=隐藏在血量低于:
+ii.gui.emplacement.config.data_output=数据输出
+ii.gui.emplacement.config.data_output.tooltip=通过武器站数据口发送发现的目标.
+ii.gui.emplacement.config.ballistic_fire=弹道打击
+ii.gui.emplacement.config.ballistic_fire.tooltip=对自动探测到的目标使用高角度弹道打击.直射时禁用.
+ii.gui.emplacement.config.yaw=偏航
+ii.gui.emplacement.config.pitch=俯仰
+ii.gui.emplacement.config.hide_health=隐藏在当血量低于:
 ii.gui.emplacement.config.hide_health.tooltip=低于此值时,平台会隐藏以进行维修.
 ii.gui.emplacement.config.resurface_health=维修直到生命值高于:
 ii.gui.emplacement.config.resurface_health.tooltip=在维修到高于此值时,武器站才能升到地面.
@@ -3343,6 +3583,121 @@ ii.gui.emplacement.fire_missions.finite_shots=限制射击
 ii.gui.emplacement.fire_missions.shots=射击s
 ii.gui.emplacement.fire_missions.shots_left=%s 次射击
 ii.gui.emplacement.fire_missions.until_done=直到完成
+
+ii.gui.emplacement.target_preset.mobs=生物
+ii.gui.emplacement.target_preset.everyone=所有
+ii.gui.emplacement.target_preset.enemy_factions=敌对派系
+ii.gui.emplacement.target_preset.shells=弹药
+ii.gui.emplacement.target_preset.custom=自定义
+ii.gui.emplacement.target_preset.name=预设名称
+ii.gui.emplacement.target_preset.new_name=新预设
+ii.gui.emplacement.target_preset.copy_name=%s 副本
+ii.gui.emplacement.target_preset.add.tooltip=增加自定义目标预设.
+ii.gui.emplacement.target_preset.duplicate.tooltip=以新身份复制选择预设.
+ii.gui.emplacement.target_preset.remove.tooltip=移除所选预设及其目标树.
+ii.gui.emplacement.target_preset.reset=重置
+ii.gui.emplacement.target_preset.reset.tooltip=恢复内置预设,或将自定义预设恢复到打开此页面时的状态.
+ii.gui.emplacement.target_preset.current=当前任务
+ii.gui.emplacement.target_preset.current.tooltip=使用这个预设作为自动目标任务.关闭它以禁用自动目标.
+
+ii.gui.emplacement.target_tree.node=目标状态
+ii.gui.emplacement.target_tree.weight=权重
+ii.gui.emplacement.target_tree.weight.tooltip=当条件及其父分支匹配时,添加这个标记的值.
+ii.gui.emplacement.target_tree.filter=过滤器
+ii.gui.emplacement.target_tree.filter.tooltip=选择评估此目标树节点的条件.
+ii.gui.emplacement.target_tree.entity_id=实体ID
+ii.gui.emplacement.target_tree.mod_id=生物ID
+ii.gui.emplacement.target_tree.entity_type=种类
+ii.gui.emplacement.target_tree.direction=方向
+ii.gui.emplacement.target_tree.name=名称
+ii.gui.emplacement.target_tree.comparison=测试
+ii.gui.emplacement.target_tree.expected=状态
+ii.gui.emplacement.target_tree.expected_state=预期
+ii.gui.emplacement.target_tree.relationship=关系
+ii.gui.emplacement.target_tree.add_child=增加子集
+ii.gui.emplacement.target_tree.add_child.tooltip=在选中的节点下添加任何条件.
+ii.gui.emplacement.target_tree.remove=移除
+ii.gui.emplacement.target_tree.remove.tooltip=删除所选节点及其所有子节点.根节点无法删除.
+ii.gui.emplacement.target_tree.condition=%s: %s
+ii.gui.emplacement.target_tree.weight_value=重量t: %s
+
+ii.gui.emplacement.target_filter.invalid=无效
+ii.gui.emplacement.target_filter.invalid.tooltip=这个条件会拒绝所有目标,因为它保存的数据无效.
+ii.gui.emplacement.target_filter.any=任意
+ii.gui.emplacement.target_filter.any.value=所有目标
+ii.gui.emplacement.target_filter.any.tooltip=匹配每一个通过武器可见性规则的候选对象.
+ii.gui.emplacement.target_filter.entity_id=实体ID
+ii.gui.emplacement.target_filter.entity_id.tooltip=匹配一个精确的 Forge 实体注册标识符.
+ii.gui.emplacement.target_filter.mod_id=生物ID
+ii.gui.emplacement.target_filter.mod_id.tooltip=匹配目标实体注册表标识符的命名空间.
+ii.gui.emplacement.target_filter.entity_type=实体种类
+ii.gui.emplacement.target_filter.entity_type.tooltip=匹配一个支持的部署实体类别.
+ii.gui.emplacement.target_filter.name=名称
+ii.gui.emplacement.target_filter.name.tooltip=匹配目标的可见名称,不区分大小写.
+ii.gui.emplacement.target_filter.health=生命值
+ii.gui.emplacement.target_filter.health.tooltip=将当前生命值或车辆耐久度与阈值进行比较.
+ii.gui.emplacement.target_filter.max_health=最大生命值
+ii.gui.emplacement.target_filter.max_health.tooltip=将最大生命值或车辆耐久度与阈值比较.
+ii.gui.emplacement.target_filter.distance=距离
+ii.gui.emplacement.target_filter.distance.tooltip=将武器中心的距离与方块阈值相比较.
+ii.gui.emplacement.target_filter.horizontal_distance=水平距离
+ii.gui.emplacement.target_filter.horizontal_distance.tooltip=比较武器中心X/Z距离与方块阈值, 忽略高度.
+ii.gui.emplacement.target_filter.relative_direction=相对方向
+ii.gui.emplacement.target_filter.relative_direction.tooltip=从武器瞄准中心到目标,匹配主要的东,南,西,北方向,忽略高度.
+ii.gui.emplacement.target_filter.relative_direction.north=北
+ii.gui.emplacement.target_filter.relative_direction.east=东
+ii.gui.emplacement.target_filter.relative_direction.south=南
+ii.gui.emplacement.target_filter.relative_direction.west=西
+ii.gui.emplacement.target_filter.on_ground=在地面上
+ii.gui.emplacement.target_filter.on_ground.tooltip=匹配目标是否在地面上.
+ii.gui.emplacement.target_filter.in_water=在水中
+ii.gui.emplacement.target_filter.in_water.tooltip=匹配目标是否在水中.
+ii.gui.emplacement.target_filter.on_fire=着火中
+ii.gui.emplacement.target_filter.on_fire.tooltip=匹配目标是否在着火.
+ii.gui.emplacement.target_filter.faction_relationship=派系关系
+ii.gui.emplacement.target_filter.faction_relationship.tooltip=匹配武器站所有者与活的目标之间的确切派系关系。
+ii.gui.emplacement.target_filter.unset=未设置
+ii.gui.emplacement.target_filter.boolean.true=True
+ii.gui.emplacement.target_filter.boolean.false=False
+ii.gui.emplacement.target_filter.entity_type.mob=生物
+ii.gui.emplacement.target_filter.entity_type.animal=动物
+ii.gui.emplacement.target_filter.entity_type.player=玩家
+ii.gui.emplacement.target_filter.entity_type.npc=NPC
+ii.gui.emplacement.target_filter.entity_type.vehicle=载具
+ii.gui.emplacement.target_filter.entity_type.projectile=弹射物
+ii.gui.emplacement.target_filter.relationship.member=成员
+ii.gui.emplacement.target_filter.relationship.allied=盟友
+ii.gui.emplacement.target_filter.relationship.neutral=中立
+ii.gui.emplacement.target_filter.relationship.enemy=敌人
+ii.gui.emplacement.target_filter.comparison.less_than=小于
+ii.gui.emplacement.target_filter.comparison.less_or_equal=小于等于
+ii.gui.emplacement.target_filter.comparison.equal=等于
+ii.gui.emplacement.target_filter.comparison.greater_or_equal=大于等于
+ii.gui.emplacement.target_filter.comparison.greater_than=大于
+
+ii.gui.emplacement.fire_mission.editor=射击任务
+ii.gui.emplacement.fire_mission.entity_not_editable=基于实体的射击任务无法编辑.
+ii.gui.emplacement.fire_mission.type=种类
+ii.gui.emplacement.fire_mission.type.position=位置
+ii.gui.emplacement.fire_mission.type.entity=实体
+ii.gui.emplacement.fire_mission.position=相对目标位置 (X / Y / Z)
+ii.gui.emplacement.fire_mission.position_value=%s, %s, %s
+ii.gui.emplacement.fire_mission.position_unset=位置未设定
+ii.gui.emplacement.fire_mission.entity_id=实体ID
+ii.gui.emplacement.fire_mission.entity_id.tooltip=目标的运行时实体ID.
+ii.gui.emplacement.fire_mission.entity_value=实体 #%s
+ii.gui.emplacement.fire_mission.coordinate.x.tooltip=目标X坐标.
+ii.gui.emplacement.fire_mission.coordinate.y.tooltip=目标Y坐标.
+ii.gui.emplacement.fire_mission.coordinate.z.tooltip=目标Z坐标.
+ii.gui.emplacement.fire_mission.finite_shots=限制射击
+ii.gui.emplacement.fire_mission.finite_shots.tooltip=在达到设置的次数后删除此请求.
+ii.gui.emplacement.fire_mission.shots=射击数
+ii.gui.emplacement.fire_mission.shots.tooltip=这个请求剩余的射击次数.
+ii.gui.emplacement.fire_mission.shots_left=%s 发
+ii.gui.emplacement.fire_mission.until_done=直到目标消失
+ii.gui.emplacement.fire_mission.aim_only=仅瞄准
+ii.gui.emplacement.fire_mission.ballistic_fire=弹道打击
+ii.gui.emplacement.fire_mission.ballistic_fire.tooltip=为这次火力任务覆盖武器站默认设置.直射时禁用.
 
 ii.gui.emplacement.selector_preset=选择器预设
 ii.gui.emplacement.filter=过滤器
@@ -3381,6 +3736,48 @@ ii.gui.map_display.marker.missiles=导弹
 ii.gui.map_display.marker.artillery=重炮
 ii.gui.map_display.marker.bullets=弹药
 
+ii.gui.flagpole.config.chunk_loading_range=区块加载范围
+ii.gui.flagpole.config.chunks=%s 个区块
+ii.gui.flagpole.config.display_faction_flag=显示派系旗帜
+ii.gui.flagpole.config.display_faction_flag.tooltip=旗杆上未放置旗帜时,显示所有者旗帜.
+ii.gui.flagpole.config.prioritize_faction_flag=派系旗帜优先
+ii.gui.flagpole.config.prioritize_faction_flag.tooltip=即使旗杆上已有旗帜,仍显示所有者旗帜.
+ii.gui.flagpole.config.distress_signal=求救信号
+ii.gui.flagpole.config.sound_alarm=响警报
+ii.gui.flagpole.config.sound_alarm.tooltip=当敌人逼近时响警报.
+ii.gui.flagpole.config.send_distress_packet=发送求救信号
+ii.gui.flagpole.config.send_distress_packet.tooltip=当敌人逼近时在无线电网络发求救信号.
+ii.gui.flagpole.config.tesla_coil=特斯拉线圈
+ii.gui.flagpole.config.tesla_coil_active=特斯拉线圈已激活
+ii.gui.flagpole.config.tesla_coil_active.tooltip=激活特斯拉线圈,打击附近的敌人.
+
+ii.gui.faction_invitation=派系
+ii.gui.faction_invitation.invalid=无法获取派系数据.请重新开启此界面.
+ii.gui.faction_invitation.current=当前状态
+ii.gui.faction_invitation.current.alone=%s 是自己领域的主人.
+#[Name] is [Rank] of [Faction], e.g. Pabilo8 is Owner of Pabulograd
+ii.gui.faction_invitation.current.faction=%s 是 %s ,掌管 %s
+ii.gui.faction_invitation.invitations=派系邀请
+ii.gui.faction_invitation.invitations.none=没有待处理的邀请
+
+ii.gui.faction_management.insignia=标志
+ii.gui.faction_management.insignia.tooltip=自定义派系名称与颜色
+ii.gui.faction_management.insignia.name=派系名称
+ii.gui.faction_management.insignia.name.tooltip=派系的名称
+ii.gui.faction_management.insignia.banner=旗帜
+ii.gui.faction_management.insignia.banner.tooltip=点击旗帜更换派系的旗帜.
+ii.gui.faction_management.members=成员
+ii.gui.faction_management.members.tooltip=管理派系成员
+ii.gui.faction_management.invitations=邀请
+ii.gui.faction_management.invitations.tooltip=邀请新成员并管理现有邀请
+ii.gui.faction_management.invitations.username=用户名
+ii.gui.faction_management.invitations.username.tooltip=要邀请的玩家用户名
+ii.gui.faction_management.permissions=权限
+ii.gui.faction_management.permissions.tooltip=管理成员权限
+ii.gui.faction_management.permissions.role=编辑身份组:
+ii.gui.faction_management.permissions.role.tooltip=选择要查看或编辑权限的身份组
+ii.gui.faction_management.permissions.empty=无可用身份组
+
 ii.gui.redstone_data_interface.from.redstone=从红石
 ii.gui.redstone_data_interface.from.redstone.tooltip=指定哪种红石信号颜色将被转换为数据变量
 ii.gui.redstone_data_interface.from.data=从变量
@@ -3399,6 +3796,7 @@ ii.gui.redstone_data_interface.mode.float=浮点数 0-1
 ii.gui.redstone_data_interface.mode.string=字符串
 
 ii.gui.projectile_workshop.component_info=组件信息
+ii.gui.projectile_workshop.tooltip.units=%s 单位
 ii.gui.projectile_workshop.component.role=规则: %s
 ii.gui.projectile_workshop.component.density=密度: %s
 ii.gui.projectile_workshop.component.slots_taken=已占用的插槽: %s
@@ -3407,27 +3805,38 @@ ii.gui.projectile_workshop.entry.type=类型
 ii.gui.projectile_workshop.tooltip.core_type=弹芯核心
 ii.gui.projectile_workshop.tooltip.ammunition_type=弹药种类
 ii.gui.projectile_workshop.cost=总计:
-ii.gui.projectile_workshop.invalid_cost=总计: 67891 P数
+ii.gui.projectile_workshop.invalid_cost=总计: 无效 Pabulions
 ii.gui.projectile_workshop.material_preview=材质预览
 ii.gui.projectile_workshop.section.core=弹芯
 ii.gui.projectile_workshop.section.ballistics=弹道
 ii.gui.projectile_workshop.tooltip.component_slots=组件插槽
+ii.gui.projectile_workshop.tooltip.component_slots.tooltip=可用于装填弹药组件的空间.
 ii.gui.projectile_workshop.tooltip.component_effect_shape=组件效果形状
-ii.gui.projectile_workshop.tooltip.component_efficiency=组件效率修正
-ii.gui.projectile_workshop.tooltip.component_efficiency.line1=确定效力.
-ii.gui.projectile_workshop.tooltip.component_efficiency.line2=负责爆炸力、化学气体浓度.
-ii.gui.projectile_workshop.tooltip.component_size=组件尺寸倍增器
-ii.gui.projectile_workshop.tooltip.component_size.line1=确定组件体积，负责爆炸半径，气体扩散范围倍增器.
-ii.gui.projectile_workshop.tooltip.core_mass=弹芯重量
+ii.gui.projectile_workshop.tooltip.component_effect_shape.tooltip=组件效果(如爆炸物引爆时)所使用的形状.取决于核心类型.
+ii.gui.projectile_workshop.tooltip.component_efficiency=组件效果修正
+ii.gui.projectile_workshop.tooltip.component_efficiency.tooltip=决定组件强度,并影响爆炸威力和化学气体浓度.
+																														  
+ii.gui.projectile_workshop.tooltip.component_size=组件尺寸倍率
+ii.gui.projectile_workshop.tooltip.component_size.tooltip=决定组件体积,并影响爆炸半径和气体扩散范围倍率.
+ii.gui.projectile_workshop.tooltip.core_mass=弹芯质量
+ii.gui.projectile_workshop.tooltip.core_mass.tooltip=所选材料的弹芯质量.
 ii.gui.projectile_workshop.tooltip.damage_dealt=造成的伤害
+ii.gui.projectile_workshop.tooltip.damage_dealt.tooltip=弹射物命中目标时造成的直接伤害.
 ii.gui.projectile_workshop.tooltip.velocity=速度
+ii.gui.projectile_workshop.tooltip.velocity.tooltip=弹射物每tick走的块数.
 ii.gui.projectile_workshop.tooltip.available_fuzes=可用引信
+ii.gui.projectile_workshop.tooltip.available_fuzes.tooltip=此弹射物可用的引信.
 ii.gui.projectile_workshop.tooltip.penetration_hardness=穿透硬度
-ii.gui.projectile_workshop.tooltip.flat_trajectory_range=平射程
-ii.gui.projectile_workshop.tooltip.max_artillery_range=最大火炮奢侈
+ii.gui.projectile_workshop.tooltip.penetration_hardness.tooltip=弹射物能够穿透的最坚硬材料.
+ii.gui.projectile_workshop.tooltip.penetration_depth=穿透深度
+ii.gui.projectile_workshop.tooltip.penetration_depth.tooltip=弹射物能够穿透其最坚硬材料的最大深度.
+ii.gui.projectile_workshop.tooltip.flat_trajectory_range=直射射程
+ii.gui.projectile_workshop.tooltip.flat_trajectory_range.tooltip=以 0 度角发射的弹射物在下落整整一个方块高度前所飞行的距离.
+ii.gui.projectile_workshop.tooltip.max_artillery_range=最大射程
+ii.gui.projectile_workshop.tooltip.max_artillery_range.tooltip=以 45 度角发射的弹射物在下落前所飞行的水平距离.
 ii.gui.projectile_workshop.unit.blocks=%s 块
 ii.gui.projectile_workshop.unit.blocks_per_tick=%s 块/时减
-ii.gui.projectile_workshop.value.penetration_hardness=%s 块 %s
+ii.gui.projectile_workshop.value.penetration_hardness=%s @ %s
 ii.gui.projectile_workshop.unit.multiplier=%sx
 
 ii.gui.ammunition_assembler.fuse_config.timed=时间:
@@ -3502,13 +3911,24 @@ ii.gui_tooltip.button.add=添加
 ii.gui_tooltip.button.remove=移除
 ii.gui_tooltip.button.edit=编辑
 ii.gui_tooltip.button.duplicate=复制
-ii.gui_tooltip.button.clear=清楚
+ii.gui_tooltip.button.clear=清除
+ii.gui_tooltip.button.accept=允许
+ii.gui_tooltip.button.reject=拒绝
+ii.gui_tooltip.button.help=展示帮助
+ii.gui_tooltip.button.factions=派系
 
 #GUI Widgets
 ii.gui_tooltip.widget.style.show=显示样式自定义
 ii.gui_tooltip.widget.style.hide=隐藏样式自定义
 ii.gui_tooltip.widget.style=自定义
-ii.gui_tooltip.widget.style.desc=这个多方快结构允许自定义颜色与样式.
+ii.gui_tooltip.widget.style.main=此 %s 不支持自定义.
+ii.gui_tooltip.widget.style.main.variants=此 %s 支撑自定义样式.
+ii.gui_tooltip.widget.style.main.color=此 %s 支持自定义颜色.
+ii.gui_tooltip.widget.style.main.variants.color=此 %s 支持自定义样式与颜色.
+ii.gui_tooltip.widget.style.main.tile=机器
+ii.gui_tooltip.widget.style.main.multiblock=多方块结构
+ii.gui_tooltip.widget.style.main.vehicle=载具
+ii.gui_tooltip.widget.style.main.entity=实体
 ii.gui_tooltip.widget.style.style=样式
 ii.gui_tooltip.widget.style.color=颜色
 ii.gui_tooltip.widget.ownership.show=显示所有权数据
@@ -3519,39 +3939,39 @@ ii.gui_tooltip.widget.manual.hide=隐藏侧边手册
 ii.gui_tooltip.widget.manual.page=在工程师手册中打开
 ii.gui_tooltip.widget.manual=工程师手册
 
-ii.gui_tooltip.energy.stored=Energy Stored: %s/%s IF
-ii.gui_tooltip.energy.input=Energy Consumed: %s IF/t
-ii.gui_tooltip.energy.required=Energy Required: %s IH/t
-ii.gui_tooltip.energy.output=Energy Output: %s IF/t
+ii.gui_tooltip.energy.stored=储存的能量: %s/%s IF
+ii.gui_tooltip.energy.input=消耗的能量: %s IF/t
+ii.gui_tooltip.energy.required=需要的能量: %s IH/t
+ii.gui_tooltip.energy.output=输出的能量: %s IF/t
 
-ii.gui_tooltip.heat.stored=Heat %s/%s IH
-ii.gui_tooltip.heat.input=Heat Consumed: %s IH/t
-ii.gui_tooltip.heat.required=Heat Required: %s IH /t
-ii.gui_tooltip.heat.output=Heat Output: %s IH/t
+ii.gui_tooltip.heat.stored=热量 %s/%s IH
+ii.gui_tooltip.heat.input=消耗的热量: %s IH/t
+ii.gui_tooltip.heat.required=需要的热量: %s IH /t
+ii.gui_tooltip.heat.output=输出的热量: %s IH/t
 
-ii.gui_tooltip.pressure.stored=Pressure: %s/%s IP
-ii.gui_tooltip.pressure.input=Pressure Intake: %s IP
-ii.gui_tooltip.pressure.required=Pressure Required: %s IP /t
-ii.gui_tooltip.pressure.output=Pressure Output: %s IP
+ii.gui_tooltip.pressure.stored=压力: %s/%s IP
+ii.gui_tooltip.pressure.input=输入的压力: %s IP
+ii.gui_tooltip.pressure.required=需要的压力: %s IP /t
+ii.gui_tooltip.pressure.output=输出的压力: %s IP
 
-ii.gui_tooltip.mech_torque.message.basic=Input: 速度 %s D/t | 扭矩 %s IT.
-ii.gui_tooltip.mech_torque.message.advanced=Input: 速度 %s D/t | 扭矩 %s IT. 输出: Speed %s D/t | 扭矩 %s IT.
-ii.gui_tooltip.mech_torque.stored=Torque: %s/%s IT
-ii.gui_tooltip.mech_torque.input=Torque Input: %s IT
-ii.gui_tooltip.mech_torque.required=Torque Required: %s IT/t
-ii.gui_tooltip.mech_torque.output=Torque Output: %s IT
+ii.gui_tooltip.mech_torque.message.basic=输入: 速度 %s D/t | 扭矩 %s IT.
+ii.gui_tooltip.mech_torque.message.advanced=输入: 速度 %s D/t | 扭矩 %s IT. 输出: 速度 %s D/t | 扭矩 %s IT.
+ii.gui_tooltip.mech_torque.stored=扭矩: %s/%s IT
+ii.gui_tooltip.mech_torque.input=输入的扭矩: %s IT
+ii.gui_tooltip.mech_torque.required=需要的扭矩: %s IT/t
+ii.gui_tooltip.mech_torque.output=输出的扭矩: %s IT
 
-ii.gui_tooltip.mech_speed.stored=Speed: %s/%s D/t
-ii.gui_tooltip.mech_speed.input=Speed Input: %s D/t
-ii.gui_tooltip.mech_speed.required=Speed Required: %s D/t
-ii.gui_tooltip.mech_speed.output=Speed Output: %s D/t
+ii.gui_tooltip.mech_speed.stored=速度: %s/%s D/t
+ii.gui_tooltip.mech_speed.input=输入的速度: %s D/t
+ii.gui_tooltip.mech_speed.required=需要的速度: %s D/t
+ii.gui_tooltip.mech_speed.output=输出的速度: %s D/t
 
 ii.gui_tooltip.fluid.stored=%s - %s mB
-ii.gui_tooltip.fluid.input=%s Intake: %s mB
-ii.gui_tooltip.fluid.output=%s Output: %s mB
+ii.gui_tooltip.fluid.input=%s 输入: %s mB
+ii.gui_tooltip.fluid.output=%s 输出: %s mB
 
-ii.gui_tooltip.time.stored=Time Remaining: %s/%s t
-ii.gui_tooltip.time.required=Time Required: %s t
+ii.gui_tooltip.time.stored=剩余时间: %s/%s t
+ii.gui_tooltip.time.required=需要时间: %s t
 
 ii.gui_tooltip.structural_integrity=Structural Integrity: %s/%s 生命值
 ii.gui_tooltip.structural_integrity.repair=Repair Threshold: 低于 %s 生命值
@@ -3567,53 +3987,56 @@ ii.gui_tooltip.fuel=燃油: %s/%s mB
 ii.gui_tooltip.soil_fertility=土壤肥力: %s %
 
 # Nether Backport Compat
-item.immersiveintelligence.bullet.component.core_netherite.name=Netherite
-ie.manual.entry.bullet_core.core_netherite=Netherite Core
-ie.manual.entry.bullet_core.core_netherite.lore=Nether-Forged
-ie.manual.entry.bullet_core.core_netherite.desc=Ancient debris is what remains of the mining activity of the piglins, who extracted all the original netherite ore. Currently they are a product of an industrialized fallen empire and in the past they were a united front.
+item.immersiveintelligence.bullet.component.core_netherite.name=下界合金
+ie.manual.entry.bullet_core.core_netherite=下界合金弹芯
+ie.manual.entry.bullet_core.core_netherite.lore=下界锻造
+ie.manual.entry.bullet_core.core_netherite.desc=远古残骸是猪灵采矿活动留下的残余, 他们开采了所有原始的下界合金矿石. 非常坚固且致密. 用作弹药是个非常好的选择, 但*昂贵*.
 
-item.immersiveintelligence.bullet.component.nether_fire.name=Nether Fire
-ie.manual.entry.bullet_component.nether_fire=Nether Fire
+item.immersiveintelligence.bullet.component.nether_fire.name下界火
+ie.manual.entry.bullet_component.nether_fire=下界火
 ie.manual.entry.bullet_component.nether_fire.lore=This "prison"... to contain ME?
-ie.manual.entry.bullet_component.nether_fire.desc=A fire of infernal origins,  it is a permanent, non-spreading fire that deals higher damage than normal fire and keeps on burning when it should not.
+ie.manual.entry.bullet_component.nether_fire.desc=一种源自地狱的火焰, 它是永久且不扩散的火焰, 比普通火焰造成更高伤害, 并且在本不应继续燃烧时仍持续燃烧.
 
 # Deeper Depths Compat
-item.immersiveintelligence.bullet.component.windcharge.name=Wind Charge
-ie.manual.entry.bullet_component.windcharge=Wind Charge
+item.immersiveintelligence.bullet.component.windcharge.name=风弹
+ie.manual.entry.bullet_component.windcharge=风弹
 ie.manual.entry.bullet_component.windcharge.lore=How?
-ie.manual.entry.bullet_component.windcharge.desc=Condensed wind obtained from Breeze, wind charges knock targets back and apply slowness and suppression in small radius. Due to properties of the charge, it remains on the same level of potency regardless of the shell size.
+ie.manual.entry.bullet_component.windcharge.desc=从旋风人处获得的凝聚风, 风弹会击退目标, 并在小范围内施加缓慢和压制. 由于风弹的特性, 无论外壳尺寸如何, 其效力都保持不变.
 
 # Thaumcraft Compat
-item.immersiveintelligence.bullet.component.primordial_pearl.name=Primordial Pearl
-ie.manual.entry.bullet_component.primordial_pearl=Primordial Pearl
-ie.manual.entry.bullet_component.primordial_pearl.lore=Magical Oppenheimer
-ie.manual.entry.bullet_component.primordial_pearl.desc=A potent artifact containing vast magical power and nearly unlimited potential that is beyond the known magical and physical laws. Despite its small size, rules of physics dictate that compression of such matter by integrated detonator explosive can only result in unparraleled levels of destruction from sheer amount of energy unleashed at once.
+# Despite its small size, rules of physics dictate that compression of such matter by integrated detonator explosive can only result in unparraleled levels of destruction from sheer amount of energy unleashed at once.
+item.immersiveintelligence.bullet.component.primordial_pearl.name=元始珍珠
+ie.manual.entry.bullet_component.primordial_pearl=元始珍珠
+ie.manual.entry.bullet_component.primordial_pearl.lore=魔法版奥本海默
+ie.manual.entry.bullet_component.primordial_pearl.desc=一件强大的造物, 蕴含浩瀚魔力与近乎无穷的潜能, 其存在超出了已知的魔法与物理定律. 无与伦比的毁灭之力.
 
-item.immersiveintelligence.bullet.component.alumentum.name=Alumentum
-ie.manual.entry.bullet_component.alumentum=Alumentum
-ie.manual.entry.bullet_component.alumentum.lore=Alchemist's explosives
-ie.manual.entry.bullet_component.alumentum.desc=A very volatile fiery substance, Alumentum is smaller in radius compared to TNT, but contains more concentrated power. Being in explosive container allows to focus its explosive power, making it more destructive than otherwise hand-thrown Alumentum.
+item.immersiveintelligence.bullet.component.alumentum.name=源动之焰
+ie.manual.entry.bullet_component.alumentum=源动之焰
+ie.manual.entry.bullet_component.alumentum.lore=炼金术士的炸药
+ie.manual.entry.bullet_component.alumentum.desc=源动之焰是一种极不稳定的炽热物质, 与 TNT 相比爆炸半径更小, 但蕴含更集中的能量.
 
-item.immersiveintelligence.bullet.component.bottled_taint.name=Bottled Taint
-ie.manual.entry.bullet_component.bottled_taint=Bottled Taint
-ie.manual.entry.bullet_component.bottled_taint.lore=Ruinous power
-ie.manual.entry.bullet_component.bottled_taint.desc=Moving the contents of the bottle into a shell allows to deliver the corruptive Taint at much longer distances than it is possible to throw the bottle manually. Spread forth magical corruption, now at long distances!
+item.immersiveintelligence.bullet.component.bottled_taint.name=腐化瓶
+ie.manual.entry.bullet_component.bottled_taint=腐化瓶
+ie.manual.entry.bullet_component.bottled_taint.lore=毁灭之力
+ie.manual.entry.bullet_component.bottled_taint.desc=将瓶中的内容物装入炮弹外壳, 能让你把腐化释放到比徒手投掷瓶子远得多的距离. 传播魔法腐化, 如今可及远方!
 
-ie.manual.entry.bullet_core.core_core_thaumium=Thaumium
-ie.manual.entry.bullet_core.core_thaumium=Thaumium Core
-ie.manual.entry.bullet_core.ore_thaumium.lore=Thaumaturgicallymtallurgic
-ie.manual.entry.bullet_core.core_thaumium.desc=A result of infusing iron with raw magical energy. Harder and better than base iron, it is a good candidate for massproduced shells, provided you can make alchemical mettalurgy supply keep up with the industrial demands.
+item.immersiveintelligence.bullet.component.core_thaumium.name=神秘锭
+ie.manual.entry.bullet_core.core_thaumium=神秘弹芯
+ie.manual.entry.bullet_core.core_thaumium.lore=魔法冶金产物
+ie.manual.entry.bullet_core.core_thaumium.desc=将铁与原始魔力融合后的产物. 它比基础铁更硬更好, 是批量生产弹壳的理想材料.
 
-ie.manual.entry.bullet_core.core_core_core_voidmetal=Void Metal
-ie.manual.entry.bullet_core.core_voidmetal=Void Metal Core
-ie.manual.entry.bullet_core.core_voidmetal.lore=Thaumaturgicallymtallurgic
-ie.manual.entry.bullet_core.core_voidmetal.desc=Disturbingly slick and warm to the touch, easy to work like gold, becoming as hard as tungsten and harder when struck - Void Metal is an excellent choice for bullets. However, properties of the metal make it somewhat difficult for conventional explosives to detonate with proper force. Furthermore, you cannot retrieve this metal core despite its regenerative properties, as it becomes unuseable after hitting the target.
+
+# Void metal is Disturbingly slick and warm to the touch, easy to work like gold, becoming as hard as tungsten and harder when struck 
+item.immersiveintelligence.bullet.component.core_voidmetal=虚空金属
+ie.manual.entry.bullet_core.core_voidmetal=虚空金属弹芯
+ie.manual.entry.bullet_core.core_voidmetal.lore=魔法-军事-工业综合体
+ie.manual.entry.bullet_core.core_voidmetal.desc=虚空金属是子弹的绝佳选择. 然而, 这种金属的特性使常规炸药有些难以以适当的力度引爆.
 
 # Thaumic Augmentation Compat
-item.immersiveintelligence.bullet.component.impetus.name=Impetus
-ie.manual.entry.bullet_component.impetus=Impetus
-ie.manual.entry.bullet_component.impetus.lore=Rift power in a can
-ie.manual.entry.bullet_component.impetus.desc=Dangerous byproduct of Flux Rifts, and not fully understood material or phenomena, full range of usages for Impetus is shrouded in mystery. However, "infusing" the shell with the Impetus energy very significantly magnifies and supercharges its lethality.
+item.immersiveintelligence.bullet.component.impetus.name=元动
+ie.manual.entry.bullet_component.impetus=元动
+ie.manual.entry.bullet_component.impetus.lore=罐装裂隙能量
+ie.manual.entry.bullet_component.impetus.desc=咒波裂隙的危险副产物, 一种尚未被完全理解的材料或现象. 用元动能量 "灌注" 弹壳会极其显著地放大并强化其杀伤力.
 
 #Banner patterns
 
@@ -3718,3 +4141,5 @@ item.banner.immersiveintelligence_infrared_helmet.lightBlue=淡蓝色红外头�
 item.banner.immersiveintelligence_infrared_helmet.magenta=品红色红外头盔
 item.banner.immersiveintelligence_infrared_helmet.orange=橙色红外头盔
 item.banner.immersiveintelligence_infrared_helmet.white=白色红外头盔
+
+# Banners

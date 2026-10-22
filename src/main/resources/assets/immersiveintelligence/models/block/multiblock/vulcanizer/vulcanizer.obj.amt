@@ -1,0 +1,209 @@
+{
+  "origins": {
+    "roller1": [
+      -26.25,
+      33,
+      39.75
+    ],
+    "roller4": [
+      -26.25,
+      13,
+      39.75
+    ],
+    "roller2": [
+      -18.25,
+      35,
+      39.75
+    ],
+    "roller3": [
+      -18,
+      15,
+      40
+    ],
+    "rotator": [
+      21,
+      9,
+      16
+    ],
+    "container_right": [
+      22.1944,
+      32.625,
+      37.4306
+    ],
+    "door_right": [
+      57.6389,
+      30.9,
+      47.3111
+    ],
+    "rods_right": [
+      20.8399,
+      46.7133,
+      22.8561
+    ],
+    "container_left": [
+      20.9706,
+      41.9908,
+      38.2721
+    ],
+    "rods_left": [
+      63.42,
+      46.7133,
+      9.5392
+    ],
+    "door_left": [
+      64.9412,
+      30.9,
+      -14.9058
+    ],
+    "latex_strip1": [
+      -28,
+      37.9,
+      40.5
+    ],
+    "latex_strip1_1": [
+      -28.1,
+      27,
+      45
+    ],
+    "latex_strip2": [
+      -28,
+      19.9,
+      40.5
+    ],
+    "latex_strip2_1": [
+      -28.1,
+      9,
+      45
+    ],
+    "heating_right1": [
+      -2.75,
+      39,
+      34
+    ],
+    "heating_right2": [
+      44.25,
+      39,
+      34
+    ],
+    "heating_left1": [
+      44.75,
+      39,
+      -2
+    ],
+    "heating_left2": [
+      -2.5,
+      39,
+      -2
+    ],
+    "smoke1": [
+      6,
+      20,
+      44
+    ],
+    "smoke2": [
+      22,
+      20,
+      44
+    ],
+    "smoke3": [
+      40,
+      20,
+      44
+    ]
+  },
+  "hierarchy": {
+    "container_right": "rotator",
+    "door_right": "container_right",
+    "rods_right": "container_right",
+    "container_left": "rotator",
+    "rods_left": "container_left",
+    "door_left": "container_left",
+    "latex_strip1_1": "latex_strip1",
+    "latex_strip2_1": "latex_strip2",
+    "heating_right1": "container_right",
+    "heating_right2": "container_right",
+    "heating_left1": "container_left",
+    "heating_left2": "container_left"
+  },
+  "types": {
+    "heating_right1": "particle",
+    "heating_right2": "particle",
+    "heating_left1": "particle",
+    "heating_left2": "particle",
+    "smoke1": "particle",
+    "smoke2": "particle",
+    "smoke3": "particle"
+  },
+  "properties": {
+    "heating_right1": {
+      "particle": "machine/vulcanizer_heat",
+      "correct_rotation": false,
+      "base_rotation": [
+        0,
+        -90,
+        0
+      ],
+      "property": 0
+    },
+    "heating_right2": {
+      "particle": "machine/vulcanizer_heat",
+      "correct_rotation": false,
+      "base_rotation": [
+        0,
+        -90,
+        0
+      ],
+      "property": 0
+    },
+    "heating_left1": {
+      "particle": "machine/vulcanizer_heat",
+      "correct_rotation": false,
+      "base_rotation": [
+        0,
+        -90,
+        0
+      ],
+      "property": 0
+    },
+    "heating_left2": {
+      "particle": "machine/vulcanizer_heat",
+      "correct_rotation": false,
+      "base_rotation": [
+        0,
+        -90,
+        0
+      ],
+      "property": 0
+    },
+    "smoke1": {
+      "particle": "machine/vulcanizer_smoke",
+      "correct_rotation": true,
+      "base_rotation": [
+        0,
+        0,
+        0
+      ],
+      "property": 0
+    },
+    "smoke2": {
+      "particle": "machine/vulcanizer_smoke",
+      "correct_rotation": true,
+      "base_rotation": [
+        0,
+        0,
+        0
+      ],
+      "property": 0
+    },
+    "smoke3": {
+      "particle": "machine/vulcanizer_smoke",
+      "correct_rotation": true,
+      "base_rotation": [
+        0,
+        0,
+        0
+      ],
+      "property": 0
+    }
+  }
+}

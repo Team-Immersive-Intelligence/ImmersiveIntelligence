@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.common.entity;
 import blusunrize.immersiveengineering.api.energy.wires.IImmersiveConnectable;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
+import blusunrize.immersiveengineering.api.energy.wires.WireType;
 import blusunrize.immersiveengineering.api.tool.ITeslaEntity;
 import blusunrize.immersiveengineering.common.Config.IEConfig.Machines;
 import blusunrize.immersiveengineering.common.util.Utils;
@@ -13,10 +14,7 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
@@ -30,39 +28,31 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * I would really want to name it Skyblock, but it seems that the name is already taken...
- * Also, IE planned to add them some time ago (https://github.com/BluSunrize/ImmersiveEngineering/issues/2027)
- * The name skycrate derives from a name of a file inside IE's jar (skycrate.obj), but the model isn't used.
+ * Carries a container along a loaded structural wire and through Skycrate connectors.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 08.10.2026
  * @since 07.06.2019
  */
 public class EntitySkyCrate extends Entity implements ITeslaEntity
 {
-	//ATTENTION! UWAGA! ACHTUNG! - Do not EVER use DataSerializers.ITEM_STACK, it's broken af!
 	private static final DataParameter<NBTTagCompound> dataMarkerMount = EntityDataManager.createKey(EntitySkyCrate.class, DataSerializers.COMPOUND_TAG);
 	private static final DataParameter<NBTTagCompound> dataMarkerCrate = EntityDataManager.createKey(EntitySkyCrate.class, DataSerializers.COMPOUND_TAG);
+	private static final DataParameter<Float> dataMarkerEnergy = EntityDataManager.createKey(EntitySkyCrate.class, DataSerializers.FLOAT);
 	public final Set<BlockPos> ignoreCollisions = new HashSet<>();
 	public Connection connection;
-	public double linePos = 0;
+	public double linePos;
 	public ItemStack mount = ItemStack.EMPTY;
 	public ItemStack crate = ItemStack.EMPTY;
-	public double horizontalSpeedPowered = 0;
-	public double horizontalSpeedUnpowered = 0;
-	public double energy;
-	private Ticket ticket = null;
+	public double horizontalSpeedPowered, horizontalSpeedUnpowered, energy;
+	private Ticket ticket;
+	private ChunkPos forcedChunk;
+	private int nextTicketRequest;
 
 	public EntitySkyCrate(World world)
 	{
 		super(world);
-		this.setSize(1f, 1f);
-
-		if(!world.isRemote)
-		{
-			ticket = ForgeChunkManager.requestTicket(ImmersiveIntelligence.INSTANCE, this.getEntityWorld(), Type.ENTITY);
-			if(ticket!=null)
-				ticket.bindEntity(this);
-		}
+		setSize(1, 1);
 	}
 
 	public EntitySkyCrate(World world, Connection connection, ItemStack mount, ItemStack crate, BlockPos firstPos)
@@ -70,94 +60,171 @@ public class EntitySkyCrate extends Entity implements ITeslaEntity
 		this(world);
 		if(!world.isRemote)
 		{
-			setConnection(connection, firstPos, linePos);
 			setSkycrate(mount, crate);
+			setConnection(connection, firstPos, 0);
 		}
-
 	}
 
 	@Override
 	protected void entityInit()
 	{
-		//I'M REALLY PISSED NOW
-		//I WAS WONDERING FOR TWO FUCKING HOURS ON WHAT'S WRONG WITH MY CODE
-		//TURNS OUT... YES! FORGE'S FAULT! HOW GREAT!
-		this.dataManager.register(dataMarkerCrate, new NBTTagCompound());
-		this.dataManager.register(dataMarkerMount, new NBTTagCompound());
+		dataManager.register(dataMarkerCrate, new NBTTagCompound());
+		dataManager.register(dataMarkerMount, new NBTTagCompound());
+		dataManager.register(dataMarkerEnergy, 0f);
+	}
+
+	@Override
+	public void notifyDataManagerChange(DataParameter<?> key)
+	{
+		super.notifyDataManagerChange(key);
+		if(world!=null&&world.isRemote)
+		{
+			if(dataMarkerCrate.equals(key))
+				crate = new ItemStack(dataManager.get(dataMarkerCrate));
+			else if(dataMarkerMount.equals(key))
+				mount = new ItemStack(dataManager.get(dataMarkerMount));
+			else if(dataMarkerEnergy.equals(key))
+				energy = dataManager.get(dataMarkerEnergy);
+		}
 	}
 
 	@Override
 	public void onUpdate()
 	{
 		super.onUpdate();
-		if(world.isRemote)
+		if(world.isRemote||isDead)
+			return;
+		if(!validConnection(connection)||crate.isEmpty()||!(mount.getItem() instanceof ISkycrateMount))
 		{
-			crate = new ItemStack(dataManager.get(dataMarkerCrate));
-			mount = new ItemStack(dataManager.get(dataMarkerMount));
+			dropPayload();
+			return;
+		}
+		//Do not load route endpoints as a side effect of transport.
+		if(!world.isBlockLoaded(connection.start)||!world.isBlockLoaded(connection.end))
+			return;
+		Set<Connection> connections = ImmersiveNetHandler.INSTANCE.getConnections(world, connection.start);
+		if(connections==null||!connections.contains(connection))
+		{
+			dropPayload();
+			return;
+		}
+		connection.getSubVertices(world);
+		if(linePos >= 1)
+		{
+			TileEntity endpoint = world.getTileEntity(connection.end);
+			boolean retained = endpoint instanceof ISkyCrateConnector&&((ISkyCrateConnector)endpoint).onSkycrateMeeting(this);
+			if(!retained&&!isDead)
+				dropPayload();
 		}
 		else
+			nextPos();
+		if(!isDead)
+			requestChunkLoadingTicket();
+		if(!isDead&&ticket!=null)
 		{
-			if(linePos >= 1)
+			ChunkPos current = new ChunkPos(getPosition());
+			if(!current.equals(forcedChunk))
 			{
-				boolean success = false;
-				if(world.getTileEntity(connection.end) instanceof ISkyCrateConnector)
-				{
-					success = ((ISkyCrateConnector)world.getTileEntity(connection.end)).onSkycrateMeeting(this);
-				}
-				if(!success)
-				{
-					/* if(crate.getItem() instanceof ItemBlock)
-					{
-						ItemBlock b = (ItemBlock)crate.getItem();
-						EntityFallingBlock e = new EntityFallingBlock(world, (int)posX, (int)posY-2, (int)posZ, b.getBlock().getDefaultState());
-						world.spawnEntity(e);
-					}
-					else
-					{
-						Utils.dropStackAtPos(world, getPosition(), crate.copy());
-					} */
-					BlockPos ePos = getPosition();
-					BlockPos dropPos = new BlockPos(ePos.getX(), ePos.getY()-2, ePos.getZ());
-					Utils.dropStackAtPos(world, dropPos, mount.copy());
-					Utils.dropStackAtPos(world, dropPos, crate.copy());
-					this.setDead();
-				}
+				ForgeChunkManager.forceChunk(ticket, current);
+				if(forcedChunk!=null)
+					ForgeChunkManager.unforceChunk(ticket, forcedChunk);
+				forcedChunk = current;
 			}
-			else if(world.getTileEntity(getPosition()) instanceof ISkyCrateConnector)
-			{
-				nextPos();
-			}
-			else
-				nextPos();
 		}
-		if(!world.isRemote)
-			ForgeChunkManager.forceChunk(ticket, this.world.getChunkFromBlockCoords(this.getPosition()).getPos());
+		dataManager.set(dataMarkerEnergy, (float)energy);
+	}
 
+	private static boolean validConnection(Connection connection)
+	{
+		return connection!=null&&connection.start!=null&&connection.end!=null&&connection.length > 0
+				&&connection.cableType!=null&&WireType.STRUCTURE_CATEGORY.equals(connection.cableType.getCategory());
+	}
+
+	private void dropPayload()
+	{
+		if(isDead)
+			return;
+		BlockPos dropPos = getPosition().down(2);
+		if(!mount.isEmpty())
+			Utils.dropStackAtPos(world, dropPos, mount.copy());
+		if(!crate.isEmpty())
+			Utils.dropStackAtPos(world, dropPos, crate.copy());
+		mount = crate = ItemStack.EMPTY;
+		setDead();
+	}
+
+	@Override
+	public void onAddedToWorld()
+	{
+		super.onAddedToWorld();
+		if(!world.isRemote&&!isDead)
+			requestChunkLoadingTicket();
+	}
+
+	private void requestChunkLoadingTicket()
+	{
+		if(ticket!=null||ticksExisted < nextTicketRequest)
+			return;
+		ticket = ForgeChunkManager.requestTicket(ImmersiveIntelligence.INSTANCE, world, Type.ENTITY);
+		if(ticket!=null)
+			ticket.bindEntity(this);
+		else
+			nextTicketRequest = ticksExisted+20;
+	}
+
+	/**
+	 * Uses the entity's saved chunk ticket after a world reload.
+	 */
+	public void restoreChunkLoadingTicket(Ticket restored)
+	{
+		if(world.isRemote||isDead||restored.world!=world||restored.getEntity()!=this)
+		{
+			ForgeChunkManager.releaseTicket(restored);
+			return;
+		}
+		if(ticket!=null&&ticket!=restored)
+			ForgeChunkManager.releaseTicket(ticket);
+		ticket = restored;
+		for(ChunkPos chunk : ticket.getChunkList())
+			ForgeChunkManager.unforceChunk(ticket, chunk);
+		forcedChunk = new ChunkPos(getPosition());
+		ForgeChunkManager.forceChunk(ticket, forcedChunk);
+	}
+
+	@Override
+	public void onRemovedFromWorld()
+	{
+		if(ticket!=null)
+		{
+			ForgeChunkManager.releaseTicket(ticket);
+			ticket = null;
+			forcedChunk = null;
+		}
+		super.onRemovedFromWorld();
+	}
+
+	@Override
+	public void setDead()
+	{
+		if(ticket!=null)
+		{
+			ForgeChunkManager.releaseTicket(ticket);
+			ticket = null;
+			forcedChunk = null;
+		}
+		super.setDead();
 	}
 
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound compound)
 	{
-		if(compound.hasKey("crate"))
-		{
-			crate = new ItemStack(compound.getCompoundTag("crate"));
-		}
-		if(compound.hasKey("mount"))
-		{
-			mount = new ItemStack(compound.getCompoundTag("mount"));
-		}
-		if(compound.hasKey("connection"))
-		{
-			connection = Connection.readFromNBT(compound.getCompoundTag("connection"));
-		}
-		else if(connection==null)
-		{
-			setDead();
-		}
-		linePos = compound.getDouble("linePos");
+		setSkycrate(new ItemStack(compound.getCompoundTag("mount")), new ItemStack(compound.getCompoundTag("crate")));
 		energy = compound.getDouble("energy");
-
-		setSkycrate(mount, crate);
+		dataManager.set(dataMarkerEnergy, (float)energy);
+		linePos = MathHelper.clamp(compound.getDouble("linePos"), 0, 1);
+		NBTTagCompound wire = compound.getCompoundTag("connection");
+		if(wire.getIntArray("start").length==3&&wire.getIntArray("end").length==3)
+			connection = Connection.readFromNBT(wire);
 	}
 
 	@Override
@@ -167,7 +234,7 @@ public class EntitySkyCrate extends Entity implements ITeslaEntity
 		compound.setTag("mount", mount.serializeNBT());
 		compound.setDouble("linePos", linePos);
 		compound.setDouble("energy", energy);
-		if(connection!=null)
+		if(validConnection(connection))
 			compound.setTag("connection", connection.writeToNBT());
 	}
 
@@ -175,65 +242,60 @@ public class EntitySkyCrate extends Entity implements ITeslaEntity
 	{
 		this.mount = mount.copy();
 		this.crate = crate.copy();
-
-		if(mount.getItem() instanceof ISkycrateMount)
+		if(mount.getItem() instanceof ISkycrateMount&&!crate.isEmpty())
 		{
-			ISkycrateMount s = (ISkycrateMount)mount.getItem();
-			energy = s.getMountEnergy(mount);
-			horizontalSpeedPowered = s.getPoweredSpeed(mount);
-			horizontalSpeedUnpowered = s.getUnpoweredSpeed(mount);
+			ISkycrateMount type = (ISkycrateMount)mount.getItem();
+			energy = type.getMountEnergy(mount);
+			horizontalSpeedPowered = type.getPoweredSpeed(mount);
+			horizontalSpeedUnpowered = type.getUnpoweredSpeed(mount);
 		}
 		else
 			setDead();
-
-		if(crate.isEmpty())
-			setDead();
-
 		dataManager.set(dataMarkerCrate, crate.serializeNBT());
 		dataManager.set(dataMarkerMount, mount.serializeNBT());
+		dataManager.set(dataMarkerEnergy, (float)energy);
 	}
 
 	public void setConnection(Connection connection, BlockPos firstPos, double linePos)
 	{
-		if(connection.start.equals(firstPos))
-			this.connection = connection;
-		else
-			this.connection = ImmersiveNetHandler.INSTANCE.getReverseConnection(world.provider.getDimension(), connection);
-		this.linePos = linePos;
-		try
+		if(!validConnection(connection)||(!connection.start.equals(firstPos)&&!connection.end.equals(firstPos)))
 		{
-			Vec3d v = this.connection.getVecAt(this.linePos);
-			this.setPosition(firstPos.getX()+v.x, firstPos.getY()+v.y, firstPos.getZ()+v.z);
-		} catch(NullPointerException ignored)
-		{
-
+			this.connection = null;
+			return;
 		}
-
-		if(world.getTileEntity(connection.start) instanceof IImmersiveConnectable&&world.getTileEntity(connection.end) instanceof IImmersiveConnectable)
+		this.connection = connection.start.equals(firstPos)?connection:
+				ImmersiveNetHandler.INSTANCE.getReverseConnection(world.provider.getDimension(), connection);
+		this.linePos = MathHelper.clamp(linePos, 0, 1);
+		ignoreCollisions.clear();
+		if(this.connection==null||!world.isBlockLoaded(connection.start)||!world.isBlockLoaded(connection.end))
+			return;
+		this.connection.getSubVertices(world);
+		updatePositionOnWire();
+		TileEntity start = world.getTileEntity(connection.start);
+		TileEntity end = world.getTileEntity(connection.end);
+		if(start instanceof IImmersiveConnectable&&end instanceof IImmersiveConnectable)
 		{
-			ignoreCollisions.addAll(((IImmersiveConnectable)world.getTileEntity(connection.start)).getIgnored(((IImmersiveConnectable)world.getTileEntity(connection.end))));
+			ignoreCollisions.addAll(((IImmersiveConnectable)start).getIgnored((IImmersiveConnectable)end));
+			ignoreCollisions.addAll(((IImmersiveConnectable)end).getIgnored((IImmersiveConnectable)start));
 		}
 	}
 
 	public void nextPos()
 	{
-		if(connection!=null&&!world.isRemote)
+		if(!world.isRemote&&validConnection(connection))
 		{
-			double speed = getSpeed();
-			this.linePos += speed/connection.length;
-			try
-			{
-				Vec3d pos = connection.getVecAt(this.linePos).add(new Vec3d(connection.start));
-				setPosition(pos.x, pos.y, pos.z);
-				setRotation((float)Math.atan2(pos.z, pos.x), (float)connection.getSlopeAt(this.linePos));
-			} catch(NullPointerException e)
-			{
-				if(ticksExisted > 10)
-					setDead();
-			}
-			this.linePos = MathHelper.clamp(this.linePos, 0, 1);
+			linePos = MathHelper.clamp(linePos+Math.max(0, getSpeed())/connection.length, 0, 1);
+			updatePositionOnWire();
 		}
+	}
 
+	private void updatePositionOnWire()
+	{
+		Vec3d position = connection.getVecAt(linePos).add(new Vec3d(connection.start));
+		setPosition(position.x, position.y, position.z);
+		Vec3d direction = new Vec3d(connection.end.subtract(connection.start));
+		setRotation((float)Math.toDegrees(Math.atan2(direction.z, direction.x)),
+				(float)Math.toDegrees(Math.atan(connection.getSlopeAt(linePos))));
 	}
 
 	public Connection getConnection()
@@ -249,12 +311,14 @@ public class EntitySkyCrate extends Entity implements ITeslaEntity
 	@Override
 	public void onHit(TileEntity teslaCoil, boolean lowPower)
 	{
-		if(!world.isRemote)
+		if(!world.isRemote&&mount.getItem() instanceof ISkycrateMount)
 		{
-			if(((ISkycrateMount)mount.getItem()).isTesla(mount))
+			ISkycrateMount type = (ISkycrateMount)mount.getItem();
+			if(type.isTesla(mount))
 			{
-				int cap = (int)Math.floor((Machines.teslacoil_consumption_active*(lowPower?0.5f: 1f))/SkycrateMounts.electricEnergyRatio);
-				energy = Math.min(energy+cap, ((ISkycrateMount)mount.getItem()).getMountMaxEnergy(mount));
+				int charge = (int)Math.floor((Machines.teslacoil_consumption_active*(lowPower?.5f: 1f))/SkycrateMounts.electricEnergyRatio);
+				energy = Math.min(energy+charge, type.getMountMaxEnergy(mount));
+				dataManager.set(dataMarkerEnergy, (float)energy);
 			}
 		}
 	}

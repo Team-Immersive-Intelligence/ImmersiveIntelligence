@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity;
 
-import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
 import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
@@ -11,7 +10,10 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.*;
+import net.minecraftforge.fluids.FluidActionResult;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
@@ -35,8 +37,10 @@ import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockProjectileWorkshop;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
+import pl.pabilo8.immersiveintelligence.common.util.IIEnergyStorage;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
+import pl.pabilo8.immersiveintelligence.common.util.fluid.FilteredFluidTank;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionSingle;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
@@ -50,7 +54,7 @@ import java.util.Optional;
  * Machine that handles ammunition core production and filling.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 24.09.2026
+ * @updated 07.10.2026
  * @ii-approved 0.3.1
  * @since 04.03.2021
  */
@@ -71,16 +75,10 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 	 * Stores fluids to be converted to ammo components
 	 */
 	@SyncNBT
-	public FluidTank tanksFiller = new FluidTank(ProjectileWorkshop.componentTankCapacity)
-	{
-		@Override
-		public boolean canFillFluidType(FluidStack fluid)
-		{
-			return fluid!=null
+	public FilteredFluidTank tanksFiller = new FilteredFluidTank(ProjectileWorkshop.componentTankCapacity)
+			.withInputFilter(fluid -> fluid!=null
 					&&getComponentForFluid(fluid).isPresent()
-					&&(componentInside.isEmpty()||componentInside.matches(fluid));
-		}
-	};
+					&&(componentInside.isEmpty()||componentInside.matches(fluid)));
 	@SyncNBT
 	public MultiblockInteractablePart lid1, lid2;
 	@SyncNBT(name = "upgrades", events = SyncEvents.TILE_UPGRADES_MODIFIED)
@@ -92,7 +90,7 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 	public TileEntityProjectileWorkshop()
 	{
 		super(MultiblockProjectileWorkshop.INSTANCE);
-		this.energyStorage = new FluxStorageAdvanced(ProjectileWorkshop.energyCapacity);
+		this.energyStorage = new IIEnergyStorage(ProjectileWorkshop.energyCapacity);
 		this.inventory = NonNullList.withSize(3, ItemStack.EMPTY);
 		this.upgrades = new UpgradeManager<>(this);
 
@@ -134,7 +132,7 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 		}
 
 		//Stop working when the machine is disabled
-		if(getRedstoneAtPos(0)^redstoneControlInverted)
+		if(getRedstoneAtPos(0))
 			return;
 
 		super.onUpdate();
@@ -420,8 +418,10 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 		ProjectileWorkshopRecipe recipe = getOrCreateCoreProductionRecipe(producedAmmo, first.get(), coreType);
 		if(recipe.advanced)
 			return null;
+		ItemStack displayInput = stack.copy();
+		displayInput.setCount(producedAmmo.getCoreMaterialNeeded());
 		stack.shrink(producedAmmo.getCoreMaterialNeeded());
-		return new IIMultiblockProcess<>(recipe);
+		return new IIMultiblockProcess<>(recipe).withNBT(nbt -> nbt.withItemStack("displayInput", displayInput));
 	}
 
 	private IIMultiblockProcess<ProjectileWorkshopRecipe> findNewFillingProcess()
@@ -442,6 +442,8 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 		if(componentInside.amount < componentAmount)
 			return null;
 
+		ItemStack displayInput = stack.copy();
+		displayInput.setCount(1);
 		ItemStack effect = stack.copy();
 		effect.setCount(1);
 
@@ -458,7 +460,7 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 
 		IIMultiblockProcess<ProjectileWorkshopRecipe> process = new IIMultiblockProcess<>(ProjectileWorkshopRecipe.CORE_FILLING)
 				.withNBT(nbt -> nbt
-						.withItemStack("effect", effect)
+						.withItemStack("effect", effect).withItemStack("displayInput", displayInput)
 						.withBoolean("filled", true)
 						.withSerializable("component", usedComponent)
 				);
@@ -484,7 +486,7 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 	@Override
 	public float getProductionStep(IIMultiblockProcess<ProjectileWorkshopRecipe> process, boolean simulate)
 	{
-		return (energyStorage.extractEnergy(process.recipe.getEnergyPerTick(), simulate)==process.recipe.getEnergyPerTick())?1: 0;
+		return energyStorage.tryConsumeEnergy(process.recipe.getEnergyPerTick(), simulate)?1: 0;
 	}
 
 	@Override
@@ -537,7 +539,7 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 	{
 		if(isUpgradeInstalled(IIContent.UPGRADE_CORE_FILLER)
 				&&Arrays.stream(getPOI("component_fluid_in")).anyMatch(i -> i==pos))
-			return new FluidTank[]{tanksFiller};
+			return new FilteredFluidTank[]{tanksFiller};
 
 		return super.getFluidTanks(pos, side);
 	}

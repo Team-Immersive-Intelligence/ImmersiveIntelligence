@@ -29,19 +29,15 @@ import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyHandler;
 import java.util.HashMap;
 import java.util.Map;
 
-import static pl.pabilo8.immersiveintelligence.ImmersiveIntelligence.MODID;
-import static pl.pabilo8.immersiveintelligence.ImmersiveIntelligence.VERSION;
-
-@Mod(modid = MODID, version = VERSION,
+@Mod(modid = Tags.MOD_ID, version = Tags.VERSION, name = Tags.MOD_NAME,
 		//xaxaxa, trick! yuo can't steal mod if mod is steal-proof
 		certificateFingerprint = "84c19709be61a4630ee3812136f5c80086a978db",
 		dependencies = "required-after:forge@[14.23.5.2820,);required-after:immersiveengineering@[0.12,);after:immersiveengineering@[0.12,);after:immersiveposts@[0.2,)")
 public class ImmersiveIntelligence
 {
-	public static final String MODID = "immersiveintelligence";
-	public static final String VERSION = "@VERSION@";
+	public static final String MODID = Tags.MOD_ID;
 	//If anyone wants to acquire a righteously certified loicense:tm:, ask @Pabilo8, it is probable he can grant you one
-	private static final HashMap<String, String> alternativeCerts = new HashMap<String, String>()
+	private static final HashMap<String, String> alternativeCerts = new HashMap<>()
 	{{
 		put("gabriel@iiteam.net", "73cf50303bda0cde99468a637a9d2681a4d7a125");
 		put("pabilo@iiteam.net", "48791e3791eac0c69a01301060895dc0f4f15f68");
@@ -50,7 +46,7 @@ public class ImmersiveIntelligence
 	}};
 	@SidedProxy(clientSide = "pl.pabilo8.immersiveintelligence.client.ClientProxy", serverSide = "pl.pabilo8.immersiveintelligence.common.CommonProxy")
 	public static CommonProxy proxy;
-	@Instance(MODID)
+	@Instance(Tags.MOD_ID)
 	public static ImmersiveIntelligence INSTANCE;
 
 	@Mod.EventHandler

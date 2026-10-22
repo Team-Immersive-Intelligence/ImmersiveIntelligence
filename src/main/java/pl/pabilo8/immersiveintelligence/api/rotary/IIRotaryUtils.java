@@ -350,27 +350,61 @@ public class IIRotaryUtils
 
 	public static float getGearEfficiency(NonNullList<ItemStack> inventory)
 	{
-		float fraction = 1f/(inventory.size());
+		return getGearEfficiency(inventory, 0, inventory.size());
+	}
+
+	/**
+	 * Calculates gear efficiency within an inventory range, without copying slots.
+	 *
+	 * @param from first gear slot, inclusive
+	 * @param to   last gear slot, exclusive
+	 */
+	public static float getGearEfficiency(NonNullList<ItemStack> inventory, int from, int to)
+	{
+		checkGearRange(inventory, from, to);
+		if(from==to)
+			return 0;
+		float fraction = 1f/(to-from);
 		float efficiency = 0;
-		for(ItemStack stack : inventory)
-			if(!stack.isEmpty())
+		for(int slot = from; slot < to; slot++)
+			if(!inventory.get(slot).isEmpty())
 				efficiency += fraction;
 		return MathHelper.clamp(efficiency+fraction, 0, 1);
 	}
 
 	/**
-	 * Calculates the torque ratio for given gears. Already includes the efficiency (presence modifier) of the gears, so don't combine it with {@link #getGearEfficiency(NonNullList)}
-	 *
-	 * @param inventory the gears to calculate the torque ratio for
-	 * @return a speed to torque ratio for given gears
+	 * Calculates the torque ratio, including the presence modifier of the gears.
 	 */
 	public static float getGearTorqueRatio(NonNullList<ItemStack> inventory)
 	{
+		return getGearTorqueRatio(inventory, 0, inventory.size());
+	}
+
+	/**
+	 * Calculates the torque ratio within an inventory range.
+	 *
+	 * @param from first gear slot, inclusive
+	 * @param to   last gear slot, exclusive
+	 */
+	public static float getGearTorqueRatio(NonNullList<ItemStack> inventory, int from, int to)
+	{
+		checkGearRange(inventory, from, to);
+		if(from==to)
+			return 0;
 		float torque = 0;
-		for(ItemStack stack : inventory)
+		for(int slot = from; slot < to; slot++)
+		{
+			ItemStack stack = inventory.get(slot);
 			if(!stack.isEmpty()&&stack.getItem() instanceof IMotorGear)
 				torque += ((IMotorGear)stack.getItem()).getGearTorqueModifier(stack);
-		return MathHelper.clamp(torque/inventory.size(), 0, 8);
+		}
+		return MathHelper.clamp(torque/(to-from), 0, 8);
+	}
+
+	private static void checkGearRange(NonNullList<ItemStack> inventory, int from, int to)
+	{
+		if(from < 0||to < from||to > inventory.size())
+			throw new IndexOutOfBoundsException("Invalid gear slot range: "+from+".."+to);
 	}
 
 	public static Collection<MotorBeltType> getAllMotorBelts()

@@ -8,15 +8,16 @@ import pl.pabilo8.immersiveintelligence.api.crafting.DustUtils;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import javax.annotation.Nonnull;
+
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
  * @since 21.08.2025
+ * @updated 05.10.2026
  */
 public class DustTank implements INBTSerializable<NBTTagCompound>
 {
@@ -58,12 +59,12 @@ public class DustTank implements INBTSerializable<NBTTagCompound>
 		if(!dustStack.canMergeWith(resource))
 			return 0;
 
-		int accepted = capacity-Math.min(dustStack.amount+resource.amount, capacity);
+		int accepted = Math.min(resource.amount, capacity-dustStack.amount);
 		if(accepted <= 0)
 			return 0;
 
 		if(doFill)
-			dustStack = dustStack.mergeWith(resource);
+			dustStack = dustStack.mergeWith(new DustStack(resource.name, accepted));
 		return accepted;
 	}
 
@@ -106,7 +107,7 @@ public class DustTank implements INBTSerializable<NBTTagCompound>
 	public List<ItemStack> turnIntoItems()
 	{
 		List<ItemStack> list = new ArrayList<>();
-		Collections.addAll(Arrays.asList(DustUtils.fromDustStack(dustStack)));
+		list.addAll(Arrays.asList(DustUtils.fromDustStack(dustStack)));
 		return list;
 	}
 

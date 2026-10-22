@@ -29,7 +29,7 @@ import java.util.Map;
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @author Avalon (avalon@iiteam.net)
- * @updated 08.09.2026
+ * @updated 07.10.2026
  * @since 12.05.2019
  */
 @Mod.EventBusSubscriber
@@ -425,6 +425,10 @@ public class IIConfigHandler
 
 		public static class Tools
 		{
+			@Comment({"Prevent held-item use and GUI opening at multiblock tank interaction points when holding a fluid container, even if the transfer fails.",
+					"Disable to allow normal interaction after failed transfers. Successful transfers always consume the interaction."})
+			public static boolean fluidContainersBlockInteraction = true;
+
 			@SubConfig
 			@LangKey("item.immersiveintelligence.skycrate_mount.mechanical.name")
 			@Comment("Config for Skycrate Mounts, allows for changes to speed multipliers and energy consumption")
@@ -762,6 +766,10 @@ public class IIConfigHandler
 			@Comment("Config for the Sawmill, allows for changes to RPM max/min and Torque max/min")
 			public static Sawmill sawmill;
 			@SubConfig
+			@LangKey("tile.immersiveintelligence.wooden_multiblock.diesel_engine.name")
+			@Comment("Config for the Diesel Engine fuel capacity and rotary output.")
+			public static DieselEngine dieselEngine;
+			@SubConfig
 			@LangKey("tile.immersiveintelligence.data_connector.alarm_siren.name")
 			@Comment("Config for the Alarm Siren, allows for changes to default volume")
 			public static AlarmSiren alarmSiren;
@@ -942,6 +950,30 @@ public class IIConfigHandler
 
 				@Comment({"Efficiency modifier for the Improved Gearbox upgrade."})
 				public static float gearboxUpgradeEfficiency = 2.5f;
+			}
+
+			public static class DieselEngine
+			{
+				@Comment({"Fuel tank capacity in mB."})
+				@RangeInt(min = 1)
+				@RequiresMcRestart
+				public static int fuelCapacity = 12000;
+
+				@Comment({"Output torque in IT."})
+				@RangeDouble(min = 0)
+				public static float producedTorque = 32;
+
+				@Comment({"Output speed in degrees per tick."})
+				@RangeDouble(min = 0)
+				public static float producedSpeed = 128;
+
+				@Comment({"Minimum torque to speed ratio."})
+				@RangeDouble(min = 0.0625)
+				public static float minRatio = 0.25f;
+
+				@Comment({"Maximum torque to speed ratio."})
+				@RangeDouble(min = 0.0625)
+				public static float maxRatio = 4f;
 			}
 
 			public static class MechanicalPump
@@ -2751,6 +2783,9 @@ public class IIConfigHandler
 
 		public static class Ammunition
 		{
+			@Comment({"Use German codes and names for creative ammunition. Set to false for short English names."})
+			public static boolean useGermanCreativeAmmoNames = true;
+
 			@Comment({"Whether explosive ammo components can break blocks"})
 			public static boolean blockDamage = true;
 

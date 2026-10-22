@@ -15,21 +15,23 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEn
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.meta.When;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
  * Utility class combining II's {@link IIMultiblockRecipe} recipes with IE's {@link MultiblockRecipe} recipes
+ *
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 05.10.2026
  */
 public abstract class IIMultiblockRecipe extends MultiblockRecipe implements IIIMultiblockRecipe
 {
 	private static HashMap<Class<? extends IIMultiblockRecipe>, MultiblockRecipeRegistry<?>> registries = new HashMap<>();
 	protected String name;
+	private final String legacyName;
+	private final boolean registered;
 	private IIRecipeLayout recipeLayout;
 	private int totalProcessTime;
 	private int totalProcessEnergy;
@@ -37,13 +39,31 @@ public abstract class IIMultiblockRecipe extends MultiblockRecipe implements III
 
 	public IIMultiblockRecipe(Object nameSource, Object... nameSources)
 	{
-		//Create a name for the recipe based on the sources
-		name = generateRecipeName(nameSource, nameSources);
-		registries.computeIfAbsent(this.getClass(), MultiblockRecipeRegistry::new).addRecipe(this);
+		this(nameSource, nameSources, true);
+	}
+
+	protected IIMultiblockRecipe(Object nameSource, Object[] nameSources, boolean register)
+	{
+		name = generateLegacyRecipeName(nameSource, nameSources);
+		legacyName = name;
+		registered = register;
+		if(register)
+			registries.computeIfAbsent(this.getClass(), MultiblockRecipeRegistry::new).addRecipe(this, true);
+	}
+
+	/**
+	 * Sets a complete identity and keeps the old save name as an alias.
+	 */
+	protected final void completeRegistration(Object source, Object... sources)
+	{
+		setName(generateRecipeName(source, sources));
+		MultiblockRecipeRegistry<?> registry = registries.get(getClass());
+		if(registry!=null&&registered)
+			registry.addLegacyName(legacyName, this);
 	}
 
 	@Nonnull
-	public static String generateRecipeName(Object nameSource, Object... nameSources)
+	private static String generateLegacyRecipeName(Object nameSource, Object... nameSources)
 	{
 		//The recipe needs at least one object for its name source, that's the reason for the constructor
 		Object[] joinedSources = new Object[nameSources.length+1];
@@ -64,6 +84,34 @@ public abstract class IIMultiblockRecipe extends MultiblockRecipe implements III
 				.map(Object::toString)
 				//Create this mess of a name and hope it is unique
 				.collect(Collectors.joining("_"));
+	}
+
+	@Nonnull
+	public static String generateRecipeName(Object source, Object... sources)
+	{
+		Object[] all = new Object[sources.length+1];
+		all[0] = source;
+		System.arraycopy(sources, 0, all, 1, sources.length);
+		return Arrays.stream(all).map(IIMultiblockRecipe::getIdentityPart).collect(Collectors.joining("_"));
+	}
+
+	private static String getIdentityPart(Object value)
+	{
+		if(value instanceof FluidStack)
+			return ((FluidStack)value).writeToNBT(new NBTTagCompound()).toString();
+		if(value instanceof IngredientStack)
+		{
+			IngredientStack ingredient = (IngredientStack)value;
+			NBTTagCompound nbt = ingredient.writeToNBT(new NBTTagCompound());
+			if(ingredient.fluid!=null)
+				nbt.setTag("fluidStack", ingredient.fluid.writeToNBT(new NBTTagCompound()));
+			return nbt.toString();
+		}
+		if(value instanceof ItemStack)
+			return IIItemUtils.getUniqueStackString((ItemStack)value);
+		if(value instanceof Object[])
+			return Arrays.stream((Object[])value).map(IIMultiblockRecipe::getIdentityPart).collect(Collectors.joining(",", "[", "]"));
+		return String.valueOf(value);
 	}
 
 	private static String createIngredientStackName(IngredientStack stack)
@@ -98,18 +146,18 @@ public abstract class IIMultiblockRecipe extends MultiblockRecipe implements III
 
 	public void setName(String name)
 	{
-		//Update registry
-		MultiblockRecipeRegistry<?> registry = registries.get(this.getClass());
-		if(registry!=null)
+		if(!registered)
 		{
-			registry.recipesMap.remove(this.name);
-			registry.recipesList.remove(this);
 			this.name = name;
-			registry.addRecipe(this);
+			return;
 		}
-		else
-			IILogger.error("Something in Recipe Registry is VERY,VERY wrong. Could not rename an existing recipe.");
-
+		MultiblockRecipeRegistry<?> registry = registries.get(getClass());
+		if(registry==null)
+			throw new IllegalStateException("Missing recipe registry: "+getClass().getName());
+		registry.recipesMap.entrySet().removeIf(entry -> entry.getValue()==this);
+		registry.recipesList.remove(this);
+		this.name = name;
+		registry.addRecipe(this, false);
 	}
 
 	/**
@@ -125,10 +173,14 @@ public abstract class IIMultiblockRecipe extends MultiblockRecipe implements III
 	public static <T extends IIMultiblockRecipe> List<T> removeRecipesByFilter(Class<T> recipeClass, Predicate<T> recipeFilter)
 	{
 		MultiblockRecipeRegistry<T> registry = (MultiblockRecipeRegistry<T>)registries.get(recipeClass);
+		if(registry==null)
+			return Collections.emptyList();
 		List<T> recipes = registry.recipesList.stream()
 				.filter(recipeFilter)
 				.collect(Collectors.toList());
 		registry.recipesList.removeAll(recipes);
+		registry.recipesMap.entrySet().removeIf(entry -> recipes.contains(entry.getValue()));
+		registry.legacyNames.entrySet().removeIf(entry -> recipes.contains(entry.getValue()));
 
 		return recipes;
 	}
@@ -149,7 +201,7 @@ public abstract class IIMultiblockRecipe extends MultiblockRecipe implements III
 	public static <T extends IIMultiblockRecipe> List<T> getRecipes(Class<T> recipeClass)
 	{
 		MultiblockRecipeRegistry<T> registry = (MultiblockRecipeRegistry<T>)registries.get(recipeClass);
-		return registry.getRecipes();
+		return registry==null?Collections.emptyList(): registry.getRecipes();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -166,7 +218,7 @@ public abstract class IIMultiblockRecipe extends MultiblockRecipe implements III
 	public static <T extends IIMultiblockRecipe> T getRecipe(Class<T> recipeClass, String name)
 	{
 		MultiblockRecipeRegistry<T> registry = (MultiblockRecipeRegistry<T>)registries.get(recipeClass);
-		return registry.getRecipe(name);
+		return registry==null?null: registry.getRecipe(name);
 	}
 
 	public static Class<IIMultiblockRecipe> getRecipeClassFromName(String type)
@@ -287,6 +339,7 @@ public abstract class IIMultiblockRecipe extends MultiblockRecipe implements III
 	private static class MultiblockRecipeRegistry<T extends IIMultiblockRecipe>
 	{
 		private final HashMap<String, T> recipesMap = new HashMap<>();
+		private final HashMap<String, T> legacyNames = new HashMap<>();
 		private final ArrayList<T> recipesList = new ArrayList<>();
 
 		protected MultiblockRecipeRegistry(Class<T> recipeClass)
@@ -295,11 +348,28 @@ public abstract class IIMultiblockRecipe extends MultiblockRecipe implements III
 		}
 
 		@SuppressWarnings("unchecked")
-		public void addRecipe(@Nonnull IIMultiblockRecipe recipe)
+		public void addRecipe(@Nonnull IIMultiblockRecipe recipe, boolean provisional)
 		{
 			try
 			{
 				T castedRecipe = (T)recipe;
+				if(provisional)
+				{
+					String base = recipe.name;
+					int suffix = 1;
+					while(recipesMap.containsKey(recipe.name))
+						recipe.name = base+"~"+suffix++;
+				}
+				else
+				{
+					T previous = recipesMap.get(recipe.getName());
+					if(previous!=null&&previous!=recipe)
+					{
+						IILogger.warn("Replacing duplicate recipe identity: "+recipe.getName());
+						recipesList.remove(previous);
+						legacyNames.replaceAll((key, value) -> value==previous?castedRecipe: value);
+					}
+				}
 				recipesMap.put(recipe.getName(), castedRecipe);
 				recipesList.add(castedRecipe);
 			} catch(ClassCastException e)
@@ -309,10 +379,33 @@ public abstract class IIMultiblockRecipe extends MultiblockRecipe implements III
 
 		}
 
+		@SuppressWarnings("unchecked")
+		private void addLegacyName(String name, IIMultiblockRecipe recipe)
+		{
+			legacyNames.put(name, (T)recipe);
+		}
+
 		@Nullable
 		public T getRecipe(String name)
 		{
-			return recipesMap.get(name);
+			T recipe = recipesMap.containsKey(name)?recipesMap.get(name): legacyNames.get(name);
+			if(recipe!=null)
+				return recipe;
+			int arrayName = name.indexOf("_[Ljava.lang.Object;@");
+			if(arrayName < 0)
+				return null;
+			String prefix = name.substring(0, arrayName);
+			T matched = null;
+			for(T candidate : recipesList)
+			{
+				String legacy = ((IIMultiblockRecipe)candidate).legacyName;
+				if(!legacy.startsWith(prefix+"_[Ljava.lang.Object;@"))
+					continue;
+				if(matched!=null)
+					return null;
+				matched = candidate;
+			}
+			return matched;
 		}
 
 		@Nonnull

@@ -149,6 +149,8 @@ public abstract class GunAmmoProvider implements INBTSerializable<NBTTagCompound
 
 	protected final void giveOrDrop(ItemStack ammoStack)
 	{
+		if(gun.world.isRemote||ammoStack.isEmpty())
+			return;
 		Entity entity = operatorSupplier.get();
 		//No operator, drop at gun position
 		if(entity==null)

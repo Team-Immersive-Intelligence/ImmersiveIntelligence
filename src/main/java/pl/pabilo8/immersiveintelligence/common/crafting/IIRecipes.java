@@ -91,6 +91,7 @@ import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradeableArmor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -99,9 +100,11 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
+ * Registers crafting and machine recipes.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
  * @author Avalon (avalon@iiteam.net)
- * @updated 24.09.2026
+ * @updated 05.10.2026
  * @since 22.03.2020
  * @since 28.11.2024
  */
@@ -147,6 +150,7 @@ public class IIRecipes
 		addMetalPressRecipes();
 		addBulletPressRecipes();
 		addFillerRecipes();
+		ProjectileWorkshopRecipe.registerCoreRecipes();
 
 		addSiliconProcessingRecipes();
 		addCircuitRecipes();
@@ -459,11 +463,11 @@ public class IIRecipes
 		}
 
 		//Circuits
-		new BathingRecipe(IIContent.itemMaterial.getStack(Materials.BASIC_CIRCUIT_BOARD_ETCHED), new IngredientStack("circuitBasicRaw"),
+		new ChemicalBathRecipe(IIContent.itemMaterial.getStack(Materials.BASIC_CIRCUIT_BOARD_ETCHED), new IngredientStack("circuitBasicRaw"),
 				FluidRegistry.getFluidStack("etching_acid", 500), 15000, 360, false);
-		new BathingRecipe(IIContent.itemMaterial.getStack(Materials.ADVANCED_CIRCUIT_BOARD_ETCHED), new IngredientStack("circuitAdvancedRaw"),
+		new ChemicalBathRecipe(IIContent.itemMaterial.getStack(Materials.ADVANCED_CIRCUIT_BOARD_ETCHED), new IngredientStack("circuitAdvancedRaw"),
 				FluidRegistry.getFluidStack("etching_acid", 1000), 150000, 560, false);
-		new BathingRecipe(IIContent.itemMaterial.getStack(Materials.PROCESSOR_CIRCUIT_BOARD_ETCHED), new IngredientStack("circuitProcessorRaw"),
+		new ChemicalBathRecipe(IIContent.itemMaterial.getStack(Materials.PROCESSOR_CIRCUIT_BOARD_ETCHED), new IngredientStack("circuitProcessorRaw"),
 				FluidRegistry.getFluidStack("etching_acid", 2000), 1500000, 720, false);
 
 //4x Vacuum tube + 1 x copper nugget = 2 x copper wire, 1 x iron plate, 1 x glass block
@@ -583,7 +587,7 @@ public class IIRecipes
 				3200
 		);
 
-		new BathingRecipe(
+		new ChemicalBathRecipe(
 				IIContent.itemMaterialDust.getStack(MaterialsDust.QUARTZ),
 				new IngredientStack("dustQuartzDirty"),
 				new FluidStack(IIContent.fluidHydrofluoricAcid, 1000),
@@ -781,7 +785,7 @@ public class IIRecipes
 	public static void addMiscIERecipes()
 	{
 		//Cheaper treated planks
-		new BathingRecipe(new ItemStack(IEContent.blockTreatedWood, 12),
+		new ChemicalBathRecipe(new ItemStack(IEContent.blockTreatedWood, 12),
 				new IngredientStack("plankWood", 8),
 				new FluidStack(IEContent.fluidCreosote, 1000),
 				3200, 120, false
@@ -802,8 +806,7 @@ public class IIRecipes
 	//Laggy, weird and wrong, but kinda universal
 	public static void addWoodTableSawRecipes()
 	{
-
-		//Sawmill plank recipe
+		//Logs to planks
 		CraftingManager.REGISTRY.forEach(iRecipe ->
 				{
 					if(Utils.compareToOreName(iRecipe.getRecipeOutput(), "plankWood"))
@@ -820,52 +823,46 @@ public class IIRecipes
 							new SawmillRecipe(out, new IngredientStack(stacks).setUseNBT(false),
 									IIContent.itemMaterial.getStack(Materials.DUST_WOOD),
 									Sawmill.torqueMin+2, 200, 1);
-
-						//IILogger.info("Added recipe for "+stack.getDisplayName()+" x"+stack.getCount()+" -> "+out.getDisplayName()+" x"+out.getCount());
 					}
 				}
 		);
-		//Crusher, logs to sawdust
-		CrusherRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.DUST_WOOD, 2),
-				new IngredientStack("logWood"), 4096);
-		CrusherRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.DUST_WOOD),
-				new IngredientStack("plankWood", 2), 3192);
 
-		//Add recipes for all planks dynamically
-
-		//Vanilla planks (Oak, Spruce, Birch, etc.)
-		for(int i = 0; i < 6; i++)
-			new SawmillRecipe(new ItemStack(Items.STICK, 3),
-					new IngredientStack(new ItemStack(Blocks.PLANKS, 1, i)), // Specific plank type
-					IIContent.itemMaterial.getStack(Materials.DUST_WOOD),
-					Sawmill.torqueMin, 100, 1);
-
-		//Treated wood planks
-		new SawmillRecipe(new ItemStack(IEContent.itemMaterial, 3, 0), // Treated sticks
-				new IngredientStack(new ItemStack(IEContent.blockTreatedWood)), // Treated planks
-				IIContent.itemMaterial.getStack(Materials.DUST_WOOD),
-				Sawmill.torqueMin, 100, 1);
-
-		//Support modded planks or dynamically registered planks
+		//Sticks from planks
 		IngredientStack allPlanks = new IngredientStack("plankWood"); // Handles OreDict entries for any planks
 		new SawmillRecipe(new ItemStack(Items.STICK, 3),
 				allPlanks,
 				IIContent.itemMaterial.getStack(Materials.DUST_WOOD),
 				Sawmill.torqueMin, 100, 1);
 
+		//Treated sticks from planks
+		new SawmillRecipe(new ItemStack(IEContent.itemMaterial, 3, 0), // Treated sticks
+				new IngredientStack(new ItemStack(IEContent.blockTreatedWood)), // Treated planks
+				IIContent.itemMaterial.getStack(Materials.DUST_WOOD),
+				Sawmill.torqueMin, 100, 1);
+
+		//Crusher, logs to sawdust
+		CrusherRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.DUST_WOOD, 2),
+				new IngredientStack("logWood"), 4096);
+		CrusherRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.DUST_WOOD),
+				new IngredientStack("plankWood", 2), 3192);
+
+		//Sawdust to pulp
 		BottlingMachineRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.PULP_WOOD),
 				new IngredientStack("dustWood"),
 				new FluidStack(FluidRegistry.WATER, 250)
 		);
+		//Sawdust to treated pulp
 		BottlingMachineRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.PULP_WOOD_TREATED),
 				new IngredientStack("pulpWood"),
 				new FluidStack(IEContent.fluidCreosote, 1000)
 		);
 
+		//Paper from pulp
 		MetalPressRecipe.addRecipe(new ItemStack(Items.PAPER, 2, 0),
 				new IngredientStack("pulpWood"),
 				new ItemStack(IEContent.itemMold, 1, 0),
 				100);
+		//Artificial leather from treated pulp
 		MetalPressRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.ARTIFICIAL_LEATHER),
 				new IngredientStack("pulpWoodTreated"),
 				new ItemStack(IEContent.itemMold, 1, 0),
@@ -951,7 +948,7 @@ public class IIRecipes
 	public static void addConcreteRecipes()
 	{
 		//Concrete Bricks / Volksbeton
-		new BathingRecipe(IIContent.blockConcreteDecoration.getStack(ConcreteDecorations.CONCRETE_BRICKS),
+		new ChemicalBathRecipe(IIContent.blockConcreteDecoration.getStack(ConcreteDecorations.CONCRETE_BRICKS),
 				new IngredientStack(new ItemStack(Blocks.BRICK_BLOCK)),
 				new FluidStack(FluidRegistry.getFluid("concrete"), 500), 1600, 120, false);
 		//Panzerconcrete / Panzerbeton
@@ -1049,8 +1046,8 @@ public class IIRecipes
 		);
 
 		addBathingCleaningRecipe(
-				new ItemStack(Items.BANNER, 1, OreDictionary.WILDCARD_VALUE),
-				new IngredientStack(new ItemStack(Items.BANNER, 1, 15)),
+				new ItemStack(Items.BANNER, 1, 15),
+				new IngredientStack(new ItemStack(Items.BANNER, 1, OreDictionary.WILDCARD_VALUE)),
 				2000,
 				256*160, 160, true, false, false
 		);
@@ -1084,43 +1081,43 @@ public class IIRecipes
 	public static void addChemicalPainterRecipes()
 	{
 		//Vanilla Blocks
-		new PaintingRecipe((rgb, stack) -> {
+		new ChemicalPainterRecipe((rgb, stack) -> {
 			//get closest approximated dye
 			return new ItemStack(Blocks.WOOL, 1, rgb.getDyeColor().getMetadata());
 		}, new IngredientStack(new ItemStack(Blocks.WOOL)), 256*240, 240, 125);
 
-		new PaintingRecipe((rgb, stack) -> {
+		new ChemicalPainterRecipe((rgb, stack) -> {
 			//get closest approximated dye
 			return new ItemStack(Blocks.CARPET, 1, rgb.getDyeColor().getMetadata());
 		}, new IngredientStack(new ItemStack(Blocks.CARPET)), 256*240, 240, 50);
 
-		new PaintingRecipe((rgb, stack) -> {
+		new ChemicalPainterRecipe((rgb, stack) -> {
 			//get closest approximated dye
 			return new ItemStack(Blocks.STAINED_GLASS, 1, rgb.getDyeColor().getMetadata());
 		}, new IngredientStack(new ItemStack(Blocks.GLASS)), 256*240, 240, 125);
 
-		new PaintingRecipe((rgb, stack) -> {
+		new ChemicalPainterRecipe((rgb, stack) -> {
 			//get closest approximated dye
 			return new ItemStack(Blocks.STAINED_GLASS_PANE, 1, rgb.getDyeColor().getMetadata());
 		}, new IngredientStack(new ItemStack(Blocks.GLASS_PANE)), 256*240, 240, 125);
 
-		new PaintingRecipe((rgb, stack) -> {
+		new ChemicalPainterRecipe((rgb, stack) -> {
 			//get closest approximated dye
 			return new ItemStack(Blocks.STAINED_HARDENED_CLAY, 1, rgb.getDyeColor().getMetadata());
 		}, new IngredientStack(new ItemStack(Blocks.HARDENED_CLAY)), 256*240, 240, 125);
 
-		new PaintingRecipe((rgb, stack) -> {
+		new ChemicalPainterRecipe((rgb, stack) -> {
 			//get closest approximated dye
 			return new ItemStack(Items.BED, 1, rgb.getDyeColor().getMetadata());
 		}, new IngredientStack(new ItemStack(Items.BED)), 256*240, 240, 200);
 
 		//II / IE items
-		new PaintingRecipe((rgb, stack) -> {
+		new ChemicalPainterRecipe((rgb, stack) -> {
 			IIContent.itemAdvancedPowerPack.setColor(stack, rgb.getPackedRGB());
 			return stack;
 		}, new IngredientStack(new ItemStack(IIContent.itemAdvancedPowerPack)), 512*340, 340, 2000);
 
-		new PaintingRecipe((rgb, stack) -> {
+		new ChemicalPainterRecipe((rgb, stack) -> {
 			Items.LEATHER_HELMET.setColor(stack, rgb.getPackedRGB());
 			return stack;
 		}, new IngredientStack(NonNullList.from(ItemStack.EMPTY,
@@ -1130,7 +1127,7 @@ public class IIRecipes
 				new ItemStack(Items.LEATHER_BOOTS)
 		)), 512*340, 340, 2000);
 
-		new PaintingRecipe((rgb, stack) -> {
+		new ChemicalPainterRecipe((rgb, stack) -> {
 			IIContent.itemLightEngineerChestplate.setColor(stack, rgb.getPackedRGB());
 			return stack;
 		}, new IngredientStack(NonNullList.from(ItemStack.EMPTY,
@@ -1145,7 +1142,7 @@ public class IIRecipes
 			int time = 100+(bullet.getCaliber()*40);
 			ItemStack bulletStack = bullet.getAmmoStack(IIContent.ammoCoreIron,
 					bullet.getAllowedCoreTypes()[0], bullet.getAllowedFuseTypes()[0]);
-			new PaintingRecipe((rgb, stack) -> {
+			new ChemicalPainterRecipe((rgb, stack) -> {
 				ItemStack ret = bullet.setPaintColor(stack, rgb);
 				ret.setCount(1);
 				return ret;
@@ -1161,11 +1158,11 @@ public class IIRecipes
 	private static void addBathingCleaningRecipe(ItemStack out, IngredientStack in, int amount, int energy, int time, boolean allowWater, boolean allowSulfuric, boolean allowHFl)
 	{
 		if(allowWater)
-			new BathingRecipe(out, in, new FluidStack(FluidRegistry.WATER, amount), energy, time, true);
+			new ChemicalBathRecipe(out, in, new FluidStack(FluidRegistry.WATER, amount), energy, time, true);
 		if(allowSulfuric)
-			new BathingRecipe(out, in, new FluidStack(IIContent.fluidSulfuricAcid, allowWater?amount/2: amount), allowWater?energy/2: energy, allowWater?time/2: time, true);
+			new ChemicalBathRecipe(out, in, new FluidStack(IIContent.fluidSulfuricAcid, allowWater?amount/2: amount), allowWater?energy/2: energy, allowWater?time/2: time, true);
 		if(allowHFl)
-			new BathingRecipe(out, in, new FluidStack(IIContent.fluidHydrofluoricAcid, amount/2), allowWater?energy/4: energy/2, allowWater?time/4: time/2, true);
+			new ChemicalBathRecipe(out, in, new FluidStack(IIContent.fluidHydrofluoricAcid, amount/2), allowWater?energy/4: energy/2, allowWater?time/4: time/2, true);
 	}
 
 	public static void addUpgradeRecipes()
@@ -1545,7 +1542,7 @@ public class IIRecipes
 				new IngredientStack("plateRubberRaw", 10),
 				new IngredientStack("dustVulcanizationCompound", 3),
 				new IngredientStack("dustSulfur", 2),
-				24000
+				24000, VulcanizerRecipe.MODEL_BELT
 		).setName("rubber_belts");
 
 		new VulcanizerRecipe(IIContent.itemMaterial.getStack(Materials.RUBBER_TIRE, 3),
@@ -1553,7 +1550,7 @@ public class IIRecipes
 				new IngredientStack("plateRubberRaw", 10),
 				new IngredientStack("dustVulcanizationCompound", 8),
 				new IngredientStack("dustSulfur", 3),
-				32000
+				32000, VulcanizerRecipe.MODEL_TIRE
 		).setName("rubber_tires");
 
 		//Rubber is a slow pace industry ^^
@@ -1876,6 +1873,7 @@ public class IIRecipes
 		OreDictionary.registerOre("logWood", new ItemStack(IIContent.blockRubberLog));
 		OreDictionary.registerOre("woodRubber", new ItemStack(IIContent.blockRubberLog));
 		OreDictionary.registerOre("treeLeaves", new ItemStack(IIContent.blockRubberLeaves));
+		OreDictionary.registerOre("treeSapling", new ItemStack(IIContent.blockRubberSapling));
 
 		OreDictionary.registerOre("tnt", new ItemStack(Blocks.TNT));
 		OreDictionary.registerOre("materialTNT", new ItemStack(Blocks.TNT));

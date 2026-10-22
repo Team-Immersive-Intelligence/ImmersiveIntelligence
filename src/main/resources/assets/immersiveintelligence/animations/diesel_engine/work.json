@@ -1,0 +1,289 @@
+{
+  "comment": "Made by Pabilo8 with Blockbench",
+  "groups": {
+    "rocker1": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.25,
+          "transform": [15, 0, 0]
+        },
+        {
+          "time": 0.5,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.75,
+          "transform": [-10, 0, 0]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "rocker2": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.25,
+          "transform": [-10, 0, 0]
+        },
+        {
+          "time": 0.5,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.75,
+          "transform": [15, 0, 0]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "pushrod1": {
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.25,
+          "transform": [0, -2, 0]
+        },
+        {
+          "time": 0.5,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.75,
+          "transform": [0, 1, 0]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "discharge_valve1": {
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.25,
+          "transform": [0, -1, 0]
+        },
+        {
+          "time": 0.5,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.75,
+          "transform": [0, 0.5, 0]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "intake_valve1": {
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.25,
+          "transform": [0, 0.7, 0]
+        },
+        {
+          "time": 0.5,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.75,
+          "transform": [0, -0.5, 0]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "discharge_valve2": {
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.25,
+          "transform": [0, 0.5, 0]
+        },
+        {
+          "time": 0.5,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.75,
+          "transform": [0, -1, 0]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "pushrod2": {
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.25,
+          "transform": [0, 1, 0]
+        },
+        {
+          "time": 0.5,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.75,
+          "transform": [0, -2, 0]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "intake_valve2": {
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.25,
+          "transform": [0, -0.5, 0]
+        },
+        {
+          "time": 0.5,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.75,
+          "transform": [0, 0.7, 0]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "engine_cylinde1": {
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.25,
+          "transform": [0, -0.1, 0]
+        },
+        {
+          "time": 0.5,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.75,
+          "transform": [0, -0.1, 0]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "engine_cylinde2": {
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.25,
+          "transform": [0, 0.1, 0]
+        },
+        {
+          "time": 0.5,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.75,
+          "transform": [0, 0.1, 0]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "pipe": {
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.1666,
+          "transform": [0, 0.1, 0]
+        },
+        {
+          "time": 0.3334,
+          "transform": [0, -0.1, 0]
+        },
+        {
+          "time": 0.5,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.6666,
+          "transform": [0, 0.1, 0]
+        },
+        {
+          "time": 0.8334,
+          "transform": [0, -0.1, 0]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "rotary": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, 360]
+        }
+      ]
+    }
+  }
+}

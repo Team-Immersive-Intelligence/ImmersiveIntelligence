@@ -11,6 +11,7 @@ import javax.annotation.Nullable;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
  * @since 06.12.2025
+ * @updated 05.10.2026
  */
 public class LayoutComponent
 {
@@ -21,6 +22,7 @@ public class LayoutComponent
 	@Nullable
 	private final Object data;
 	private final String subtype;
+	private final boolean toolSlot;
 
 	private LayoutComponent(LayoutComponentBuilder builder)
 	{
@@ -32,6 +34,7 @@ public class LayoutComponent
 		this.height = builder.height;
 		this.data = builder.data;
 		this.subtype = builder.subtype;
+		this.toolSlot = builder.toolSlot;
 	}
 
 	public static LayoutComponentBuilder builder(ComponentType type, int x, int y)
@@ -76,6 +79,11 @@ public class LayoutComponent
 		return data;
 	}
 
+	public boolean isToolSlot()
+	{
+		return toolSlot;
+	}
+
 	public String getSubtype()
 	{
 		return subtype;
@@ -91,6 +99,7 @@ public class LayoutComponent
 		@Nullable
 		private Object data = null;
 		private String subtype = "";
+		private boolean toolSlot = false;
 
 		private LayoutComponentBuilder(ComponentType type, int x, int y)
 		{
@@ -151,6 +160,17 @@ public class LayoutComponent
 		public LayoutComponentBuilder subtype(String subtype)
 		{
 			this.subtype = subtype;
+			return this;
+		}
+
+		public LayoutComponentBuilder toolSlot()
+		{
+			return toolSlot(true);
+		}
+
+		public LayoutComponentBuilder toolSlot(boolean toolSlot)
+		{
+			this.toolSlot = toolSlot;
 			return this;
 		}
 

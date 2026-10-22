@@ -144,6 +144,9 @@ public class IIContent
 	//allows the radar to detect radio signal emitters and send their positions
 	public static final Upgrade UPGRADE_RADIO_LOCATORS = new Upgrade("radio_locators");
 
+	//Initialized by Weather2CompatHandler when Weather2 compatibility is enabled.
+	public static Upgrade UPGRADE_WEATHER_ANOMALY_DETECTORS = null;
+
 	//changes the projectile workshop to *fill* projectiles
 	public static final Upgrade UPGRADE_CORE_FILLER = new Upgrade("core_filler")
 			.withType(UpgradePurpose.FULL_CONVERSION);

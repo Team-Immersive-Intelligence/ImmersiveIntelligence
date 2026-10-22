@@ -2,13 +2,11 @@ package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multibloc
 
 import blusunrize.immersiveengineering.api.IEApi;
 import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorage;
-import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
 import blusunrize.immersiveengineering.api.tool.ConveyorHandler.IConveyorAttachable;
 import blusunrize.immersiveengineering.common.Config.IEConfig.Machines;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IPlayerInteraction;
 import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
-import blusunrize.immersiveengineering.common.util.inventory.MultiFluidTank;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -24,7 +22,6 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -53,15 +50,18 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockPacker;
+import pl.pabilo8.immersiveintelligence.common.util.IIEnergyStorage;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyCollection;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
+import pl.pabilo8.immersiveintelligence.common.util.fluid.FilteredMultiFluidTank;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IIIGuiMultiblockTile;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIGeneric;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
@@ -71,7 +71,7 @@ import java.util.function.Predicate;
  * Packs items, fluids, or energy into compatible containers by configured tasks.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 12.08.2026
+ * @updated 07.10.2026
  * @since 28.06.2019
  */
 public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPacker>
@@ -86,11 +86,11 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CLIENT_MESSAGE})
 	public EasyCollection<LabelingTask, NBTTagCompound> labels;
 	@SyncNBT(events = {SyncEvents.TILE_RECIPE_CHANGED, SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_UPGRADES_MODIFIED})
-	public MultiFluidTank fluidTankUpgradeInput;
+	public FilteredMultiFluidTank fluidTankUpgradeInput;
 	@SyncNBT(events = {SyncEvents.TILE_RECIPE_CHANGED, SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_UPGRADES_MODIFIED})
-	public MultiFluidTank fluidTankUpgradeOutput;
+	public FilteredMultiFluidTank fluidTankUpgradeOutput;
 	@SyncNBT(events = {SyncEvents.TILE_RECIPE_CHANGED, SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_UPGRADES_MODIFIED, SyncEvents.TILE_CUSTOM1})
-	public FluxStorageAdvanced energyStorageUpgrade;
+	public IIEnergyStorage energyStorageUpgrade;
 
 	private IItemHandler containerHandler = new IEInventoryHandler(1, this, 0, true, true);
 	private IItemHandler inventoryInHandler = new IEInventoryHandler(54, this, 1, true, true);
@@ -100,15 +100,15 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 	{
 		super(MultiblockPacker.INSTANCE);
 
-		this.energyStorage = new FluxStorageAdvanced(Packer.energyCapacity);
+		this.energyStorage = new IIEnergyStorage(Packer.energyCapacity);
 		this.inventory = NonNullList.withSize(1+108, ItemStack.EMPTY);
 		this.upgradeManager = new UpgradeManager<>(this);
 		this.tasks = new EasyCollection<>(PackerTask::new);
 		this.labels = new EasyCollection<>(LabelingTask::new);
 
-		this.energyStorageUpgrade = new FluxStorageAdvanced(Packer.energyCapacityUpgrade);
-		this.fluidTankUpgradeInput = new MultiFluidTank(Packer.fluidCapacityUpgrade);
-		this.fluidTankUpgradeOutput = new MultiFluidTank(Packer.fluidCapacityUpgrade);
+		this.energyStorageUpgrade = new IIEnergyStorage(Packer.energyCapacityUpgrade);
+		this.fluidTankUpgradeInput = new FilteredMultiFluidTank(Packer.fluidCapacityUpgrade);
+		this.fluidTankUpgradeOutput = new FilteredMultiFluidTank(Packer.fluidCapacityUpgrade);
 	}
 
 	@Override
@@ -883,7 +883,10 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 			TileEntityPacker master = master();
 			//container interaction = filling/emptying against INPUT tank (loading containers)
 			return master!=null&&master.isUpgradeInstalled(IIContent.UPGRADE_PACKER_FLUID)
-					&&FluidUtil.interactWithFluidHandler(player, hand, master.fluidTankUpgradeInput);
+					&&!master.fluidTankUpgradeInput.interactWithItem(player, hand, heldItem, () -> {
+				master.markDirty();
+				master.updateTileForEvent(SyncEvents.TILE_RECIPE_CHANGED);
+			});
 		}
 		return false;
 	}

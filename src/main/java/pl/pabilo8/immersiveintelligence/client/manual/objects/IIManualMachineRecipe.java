@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.client.manual.objects;
 
-import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.client.Minecraft;
@@ -36,6 +35,7 @@ import java.util.List;
  * Displays a crafting recipe for item(s).
  *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 05.10.2026
  * @since 22.05.2022
  */
 public class IIManualMachineRecipe extends IIManualObject
@@ -84,6 +84,7 @@ public class IIManualMachineRecipe extends IIManualObject
 						.size(component.getWidth(), component.getHeight())
 						.subtype(component.getSubtype())
 						.data(component.getData())
+						.toolSlot(component.isToolSlot())
 						.build());
 
 			//Scale down bottom bar components as well
@@ -93,6 +94,7 @@ public class IIManualMachineRecipe extends IIManualObject
 						.size(component.getWidth(), component.getHeight())
 						.subtype(component.getSubtype())
 						.data(component.getData())
+						.toolSlot(component.isToolSlot())
 						.build());
 
 			// Precompute scale/offsets now that layout and components are known.
@@ -230,26 +232,21 @@ public class IIManualMachineRecipe extends IIManualObject
 			drawFrameLabel(mc, x, y, component);
 
 		//Draw stack in slot
-		ItemStack stack = null;
-		Object data = component.getData();
-		if(data instanceof ItemStack)
-			stack = (ItemStack)data;
-		else if(data instanceof IngredientStack)
-			stack = ((IngredientStack)data).getRandomizedExampleStack(mc.world.getTotalWorldTime());
+		ItemStack stack = IIRecipeLayout.getDisplayedItem(component.getData(), mc.world.getTotalWorldTime());
 
-		if(stack!=null)
+		if(!stack.isEmpty())
 		{
 			GlStateManager.pushMatrix();
 			GlStateManager.color(1f, 1f, 1f);
 			GlStateManager.enableDepth();
 			RenderHelper.enableGUIStandardItemLighting();
 			mc.getRenderItem().renderItemIntoGUI(stack, x+1, y+1);
+			mc.getRenderItem().renderItemOverlayIntoGUI(manual.fontRenderer, stack, x+1, y+1, null);
 			RenderHelper.disableStandardItemLighting();
 			GlStateManager.disableDepth();
 			GlStateManager.popMatrix();
 		}
-		else
-			IILogger.error("Incorrect data for layout component. Slot data must be an ItemStack or IngredientStack.");
+
 	}
 
 	private void drawFrameLabel(Minecraft mc, int x, int y, LayoutComponent component)
@@ -276,35 +273,23 @@ public class IIManualMachineRecipe extends IIManualObject
 
 	private int getLabelIndex(String subtype, IOType ioType)
 	{
-		switch(subtype)
+		return switch(subtype)
 		{
-			case "red":
-				return 4;
-			case "blue":
-				return 5;
-			case "green":
-				return 6;
-			case "yellow":
-				return 7;
-			case "purple":
-				return 8;
-			case "cyan":
-				return 9;
-			case "black":
-				return 10;
-			case "white":
-				return 11;
-			default:
-				switch(ioType)
-				{
-					case INPUT:
-						return 2;
-					case OUTPUT:
-						return 3;
-					default:
-						return 0;
-				}
-		}
+			case "red" -> 4;
+			case "blue" -> 5;
+			case "green" -> 6;
+			case "yellow" -> 7;
+			case "purple" -> 8;
+			case "cyan" -> 9;
+			case "black" -> 10;
+			case "white" -> 11;
+			default -> switch(ioType)
+			{
+				case INPUT -> 2;
+				case OUTPUT -> 3;
+				default -> 0;
+			};
+		};
 	}
 
 	private void drawInfoDisplay(Minecraft mc, int x, int y, LayoutComponent component)
@@ -312,25 +297,21 @@ public class IIManualMachineRecipe extends IIManualObject
 		String subtype = component.getSubtype();
 		switch(subtype)
 		{
-			case "arrow":
-				drawProgressArrow(mc, x, y, component.getWidth(), component.getHeight());
-				break;
-			case "time":
-				drawTimeInfo(mc, x, y);
-				break;
-			case "power":
-				drawPowerInfo(mc, x, y);
-				break;
-			case "mechanical_power":
+			case "note" ->
+			{
+				String[] parts = IIRecipeLayout.getNoteParts(component);
+				Object[] arguments = java.util.Arrays.copyOfRange(parts, 1, parts.length);
+				manual.fontRenderer.drawString(net.minecraft.client.resources.I18n.format(parts[0], arguments), x, y,
+						DecoColors.H1.getPackedRGB());
+			}
+			case "time" -> drawTimeInfo(mc, x, y);
+			case "power" -> drawPowerInfo(mc, x, y);
+			case "mechanical_power" ->
+			{
 				if(recipe instanceof RotaryMachineRecipe)
 					drawMechanicalPowerInfo(mc, x, y, (RotaryMachineRecipe)recipe);
-				break;
+			}
 		}
-	}
-
-	private void drawProgressArrow(Minecraft mc, int x, int y, int width, int height)
-	{
-		//TODO: 08.12.2025 implement for JEI and here
 	}
 
 	private void drawTimeInfo(Minecraft mc, int x, int y)
@@ -343,7 +324,7 @@ public class IIManualMachineRecipe extends IIManualObject
 
 		//Draw time text
 		String timeStr = recipe.getTotalProcessTime()+" t";
-		drawTextAtFullSize(mc.fontRenderer, timeStr, x+14, y+3, DecoColors.H1.getPackedRGB());
+		drawTextAtFullSize(manual.fontRenderer, timeStr, x+14, y+3, DecoColors.H1.getPackedRGB());
 	}
 
 	private void drawPowerInfo(Minecraft mc, int x, int y)
@@ -356,7 +337,7 @@ public class IIManualMachineRecipe extends IIManualObject
 
 		//Draw power text
 		String powerStr = recipe.getTotalProcessEnergy()+" IF";
-		drawTextAtFullSize(mc.fontRenderer, powerStr, x+14, y+3, DecoColors.H1.getPackedRGB());
+		drawTextAtFullSize(manual.fontRenderer, powerStr, x+14, y+3, DecoColors.H1.getPackedRGB());
 	}
 
 	private void drawMechanicalPowerInfo(Minecraft mc, int x, int y, RotaryMachineRecipe recipe)
@@ -469,13 +450,14 @@ public class IIManualMachineRecipe extends IIManualObject
 		{
 			case SLOT:
 			{
-				ItemStack stack = ItemStack.EMPTY;
-				if(data instanceof ItemStack)
-					stack = (ItemStack)data;
-				else if(data instanceof IngredientStack)
-					stack = ((IngredientStack)data).getRandomizedExampleStack(mc.world.getTotalWorldTime());
+				ItemStack stack = IIRecipeLayout.getDisplayedItem(data, mc.world.getTotalWorldTime());
 				if(!stack.isEmpty())
-					return this.gui.getItemToolTip(stack);
+				{
+					tooltip.addAll(this.gui.getItemToolTip(stack));
+					if(hoveredComponent.isToolSlot())
+						tooltip.add(net.minecraft.client.resources.I18n.format("desc.immersiveintelligence.recipe.tool_slot"));
+					return tooltip;
+				}
 			}
 			break;
 			case FLUID_TANK:
@@ -501,6 +483,8 @@ public class IIManualMachineRecipe extends IIManualObject
 			{
 				switch(hoveredComponent.getSubtype())
 				{
+					case "note":
+						break;
 					case "time":
 						tooltip.add("Processing Time");
 						tooltip.add(TextFormatting.GRAY+""+recipe.getTotalProcessTime()+" ticks");

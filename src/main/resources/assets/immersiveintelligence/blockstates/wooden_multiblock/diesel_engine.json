@@ -1,0 +1,88 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "transform": "forge:default-block",
+    "custom": {
+      "flip-v": true
+    },
+    "textures": {
+      "particle": "immersiveengineering:blocks/storage_steel"
+    }
+  },
+  "variants": {
+    "inventory,type=diesel_engine": [
+      {
+        "model": "immersiveintelligence:multiblock/diesel_engine/diesel_engine_inv.obj",
+        "transform": {
+          "scale": 0.25,
+          "translation": [0, -0.17187, 0],
+          "rotation": [
+            {
+              "x": 23
+            },
+            {
+              "y": -58
+            }
+          ]
+        }
+      }
+    ],
+    "type": {
+      "diesel_engine": {}
+    },
+    "facing": {
+      "north": {
+        "transform": {
+          "rotation": {
+            "y": 180
+          }
+        }
+      },
+      "south": {
+        "transform": {
+          "rotation": {
+            "y": 0
+          }
+        }
+      },
+      "west": {
+        "transform": {
+          "rotation": {
+            "y": -90
+          }
+        }
+      },
+      "east": {
+        "transform": {
+          "rotation": {
+            "y": 90
+          }
+        }
+      }
+    },
+    "_0multiblockslave": {
+      "false": {},
+      "true": {
+        "model": "immersiveengineering:ie_empty"
+      }
+    },
+    "_1dynamicrender": {
+      "false": {},
+      "true": {
+        "model": "immersiveintelligence:multiblock/diesel_engine/diesel_engine.obj.ie"
+      }
+    },
+    "boolean0": {
+      "false": {
+        "model": "immersiveintelligence:multiblock/diesel_engine/diesel_engine_base.obj"
+      },
+      "true": {
+        "model": "immersiveintelligence:multiblock/diesel_engine/diesel_engine_flipped.obj"
+      }
+    },
+    "boolean1": {
+      "false": {},
+      "true": {}
+    }
+  }
+}

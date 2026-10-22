@@ -10,9 +10,7 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.ISkycrateMount;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.wooden.ModelSkyCrate;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.wooden.ModelSkyCrateElectric;
-import pl.pabilo8.immersiveintelligence.client.util.tmt.TmtUtil;
 import pl.pabilo8.immersiveintelligence.common.entity.EntitySkyCrate;
-import pl.pabilo8.immersiveintelligence.common.item.ItemIISkycrateMount;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -42,11 +40,11 @@ public class SkyCrateRenderer extends Render<EntitySkyCrate>
 
 		GlStateManager.translate(x, y, z);
 
-		if(entity.mount.getItem() instanceof ItemIISkycrateMount)
+		if(entity.mount.getItem() instanceof ISkycrateMount)
 		{
 			GlStateManager.scale(0.85, 0.85, 0.85);
 			GlStateManager.translate(0, -1.125, 0);
-			GlStateManager.rotate(180.0F-TmtUtil.TMTToAngle(entity.rotationYaw), 0.0F, 1.0F, 0.0F);
+			GlStateManager.rotate(180.0F-entityYaw, 0.0F, 1.0F, 0.0F);
 			ISkycrateMount mount = (ISkycrateMount)entity.mount.getItem();
 			mount.render(entity.mount, entity.world, partialTicks, entity.energy);
 			GlStateManager.translate(0, 0.5, 0);

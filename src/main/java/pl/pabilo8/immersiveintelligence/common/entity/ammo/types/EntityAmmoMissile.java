@@ -14,11 +14,14 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import javax.vecmath.Vector2f;
 
 /**
+ * Keeps a missile loaded and applies its booster physics.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 06.10.2026
  * @ii-approved 0.3.1
  * @since 02.02.2024
  */
-public class EntityAmmoMissile extends EntityAmmoProjectile
+public class EntityAmmoMissile extends EntityAmmoChunkLoadingProjectile
 {
 	public static final int BOOSTER_TIME = 100;
 	@SyncNBT(events = SyncEvents.ENTITY_COLLISION)
@@ -68,7 +71,7 @@ public class EntityAmmoMissile extends EntityAmmoProjectile
 		super.onUpdate();
 
 		//Missile jet particles
-		if(!world.isRemote&&isBoosterActive())
+		if(!world.isRemote&&!isDead&&isBoosterActive())
 			IIPacketHandler.sendToClient(new MessageParticleEffect("ammo/rocket_smoke", world, getPositionVector(), Vec3d.ZERO, new Vector2f(),
 					EasyNBT.newNBT().withVec3d("stretch", new Vec3d(prevPosX, prevPosY, prevPosZ)))
 			);

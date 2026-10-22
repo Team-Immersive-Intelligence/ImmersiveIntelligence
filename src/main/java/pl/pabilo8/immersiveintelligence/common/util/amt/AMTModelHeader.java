@@ -31,13 +31,15 @@ public class AMTModelHeader
 	private final HashMap<String, Vec3d> offsets;
 	private final HashMap<String, EasyNBT> properties;
 	private final HashMap<String, Matrix4> transforms;
+	private final HashMap<String, String> types;
 
 	public AMTModelHeader(JsonObject json)
 	{
-		offsets = new HashMap<>();
-		hierarchy = new HashMap<>();
-		properties = new HashMap<>();
-		transforms = new HashMap<>();
+		this.offsets = new HashMap<>();
+		this.hierarchy = new HashMap<>();
+		this.properties = new HashMap<>();
+		this.transforms = new HashMap<>();
+		this.types = new HashMap<>();
 
 		//get origins, if not contained Vec3D.ZERO will be used
 		if(json.has("origins"))
@@ -125,18 +127,20 @@ public class AMTModelHeader
 	 */
 	public AMTModelHeader(@Nullable AMTModelHeader... headers)
 	{
-		hierarchy = new HashMap<>();
-		offsets = new HashMap<>();
-		properties = new HashMap<>();
-		transforms = new HashMap<>();
+		this.hierarchy = new HashMap<>();
+		this.offsets = new HashMap<>();
+		this.properties = new HashMap<>();
+		this.transforms = new HashMap<>();
+		this.types = new HashMap<>();
 
 		if(headers!=null)
 			for(AMTModelHeader h : headers)
 			{
-				hierarchy.putAll(h.hierarchy);
-				offsets.putAll(h.offsets);
-				properties.putAll(h.properties);
-				transforms.putAll(h.transforms);
+				this.hierarchy.putAll(h.hierarchy);
+				this.offsets.putAll(h.offsets);
+				this.properties.putAll(h.properties);
+				this.transforms.putAll(h.transforms);
+				this.types.putAll(h.types);
 			}
 
 	}

@@ -7,7 +7,6 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -30,6 +29,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.EntityIIChe
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.TargetCoordinateReference;
+import pl.pabilo8.immersiveintelligence.common.util.fluid.FilteredFluidTank;
 import pl.pabilo8.immersiveintelligence.common.util.gun.ChillingState;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
 
@@ -41,15 +41,15 @@ import java.util.Arrays;
  * Implements direct Platform-fluid firing and Base-to-Platform supply for the Heavy Chemthrower.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 27.09.2026
+ * @updated 07.10.2026
  * @since 01.01.2026
  */
 public class EmplacementWeaponHeavyChemthrower extends EmplacementWeaponTurretBase
 {
 	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.WEAPON_MISC})
-	public FluidTank baseTank = new FluidTank(HeavyChemthrower.tankCapacity);
+	public FilteredFluidTank baseTank = new FilteredFluidTank(HeavyChemthrower.tankCapacity);
 	@SyncNBT(name = "tank", events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.WEAPON_MISC, SyncEvents.WEAPON_RELOAD})
-	public FluidTank platformTank = new FluidTank(HeavyChemthrower.tankCapacity);
+	public FilteredFluidTank platformTank = new FilteredFluidTank(HeavyChemthrower.tankCapacity);
 	@SyncNBT(events = SyncEvents.WEAPON_MISC)
 	public boolean shouldIgnite = true;
 

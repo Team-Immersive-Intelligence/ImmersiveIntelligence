@@ -52,8 +52,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
+ * Applies projectile physics, collision effects, and flight state persistence.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 08.09.2026
+ * @updated 06.10.2026
  * @ii-approved 0.3.1
  * @since 02.02.2024
  */
@@ -188,7 +190,7 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 	{
 		super.onUpdate();
 
-		if(world.isRemote&&!clientLoaded)
+		if(isDead||(world.isRemote&&!clientLoaded))
 			return;
 
 		//Yep, that's it, that's the entire motion code
@@ -617,11 +619,21 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 		EasyNBT nbt = EasyNBT.wrapNBT(compound);
 
 		this.baseMotion = nbt.getVec3d("base_motion");
+		if(compound.hasKey("velocity"))
+			this.velocity = nbt.getFloat("velocity");
+		if(compound.hasKey("gravity_motion_y"))
+			this.gravityMotionY = nbt.getDouble("gravity_motion_y");
+		if(compound.hasKey("penetration_depth"))
+			this.penetrationDepth = nbt.getFloat("penetration_depth");
+		this.velocityModifier = compound.hasKey("velocity_modifier")?nbt.getFloat("velocity_modifier"): 1;
+		if(compound.hasKey("ticks_existed"))
+			this.ticksExisted = Math.max(0, nbt.getInt("ticks_existed"));
 		this.rotationYaw = nbt.getFloat("yaw");
 		this.rotationPitch = nbt.getFloat("pitch");
 		this.ignoredEntities = nbt.streamList(NBTTagInt.class, "ignored_entities", EasyNBT.TAG_INT)
 				.map(NBTTagInt::getInt)
 				.map(world::getEntityByID)
+				.filter(entity -> entity!=null)
 				.collect(Collectors.toSet());
 		this.ignoredPositions = nbt.streamList(NBTTagIntArray.class, "ignored_pos", EasyNBT.TAG_INT_ARRAY)
 				.map(NBTTagIntArray::getIntArray)
@@ -637,10 +649,16 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 		super.writeEntityToNBT(compound);
 		EasyNBT nbt = EasyNBT.wrapNBT(compound);
 		nbt.withVec3d("base_motion", baseMotion);
+		nbt.withFloat("velocity", velocity);
+		nbt.withDouble("gravity_motion_y", gravityMotionY);
+		nbt.withFloat("penetration_depth", penetrationDepth);
+		nbt.withFloat("velocity_modifier", velocityModifier);
+		nbt.withInt("ticks_existed", ticksExisted);
 		nbt.withFloat("yaw", rotationYaw);
 		nbt.withFloat("pitch", rotationPitch);
 		if(ignoredEntities!=null&&!ignoredEntities.isEmpty())
-			nbt.withList("ignored_entities", e -> new NBTTagInt(e.getEntityId()), ignoredEntities);
+			nbt.withList("ignored_entities", e -> new NBTTagInt(e.getEntityId()),
+					ignoredEntities.stream().filter(entity -> entity!=null).collect(Collectors.toList()));
 		if(ignoredPositions!=null&&!ignoredPositions.isEmpty())
 			nbt.withList("ignored_pos", e -> new NBTTagIntArray(new int[]{e.getX(), e.getY(), e.getZ()}), ignoredPositions);
 	}

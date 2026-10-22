@@ -1,0 +1,30 @@
+# Made by Pabilo8 with Blockbench
+
+newmtl common_thingies
+map_Kd immersiveintelligence:blocks/common/common_thingies
+newmtl common_machinebase
+map_Kd immersiveintelligence:blocks/common/common_machinebase
+newmtl common_steel_norivets
+map_Kd immersiveintelligence:blocks/common/common_steel_norivets
+newmtl common_steel
+map_Kd immersiveintelligence:blocks/common/common_steel
+newmtl common_rough_steel
+map_Kd immersiveintelligence:blocks/common/common_rough_steel
+newmtl common_bottom
+map_Kd immersiveintelligence:blocks/common/common_bottom
+newmtl common_cable_and_pipe
+map_Kd immersiveintelligence:blocks/common/common_cable_and_pipe
+newmtl vulcanizer_base1
+map_Kd immersiveintelligence:blocks/multiblock/vulcanizer/vulcanizer_base1
+newmtl vulcanizer_base2
+map_Kd immersiveintelligence:blocks/multiblock/vulcanizer/vulcanizer_base2
+newmtl vulcanizer_base3
+map_Kd immersiveintelligence:blocks/multiblock/vulcanizer/vulcanizer_base3
+newmtl vulcanizer_base4
+map_Kd immersiveintelligence:blocks/multiblock/vulcanizer/vulcanizer_base4
+newmtl latex_strip
+map_Kd immersiveintelligence:blocks/multiblock/vulcanizer/latex_strip
+newmtl rubber_strip
+map_Kd immersiveintelligence:blocks/multiblock/vulcanizer/rubber_strip
+newmtl wheel_12
+map_Kd immersiveintelligence:entity/vehicle/suspension/wheel_12

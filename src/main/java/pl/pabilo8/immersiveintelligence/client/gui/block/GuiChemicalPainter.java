@@ -106,6 +106,6 @@ public class GuiChemicalPainter extends DecoTileGui<TileEntityChemicalPainter, C
 	@Method(modid = "jei")
 	public void onInitJEICompat()
 	{
-		JEIHelper.addRecipesDecoGuiLink(this.imageProgress, "ii.painting");
+		JEIHelper.addRecipesDecoGuiLink(this.imageProgress, "ii.chemical_painter");
 	}
 }

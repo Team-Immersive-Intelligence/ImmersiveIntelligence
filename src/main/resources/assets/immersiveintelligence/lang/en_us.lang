@@ -338,14 +338,14 @@ desc.immersiveintelligence.toolupgrade.engineer_gear=Combines the effects of Inf
 desc.immersiveintelligence.toolupgrade.steel_armor_plates=Slightly increase armor thickness. Can deflect arrows and other light projectiles. Up to 3 can be installed per one armor piece.
 desc.immersiveintelligence.toolupgrade.composite_armor_plates=Significantly increase armor thickness. Deflects projectiles and damages enemy melee weapons when they aren't capable of dealing enough damage to armor wearer. Up to 3 can be installed per one armor piece.
 desc.immersiveintelligence.toolupgrade.hazmat_coating=Makes the armor resistant to radiation and corrosion.
-desc.immersiveintelligence.toolupgrade.heat_resistant_coating=When combined with reinforced boots, allows for swimming in hot liquids.
+desc.immersiveintelligence.toolupgrade.heat_resistant_coating=Makes the wearer fireproof. When combined with reinforced boots, allows for swimming in hot liquids.
 desc.immersiveintelligence.toolupgrade.anti_static_mesh=Makes wearer immune to electric damage and makes proximity fuses unable to target it. Very sensitive to electric damage under water.
 desc.immersiveintelligence.toolupgrade.camouflage_mesh=Makes wearer invisible when sneaking through foliage. Sensitive to fire.
 desc.immersiveintelligence.toolupgrade.infrared_absorbing_mesh=Makes wearer invisible to infrared-based devices. Sensitive to EMP.
 desc.immersiveintelligence.toolupgrade.scuba_tank=Can be filled with oxygen for breathing underwater. Requires a Gas Mask to work.
 desc.immersiveintelligence.toolupgrade.helipack=Allows slow, albeit stable flight. Requires gasoline.
 desc.immersiveintelligence.toolupgrade.exoskeleton=Allows faster running. Requires energy to operate.
-desc.immersiveintelligence.toolupgrade.boot_reinforcement=Makes wearer immune to fire damage. When combined with Heat-Resistant Coating, allows the wearer to swim in hot liquids.
+desc.immersiveintelligence.toolupgrade.boot_reinforcement=Makes wearer immune to damage from magma blocks. When combined with Heat-Resistant Coating, allows the wearer to swim in hot liquids.
 desc.immersiveintelligence.toolupgrade.snow_rackets=Increases walk speed on snow and stability on ice.
 desc.immersiveintelligence.toolupgrade.flippers=Allows faster movement in water.
 desc.immersiveintelligence.toolupgrade.internal_springs=Protects wearer from falling damage. Silences wearer's steps.
@@ -732,6 +732,8 @@ tile.immersiveintelligence.wooden_multiblock.skycrate_station.name=SkyCrate Stat
 tile.immersiveintelligence.wooden_multiblock.skycart_station.name=SkyCart Station
 tile.immersiveintelligence.wooden_multiblock.skycrate_post.name=SkyCrate Post
 tile.immersiveintelligence.wooden_multiblock.sawmill.name=Sawmill
+tile.immersiveintelligence.wooden_multiblock.diesel_engine.name=Diesel Engine
+ii.gui.diesel_engine.ratio.tooltip=Trade speed for torque. Changes apply when you close the controls.
 tile.immersiveintelligence.metal_multiblock.data_input_machine.name=Data Input Machine
 tile.immersiveintelligence.metal_multiblock.arithmetic_logic_machine.name=Arithmetic-Logic Machine
 tile.immersiveintelligence.metal_multiblock.radio_station.name=Radio Station
@@ -1009,6 +1011,7 @@ entity.minecart_metal_barrel.name=Minecart with Metal Barrel
 entity.minecart_capacitor_lv.name=Minecart with LV Capacitor
 entity.minecart_capacitor_mv.name=Minecart with MV Capacitor
 entity.minecart_capacitor_hv.name=Minecart with HV Capacitor
+entity.minecart_capacitor.name=Minecart with HV Capacitor
 entity.minecart_capacitor_creative.name=Minecart with Creative Capacitor
 #Immersive Technology Compat
 entity.minecart_crate_creative.name=Minecart with Creative Storage Crate
@@ -1017,23 +1020,40 @@ entity.minecart_steel_barrel.name=Minecart with Steel Barrel
 entity.minecart_open_barrel.name=Minecart with Open Metal Barrel
 
 entity.skycrate.name=Skycrate
+entity.skycrate_internal.name=Skycrate Internal Part
 
 entity.bullet.name=Bullet
+entity.projectile.name=Projectile
+entity.artillery_projectile.name=Artillery Projectile
+entity.grenade.name=Grenade
+entity.missile.name=Missile
+entity.guided_missile.name=Guided Missile
+entity.naval_mine.name=Naval Mine
+entity.naval_mine_anchor.name=Naval Mine Anchor
 entity.shrapnel.name=Shrapnel
 entity.flare.name=Flare
 entity.gas_cloud.name=Gas Cloud
 entity.white_phosphorus.name=White Phosphorus Explosion
 entity.atomic_boom.name=Nuclear Explosion
+entity.chemthrower_shot.name=Chemical Thrower Shot
+entity.emplacement_smoke.name=Emplacement Smoke
 
 entity.machinegun.name=Machinegun
 entity.mortar.name=Mortar
 entity.motorbike.name=Motorbike
+entity.tracked_motorbike.name=Tracked Motorbike
 entity.wheel.name=Wheel
 entity.seat.name=Seat
 entity.field_howitzer.name=Field Howitzer
+entity.field_flak.name=Field Flak
+entity.field_gun.name=Field Gun
 entity.tripod_periscope.name=Tripod Periscope
 
 entity.hans.name=Hans
+entity.parachute.name=Parachute
+entity.drone.name=Drone
+entity.tactile.name=Tactile
+entity.tactile_living.name=Tactile
 
 #Skins
 skin.immersiveintelligence.anno_1880.name=Anno 1880
@@ -1203,6 +1223,9 @@ machineupgrade.immersiveintelligence.packer_railway.desc=Replaces the Packer's c
 
 machineupgrade.immersiveintelligence.packer_naming=Naming Stamp
 machineupgrade.immersiveintelligence.packer_naming.desc=Allows the Packer to name the loaded containers, can use filters and data.
+
+machineupgrade.immersiveintelligence.weather_anomaly_detectors=Weather Anomaly Detectors
+machineupgrade.immersiveintelligence.weather_anomaly_detectors.desc=Detects local weather anomalies and sends their relative positions through data.
 
 machineupgrade.immersiveintelligence.radio_locators=Radio Locators
 machineupgrade.immersiveintelligence.radio_locators.desc=Allows the Radar to detect radio signals and compute points of their origin. Increases the amount of energy required to operate.
@@ -1380,7 +1403,6 @@ desc.immersiveintelligence.diplomacy.rolename.owner=Owner
 desc.immersiveintelligence.diplomacy.rolename.trusted=Trusted
 
 desc.immersiveintelligence.diplomacy.rolename.member=Member
-desc.immersiveintelligence.diplomacy.rolename.citizen=Citizen
 
 desc.immersiveintelligence.diplomacy.rolename.ceo=CEO
 desc.immersiveintelligence.diplomacy.rolename.cfo=CFO
@@ -1393,13 +1415,11 @@ desc.immersiveintelligence.diplomacy.rolename.minister=Minister
 desc.immersiveintelligence.diplomacy.rolename.representative=Representative
 #desc.immersiveintelligence.diplomacy.rolename.citizen=
 
-#desc.immersiveintelligence.diplomacy.rolename.member=
-
 desc.immersiveintelligence.diplomacy.rolename.supreme_commissar=Supreme Commissar
 desc.immersiveintelligence.diplomacy.rolename.comissar=Commissar
 desc.immersiveintelligence.diplomacy.rolename.officer=Officer
 desc.immersiveintelligence.diplomacy.rolename.enforcer=Enforcer
-#desc.immersiveintelligence.diplomacy.rolename.citizen=
+desc.immersiveintelligence.diplomacy.rolename.citizen=Citizen
 desc.immersiveintelligence.diplomacy.rolename.sub_citizen=Second-Class Citizen
 
 desc.immersiveintelligence.diplomacy.rolename.mayor=Mayor
@@ -1626,6 +1646,7 @@ desc.immersiveintelligence.bullets.core=Fitted with %1$s %2$s Core
 desc.immersiveintelligence.bullets.fuse=%s Fuse
 desc.immersiveintelligence.bullets.mass=Mass: %s
 desc.immersiveintelligence.bullets.component_slots=Free Component Slots: %s
+desc.immersiveintelligence.bullets.no_component_slots=No available component slots.
 desc.immersiveintelligence.bullets.caliber=Caliber: %s bCal
 
 desc.immersiveintelligence.bullets.components=Components:
@@ -1642,7 +1663,15 @@ desc.immersiveintelligence.bullets.armor_penetration=Armor Penetration:
 desc.immersiveintelligence.bullet_magazine.remaining=Remaining Bullets: %s
 desc.immersiveintelligence.bullet_magazine.empty=Empty
 
+# Recipe layout information
+desc.immersiveintelligence.recipe.tool_slot=Tool item, it will be damaged in the process.
 desc.immersiveintelligence.jei.washing_recipe=Chemical Washing
+desc.immersiveintelligence.jei.projectile_workshop_recipe=Projectile Workshop
+desc.immersiveintelligence.jei.projectile_filling_recipe=Projectile Filling
+desc.immersiveintelligence.recipe.filling=Requires Core Filler
+desc.immersiveintelligence.recipe.filling_inserter=Requires Core Filler and Inserter
+desc.immersiveintelligence.recipe.component_units=%s units, %s per item
+desc.immersiveintelligence.recipe.fluid_component_units=%s component units
 
 #Potion effects
 potion.immersiveintelligence.suppression=Suppressed
@@ -3713,6 +3742,10 @@ ii.gui.emplacement.target.shells=Shells
 ii.gui.emplacement.target.team=Team
 ii.gui.emplacement.target.name=Name
 
+ii.gui.map_display.zoom_in=Zoom in
+ii.gui.map_display.zoom_out=Zoom out
+ii.gui.map_display.center=Center
+
 ii.gui.map_display.color_mapper.terrain=Terrain
 ii.gui.map_display.color_mapper.grayscale=Grayscale
 ii.gui.map_display.color_mapper.topographic=Topographic
@@ -3929,6 +3962,13 @@ ii.gui_tooltip.widget.style.main.multiblock=multiblock
 ii.gui_tooltip.widget.style.main.vehicle=vehicle
 ii.gui_tooltip.widget.style.main.entity=entity
 ii.gui_tooltip.widget.style.style=Style
+ii.gui_tooltip.widget.style.style_names.sandbags=Sandbags
+ii.gui_tooltip.widget.style.style_names.wooden=Wooden
+ii.gui_tooltip.widget.style.style_names.steel=Steel
+ii.gui_tooltip.widget.style.style_names.bricks=Bricks
+ii.gui_tooltip.widget.style.style_names.concrete=Concrete
+ii.gui_tooltip.widget.style.style_names.naval=Naval
+
 ii.gui_tooltip.widget.style.color=Color
 ii.gui_tooltip.widget.ownership.show=Show Ownership Data
 ii.gui_tooltip.widget.ownership.hide=Hide Ownership Data
@@ -4141,4 +4181,3 @@ item.banner.immersiveintelligence_infrared_helmet.magenta=Magenta Infrared Helme
 item.banner.immersiveintelligence_infrared_helmet.orange=Orange Infrared Helmet
 item.banner.immersiveintelligence_infrared_helmet.white=White Infrared Helmet
 
-# Banners

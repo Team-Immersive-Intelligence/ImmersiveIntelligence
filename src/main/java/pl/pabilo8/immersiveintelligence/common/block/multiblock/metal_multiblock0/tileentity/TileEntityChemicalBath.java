@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity;
 
-import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
 import blusunrize.immersiveengineering.api.tool.ChemthrowerHandler;
 import blusunrize.immersiveengineering.api.tool.ChemthrowerHandler.ChemthrowerEffect;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IPlayerInteraction;
@@ -14,23 +13,23 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import pl.pabilo8.immersiveintelligence.api.crafting.BathingRecipe;
+import pl.pabilo8.immersiveintelligence.api.crafting.ChemicalBathRecipe;
 import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIMultiblockRecipe;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedTextOverlay;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.ChemicalBath;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockChemicalBath;
+import pl.pabilo8.immersiveintelligence.common.util.IIEnergyStorage;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
+import pl.pabilo8.immersiveintelligence.common.util.fluid.FilteredFluidTank;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionSingle;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
@@ -38,16 +37,18 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
+ * Processes items in a fluid bath.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 11.12.2025
+ * @updated 07.10.2026
  * @ii-approved 0.3.1
  * @since 28.06.2019
  */
-public class TileEntityChemicalBath extends TileEntityMultiblockProductionSingle<TileEntityChemicalBath, BathingRecipe>
+public class TileEntityChemicalBath extends TileEntityMultiblockProductionSingle<TileEntityChemicalBath, ChemicalBathRecipe>
 		implements IPlayerInteraction, IAdvancedTextOverlay
 {
 	@SyncNBT(events = {SyncEvents.TILE_CUSTOM1, SyncEvents.TILE_RECIPE_CHANGED})
-	public FluidTank tank;
+	public FilteredFluidTank tank;
 	private IItemHandler inputHandler = getSingleInventoryHandler(MultiblockChemicalBath.ITEM_IN, true, true);
 	private IItemHandler outputHandler = getSingleInventoryHandler(MultiblockChemicalBath.ITEM_OUT, true, true);
 
@@ -55,8 +56,8 @@ public class TileEntityChemicalBath extends TileEntityMultiblockProductionSingle
 	{
 		super(MultiblockChemicalBath.INSTANCE);
 		this.inventory = NonNullList.withSize(4, ItemStack.EMPTY);
-		this.tank = new FluidTank(ChemicalBath.fluidCapacity);
-		this.energyStorage = new FluxStorageAdvanced(ChemicalBath.energyCapacity);
+		this.tank = new FilteredFluidTank(ChemicalBath.fluidCapacity);
+		this.energyStorage = new IIEnergyStorage(ChemicalBath.energyCapacity);
 	}
 
 	@Override
@@ -79,7 +80,7 @@ public class TileEntityChemicalBath extends TileEntityMultiblockProductionSingle
 			//Handle buckets
 			boolean updateTank = IIUtils.handleBucketTankInteraction(tank, inventory,
 					MultiblockChemicalBath.BUCKET_IN, MultiblockChemicalBath.BUCKET_OUT, true,
-					BathingRecipe::isValidFluid
+					ChemicalBathRecipe::isValidFluid
 			);
 
 			attemptStackOutput(outputHandler, getDirection("item_output"), getPOI(MultiblockPOI.ITEM_OUTPUT));
@@ -102,7 +103,7 @@ public class TileEntityChemicalBath extends TileEntityMultiblockProductionSingle
 	}
 
 	@Override
-	protected IIMultiblockProcess<BathingRecipe> findNewProductionProcess()
+	protected IIMultiblockProcess<ChemicalBathRecipe> findNewProductionProcess()
 	{
 		if(getRedstoneAtPos(0))
 			return null;
@@ -110,7 +111,7 @@ public class TileEntityChemicalBath extends TileEntityMultiblockProductionSingle
 			return null;
 
 		//Find recipe
-		BathingRecipe found = IIMultiblockRecipe.streamRecipes(BathingRecipe.class)
+		ChemicalBathRecipe found = IIMultiblockRecipe.streamRecipes(ChemicalBathRecipe.class)
 				.filter(r -> r.itemInput.matchesItemStack(this.inventory.get(MultiblockChemicalBath.ITEM_IN)))
 				.filter(r -> r.fluidInput.equals(this.tank.drain(r.fluidInput, false)))
 				.findFirst()
@@ -120,37 +121,33 @@ public class TileEntityChemicalBath extends TileEntityMultiblockProductionSingle
 
 		//Drain inputs
 		this.tank.drain(found.fluidInput, true);
-		this.inputHandler.extractItem(0, found.itemInput.inputSize, false);
+		ItemStack displayInput = this.inputHandler.extractItem(0, found.itemInput.inputSize, false);
 
-		return new IIMultiblockProcess<>(found);
+		//Store the consumed stack for the production animation.
+		return new IIMultiblockProcess<>(found).withNBT(nbt -> nbt.withItemStack("displayInput", displayInput));
 	}
 
 	@Override
-	protected IIMultiblockProcess<BathingRecipe> getProcessByName(String name)
+	protected IIMultiblockProcess<ChemicalBathRecipe> getProcessByName(String name)
 	{
-		BathingRecipe recipe = IIMultiblockRecipe.getRecipe(BathingRecipe.class, name);
+		ChemicalBathRecipe recipe = IIMultiblockRecipe.getRecipe(ChemicalBathRecipe.class, name);
 		return recipe==null?null: new IIMultiblockProcess<>(recipe);
 	}
 
 	@Override
-	public float getProductionStep(IIMultiblockProcess<BathingRecipe> process, boolean simulate)
+	public float getProductionStep(IIMultiblockProcess<ChemicalBathRecipe> process, boolean simulate)
 	{
-		if(getRedstoneAtPos(0))
-			return 0f;
-		if(energyStorage.extractEnergy(process.recipe.getEnergyPerTick(), true) < process.recipe.getEnergyPerTick())
-			return 0;
-		energyStorage.extractEnergy(process.recipe.getEnergyPerTick(), simulate);
-		return 1f;
+		return energyStorage.tryConsumeEnergy(process.recipe.getEnergyPerTick(), simulate)?1: 0;
 	}
 
 	@Override
-	protected boolean attemptProductionOutput(IIMultiblockProcess<BathingRecipe> process)
+	protected boolean attemptProductionOutput(IIMultiblockProcess<ChemicalBathRecipe> process)
 	{
 		return this.outputHandler.insertItem(0, process.recipe.itemOutput, true).isEmpty();
 	}
 
 	@Override
-	protected void onProductionFinish(IIMultiblockProcess<BathingRecipe> process)
+	protected void onProductionFinish(IIMultiblockProcess<ChemicalBathRecipe> process)
 	{
 		this.outputHandler.insertItem(0, process.recipe.itemOutput, false);
 	}
@@ -190,8 +187,8 @@ public class TileEntityChemicalBath extends TileEntityMultiblockProductionSingle
 	{
 		return switch(slot)
 		{
-			case MultiblockChemicalBath.ITEM_IN -> IIMultiblockRecipe.streamRecipes(BathingRecipe.class)
-					.anyMatch(r -> r.itemInput.matchesItemStack(stack));
+			case MultiblockChemicalBath.ITEM_IN -> IIMultiblockRecipe.streamRecipes(ChemicalBathRecipe.class)
+					.anyMatch(r -> r.itemInput.matchesItemStackIgnoringSize(stack));
 			case MultiblockChemicalBath.BUCKET_IN -> stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
 			case MultiblockChemicalBath.ITEM_OUT, MultiblockChemicalBath.BUCKET_OUT -> true;
 			default -> false;
@@ -202,19 +199,16 @@ public class TileEntityChemicalBath extends TileEntityMultiblockProductionSingle
 	public boolean interact(@Nonnull EnumFacing side, @Nonnull EntityPlayer player, @Nonnull EnumHand hand,
 							@Nonnull ItemStack heldItem, float hitX, float hitY, float hitZ)
 	{
-		if(!world.isRemote&&this.isPOI("tank_bucket"))
+		if(this.isPOI("tank_bucket"))
 		{
 			TileEntityChemicalBath master = master();
 			if(master==null)
 				return false;
 
-			//Check for bucket interaction
-			if(heldItem.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null))
-				if(FluidUtil.interactWithFluidHandler(player, hand, master.tank))
-				{
-					master.updateTileForEvent(SyncEvents.TILE_CUSTOM1);
-					return true;
-				}
+			return !master.tank.interactWithItem(player, hand, heldItem, () -> {
+				master.markDirty();
+				master.updateTileForEvent(SyncEvents.TILE_CUSTOM1);
+			});
 		}
 
 		return false;

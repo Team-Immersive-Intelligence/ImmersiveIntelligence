@@ -11,6 +11,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Tuple;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
@@ -33,6 +34,7 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 /**
@@ -284,6 +286,16 @@ public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extend
 	}
 
 	//--- Misc ---//
+
+	@Nonnull
+	@Override
+	public String getName()
+	{
+		if(hasCustomName()||ammoType==null)
+			return super.getName();
+		String key = "item.immersiveintelligence."+ammoType.getName().toLowerCase(Locale.ROOT)+".bullet.name";
+		return I18n.canTranslate(key)?I18n.translateToLocal(key): super.getName();
+	}
 
 	@Override
 	public boolean isBurning()

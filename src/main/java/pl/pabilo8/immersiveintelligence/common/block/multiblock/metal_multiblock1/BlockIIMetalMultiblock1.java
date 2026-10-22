@@ -4,9 +4,7 @@ import blusunrize.immersiveengineering.api.IEProperties;
 import blusunrize.immersiveengineering.client.models.IOBJModelCallback;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumBlockRenderType;
 import net.minecraftforge.common.property.Properties;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.BlockIIMetalMultiblock1.MetalMultiblocks1;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.*;
@@ -34,18 +32,9 @@ public class BlockIIMetalMultiblock1 extends BlockIIMultiblock<MetalMultiblocks1
 		setHardness(3.0F);
 		setResistance(15.0F);
 
-		addToTESRMap(MetalMultiblocks1.VULCANIZER);
 		setBlockLayer(BlockRenderLayer.CUTOUT);
 		setSubBlockLayer(MetalMultiblocks1.REDSTONE_DATA_INTERFACE, BlockRenderLayer.SOLID, BlockRenderLayer.CUTOUT);
 		setSubBlockLayer(MetalMultiblocks1.FLAGPOLE, BlockRenderLayer.SOLID, BlockRenderLayer.CUTOUT);
-	}
-
-	@Deprecated
-	public EnumBlockRenderType getRenderType(IBlockState state)
-	{
-		if(state.getValue(property)==MetalMultiblocks1.VULCANIZER)
-			return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
-		return EnumBlockRenderType.MODEL;
 	}
 
 	public enum MetalMultiblocks1 implements IITileMultiblockEnum
@@ -90,6 +79,7 @@ public class BlockIIMetalMultiblock1 extends BlockIIMultiblock<MetalMultiblocks1
 		@IIBlockProperties(needsCustomState = true)
 		@EnumMultiblockProvider(multiblock = MultiblockChemicalPainter.class, tile = TileEntityChemicalPainter.class)
 		CHEMICAL_PAINTER,
+		@IIBlockProperties(needsCustomState = true)
 		@EnumMultiblockProvider(multiblock = MultiblockVulcanizer.class, tile = TileEntityVulcanizer.class)
 		VULCANIZER,
 

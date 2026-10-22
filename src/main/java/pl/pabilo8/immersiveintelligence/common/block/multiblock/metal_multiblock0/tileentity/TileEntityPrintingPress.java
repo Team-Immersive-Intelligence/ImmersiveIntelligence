@@ -1,9 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity;
 
-import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IPlayerInteraction;
 import blusunrize.immersiveengineering.common.util.Utils;
-import blusunrize.immersiveengineering.common.util.inventory.MultiFluidTank;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -16,7 +14,6 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
@@ -42,10 +39,12 @@ import pl.pabilo8.immersiveintelligence.common.entity.tactile.EntityAMTTactile;
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileManager;
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileManager.ITactileListener;
 import pl.pabilo8.immersiveintelligence.common.util.IIDamageSources;
+import pl.pabilo8.immersiveintelligence.common.util.IIEnergyStorage;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyCollection;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
+import pl.pabilo8.immersiveintelligence.common.util.fluid.FilteredMultiFluidTank;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionMulti;
 
 import javax.annotation.Nonnull;
@@ -53,14 +52,14 @@ import javax.annotation.Nullable;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 13.12.2023
+ * @updated 07.10.2026
  * @since 28.06.2019
  */
 public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti<TileEntityPrintingPress, PrintingRecipe>
 		implements ITactileListener, IPlayerInteraction, IAdvancedTextOverlay, IManagedUpgradableDevice<TileEntityPrintingPress>
 {
 	@SyncNBT(time = 40, events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_RECIPE_CHANGED})
-	public MultiFluidTank tank;
+	public FilteredMultiFluidTank tank;
 	@SyncNBT(name = "upgrades", events = SyncEvents.TILE_UPGRADES_MODIFIED)
 	public UpgradeManager<TileEntityPrintingPress> upgradeManager;
 
@@ -73,8 +72,8 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 	public TileEntityPrintingPress()
 	{
 		super(MultiblockPrintingPress.INSTANCE);
-		this.tank = new MultiFluidTank(8000);
-		this.energyStorage = new FluxStorageAdvanced(PrintingPress.energyCapacity);
+		this.tank = new FilteredMultiFluidTank(8000);
+		this.energyStorage = new IIEnergyStorage(PrintingPress.energyCapacity);
 		this.inventory = NonNullList.withSize(4, ItemStack.EMPTY);
 		this.printRequestsQueue = new EasyCollection<>(PrintingRequest::new);
 		this.upgradeManager = new UpgradeManager<>(this);
@@ -178,7 +177,8 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 		switch(slot)
 		{
 			case MultiblockPrintingPress.SLOT_PAPER:
-				return Utils.compareToOreName(stack, "pageEmpty");
+				return IIMultiblockRecipe.streamRecipes(PrintingRecipe.class)
+						.anyMatch(recipe -> recipe.getInput().matchesItemStackIgnoringSize(stack));
 			case MultiblockPrintingPress.SLOT_OUTPUT:
 				return Utils.compareToOreName(stack, "pageWritten")||Utils.compareToOreName(stack, "pageEmpty");
 			case MultiblockPrintingPress.SLOT_BUCKET_IN:
@@ -210,13 +210,14 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 			return null;
 		PrintingRequest found = printRequestsQueue.get(0);
 
-		ItemStack input = inputHandler.extractItem(MultiblockPrintingPress.SLOT_PAPER, 1, true);
+		ItemStack input = inputHandler.extractItem(0, found.recipe.getInput().inputSize, true);
 		if(!found.recipe.getInput().matchesItemStack(input))
 			return null;
 
 		//Check if there's enough paper
 		PrintFunction function = found.recipe.getFunction();
-		ItemStack result = function.apply(input, found.data);
+		ItemStack displayInput = input.copy();
+		ItemStack result = function.apply(input.copy(), found.data.clone());
 		int[] inkCost = function.getInkTypesRequired(found.data);
 
 		//Check if the required upgrade is installed
@@ -232,11 +233,11 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 				new FluidStack(IIContent.fluidInkBlack, inkCost[3])
 		};
 		for(FluidStack f : fs)
-			if(f.amount!=0&&!f.isFluidEqual(tank.drain(f, false)))
+			if(f.amount!=0&&!f.isFluidStackIdentical(tank.drain(f, false)))
 				return null;
 
 		//Use resources
-		inputHandler.extractItem(MultiblockPrintingPress.SLOT_PAPER, 1, false);
+		inputHandler.extractItem(0, found.recipe.getInput().inputSize, false);
 		for(FluidStack f : fs)
 			tank.drain(f, true);
 
@@ -245,7 +246,7 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 			printRequestsQueue.remove(0);
 		//Return the process
 		return new IIMultiblockProcess<>(found.recipe)
-				.withNBT(nbt -> nbt.withItemStack("result", result)
+				.withNBT(nbt -> nbt.withItemStack("result", result).withItemStack("displayInput", displayInput)
 						.withInt("cyan", inkCost[0])
 						.withInt("magenta", inkCost[1])
 						.withInt("yellow", inkCost[2])
@@ -263,10 +264,7 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 	public float getProductionStep(IIMultiblockProcess<PrintingRecipe> process, boolean simulate)
 	{
 		int perTick = process.recipe.getTotalProcessEnergy()/process.maxTicks;
-		if(energyStorage.extractEnergy(perTick, simulate) < perTick)
-			return 0;
-
-		return 1;
+		return energyStorage.tryConsumeEnergy(perTick, simulate)?1: 0;
 	}
 
 	@Override
@@ -361,7 +359,10 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 		if(isPOI("fluid_tank"))
 		{
 			TileEntityPrintingPress master = master();
-			return master!=null&&FluidUtil.interactWithFluidHandler(player, hand, master.tank);
+			return master!=null&&!master.tank.interactWithItem(player, hand, heldItem, () -> {
+				master.markDirty();
+				master.updateTileForEvent(SyncEvents.TILE_RECIPE_CHANGED);
+			});
 		}
 		return false;
 	}

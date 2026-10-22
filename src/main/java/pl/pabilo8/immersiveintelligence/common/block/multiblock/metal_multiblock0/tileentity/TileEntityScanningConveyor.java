@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity;
 
-import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
 import blusunrize.immersiveengineering.api.tool.ConveyorHandler;
 import blusunrize.immersiveengineering.api.tool.ConveyorHandler.IConveyorAttachable;
 import blusunrize.immersiveengineering.api.tool.ConveyorHandler.IConveyorBelt;
@@ -15,6 +14,7 @@ import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeItemStack;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.ScanningConveyor;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockScanningConveyor;
+import pl.pabilo8.immersiveintelligence.common.util.IIEnergyStorage;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIGeneric;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
@@ -23,7 +23,7 @@ import java.util.HashSet;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 28.10.2023
+ * @updated 05.10.2026
  * @since 28.06.2019
  */
 public class TileEntityScanningConveyor extends TileEntityMultiblockIIGeneric<TileEntityScanningConveyor> implements IConveyorAttachable, IConveyorTile
@@ -33,7 +33,7 @@ public class TileEntityScanningConveyor extends TileEntityMultiblockIIGeneric<Ti
 	public TileEntityScanningConveyor()
 	{
 		super(MultiblockScanningConveyor.INSTANCE);
-		this.energyStorage = new FluxStorageAdvanced(ScanningConveyor.energyCapacity);
+		this.energyStorage = new IIEnergyStorage(ScanningConveyor.energyCapacity);
 	}
 
 	@Override

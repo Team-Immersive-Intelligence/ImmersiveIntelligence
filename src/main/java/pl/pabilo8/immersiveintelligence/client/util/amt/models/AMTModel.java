@@ -68,7 +68,8 @@ public class AMTModel implements Iterable<AMT>, AMTRenderable
 	{
 		ArrayList<AMT> modelList = new ArrayList<>();
 		for(AMTModel m : models)
-			Collections.addAll(modelList, m.model);
+			if(m!=null)
+				Collections.addAll(modelList, m.model);
 		this.model = modelList.toArray(new AMT[0]);
 	}
 

@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity;
 
-import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IPlayerInteraction;
 import blusunrize.immersiveengineering.common.util.Utils;
 import com.elytradev.mirage.event.GatherLightsEvent;
@@ -14,8 +13,6 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.Optional.Interface;
@@ -24,7 +21,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
-import pl.pabilo8.immersiveintelligence.api.crafting.PaintingRecipe;
+import pl.pabilo8.immersiveintelligence.api.crafting.ChemicalPainterRecipe;
 import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIMultiblockRecipe;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataHandlingUtils;
@@ -34,9 +31,9 @@ import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedTextOverlay;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.ChemicalPainter;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
-import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
+import pl.pabilo8.immersiveintelligence.common.util.IIEnergyStorage;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
@@ -51,20 +48,21 @@ import static pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_mul
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 07.10.2026
  * @since 28.06.2019
  */
 @Interface(iface = "com.elytradev.mirage.lighting.ILightEventConsumer", modid = "mirage")
-public class TileEntityChemicalPainter extends TileEntityMultiblockProductionSingle<TileEntityChemicalPainter, PaintingRecipe>
+public class TileEntityChemicalPainter extends TileEntityMultiblockProductionSingle<TileEntityChemicalPainter, ChemicalPainterRecipe>
 		implements ILightEventConsumer, IPlayerInteraction, IAdvancedTextOverlay
 {
 	@SyncNBT(name = "tank1", events = SyncEvents.TILE_RECIPE_CHANGED)
-	public FluidTank tankCyan;
+	public FilteredFluidTank tankCyan;
 	@SyncNBT(name = "tank2", events = SyncEvents.TILE_RECIPE_CHANGED)
-	public FluidTank tankMagenta;
+	public FilteredFluidTank tankMagenta;
 	@SyncNBT(name = "tank3", events = SyncEvents.TILE_RECIPE_CHANGED)
-	public FluidTank tankYellow;
+	public FilteredFluidTank tankYellow;
 	@SyncNBT(name = "tank4", events = SyncEvents.TILE_RECIPE_CHANGED)
-	public FluidTank tankBlack;
+	public FilteredFluidTank tankBlack;
 
 	@SyncNBT(events = SyncEvents.TILE_RECIPE_CHANGED)
 	public ItemStack recipeStack = ItemStack.EMPTY;
@@ -84,7 +82,7 @@ public class TileEntityChemicalPainter extends TileEntityMultiblockProductionSin
 		super(INSTANCE);
 
 		inventory = NonNullList.withSize(4, ItemStack.EMPTY);
-		energyStorage = new FluxStorageAdvanced(ChemicalPainter.energyCapacity);
+		energyStorage = new IIEnergyStorage(ChemicalPainter.energyCapacity);
 		tankCyan = new FilteredFluidTank(ChemicalPainter.fluidCapacity).withInputFilter(CYAN);
 		tankMagenta = new FilteredFluidTank(ChemicalPainter.fluidCapacity).withInputFilter(MAGENTA);
 		tankYellow = new FilteredFluidTank(ChemicalPainter.fluidCapacity).withInputFilter(YELLOW);
@@ -165,13 +163,13 @@ public class TileEntityChemicalPainter extends TileEntityMultiblockProductionSin
 	protected IFluidTank[] getFluidTanks(int pos, EnumFacing side)
 	{
 		if(getPOI("input_cyan")[0]==pos)
-			return new FluidTank[]{tankCyan};
+			return new FilteredFluidTank[]{tankCyan};
 		else if(getPOI("input_magenta")[0]==pos)
-			return new FluidTank[]{tankMagenta};
+			return new FilteredFluidTank[]{tankMagenta};
 		else if(getPOI("input_yellow")[0]==pos)
-			return new FluidTank[]{tankYellow};
+			return new FilteredFluidTank[]{tankYellow};
 		else if(getPOI("input_black")[0]==pos)
-			return new FluidTank[]{tankBlack};
+			return new FilteredFluidTank[]{tankBlack};
 
 		return super.getFluidTanks(pos, side);
 	}
@@ -186,7 +184,7 @@ public class TileEntityChemicalPainter extends TileEntityMultiblockProductionSin
 	}
 
 	@Override
-	protected IIMultiblockProcess<PaintingRecipe> findNewProductionProcess()
+	protected IIMultiblockProcess<ChemicalPainterRecipe> findNewProductionProcess()
 	{
 		if(getRedstoneAtPos(0))
 			return null;
@@ -194,13 +192,13 @@ public class TileEntityChemicalPainter extends TileEntityMultiblockProductionSin
 			return null;
 
 		//Get recipe
-		java.util.Optional<PaintingRecipe> found = IIMultiblockRecipe.streamRecipes(PaintingRecipe.class)
+		java.util.Optional<ChemicalPainterRecipe> found = IIMultiblockRecipe.streamRecipes(ChemicalPainterRecipe.class)
 				.filter(r -> r.itemInput.matchesItemStack(inventory.get(SLOT_INPUT)))
 				.findFirst();
 
 		if(!found.isPresent())
 			return null;
-		PaintingRecipe recipe = found.get();
+		ChemicalPainterRecipe recipe = found.get();
 
 		//Get paint amounts and test if they are available
 		int c = recipe.getCyanAmount(color);
@@ -218,47 +216,50 @@ public class TileEntityChemicalPainter extends TileEntityMultiblockProductionSin
 		tankBlack.drain(k, true);
 
 		//Take stack from inventory
-		this.recipeStack = ItemHandlerHelper.copyStackWithSize(inventory.get(SLOT_INPUT), 1);
+		this.recipeStack = ItemHandlerHelper.copyStackWithSize(inventory.get(SLOT_INPUT), recipe.itemInput.inputSize);
 		this.resultStack = recipe.process.apply(color, this.recipeStack.copy());
-		inventory.get(SLOT_INPUT).shrink(1);
+		inventory.get(SLOT_INPUT).shrink(recipe.itemInput.inputSize);
 
 		//Return new process
 		return new IIMultiblockProcess<>(recipe)
-				.withNBT(easyNBT -> easyNBT.withItemStack("effect", this.recipeStack).withColor("color", color));
+				.withNBT(easyNBT -> easyNBT.withItemStack("effect", this.recipeStack).withItemStack("result", this.resultStack).withColor("color", color));
 	}
 
 	@Override
-	protected IIMultiblockProcess<PaintingRecipe> getProcessByName(String name)
+	protected IIMultiblockProcess<ChemicalPainterRecipe> getProcessByName(String name)
 	{
-		PaintingRecipe recipe = IIMultiblockRecipe.getRecipe(PaintingRecipe.class, name);
+		ChemicalPainterRecipe recipe = IIMultiblockRecipe.getRecipe(ChemicalPainterRecipe.class, name);
 		return recipe==null?null: new IIMultiblockProcess<>(recipe);
 	}
 
 	@Override
-	public float getProductionStep(IIMultiblockProcess<PaintingRecipe> process, boolean simulate)
+	public float getProductionStep(IIMultiblockProcess<ChemicalPainterRecipe> process, boolean simulate)
 	{
 		if(getRedstoneAtPos(0))
 			return 0;
-		if(energyStorage.extractEnergy(process.recipe.getEnergyPerTick(), true)==process.recipe.getEnergyPerTick())
-			return (simulate||(energyStorage.extractEnergy(process.recipe.getEnergyPerTick(), false)) > 0)?1: 0;
-		return 0;
+		return energyStorage.tryConsumeEnergy(process.recipe.getEnergyPerTick(), simulate)?1: 0;
 	}
 
 	@Override
-	protected boolean attemptProductionOutput(IIMultiblockProcess<PaintingRecipe> process)
+	protected boolean attemptProductionOutput(IIMultiblockProcess<ChemicalPainterRecipe> process)
 	{
-		ItemStack result = process.processData.getItemStack("effect");
-		IIColor color = process.processData.getColor("color");
-		if(result.isEmpty())
+		ItemStack result = process.processData.getItemStack("result");
+		if(!process.processData.unwrap().hasKey("result"))
 		{
-			IILogger.error("Error on Chemical Painter recipe output, result nbt is null!");
-			return true;
+			//Prepare the output once for processes saved before this field existed.
+			ItemStack input = process.processData.getItemStack("effect");
+			if(input.isEmpty())
+				return true;
+			result = process.recipe.process.apply(process.processData.getColor("color"), input.copy());
+			process.processData.withItemStack("result", result);
 		}
-		return outputHandler.insertItem(0, process.recipe.process.apply(color, result), false).isEmpty();
+		if(!outputHandler.insertItem(0, result.copy(), true).isEmpty())
+			return false;
+		return outputHandler.insertItem(0, result.copy(), false).isEmpty();
 	}
 
 	@Override
-	protected void onProductionFinish(IIMultiblockProcess<PaintingRecipe> process)
+	protected void onProductionFinish(IIMultiblockProcess<ChemicalPainterRecipe> process)
 	{
 		this.recipeStack = ItemStack.EMPTY;
 		this.resultStack = ItemStack.EMPTY;
@@ -294,13 +295,25 @@ public class TileEntityChemicalPainter extends TileEntityMultiblockProductionSin
 			return false;
 
 		if(isPOI("tank_cyan"))
-			return FluidUtil.interactWithFluidHandler(player, hand, master.tankCyan);
+			return !master.tankCyan.interactWithItem(player, hand, heldItem, () -> {
+				master.markDirty();
+				master.updateTileForEvent(SyncEvents.TILE_RECIPE_CHANGED);
+			});
 		else if(isPOI("tank_magenta"))
-			return FluidUtil.interactWithFluidHandler(player, hand, master.tankMagenta);
+			return !master.tankMagenta.interactWithItem(player, hand, heldItem, () -> {
+				master.markDirty();
+				master.updateTileForEvent(SyncEvents.TILE_RECIPE_CHANGED);
+			});
 		else if(isPOI("tank_yellow"))
-			return FluidUtil.interactWithFluidHandler(player, hand, master.tankYellow);
+			return !master.tankYellow.interactWithItem(player, hand, heldItem, () -> {
+				master.markDirty();
+				master.updateTileForEvent(SyncEvents.TILE_RECIPE_CHANGED);
+			});
 		else if(isPOI("tank_black"))
-			return FluidUtil.interactWithFluidHandler(player, hand, master.tankBlack);
+			return !master.tankBlack.interactWithItem(player, hand, heldItem, () -> {
+				master.markDirty();
+				master.updateTileForEvent(SyncEvents.TILE_RECIPE_CHANGED);
+			});
 
 		return false;
 	}

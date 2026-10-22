@@ -13,10 +13,18 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctur
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 import pl.pabilo8.immersiveintelligence.common.util.sound.IISoundAnimation;
 
+/**
+ * Defines the Vulcanizer structure, ports and production timing.
+ *
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 09.10.2026
+ */
 public class MultiblockVulcanizer extends MultiblockStuctureBase<TileEntityVulcanizer>
 {
 	public static MultiblockVulcanizer INSTANCE;
 	public static final int SLOT_RUBBER = 0, SLOT_COMPOUND = 1, SLOT_SULFUR = 2;
+	public static final int ANIMATION_DURATION = 1000;
+	public static final float PRODUCTION_OFFSET = 0.3f;
 	public final IISoundAnimation workAnimation;
 
 	public MultiblockVulcanizer()
@@ -25,7 +33,6 @@ public class MultiblockVulcanizer extends MultiblockStuctureBase<TileEntityVulca
 		offset = new Vec3i(2, 1, 0);
 		INSTANCE = this;
 
-		//Vulcanizer
 		addPOI(MultiblockPOI.ENERGY_INPUT, "energy");
 		addPOI(MultiblockPOI.REDSTONE_INPUT, "redstone");
 		addPOI(MultiblockPOI.ITEM_INPUT, "inputs");
@@ -39,8 +46,7 @@ public class MultiblockVulcanizer extends MultiblockStuctureBase<TileEntityVulca
 				.withRepeatedSound(0.85, 0.86, IISounds.electricMotorHeavyForwardLoop)
 				.withSound(0.89, SoundEvents.BLOCK_LAVA_EXTINGUISH)
 				.withRepeatedSound(0.93, 0.96, IISounds.electricMotorHeavyBackwardLoop)
-				.compile(1000);
-
+				.compile(ANIMATION_DURATION);
 	}
 
 	@Override

@@ -1,0 +1,25 @@
+{
+  "type": "ParticleVanilla",
+  "textures": [
+    "immersiveintelligence:particle/smoke/paaa0",
+    "immersiveintelligence:particle/smoke/paaa1",
+    "immersiveintelligence:particle/smoke/paaa2",
+    "immersiveintelligence:particle/smoke/paaa3",
+    "immersiveintelligence:particle/smoke/paaa4",
+    "immersiveintelligence:particle/smoke/paaa5",
+    "immersiveintelligence:particle/smoke/paaa6",
+    "immersiveintelligence:particle/smoke/paaa7",
+    "immersiveintelligence:particle/smoke/paaa8",
+    "immersiveintelligence:particle/smoke/paaa9"
+  ],
+  "max_lifetime": 60,
+  "draw_stage": "custom_smoke_noise_shader",
+  "aabb": 0.3,
+  "color": "151515",
+  "programs": [
+    "smoke_transition",
+    "lifetime_retexture",
+    "gravity(0.92,-0.005)"
+  ],
+  "size": 0.3125
+}

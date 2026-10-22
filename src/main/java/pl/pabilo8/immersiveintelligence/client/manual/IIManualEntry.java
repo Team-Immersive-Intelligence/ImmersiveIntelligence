@@ -2,6 +2,7 @@ package pl.pabilo8.immersiveintelligence.client.manual;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.lib.manual.ManualInstance.ManualEntry;
+import lombok.Getter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.resources.IResource;
@@ -25,7 +26,11 @@ import java.util.LinkedHashMap;
 import java.util.stream.Collectors;
 
 /**
+ * Loads Markdown pages from a resource directory for a manual entry.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 06.10.2026
+ * @ii-approved 0.3.2
  * @since 21.03.2022
  */
 public class IIManualEntry extends ManualEntry
@@ -33,12 +38,26 @@ public class IIManualEntry extends ManualEntry
 	private final LinkedHashMap<String, String> texts = new LinkedHashMap<>();
 	private final LinkedHashMap<String, EasyNBT> dataSources = new LinkedHashMap<>();
 	private final String fullFilePath;
+	@Getter
+	private final String resourceCategory;
 	private IIManualPageFolder folder;
 
+	/**
+	 * Uses the destination category as the resource directory.
+	 */
 	public IIManualEntry(String name, String category)
+	{
+		this(name, category, category);
+	}
+
+	/**
+	 * Uses a separate resource directory for the destination category.
+	 */
+	public IIManualEntry(String name, String category, String resourceCategory)
 	{
 		super(name.contains("/")?name.substring(name.lastIndexOf("/")+1): name, category);
 		this.fullFilePath = name;
+		this.resourceCategory = resourceCategory;
 		loadTexts(true);
 	}
 
@@ -119,7 +138,7 @@ public class IIManualEntry extends ManualEntry
 		try
 		{
 			return Minecraft.getMinecraft().getResourceManager().getResource(new ResourceLocation(ImmersiveIntelligence.MODID,
-					String.format("ie_manual/%s/%s/%s.md", language, getCategory(), fullFilePath)));
+					String.format("ie_manual/%s/%s/%s.md", language, resourceCategory, fullFilePath)));
 		} catch(IOException ignored) {}
 		return null;
 	}
