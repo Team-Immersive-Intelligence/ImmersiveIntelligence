@@ -789,7 +789,7 @@ desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.cmyk=Display
 desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.cmyk.c=Cyan
 desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.cmyk.m=Magenta
 desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.cmyk.y=Yellow
-desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.cmyk.k=Red
+desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.cmyk.k=Black
 
 desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.hsv=Display in HSV
 desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.hsv.h=Hue
@@ -1403,6 +1403,7 @@ desc.immersiveintelligence.diplomacy.rolename.owner=Owner
 desc.immersiveintelligence.diplomacy.rolename.trusted=Trusted
 
 desc.immersiveintelligence.diplomacy.rolename.member=Member
+desc.immersiveintelligence.diplomacy.rolename.citizen=Сitizen
 
 desc.immersiveintelligence.diplomacy.rolename.ceo=CEO
 desc.immersiveintelligence.diplomacy.rolename.cfo=CFO
@@ -1419,7 +1420,7 @@ desc.immersiveintelligence.diplomacy.rolename.supreme_commissar=Supreme Commissa
 desc.immersiveintelligence.diplomacy.rolename.comissar=Commissar
 desc.immersiveintelligence.diplomacy.rolename.officer=Officer
 desc.immersiveintelligence.diplomacy.rolename.enforcer=Enforcer
-desc.immersiveintelligence.diplomacy.rolename.citizen=Citizen
+#desc.immersiveintelligence.diplomacy.rolename.citizen=
 desc.immersiveintelligence.diplomacy.rolename.sub_citizen=Second-Class Citizen
 
 desc.immersiveintelligence.diplomacy.rolename.mayor=Mayor
