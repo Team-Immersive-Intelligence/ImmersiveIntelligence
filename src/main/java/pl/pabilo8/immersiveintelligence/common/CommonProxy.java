@@ -687,6 +687,7 @@ public class CommonProxy implements IGuiHandler
 		DustUtils.registerDust(new IngredientStack("dustSmallWood", 25), "sawdust", IIColor.fromPackedRGB(0x8c8269));
 		DustUtils.registerDust(new IngredientStack("sand", 100), "sand", IIColor.fromPackedRGB(0xaca37b));
 		DustUtils.registerDust(new IngredientStack("gravel", 100), "gravel", IIColor.fromPackedRGB(0x383937));
+		DustUtils.registerDust(new IngredientStack("dustSlag", 100), "slag", IIColor.fromPackedRGB(0x5f403c));
 
 		ShrapnelHandler.addShrapnel("white_phosphorus", IIColor.fromPackedRGB(0x6b778a), 5, 0.3f, 0f)
 				.setFlammable(true);

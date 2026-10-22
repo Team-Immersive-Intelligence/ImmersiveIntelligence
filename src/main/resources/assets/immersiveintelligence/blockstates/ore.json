@@ -5,7 +5,7 @@
     "textures": {
       "all": "immersiveintelligence:blocks/metal/ore_platinum"
     },
-    "model": "cube_all"
+    "model": "stone"
   },
   "variants": {
     "inventory,type=platinum": [
@@ -57,7 +57,7 @@
         }
       }
     ],
-    "inventory,type=overworldfluorite": [
+    "inventory,type=fluorite_overworld": [
       {
         "textures": {
           "all": "immersiveintelligence:blocks/metal/ore_fluorite_overworld"
@@ -71,10 +71,24 @@
         }
       }
     ],
-    "inventory,type=overworldphosphorus": [
+    "inventory,type=phosphorus_overworld": [
       {
         "textures": {
           "all": "immersiveintelligence:blocks/metal/ore_phosphorus_overworld"
+        }
+      }
+    ],
+    "inventory,type=sulfur": [
+      {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/ore_sulfur"
+        }
+      }
+    ],
+    "inventory,type=sulfur_overworld": [
+      {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/ore_sulfur_overworld"
         }
       }
     ],
@@ -114,7 +128,7 @@
           "all": "immersiveintelligence:blocks/metal/ore_fluorite"
         }
       },
-      "overworldfluorite": {
+      "fluorite_overworld": {
         "textures": {
           "all": "immersiveintelligence:blocks/metal/ore_fluorite_overworld"
         }
@@ -124,9 +138,19 @@
           "all": "immersiveintelligence:blocks/metal/ore_phosphorus"
         }
       },
-      "overworldphosphorus": {
+      "phosphorus_overworld": {
         "textures": {
           "all": "immersiveintelligence:blocks/metal/ore_phosphorus_overworld"
+        }
+      },
+      "sulfur": {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/ore_sulfur"
+        }
+      },
+      "sulfur_overworld": {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/ore_sulfur_overworld"
         }
       }
     }

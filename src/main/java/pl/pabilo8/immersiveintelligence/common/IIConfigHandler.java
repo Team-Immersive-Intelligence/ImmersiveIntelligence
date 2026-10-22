@@ -140,10 +140,6 @@ public class IIConfigHandler
 		@RequiresMcRestart
 		public static boolean smeltableTungsten = false;
 
-		@Comment({"Whether Advanced Electronic Alloy should be smeltable in the vanilla furnace"})
-		@RequiresMcRestart
-		public static boolean smeltableAEA = false;
-
 		@Comment({"A list of all entities for which a fakeplayer should be used when shooter is not a player"})
 		public static String[] bulletFakeplayerWhitelist = new String[]{
 				"minecraft:ender_dragon"

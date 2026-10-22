@@ -241,6 +241,8 @@ public class IIContent
 	public static final ItemIIMaterialSpring itemMaterialSpring = new ItemIIMaterialSpring();
 	public static final ItemIIMaterialGem itemMaterialGem = new ItemIIMaterialGem();
 	public static final ItemIIMaterialBoule itemMaterialBoule = new ItemIIMaterialBoule();
+	public static final ItemIIMaterialCatalyst itemMaterialCatalyst = new ItemIIMaterialCatalyst();
+	public static final ItemIIMaterialDye itemMaterialDye = new ItemIIMaterialDye();
 	public static final ItemIIMetalPressMold itemPressMold = new ItemIIMetalPressMold();
 	public static final ItemIIVulcanizerMold itemVulcanizerMold = new ItemIIVulcanizerMold();
 	public static final ItemIIFunctionalCircuit itemCircuit = new ItemIIFunctionalCircuit();
@@ -321,7 +323,7 @@ public class IIContent
 	public static final BlockIIRubberLeaves blockRubberLeaves = new BlockIIRubberLeaves();
 	public static final BlockIIRubberSapling blockRubberSapling = new BlockIIRubberSapling();
 	public static final BlockIICharredLog blockCharredLog = new BlockIICharredLog();
-	public static final BlockIIIndustrialGlowstone blockIndustrialGlowstone = new BlockIIIndustrialGlowstone();
+	public static final BlockIIChemicalIngredient blockChemicalIngredient = new BlockIIChemicalIngredient();
 	//metal
 	@IBatchOredictRegister(oreDict = "ore")
 	public static final BlockIIOre blockOre = new BlockIIOre();

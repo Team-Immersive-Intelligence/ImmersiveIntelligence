@@ -151,41 +151,12 @@ public class ItemIIMaterial extends ItemIISubItemsBase<Materials>
 		@IIItemProperties(oreDict = {"dustNitrocellulose", "nitrocellulose"})
 		NITROCELLULOSE,
 		@IIItemProperties(oreDict = {"dustCordite", "cordite"})
-		CORDITE,
+		DUST_CORDITE,
 		@IIItemProperties(oreDict = "dustPotassiumHydroxide")
 		POTASSIUM_HYDROXIDE,
-		@IIItemProperties(oreDict = "gemOrpiment")
-		ORPIMENT,
-		@IIItemProperties(oreDict = "dustSlag")
-		DUST_SLAG,
 		@IIItemProperties(oreDict = "dustThermite")
 		THERMITE,
 		@IIItemProperties(oreDict = "dustZincSulfide")
-		ZINC_SULFIDE,
-
-		@IIItemProperties(oreDict = "catalystCopper")
-		COPPER_CATALYST,
-		@IIItemProperties(oreDict = "catalystIron")
-		IRON_CATALYST,
-		@IIItemProperties(oreDict = "catalystNickel")
-		NICKEL_CATALYST,
-		@IIItemProperties(oreDict = "catalystPlatinum")
-		PLATINUM_CATALYST,
-
-
-		@IIItemProperties(oreDict = {"dye", "dyeRed", "dyeRedChemical"})
-		RED_CHEMICAL_DYE,
-		@IIItemProperties(oreDict = {"dye", "dyeGreen", "dyeGreenChemical"})
-		GREEN_CHEMICAL_DYE,
-		@IIItemProperties(oreDict = {"dye", "dyeBlue", "dyeBlueChemical"})
-		BLUE_CHEMICAL_DYE,
-		@IIItemProperties(oreDict = {"dye", "dyeCyan", "dyeCyanChemical"})
-		CYAN_CHEMICAL_DYE,
-		@IIItemProperties(oreDict = {"dye", "dyeYellow", "dyeYellowChemical"})
-		YELLOW_CHEMICAL_DYE,
-		@IIItemProperties(oreDict = {"dye", "dyeMagenta", "dyeMagentaChemical"})
-		MAGENTA_CHEMICAL_DYE,
-		@IIItemProperties(oreDict = {"dye", "dyeBlack", "dyeBlackChemical"})
-		BLACK_CHEMICAL_DYE
+		ZINC_SULFIDE
 	}
 }

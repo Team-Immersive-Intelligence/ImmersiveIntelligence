@@ -24,7 +24,7 @@ public class ItemIIMaterialPlate extends ItemIISubItemsBase<MaterialsPlate>
 	@GeneratedItemModels(itemName = "material_plate", texturePath = "material/plate")
 	public enum MaterialsPlate implements IIItemEnum
 	{
-		ADVANCED_ELECTRONIC_ALLOY,
+		TIN,
 		BRASS,
 		PLATINUM,
 		TUNGSTEN,
@@ -32,7 +32,6 @@ public class ItemIIMaterialPlate extends ItemIISubItemsBase<MaterialsPlate>
 		SILICON,
 		RUBBER_RAW,
 		DURALUMINIUM,
-		TIN,
 		STAINLESS_STEEL,
 		CHROMIUM
 	}

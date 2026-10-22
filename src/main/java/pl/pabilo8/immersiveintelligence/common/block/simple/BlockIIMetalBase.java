@@ -27,7 +27,6 @@ public class BlockIIMetalBase extends BlockIIBase<Metals>
 
 	public enum Metals implements IIBlockEnum
 	{
-		// TODO: 05.09.2022 values
 		@IIBlockProperties(hardness = 5, blastResistance = 10)
 		PLATINUM,
 		@IIBlockProperties(hardness = 4, blastResistance = 10)

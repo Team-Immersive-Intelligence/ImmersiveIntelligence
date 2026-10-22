@@ -581,7 +581,6 @@ public class IIRecipes
 		);
 
 
-
 		CrusherRecipe.addRecipe(
 				IIContent.itemMaterialGem.getStack(MaterialsGem.PHOSPHORUS, 2),
 				new IngredientStack("oreOverworldphosphorus"),
@@ -842,7 +841,7 @@ public class IIRecipes
 		);
 
 		//Crushed slag
-		CrusherRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.DUST_SLAG, 2),
+		CrusherRecipe.addRecipe(IIContent.itemMaterialDust.getStack(MaterialsDust.SLAG, 2),
 				new IngredientStack("itemSlag"), 4096);
 
 		//Sticks from planks
@@ -1408,12 +1407,6 @@ public class IIRecipes
 					IIContent.itemMaterialIngot.getStack(MaterialsIngot.TUNGSTEN),
 					0.5F);
 		}
-
-		if(IIConfig.smeltableAEA)
-			FurnaceRecipes.instance().addSmeltingRecipe(
-					IIContent.itemMaterialDust.getStack(MaterialsDust.ADVANCED_ELECTRONIC_ALLOY),
-					IIContent.itemMaterialIngot.getStack(MaterialsIngot.ADVANCED_ELECTRONIC_ALLOY),
-					0.5F);
 	}
 
 	public static void addArcFurnaceRecyclingRecipes()
