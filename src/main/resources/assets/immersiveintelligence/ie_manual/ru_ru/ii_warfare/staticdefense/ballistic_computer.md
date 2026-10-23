@@ -17,7 +17,7 @@
 |[data_variable]{type:"itemstack", direction:"вход", letter:"s", name:"Стек боеприпасов", description:"Предмет боеприпаса, используемый для считывания массы и стандартной скорости"}|
 |[data_variable]{type:"float", direction:"вход", letter:"m", name:"Масса снаряда", description:"Баллистическая масса снаряда. Требуется, если не предоставлен допустимый стек боеприпасов"}|
 |[data_variable]{type:"float", direction:"вход", letter:"f", name:"Скорость снаряда", description:"Настраиваемая скорость снаряда. По умолчанию используется скорость снаряда тяжёлой артиллерии"}|
-|[data_variable]{type:"string", direction:"вход", letter:"t", name:"Тип боеприпаса", description:"Зарегистрированный тип боеприпаса", values:[["artillery_8bCal","Тяжёлая артиллерия"], ["artillery_6bCal_long","Средняя артиллерия"], ["artillery_6bCal","Лёгкая артиллерия"], ["mortar_6bCal","Лёгкая артиллерия"]]}|
+|[data_variable]{type:"string", direction:"вход", letter:"t", name:"Тип боеприпаса", description:"Зарегистрированный тип боеприпаса", values:[["artillery_8bCal","Тяжёлой артиллерии"], ["artillery_6bCal_long","Средней артиллерии"], ["artillery_6bCal","Лёгкой артиллерии"], ["mortar_6bCal","Миномётной артиллерии"]]}|
 # projectile2
 |[data_variable]{type:"boolean", direction:"вход", letter:"d", name:"Прямой наводкой", description:"Использовать стрельбу прямой наводкой вместо стандартной баллистической траектории"}|
 
