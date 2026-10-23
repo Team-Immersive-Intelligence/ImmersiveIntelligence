@@ -4,7 +4,7 @@
 # intro
 |[multiblock]{mb:"II:Packer"}|
 Упаковщик - это машина, используемая для загрузки предметов в контейнеры, такие как ящики или магазины.
-Для сборки упаковщика используйте [молоток](introduction#introductionHammer) на [вертикальном конвейере].
+Для сборки упаковщика используйте [молот](introduction#introductionHammer) по [вертикальному конвейеру].
 # details
 По умолчанию в упаковщике 54 ячейки для хранения предметов. Предметы можно загрузить с помощью конвейера в задней части машины.
 Для работы машины требуется электричество и наличие контейнера на конвейере длиной в 3 блока.
@@ -19,32 +19,32 @@
 # details_4
 Задачи ["Unpack"], ["Fill"], ["Unfill"], ["Charge"] и ["Discharge"] задаются аналогично ["Pack"]. Для жидкостей ["Ячейки"] - это резервуары, а объем - это количество жидкости в mb. Для энергии учитывается только количество.
 # data_1
-|[data_variable]{type:"string", direction:"вход", letter:"c", name:"Команду", description:"Возможные значения: add(добавить), remove(удалить), clear(очистить)."}|
+|[data_variable]{type:"string", direction:"вход", letter:"c", name:"Команда", description:"Возможные значения: add(добавить), remove(удалить), clear(очистить)."}|
 |[data_variable]{type:"string", direction:"вход", letter:"a", name:"Тип", description:"Возможные значения: item(предмет), fluid(жидкость), energy(энергия)."}|
 |[data_variable]{type:"itemstack", direction:"вход", letter:"s", name:"Стак", description:"Опционально: ItemStack или OreDict, которой должны соответствовать элементу."}|
 # data_2
 |[data_variable]{type:"string", direction:"вход", letter:"m", name:"Режим выбора", description:"Возможные значения: amount(кол-во), slot(слоты), all_possible(все возможные). Опционально. По умолчанию последние."}|
-|[data_variable]{type:"integer", direction:"вход", letter:"e", name:"Expire After", description:"Необязательный. кол-во циклов для завершения задания"}|
-|[data_variable]{type:"boolean", direction:"вход", letter:"r", name:"Repeat", description:"Optional. Whether the task should be repeated multiple times in one cycle."}|
+|[data_variable]{type:"integer", direction:"вход", letter:"e", name:"Истекает после", description:"Необязательный. Количество циклов для завершения задания"}|
+|[data_variable]{type:"boolean", direction:"вход", letter:"r", name:"Повтор", description:"Опционально. Должно ли задание повторяться несколько раз за один цикл."}|
 # upgrades_fluid
 |[upgrade_display]{upgrade:"immersiveintelligence:packer_fluid"}|
-The [Fluid Loader] transforms the Packer's item storage into [96 buckets] of fluid storage and changes the loading mechanism to fill fluid containers like barrels. A souped-up [Bottling Machine](bottlingMachine)!
+[Жидкостный наполнитель] преобразует хранилище предметов упаковщика в [96 вёдер] жидкости и изменяет механизм загрузки для наполнения жидкостных контейнеров, таких как бочки. Усиленная [разливочная машина](bottlingMachine)!
 # upgrades_energy
 |[upgrade_display]{upgrade:"immersiveintelligence:packer_energy"}|
-The [Energy Loader] converts the Packer's item storage into [16 million] IF of energy storage. The loading mechanism is replaced with a set of electrical terminals to rapidly charge capacitors or equipment.
+[Зарядное устройство] преобразует хранилище предметов упаковщика в [16 миллионов] IF энергии. Механизм загрузки заменяется набором электрических клемм для быстрой зарядки конденсаторов или оборудования.
 # upgrades_railway
 |[upgrade_display]{upgrade:"immersiveintelligence:packer_railway"}|
-The [Railway Upgrade] transforms the Packer's loading conveyor into a set of rails. This allows the Packer to fill [storage Minecarts](skycrate_system.md#minecarts). This upgrade can be combined with other upgrades.
+[Железнодорожное улучшение] превращает загрузочный конвейер упаковщика в набор рельсов. Это позволяет упаковщику заполнять [вагонетки для хранения](skycrate_system.md#minecarts). Это улучшение можно комбинировать с другими улучшениями.
 |[wip_notice]|
 # upgrades_labeler
 |[upgrade_display]{upgrade:"immersiveintelligence:packer_naming"}|
-The [Naming Stamp] adds a label maker to the Packer and allows it to set the name of the packed item. This upgrade can be combined with other upgrades.
+[Именной штамп] добавляет устройство для маркировки в упаковщик и позволяет задавать имя упаковываемого предмета. Это улучшение можно комбинировать с другими улучшениями.
 # data_labeling_1
-|[data_variable]{type:"itemstack", direction:"вход", letter:"f", name:"Label Filter", description:"Optional. Container filter for labeling. ItemStack or OreDict String."}|
-|[data_variable]{type:"integer", direction:"вход", letter:"b", name:"Serial Batch Start", description:"Optional. Starting serial number for labeling; also sets current serial to this value."}|
-|[data_variable]{type:"logistic_tag", direction:"вход", letter:"i", name:"LogiTag Input", description:"Optional. Only label containers matching this incoming tag."}|
-|[data_variable]{type:"logistic_tag", direction:"вход", letter:"o", name:"LogiTag Output", description:"Tag applied to labeled containers."}|
+|[data_variable]{type:"itemstack", direction:"вход", letter:"f", name:"Фильтр меток", description:"Опционально. Фильтр контейнеров для маркировки. ItemStack или строка OreDict."}|
+|[data_variable]{type:"integer", direction:"вход", letter:"b", name:"Начало серийного номера", description:"Опционально. Начальный серийный номер для маркировки; также устанавливает текущий серийный номер в это значение."}|
+|[data_variable]{type:"logistic_tag", direction:"вход", letter:"i", name:"Вход LogiTag", description:"Опционально. Маркировать только контейнеры, соответствующие этому входящему тегу."}|
+|[data_variable]{type:"logistic_tag", direction:"вход", letter:"o", name:"Выход LogiTag", description:"Тег, применяемый к маркированным контейнерам."}|
 # data_labeling_2
-|[data_variable]{type:"itemstack", direction:"вход", letter:"t", name:"LogiTag In (as ItemStack)", description:"Optional alternative to 'i'. Provide an ItemStack carrying a Logistic Tag."}|
-|[data_variable]{type:"itemstack", direction:"вход", letter:"T", name:"LogiTag Out (as ItemStack)", description:"Optional alternative to 'o'. Provide an ItemStack carrying a Logistic Tag."}|
-|[data_variable]{type:"integer", direction:"вход", letter:"x", name:"Индекс", description:"Optional. Index for remove/remove_label."}|
+|[data_variable]{type:"itemstack", direction:"вход", letter:"t", name:"LogiTag вход (как ItemStack)", description:"Опциональная альтернатива 'i'. Предоставьте ItemStack, несущий логистический тег."}|
+|[data_variable]{type:"itemstack", direction:"вход", letter:"T", name:"LogiTag выход (как ItemStack)", description:"Опциональная альтернатива 'o'. Предоставьте ItemStack, несущий логистический тег."}|
+|[data_variable]{type:"integer", direction:"вход", letter:"x", name:"Индекс", description:"Опционально. Индекс для remove/remove_label."}|
