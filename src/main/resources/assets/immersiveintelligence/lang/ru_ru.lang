@@ -283,7 +283,7 @@ desc.immersiveintelligence.wrench=Устанавливает улучшения 
 desc.immersiveintelligence.tachometer=Измеряет скорость и крутящий момент вращающихся устройств.
 desc.immersiveintelligence.binoculars=Позволяет видеть удалённые объекты.
 desc.immersiveintelligence.casing_pouch=Хранит стреляные гильзы и пустые магазины.
-desc.immersiveintelligence.mine_detector=Обнаруживает зарытые мины и металлы, подверженные магнитному воздействию.
+desc.immersiveintelligence.mine_detector=Обнаруживает зарытые мины и металлы.
 
 desc.immersiveintelligence.toolupgrade.item.revolver=Револьвер
 desc.immersiveintelligence.toolupgrade.item.railgun=Рельсотрон
@@ -539,8 +539,8 @@ tile.immersiveintelligence.fence_platinum.name=Платиновый забор
 tile.immersiveintelligence.fence_duraluminium.name=Дюралюминиевый забор
 
 tile.immersiveintelligence.rubber_log.raw.name=Бревно гевеи
-tile.immersiveintelligence.rubber_log.rebbur.name=Место для продольного разреза
-tile.immersiveintelligence.rubber_log.stripped.name=Отверстие для извлечения каучука
+tile.immersiveintelligence.rubber_log.rebbur.name=Место для извлечения каучука
+tile.immersiveintelligence.rubber_log.stripped.name=Надрез для извлечения каучука
 tile.immersiveintelligence.rubber_leaves.rubber.name=Листья гевеи
 tile.immersiveintelligence.rubber_sapling.rubber.name=Саженец гевеи
 tile.immersiveintelligence.charred_log.main.name=Обугленное бревно
@@ -1079,7 +1079,7 @@ skin.immersiveintelligence.flakmeister.name=Зенитчик
 skin.immersiveintelligence.flakmeister.desc=Для известного артиллериста
 skin.immersiveintelligence.flakmeister.text=Скин, подаренный Carver'у, который внес большой вклад (особенно по артиллерии).
 
-skin.immersiveintelligence.blackdragon.name=Черный дракон
+skin.immersiveintelligence.blackdragon.name=Чёрный дракон
 skin.immersiveintelligence.blackdragon.desc=Награда за вклад, усилия и контент
 skin.immersiveintelligence.blackdragon.text=Скин, подаренный Blackdragon, который снял отличное обучающее видео по II на YouTube.
 
@@ -1420,8 +1420,6 @@ desc.immersiveintelligence.diplomacy.rolename.president=Президент
 desc.immersiveintelligence.diplomacy.rolename.minister=Министр
 desc.immersiveintelligence.diplomacy.rolename.representative=Представитель
 #desc.immersiveintelligence.diplomacy.rolename.citizen=
-
-#desc.immersiveintelligence.diplomacy.rolename.member=
 
 desc.immersiveintelligence.diplomacy.rolename.supreme_commissar=Верховный комиссар
 desc.immersiveintelligence.diplomacy.rolename.comissar=Комиссар
@@ -2848,7 +2846,7 @@ datasystem.immersiveintelligence.datatype.boolean.false=Ложь
 desc.immersiveengineering.info.blueprint.basic_circuits=Базовые печатные платы
 desc.immersiveengineering.info.blueprint.advanced_circuits=Продвинутые печатные платы
 desc.immersiveengineering.info.blueprint.processors=Процессоры
-desc.immersiveengineering.info.blueprint.cryptography_circuits=Криптографическые печатные платы
+desc.immersiveengineering.info.blueprint.cryptography_circuits=Криптографические печатные платы
 
 desc.immersiveengineering.info.blueprint.basic_functional_circuits=Базовые функциональные платы
 desc.immersiveengineering.info.blueprint.advanced_functional_circuits=Продвинутые функциональные платы
@@ -3187,8 +3185,8 @@ ie.manual.entry.data_variable.allowed_values=Допустимые значени
 ie.manual.entry.data_variable.required_variables=Необходимые переменные:
 
 #manual multiblock forming block position text
-ie.manual.entry.multiblock_forming=%1$s можно сформировать с использованием %2$s на %3$s %4$s
-ie.manual.entry.multiblock_forming_short=Это может быть сформировано с использованием %2$s на %3$s %4$s
+ie.manual.entry.multiblock_forming=%1$s можно сформировать с использованием %2$s по %3$s %4$s
+ie.manual.entry.multiblock_forming_short=Это может быть сформировано с использованием %2$s по %3$s %4$s
 #y axis
 ie.manual.entry.multiblock_forming.up=верхний
 ie.manual.entry.multiblock_forming.middle=средний
@@ -3447,7 +3445,7 @@ ii.gui.diesel_engine.ratio.tooltip=Обмен скорости на крутящ
 
 ii.gui.editor.editor_style=Визуальный/POL редактор
 
-ii.gui.task_editor.jobs=Задачи
+ii.gui.task_editor.jobs=Задания
 ii.gui.task_editor.jobs.tooltip=Задания - это задачи, которые повторяются бесконечно.
 ii.gui.task_editor.requests=Запросы
 ii.gui.task_editor.requests.tooltip=Запросы - это задачи, которые удаляются из памяти после передачи определенного объема ресурсов.
@@ -3479,7 +3477,7 @@ ii.gui.ammunition_crate.mode.revolver=Револьвер
 ii.gui.ammunition_crate.mode.submachinegun=Пистолет-пулемёт
 ii.gui.ammunition_crate.mode.assault_rifle=Автомат
 ii.gui.ammunition_crate.mode.rifle_bullets=Винтовка (болтовка)
-ii.gui.ammunition_crate.mode.rifle_magazines=Винтовка (магазинный)
+ii.gui.ammunition_crate.mode.rifle_magazines=Винтовка (магазинная)
 ii.gui.ammunition_crate.mode.machinegun_magazines=Пулемёт (магазинный)
 ii.gui.ammunition_crate.mode.machinegun_belt_fed=Пулемёт (ленточный)
 
