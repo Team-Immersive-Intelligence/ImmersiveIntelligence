@@ -241,6 +241,8 @@ public class IIContent
 	public static final ItemIIMaterialSpring itemMaterialSpring = new ItemIIMaterialSpring();
 	public static final ItemIIMaterialGem itemMaterialGem = new ItemIIMaterialGem();
 	public static final ItemIIMaterialBoule itemMaterialBoule = new ItemIIMaterialBoule();
+	public static final ItemIIMaterialCatalyst itemMaterialCatalyst = new ItemIIMaterialCatalyst();
+	public static final ItemIIMaterialDye itemMaterialDye = new ItemIIMaterialDye();
 	public static final ItemIIMetalPressMold itemPressMold = new ItemIIMetalPressMold();
 	public static final ItemIIVulcanizerMold itemVulcanizerMold = new ItemIIVulcanizerMold();
 	public static final ItemIIFunctionalCircuit itemCircuit = new ItemIIFunctionalCircuit();
@@ -321,6 +323,7 @@ public class IIContent
 	public static final BlockIIRubberLeaves blockRubberLeaves = new BlockIIRubberLeaves();
 	public static final BlockIIRubberSapling blockRubberSapling = new BlockIIRubberSapling();
 	public static final BlockIICharredLog blockCharredLog = new BlockIICharredLog();
+	public static final BlockIIChemicalIngredient blockChemicalIngredient = new BlockIIChemicalIngredient();
 	//metal
 	@IBatchOredictRegister(oreDict = "ore")
 	public static final BlockIIOre blockOre = new BlockIIOre();
@@ -415,6 +418,8 @@ public class IIContent
 	public static BlockIIFluid blockGasHydrogen, blockGasOxygen, blockGasChlorine, blockGasCO2, blockGasCO;
 	public static BlockIIFluid blockGasMustardGas;
 	public static BlockIIFluid blockFluidLatex;
+	public static BlockIIFluid blockAcetaldol, blockAtropine, blockGlycerin, blockAceticAcid, blockHydrazine, blockMonomethylHydrazine, blockNitroglycerin, blockHydrogenPeroxide, blockNitrogenTetroxide, blockSodiumHypochlorite;
+	public static BlockIIFluid blockButadiene, blockSulfurDioxide, blockSulfurTrioxide, blockHydrogenSulfide, blockArgon, blockNitrogen, blockTearGas, blockPhosgene, blockSarin, blocktabun;
 	//fluids
 	public static Fluid fluidInkBlack, fluidInkCyan, fluidInkMagenta, fluidInkYellow;
 	public static Fluid fluidEtchingAcid, fluidSulfuricAcid, fluidHydrofluoricAcid, fluidNitricAcid, fluidFormicAcid;
@@ -424,6 +429,8 @@ public class IIContent
 	public static Fluid gasHydrogen, gasOxygen, gasChlorine, gasCO2, gasCO;
 	public static Fluid gasMustardGas;
 	public static Fluid fluidLatex, fluidMilk;
+	public static Fluid fluidAcetaldol, fluidAtropine, fluidGlycerin, fluidAceticAcid, fluidHydrazine, fluidMonomethylHydrazine, fluidNitroglycerin, fluidHydrogenPeroxide, fluidNitrogenTetroxide, fluidSodiumHypochlorite;
+	public static Fluid gasButadiene, gasSulfurDioxide, gasSulfurTrioxide, gasHydrogenSulfide, gasArgon, gasNitrogen, gasTearGas, gasPhosgene, gasSarin, gastabun;
 	//biomes
 	public static BiomeWasteland biomeWasteland = new BiomeWasteland();
 
@@ -439,18 +446,40 @@ public class IIContent
 		IIContent.fluidFormicAcid = makeFluid("formic_acid", IIColor.fromHex("a3b1b1"), false, 1221, 1784);
 		IIContent.fluidNitricAcid = makeFluid("nitric_acid", IIColor.fromHex("cbcbc2"), false, 1510, 2500);
 		IIContent.fluidBrine = makeFluid("brine", IIColor.fromHex("757cbd"), false, 1030, 1002);
-		IIContent.gasHydrogen = makeFluid("hydrogen", IIColor.fromHex("11eecdcd"), true, -1000+100, 88);
-		IIContent.gasOxygen = makeFluid("oxygen", IIColor.fromHex("11ffffff"), true, -1000+200, 204);
+		IIContent.gasHydrogen = makeFluid("hydrogen", IIColor.fromHex("97e2fc"), true, -1000+100, 88);
+		IIContent.gasOxygen = makeFluid("oxygen", IIColor.fromHex("97e2fc"), true, -1000+200, 204);
 		IIContent.gasCO2 = makeFluid("carbon_dioxide", IIColor.fromHex("22000000"), true, -1000+100, 147);
 		IIContent.gasCO = makeFluid("carbon_monoxide", IIColor.fromHex("55000000"), true, -1000+145, 166);
 //		IIContent.fluidHexamine = makeFluid("hexamine", IIColor.fromHex("788d8d"), true, -1000+100, 132);
-		IIContent.gasChlorine = makeFluid("chlorine", IIColor.fromHex("557b7a72"), true, -1000+100, 132);
+		IIContent.gasChlorine = makeFluid("chlorine", IIColor.fromHex("cdfaaf"), true, -1000+100, 132);
 		IIContent.fluidAmmonia = makeFluid("ammonia", IIColor.fromHex("f0e5d1"), false, 771, 1007);
 		IIContent.fluidMethanol = makeFluid("methanol", IIColor.fromHex("806d94"), false, 792, 553);
 		IIContent.fluidRocketPropellant = makeFluid("rocket_propellant", IIColor.fromHex("c98461"), false, 860, 1450);
 		IIContent.fluidLatex = makeFluid("latex", IIColor.fromHex("cccccc"), false, 4300, 3500);
-		IIContent.gasMustardGas = makeFluid("mustard_gas", IIColor.fromHex("66807551"), true, 127, 340);
+		IIContent.gasMustardGas = makeFluid("mustard_gas", IIColor.fromHex("e6e6e6"), true, 127, 340);
+		IIContent.gasPhosgene = makeFluid("phosgene", IIColor.fromHex("e6e6e6"), true, -200+100, 120);
+		IIContent.gastabun = makeFluid("tabun", IIColor.fromHex("e6e6e6"), false, 250, 140);
+		IIContent.gasSarin = makeFluid("sarin", IIColor.fromHex("e6e6e6"), true, 320, 80);
 		IIContent.fluidMilk = makeFluid("milk", "item.milk.name", IIColor.fromHex("ffffff"), false, 1000, 1200, 0, 298);
+
+		IIContent.fluidAcetaldol = makeFluid("acetaldol", IIColor.fromHex("fffabf"), false, 1000, 1200);
+		IIContent.fluidAtropine = makeFluid("atropine", IIColor.fromHex("ad7d7"), false, 1000, 1200);
+		IIContent.fluidGlycerin = makeFluid("glycerin", IIColor.fromHex("e6e3e3"), false, 1000, 1200);
+		IIContent.fluidAceticAcid = makeFluid("acetic_acid", IIColor.fromHex("f2f0f0"), false, 1000, 1200);
+		IIContent.fluidHydrazine = makeFluid("hydrazine", IIColor.fromHex("ff7373"), false, 1000, 1200);
+		IIContent.fluidMonomethylHydrazine = makeFluid("monomethylhydrazine", IIColor.fromHex("c68d68"), false, 1000, 1200);
+		IIContent.fluidNitroglycerin = makeFluid("nitroglycerin", IIColor.fromHex("97c7fc"), false, 1000, 1200);
+		IIContent.fluidHydrogenPeroxide = makeFluid("hydrogen_peroxide", IIColor.fromHex("97c7fc"), false, 1000, 1200);
+		IIContent.fluidNitrogenTetroxide = makeFluid("nitrogen_tetroxide", IIColor.fromHex("d68b4a"), false, 1000, 1200);
+		IIContent.fluidSodiumHypochlorite = makeFluid("sodium_hypochlorite", IIColor.fromHex("97c7fc"), false, 1000, 1200);
+
+		IIContent.gasButadiene = makeFluid("butadiene", IIColor.fromHex("f0f2d0"), true, -1000+100, 88);
+		IIContent.gasSulfurDioxide = makeFluid("sulfur_dioxide", IIColor.fromHex("e6faaf"), true, -1000+100, 88);
+		IIContent.gasSulfurTrioxide = makeFluid("sulfur_trioxide", IIColor.fromHex("e6faaf"), true, -1000+100, 88);
+		IIContent.gasHydrogenSulfide = makeFluid("hydrogen_sulfide", IIColor.fromHex("e6e6e6"), true, -1000+100, 88);
+		IIContent.gasArgon = makeFluid("argon", IIColor.fromHex("e6e6e6"), true, -1000+100, 88);
+		IIContent.gasNitrogen = makeFluid("nitrogen", IIColor.fromHex("e6e6e6"), true, -1000+100, 88);
+		IIContent.gasTearGas = makeFluid("tear_gas", IIColor.fromHex("fffffc"), true, -500+100, 240);
 
 		IIContent.blockFluidInkBlack = new BlockIIFluid("ink", IIContent.fluidInkBlack, Material.WATER);
 		IIContent.blockFluidInkCyan = new BlockIIFluid("ink_cyan", IIContent.fluidInkCyan, Material.WATER);
@@ -468,21 +497,44 @@ public class IIContent
 		IIContent.blockFluidMethanol = new BlockIIFluid("methanol", IIContent.fluidMethanol, Material.WATER);
 		IIContent.blockFluidRocketPropellant = new BlockIIFluid("rocket_propellant", IIContent.fluidRocketPropellant, Material.WATER);
 
-		IIContent.blockGasHydrogen = new BlockIIFluid("hydrogen", IIContent.gasHydrogen, Material.WATER);
+		IIContent.blockAcetaldol = new BlockIIFluid("acetaldol", IIContent.fluidAcetaldol, Material.WATER);
+		IIContent.blockAtropine = new BlockIIFluid("atropine", IIContent.fluidAtropine, Material.WATER);
+		IIContent.blockGlycerin = new BlockIIFluid("glycerin", IIContent.fluidGlycerin, Material.WATER);
+		IIContent.blockAceticAcid = new BlockIIFluid("acetic_acid", IIContent.fluidAceticAcid, Material.WATER);
+		IIContent.blockHydrazine = new BlockIIFluid("hydrazine", IIContent.fluidHydrazine, Material.WATER);
+		IIContent.blockMonomethylHydrazine = new BlockIIFluid("monomethylhydrazine", IIContent.fluidMonomethylHydrazine, Material.WATER);
+		IIContent.blockNitroglycerin = new BlockIIFluid("nitroglycerin", IIContent.fluidNitroglycerin, Material.WATER);
+		IIContent.blockHydrogenPeroxide = new BlockIIFluid("hydrogen_peroxide", IIContent.fluidHydrogenPeroxide, Material.WATER);
+		IIContent.blockNitrogenTetroxide = new BlockIIFluid("nitrogen_tetroxide", IIContent.fluidNitrogenTetroxide, Material.WATER);
+		IIContent.blockSodiumHypochlorite = new BlockIIFluid("sodium_hypochlorite", IIContent.fluidSodiumHypochlorite, Material.WATER);
+
+		IIContent.blockGasHydrogen = new BlockIIFluid("hydrogen", IIContent.gasHydrogen, Material.WATER)
+				.setPotionEffects(new PotionEffect(IIPotions.suffocator, 60, 1));
 		IIContent.blockGasOxygen = new BlockIIFluid("oxygen", IIContent.gasOxygen, Material.WATER)
-				.setPotionEffects(new PotionEffect(MobEffects.WATER_BREATHING, 20, 0));
+				.setPotionEffects(new PotionEffect(MobEffects.WATER_BREATHING, 20, 0), new PotionEffect(MobEffects.WEAKNESS, 60, 0), new PotionEffect(IIPotions.corrosion, 60, 0));
 		IIContent.blockGasChlorine = new BlockIIFluid("chlorine", IIContent.gasChlorine, Material.WATER)
-				.setPotionEffects(new PotionEffect(MobEffects.BLINDNESS, 60, 1));
+				.setPotionEffects(new PotionEffect(IIPotions.suffocator, 60, 1), new PotionEffect(MobEffects.BLINDNESS, 60, 0));
 		IIContent.blockGasCO2 = new BlockIIFluid("carbon_dioxide", IIContent.gasCO2, Material.WATER)
-				.setPotionEffects(new PotionEffect(MobEffects.BLINDNESS, 60, 0));
+				.setPotionEffects(new PotionEffect(IIPotions.suffocator, 60, 1), new PotionEffect(MobEffects.BLINDNESS, 60, 0));
 		IIContent.blockGasCO = new BlockIIFluid("carbon_oxide", IIContent.gasCO, Material.WATER)
-				.setPotionEffects(new PotionEffect(MobEffects.BLINDNESS, 60, 0));
+				.setPotionEffects(new PotionEffect(IIPotions.suffocator, 60, 1), new PotionEffect(MobEffects.BLINDNESS, 60, 0));
 		IIContent.blockGasMustardGas = new BlockIIFluid("mustard_gas", IIContent.gasMustardGas, Material.WATER)
-				.setPotionEffects(new PotionEffect(MobEffects.POISON, 60, 0));
+				.setPotionEffects(new PotionEffect(IIPotions.suffocator, 60, 1), new PotionEffect(MobEffects.POISON, 60, 0), new PotionEffect(IIPotions.poisonirritant, 60, 2));
+		IIContent.blockHydrogenSulfide = new BlockIIFluid("hydrogen_sulfide", IIContent.gasHydrogenSulfide, Material.WATER)
+				.setPotionEffects(new PotionEffect(IIPotions.suffocator, 60, 1), new PotionEffect(IIPotions.corrosion, 60, 0))
+				.setFlammability(20, 5);
+		IIContent.blockTearGas = new BlockIIFluid("tear_gas", IIContent.gasTearGas, Material.WATER)
+				.setPotionEffects(new PotionEffect(IIPotions.suffocator, 60, 1), new PotionEffect(IIPotions.poisonirritant, 40, 0), new PotionEffect(MobEffects.BLINDNESS, 40, 0));
+		IIContent.blockPhosgene = new BlockIIFluid("phosgene_gas", IIContent.gasPhosgene, Material.WATER)
+				.setPotionEffects(new PotionEffect(IIPotions.suffocator, 60, 1), new PotionEffect(IIPotions.suffocatordelayed1, 60, 0), new PotionEffect(IIPotions.poisonirritant, 120, 0));
+		IIContent.blocktabun = new BlockIIFluid("tabun", IIContent.gastabun, Material.WATER)
+				.setPotionEffects(new PotionEffect(IIPotions.suffocator, 60, 1), new PotionEffect(IIPotions.neuroparalitic, 480, 0), new PotionEffect(MobEffects.HUNGER, 360, 4));
+		IIContent.blockSarin = new BlockIIFluid("sarin_gas", IIContent.gasSarin, Material.WATER)
+				.setPotionEffects(new PotionEffect(IIPotions.suffocator, 60, 1), new PotionEffect(MobEffects.NAUSEA, 120, 0), new PotionEffect(IIPotions.neuroparalitic, 240, 2));
 	}
 
 	//dummy method, called so that the static fields above get loaded
-	static void init()
+	public static void init()
 	{
 		new ItemStack(IIContent.itemLightEngineerHelmet);
 	}
@@ -509,6 +561,26 @@ public class IIContent
 		IIContent.fluidRocketPropellant = FluidRegistry.getFluid("rocket_propellant");
 		IIContent.fluidLatex = FluidRegistry.getFluid("latex");
 		IIContent.gasMustardGas = FluidRegistry.getFluid("mustard_gas");
+		IIContent.gasPhosgene = FluidRegistry.getFluid("phosgene");
+		IIContent.gasSarin = FluidRegistry.getFluid("sarin");
+		IIContent.gastabun = FluidRegistry.getFluid("tabun");
 		IIContent.fluidMilk = FluidRegistry.getFluid("milk");
+		IIContent.fluidAcetaldol = FluidRegistry.getFluid("acetaldol");
+		IIContent.fluidAtropine = FluidRegistry.getFluid("atropine");
+		IIContent.fluidGlycerin = FluidRegistry.getFluid("glycerin");
+		IIContent.fluidAceticAcid = FluidRegistry.getFluid("acetic_acid");
+		IIContent.fluidHydrazine = FluidRegistry.getFluid("hydrazine");
+		IIContent.fluidMonomethylHydrazine = FluidRegistry.getFluid("monomethylhydrazine");
+		IIContent.fluidNitroglycerin = FluidRegistry.getFluid("nitroglycerin");
+		IIContent.fluidHydrogenPeroxide = FluidRegistry.getFluid("hydrogen_peroxide");
+		IIContent.fluidNitrogenTetroxide = FluidRegistry.getFluid("nitrogen_tetroxide");
+		IIContent.fluidSodiumHypochlorite = FluidRegistry.getFluid("sodium_hypochlorite");
+		IIContent.gasButadiene = FluidRegistry.getFluid("butadiene");
+		IIContent.gasSulfurDioxide = FluidRegistry.getFluid("sulfur_dioxide");
+		IIContent.gasSulfurTrioxide = FluidRegistry.getFluid("sulfur_trioxide");
+		IIContent.gasHydrogenSulfide = FluidRegistry.getFluid("hydrogen_sulfide");
+		IIContent.gasArgon = FluidRegistry.getFluid("argon");
+		IIContent.gasNitrogen = FluidRegistry.getFluid("nitrogen");
+		IIContent.gasTearGas = FluidRegistry.getFluid("tear_gas");
 	}
 }

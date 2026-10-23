@@ -132,6 +132,31 @@ public class ItemIIMaterial extends ItemIISubItemsBase<Materials>
 		@IIItemProperties(oreDict = "lens")
 		LENS,
 		@IIItemProperties(oreDict = "lensInfrared")
-		INFRARED_LENS
+		INFRARED_LENS,
+
+		@IIItemProperties(oreDict = "dustSodium")
+		SODIUM,
+		@IIItemProperties(oreDict = "dustPotassium")
+		POTASSIUM,
+		@IIItemProperties(oreDict = "dustAmmoniumNitrate")
+		AMMONIUM_NITRATE,
+		@IIItemProperties(oreDict = "dustSiliconDioxide")
+		SILICON_DIOXIDE,
+		@IIItemProperties(oreDict = "dustSodiumCarbonate")
+		SODIUM_CARBONATE,
+		@IIItemProperties(oreDict = "dustSodiumHydroxide")
+		SODIUM_HYDROXIDE,
+		@IIItemProperties(oreDict = "nuggetSyntheticRubber")
+		SYNTHETIC_RUBBER_CRUMBS,
+		@IIItemProperties(oreDict = {"dustNitrocellulose", "nitrocellulose"})
+		NITROCELLULOSE,
+		@IIItemProperties(oreDict = {"dustCordite", "cordite"})
+		DUST_CORDITE,
+		@IIItemProperties(oreDict = "dustPotassiumHydroxide")
+		POTASSIUM_HYDROXIDE,
+		@IIItemProperties(oreDict = "dustThermite")
+		THERMITE,
+		@IIItemProperties(oreDict = "dustZincSulfide")
+		ZINC_SULFIDE
 	}
 }

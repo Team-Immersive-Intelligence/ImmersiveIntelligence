@@ -24,13 +24,15 @@ public class ItemIIMaterialNugget extends ItemIISubItemsBase<MaterialsNugget>
 	@GeneratedItemModels(itemName = "material_nugget", texturePath = "material/nugget")
 	public enum MaterialsNugget implements IIItemEnum
 	{
-		ADVANCED_ELECTRONIC_ALLOY,
+		TIN,
 		BRASS,
 		PLATINUM,
 		TUNGSTEN,
 		ZINC,
 		SILICON,
 		DURALUMINIUM,
-		RUBBER
+		RUBBER,
+		STAINLESS_STEEL,
+		CHROMIUM
 	}
 }

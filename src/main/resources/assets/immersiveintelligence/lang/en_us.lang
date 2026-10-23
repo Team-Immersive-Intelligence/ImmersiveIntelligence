@@ -84,53 +84,68 @@ item.immersiveintelligence.material_ingot.platinum.name=Platinum Ingot
 item.immersiveintelligence.material_ingot.zinc.name=Zinc Ingot
 item.immersiveintelligence.material_ingot.tungsten.name=Tungsten Ingot
 item.immersiveintelligence.material_ingot.brass.name=Brass Ingot
-item.immersiveintelligence.material_ingot.advanced_electronic_alloy.name=Advanced Electronic Alloy Ingot
 item.immersiveintelligence.material_ingot.silicon.name=Silicon Ingot
 item.immersiveintelligence.material_ingot.magnet.name=Magnet
 item.immersiveintelligence.material_ingot.duraluminium.name=Duraluminium Ingot
+item.immersiveintelligence.material_ingot.tin.name=Tin Ingot
+item.immersiveintelligence.material_ingot.stainless_steel.name=Stainless Steel Ingot
+item.immersiveintelligence.material_ingot.chromium.name=Chromium Ingot
 
 item.immersiveintelligence.material_rod.brass.name=Brass Rod
 item.immersiveintelligence.material_rod.tungsten.name=Tungsten Rod
 item.immersiveintelligence.material_rod.zinc.name=Zinc Rod
 item.immersiveintelligence.material_rod.platinum.name=Platinum Rod
 item.immersiveintelligence.material_rod.duraluminium.name=Duraluminium Rod
+item.immersiveintelligence.material_rod.tin.name=Tin Rod
+item.immersiveintelligence.material_rod.stainless_steel.name=Stainless Steel Rod
+item.immersiveintelligence.material_rod.chromium.name=Chromium Rod
 
 item.immersiveintelligence.material_dust.platinum.name=Platinum Grit
 item.immersiveintelligence.material_dust.zinc.name=Zinc Grit
 item.immersiveintelligence.material_dust.tungsten.name=Tungsten Grit
 item.immersiveintelligence.material_dust.brass.name=Brass Grit
-item.immersiveintelligence.material_dust.advanced_electronic_alloy.name=Advanced Electronic Alloy Grit
 item.immersiveintelligence.material_dust.silicon.name=Silicon Dust
 item.immersiveintelligence.material_dust.fluorite.name=Fluorite Dust
 item.immersiveintelligence.material_dust.quartz.name=Quartz Dust
 item.immersiveintelligence.material_dust.quartz_dirty.name=Dirty Quartz Dust
 item.immersiveintelligence.material_dust.phosphorus.name=Phosphorus Dust
 item.immersiveintelligence.material_dust.duraluminium.name=Duraluminium Grit
+item.immersiveintelligence.material_dust.tin.name=Tin Grit
+item.immersiveintelligence.material_dust.stainless_steel.name=Stainless Steel Grit
+item.immersiveintelligence.material_dust.chromium.name=Chromium Grit
+item.immersiveintelligence.material_dust.slag.name=Slag Dust
 
 item.immersiveintelligence.material_plate.platinum.name=Platinum Plate
 item.immersiveintelligence.material_plate.zinc.name=Zinc Plate
 item.immersiveintelligence.material_plate.tungsten.name=Tungsten Plate
 item.immersiveintelligence.material_plate.brass.name=Brass Plate
-item.immersiveintelligence.material_plate.advanced_electronic_alloy.name=Advanced Electronic Alloy Plate
 item.immersiveintelligence.material_plate.silicon.name=Silicon Wafer
 item.immersiveintelligence.material_plate.rubber_raw.name=Natural Rubber Sheet
 item.immersiveintelligence.material_plate.duraluminium.name=Duraluminium Plate
+item.immersiveintelligence.material_plate.tin.name=Tin Plate
+item.immersiveintelligence.material_plate.stainless_steel.name=Stainless Steel Plate
+item.immersiveintelligence.material_plate.chromium.name=Chromium Plate
 
 item.immersiveintelligence.material_nugget.platinum.name=Platinum Nugget
 item.immersiveintelligence.material_nugget.zinc.name=Zinc Nugget
 item.immersiveintelligence.material_nugget.tungsten.name=Tungsten Nugget
 item.immersiveintelligence.material_nugget.brass.name=Brass Nugget
-item.immersiveintelligence.material_nugget.advanced_electronic_alloy.name=Advanced Electronic Alloy Nugget
 item.immersiveintelligence.material_nugget.silicon.name=Silicon Piece
 item.immersiveintelligence.material_nugget.duraluminium.name=Duraluminium Nugget
 item.immersiveintelligence.material_nugget.rubber.name=Rubber Nugget
+item.immersiveintelligence.material_nugget.tin.name=Tin Nugget
+item.immersiveintelligence.material_nugget.stainless_steel.name=Stainless Steel Nugget
+item.immersiveintelligence.material_nugget.chromium.name=Chromium Nugget
 
 item.immersiveintelligence.material_wire.tungsten.name=Tungsten Wire
 item.immersiveintelligence.material_wire.brass.name=Brass Wire
 
-item.immersiveintelligence.material_gem.fluorite.name=Nether Fluorite
+item.immersiveintelligence.material_gem.fluorite.name=Fluorite Crystal
 #Based on real-life mineral glauconite, though the word phosphorus is easier to remember
-item.immersiveintelligence.material_gem.phosphorus.name=Nether Phosphorus
+item.immersiveintelligence.material_gem.phosphorus.name=Phosphorus Crystal
+#Orpiment
+item.immersiveintelligence.material_gem.sulfur.name=Sulfur Crystal
+item.immersiveintelligence.material_gem.salt.name=Salt Crystal
 
 item.immersiveintelligence.material_boule.silicon.name=Silicon Boule
 
@@ -160,6 +175,36 @@ item.immersiveintelligence.material.artificial_leather.name=Artificial Leather
 item.immersiveintelligence.material.natural_rubber.name=Natural Rubber
 item.immersiveintelligence.material.rubber_belt.name=Rubber Strap
 item.immersiveintelligence.material.rubber_tire.name=Rubber Tire
+
+#Chemistry Items
+item.immersiveintelligence.material.sodium.name=Sodium
+item.immersiveintelligence.material.potassium.name=Potassium
+item.immersiveintelligence.material.ammonium_nitrate.name=Ammonium Nitrate
+item.immersiveintelligence.material.potassium_hydroxide.name=Potassium Hydroxide
+item.immersiveintelligence.material.potassium_carbonate.name=Potassium Carbonate
+item.immersiveintelligence.material.synthetic_rubber_crumbs.name=Synthetic Rubber Crumbs
+item.immersiveintelligence.material.silicon_dioxide.name=Silicon Dioxide
+item.immersiveintelligence.material.sodium_carbonate.name=Sodium Carbonate
+item.immersiveintelligence.material.nitrocellulose.name=Nitrocellulose
+item.immersiveintelligence.material.dust_cordite.name=Cordite Dust
+item.immersiveintelligence.material.sodium_hydroxide.name=Sodium Hydroxide
+item.immersiveintelligence.material.zinc_sulfide.name=Zinc Sulfide
+item.immersiveintelligence.material.thermite.name=Thermite
+
+item.immersiveintelligence.material_catalyst.copper.name=Copper Catalyst
+item.immersiveintelligence.material_catalyst.iron.name=Iron Catalyst
+item.immersiveintelligence.material_catalyst.platinum.name=Platinum Catalyst
+item.immersiveintelligence.material_catalyst.nickel.name=Nickel Catalyst
+
+item.immersiveintelligence.material_dye.red.name=Red Chemical Dye
+item.immersiveintelligence.material_dye.blue.name=Blue Chemical Dye
+item.immersiveintelligence.material_dye.green.name=Green Chemical Dye
+item.immersiveintelligence.material_dye.cyan.name=Cyan Chemical Dye
+item.immersiveintelligence.material_dye.yellow.name=Yellow Chemical Dye
+item.immersiveintelligence.material_dye.magenta.name=Magenta Chemical Dye
+item.immersiveintelligence.material_dye.black.name=Black Chemical Dye
+
+#Chemistry Fluids
 
 item.immersiveintelligence.circuit_functional.arithmetic.name=Arithmetic Circuit
 item.immersiveintelligence.circuit_functional.advanced_arithmetic.name=Advanced Arithmetic Circuit
@@ -521,6 +566,10 @@ tile.immersiveintelligence.ore.salt.name=Salt Ore
 
 tile.immersiveintelligence.ore.fluorite.name=Nether Fluorite Ore
 tile.immersiveintelligence.ore.phosphorus.name=Nether Phosphorus Ore
+tile.immersiveintelligence.ore.sulfur.name=Nether Sulfur Ore
+tile.immersiveintelligence.ore.fluorite_overworld.name=Fluorite Ore
+tile.immersiveintelligence.ore.phosphorus_overworld.name=Phosphorus Ore
+tile.immersiveintelligence.ore.sulfur_overworld.name=Sulfur Ore
 
 tile.immersiveintelligence.sheetmetal.brass.name=Brass Sheetmetal
 tile.immersiveintelligence.storage.brass.name=Brass Block
@@ -537,6 +586,26 @@ tile.immersiveintelligence.fence_tungsten.name=Tungsten Fence
 tile.immersiveintelligence.fence_zinc.name=Zinc Fence
 tile.immersiveintelligence.fence_platinum.name=Platinum Fence
 tile.immersiveintelligence.fence_duraluminium.name=Duraluminium Fence
+tile.immersiveintelligence.fence_stainless_steel.name=Stainless Steel Fence
+
+tile.immersiveintelligence.ore.tin.name=Tin Ore
+tile.immersiveintelligence.sheetmetal.tin.name=Tin Sheetmetal
+tile.immersiveintelligence.storage.tin.name=Tin Block
+tile.immersiveintelligence.sheetmetal_slab.tin.name=Tin Sheetmetal Slab
+tile.immersiveintelligence.storage_slab.tin.name=Tin Slab
+
+tile.immersiveintelligence.ore.chromium.name=Chromium Ore
+tile.immersiveintelligence.sheetmetal.chromium.name=Chromium Sheetmetal
+tile.immersiveintelligence.storage.chromium.name=Chromium Block
+tile.immersiveintelligence.sheetmetal_slab.chromium.name=Chromium Sheetmetal Slab
+tile.immersiveintelligence.storage_slab.chromium.name=Chromium Slab
+
+tile.immersiveintelligence.sheetmetal.stainless_steel.name=Stainless Steel Sheetmetal
+tile.immersiveintelligence.storage.stainless_steel.name=Stainless Steel Block
+tile.immersiveintelligence.sheetmetal_slab.stainless_steel.name=Stainless Steel Sheetmetal Slab
+tile.immersiveintelligence.storage_slab.stainless_steel.name=Stainless Steel Slab
+
+tile.immersiveintelligence.industrial_glowstone.industrial.name=Industrial Glowstone
 
 tile.immersiveintelligence.rubber_log.raw.name=Rubber Tree Wood
 tile.immersiveintelligence.rubber_log.rebbur.name=Latex Extraction Hole
@@ -578,6 +647,7 @@ tile.immersiveintelligence.metal_decoration.advanced_electronic_engineering.name
 tile.immersiveintelligence.metal_decoration.computer_engineering.name=Computer Engineering Block
 tile.immersiveintelligence.metal_decoration.mechanical_engineering.name=Mechanical Engineering Block
 tile.immersiveintelligence.metal_decoration.heavy_mechanical_engineering.name=Heavy Mechanical Engineering Block
+tile.immersiveintelligence.metal_decoration.chemical_engineering.name=Chemical Engineering Block
 
 tile.immersiveintelligence.metal_decoration.coil_data.name=Data Cable Coil
 tile.immersiveintelligence.cloth_decoration.coil_rope.name=Rope Coil
@@ -859,6 +929,17 @@ fluid.carbon_dioxide=Carbon Dioxide
 fluid.carbon_monoxide=Carbon Monoxide
 fluid.mustard_gas=Mustard Gas
 
+fluid.butadiene=Butadiene
+fluid.sulfur_dioxide=Sulfur Dioxide
+fluid.sulfur_trioxide=Sulfur Trioxide
+fluid.hydrogen_sulfide=Hydrogen Sulfide
+fluid.argon=Argon
+fluid.nitrogen=Nitrogen
+fluid.tear_gas=Tear Gas
+fluid.phosgene=Phosgene
+fluid.sarin=Sarin
+fluid.tabun=tabun
+
 fluid.brine=Brine
 
 fluid.ammonia=Ammonia
@@ -868,12 +949,24 @@ fluid.rocket_propellant=Rocket Propellant
 
 fluid.latex=Latex
 
+fluid.acetaldol=Acetaldol
+fluid.atropine=Atropine
+fluid.glycerin=Glycerin
+fluid.acetic_acid=Acetic Acid
+fluid.hydrazine=Hydrazine
+fluid.monomethylhydrazine=Monomethylhydrazine
+fluid.hydrogen_peroxide=Hydrogen Peroxide
+fluid.nitroglycerin=Nitroglycerin
+fluid.nitrogen_tetroxide=Nitrogen Tetroxide
+fluid.sodium_hypochlorite=Sodium Hypochlorite
+
 #Dusts
 dust.gunpowder=Gunpowder
 dust.sulfur=Sulfur
 dust.sawdust=Sawdust
 dust.sand=Sand
 dust.gravel=Gravel
+dust.slag=Slag Dust
 
 #Sounds
 
@@ -1693,7 +1786,12 @@ potion.immersiveintelligence.enemys_nest=Enemy's Nest
 potion.immersiveintelligence.home_shores=Home Shores
 potion.immersiveintelligence.homeland=Homeland
 potion.immersiveintelligence.heartland=Heartland
-
+potion.immersiveintelligence.neuroparalitic=Neuroparalysis
+potion.immersiveintelligence.fullparalysis=Paralyzed
+potion.immersiveintelligence.poisonIrritant=Irritant
+potion.immersiveintelligence.suffocator=Suffocation
+potion.immersiveintelligence.suffocatordelayed1=Suffocation (Delayed)
+potion.immersiveintelligence.suffocatordelayed2=Suffocation (Accumulation)
 #Chat info / debug
 info.immersiveintelligence.frequency_set=Radio frequency has been set to %s
 info.immersiveintelligence.frequency_invalid=Invalid frequency, basic devices can use frequencies up to %s!

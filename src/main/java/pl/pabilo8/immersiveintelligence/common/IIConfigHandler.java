@@ -140,10 +140,6 @@ public class IIConfigHandler
 		@RequiresMcRestart
 		public static boolean smeltableTungsten = false;
 
-		@Comment({"Whether Advanced Electronic Alloy should be smeltable in the vanilla furnace"})
-		@RequiresMcRestart
-		public static boolean smeltableAEA = false;
-
 		@Comment({"A list of all entities for which a fakeplayer should be used when shooter is not a player"})
 		public static String[] bulletFakeplayerWhitelist = new String[]{
 				"minecraft:ender_dragon"
@@ -382,6 +378,16 @@ public class IIConfigHandler
 			@RequiresMcRestart
 			@Mapped(mapClass = Config.class, mapName = "manual_intA")
 			public static int[] orePhosphorus = new int[]{12, 1, 55, 1, 80};
+
+			@Comment({"Generation config for Tin Ore.", "Parameters: Vein size, lowest possible Y, highest possible Y, veins per chunk, chance for vein to spawn (out of 100). Set vein size to 0 to disable the generation"})
+			@RequiresMcRestart
+			@Mapped(mapClass = Config.class, mapName = "manual_intA")
+			public static int[] oreTin = new int[]{16, 0, 96, 2, 75};
+
+			@Comment({"Generation config for Chromium Ore.", "Parameters: Vein size, lowest possible Y, highest possible Y, veins per chunk, chance for vein to spawn (out of 100). Set vein size to 0 to disable the generation"})
+			@RequiresMcRestart
+			@Mapped(mapClass = Config.class, mapName = "manual_intA")
+			public static int[] oreChromium = new int[]{10, 35, 95, 2, 100};
 
 			@Comment({"Set this to true to allow retro-generation of Platinum Ore."})
 			@RequiresMcRestart

@@ -384,6 +384,8 @@ public class CommonProxy implements IGuiHandler
 		ExcavatorHandler.addMineral("Rich Auricupride", 15, .15f, new String[]{"oreGold", "oreCopper"}, new float[]{.6f, .4f});
 		ExcavatorHandler.addMineral("Emerald Geode", 15, .15f, new String[]{"terracotta", "sand", "gemEmerald"}, new float[]{.4f, .4f, .2f});
 		ExcavatorHandler.addMineral("Uranite", 15, .15f, new String[]{"oreUranium", "oreLead"}, new float[]{.4f, .6f});
+		ExcavatorHandler.addMineral("Cassiterite", 15, .15f, new String[]{"oreTin"}, new float[]{1.0f});
+		ExcavatorHandler.addMineral("Chromite", 15, .15f, new String[]{"oreChromium"}, new float[]{1.0f});
 
 		LighterFuelHandler.addFuel(FluidRegistry.getFluid("creosote"), 100);
 		LighterFuelHandler.addFuel(FluidRegistry.getFluid("ethanol"), 20);
@@ -579,10 +581,10 @@ public class CommonProxy implements IGuiHandler
 		fl.setTemperature(temperature);
 		fl.setGaseous(gas);
 
-		//Register fluid
-		FluidRegistry.addBucketForFluid(fl);
+		//Register fluid in the master registry before any bucket registration.
 		if(!FluidRegistry.registerFluid(fl))
 			fl = FluidRegistry.getFluid(fl.getName());
+		FluidRegistry.addBucketForFluid(fl);
 
 		//Add fluid to creative menu
 		IICreativeTab.fluidBucketMap.add(fl);
@@ -607,6 +609,7 @@ public class CommonProxy implements IGuiHandler
 		CapabilityChunkOwnership.register();
 		IEApi.prefixToIngotMap.put("spring", new Integer[]{2, 1});
 
+		IIPotions.init();
 		IIContent.init();
 
 		IIDataTypeUtils.registerDataTypes();
@@ -684,6 +687,7 @@ public class CommonProxy implements IGuiHandler
 		DustUtils.registerDust(new IngredientStack("dustSmallWood", 25), "sawdust", IIColor.fromPackedRGB(0x8c8269));
 		DustUtils.registerDust(new IngredientStack("sand", 100), "sand", IIColor.fromPackedRGB(0xaca37b));
 		DustUtils.registerDust(new IngredientStack("gravel", 100), "gravel", IIColor.fromPackedRGB(0x383937));
+		DustUtils.registerDust(new IngredientStack("dustSlag", 100), "slag", IIColor.fromPackedRGB(0x5f403c));
 
 		ShrapnelHandler.addShrapnel("white_phosphorus", IIColor.fromPackedRGB(0x6b778a), 5, 0.3f, 0f)
 				.setFlammable(true);
@@ -785,6 +789,10 @@ public class CommonProxy implements IGuiHandler
 		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.ZINC.getMeta()), "zinc", IIConfig.Ores.oreZinc, EnumOreType.OVERWORLD);
 		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.TUNGSTEN.getMeta()), "tungsten", IIConfig.Ores.oreTungsten, EnumOreType.OVERWORLD);
 		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.SALT.getMeta()), "salt", IIConfig.Ores.oreSalt, EnumOreType.OVERWORLD);
+		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.FLUORITE_OVERWORLD.getMeta()), "fluorite_overworld", IIConfig.Ores.oreFluorite, EnumOreType.OVERWORLD);
+		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.PHOSPHORUS_OVERWORLD.getMeta()), "phosphorus_overworld", IIConfig.Ores.orePhosphorus, EnumOreType.OVERWORLD);
+		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.TIN.getMeta()), "tin", IIConfig.Ores.oreTin, EnumOreType.OVERWORLD);
+		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.CHROMIUM.getMeta()), "chromium", IIConfig.Ores.oreChromium, EnumOreType.OVERWORLD);
 		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.FLUORITE.getMeta()), "fluorite", IIConfig.Ores.oreFluorite, EnumOreType.NETHER);
 		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.PHOSPHORUS.getMeta()), "phosphorus", IIConfig.Ores.orePhosphorus, EnumOreType.NETHER);
 
