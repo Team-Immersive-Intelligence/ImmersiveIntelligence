@@ -2989,13 +2989,6 @@ advancement.immersiveintelligence.craft_chemdispenser.desc=Изготовьте 
 advancement.immersiveintelligence.craft_inserter=Никаких жёлтых, извините!
 advancement.immersiveintelligence.craft_inserter.desc=Создайте манипулятор
 
-#Long story short, in Company of Heroes 2 on Wikinger Mod, there is a special unit type - the infiltrators
-#Those guys often have superior firepower and accuracy, German units are using the Sturmgewehrs with infrared sights
-#That's why all the infiltration stuff in II is related to Infrared Vision
-advancement.immersiveintelligence.craft_ir_binoculars=Инфильтратор
-advancement.immersiveintelligence.craft_ir_binoculars.desc=Создайте инфракрасный бинокль
-
-#Reference to Fullmetal Alchemist: Brotherhood (Lust death scene)
 advancement.immersiveintelligence.craft_lighter=Возвращение парня с Zippo
 advancement.immersiveintelligence.craft_lighter.desc=Создайте зажигалку
 
