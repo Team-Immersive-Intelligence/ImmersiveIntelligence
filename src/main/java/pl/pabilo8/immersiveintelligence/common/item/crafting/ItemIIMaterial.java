@@ -146,7 +146,7 @@ public class ItemIIMaterial extends ItemIISubItemsBase<Materials>
 		SODIUM_CARBONATE,
 		@IIItemProperties(oreDict = "dustSodiumHydroxide")
 		SODIUM_HYDROXIDE,
-		@IIItemProperties(oreDict = "nuggetSyntheticRubber")
+		@IIItemProperties(oreDict = {"nuggetSyntheticRubber", "rubberRaw"})
 		SYNTHETIC_RUBBER_CRUMBS,
 		@IIItemProperties(oreDict = {"dustNitrocellulose", "nitrocellulose"})
 		NITROCELLULOSE,
