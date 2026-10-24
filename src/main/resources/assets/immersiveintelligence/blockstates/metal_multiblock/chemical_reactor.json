@@ -80,9 +80,7 @@
 		},
 		"_1dynamicrender": {
 			"false": {},
-			"true": {
-				"model": "immersiveintelligence:multiblock/chemical_reactor/chemical_reactor.obj.ie"
-			}
+			"true": {}
 		}
 	}
 }

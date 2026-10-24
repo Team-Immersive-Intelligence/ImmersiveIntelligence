@@ -33,7 +33,7 @@ public class ChemicalReactorRenderer extends IIMultiblockRenderer<TileEntityChem
 	@Override
 	public void compileModels(IBlockState state, OBJModel objModel)
 	{
-		model = objModel==null?null: new AMTModel(state, objModel);
+		model = null;
 	}
 
 	@Override
