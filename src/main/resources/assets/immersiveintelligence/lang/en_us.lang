@@ -859,7 +859,7 @@ desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.cmyk=Display
 desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.cmyk.c=Cyan
 desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.cmyk.m=Magenta
 desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.cmyk.y=Yellow
-desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.cmyk.k=Red
+desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.cmyk.k=Black
 
 desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.hsv=Display in HSV
 desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.hsv.h=Hue
