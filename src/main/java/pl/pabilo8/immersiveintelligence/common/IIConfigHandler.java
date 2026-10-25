@@ -389,6 +389,11 @@ public class IIConfigHandler
 			@Mapped(mapClass = Config.class, mapName = "manual_intA")
 			public static int[] oreChromium = new int[]{10, 35, 95, 2, 100};
 
+			@Comment({"Generation config for Sulfur Ore.", "Parameters: Vein size, lowest possible Y, highest possible Y, veins per chunk, chance for vein to spawn (out of 100). Set vein size to 0 to disable the generation"})
+			@RequiresMcRestart
+			@Mapped(mapClass = Config.class, mapName = "manual_intA")
+			public static int[] oreSulfur = new int[]{6, 1, 55, 1, 65};
+
 			@Comment({"Set this to true to allow retro-generation of Platinum Ore."})
 			@RequiresMcRestart
 			@Mapped(mapClass = IIWorldGen.class, mapName = "retrogenMap")
