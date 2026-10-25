@@ -517,6 +517,19 @@ public class CommonProxy implements IGuiHandler
 	{
 		String s = tile.getSimpleName();
 		s = s.substring(s.indexOf("TileEntity")+"TileEntity".length());
+		//Keep the persisted IDs of the devices replaced by these classes.
+		switch(s)
+		{
+			case "DataBuffer":
+				s = "SmallDataBuffer";
+				break;
+			case "DataMapper":
+				s = "TimedBuffer";
+				break;
+			case "RedstoneSequencer":
+				s = "RedstoneBuffer";
+				break;
+		}
 		GameRegistry.registerTileEntity(tile, new ResourceLocation(ImmersiveIntelligence.MODID+":"+s));
 	}
 

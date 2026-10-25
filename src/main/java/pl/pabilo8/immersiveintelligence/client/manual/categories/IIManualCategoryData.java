@@ -155,14 +155,18 @@ public class IIManualCategoryData extends IIManualCategory
 
 		addEntry("redstone_interface");
 
-		addEntry("small_data_devices")
-				.addSource("data_combiner", getSourceForItem(IIContent.blockMetalDevice.getStack(IIBlockTypes_MetalDevice.DATA_MERGER)))
-				.addSource("data_router", getSourceForItem(IIContent.blockMetalDevice.getStack(IIBlockTypes_MetalDevice.DATA_ROUTER)))
-				.addSource("small_data_buffer", getSourceForItem(IIContent.blockMetalDevice.getStack(IIBlockTypes_MetalDevice.SMALL_DATA_BUFFER)))
-				.addSource("timed_buffer", getSourceForItem(IIContent.blockMetalDevice.getStack(IIBlockTypes_MetalDevice.TIMED_BUFFER)))
-				.addSource("redstone_buffer", getSourceForItem(IIContent.blockMetalDevice.getStack(IIBlockTypes_MetalDevice.REDSTONE_BUFFER)
-
-				));
+		addEntry("small_data_devices/data_buffer")
+				.addSource("device", getSourceForItem(IIContent.blockMetalDevice.getStack(IIBlockTypes_MetalDevice.DATA_BUFFER)));
+		addEntry("small_data_devices/data_mapper")
+				.addSource("device", getSourceForItem(IIContent.blockMetalDevice.getStack(IIBlockTypes_MetalDevice.DATA_MAPPER)));
+		addEntry("small_data_devices/redstone_sequencer")
+				.addSource("device", getSourceForItem(IIContent.blockMetalDevice.getStack(IIBlockTypes_MetalDevice.REDSTONE_SEQUENCER)));
+		addEntry("small_data_devices/data_appender")
+				.addSource("device", getSourceForItem(IIContent.blockMetalDevice.getStack(IIBlockTypes_MetalDevice.DATA_APPENDER)));
+		addEntry("small_data_devices/data_router")
+				.addSource("device", getSourceForItem(IIContent.blockMetalDevice.getStack(IIBlockTypes_MetalDevice.DATA_ROUTER)));
+		addEntry("small_data_devices/data_merger")
+				.addSource("device", getSourceForItem(IIContent.blockMetalDevice.getStack(IIBlockTypes_MetalDevice.DATA_MERGER)));
 
 		addEntry("radio_station")
 				.addSource("basic_radio_tuner", getSourceForItem(IIContent.itemRadioTuner.getStack(1)))

@@ -3,7 +3,7 @@ Task System and Logistic Tags
 Keep it Simple, Stupid
 
 # intro
-**The task system** is a concept of organising a machine's work schedule through a single iterable task. Tasks are used by many data devices, such as the [Inserters](inserters.md), [Packers](packer.md), and the [data routers](small_data_devices.md#router). Tasks are divided into two groups:
+**The task system** is a concept of organising a machine's work schedule through a single iterable task. Tasks are used by many data devices, such as the [Inserters](inserters.md), [Packers](packer.md), and the [data routers](../ii_data/small_data_devices/data_router.md). Tasks are divided into two groups:
 **Jobs** - tasks which will execute infinitely, unless manually removed.
 **Requests** - tasks which are temporary, and will remove themselves after they are finished (i.e. after an inserter picks up a certain amount of items)
 # details

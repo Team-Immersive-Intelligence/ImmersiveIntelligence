@@ -8,7 +8,6 @@ import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.property.Properties;
@@ -26,8 +25,6 @@ import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBl
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IITileProviderEnum;
 import pl.pabilo8.immersiveintelligence.common.util.block.ItemBlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
-
-import javax.annotation.Nonnull;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -51,28 +48,6 @@ public class BlockIIMetalDevice extends BlockIITileProvider<IIBlockTypes_MetalDe
 		setSubBlockLayer(IIBlockTypes_MetalDevice.AMMUNITION_CRATE, BlockRenderLayer.SOLID, BlockRenderLayer.CUTOUT);
 		setSubBlockLayer(IIBlockTypes_MetalDevice.REPAIR_CRATE, BlockRenderLayer.SOLID, BlockRenderLayer.CUTOUT);
 		setSubBlockLayer(IIBlockTypes_MetalDevice.MEDIC_CRATE, BlockRenderLayer.SOLID, BlockRenderLayer.CUTOUT);
-
-		addToTESRMap(IIBlockTypes_MetalDevice.TIMED_BUFFER, IIBlockTypes_MetalDevice.REDSTONE_BUFFER,
-				IIBlockTypes_MetalDevice.SMALL_DATA_BUFFER, IIBlockTypes_MetalDevice.DATA_MERGER);
-	}
-
-	@Nonnull
-	public EnumBlockRenderType getRenderType(IBlockState state)
-	{
-		switch(state.getValue(property))
-		{
-			case METAL_CRATE:
-			case DATA_ROUTER:
-			case LATEX_COLLECTOR:
-			case PUNCHTAPE_READER:
-			case AMMUNITION_CRATE:
-			case MEDIC_CRATE:
-			case REPAIR_CRATE:
-				return EnumBlockRenderType.MODEL;
-			default:
-				return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
-		}
-
 	}
 
 	@Override
@@ -100,14 +75,14 @@ public class BlockIIMetalDevice extends BlockIITileProvider<IIBlockTypes_MetalDe
 		@EnumTileProvider(tile = TileEntityAmmunitionCrate.class)
 		AMMUNITION_CRATE,
 		@IIBlockProperties(category = IICategory.ELECTRONICS)
-		@EnumTileProvider(tile = TileEntitySmallDataBuffer.class)
-		SMALL_DATA_BUFFER,
+		@EnumTileProvider(tile = TileEntityDataBuffer.class)
+		DATA_BUFFER,
 		@IIBlockProperties(category = IICategory.ELECTRONICS)
-		@EnumTileProvider(tile = TileEntityTimedBuffer.class)
-		TIMED_BUFFER,
+		@EnumTileProvider(tile = TileEntityDataMapper.class)
+		DATA_MAPPER,
 		@IIBlockProperties(category = IICategory.ELECTRONICS)
-		@EnumTileProvider(tile = TileEntityRedstoneBuffer.class)
-		REDSTONE_BUFFER,
+		@EnumTileProvider(tile = TileEntityRedstoneSequencer.class)
+		REDSTONE_SEQUENCER,
 		@IIBlockProperties(category = IICategory.ELECTRONICS)
 		@EnumTileProvider(tile = TileEntityPunchtapeReader.class)
 		PUNCHTAPE_READER,
@@ -125,7 +100,10 @@ public class BlockIIMetalDevice extends BlockIITileProvider<IIBlockTypes_MetalDe
 		REPAIR_CRATE,
 		@IIBlockProperties(category = IICategory.TOOLS, needsCustomState = true)
 		@EnumTileProvider(tile = TileEntityLatexCollector.class)
-		LATEX_COLLECTOR
+		LATEX_COLLECTOR,
+		@IIBlockProperties(category = IICategory.ELECTRONICS)
+		@EnumTileProvider(tile = TileEntityDataAppender.class)
+		DATA_APPENDER
 	}
 
 

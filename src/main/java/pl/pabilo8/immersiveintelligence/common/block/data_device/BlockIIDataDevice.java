@@ -57,15 +57,11 @@ public class BlockIIDataDevice extends BlockIITileProvider<IIBlockTypes_Connecto
 	@Override
 	public String getMappingsExtension(int meta, boolean itemBlock)
 	{
-		switch(enumValues[meta])
+		return switch(enumValues[meta])
 		{
-			case DATA_CONNECTOR:
-			case DATA_RELAY:
-			case DATA_DUPLEX_CONNECTOR:
-				return "plug";
-			default:
-				return super.getMappingsExtension(meta, itemBlock);
-		}
+			case DATA_CONNECTOR, DATA_RELAY, DATA_DUPLEX_CONNECTOR -> "plug";
+			default -> super.getMappingsExtension(meta, itemBlock);
+		};
 	}
 
 	@Override

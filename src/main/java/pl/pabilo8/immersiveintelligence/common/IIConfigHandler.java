@@ -748,9 +748,9 @@ public class IIConfigHandler
 			@Comment("Config for the Chemical Dispenser, allows for changes to movement speed, energy usage and capacity")
 			public static ChemicalDispenser chemicalDispenser;
 			@SubConfig
-			@LangKey("tile.immersiveintelligence.metal_device.small_data_buffer.name")
-			@Comment("Config for the Small Data Buffer, allows changes to maximum packet capacity")
-			public static SmallDataBuffer smallDataBuffer;
+			@LangKey("tile.immersiveintelligence.metal_device.data_buffer.name")
+			@Comment("Config for the Data Buffer, allows changes to maximum packet capacity")
+			public static DataBuffer dataBuffer;
 			@SubConfig
 			@LangKey("tile.immersiveintelligence.wooden_multiblock.skycrate_station.name")
 			@Comment("Config for the Skycrate Station, allows for changes to multiblock processing time, and RPM interaction adjustments ")
@@ -1394,10 +1394,11 @@ public class IIConfigHandler
 				public static float sprayRangeGas = 0.75f;
 			}
 
-			public static class SmallDataBuffer
+			public static class DataBuffer
 			{
+				@RangeInt(min = 1, max = 4096)
 				@Comment({"Amount of data packets the machine can store."})
-				public static int packetCapacity = 4;
+				public static int packetCapacity = 64;
 			}
 
 			public static class FuelStation

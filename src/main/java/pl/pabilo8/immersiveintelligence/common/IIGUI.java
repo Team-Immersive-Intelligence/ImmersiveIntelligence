@@ -21,6 +21,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.block.arithmetic_logic_machin
 import pl.pabilo8.immersiveintelligence.client.gui.block.arithmetic_logic_machine.GuiArithmeticLogicMachineEdit;
 import pl.pabilo8.immersiveintelligence.client.gui.block.arithmetic_logic_machine.GuiArithmeticLogicMachineMemory;
 import pl.pabilo8.immersiveintelligence.client.gui.block.arithmetic_logic_machine.GuiArithmeticLogicMachineMemoryEdit;
+import pl.pabilo8.immersiveintelligence.client.gui.block.data_device.*;
 import pl.pabilo8.immersiveintelligence.client.gui.block.data_input_machine.GuiDataInputMachine;
 import pl.pabilo8.immersiveintelligence.client.gui.block.data_input_machine.GuiDataInputMachineEdit;
 import pl.pabilo8.immersiveintelligence.client.gui.block.data_merger.GuiDataMerger;
@@ -49,8 +50,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.entity.GuiEntityUpgrade;
 import pl.pabilo8.immersiveintelligence.client.gui.item.GuiCasingPouch;
 import pl.pabilo8.immersiveintelligence.client.gui.item.GuiClipboardItem;
 import pl.pabilo8.immersiveintelligence.client.gui.item.GuiPrintedPage;
-import pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity.TileEntityDataMerger;
-import pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity.TileEntityDataRouter;
+import pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity.*;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.TileEntityMetalCrate;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate.TileEntityAmmunitionCrate;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate.TileEntityMedicalCrate;
@@ -188,7 +188,15 @@ public enum IIGUI implements ISerializableEnum
 	FACTION_INVITATIONS(ContainerPlayerGui::new),
 	CLIPBOARD_ITEM(ContainerClipboardItem::new),
 	CLIPBOARD_BLOCK(TileEntityClipboard.class, ContainerClipboardTile::new),
-	DIESEL_ENGINE(TileEntityDieselEngine.class, ContainerDieselEngine::new);
+	DIESEL_ENGINE(TileEntityDieselEngine.class, ContainerDieselEngine::new),
+	DATA_BUFFER(TileEntityDataBuffer.class, (player, tile) -> new ContainerSmallDataDevice<>(player, tile, true)),
+	DATA_BUFFER_EDIT(TileEntityDataBuffer.class, (player, tile) -> new ContainerSmallDataDevice<>(player, tile, true)),
+	DATA_MAPPER(TileEntityDataMapper.class, (player, tile) -> new ContainerSmallDataDevice<>(player, tile, true)),
+	DATA_MAPPER_EDIT(TileEntityDataMapper.class, ContainerSmallDataDevice::new),
+	DATA_MAPPER_VALUE(TileEntityDataMapper.class, ContainerSmallDataDevice::new),
+	DATA_APPENDER(TileEntityDataAppender.class, (player, tile) -> new ContainerSmallDataDevice<>(player, tile, true)),
+	DATA_APPENDER_EDIT(TileEntityDataAppender.class, ContainerSmallDataDevice::new),
+	REDSTONE_SEQUENCER(TileEntityRedstoneSequencer.class, ContainerSmallDataDevice::new);
 
 	public final Class<? extends TileEntity> teClass;
 	public final Class<? extends Entity> entityClass;
@@ -309,6 +317,14 @@ public enum IIGUI implements ISerializableEnum
 		IIGUI.DATA_MERGER_EDIT.setClientTileGui(GuiDataMergerEdit::new);
 		IIGUI.DATA_ROUTER.setClientTileGui(GuiDataRouter::new);
 		IIGUI.DATA_ROUTER_EDIT.setClientTileGui(GuiDataRouterEdit::new);
+		IIGUI.DATA_BUFFER.setClientTileGui(GuiDataBuffer::new);
+		IIGUI.DATA_BUFFER_EDIT.setClientTileGui(GuiDataBufferEdit::new);
+		IIGUI.DATA_MAPPER.setClientTileGui(GuiDataMapper::new);
+		IIGUI.DATA_MAPPER_EDIT.setClientTileGui(GuiDataMapperEdit::new);
+		IIGUI.DATA_MAPPER_VALUE.setClientTileGui(GuiDataMapperValue::new);
+		IIGUI.DATA_APPENDER.setClientTileGui(GuiDataAppender::new);
+		IIGUI.DATA_APPENDER_EDIT.setClientTileGui(GuiDataAppenderEdit::new);
+		IIGUI.REDSTONE_SEQUENCER.setClientTileGui(GuiRedstoneSequencer::new);
 		IIGUI.INSERTER.setClientTileGui(GuiInserter::new);
 		//Crates
 		IIGUI.METAL_CRATE.setClientTileGui(GuiMetalCrate::new);

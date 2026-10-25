@@ -1,4 +1,3 @@
-
 #Items
 itemGroup.immersiveintelligence=Immersive Intelligence
 itemGroup.ii.resources=Resources
@@ -698,13 +697,13 @@ item.immersiveintelligence.placeholder_icon.name=Placeholder
 tile.immersiveintelligence.stone_decoration.sandbags.name=Sandbags
 
 tile.immersiveintelligence.metal_device.metal_crate.name=Metal Crate
-tile.immersiveintelligence.metal_device.small_data_buffer.name=Small Data Buffer
-tile.immersiveintelligence.metal_device.item_buffer.name=Item Buffer
-tile.immersiveintelligence.metal_device.timed_buffer.name=Timed Buffer
-tile.immersiveintelligence.metal_device.redstone_buffer.name=Redstone Buffer
 tile.immersiveintelligence.metal_device.punchtape_reader.name=Punchtape Reader
 tile.immersiveintelligence.metal_device.data_router.name=Data Router
 tile.immersiveintelligence.metal_device.data_merger.name=Data Merger
+tile.immersiveintelligence.metal_device.data_buffer.name=Data Buffer
+tile.immersiveintelligence.metal_device.data_mapper.name=Data Mapper
+tile.immersiveintelligence.metal_device.redstone_sequencer.name=Redstone Sequencer
+tile.immersiveintelligence.metal_device.data_appender.name=Data Appender
 
 tile.immersiveintelligence.metal_device.ammunition_crate.name=Ammunition Crate
 tile.immersiveintelligence.metal_device.medic_crate.name=Medical Crate
@@ -3253,6 +3252,7 @@ ie.manual.folder.weaponry=Weaponry
 ie.manual.folder.armortools=Armor and Tools
 ie.manual.folder.staticdefense=Defensive Structures
 ie.manual.folder.terrain_control=Terrain Control
+ie.manual.folder.small_data_devices=Small Data Devices
 
 ie.manual.entry.traits.level_beginner=Complexity: Pre-Industrial
 ie.manual.entry.traits.level_early_industrial=Complexity: Early Industrial
@@ -4014,6 +4014,36 @@ ii.gui.data_merger.left=Left
 ii.gui.data_merger.right=Right
 ii.gui.data_merger.send=Send
 
+ii.gui.data_buffer=Data Buffer
+ii.gui.data_buffer_edit=Match Value
+ii.gui.data_mapper=Data Mapper
+ii.gui.data_mapper_edit=Mapping Rule
+ii.gui.data_mapper_value=Value Pair
+ii.gui.data_appender=Data Appender
+ii.gui.data_appender_edit=Variable Entry
+ii.gui.data_appender.action.add=Add
+ii.gui.data_appender.action.remove=Remove
+ii.gui.data_appender.action.overwrite=Overwrite
+ii.gui.redstone_sequencer=Redstone Sequencer
+ii.gui.data_buffer.condition.redstone_signal=Redstone Signal
+ii.gui.data_buffer.condition.last_received_delay=Last Received Delay
+ii.gui.data_buffer.condition.time_delay=Time Delay
+ii.gui.data_buffer.condition.variable_present=Variable Present
+ii.gui.data_buffer.condition.variable_matching=Variable Matching
+ii.gui.small_data_devices.conditions=Conditions
+ii.gui.small_data_devices.queue_unmatched=Queue unmatched packets
+ii.gui.small_data_devices.termination=Termination time (ticks)
+ii.gui.small_data_devices.accessor=Read delay from a packet variable
+ii.gui.small_data_devices.remove_variable=Remove variable
+ii.gui.small_data_devices.overwrite=Overwrite existing
+ii.gui.small_data_devices.input_value=Input value
+ii.gui.small_data_devices.output_value=Output value
+ii.gui.small_data_devices.strength=Strength
+ii.gui.small_data_devices.constant=Constant signal
+ii.gui.small_data_devices.duration=Ticks
+ii.gui.small_data_devices.repeats=Repeats
+ii.gui.small_data_devices.running=Running
+
 
 #GUI HelpBoxes
 ii.gui_help.data_input_machine.programming=These slots allow reading a punchtape into the DIM's memory or writing its contents into an empty one.
@@ -4278,4 +4308,3 @@ item.banner.immersiveintelligence_infrared_helmet.lightBlue=Light Blue Infrared 
 item.banner.immersiveintelligence_infrared_helmet.magenta=Magenta Infrared Helmet
 item.banner.immersiveintelligence_infrared_helmet.orange=Orange Infrared Helmet
 item.banner.immersiveintelligence_infrared_helmet.white=White Infrared Helmet
-

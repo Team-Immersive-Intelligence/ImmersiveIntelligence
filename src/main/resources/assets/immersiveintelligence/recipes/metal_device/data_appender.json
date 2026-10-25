@@ -2,7 +2,7 @@
   "type": "forge:ore_shaped",
   "result": {
     "item": "immersiveintelligence:metal_device",
-    "data": 3
+    "data": 11
   },
   "pattern": [
     " t ",
@@ -11,7 +11,8 @@
   ],
   "key": {
     "t": {
-      "item": "minecraft:clock"
+      "type": "forge:ore_dict",
+      "ore": "punchtapeEmpty"
     },
     "c": {
       "type": "forge:ore_dict",

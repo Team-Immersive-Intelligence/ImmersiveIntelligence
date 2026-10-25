@@ -108,9 +108,6 @@ import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.ammo.components.factory.AmmoComponentFluid;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity.TileEntityDataMerger;
-import pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity.TileEntityRedstoneBuffer;
-import pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity.TileEntitySmallDataBuffer;
-import pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity.TileEntityTimedBuffer;
 import pl.pabilo8.immersiveintelligence.common.block.fortification.tileentity.TileEntityMineSign;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDevice.IIBlockTypes_MetalDevice;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.conveyors.*;
@@ -482,11 +479,6 @@ public class ClientProxy extends CommonProxy
 		registerTileRenderer(FluidInserterRenderer.class);
 		registerTileRenderer(AdvancedFluidInserterRenderer.class);
 
-		//TODO: 29.12.2023 data devices (0.4.0)
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTimedBuffer.class, new TimedBufferRenderer());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRedstoneBuffer.class, new RedstoneBufferRenderer());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySmallDataBuffer.class, new SmallDataBufferRenderer());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDataMerger.class, new DataMergerRenderer());
 		registerTileRenderer(DataDebuggerRenderer.class);
 		registerTileRenderer(LatexCollectorRenderer.class);
 
@@ -745,9 +737,6 @@ public class ClientProxy extends CommonProxy
 		TEISRRegistryQueue.forEach(this::registerTEISR);
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock1), MetalMultiblocks1.VULCANIZER.getMeta(), TileEntityVulcanizer.class);
 
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalDevice), IIBlockTypes_MetalDevice.TIMED_BUFFER.getMeta(), TileEntityTimedBuffer.class);
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalDevice), IIBlockTypes_MetalDevice.REDSTONE_BUFFER.getMeta(), TileEntityRedstoneBuffer.class);
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalDevice), IIBlockTypes_MetalDevice.SMALL_DATA_BUFFER.getMeta(), TileEntitySmallDataBuffer.class);
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalDevice), IIBlockTypes_MetalDevice.DATA_MERGER.getMeta(), TileEntityDataMerger.class);
 
 		//Fix colors for fluid ammo components on client

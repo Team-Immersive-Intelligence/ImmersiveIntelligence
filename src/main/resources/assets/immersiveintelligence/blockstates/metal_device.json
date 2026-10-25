@@ -31,6 +31,46 @@
         }
       }
     ],
+    "inventory,type=data_merger": [
+      {
+        "model": "immersiveintelligence:metal_device/data_merger.obj",
+        "custom": {
+          "flip-v": true
+        }
+      }
+    ],
+    "inventory,type=data_buffer": [
+      {
+        "model": "immersiveintelligence:metal_device/data_buffer.obj",
+        "custom": {
+          "flip-v": true
+        }
+      }
+    ],
+    "inventory,type=data_mapper": [
+      {
+        "model": "immersiveintelligence:metal_device/data_mapper.obj",
+        "custom": {
+          "flip-v": true
+        }
+      }
+    ],
+    "inventory,type=redstone_sequencer": [
+      {
+        "model": "immersiveintelligence:metal_device/redstone_sequencer.obj",
+        "custom": {
+          "flip-v": true
+        }
+      }
+    ],
+    "inventory,type=data_appender": [
+      {
+        "model": "immersiveintelligence:metal_device/data_appender.obj",
+        "custom": {
+          "flip-v": true
+        }
+      }
+    ],
     "type": {
       "metal_crate": {
         "textures": {
@@ -56,13 +96,41 @@
         "custom": {
           "flip-v": true
         }
+      },
+      "data_merger": {
+        "model": "immersiveintelligence:metal_device/data_merger.obj",
+        "custom": {
+          "flip-v": true
+        }
+      },
+      "data_buffer": {
+        "model": "immersiveintelligence:metal_device/data_buffer.obj",
+        "custom": {
+          "flip-v": true
+        }
+      },
+      "data_mapper": {
+        "model": "immersiveintelligence:metal_device/data_mapper.obj",
+        "custom": {
+          "flip-v": true
+        }
+      },
+      "redstone_sequencer": {
+        "model": "immersiveintelligence:metal_device/redstone_sequencer.obj",
+        "custom": {
+          "flip-v": true
+        }
+      },
+      "data_appender": {
+        "model": "immersiveintelligence:metal_device/data_appender.obj",
+        "custom": {
+          "flip-v": true
+        }
       }
     },
     "facing": {
-      "down": {
-      },
-      "up": {
-      },
+      "down": {},
+      "up": {},
       "north": {
         "transform": {
           "rotation": {
@@ -70,8 +138,7 @@
           }
         }
       },
-      "south": {
-      },
+      "south": {},
       "west": {
         "transform": {
           "rotation": {
