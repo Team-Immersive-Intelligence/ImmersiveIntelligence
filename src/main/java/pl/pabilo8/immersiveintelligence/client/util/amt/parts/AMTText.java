@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.client.util.amt.parts;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
+import lombok.Getter;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -23,12 +24,17 @@ import javax.annotation.Nullable;
 public class AMTText extends AMT
 {
 	@Nullable
+	@Getter
 	private String text;
-
+	@Getter
 	private IIColor color = IIColor.WHITE;
+	@Getter
 	private float fontSize = 1;
 	@Nonnull
+	@Getter
 	private FontRenderer fontRenderer;
+	@Getter
+	private boolean glowing = false;
 
 	public AMTText(String name, Vec3d originPos)
 	{
@@ -57,8 +63,12 @@ public class AMTText extends AMT
 
 			GlStateManager.scale(fontSize, fontSize, fontSize);
 
-
+			if(glowing)
+				GlStateManager.disableLighting();
 			fontRenderer.drawString(text, 0, 0, color.getPackedRGB(), false);
+			if(glowing)
+				GlStateManager.enableLighting();
+
 			GlStateManager.popMatrix();
 			GlStateManager.enableCull();
 
@@ -79,9 +89,10 @@ public class AMTText extends AMT
 	public void applyProperties(EasyNBT nbt)
 	{
 		super.applyProperties(nbt);
-		nbt.checkSetString("text", text -> this.text = text);
-		nbt.checkSetColor("color", color -> this.color = color);
-		nbt.checkSetFloat("fontSize", fontSize -> this.fontSize = fontSize);
+		nbt.checkSetString("text", this::setText);
+		nbt.checkSetColor("color", this::setColor);
+		nbt.checkSetFloat("fontSize", fontSize -> this.fontSize = fontSize/this.fontRenderer.FONT_HEIGHT/16f);
+		nbt.checkSetBoolean("glowing", this::setGlowing);
 	}
 
 	@Override
@@ -105,6 +116,7 @@ public class AMTText extends AMT
 		text.setText(this.text);
 		text.setColor(this.color);
 		text.setFontSize(this.fontSize);
+		text.setGlowing(this.glowing);
 		return text;
 	}
 
@@ -129,6 +141,12 @@ public class AMTText extends AMT
 	public AMTText setFontSize(float fontSize)
 	{
 		this.fontSize = fontSize;
+		return this;
+	}
+
+	public AMTText setGlowing(boolean glowing)
+	{
+		this.glowing = glowing;
 		return this;
 	}
 }

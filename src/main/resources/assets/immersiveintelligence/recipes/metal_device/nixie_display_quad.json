@@ -1,0 +1,26 @@
+{
+  "type": "forge:ore_shaped",
+  "result": {
+    "item": "immersiveintelligence:metal_device",
+    "data": 13
+  },
+  "pattern": [
+    "t t",
+    "t t",
+    "pcp"
+  ],
+  "key": {
+    "c": {
+      "type": "forge:ore_dict",
+      "ore": "circuitBasic"
+    },
+    "t": {
+      "type": "forge:ore_dict",
+      "ore": "electronTube"
+    },
+    "p": {
+      "type": "forge:ore_dict",
+      "ore": "plateSteel"
+    }
+  }
+}

@@ -704,6 +704,8 @@ tile.immersiveintelligence.metal_device.data_buffer.name=Data Buffer
 tile.immersiveintelligence.metal_device.data_mapper.name=Data Mapper
 tile.immersiveintelligence.metal_device.redstone_sequencer.name=Redstone Sequencer
 tile.immersiveintelligence.metal_device.data_appender.name=Data Appender
+tile.immersiveintelligence.metal_device.double_nixie_display.name=Double Nixie Tube Display
+tile.immersiveintelligence.metal_device.quad_nixie_display.name=Quad Nixie Tube Display
 
 tile.immersiveintelligence.metal_device.ammunition_crate.name=Ammunition Crate
 tile.immersiveintelligence.metal_device.medic_crate.name=Medical Crate
@@ -4015,6 +4017,12 @@ ii.gui.data_merger.right=Right
 ii.gui.data_merger.send=Send
 
 ii.gui.data_buffer=Data Buffer
+ii.gui.nixie_display=Nixie Tube Display
+ii.gui.nixie_display.mode=Mode
+ii.gui.nixie_display.digits=Digit mode
+ii.gui.nixie_display.number_text=Number/Text mode
+ii.gui.nixie_display.tube=Tube %s
+ii.gui.nixie_display.value=Value
 ii.gui.data_buffer_edit=Match Value
 ii.gui.data_mapper=Data Mapper
 ii.gui.data_mapper_edit=Mapping Rule

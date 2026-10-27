@@ -56,6 +56,7 @@ import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.eff
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate.TileEntityMedicalCrate;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate.TileEntityRepairCrate;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.inserter.TileEntityInserterBase;
+import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.nixie.TileEntityNixieDisplayBase;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.*;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.*;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
@@ -196,7 +197,8 @@ public enum IIGUI implements ISerializableEnum
 	DATA_MAPPER_VALUE(TileEntityDataMapper.class, ContainerSmallDataDevice::new),
 	DATA_APPENDER(TileEntityDataAppender.class, (player, tile) -> new ContainerSmallDataDevice<>(player, tile, true)),
 	DATA_APPENDER_EDIT(TileEntityDataAppender.class, ContainerSmallDataDevice::new),
-	REDSTONE_SEQUENCER(TileEntityRedstoneSequencer.class, ContainerSmallDataDevice::new);
+	REDSTONE_SEQUENCER(TileEntityRedstoneSequencer.class, ContainerSmallDataDevice::new),
+	NIXIE_DISPLAY(TileEntityNixieDisplayBase.class, (player, tile) -> new ContainerSmallDataDevice<>(player, tile, 88));
 
 	public final Class<? extends TileEntity> teClass;
 	public final Class<? extends Entity> entityClass;
@@ -326,6 +328,7 @@ public enum IIGUI implements ISerializableEnum
 		IIGUI.DATA_APPENDER_EDIT.setClientTileGui(GuiDataAppenderEdit::new);
 		IIGUI.REDSTONE_SEQUENCER.setClientTileGui(GuiRedstoneSequencer::new);
 		IIGUI.INSERTER.setClientTileGui(GuiInserter::new);
+		IIGUI.NIXIE_DISPLAY.setClientTileGui(GuiNixieDisplay::new);
 		//Crates
 		IIGUI.METAL_CRATE.setClientTileGui(GuiMetalCrate::new);
 		IIGUI.SMALL_CRATE.setClientTileGui(GuiSmallCrate::new);

@@ -18,6 +18,8 @@ import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.Til
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate.TileEntityAmmunitionCrate;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate.TileEntityMedicalCrate;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate.TileEntityRepairCrate;
+import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.nixie.TileEntityDoubleNixieDisplay;
+import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.nixie.TileEntityQuadNixieDisplay;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIITileProvider;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.EnumTileProvider;
@@ -103,7 +105,13 @@ public class BlockIIMetalDevice extends BlockIITileProvider<IIBlockTypes_MetalDe
 		LATEX_COLLECTOR,
 		@IIBlockProperties(category = IICategory.ELECTRONICS)
 		@EnumTileProvider(tile = TileEntityDataAppender.class)
-		DATA_APPENDER
+		DATA_APPENDER,
+		@IIBlockProperties(category = IICategory.ELECTRONICS)
+		@EnumTileProvider(tile = TileEntityDoubleNixieDisplay.class)
+		DOUBLE_NIXIE_DISPLAY,
+		@IIBlockProperties(category = IICategory.ELECTRONICS)
+		@EnumTileProvider(tile = TileEntityQuadNixieDisplay.class)
+		QUAD_NIXIE_DISPLAY
 	}
 
 

@@ -168,6 +168,11 @@ public class IIManualCategoryData extends IIManualCategory
 		addEntry("small_data_devices/data_merger")
 				.addSource("device", getSourceForItem(IIContent.blockMetalDevice.getStack(IIBlockTypes_MetalDevice.DATA_MERGER)));
 
+		addEntry("small_data_devices/nixie_displays")
+				.addSource("crafting", getSourceForItems(
+						IIContent.blockMetalDevice.getStack(IIBlockTypes_MetalDevice.DOUBLE_NIXIE_DISPLAY),
+						IIContent.blockMetalDevice.getStack(IIBlockTypes_MetalDevice.QUAD_NIXIE_DISPLAY)
+				));
 		addEntry("radio_station")
 				.addSource("basic_radio_tuner", getSourceForItem(IIContent.itemRadioTuner.getStack(1)))
 				.addSource("advanced_radio_tuner", getSourceForItem(new ItemStack(IIContent.itemRadioTuner, 1, 1)

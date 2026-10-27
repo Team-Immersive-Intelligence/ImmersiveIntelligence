@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformT
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMT;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.*;
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.EntityAMTTactile;
 import pl.pabilo8.immersiveintelligence.common.util.IIFileUtils;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
@@ -17,12 +17,13 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.function.BiFunction;
 
 /**
- * Defines offsets and hierarchy for an animated model's parts
+ * Defines offsets and hierarchy for an animated model's parts.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 22.09.2026
+ * @updated 24.10.2026
  * @since 09.04.2022
  */
 public class AMTModelHeader
@@ -71,6 +72,18 @@ public class AMTModelHeader
 				//put into property map
 				if(entry.getValue().isJsonObject())
 					properties.put(entry.getKey(), EasyNBT.parseEasyNBT(entry.getValue().toString()));
+			}
+		}
+
+		//Non-quad part types
+		if(json.has("types"))
+		{
+			JsonObject prop = json.getAsJsonObject("types");
+			for(Entry<String, JsonElement> entry : prop.entrySet())
+			{
+				//put into property map
+				if(!entry.getValue().getAsString().isEmpty())
+					types.put(entry.getKey(), entry.getValue().getAsString());
 			}
 		}
 
@@ -148,6 +161,46 @@ public class AMTModelHeader
 	public Set<String> getAffectedElements()
 	{
 		return offsets.keySet();
+	}
+
+	@SideOnly(Side.CLIENT)
+	public AMT[] createParts()
+	{
+		return createParts(null);
+	}
+
+	/**
+	 * Creates declared parts and applies their properties and hierarchy.
+	 *
+	 * @param customParser factory for additional part types, or null
+	 * @return root parts of the model
+	 */
+	@SideOnly(Side.CLIENT)
+	public AMT[] createParts(@Nullable BiFunction<String, EasyNBT, AMT> customParser)
+	{
+		return types.entrySet().stream()
+				.map(e -> switch(e.getValue())
+				{
+					case "banner" -> new AMTBanner(e.getKey(), this);
+					case "biped_adapter" -> new AMTBipedAdapter(e.getKey(), this);
+					case "blend_mode_group" -> new AMTBlendModeGroup(e.getKey(), this);
+					case "bullet" -> new AMTBullet(e.getKey(), this);
+					case "chain" -> new AMTChain(e.getKey(), this);
+					case "fluid" -> new AMTFluid(e.getKey(), this);
+					case "hand" -> new AMTHand(e.getKey(), this);
+					case "item" -> new AMTItem(e.getKey(), this);
+					case "particle" -> new AMTParticle(e.getKey(), this);
+					case "text" -> new AMTText(e.getKey(), this);
+					case "wire" -> new AMTWire(e.getKey(), this);
+					case "", "locator" -> new AMTLocator(e.getKey(), this);
+					default ->
+					{
+						EasyNBT easyNBT = properties.get(e.getKey());
+						yield customParser==null||easyNBT==null?null: customParser.apply(e.getKey(), easyNBT);
+					}
+				})
+				.filter(Objects::nonNull)
+				.toArray(AMT[]::new);
 	}
 
 	public void renameElement(String oldName, String newName)

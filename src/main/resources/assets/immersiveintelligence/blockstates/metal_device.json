@@ -63,6 +63,22 @@
         }
       }
     ],
+    "inventory,type=double_nixie_display": [
+      {
+        "model": "immersiveintelligence:metal_device/nixie_display_double_inv.obj",
+        "custom": {
+          "flip-v": true
+        }
+      }
+    ],
+    "inventory,type=quad_nixie_display": [
+      {
+        "model": "immersiveintelligence:metal_device/nixie_display_quad_inv.obj",
+        "custom": {
+          "flip-v": true
+        }
+      }
+    ],
     "inventory,type=data_appender": [
       {
         "model": "immersiveintelligence:metal_device/data_appender.obj",
@@ -72,6 +88,18 @@
       }
     ],
     "type": {
+      "double_nixie_display": {
+        "model": "immersiveintelligence:metal_device/nixie_base.obj",
+        "custom": {
+          "flip-v": true
+        }
+      },
+      "quad_nixie_display": {
+        "model": "immersiveintelligence:metal_device/nixie_base.obj",
+        "custom": {
+          "flip-v": true
+        }
+      },
       "metal_crate": {
         "textures": {
           "all": "immersiveintelligence:blocks/metal_device/steel_crate"

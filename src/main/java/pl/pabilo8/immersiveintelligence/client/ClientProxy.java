@@ -480,6 +480,7 @@ public class ClientProxy extends CommonProxy
 		registerTileRenderer(AdvancedFluidInserterRenderer.class);
 
 		registerTileRenderer(DataDebuggerRenderer.class);
+		registerTileRenderer(NixieDisplayRenderer.class);
 		registerTileRenderer(LatexCollectorRenderer.class);
 
 		//Decorations

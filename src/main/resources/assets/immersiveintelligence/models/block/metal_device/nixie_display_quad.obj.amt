@@ -1,0 +1,67 @@
+{
+  "origins": {
+    "variant_4": [
+      8,
+      0,
+      8
+    ],
+    "char4_1": [
+      0.5,
+      7.5,
+      8.325
+    ],
+    "char4_2": [
+      4.5,
+      7.5,
+      8.325
+    ],
+    "char4_3": [
+      8.5,
+      7.5,
+      8.325
+    ],
+    "char4_4": [
+      12.5,
+      7.5,
+      8.325
+    ]
+  },
+  "types": {
+    "char4_1": "text",
+    "char4_2": "text",
+    "char4_3": "text",
+    "char4_4": "text"
+  },
+  "hierarchy": {
+    "char4_1": "variant_4",
+    "char4_2": "variant_4",
+    "char4_3": "variant_4",
+    "char4_4": "variant_4"
+  },
+  "properties": {
+    "char4_1": {
+      "text": "1",
+      "color": 16741120,
+      "fontSize": 5.8182,
+      "glowing": "true"
+    },
+    "char4_2": {
+      "text": "2",
+      "color": 16741120,
+      "fontSize": 5.8182,
+      "glowing": "true"
+    },
+    "char4_3": {
+      "text": "3",
+      "color": 16741120,
+      "fontSize": 5.8182,
+      "glowing": "true"
+    },
+    "char4_4": {
+      "text": "4",
+      "color": 16741120,
+      "fontSize": 5.8182,
+      "glowing": "true"
+    }
+  }
+}
