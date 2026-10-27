@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.common;
 import blusunrize.immersiveengineering.api.MultiblockHandler.IMultiblock;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.passive.HorseArmorType;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
@@ -296,7 +297,8 @@ public class IIContent
 	public static final ItemIIRifle itemRifle = new ItemIIRifle();
 	public static final ItemIIMortar itemMortar = new ItemIIMortar();
 	public static final ItemIIWeaponUpgrade itemWeaponUpgrade = new ItemIIWeaponUpgrade();
-	//armor
+
+	//Armor
 	public static final ArmorMaterial ARMOR_MATERIAL_LIGHT_ENGINEER = EnumHelper.addArmorMaterial("light_engineer_armor",
 			ImmersiveIntelligence.MODID+":light_engineer_armor", 42,
 			new int[]{4, 7, 8, 4}, 0, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 2);
@@ -305,10 +307,20 @@ public class IIContent
 	public static final ItemIILightEngineerLeggings itemLightEngineerLeggings = new ItemIILightEngineerLeggings();
 	public static final ItemIILightEngineerBoots itemLightEngineerBoots = new ItemIILightEngineerBoots();
 	public static final ItemIIArmorUpgrade itemArmorUpgrade = new ItemIIArmorUpgrade();
+
+	//Horse Armor
+	public static final ItemIIHorseArmor itemBrassHorseArmor = new ItemIIHorseArmor("brass_horse_armor",
+			EnumHelper.addEnum(HorseArmorType.class, "II_BRASS", new Class<?>[]{String.class, int.class},
+					MODID+":textures/entity/horse/armor/horse_armor_brass.png", 5)
+	);
+	public static final ItemIIHorseArmor itemSteelHorseArmor = new ItemIIHorseArmor("steel_horse_armor",
+			EnumHelper.addEnum(HorseArmorType.class, "II_STEEL", new Class<?>[]{String.class, int.class},
+					MODID+":textures/entity/horse/armor/horse_armor_steel.png", 9)
+	);
 	//Backpacks
 	public static final ItemIIAdvancedPowerPack itemAdvancedPowerPack = new ItemIIAdvancedPowerPack();
 	public static final String NBT_AdvancedPowerpack = "II:Powerpack";
-	//data
+	//Data
 	@IBatchOredictRegister(oreDict = "punchtape")
 	public static final ItemIIPunchtape itemPunchtape = new ItemIIPunchtape();
 	public static final ItemIIPrintedPage itemPrintedPage = new ItemIIPrintedPage();
