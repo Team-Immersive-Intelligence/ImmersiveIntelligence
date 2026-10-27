@@ -363,8 +363,10 @@ public class CommonProxy implements IGuiHandler
 
 		MineralMix mineralFluorite = ExcavatorHandler.addMineral("Fluorite", 25, .65f, new String[]{"oreFluorite", "oreQuartz"}, new float[]{.5f, .25f});
 		MineralMix mineralPhosphorite = ExcavatorHandler.addMineral("Phosphorite", 30, .45f, new String[]{"orePhosphorus", sulfur, "oreIron", "oreAluminum"}, new float[]{.65f, .125f, 0.0625f, 0.0125f});
-		mineralFluorite.dimensionWhitelist = new int[]{-1};
-		mineralPhosphorite.dimensionWhitelist = new int[]{-1};
+		MineralMix mineralSulfur = ExcavatorHandler.addMineral("Sulfur", 15, .15f, new String[]{"oreSulfur"}, new float[]{1.0f});
+		mineralFluorite.dimensionWhitelist = new int[]{0};
+		mineralPhosphorite.dimensionWhitelist = new int[]{0};
+		mineralSulfur.dimensionWhitelist = new int[]{0};
 
 		ExcavatorHandler.addMineral("Wolframite", 15, .15f, new String[]{"oreTungsten", "oreIron"}, new float[]{.25f, .75f});
 		ExcavatorHandler.addMineral("Ferberite", 10, .2f, new String[]{"oreTungsten", "oreIron", "oreTin"}, new float[]{.2f, .4f, .3f});
@@ -789,12 +791,11 @@ public class CommonProxy implements IGuiHandler
 		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.ZINC.getMeta()), "zinc", IIConfig.Ores.oreZinc, EnumOreType.OVERWORLD);
 		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.TUNGSTEN.getMeta()), "tungsten", IIConfig.Ores.oreTungsten, EnumOreType.OVERWORLD);
 		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.SALT.getMeta()), "salt", IIConfig.Ores.oreSalt, EnumOreType.OVERWORLD);
-		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.FLUORITE_OVERWORLD.getMeta()), "fluorite_overworld", IIConfig.Ores.oreFluorite, EnumOreType.OVERWORLD);
-		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.PHOSPHORUS_OVERWORLD.getMeta()), "phosphorus_overworld", IIConfig.Ores.orePhosphorus, EnumOreType.OVERWORLD);
 		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.TIN.getMeta()), "tin", IIConfig.Ores.oreTin, EnumOreType.OVERWORLD);
 		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.CHROMIUM.getMeta()), "chromium", IIConfig.Ores.oreChromium, EnumOreType.OVERWORLD);
 		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.FLUORITE.getMeta()), "fluorite", IIConfig.Ores.oreFluorite, EnumOreType.NETHER);
 		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.PHOSPHORUS.getMeta()), "phosphorus", IIConfig.Ores.orePhosphorus, EnumOreType.NETHER);
+		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.SULFUR.getMeta()), "sulfur", IIConfig.Ores.oreSulfur, EnumOreType.NETHER);
 
 		IILogger.info("Adding rubber tree generation");
 		IIWorldGen.worldGenRubberTree = new IIWorldGenRubberTree();
