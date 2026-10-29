@@ -607,6 +607,13 @@ public class IIRecipes
 				4200, 240, false
 		);
 
+		new ChemicalBathRecipe(
+				IIContent.itemMaterialIngot.getStack(MaterialsIngot.MAGNET),
+				new IngredientStack("ingotIron"),
+				new FluidStack(IIContent.fluidBrine, 1000),
+				10000, 240, false
+		);
+
 		ArcFurnaceRecipe.addRecipe(
 				IIContent.itemMaterialBoule.getStack(MaterialsBoule.SILICON),
 				new IngredientStack("dustQuartz", 6),
