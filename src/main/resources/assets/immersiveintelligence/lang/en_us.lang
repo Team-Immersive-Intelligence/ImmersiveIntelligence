@@ -1392,6 +1392,7 @@ desc.immersiveintelligence.info.holdControl=Hold [Ctrl]
 desc.immersiveintelligence.info.holdShift=Hold [Shift]
 desc.immersiveintelligence.info.holdAlt=Hold [Alt]
 desc.immersiveintelligence.info.holdTab=Hold [Tab]
+desc.immersiveintelligence.info.holdAny=Hold [%s]
 
 desc.immersiveintelligence.assembly_scheme.info_hold1=%s - Materials Used
 desc.immersiveintelligence.assembly_scheme.info_hold2=%s - Tools Used
@@ -2957,6 +2958,8 @@ desc.immersiveengineering.info.blueprint.bullet_magazines=Bullet Magazines
 key.immersiveintelligence.manualReload=Manual Reload
 key.immersiveintelligence.armorHelmet=Toggle Light Engineer Armor Headgear
 key.immersiveintelligence.armorExosuit=Toggle Light Engineer Armor Exoskeleton
+
+key.immersiveintelligence.manualLookup=Find Engineer's Manual Page for Hovered Item
 
 key.immersiveintelligence.mgScope=Zoom / Look through Scope
 

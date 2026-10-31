@@ -40,7 +40,10 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
+ * Loads and displays objects from a Markdown manual page.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 30.10.2026
  * @ii-approved 0.3.1
  * @since 20.03.2022
  */
@@ -110,6 +113,36 @@ public class IIManualPage extends IIManualPageBase
 	}
 
 	//--- Initialization on Opening ---//
+
+	/**
+	 * Indexes the item stacks supplied by the page objects.
+	 */
+	@Override
+	public void recalculateCraftingRecipes()
+	{
+		this.providedItems = new ArrayList<>();
+		this.manualObjects.clear();
+		String file = entry.fetchPage(text);
+		if(file==null)
+			return;
+
+		List<GuiButton> pageButtons = new ArrayList<>();
+		Matcher matcher = patternObject.matcher(file);
+		while(matcher.find())
+		{
+			IIManualObject object = parseObject(null, pageButtons, matcher.group(1), 0, 0);
+			if(object==null)
+				continue;
+			this.manualObjects.add(object);
+			pageButtons.add(object);
+			object.initData(this);
+			List<ItemStack> stacks = object.provideManualItemStacks();
+			if(stacks!=null)
+				for(ItemStack stack : stacks)
+					if(stack!=null&&!stack.isEmpty())
+						providedItems.add(stack.copy());
+		}
+	}
 
 	@SideOnly(Side.CLIENT)
 	@Override
@@ -396,7 +429,7 @@ public class IIManualPage extends IIManualPageBase
 	}
 
 	@Nullable
-	private IIManualObject parseObject(GuiManual gui, List<GuiButton> pageButtons, String text, int x, int y)
+	private IIManualObject parseObject(@Nullable GuiManual gui, List<GuiButton> pageButtons, String text, int x, int y)
 	{
 		final Matcher matcherName = Pattern.compile("\\[(.+?)]").matcher(text);
 		final Matcher matcherTag = Pattern.compile("\\{(.+?)}\\|").matcher(text+"|");
@@ -414,9 +447,9 @@ public class IIManualPage extends IIManualPageBase
 		return null;
 	}
 
-	private ManualObjectInfo getInfoForNext(GuiManual gui, List<GuiButton> pageButtons, int x, int y)
+	private ManualObjectInfo getInfoForNext(@Nullable GuiManual gui, List<GuiButton> pageButtons, int x, int y)
 	{
-		return new ManualObjectInfo(gui, x, y, pageButtons.size()+100);
+		return new ManualObjectInfo(manual, gui, x, y, pageButtons.size()+100);
 	}
 
 	@Nullable

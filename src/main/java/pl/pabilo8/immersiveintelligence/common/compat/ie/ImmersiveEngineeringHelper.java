@@ -289,6 +289,8 @@ public class ImmersiveEngineeringHelper extends IICompatModule
 	@Override
 	public void clientInit()
 	{
+		MinecraftForge.EVENT_BUS.register(new IEManualInventoryHandler());
+
 		if(Overrides.enableFontOverride)
 		{
 			this.fontManual = new IIFontRenderer(new ResourceLocation("textures/font/ascii.png"));

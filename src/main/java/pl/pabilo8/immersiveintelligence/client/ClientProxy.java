@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.client;
 
 import blusunrize.immersiveengineering.api.ApiUtils;
+import blusunrize.immersiveengineering.api.ManualHelper;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
 import blusunrize.immersiveengineering.api.energy.wires.WireApi;
 import blusunrize.immersiveengineering.client.ClientUtils;
@@ -815,6 +816,7 @@ public class ClientProxy extends CommonProxy
 		IIManualCategoryMotorworks.INSTANCE.addPages();
 		IIManualCategoryIntelligence.INSTANCE.addPages();
 		IIManualCategoryIEDefaults.INSTANCE.addPages();
+		ManualHelper.getManual().indexRecipes();
 	}
 
 	@Override

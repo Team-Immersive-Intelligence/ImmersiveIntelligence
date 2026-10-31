@@ -180,6 +180,13 @@ public class IIConfigHandler
 			@Comment({"If disabled, II will not replace the IE font in the Engineer's Manual."})
 			public static boolean enableFontOverride = true;
 
+			@Comment({"Enable manual page lookup from inventory screens."})
+			public static boolean enableManualLookup = true;
+
+			@Comment({"Time to hold the manual lookup key, in ticks."})
+			@RangeInt(min = 1)
+			public static int manualLookupTime = 20;
+
 			@SubConfig
 			@LangKey("item.immersiveengineering.railgun.name")
 			@Comment("Config for the Railgun, allows for the toggling of II related features, such as recoil and penetration")

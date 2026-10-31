@@ -32,10 +32,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Displays a crafting recipe for item(s).
+ * Displays a machine recipe and its inputs and outputs.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 05.10.2026
+ * @updated 30.10.2026
  * @since 22.05.2022
  */
 public class IIManualMachineRecipe extends IIManualObject
@@ -54,18 +54,18 @@ public class IIManualMachineRecipe extends IIManualObject
 	}
 
 	@Override
+	public void initData(IIManualPage page)
+	{
+		super.initData(page);
+		Class<IIMultiblockRecipe> recipeClass = IIMultiblockRecipe.getRecipeClassFromName(dataSource.getString("type"));
+		recipe = recipeClass==null?null: IIMultiblockRecipe.getRecipe(recipeClass, dataSource.getString("recipe"));
+		layout = recipe==null?null: recipe.getRecipeLayout();
+	}
+
+	@Override
 	public void postInit(IIManualPage page)
 	{
 		super.postInit(page);
-		Class<IIMultiblockRecipe> recipeClass = IIMultiblockRecipe.getRecipeClassFromName(dataSource.getString("type"));
-		if(recipeClass==null)
-			layout = null;
-		else
-		{
-			this.recipe = IIMultiblockRecipe.getRecipe(recipeClass, dataSource.getString("recipe"));
-			if(this.recipe!=null)
-				this.layout = recipe.getRecipeLayout();
-		}
 
 		if(recipe==null)
 			IILogger.error("Recipe "+dataSource.getString("recipe")+" not found! Cannot display manual recipe object.");
@@ -102,6 +102,15 @@ public class IIManualMachineRecipe extends IIManualObject
 			// drawButton falls back to recomputing.
 			computeScaleAndOffsets();
 		}
+	}
+
+	/**
+	 * Gets the item outputs of the displayed machine recipe.
+	 */
+	@Override
+	public List<ItemStack> provideManualItemStacks()
+	{
+		return recipe==null?null: recipe.getItemOutputs();
 	}
 
 	// New helper: compute scale and offsets once
