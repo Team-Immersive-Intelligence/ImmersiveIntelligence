@@ -1,0 +1,206 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "transform": "forge:default-block",
+    "textures": {
+      "all": "immersiveintelligence:blocks/metal/painted_sheetmetal_tin_white"
+    },
+    "model": "cube_all"
+  },
+  "variants": {
+    "inventory,type=white": [
+      {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/painted_sheetmetal_tin_white"
+        }
+      }
+    ],
+    "inventory,type=orange": [
+      {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/painted_sheetmetal_tin_orange"
+        }
+      }
+    ],
+    "inventory,type=magenta": [
+      {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/painted_sheetmetal_tin_magenta"
+        }
+      }
+    ],
+    "inventory,type=light_blue": [
+      {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/painted_sheetmetal_tin_light_blue"
+        }
+      }
+    ],
+    "inventory,type=yellow": [
+      {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/painted_sheetmetal_tin_yellow"
+        }
+      }
+    ],
+    "inventory,type=lime": [
+      {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/painted_sheetmetal_tin_lime"
+        }
+      }
+    ],
+    "inventory,type=pink": [
+      {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/painted_sheetmetal_tin_pink"
+        }
+      }
+    ],
+    "inventory,type=gray": [
+      {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/painted_sheetmetal_tin_gray"
+        }
+      }
+    ],
+    "inventory,type=silver": [
+      {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/painted_sheetmetal_tin_silver"
+        }
+      }
+    ],
+    "inventory,type=cyan": [
+      {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/painted_sheetmetal_tin_cyan"
+        }
+      }
+    ],
+    "inventory,type=purple": [
+      {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/painted_sheetmetal_tin_purple"
+        }
+      }
+    ],
+    "inventory,type=blue": [
+      {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/painted_sheetmetal_tin_blue"
+        }
+      }
+    ],
+    "inventory,type=brown": [
+      {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/painted_sheetmetal_tin_brown"
+        }
+      }
+    ],
+    "inventory,type=green": [
+      {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/painted_sheetmetal_tin_green"
+        }
+      }
+    ],
+    "inventory,type=red": [
+      {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/painted_sheetmetal_tin_red"
+        }
+      }
+    ],
+    "inventory,type=black": [
+      {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/painted_sheetmetal_tin_black"
+        }
+      }
+    ],
+    "type": {
+      "white": {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/painted_sheetmetal_tin_white"
+        }
+      },
+      "orange": {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/painted_sheetmetal_tin_orange"
+        }
+      },
+      "magenta": {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/painted_sheetmetal_tin_magenta"
+        }
+      },
+      "light_blue": {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/painted_sheetmetal_tin_light_blue"
+        }
+      },
+      "yellow": {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/painted_sheetmetal_tin_yellow"
+        }
+      },
+      "lime": {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/painted_sheetmetal_tin_lime"
+        }
+      },
+      "pink": {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/painted_sheetmetal_tin_pink"
+        }
+      },
+      "gray": {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/painted_sheetmetal_tin_gray"
+        }
+      },
+      "silver": {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/painted_sheetmetal_tin_silver"
+        }
+      },
+      "cyan": {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/painted_sheetmetal_tin_cyan"
+        }
+      },
+      "purple": {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/painted_sheetmetal_tin_purple"
+        }
+      },
+      "blue": {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/painted_sheetmetal_tin_blue"
+        }
+      },
+      "brown": {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/painted_sheetmetal_tin_brown"
+        }
+      },
+      "green": {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/painted_sheetmetal_tin_green"
+        }
+      },
+      "red": {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/painted_sheetmetal_tin_red"
+        }
+      },
+      "black": {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/painted_sheetmetal_tin_black"
+        }
+      }
+    }
+  }
+}

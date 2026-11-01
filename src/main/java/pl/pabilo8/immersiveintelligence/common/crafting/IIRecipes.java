@@ -62,7 +62,9 @@ import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDe
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDevice.IIBlockTypes_MetalDevice;
 import pl.pabilo8.immersiveintelligence.common.block.mines.BlockIIMine.IIBlockTypes_Mine;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIConcreteDecoration.ConcreteDecorations;
+import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIMetalBase.Metals;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIOre.Ores;
+import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIPaintedTinSheetmetal.PaintedColors;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIISmallCrate.IIBlockTypes_SmallCrate;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIIMinecart.Minecarts;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIIPrintedPage.PageType;
@@ -1127,6 +1129,15 @@ public class IIRecipes
 			//get closest approximated dye
 			return new ItemStack(Items.BED, 1, rgb.getDyeColor().getMetadata());
 		}, new IngredientStack(new ItemStack(Items.BED)), 256*240, 240, 200);
+
+		//Painted tin sheetmetal, based off the wool stuff in the chemical painter
+		new ChemicalPainterRecipe((rgb, stack) ->
+				IIContent.blockPaintedTinSheetmetal.getStack(PaintedColors.values()[rgb.getDyeColor().getMetadata()]),
+				new IngredientStack(IIContent.blockSheetmetal.getStack(Metals.TIN)), 256*240, 240, 125);
+
+		new ChemicalPainterRecipe((rgb, stack) ->
+				IIContent.blockPaintedTinSheetmetalSlabs.getStack(PaintedColors.values()[rgb.getDyeColor().getMetadata()]),
+				new IngredientStack(IIContent.blockMetalSlabs.getStack(Metals.TIN)), 128*240, 240, 63);
 
 		//II / IE items
 		new ChemicalPainterRecipe((rgb, stack) -> {
