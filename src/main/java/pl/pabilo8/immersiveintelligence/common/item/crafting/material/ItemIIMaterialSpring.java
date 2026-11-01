@@ -26,6 +26,7 @@ public class ItemIIMaterialSpring extends ItemIISubItemsBase<MaterialsSpring>
 	{
 		BRASS,
 		IRON,
-		STEEL
+		STEEL,
+		SOLDER
 	}
 }

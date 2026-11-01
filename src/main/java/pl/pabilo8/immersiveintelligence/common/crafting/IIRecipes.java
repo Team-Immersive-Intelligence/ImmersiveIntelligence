@@ -187,6 +187,7 @@ public class IIRecipes
 		addAmmunitionCasingRecipes();
 		addRubberRecipes();
 		addDuraluminiumRecipes();
+		addSolderRecipes();
 
 		MixerRecipe.addRecipe(new FluidStack(IIContent.fluidEtchingAcid, 1000),
 				new FluidStack(IIContent.gasChlorine, 500), new Object[]{"dustIron"}, 4800);
@@ -1595,6 +1596,11 @@ public class IIRecipes
 					new IngredientStack("plateSteel", 5),
 					TOOL_CUTTERS
 			);
+
+		MetalPressRecipe.addRecipe(IIContent.itemMaterialSpring.getStack(MaterialsSpring.SOLDER, 2),
+				IIContent.itemSolderIngot.getIngredientStack(1),
+				new ItemStack(IEContent.itemMold, 1, 4),
+				2400);
 	}
 
 	public static void addDuraluminiumRecipes()
@@ -1614,6 +1620,31 @@ public class IIRecipes
 				new ItemStack(Items.IRON_NUGGET),
 				600, 640,
 				"dustCopper", "dustZinc", "dustIron", "dustSilicon"
+		);
+	}
+
+	public static void addSolderRecipes()
+	{
+
+		AlloyRecipe.addRecipe(new ItemStack(IIContent.itemSolderIngot),
+				new IngredientStack("ingotLead"),
+				new IngredientStack("ingotTin"),
+				200
+		);
+		AlloyRecipe.addRecipe(new ItemStack(IIContent.itemSolderIngot),
+				new IngredientStack("dustLead"),
+				new IngredientStack("dustTin"),
+				200
+		);
+		AlloyRecipe.addRecipe(new ItemStack(IIContent.itemSolderIngot, 2),
+				new IngredientStack("ingotSilver"),
+				new IngredientStack("ingotTin"),
+				200
+		);
+		AlloyRecipe.addRecipe(new ItemStack(IIContent.itemSolderIngot, 2),
+				new IngredientStack("dustSilver"),
+				new IngredientStack("dustTin"),
+				200
 		);
 	}
 

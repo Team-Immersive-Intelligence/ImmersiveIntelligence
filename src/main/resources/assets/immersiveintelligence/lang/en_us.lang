@@ -91,6 +91,9 @@ item.immersiveintelligence.material_ingot.tin.name=Tin Ingot
 item.immersiveintelligence.material_ingot.stainless_steel.name=Stainless Steel Ingot
 item.immersiveintelligence.material_ingot.chromium.name=Chromium Ingot
 
+item.immersiveintelligence.solder_ingot.name=Solder Ingot
+item.immersiveintelligence.material_spring.solder.name=Solder Coil
+
 item.immersiveintelligence.material_rod.brass.name=Brass Rod
 item.immersiveintelligence.material_rod.tungsten.name=Tungsten Rod
 item.immersiveintelligence.material_rod.zinc.name=Zinc Rod
