@@ -432,7 +432,8 @@ public class IIRecipes
 
 			BlueprintCraftingRecipe.addRecipe("basic_circuits", BASIC_CIRCUIT,
 					"circuitBasicEtched",
-					new IngredientStack("chipBasic", 2)
+					new IngredientStack("chipBasic", 2),
+					"springSolder"
 			);
 
 			BlueprintCraftingRecipe.addRecipe("advanced_circuits",
@@ -443,13 +444,15 @@ public class IIRecipes
 			BlueprintCraftingRecipe.addRecipe("advanced_circuits",
 					IIContent.itemMaterial.getStack(Materials.ADVANCED_CIRCUIT_BOARD),
 					"circuitAdvancedEtched",
-					new IngredientStack("chipAdvanced", 2)
+					new IngredientStack("chipAdvanced", 2),
+					"springSolder"
 			);
 
 			BlueprintCraftingRecipe.addRecipe("advanced_circuits",
 					IIContent.itemMaterial.getStack(Materials.CRYPTOGRAPHIC_CIRCUIT_BOARD),
 					"circuitAdvanced",
-					new ItemStack(IEContent.itemMaterial, 2, 9));
+					new ItemStack(IEContent.itemMaterial, 2, 9),
+					"springSolder");
 
 			BlueprintCraftingRecipe.addRecipe("processors",
 					IIContent.itemMaterial.getStack(Materials.PROCESSOR_CIRCUIT_BOARD_RAW),
@@ -459,7 +462,8 @@ public class IIRecipes
 			BlueprintCraftingRecipe.addRecipe("processors",
 					IIContent.itemMaterial.getStack(Materials.PROCESSOR_CIRCUIT_BOARD),
 					"circuitProcessorEtched",
-					new IngredientStack("chipProcessor", 2)
+					new IngredientStack("chipProcessor", 2),
+					"springSolder"
 			);
 
 		}
@@ -491,7 +495,7 @@ public class IIRecipes
 				IIContent.itemMaterial.getStack(Materials.BASIC_ELECTRONIC_ELEMENT),
 				ItemStack.EMPTY,
 
-				new IngredientStack[]{new IngredientStack("electronTube"), new IngredientStack("plateNickel"), new IngredientStack("dustRedstone", 4)},
+				new IngredientStack[]{new IngredientStack("electronTube"), new IngredientStack("plateNickel"), new IngredientStack("dustRedstone", 4), new IngredientStack("springSolder")},
 
 				new String[]{"inserter", "solderer", "drill"},
 				new String[]{"inserter pick second", "inserter drop main", "drill work main", "inserter pick first", "inserter drop main", "solderer work main", "inserter pick third", "inserter drop main", "solderer work main"},
@@ -517,7 +521,7 @@ public class IIRecipes
 				IIContent.itemMaterial.getStack(Materials.ADVANCED_ELECTRONIC_ELEMENT),
 				ItemStack.EMPTY,
 
-				new IngredientStack[]{new IngredientStack("electronTubeAdvanced"), new IngredientStack("chipBasic")},
+				new IngredientStack[]{new IngredientStack("electronTubeAdvanced"), new IngredientStack("chipBasic"), new IngredientStack("springSolder")},
 
 				new String[]{"inserter", "solderer", "drill"},
 				new String[]{"inserter pick second", "inserter drop main", "drill work main", "solderer work main", "inserter pick first", "inserter drop main", "solderer work main"},
@@ -530,7 +534,7 @@ public class IIRecipes
 				IIContent.itemMaterial.getStack(Materials.TRANSISTOR, 4),
 				ItemStack.EMPTY,
 
-				new IngredientStack[]{new IngredientStack("plateSilicon", 2), new IngredientStack("plateAdvancedElectronicAlloy"), new IngredientStack("plateAluminum"), new IngredientStack("dyeBlack")},
+				new IngredientStack[]{new IngredientStack("plateSilicon", 2), new IngredientStack("plateAdvancedElectronicAlloy"), new IngredientStack("plateAluminum"), new IngredientStack("dyeBlack"), new IngredientStack("springSolder")},
 
 				new String[]{"inserter", "solderer", "drill"},
 				new String[]{"inserter pick first", "inserter drop main", "drill work main", "solderer work first", "drill work main", "inserter pick second", "inserter drop main", "solderer work main", "inserter pick third", "inserter drop main", "solderer work main"},
@@ -543,7 +547,7 @@ public class IIRecipes
 				IIContent.itemMaterial.getStack(Materials.PROCESSOR_ELECTRONIC_ELEMENT),
 				IIContent.itemMaterialNugget.getStack(MaterialsNugget.SILICON),
 
-				new IngredientStack[]{new IngredientStack("transistor", 32), new IngredientStack("electronTubeAdvanced", 2)},
+				new IngredientStack[]{new IngredientStack("transistor", 32), new IngredientStack("electronTubeAdvanced", 2), new IngredientStack("springSolder")},
 
 				new String[]{"inserter", "solderer", "buzzsaw"},
 				new String[]{"inserter pick first", "inserter drop main", "solderer work first", "buzzsaw work main", "solderer work main", "inserter pick second", "inster drop main", "buzzsaw work main", "solderer work main"},
