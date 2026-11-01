@@ -598,6 +598,22 @@ public class IIConfigHandler
 			@RequiresMcRestart
 			public static int sawbladeTungstenDurability = 550;
 
+			@Comment({"The durability (max number of uses) of the Copper Catalyst."})
+			@RequiresMcRestart
+			public static int catalystCopperDurability = 250;
+
+			@Comment({"The durability (max number of uses) of the Iron Catalyst."})
+			@RequiresMcRestart
+			public static int catalystIronDurability = 250;
+
+			@Comment({"The durability (max number of uses) of the Nickel Catalyst."})
+			@RequiresMcRestart
+			public static int catalystNickelDurability = 250;
+
+			@Comment({"The durability (max number of uses) of the Platinum Catalyst."})
+			@RequiresMcRestart
+			public static int catalystPlatinumDurability = 250;
+
 			//Usage Time
 
 			@Comment({"The usage time of the Precision Buzzsaw."})
