@@ -188,6 +188,7 @@ public class IIRecipes
 		addRubberRecipes();
 		addDuraluminiumRecipes();
 		addSolderRecipes();
+		addStainlessRecipies();
 
 		MixerRecipe.addRecipe(new FluidStack(IIContent.fluidEtchingAcid, 1000),
 				new FluidStack(IIContent.gasChlorine, 500), new Object[]{"dustIron"}, 4800);
@@ -1652,6 +1653,23 @@ public class IIRecipes
 		);
 	}
 
+	public static void addStainlessRecipies()
+	{
+		ArcFurnaceRecipe.addRecipe(IIContent.itemMaterialIngot.getStack(MaterialsIngot.STAINLESS_STEEL, 8),
+				new IngredientStack("ingotSteel", 5),
+				new ItemStack(IEContent.itemMetal, 1, 28),
+				600, 640,
+				new IngredientStack("ingotNickel"), new IngredientStack("ingotChromium", 2)
+		);
+
+		ArcFurnaceRecipe.addRecipe(IIContent.itemMaterialIngot.getStack(MaterialsIngot.STAINLESS_STEEL, 8),
+				new IngredientStack("dustSteel", 5),
+				new ItemStack(IEContent.itemMetal, 1, 28),
+				600, 640,
+				new IngredientStack("dustNickel"), new IngredientStack("dustChromium", 2)
+		);
+	}
+  
 	public static void addPackerHandling()
 	{
 		//Items
