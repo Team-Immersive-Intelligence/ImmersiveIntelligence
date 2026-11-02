@@ -53,6 +53,9 @@ public class ItemIIMaterialCatalyst extends ItemIISubItemsBase<MaterialsCatalyst
 
 	public void damageTool(ItemStack stack, int amount)
 	{
+		if(Tools.infiniteCatalystDurability)
+			return;
+
 		if(!ItemNBTHelper.hasKey(stack, "damage"))
 			ItemNBTHelper.setInt(stack, "damage", getToolMaxDamage(stack));
 
@@ -67,18 +70,21 @@ public class ItemIIMaterialCatalyst extends ItemIISubItemsBase<MaterialsCatalyst
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
 	{
 		super.addInformation(stack, worldIn, tooltip, flagIn);
-		tooltip.add(I18n.format(IIReference.INFO_KEY_TOOL_DURABILITY, TextFormatting.GOLD.toString()+getToolDamage(stack)+TextFormatting.GRAY, TextFormatting.GOLD.toString()+getToolMaxDamage(stack)+TextFormatting.GRAY));
+		if(!Tools.infiniteCatalystDurability)
+			tooltip.add(I18n.format(IIReference.INFO_KEY_TOOL_DURABILITY, TextFormatting.GOLD.toString()+getToolDamage(stack)+TextFormatting.GRAY, TextFormatting.GOLD.toString()+getToolMaxDamage(stack)+TextFormatting.GRAY));
 	}
 
 	@Override
 	public boolean showDurabilityBar(@Nonnull ItemStack stack)
 	{
-		return ItemNBTHelper.hasKey(stack, "damage")&&((double)getToolDamage(stack)/(double)getToolMaxDamage(stack))!=1f;
+		return !Tools.infiniteCatalystDurability&&ItemNBTHelper.hasKey(stack, "damage")&&((double)getToolDamage(stack)/(double)getToolMaxDamage(stack))!=1f;
 	}
 
 	@Override
 	public double getDurabilityForDisplay(@Nonnull ItemStack stack)
 	{
+		if(Tools.infiniteCatalystDurability)
+			return 0d;
 		return 1d-((double)getToolDamage(stack)/(double)getToolMaxDamage(stack));
 	}
 

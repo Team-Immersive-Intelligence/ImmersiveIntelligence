@@ -614,6 +614,9 @@ public class IIConfigHandler
 			@RequiresMcRestart
 			public static int catalystPlatinumDurability = 250;
 
+			@Comment({"Catalysts have infinite durability."})
+			public static boolean infiniteCatalystDurability = false;
+
 			//Usage Time
 
 			@Comment({"The usage time of the Precision Buzzsaw."})
