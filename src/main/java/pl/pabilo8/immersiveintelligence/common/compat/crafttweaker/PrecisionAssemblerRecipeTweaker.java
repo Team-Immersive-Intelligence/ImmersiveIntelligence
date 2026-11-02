@@ -131,10 +131,12 @@ public class PrecisionAssemblerRecipeTweaker
 			PrecisionAssemblerRecipeTweaker.addRecipe(itemOutput, trash, itemInputs, tools, animations, energy, timeMultiplier);
 		}
 
-		public static void removeRecipe(IItemStack itemOutput)
+		@ZenMethod
+		public static void removeRecipe(IItemStack output)
 		{
-			PrecisionAssemblerRecipeTweaker.removeRecipe(itemOutput);
+			CraftTweakerAPI.apply(new PrecisionAssemblerRecipeTweaker.Remove(CraftTweakerHelper.toStack(output)));
 		}
+
 	}
 
 }
