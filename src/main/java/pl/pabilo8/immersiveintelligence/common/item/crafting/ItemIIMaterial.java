@@ -157,6 +157,8 @@ public class ItemIIMaterial extends ItemIISubItemsBase<Materials>
 		@IIItemProperties(oreDict = "dustThermite")
 		THERMITE,
 		@IIItemProperties(oreDict = "dustZincSulfide")
-		ZINC_SULFIDE
+		ZINC_SULFIDE,
+		@IIItemProperties(oreDict = "ingotSolder")
+		SOLDER_INGOT
 	}
 }
