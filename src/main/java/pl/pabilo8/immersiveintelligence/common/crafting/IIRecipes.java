@@ -1602,7 +1602,7 @@ public class IIRecipes
 			);
 
 		MetalPressRecipe.addRecipe(IIContent.itemMaterialSpring.getStack(MaterialsSpring.SOLDER, 2),
-				IIContent.itemSolderIngot.getIngredientStack(1),
+				IIContent.itemMaterial.getIngredientStack(Materials.SOLDER_INGOT, 1),
 				new ItemStack(IEContent.itemMold, 1, 4),
 				2400);
 	}
@@ -1630,22 +1630,22 @@ public class IIRecipes
 	public static void addSolderRecipes()
 	{
 
-		AlloyRecipe.addRecipe(new ItemStack(IIContent.itemSolderIngot),
+		AlloyRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.SOLDER_INGOT),
 				new IngredientStack("ingotLead"),
 				new IngredientStack("ingotTin"),
 				200
 		);
-		AlloyRecipe.addRecipe(new ItemStack(IIContent.itemSolderIngot),
+		AlloyRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.SOLDER_INGOT),
 				new IngredientStack("dustLead"),
 				new IngredientStack("dustTin"),
 				200
 		);
-		AlloyRecipe.addRecipe(new ItemStack(IIContent.itemSolderIngot, 2),
+		AlloyRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.SOLDER_INGOT, 2),
 				new IngredientStack("ingotSilver"),
 				new IngredientStack("ingotTin"),
 				200
 		);
-		AlloyRecipe.addRecipe(new ItemStack(IIContent.itemSolderIngot, 2),
+		AlloyRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.SOLDER_INGOT, 2),
 				new IngredientStack("dustSilver"),
 				new IngredientStack("dustTin"),
 				200

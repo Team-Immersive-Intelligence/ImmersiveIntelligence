@@ -48,7 +48,6 @@ import pl.pabilo8.immersiveintelligence.common.block.rotary_device.BlockIIMechan
 import pl.pabilo8.immersiveintelligence.common.block.simple.*;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIConcreteDecoration.ConcreteDecorations;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIMetalBase.Metals;
-import pl.pabilo8.immersiveintelligence.common.item.ItemIISolderIngot;
 import pl.pabilo8.immersiveintelligence.common.item.*;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoRailgunGrenade;
@@ -234,7 +233,6 @@ public class IIContent
 	//materials
 	public static final ItemIIMaterial itemMaterial = new ItemIIMaterial();
 	public static final ItemIIMaterialIngot itemMaterialIngot = new ItemIIMaterialIngot();
-	public static final ItemIISolderIngot itemSolderIngot = new ItemIISolderIngot();
 	public static final ItemIIMaterialPlate itemMaterialPlate = new ItemIIMaterialPlate();
 	public static final ItemIIMaterialRod itemMaterialRod = new ItemIIMaterialRod();
 	public static final ItemIIMaterialDust itemMaterialDust = new ItemIIMaterialDust();
