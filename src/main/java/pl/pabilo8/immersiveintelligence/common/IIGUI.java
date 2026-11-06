@@ -110,6 +110,7 @@ public enum IIGUI implements ISerializableEnum
 			(player, te) -> new ContainerDataInputMachine(player, te, false)
 	),
 	DATA_INPUT_MACHINE_EDIT(TileEntityDataInputMachine.class, ContainerDataInputMachineEditing::new),
+	ATMOSPHERIC_CONDENSER(TileEntityAtmosphericCondenser.class, ContainerAtmosphericCondenser::new),
 
 	ARITHMETIC_LOGIC_MACHINE_STORAGE(TileEntityArithmeticLogicMachine.class,
 			(player, te) -> new ContainerArithmeticLogicMachine(player, te, 0)
@@ -324,6 +325,7 @@ public enum IIGUI implements ISerializableEnum
 		IIGUI.DATA_INPUT_MACHINE_STORAGE.setClientTileGui(GuiDataInputMachine::getStorageGui);
 		IIGUI.DATA_INPUT_MACHINE_VARIABLES.setClientTileGui(GuiDataInputMachine::getVariablesGui);
 		IIGUI.DATA_INPUT_MACHINE_EDIT.setClientTileGui(GuiDataInputMachineEdit::new);
+		IIGUI.ATMOSPHERIC_CONDENSER.setClientTileGui(GuiAtmosphericCondenser::new);
 		//ALM
 		IIGUI.ARITHMETIC_LOGIC_MACHINE_STORAGE.setClientTileGui(GuiArithmeticLogicMachine::getStorageGui);
 		IIGUI.ARITHMETIC_LOGIC_MACHINE_VARIABLES.setClientTileGui(GuiArithmeticLogicMachine::getVariablesGui);
