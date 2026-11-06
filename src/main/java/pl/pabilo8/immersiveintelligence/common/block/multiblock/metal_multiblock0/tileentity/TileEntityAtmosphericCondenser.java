@@ -12,8 +12,10 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.AtmosphericCondenser;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockAtmosphericCondenser;
 import pl.pabilo8.immersiveintelligence.common.util.IIEnergyStorage;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
@@ -27,13 +29,6 @@ import static pl.pabilo8.immersiveintelligence.common.IIUtils.outputFluidToTank;
 public class TileEntityAtmosphericCondenser extends TileEntityMultiblockIIGeneric<TileEntityAtmosphericCondenser>
 		implements IIIGuiMultiblockTile
 {
-	public static final int ENERGY_PER_TICK = 8;
-	public static final int TICKS_PER_CYCLE = 20;
-	public static final int ARGON_PER_CYCLE = 10;
-	public static final int NITROGEN_PER_CYCLE = 780;
-	public static final int OXYGEN_PER_CYCLE = 210;
-	public static final int TANK_CAPACITY = 32000;
-
 	@SyncNBT(name = "argon_tank", events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_RECIPE_CHANGED, SyncEvents.TILE_CUSTOM1})
 	public FilteredFluidTank argonTank;
 	@SyncNBT(name = "nitrogen_tank", events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_RECIPE_CHANGED, SyncEvents.TILE_CUSTOM1})
@@ -47,10 +42,10 @@ public class TileEntityAtmosphericCondenser extends TileEntityMultiblockIIGeneri
 	{
 		super(MultiblockAtmosphericCondenser.INSTANCE);
 		inventory = NonNullList.withSize(6, ItemStack.EMPTY);
-		energyStorage = new IIEnergyStorage(32000);
-		argonTank = new FilteredFluidTank(TANK_CAPACITY);
-		nitrogenTank = new FilteredFluidTank(TANK_CAPACITY);
-		oxygenTank = new FilteredFluidTank(TANK_CAPACITY);
+		energyStorage = new IIEnergyStorage(AtmosphericCondenser.energyCapacity);
+		argonTank = new FilteredFluidTank(AtmosphericCondenser.fluidCapacity);
+		nitrogenTank = new FilteredFluidTank(AtmosphericCondenser.fluidCapacity);
+		oxygenTank = new FilteredFluidTank(AtmosphericCondenser.fluidCapacity);
 	}
 
 	@Override
@@ -87,19 +82,19 @@ public class TileEntityAtmosphericCondenser extends TileEntityMultiblockIIGeneri
 			}
 		}
 
-		if(argonTank.getFluidAmount()+ARGON_PER_CYCLE > TANK_CAPACITY
-				||nitrogenTank.getFluidAmount()+NITROGEN_PER_CYCLE > TANK_CAPACITY
-				||oxygenTank.getFluidAmount()+OXYGEN_PER_CYCLE > TANK_CAPACITY)
+		if(argonTank.getFluidAmount()+AtmosphericCondenser.argonPerCycle > AtmosphericCondenser.fluidCapacity
+				||nitrogenTank.getFluidAmount()+AtmosphericCondenser.nitrogenPerCycle > AtmosphericCondenser.fluidCapacity
+				||oxygenTank.getFluidAmount()+AtmosphericCondenser.oxygenPerCycle > AtmosphericCondenser.fluidCapacity)
 			return;
 
-		if(energyStorage.tryConsumeEnergy(ENERGY_PER_TICK, false))
+		if(energyStorage.tryConsumeEnergy(AtmosphericCondenser.energyPerTick, false))
 		{
-			if(++productionProgress >= TICKS_PER_CYCLE)
+			if(++productionProgress >= AtmosphericCondenser.ticksPerCycle)
 			{
 				productionProgress = 0;
-				argonTank.fill(new FluidStack(IIContent.gasArgon, ARGON_PER_CYCLE), true);
-				nitrogenTank.fill(new FluidStack(IIContent.gasNitrogen, NITROGEN_PER_CYCLE), true);
-				oxygenTank.fill(new FluidStack(IIContent.gasOxygen, OXYGEN_PER_CYCLE), true);
+				argonTank.fill(new FluidStack(IIContent.gasArgon, AtmosphericCondenser.argonPerCycle), true);
+				nitrogenTank.fill(new FluidStack(IIContent.gasNitrogen, AtmosphericCondenser.nitrogenPerCycle), true);
+				oxygenTank.fill(new FluidStack(IIContent.gasOxygen, AtmosphericCondenser.oxygenPerCycle), true);
 				markDirty();
 				updateTileForEvent(SyncEvents.TILE_RECIPE_CHANGED);
 			}
