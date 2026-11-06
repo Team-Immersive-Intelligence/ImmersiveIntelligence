@@ -69,11 +69,11 @@ public class TileEntityAtmosphericCondenser extends TileEntityMultiblockIIGeneri
 					MultiblockAtmosphericCondenser.BUCKET_NITROGEN_IN, MultiblockAtmosphericCondenser.BUCKET_NITROGEN_OUT, true);
 			changed |= handleBucketTankInteraction(oxygenTank, inventory,
 					MultiblockAtmosphericCondenser.BUCKET_OXYGEN_IN, MultiblockAtmosphericCondenser.BUCKET_OXYGEN_OUT, true);
-			if(outputFluidToTank(argonTank, 100, getPOIPos("output_argon"), this.world, this.facing.getOpposite()))
+			if(outputFluidToTank(argonTank, 100, getPOIPos("output_argon"), this.world, getDirection("output_argon")))
 				changed = true;
-			if(outputFluidToTank(nitrogenTank, 100, getPOIPos("output_nitrogen"), this.world, this.facing.getOpposite()))
+			if(outputFluidToTank(nitrogenTank, 100, getPOIPos("output_nitrogen"), this.world, getDirection("output_nitrogen")))
 				changed = true;
-			if(outputFluidToTank(oxygenTank, 100, getPOIPos("output_oxygen"), this.world, this.facing.getOpposite()))
+			if(outputFluidToTank(oxygenTank, 100, getPOIPos("output_oxygen"), this.world, getDirection("output_oxygen")))
 				changed = true;
 			if(changed)
 			{

@@ -2774,9 +2774,9 @@
 		"redstone": 2
 	},
 	"rotations": {
-		"output_argon": "clockwise_90",
-		"output_nitrogen": "none",
-		"output_oxygen": "none",
+		"output_argon": "none",
+		"output_nitrogen": "clockwise_90",
+		"output_oxygen": "clockwise_90",
 		"redstone": "counterclockwise_90",
 		"energy": "clockwise_180"
 	},
