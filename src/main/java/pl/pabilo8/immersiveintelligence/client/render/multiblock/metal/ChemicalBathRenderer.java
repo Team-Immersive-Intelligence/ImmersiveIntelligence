@@ -19,8 +19,10 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 /**
+ * Renders the Chemical Bath and its current process.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 17.03.2026
+ * @updated 04.10.2026
  * @ii-approved 0.3.1
  * @since 21.06.2019
  */
@@ -39,14 +41,16 @@ public class ChemicalBathRenderer extends IIMultiblockRenderer<TileEntityChemica
 		float productionProgress = te.getProductionProgress(te.currentProcess, partialTicks);
 		float tankAmount = te.tank.getFluidAmount();
 		fluid.withFluidTank(te.tank);
-		item.setStack(ItemStack.EMPTY);
+		item.setStack(ItemStack.EMPTY, ItemStack.EMPTY);
 
 		//Calculate fluid height based on recipe progress
 		if(te.currentProcess!=null)
 		{
 			fluid.withFluid(te.currentProcess.recipe.fluidInput);
 			tankAmount += te.currentProcess.recipe.fluidInput.amount*(1f-productionProgress);
-			item.setStack(te.currentProcess.recipe.itemInput.getExampleStack(), te.currentProcess.recipe.itemOutput);
+			ItemStack displayInput = te.currentProcess.processData.getItemStack("displayInput");
+			item.setStack(displayInput.isEmpty()?te.currentProcess.recipe.itemInput.getExampleStack(): displayInput,
+					te.currentProcess.recipe.itemOutput);
 		}
 		fluid.withLevel(tankAmount/(float)te.tank.getCapacity());
 
@@ -62,6 +66,8 @@ public class ChemicalBathRenderer extends IIMultiblockRenderer<TileEntityChemica
 	public void drawSimple(BufferBuilder buf, float partialTicks, Tessellator tes)
 	{
 		model.defaultize();
+		item.setStack(ItemStack.EMPTY, ItemStack.EMPTY);
+		fluid.withFluid(new FluidStack(IIContent.fluidSulfuricAcid, 1000)).withLevel(1f);
 		model.render(tes, buf);
 	}
 

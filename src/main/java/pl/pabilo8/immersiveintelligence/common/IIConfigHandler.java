@@ -29,7 +29,7 @@ import java.util.Map;
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @author Avalon (avalon@iiteam.net)
- * @updated 08.09.2026
+ * @updated 07.10.2026
  * @since 12.05.2019
  */
 @Mod.EventBusSubscriber
@@ -139,10 +139,6 @@ public class IIConfigHandler
 		@Comment({"Whether Tungsten should be smeltable in the vanilla furnace"})
 		@RequiresMcRestart
 		public static boolean smeltableTungsten = false;
-
-		@Comment({"Whether Advanced Electronic Alloy should be smeltable in the vanilla furnace"})
-		@RequiresMcRestart
-		public static boolean smeltableAEA = false;
 
 		@Comment({"A list of all entities for which a fakeplayer should be used when shooter is not a player"})
 		public static String[] bulletFakeplayerWhitelist = new String[]{
@@ -383,6 +379,21 @@ public class IIConfigHandler
 			@Mapped(mapClass = Config.class, mapName = "manual_intA")
 			public static int[] orePhosphorus = new int[]{12, 1, 55, 1, 80};
 
+			@Comment({"Generation config for Tin Ore.", "Parameters: Vein size, lowest possible Y, highest possible Y, veins per chunk, chance for vein to spawn (out of 100). Set vein size to 0 to disable the generation"})
+			@RequiresMcRestart
+			@Mapped(mapClass = Config.class, mapName = "manual_intA")
+			public static int[] oreTin = new int[]{16, 0, 96, 2, 75};
+
+			@Comment({"Generation config for Chromium Ore.", "Parameters: Vein size, lowest possible Y, highest possible Y, veins per chunk, chance for vein to spawn (out of 100). Set vein size to 0 to disable the generation"})
+			@RequiresMcRestart
+			@Mapped(mapClass = Config.class, mapName = "manual_intA")
+			public static int[] oreChromium = new int[]{10, 35, 95, 2, 100};
+
+			@Comment({"Generation config for Sulfur Ore.", "Parameters: Vein size, lowest possible Y, highest possible Y, veins per chunk, chance for vein to spawn (out of 100). Set vein size to 0 to disable the generation"})
+			@RequiresMcRestart
+			@Mapped(mapClass = Config.class, mapName = "manual_intA")
+			public static int[] oreSulfur = new int[]{6, 1, 55, 1, 65};
+
 			@Comment({"Set this to true to allow retro-generation of Platinum Ore."})
 			@RequiresMcRestart
 			@Mapped(mapClass = IIWorldGen.class, mapName = "retrogenMap")
@@ -425,6 +436,10 @@ public class IIConfigHandler
 
 		public static class Tools
 		{
+			@Comment({"Prevent held-item use and GUI opening at multiblock tank interaction points when holding a fluid container, even if the transfer fails.",
+					"Disable to allow normal interaction after failed transfers. Successful transfers always consume the interaction."})
+			public static boolean fluidContainersBlockInteraction = true;
+
 			@SubConfig
 			@LangKey("item.immersiveintelligence.skycrate_mount.mechanical.name")
 			@Comment("Config for Skycrate Mounts, allows for changes to speed multipliers and energy consumption")
@@ -582,6 +597,25 @@ public class IIConfigHandler
 			@Comment({"The durability (max number of uses) of the Tungsten Sawblade."})
 			@RequiresMcRestart
 			public static int sawbladeTungstenDurability = 550;
+
+			@Comment({"The durability (max number of uses) of the Copper Catalyst."})
+			@RequiresMcRestart
+			public static int catalystCopperDurability = 250;
+
+			@Comment({"The durability (max number of uses) of the Iron Catalyst."})
+			@RequiresMcRestart
+			public static int catalystIronDurability = 250;
+
+			@Comment({"The durability (max number of uses) of the Nickel Catalyst."})
+			@RequiresMcRestart
+			public static int catalystNickelDurability = 250;
+
+			@Comment({"The durability (max number of uses) of the Platinum Catalyst."})
+			@RequiresMcRestart
+			public static int catalystPlatinumDurability = 250;
+
+			@Comment({"Catalysts have infinite durability."})
+			public static boolean infiniteCatalystDurability = false;
 
 			//Usage Time
 
@@ -761,6 +795,10 @@ public class IIConfigHandler
 			@LangKey("tile.immersiveintelligence.wooden_multiblock.sawmill.name")
 			@Comment("Config for the Sawmill, allows for changes to RPM max/min and Torque max/min")
 			public static Sawmill sawmill;
+			@SubConfig
+			@LangKey("tile.immersiveintelligence.wooden_multiblock.diesel_engine.name")
+			@Comment("Config for the Diesel Engine fuel capacity and rotary output.")
+			public static DieselEngine dieselEngine;
 			@SubConfig
 			@LangKey("tile.immersiveintelligence.data_connector.alarm_siren.name")
 			@Comment("Config for the Alarm Siren, allows for changes to default volume")
@@ -956,6 +994,30 @@ public class IIConfigHandler
 
 				@Comment({"Efficiency modifier for the Improved Gearbox upgrade."})
 				public static float gearboxUpgradeEfficiency = 2.5f;
+			}
+
+			public static class DieselEngine
+			{
+				@Comment({"Fuel tank capacity in mB."})
+				@RangeInt(min = 1)
+				@RequiresMcRestart
+				public static int fuelCapacity = 12000;
+
+				@Comment({"Output torque in IT."})
+				@RangeDouble(min = 0)
+				public static float producedTorque = 32;
+
+				@Comment({"Output speed in degrees per tick."})
+				@RangeDouble(min = 0)
+				public static float producedSpeed = 128;
+
+				@Comment({"Minimum torque to speed ratio."})
+				@RangeDouble(min = 0.0625)
+				public static float minRatio = 0.25f;
+
+				@Comment({"Maximum torque to speed ratio."})
+				@RangeDouble(min = 0.0625)
+				public static float maxRatio = 4f;
 			}
 
 			public static class MechanicalPump
@@ -2765,6 +2827,9 @@ public class IIConfigHandler
 
 		public static class Ammunition
 		{
+			@Comment({"Use German codes and names for creative ammunition. Set to false for short English names."})
+			public static boolean useGermanCreativeAmmoNames = true;
+
 			@Comment({"Whether explosive ammo components can break blocks"})
 			public static boolean blockDamage = true;
 

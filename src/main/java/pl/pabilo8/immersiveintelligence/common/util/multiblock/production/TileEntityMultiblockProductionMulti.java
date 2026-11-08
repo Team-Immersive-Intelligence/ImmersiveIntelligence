@@ -9,13 +9,13 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEn
 
 import java.util.Iterator;
 
-
 /**
  * A standard II production multiblock.<br>
  * Counterpart to {@link TileEntityMultiblockMetal}<br>
  *
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 13.04.2023
+ * @updated 05.10.2026
  */
 
 public abstract class TileEntityMultiblockProductionMulti<T extends TileEntityMultiblockProductionMulti<T, R>, R extends IIIMultiblockRecipe>
@@ -56,7 +56,7 @@ public abstract class TileEntityMultiblockProductionMulti<T extends TileEntityMu
 				//Do process output
 				if(process.ticks >= process.maxTicks)
 				{
-					if(attemptProductionOutput(process))
+					if(!world.isRemote&&attemptProductionOutput(process))
 					{
 						//Remove the process from the queue
 						onProductionFinish(process);
@@ -67,7 +67,7 @@ public abstract class TileEntityMultiblockProductionMulti<T extends TileEntityMu
 				}
 
 				//Else, try to progress this process
-				float progress = getProductionStep(process, false);
+				float progress = getProductionStep(process, world.isRemote);
 				if(progress > 0)
 				{
 					process.ticks += progress;

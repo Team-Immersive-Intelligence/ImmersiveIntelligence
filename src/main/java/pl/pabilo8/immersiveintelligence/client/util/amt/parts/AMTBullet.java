@@ -43,6 +43,11 @@ public class AMTBullet extends AMT
 	private BulletState state = BulletState.BULLET_UNUSED;
 	private Vec3d baseRotation = Vec3d.ZERO;
 
+	public AMTBullet(String name, AMTModelHeader header)
+	{
+		this(name, header, null);
+	}
+
 	public AMTBullet(String name, Vec3d originPos, @Nullable IAmmoModel<?, ?> model)
 	{
 		super(name, originPos);

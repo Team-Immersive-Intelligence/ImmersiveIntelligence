@@ -20,9 +20,10 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * A class responsible for installation, removal and storing installed upgrades of a machine (a {@link net.minecraft.tileentity.TileEntity} or {@link net.minecraft.entity.Entity}( based on a designated {@link UpgradeTechTree}.
+ * Stores machine upgrades and controls their installation and removal.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 08.10.2026
  * @since 03.12.2023
  */
 public class UpgradeManager<T extends IUpgradableDevice> implements INBTSerializable<NBTTagCompound>
@@ -77,6 +78,7 @@ public class UpgradeManager<T extends IUpgradableDevice> implements INBTSerializ
 				.map(ResLoc::of)
 				.map(Upgrade::getUpgradeByID)
 				.filter(Objects::nonNull)
+				.distinct()
 				.forEach(upgrades::add);
 		enbt.checkSetString("currently_installed", s ->
 				this.currentlyInstalled = Upgrade.getUpgradeByID(ResLoc.of(s)));
@@ -121,13 +123,28 @@ public class UpgradeManager<T extends IUpgradableDevice> implements INBTSerializ
 		return true;
 	}
 
+	/**
+	 * Removes an upgrade and its dependent upgrades, and cancels their installation.
+	 *
+	 * @param upgrade upgrade to remove
+	 * @return true when the upgrade state changed
+	 */
 	public boolean remove(Upgrade upgrade)
 	{
-		upgrades.remove(upgrade);
+		if(upgrade==null)
+			return false;
 		List<Upgrade> children = techTree.getAllChildren(upgrade);
-		children.forEach(upgrades::remove);
-		sendTileUpdate();
-		return true;
+		boolean changed = upgrades.removeIf(installed -> installed==upgrade||children.contains(installed));
+		if(currentlyInstalled!=null&&(currentlyInstalled==upgrade||children.contains(currentlyInstalled)))
+		{
+			currentlyInstalled = null;
+			upgradeProgress = clientUpgradeProgress = 0;
+			maxClientUpgradeProgress = 0;
+			changed = true;
+		}
+		if(changed)
+			sendTileUpdate();
+		return changed;
 	}
 
 	public boolean resetInstallProgress()
@@ -207,6 +224,10 @@ public class UpgradeManager<T extends IUpgradableDevice> implements INBTSerializ
 
 	private void sendTileUpdate()
 	{
+		if(parent.getIIWorld()==null||parent.getIIWorld().isRemote)
+			return;
+		if(parent instanceof TileEntityIEBase)
+			((TileEntityIEBase)parent).markDirty();
 		if(parent instanceof TileEntityMultiblockIIBase<?>)
 			((TileEntityMultiblockIIBase<?>)parent).updateTileForEvent(SyncEvents.TILE_UPGRADES_MODIFIED);
 		else if(parent instanceof TileEntityIEBase)

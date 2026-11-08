@@ -65,6 +65,7 @@ The exoskeleton [requires energy] to operate and [is only activated when running
 # 15
 |[crafting]{source:"boot_reinforcement"}|
 The [Boots Reinforcement] upgrade consists of several steel plates, held together by leather straps. It [adds additional armor] and [protects the wearer from fire] when combined with the [Heat Resistant Coating](#9).
+This upgrade also allows the wearer to walk on magma blocks without being injured.
 # 16
 |[crafting]{source:"flippers"}|
 [Flippers] allow swift movement in fluids. They work very well with the [Scuba Tank](#13) and [Gas Mask](#2).

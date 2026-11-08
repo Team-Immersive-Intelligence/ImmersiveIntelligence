@@ -13,7 +13,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
-import pl.pabilo8.immersiveintelligence.api.crafting.BathingRecipe;
+import pl.pabilo8.immersiveintelligence.api.crafting.ChemicalBathRecipe;
 import pl.pabilo8.immersiveintelligence.api.crafting.PrecisionAssemblerRecipe;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
@@ -26,10 +26,10 @@ import static pl.pabilo8.immersiveintelligence.api.ShrapnelHandler.addShrapnel;
 /**
  * @author Carver (carver@iiteam.net)
  * @author Pabilo8 (pabilo@iiteam.net)
- * @since 05.04.2026
  * @updated 16.04.2026
  * @updated 31.07.2026
  * @ii-approved 0.3.1
+ * @since 05.04.2026
  */
 
 public class DeeperDepthsHelper extends IICompatModule
@@ -80,7 +80,7 @@ public class DeeperDepthsHelper extends IICompatModule
 					ItemStack.EMPTY, energy, time
 			).setSpecialRecipeType("Recycling");
 
-			new BathingRecipe(
+			new ChemicalBathRecipe(
 					getModItem(RES_DD.with(name), 1), entry[4],
 					new FluidStack(IIContent.fluidHydrofluoricAcid, 100),
 					512, 120, false
@@ -162,7 +162,7 @@ public class DeeperDepthsHelper extends IICompatModule
 					//Output: getModItem with meta 0 explicitly.
 					for(String block : baseBlocks)
 						for(int i = 1; i < 8; i++)
-							new BathingRecipe(
+							new ChemicalBathRecipe(
 									getModItem(RES_DD.with(block), 1),
 									getModItem(RES_DD.with(block), 1, i),
 									new FluidStack(IIContent.fluidHydrofluoricAcid, 100),
@@ -178,7 +178,7 @@ public class DeeperDepthsHelper extends IICompatModule
 							Item item = Item.REGISTRY.getObject(RES_DD.with(waxed+name));
 							if(item!=null)
 								for(int i = 0; i < 4; i++)
-									new BathingRecipe(
+									new ChemicalBathRecipe(
 											new ItemStack(item, 1),
 											new ItemStack(item, 1, i),
 											new FluidStack(IIContent.fluidHydrofluoricAcid, 100),
@@ -190,7 +190,7 @@ public class DeeperDepthsHelper extends IICompatModule
 					for(Object[] entry : oxidationBlocks)
 					{
 						String name = (String)entry[0];
-						new BathingRecipe(
+						new ChemicalBathRecipe(
 								getModItem(RES_DD.with(name), 1),
 								getModItem(RES_DD.with(fullPrefix+name), 1),
 								new FluidStack(IIContent.fluidHydrofluoricAcid, 100),
@@ -209,7 +209,7 @@ public class DeeperDepthsHelper extends IICompatModule
 						{
 							String name = (String)entry[0];
 							for(int i = 0; i < 4; i++)
-								new BathingRecipe(
+								new ChemicalBathRecipe(
 										getModItem(RES_DD.with(name), 1, 0),
 										getModItem(RES_DD.with("waxed_"+name), 1, i),
 										new FluidStack(IIContent.fluidHydrofluoricAcid, 100),
@@ -221,7 +221,7 @@ public class DeeperDepthsHelper extends IICompatModule
 					for(Object[] entry : oxidationBlocks)
 					{
 						String name = (String)entry[0];
-						new BathingRecipe(
+						new ChemicalBathRecipe(
 								getModItem(RES_DD.with(fullPrefix+name), 1),
 								getModItem(RES_DD.with("waxed_"+fullPrefix+name), 1),
 								new FluidStack(IIContent.fluidHydrofluoricAcid, 100),

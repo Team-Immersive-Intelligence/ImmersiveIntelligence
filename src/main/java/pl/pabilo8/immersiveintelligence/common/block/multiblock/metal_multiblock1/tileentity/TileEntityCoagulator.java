@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity;
 
-import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
 import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
 import net.minecraft.client.resources.I18n;
@@ -11,7 +10,6 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -22,6 +20,7 @@ import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockCoagulator;
+import pl.pabilo8.immersiveintelligence.common.util.IIEnergyStorage;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
@@ -34,7 +33,7 @@ import javax.annotation.Nullable;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 22.12.2025
+ * @updated 07.10.2026
  * @ii-approved 0.3.1
  * @since 04.03.2021
  */
@@ -42,9 +41,9 @@ public class TileEntityCoagulator extends TileEntityMultiblockProductionSingle<T
 		implements IAdvancedTextOverlay
 {
 	@SyncNBT(events = {SyncEvents.TILE_CUSTOM1, SyncEvents.TILE_RECIPE_CHANGED})
-	public FluidTank tankCoagulant;
+	public FilteredFluidTank tankCoagulant;
 	@SyncNBT(events = {SyncEvents.TILE_CUSTOM2, SyncEvents.TILE_RECIPE_CHANGED})
-	public FluidTank tankInput;
+	public FilteredFluidTank tankInput;
 	@SyncNBT(events = {SyncEvents.TILE_CUSTOM2, SyncEvents.TILE_RECIPE_CHANGED})
 	public NonNullList<ItemStack> bucketStacks;
 	@SyncNBT(events = SyncEvents.TILE_RECIPE_CHANGED)
@@ -61,7 +60,7 @@ public class TileEntityCoagulator extends TileEntityMultiblockProductionSingle<T
 		this.inventory = NonNullList.withSize(5, ItemStack.EMPTY);
 		this.bucketStacks = NonNullList.withSize(6, ItemStack.EMPTY);
 		this.bucketProgress = new int[]{0, 0, 0, 0, 0, 0};
-		this.energyStorage = new FluxStorageAdvanced(Coagulator.energyCapacity);
+		this.energyStorage = new IIEnergyStorage(Coagulator.energyCapacity);
 		this.tankInput = new FilteredFluidTank(Coagulator.fluidCapacity)
 				.withInputFilter(fluidStack -> IIMultiblockRecipe.streamRecipes(CoagulatorRecipe.class)
 						.anyMatch(recipe -> recipe.fluidInput.isFluidEqual(fluidStack)));
@@ -230,10 +229,7 @@ public class TileEntityCoagulator extends TileEntityMultiblockProductionSingle<T
 	@Override
 	public float getProductionStep(IIMultiblockProcess<CoagulatorRecipe> process, boolean simulate)
 	{
-		if(energyStorage.extractEnergy(process.recipe.getEnergyPerTick(), true)!=process.recipe.getEnergyPerTick())
-			return 0;
-		energyStorage.extractEnergy(process.recipe.getEnergyPerTick(), simulate);
-		return 1f;
+		return energyStorage.tryConsumeEnergy(process.recipe.getEnergyPerTick(), simulate)?1: 0;
 	}
 
 	@Override

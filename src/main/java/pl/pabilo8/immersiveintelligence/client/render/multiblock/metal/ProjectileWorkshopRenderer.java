@@ -3,8 +3,10 @@ package pl.pabilo8.immersiveintelligence.client.render.multiblock.metal;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.model.obj.OBJModel;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeTechTree;
 import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIAnimationCompiledMap;
 import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIBooleanAnimation;
@@ -23,7 +25,7 @@ import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 09.07.2024
+ * @updated 05.10.2026
  * @ii-approved 0.3.1
  * @since 21.06.2019
  */
@@ -51,13 +53,20 @@ public class ProjectileWorkshopRenderer extends IIMultiblockRenderer<TileEntityP
 		mode.apply(upgradeFiller);
 		float progress = 0;
 
+		item.setStack(ItemStack.EMPTY);
+		bullet.setModel(null);
 		//Apply bullet and item info
 		if(te.currentProcess!=null)
 		{
-			bullet.setModel(AmmoRegistry.getGenericModel(te.currentProcess.recipe.ammo));
-			bullet.withStack(te.currentProcess.recipe.getEffect(), BulletState.CORE);
+			ItemStack effect = te.currentProcess.recipe.isFilling?te.currentProcess.processData.getItemStack("effect"):
+					te.currentProcess.recipe.getEffect();
+			IAmmoTypeItem<?, ?> ammo = effect.getItem() instanceof IAmmoTypeItem?(IAmmoTypeItem<?, ?>)effect.getItem(): null;
+			bullet.setModel(ammo==null?null: AmmoRegistry.getGenericModel(ammo));
+			bullet.setVisible(!effect.isEmpty());
+			bullet.withStack(effect, BulletState.CORE);
 			if(!upgradeFiller)
-				item.setStack(te.currentProcess.recipe.ingredient);
+				item.setStack(te.currentProcess.processData.unwrap().hasKey("displayInput")?
+						te.currentProcess.processData.getItemStack("displayInput"): te.currentProcess.recipe.ingredient);
 			progress = te.getProductionProgress(te.currentProcess, partialTicks);
 		}
 		(upgradeFiller?coreFiller: coreWorkshop).apply(progress);
@@ -71,7 +80,17 @@ public class ProjectileWorkshopRenderer extends IIMultiblockRenderer<TileEntityP
 	@Override
 	public void drawSimple(BufferBuilder buf, float partialTicks, Tessellator tes)
 	{
-
+		model.defaultize();
+		active.apply(false);
+		mode.apply(false);
+		item.setStack(ItemStack.EMPTY);
+		bullet.setModel(null);
+		bullet.setVisible(false);
+		lid1.apply(0);
+		lid2.apply(0);
+		coreWorkshop.apply(0);
+		coreFiller.apply(0);
+		model.render(tes, buf);
 	}
 
 	@Override

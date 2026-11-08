@@ -25,6 +25,8 @@ public class ItemIIMaterialGem extends ItemIISubItemsBase<MaterialsGem>
 	public enum MaterialsGem implements IIItemEnum
 	{
 		FLUORITE,
-		PHOSPHORUS
+		PHOSPHORUS,
+		SULFUR,
+		SALT
 	}
 }

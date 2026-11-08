@@ -27,7 +27,7 @@ import java.util.List;
 public class VulcanizerTweaker
 {
 	@ZenMethod
-	public static void addRecipe(IIngredient mainInput, IIngredient compoundInput, IIngredient sulfurInput, IItemStack itemMold, IItemStack itemOutput, int energy, String resIn, String resOut)
+	public static void addRecipe(IIngredient mainInput, IIngredient compoundInput, IIngredient sulfurInput, IItemStack itemMold, IItemStack itemOutput, int energy, String model)
 	{
 		for(IIngredient o : new IIngredient[]{mainInput, compoundInput, sulfurInput})
 			if(o==null)
@@ -43,15 +43,14 @@ public class VulcanizerTweaker
 				CraftTweakerHelper.toIEIngredientStack(compoundInput),
 				CraftTweakerHelper.toIEIngredientStack(sulfurInput),
 				energy,
-				new ResourceLocation(resIn+".png"),
-				new ResourceLocation(resOut+".png")
+				new ResourceLocation(model)
 		));
 	}
 
 	@ZenMethod
 	public static void addRecipe(IIngredient mainInput, IIngredient compoundInput, IIngredient sulfurInput, IItemStack itemMold, IItemStack itemOutput, int energy)
 	{
-		addRecipe(mainInput, compoundInput, sulfurInput, itemMold, itemOutput, energy, VulcanizerRecipe.TEXTURE_LATEX.toString(), VulcanizerRecipe.TEXTURE_RUBBER.toString());
+		addRecipe(mainInput, compoundInput, sulfurInput, itemMold, itemOutput, energy, VulcanizerRecipe.MODEL_TIRE.toString());
 	}
 
 	@ZenMethod
@@ -62,17 +61,16 @@ public class VulcanizerTweaker
 
 	private static class Add implements IAction
 	{
-		private ItemStack output;
-		private ComparableItemStack mold;
-		private IngredientStack mainInput;
-		private IngredientStack compoundInput;
-		private IngredientStack sulfurInput;
-		private int energy;
-		private ResourceLocation resIn;
-		private ResourceLocation resOut;
+		private final ItemStack output;
+		private final ComparableItemStack mold;
+		private final IngredientStack mainInput;
+		private final IngredientStack compoundInput;
+		private final IngredientStack sulfurInput;
+		private final int energy;
+		private final ResourceLocation model;
 
 		public Add(ItemStack output, ComparableItemStack mold, IngredientStack mainInput, IngredientStack compoundInput, IngredientStack sulfurInput,
-				   int energy, ResourceLocation resIn, ResourceLocation resOut)
+				   int energy, ResourceLocation model)
 		{
 			this.output = output;
 			this.mold = mold;
@@ -80,14 +78,13 @@ public class VulcanizerTweaker
 			this.compoundInput = compoundInput;
 			this.sulfurInput = sulfurInput;
 			this.energy = energy;
-			this.resIn = resIn;
-			this.resOut = resOut;
+			this.model = model;
 		}
 
 		@Override
 		public void apply()
 		{
-			new VulcanizerRecipe(output, mold, mainInput, compoundInput, sulfurInput, energy, resIn, resOut);
+			new VulcanizerRecipe(output, mold, mainInput, compoundInput, sulfurInput, energy, model);
 		}
 
 		@Override

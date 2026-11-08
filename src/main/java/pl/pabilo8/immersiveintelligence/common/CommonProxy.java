@@ -363,8 +363,10 @@ public class CommonProxy implements IGuiHandler
 
 		MineralMix mineralFluorite = ExcavatorHandler.addMineral("Fluorite", 25, .65f, new String[]{"oreFluorite", "oreQuartz"}, new float[]{.5f, .25f});
 		MineralMix mineralPhosphorite = ExcavatorHandler.addMineral("Phosphorite", 30, .45f, new String[]{"orePhosphorus", sulfur, "oreIron", "oreAluminum"}, new float[]{.65f, .125f, 0.0625f, 0.0125f});
-		mineralFluorite.dimensionWhitelist = new int[]{-1};
-		mineralPhosphorite.dimensionWhitelist = new int[]{-1};
+		MineralMix mineralSulfur = ExcavatorHandler.addMineral("Sulfur", 15, .15f, new String[]{"oreSulfur"}, new float[]{1.0f});
+		mineralFluorite.dimensionWhitelist = new int[]{0};
+		mineralPhosphorite.dimensionWhitelist = new int[]{0};
+		mineralSulfur.dimensionWhitelist = new int[]{0};
 
 		ExcavatorHandler.addMineral("Wolframite", 15, .15f, new String[]{"oreTungsten", "oreIron"}, new float[]{.25f, .75f});
 		ExcavatorHandler.addMineral("Ferberite", 10, .2f, new String[]{"oreTungsten", "oreIron", "oreTin"}, new float[]{.2f, .4f, .3f});
@@ -384,6 +386,8 @@ public class CommonProxy implements IGuiHandler
 		ExcavatorHandler.addMineral("Rich Auricupride", 15, .15f, new String[]{"oreGold", "oreCopper"}, new float[]{.6f, .4f});
 		ExcavatorHandler.addMineral("Emerald Geode", 15, .15f, new String[]{"terracotta", "sand", "gemEmerald"}, new float[]{.4f, .4f, .2f});
 		ExcavatorHandler.addMineral("Uranite", 15, .15f, new String[]{"oreUranium", "oreLead"}, new float[]{.4f, .6f});
+		ExcavatorHandler.addMineral("Cassiterite", 15, .15f, new String[]{"oreTin"}, new float[]{1.0f});
+		ExcavatorHandler.addMineral("Chromite", 15, .15f, new String[]{"oreChromium"}, new float[]{1.0f});
 
 		LighterFuelHandler.addFuel(FluidRegistry.getFluid("creosote"), 100);
 		LighterFuelHandler.addFuel(FluidRegistry.getFluid("ethanol"), 20);
@@ -579,10 +583,10 @@ public class CommonProxy implements IGuiHandler
 		fl.setTemperature(temperature);
 		fl.setGaseous(gas);
 
-		//Register fluid
-		FluidRegistry.addBucketForFluid(fl);
+		//Register fluid in the master registry before any bucket registration.
 		if(!FluidRegistry.registerFluid(fl))
 			fl = FluidRegistry.getFluid(fl.getName());
+		FluidRegistry.addBucketForFluid(fl);
 
 		//Add fluid to creative menu
 		IICreativeTab.fluidBucketMap.add(fl);
@@ -607,6 +611,7 @@ public class CommonProxy implements IGuiHandler
 		CapabilityChunkOwnership.register();
 		IEApi.prefixToIngotMap.put("spring", new Integer[]{2, 1});
 
+		IIPotions.init();
 		IIContent.init();
 
 		IIDataTypeUtils.registerDataTypes();
@@ -684,6 +689,7 @@ public class CommonProxy implements IGuiHandler
 		DustUtils.registerDust(new IngredientStack("dustSmallWood", 25), "sawdust", IIColor.fromPackedRGB(0x8c8269));
 		DustUtils.registerDust(new IngredientStack("sand", 100), "sand", IIColor.fromPackedRGB(0xaca37b));
 		DustUtils.registerDust(new IngredientStack("gravel", 100), "gravel", IIColor.fromPackedRGB(0x383937));
+		DustUtils.registerDust(new IngredientStack("dustSlag", 100), "slag", IIColor.fromPackedRGB(0x5f403c));
 
 		ShrapnelHandler.addShrapnel("white_phosphorus", IIColor.fromPackedRGB(0x6b778a), 5, 0.3f, 0f)
 				.setFlammable(true);
@@ -727,13 +733,23 @@ public class CommonProxy implements IGuiHandler
 		ConveyorHandler.registerConveyorHandler(new ResourceLocation(ImmersiveIntelligence.MODID, "rubber_extractcovered"), ConveyorRubberCoveredExtract.class, (tileEntity) -> new ConveyorRubberCoveredExtract(tileEntity instanceof IConveyorTile?((IConveyorTile)tileEntity).getFacing(): EnumFacing.NORTH));
 
 		if(Factions.enableFactions)
-		{
 			MinecraftForge.EVENT_BUS.register(DiplomacyHandler.getInstance(false));
-			ForgeChunkManager.setForcedChunkLoadingCallback(
-					ImmersiveIntelligence.INSTANCE,
-					(tickets, world) -> DiplomacyHandler.getInstance(world.isRemote).onTicketsLoaded(tickets, world)
-			);
-		}
+		ForgeChunkManager.setForcedChunkLoadingCallback(ImmersiveIntelligence.INSTANCE, (tickets, world) -> {
+			List<ForgeChunkManager.Ticket> propertyTickets = new ArrayList<>();
+			for(ForgeChunkManager.Ticket ticket : tickets)
+			{
+				if(ticket.getEntity() instanceof EntityAmmoChunkLoadingProjectile)
+					((EntityAmmoChunkLoadingProjectile)ticket.getEntity()).restoreChunkLoadingTicket(ticket);
+				else if(ticket.getEntity() instanceof EntitySkyCrate)
+					((EntitySkyCrate)ticket.getEntity()).restoreChunkLoadingTicket(ticket);
+				else
+					propertyTickets.add(ticket);
+			}
+			if(Factions.enableFactions)
+				DiplomacyHandler.getInstance(world.isRemote).onTicketsLoaded(propertyTickets, world);
+			else
+				propertyTickets.forEach(ForgeChunkManager::releaseTicket);
+		});
 		IICompatModule.doModulesPreInit(event);
 	}
 
@@ -775,8 +791,11 @@ public class CommonProxy implements IGuiHandler
 		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.ZINC.getMeta()), "zinc", IIConfig.Ores.oreZinc, EnumOreType.OVERWORLD);
 		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.TUNGSTEN.getMeta()), "tungsten", IIConfig.Ores.oreTungsten, EnumOreType.OVERWORLD);
 		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.SALT.getMeta()), "salt", IIConfig.Ores.oreSalt, EnumOreType.OVERWORLD);
+		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.TIN.getMeta()), "tin", IIConfig.Ores.oreTin, EnumOreType.OVERWORLD);
+		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.CHROMIUM.getMeta()), "chromium", IIConfig.Ores.oreChromium, EnumOreType.OVERWORLD);
 		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.FLUORITE.getMeta()), "fluorite", IIConfig.Ores.oreFluorite, EnumOreType.NETHER);
 		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.PHOSPHORUS.getMeta()), "phosphorus", IIConfig.Ores.orePhosphorus, EnumOreType.NETHER);
+		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.SULFUR.getMeta()), "sulfur", IIConfig.Ores.oreSulfur, EnumOreType.NETHER);
 
 		IILogger.info("Adding rubber tree generation");
 		IIWorldGen.worldGenRubberTree = new IIWorldGenRubberTree();

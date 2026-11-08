@@ -77,6 +77,7 @@ import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIPrecisionTool
 import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIVulcanizerMold.VulcanizerMolds;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMaterialBoule.MaterialsBoule;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMaterialDust.MaterialsDust;
+import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMaterialGem.MaterialsGem;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMaterialIngot.MaterialsIngot;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMaterialNugget.MaterialsNugget;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMaterialPlate.MaterialsPlate;
@@ -91,6 +92,7 @@ import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradeableArmor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -99,6 +101,8 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
+ * Registers crafting and machine recipes.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
  * @author Avalon (avalon@iiteam.net)
  * @updated 24.09.2026
@@ -147,6 +151,7 @@ public class IIRecipes
 		addMetalPressRecipes();
 		addBulletPressRecipes();
 		addFillerRecipes();
+		ProjectileWorkshopRecipe.registerCoreRecipes();
 
 		addSiliconProcessingRecipes();
 		addCircuitRecipes();
@@ -182,6 +187,8 @@ public class IIRecipes
 		addAmmunitionCasingRecipes();
 		addRubberRecipes();
 		addDuraluminiumRecipes();
+		addSolderRecipes();
+		addStainlessRecipies();
 
 		MixerRecipe.addRecipe(new FluidStack(IIContent.fluidEtchingAcid, 1000),
 				new FluidStack(IIContent.gasChlorine, 500), new Object[]{"dustIron"}, 4800);
@@ -426,7 +433,8 @@ public class IIRecipes
 
 			BlueprintCraftingRecipe.addRecipe("basic_circuits", BASIC_CIRCUIT,
 					"circuitBasicEtched",
-					new IngredientStack("chipBasic", 2)
+					new IngredientStack("chipBasic", 2),
+					"springSolder"
 			);
 
 			BlueprintCraftingRecipe.addRecipe("advanced_circuits",
@@ -437,13 +445,15 @@ public class IIRecipes
 			BlueprintCraftingRecipe.addRecipe("advanced_circuits",
 					IIContent.itemMaterial.getStack(Materials.ADVANCED_CIRCUIT_BOARD),
 					"circuitAdvancedEtched",
-					new IngredientStack("chipAdvanced", 2)
+					new IngredientStack("chipAdvanced", 2),
+					"springSolder"
 			);
 
 			BlueprintCraftingRecipe.addRecipe("advanced_circuits",
 					IIContent.itemMaterial.getStack(Materials.CRYPTOGRAPHIC_CIRCUIT_BOARD),
 					"circuitAdvanced",
-					new ItemStack(IEContent.itemMaterial, 2, 9));
+					new ItemStack(IEContent.itemMaterial, 2, 9),
+					"springSolder");
 
 			BlueprintCraftingRecipe.addRecipe("processors",
 					IIContent.itemMaterial.getStack(Materials.PROCESSOR_CIRCUIT_BOARD_RAW),
@@ -453,17 +463,18 @@ public class IIRecipes
 			BlueprintCraftingRecipe.addRecipe("processors",
 					IIContent.itemMaterial.getStack(Materials.PROCESSOR_CIRCUIT_BOARD),
 					"circuitProcessorEtched",
-					new IngredientStack("chipProcessor", 2)
+					new IngredientStack("chipProcessor", 2),
+					"springSolder"
 			);
 
 		}
 
 		//Circuits
-		new BathingRecipe(IIContent.itemMaterial.getStack(Materials.BASIC_CIRCUIT_BOARD_ETCHED), new IngredientStack("circuitBasicRaw"),
+		new ChemicalBathRecipe(IIContent.itemMaterial.getStack(Materials.BASIC_CIRCUIT_BOARD_ETCHED), new IngredientStack("circuitBasicRaw"),
 				FluidRegistry.getFluidStack("etching_acid", 500), 15000, 360, false);
-		new BathingRecipe(IIContent.itemMaterial.getStack(Materials.ADVANCED_CIRCUIT_BOARD_ETCHED), new IngredientStack("circuitAdvancedRaw"),
+		new ChemicalBathRecipe(IIContent.itemMaterial.getStack(Materials.ADVANCED_CIRCUIT_BOARD_ETCHED), new IngredientStack("circuitAdvancedRaw"),
 				FluidRegistry.getFluidStack("etching_acid", 1000), 150000, 560, false);
-		new BathingRecipe(IIContent.itemMaterial.getStack(Materials.PROCESSOR_CIRCUIT_BOARD_ETCHED), new IngredientStack("circuitProcessorRaw"),
+		new ChemicalBathRecipe(IIContent.itemMaterial.getStack(Materials.PROCESSOR_CIRCUIT_BOARD_ETCHED), new IngredientStack("circuitProcessorRaw"),
 				FluidRegistry.getFluidStack("etching_acid", 2000), 1500000, 720, false);
 
 //4x Vacuum tube + 1 x copper nugget = 2 x copper wire, 1 x iron plate, 1 x glass block
@@ -485,7 +496,7 @@ public class IIRecipes
 				IIContent.itemMaterial.getStack(Materials.BASIC_ELECTRONIC_ELEMENT),
 				ItemStack.EMPTY,
 
-				new IngredientStack[]{new IngredientStack("electronTube"), new IngredientStack("plateNickel"), new IngredientStack("dustRedstone", 4)},
+				new IngredientStack[]{new IngredientStack("electronTube"), new IngredientStack("plateNickel"), new IngredientStack("dustRedstone", 4), new IngredientStack("springSolder")},
 
 				new String[]{"inserter", "solderer", "drill"},
 				new String[]{"inserter pick second", "inserter drop main", "drill work main", "inserter pick first", "inserter drop main", "solderer work main", "inserter pick third", "inserter drop main", "solderer work main"},
@@ -511,7 +522,7 @@ public class IIRecipes
 				IIContent.itemMaterial.getStack(Materials.ADVANCED_ELECTRONIC_ELEMENT),
 				ItemStack.EMPTY,
 
-				new IngredientStack[]{new IngredientStack("electronTubeAdvanced"), new IngredientStack("chipBasic")},
+				new IngredientStack[]{new IngredientStack("electronTubeAdvanced"), new IngredientStack("chipBasic"), new IngredientStack("springSolder")},
 
 				new String[]{"inserter", "solderer", "drill"},
 				new String[]{"inserter pick second", "inserter drop main", "drill work main", "solderer work main", "inserter pick first", "inserter drop main", "solderer work main"},
@@ -524,7 +535,7 @@ public class IIRecipes
 				IIContent.itemMaterial.getStack(Materials.TRANSISTOR, 4),
 				ItemStack.EMPTY,
 
-				new IngredientStack[]{new IngredientStack("plateSilicon", 2), new IngredientStack("plateAdvancedElectronicAlloy"), new IngredientStack("plateAluminum"), new IngredientStack("dyeBlack")},
+				new IngredientStack[]{new IngredientStack("plateSilicon", 2), new IngredientStack("plateAdvancedElectronicAlloy"), new IngredientStack("plateAluminum"), new IngredientStack("dyeBlack"), new IngredientStack("springSolder")},
 
 				new String[]{"inserter", "solderer", "drill"},
 				new String[]{"inserter pick first", "inserter drop main", "drill work main", "solderer work first", "drill work main", "inserter pick second", "inserter drop main", "solderer work main", "inserter pick third", "inserter drop main", "solderer work main"},
@@ -537,7 +548,7 @@ public class IIRecipes
 				IIContent.itemMaterial.getStack(Materials.PROCESSOR_ELECTRONIC_ELEMENT),
 				IIContent.itemMaterialNugget.getStack(MaterialsNugget.SILICON),
 
-				new IngredientStack[]{new IngredientStack("transistor", 32), new IngredientStack("electronTubeAdvanced", 2)},
+				new IngredientStack[]{new IngredientStack("transistor", 32), new IngredientStack("electronTubeAdvanced", 2), new IngredientStack("springSolder")},
 
 				new String[]{"inserter", "solderer", "buzzsaw"},
 				new String[]{"inserter pick first", "inserter drop main", "solderer work first", "buzzsaw work main", "solderer work main", "inserter pick second", "inster drop main", "buzzsaw work main", "solderer work main"},
@@ -576,6 +587,18 @@ public class IIRecipes
 		);
 
 
+		CrusherRecipe.addRecipe(
+				IIContent.itemMaterialGem.getStack(MaterialsGem.PHOSPHORUS, 2),
+				new IngredientStack("oreOverworldphosphorus"),
+				3200
+		);
+
+		CrusherRecipe.addRecipe(
+				IIContent.itemMaterialGem.getStack(MaterialsGem.FLUORITE, 2),
+				new IngredientStack("oreOverworldfluorite"),
+				3200
+		);
+
 		CrusherRecipe.removeRecipesForInput(new ItemStack(Items.QUARTZ));
 		CrusherRecipe.addRecipe(
 				IIContent.itemMaterialDust.getStack(MaterialsDust.QUARTZ_DIRTY),
@@ -583,7 +606,7 @@ public class IIRecipes
 				3200
 		);
 
-		new BathingRecipe(
+		new ChemicalBathRecipe(
 				IIContent.itemMaterialDust.getStack(MaterialsDust.QUARTZ),
 				new IngredientStack("dustQuartzDirty"),
 				new FluidStack(IIContent.fluidHydrofluoricAcid, 1000),
@@ -781,7 +804,7 @@ public class IIRecipes
 	public static void addMiscIERecipes()
 	{
 		//Cheaper treated planks
-		new BathingRecipe(new ItemStack(IEContent.blockTreatedWood, 12),
+		new ChemicalBathRecipe(new ItemStack(IEContent.blockTreatedWood, 12),
 				new IngredientStack("plankWood", 8),
 				new FluidStack(IEContent.fluidCreosote, 1000),
 				3200, 120, false
@@ -802,8 +825,7 @@ public class IIRecipes
 	//Laggy, weird and wrong, but kinda universal
 	public static void addWoodTableSawRecipes()
 	{
-
-		//Sawmill plank recipe
+		//Logs to planks
 		CraftingManager.REGISTRY.forEach(iRecipe ->
 				{
 					if(Utils.compareToOreName(iRecipe.getRecipeOutput(), "plankWood"))
@@ -820,52 +842,50 @@ public class IIRecipes
 							new SawmillRecipe(out, new IngredientStack(stacks).setUseNBT(false),
 									IIContent.itemMaterial.getStack(Materials.DUST_WOOD),
 									Sawmill.torqueMin+2, 200, 1);
-
-						//IILogger.info("Added recipe for "+stack.getDisplayName()+" x"+stack.getCount()+" -> "+out.getDisplayName()+" x"+out.getCount());
 					}
 				}
 		);
-		//Crusher, logs to sawdust
-		CrusherRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.DUST_WOOD, 2),
-				new IngredientStack("logWood"), 4096);
-		CrusherRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.DUST_WOOD),
-				new IngredientStack("plankWood", 2), 3192);
 
-		//Add recipes for all planks dynamically
+		//Crushed slag
+		CrusherRecipe.addRecipe(IIContent.itemMaterialDust.getStack(MaterialsDust.SLAG, 2),
+				new IngredientStack("itemSlag"), 4096);
 
-		//Vanilla planks (Oak, Spruce, Birch, etc.)
-		for(int i = 0; i < 6; i++)
-			new SawmillRecipe(new ItemStack(Items.STICK, 3),
-					new IngredientStack(new ItemStack(Blocks.PLANKS, 1, i)), // Specific plank type
-					IIContent.itemMaterial.getStack(Materials.DUST_WOOD),
-					Sawmill.torqueMin, 100, 1);
-
-		//Treated wood planks
-		new SawmillRecipe(new ItemStack(IEContent.itemMaterial, 3, 0), // Treated sticks
-				new IngredientStack(new ItemStack(IEContent.blockTreatedWood)), // Treated planks
-				IIContent.itemMaterial.getStack(Materials.DUST_WOOD),
-				Sawmill.torqueMin, 100, 1);
-
-		//Support modded planks or dynamically registered planks
+		//Sticks from planks
 		IngredientStack allPlanks = new IngredientStack("plankWood"); // Handles OreDict entries for any planks
 		new SawmillRecipe(new ItemStack(Items.STICK, 3),
 				allPlanks,
 				IIContent.itemMaterial.getStack(Materials.DUST_WOOD),
 				Sawmill.torqueMin, 100, 1);
 
+		//Treated sticks from planks
+		new SawmillRecipe(new ItemStack(IEContent.itemMaterial, 3, 0), // Treated sticks
+				new IngredientStack(new ItemStack(IEContent.blockTreatedWood)), // Treated planks
+				IIContent.itemMaterial.getStack(Materials.DUST_WOOD),
+				Sawmill.torqueMin, 100, 1);
+
+		//Crusher, logs to sawdust
+		CrusherRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.DUST_WOOD, 2),
+				new IngredientStack("logWood"), 4096);
+		CrusherRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.DUST_WOOD),
+				new IngredientStack("plankWood", 2), 3192);
+
+		//Sawdust to pulp
 		BottlingMachineRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.PULP_WOOD),
 				new IngredientStack("dustWood"),
 				new FluidStack(FluidRegistry.WATER, 250)
 		);
+		//Sawdust to treated pulp
 		BottlingMachineRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.PULP_WOOD_TREATED),
 				new IngredientStack("pulpWood"),
 				new FluidStack(IEContent.fluidCreosote, 1000)
 		);
 
+		//Paper from pulp
 		MetalPressRecipe.addRecipe(new ItemStack(Items.PAPER, 2, 0),
 				new IngredientStack("pulpWood"),
 				new ItemStack(IEContent.itemMold, 1, 0),
 				100);
+		//Artificial leather from treated pulp
 		MetalPressRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.ARTIFICIAL_LEATHER),
 				new IngredientStack("pulpWoodTreated"),
 				new ItemStack(IEContent.itemMold, 1, 0),
@@ -951,7 +971,7 @@ public class IIRecipes
 	public static void addConcreteRecipes()
 	{
 		//Concrete Bricks / Volksbeton
-		new BathingRecipe(IIContent.blockConcreteDecoration.getStack(ConcreteDecorations.CONCRETE_BRICKS),
+		new ChemicalBathRecipe(IIContent.blockConcreteDecoration.getStack(ConcreteDecorations.CONCRETE_BRICKS),
 				new IngredientStack(new ItemStack(Blocks.BRICK_BLOCK)),
 				new FluidStack(FluidRegistry.getFluid("concrete"), 500), 1600, 120, false);
 		//Panzerconcrete / Panzerbeton
@@ -1049,8 +1069,8 @@ public class IIRecipes
 		);
 
 		addBathingCleaningRecipe(
-				new ItemStack(Items.BANNER, 1, OreDictionary.WILDCARD_VALUE),
-				new IngredientStack(new ItemStack(Items.BANNER, 1, 15)),
+				new ItemStack(Items.BANNER, 1, 15),
+				new IngredientStack(new ItemStack(Items.BANNER, 1, OreDictionary.WILDCARD_VALUE)),
 				2000,
 				256*160, 160, true, false, false
 		);
@@ -1084,43 +1104,43 @@ public class IIRecipes
 	public static void addChemicalPainterRecipes()
 	{
 		//Vanilla Blocks
-		new PaintingRecipe((rgb, stack) -> {
+		new ChemicalPainterRecipe((rgb, stack) -> {
 			//get closest approximated dye
 			return new ItemStack(Blocks.WOOL, 1, rgb.getDyeColor().getMetadata());
 		}, new IngredientStack(new ItemStack(Blocks.WOOL)), 256*240, 240, 125);
 
-		new PaintingRecipe((rgb, stack) -> {
+		new ChemicalPainterRecipe((rgb, stack) -> {
 			//get closest approximated dye
 			return new ItemStack(Blocks.CARPET, 1, rgb.getDyeColor().getMetadata());
 		}, new IngredientStack(new ItemStack(Blocks.CARPET)), 256*240, 240, 50);
 
-		new PaintingRecipe((rgb, stack) -> {
+		new ChemicalPainterRecipe((rgb, stack) -> {
 			//get closest approximated dye
 			return new ItemStack(Blocks.STAINED_GLASS, 1, rgb.getDyeColor().getMetadata());
 		}, new IngredientStack(new ItemStack(Blocks.GLASS)), 256*240, 240, 125);
 
-		new PaintingRecipe((rgb, stack) -> {
+		new ChemicalPainterRecipe((rgb, stack) -> {
 			//get closest approximated dye
 			return new ItemStack(Blocks.STAINED_GLASS_PANE, 1, rgb.getDyeColor().getMetadata());
 		}, new IngredientStack(new ItemStack(Blocks.GLASS_PANE)), 256*240, 240, 125);
 
-		new PaintingRecipe((rgb, stack) -> {
+		new ChemicalPainterRecipe((rgb, stack) -> {
 			//get closest approximated dye
 			return new ItemStack(Blocks.STAINED_HARDENED_CLAY, 1, rgb.getDyeColor().getMetadata());
 		}, new IngredientStack(new ItemStack(Blocks.HARDENED_CLAY)), 256*240, 240, 125);
 
-		new PaintingRecipe((rgb, stack) -> {
+		new ChemicalPainterRecipe((rgb, stack) -> {
 			//get closest approximated dye
 			return new ItemStack(Items.BED, 1, rgb.getDyeColor().getMetadata());
 		}, new IngredientStack(new ItemStack(Items.BED)), 256*240, 240, 200);
 
 		//II / IE items
-		new PaintingRecipe((rgb, stack) -> {
+		new ChemicalPainterRecipe((rgb, stack) -> {
 			IIContent.itemAdvancedPowerPack.setColor(stack, rgb.getPackedRGB());
 			return stack;
 		}, new IngredientStack(new ItemStack(IIContent.itemAdvancedPowerPack)), 512*340, 340, 2000);
 
-		new PaintingRecipe((rgb, stack) -> {
+		new ChemicalPainterRecipe((rgb, stack) -> {
 			Items.LEATHER_HELMET.setColor(stack, rgb.getPackedRGB());
 			return stack;
 		}, new IngredientStack(NonNullList.from(ItemStack.EMPTY,
@@ -1130,7 +1150,7 @@ public class IIRecipes
 				new ItemStack(Items.LEATHER_BOOTS)
 		)), 512*340, 340, 2000);
 
-		new PaintingRecipe((rgb, stack) -> {
+		new ChemicalPainterRecipe((rgb, stack) -> {
 			IIContent.itemLightEngineerChestplate.setColor(stack, rgb.getPackedRGB());
 			return stack;
 		}, new IngredientStack(NonNullList.from(ItemStack.EMPTY,
@@ -1145,7 +1165,7 @@ public class IIRecipes
 			int time = 100+(bullet.getCaliber()*40);
 			ItemStack bulletStack = bullet.getAmmoStack(IIContent.ammoCoreIron,
 					bullet.getAllowedCoreTypes()[0], bullet.getAllowedFuseTypes()[0]);
-			new PaintingRecipe((rgb, stack) -> {
+			new ChemicalPainterRecipe((rgb, stack) -> {
 				ItemStack ret = bullet.setPaintColor(stack, rgb);
 				ret.setCount(1);
 				return ret;
@@ -1161,11 +1181,11 @@ public class IIRecipes
 	private static void addBathingCleaningRecipe(ItemStack out, IngredientStack in, int amount, int energy, int time, boolean allowWater, boolean allowSulfuric, boolean allowHFl)
 	{
 		if(allowWater)
-			new BathingRecipe(out, in, new FluidStack(FluidRegistry.WATER, amount), energy, time, true);
+			new ChemicalBathRecipe(out, in, new FluidStack(FluidRegistry.WATER, amount), energy, time, true);
 		if(allowSulfuric)
-			new BathingRecipe(out, in, new FluidStack(IIContent.fluidSulfuricAcid, allowWater?amount/2: amount), allowWater?energy/2: energy, allowWater?time/2: time, true);
+			new ChemicalBathRecipe(out, in, new FluidStack(IIContent.fluidSulfuricAcid, allowWater?amount/2: amount), allowWater?energy/2: energy, allowWater?time/2: time, true);
 		if(allowHFl)
-			new BathingRecipe(out, in, new FluidStack(IIContent.fluidHydrofluoricAcid, amount/2), allowWater?energy/4: energy/2, allowWater?time/4: time/2, true);
+			new ChemicalBathRecipe(out, in, new FluidStack(IIContent.fluidHydrofluoricAcid, amount/2), allowWater?energy/4: energy/2, allowWater?time/4: time/2, true);
 	}
 
 	public static void addUpgradeRecipes()
@@ -1357,6 +1377,16 @@ public class IIRecipes
 				0.5F);
 
 		FurnaceRecipes.instance().addSmeltingRecipe(
+				IIContent.blockOre.getStack(Ores.TIN),
+				IIContent.itemMaterialIngot.getStack(MaterialsIngot.TIN),
+				0.5F);
+
+		FurnaceRecipes.instance().addSmeltingRecipe(
+				IIContent.itemMaterialDust.getStack(MaterialsDust.TIN),
+				IIContent.itemMaterialIngot.getStack(MaterialsIngot.TIN),
+				0.5F);
+
+		FurnaceRecipes.instance().addSmeltingRecipe(
 				IIContent.itemMaterialDust.getStack(MaterialsDust.BRASS),
 				IIContent.itemMaterialIngot.getStack(MaterialsIngot.BRASS),
 				0.5F);
@@ -1383,12 +1413,6 @@ public class IIRecipes
 					IIContent.itemMaterialIngot.getStack(MaterialsIngot.TUNGSTEN),
 					0.5F);
 		}
-
-		if(IIConfig.smeltableAEA)
-			FurnaceRecipes.instance().addSmeltingRecipe(
-					IIContent.itemMaterialDust.getStack(MaterialsDust.ADVANCED_ELECTRONIC_ALLOY),
-					IIContent.itemMaterialIngot.getStack(MaterialsIngot.ADVANCED_ELECTRONIC_ALLOY),
-					0.5F);
 	}
 
 	public static void addArcFurnaceRecyclingRecipes()
@@ -1545,7 +1569,7 @@ public class IIRecipes
 				new IngredientStack("plateRubberRaw", 10),
 				new IngredientStack("dustVulcanizationCompound", 3),
 				new IngredientStack("dustSulfur", 2),
-				24000
+				24000, VulcanizerRecipe.MODEL_BELT
 		).setName("rubber_belts");
 
 		new VulcanizerRecipe(IIContent.itemMaterial.getStack(Materials.RUBBER_TIRE, 3),
@@ -1553,7 +1577,7 @@ public class IIRecipes
 				new IngredientStack("plateRubberRaw", 10),
 				new IngredientStack("dustVulcanizationCompound", 8),
 				new IngredientStack("dustSulfur", 3),
-				32000
+				32000, VulcanizerRecipe.MODEL_TIRE
 		).setName("rubber_tires");
 
 		//Rubber is a slow pace industry ^^
@@ -1577,6 +1601,11 @@ public class IIRecipes
 					new IngredientStack("plateSteel", 5),
 					TOOL_CUTTERS
 			);
+
+		MetalPressRecipe.addRecipe(IIContent.itemMaterialSpring.getStack(MaterialsSpring.SOLDER, 2),
+				IIContent.itemMaterial.getIngredientStack(Materials.SOLDER_INGOT, 1),
+				new ItemStack(IEContent.itemMold, 1, 4),
+				2400);
 	}
 
 	public static void addDuraluminiumRecipes()
@@ -1599,6 +1628,48 @@ public class IIRecipes
 		);
 	}
 
+	public static void addSolderRecipes()
+	{
+
+		AlloyRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.SOLDER_INGOT),
+				new IngredientStack("ingotLead"),
+				new IngredientStack("ingotTin"),
+				200
+		);
+		AlloyRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.SOLDER_INGOT),
+				new IngredientStack("dustLead"),
+				new IngredientStack("dustTin"),
+				200
+		);
+		AlloyRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.SOLDER_INGOT, 2),
+				new IngredientStack("ingotSilver"),
+				new IngredientStack("ingotTin"),
+				200
+		);
+		AlloyRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.SOLDER_INGOT, 2),
+				new IngredientStack("dustSilver"),
+				new IngredientStack("dustTin"),
+				200
+		);
+	}
+
+	public static void addStainlessRecipies()
+	{
+		ArcFurnaceRecipe.addRecipe(IIContent.itemMaterialIngot.getStack(MaterialsIngot.STAINLESS_STEEL, 8),
+				new IngredientStack("ingotSteel", 5),
+				new ItemStack(IEContent.itemMetal, 1, 28),
+				600, 640,
+				new IngredientStack("ingotNickel"), new IngredientStack("ingotChromium", 2)
+		);
+
+		ArcFurnaceRecipe.addRecipe(IIContent.itemMaterialIngot.getStack(MaterialsIngot.STAINLESS_STEEL, 8),
+				new IngredientStack("dustSteel", 5),
+				new ItemStack(IEContent.itemMetal, 1, 28),
+				600, 640,
+				new IngredientStack("dustNickel"), new IngredientStack("dustChromium", 2)
+		);
+	}
+  
 	public static void addPackerHandling()
 	{
 		//Items
@@ -1876,6 +1947,7 @@ public class IIRecipes
 		OreDictionary.registerOre("logWood", new ItemStack(IIContent.blockRubberLog));
 		OreDictionary.registerOre("woodRubber", new ItemStack(IIContent.blockRubberLog));
 		OreDictionary.registerOre("treeLeaves", new ItemStack(IIContent.blockRubberLeaves));
+		OreDictionary.registerOre("treeSapling", new ItemStack(IIContent.blockRubberSapling));
 
 		OreDictionary.registerOre("tnt", new ItemStack(Blocks.TNT));
 		OreDictionary.registerOre("materialTNT", new ItemStack(Blocks.TNT));

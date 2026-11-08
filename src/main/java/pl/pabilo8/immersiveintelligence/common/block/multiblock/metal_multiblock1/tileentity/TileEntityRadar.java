@@ -1,7 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity;
 
 import blusunrize.immersiveengineering.api.DimensionBlockPos;
-import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
+import lombok.Setter;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -15,9 +15,7 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.radio.IRadioDevice;
 import pl.pabilo8.immersiveintelligence.api.data.radio.RadioNetwork;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeArray;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeEntity;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeVector;
+import pl.pabilo8.immersiveintelligence.api.data.types.*;
 import pl.pabilo8.immersiveintelligence.api.upgrade.IManagedUpgradableDevice;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeManager;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.MachineStyle;
@@ -26,13 +24,16 @@ import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockRadar;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.radar.RadarContact;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.radar.RadarTargetManager;
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.EntityAMTTactile;
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileManager;
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileManager.ITactileListener;
+import pl.pabilo8.immersiveintelligence.common.util.IIEnergyStorage;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyHandler;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.OwnerIdentity;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.property.IOwnableProperty;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyCollection;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
@@ -45,15 +46,17 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPO
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
 /**
- * Scans for entities and upgraded radio contacts and sends their positions through data.
+ * Scans for entities, radio signals and weather anomalies and sends their positions through data.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 24.09.2026
+ * @updated 12.10.2026
  * @ii-approved 0.3.1
  * @since 04.03.2021
  */
@@ -62,7 +65,16 @@ public class TileEntityRadar extends TileEntityMultiblockIIGeneric<TileEntityRad
 		IIIGuiMultiblockTile, ITactileListener, IManagedDamageResistantMultiblock, IRadioDevice
 {
 	private static final int RADIO_CONTACT_DURATION = 80;
+	public static final int CONTACT_MARKER_DURATION = 20;
+	private static final int WEATHER_SCAN_INTERVAL = 20;
 	private static final int MAX_RADIO_CONTACTS = 255;
+	/**
+	 * -- SETTER --
+	 * Sets the weather contact provider for an optional compatibility module.
+	 */
+	@Setter
+	private static Function<TileEntityRadar, List<RadarContact>> weatherScanner = radar -> Collections.emptyList();
+
 	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CUSTOM2})
 	public int dishRotation = 0;
 	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CUSTOM2})
@@ -84,13 +96,18 @@ public class TileEntityRadar extends TileEntityMultiblockIIGeneric<TileEntityRad
 	public int frequency;
 	@SyncNBT(time = 0)
 	public int radioCooldown;
-	private final List<RadioContact> radioContacts = new ArrayList<>();
+	@SyncNBT(time = 0, events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CUSTOM2})
+	public EasyCollection<RadarContact, NBTTagCompound> radioContacts = new EasyCollection<>(RadarContact::new);
+	@SyncNBT(time = 0, events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CUSTOM2})
+	public EasyCollection<RadarContact, NBTTagCompound> weatherContacts = new EasyCollection<>(RadarContact::new);
+	private long nextWeatherScan;
+	private boolean contactsDirty;
 	private Entity[] lastDetectedTargets = new Entity[0];
 
 	public TileEntityRadar()
 	{
 		super(MultiblockRadar.INSTANCE);
-		this.energyStorage = new FluxStorageAdvanced(Radar.energyCapacity);
+		this.energyStorage = new IIEnergyStorage(Radar.energyCapacity);
 		this.upgrades = new UpgradeManager<>(this);
 		this.construction = new MultiblockConstructionManager(this, Radar.constructionEnergy);
 		this.health = new MultiblockHealth(this, Radar.baseHealth);
@@ -109,6 +126,7 @@ public class TileEntityRadar extends TileEntityMultiblockIIGeneric<TileEntityRad
 		this.targetManager = null;
 		this.tactileManager = null;
 		this.radioContacts.clear();
+		this.weatherContacts.clear();
 		this.lastDetectedTargets = new Entity[0];
 	}
 
@@ -117,7 +135,12 @@ public class TileEntityRadar extends TileEntityMultiblockIIGeneric<TileEntityRad
 	{
 		super.onBeforeFirstTick();
 		if(!this.world.isRemote)
+		{
 			this.tactileManager = new TactileManager(multiblock, this);
+			//Contacts are valid only for the current loaded session.
+			radioContacts.clear();
+			weatherContacts.clear();
+		}
 	}
 
 	@Override
@@ -151,27 +174,45 @@ public class TileEntityRadar extends TileEntityMultiblockIIGeneric<TileEntityRad
 		//Scan and report filtered contacts
 		if(!world.isRemote)
 		{
-			if(previousActive!=active)
-				updateTileForEvent(SyncEvents.TILE_CUSTOM2);
+			boolean contactsChanged = updateContacts()||contactsDirty;
+			contactsDirty = false;
 			targetManager.update(this, active, dataOutputEnabled);
-			if(!isUpgradeInstalled(IIContent.UPGRADE_RADIO_LOCATORS)&&!radioContacts.isEmpty())
-			{
-				radioContacts.clear();
-				sendDetectedTargets(lastDetectedTargets);
-			}
-			boolean expired = false;
-			long now = world.getTotalWorldTime();
-			for(Iterator<RadioContact> it = radioContacts.iterator(); it.hasNext(); )
-				if(it.next().expiresAt <= now)
-				{
-					it.remove();
-					expired = true;
-				}
-			if(expired)
+			if(previousActive!=active||contactsChanged)
+				updateTileForEvent(SyncEvents.TILE_CUSTOM2);
+			if(contactsChanged)
 				sendDetectedTargets(lastDetectedTargets);
 			this.tactileManager.update(MultiblockRadar.INSTANCE.animationDish, ((dishRotation)%360)/360f);
 		}
 
+	}
+
+	private boolean updateContacts()
+	{
+		long now = world.getTotalWorldTime();
+		boolean changed = radioContacts.removeIf(contact -> contact.getExpiresAt() <= now);
+		changed |= weatherContacts.removeIf(contact -> contact.getExpiresAt() <= now);
+		if(!isUpgradeInstalled(IIContent.UPGRADE_RADIO_LOCATORS)&&!radioContacts.isEmpty())
+		{
+			radioContacts.clear();
+			changed = true;
+		}
+		boolean weatherAvailable = IIContent.UPGRADE_WEATHER_ANOMALY_DETECTORS!=null&&
+				isUpgradeInstalled(IIContent.UPGRADE_WEATHER_ANOMALY_DETECTORS);
+		if(!weatherAvailable)
+		{
+			changed |= !weatherContacts.isEmpty();
+			weatherContacts.clear();
+			nextWeatherScan = now;
+		}
+		else if(active&&now >= nextWeatherScan)
+		{
+			List<RadarContact> detected = weatherScanner.apply(this);
+			changed |= !weatherContacts.isEmpty()||!detected.isEmpty();
+			weatherContacts.clear();
+			weatherContacts.addAll(detected);
+			nextWeatherScan = now+WEATHER_SCAN_INTERVAL;
+		}
+		return changed;
 	}
 
 	/**
@@ -215,10 +256,20 @@ public class TileEntityRadar extends TileEntityMultiblockIIGeneric<TileEntityRad
 		for(int i = 0; i < targets.length; i++)
 			entities[i] = new DataTypeEntity(targets[i], center);
 		DataTypeVector[] positions = new DataTypeVector[radioContacts.size()];
+		Vec3d origin = getRadarCenter();
 		for(int i = 0; i < positions.length; i++)
-			positions[i] = new DataTypeVector(radioContacts.get(i).position.getX(),
-					radioContacts.get(i).position.getY(), radioContacts.get(i).position.getZ());
-		sendData(new DataPacket().with('e', new DataTypeArray(entities)).with('r', new DataTypeArray(positions)),
+			positions[i] = new DataTypeVector(radioContacts.get(i).getPosition().subtract(origin));
+		DataTypeMap weather = new DataTypeMap();
+		Map<String, RadarContact> nearest = new LinkedHashMap<>();
+		for(RadarContact contact : weatherContacts)
+		{
+			RadarContact previous = nearest.get(contact.getName());
+			if(previous==null||contact.getPosition().squareDistanceTo(origin) < previous.getPosition().squareDistanceTo(origin))
+				nearest.put(contact.getName(), contact);
+		}
+		for(RadarContact contact : nearest.values())
+			weather.put(new DataTypeString(contact.getName()), new DataTypeVector(contact.getPosition().subtract(origin)));
+		sendData(new DataPacket().with('e', new DataTypeArray(entities)).with('r', new DataTypeArray(positions)).with('w', weather),
 				getDirection("data"), getPOI(MultiblockPOI.DATA_OUTPUT)[0]);
 	}
 
@@ -244,17 +295,20 @@ public class TileEntityRadar extends TileEntityMultiblockIIGeneric<TileEntityRad
 		if(senderPos.dimension!=world.provider.getDimension()||
 				senderPos.distanceSq(getDevicePosition()) > (double)Radar.detectionRadius*Radar.detectionRadius)
 			return false;
-		BlockPos position = new BlockPos(senderPos);
-		long expiresAt = world.getTotalWorldTime()+RADIO_CONTACT_DURATION;
-		for(RadioContact contact : radioContacts)
-			if(contact.position.equals(position))
+		Vec3d position = new Vec3d(senderPos).addVector(0.5d, 0.5d, 0.5d);
+		long now = world.getTotalWorldTime();
+		RadarContact detected = new RadarContact("radio", position, now+RADIO_CONTACT_DURATION, now+CONTACT_MARKER_DURATION);
+		for(int i = 0; i < radioContacts.size(); i++)
+			if(radioContacts.get(i).getPosition().equals(position))
 			{
-				contact.expiresAt = expiresAt;
+				radioContacts.set(i, detected);
+				contactsDirty = true;
 				return true;
 			}
 		if(radioContacts.size() >= MAX_RADIO_CONTACTS)
 			radioContacts.remove(0);
-		radioContacts.add(new RadioContact(position, expiresAt));
+		radioContacts.add(detected);
+		contactsDirty = true;
 		sendDetectedTargets(lastDetectedTargets);
 		return true;
 	}
@@ -326,21 +380,11 @@ public class TileEntityRadar extends TileEntityMultiblockIIGeneric<TileEntityRad
 			master.radioCooldown = Math.max(0, ticks);
 	}
 
-	private static class RadioContact
-	{
-		private final BlockPos position;
-		private long expiresAt;
-
-		private RadioContact(BlockPos position, long expiresAt)
-		{
-			this.position = position;
-			this.expiresAt = expiresAt;
-		}
-	}
-
 	@Override
 	public void receiveMessageFromClient(@Nonnull NBTTagCompound message)
 	{
+		message.removeTag("radio_contacts");
+		message.removeTag("weather_contacts");
 		boolean changed = false;
 		if(targetManager!=null&&message.hasKey("targets", EasyNBT.TAG_COMPOUND))
 		{

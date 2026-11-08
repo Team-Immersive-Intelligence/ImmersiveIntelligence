@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity;
 
-import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -23,6 +22,7 @@ import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockAmmunitionAssembler;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
+import pl.pabilo8.immersiveintelligence.common.util.IIEnergyStorage;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionMulti;
@@ -32,7 +32,7 @@ import javax.annotation.Nullable;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 24.09.2026
+ * @updated 05.10.2026
  * @ii-approved 0.3.1
  * @since 04.03.2021
  */
@@ -53,7 +53,7 @@ public class TileEntityAmmunitionAssembler extends TileEntityMultiblockProductio
 	public TileEntityAmmunitionAssembler()
 	{
 		super(MultiblockAmmunitionAssembler.INSTANCE);
-		energyStorage = new FluxStorageAdvanced(AmmunitionAssembler.energyCapacity);
+		energyStorage = new IIEnergyStorage(AmmunitionAssembler.energyCapacity);
 		inventory = NonNullList.withSize(3, ItemStack.EMPTY);
 		hatch = new MultiblockInteractablePart(10);
 	}
@@ -125,13 +125,17 @@ public class TileEntityAmmunitionAssembler extends TileEntityMultiblockProductio
 			for(AmmunitionAssemblerRecipe recipe : AmmunitionAssemblerRecipe.getRecipes(AmmunitionAssemblerRecipe.class))
 				if(!recipe.advanced&&recipe.casingInput.matchesItemStack(inventory.get(MultiblockAmmunitionAssembler.SLOT_CASING))&&recipe.coreInput.matches(inventory.get(MultiblockAmmunitionAssembler.SLOT_CORE)))
 				{
+					ItemStack core = inventory.get(MultiblockAmmunitionAssembler.SLOT_CORE).copy();
+					ItemStack casing = inventory.get(MultiblockAmmunitionAssembler.SLOT_CASING).copy();
+					core.setCount(recipe.coreInput.inputSize);
+					casing.setCount(recipe.casingInput.inputSize);
 					IIMultiblockProcess<AmmunitionAssemblerRecipe> process = new IIMultiblockProcess<>(recipe)
-							.withNBT(nbt -> nbt.withItemStack(MultiblockAmmunitionAssembler.NBT_KEY_EFFECT, recipe.process.apply(inventory.get(MultiblockAmmunitionAssembler.SLOT_CORE), inventory.get(MultiblockAmmunitionAssembler.SLOT_CASING)))
-									.withItemStack("core", inventory.get(MultiblockAmmunitionAssembler.SLOT_CORE))
+							.withNBT(nbt -> nbt.withItemStack(MultiblockAmmunitionAssembler.NBT_KEY_EFFECT, recipe.process.apply(core.copy(), casing.copy()))
+									.withItemStack("core", core)
 									.withString("ammo", recipe.ammoItem.getName())
 							);
-					inventory.get(MultiblockAmmunitionAssembler.SLOT_CORE).shrink(1);
-					inventory.get(MultiblockAmmunitionAssembler.SLOT_CASING).shrink(1);
+					inventory.get(MultiblockAmmunitionAssembler.SLOT_CORE).shrink(recipe.coreInput.inputSize);
+					inventory.get(MultiblockAmmunitionAssembler.SLOT_CASING).shrink(recipe.casingInput.inputSize);
 					return process;
 				}
 		return null;
@@ -148,9 +152,7 @@ public class TileEntityAmmunitionAssembler extends TileEntityMultiblockProductio
 	public float getProductionStep(IIMultiblockProcess<AmmunitionAssemblerRecipe> process, boolean simulate)
 	{
 		int perTick = process.recipe.getTotalProcessEnergy()/process.maxTicks;
-		if(energyStorage.extractEnergy(perTick, simulate) < perTick)
-			return 0;
-		return 1;
+		return energyStorage.tryConsumeEnergy(perTick, simulate)?1: 0;
 	}
 
 	@Override

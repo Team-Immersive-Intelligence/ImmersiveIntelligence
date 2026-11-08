@@ -24,7 +24,7 @@ public class ItemIIMaterialDust extends ItemIISubItemsBase<MaterialsDust>
 	@GeneratedItemModels(itemName = "material_dust", texturePath = "material/dust")
 	public enum MaterialsDust implements IIItemEnum
 	{
-		ADVANCED_ELECTRONIC_ALLOY,
+		TIN,
 		BRASS,
 		PLATINUM,
 		TUNGSTEN,
@@ -34,6 +34,9 @@ public class ItemIIMaterialDust extends ItemIISubItemsBase<MaterialsDust>
 		QUARTZ,
 		QUARTZ_DIRTY,
 		PHOSPHORUS,
-		DURALUMINIUM
+		DURALUMINIUM,
+		STAINLESS_STEEL,
+		CHROMIUM,
+		SLAG
 	}
 }

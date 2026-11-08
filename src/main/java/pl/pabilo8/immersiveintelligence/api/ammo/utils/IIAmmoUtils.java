@@ -345,7 +345,10 @@ public class IIAmmoUtils
 					componentSlotsTaken += comp.getSlotsTaken();
 				}
 			}
-			tooltip.add(I18n.format(IIReference.DESC_BULLETS+"component_slots", ammo.getCoreType(stack).getComponentSlots()-componentSlotsTaken));
+			int availableComponentSlots = coreType.getComponentSlots()-componentSlotsTaken;
+			tooltip.add(availableComponentSlots > 0?
+					I18n.format(IIReference.DESC_BULLETS+"component_slots", availableComponentSlots):
+					I18n.format(IIReference.DESC_BULLETS+"no_component_slots"));
 			tooltip.addAll(componentTooltips);
 		}
 

@@ -15,7 +15,7 @@ import javax.annotation.Nullable;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 08.06.2025
+ * @updated 05.10.2026
  * @ii-approved 0.3.1
  * @since 14.04.2020
  */
@@ -39,6 +39,7 @@ public class FillerRecipe extends IIMultiblockRecipe
 			bullet = ((IAmmoTypeItem<?, ?>)itemOutput.getItem());
 
 		this.setTimeAndEnergy(time, energy);
+		completeRegistration(this.itemInput, this.itemOutput, dust.serializeNBT());
 	}
 
 

@@ -1,6 +1,6 @@
 # meta
 Продвинутые логические функции
-Если-это-то-это, mk.2
+if-this-then-that, mk.2
 # nand
 |[data_operation]{id:"nand"}|
 # nor

@@ -24,13 +24,15 @@ public class ItemIIMaterialIngot extends ItemIISubItemsBase<MaterialsIngot>
 	@GeneratedItemModels(itemName = "material_ingot", texturePath = "material/ingot")
 	public enum MaterialsIngot implements IIItemEnum
 	{
-		ADVANCED_ELECTRONIC_ALLOY,
+		TIN,
 		BRASS,
 		PLATINUM,
 		TUNGSTEN,
 		ZINC,
 		MAGNET,
 		SILICON,
-		DURALUMINIUM
+		DURALUMINIUM,
+		STAINLESS_STEEL,
+		CHROMIUM
 	}
 }

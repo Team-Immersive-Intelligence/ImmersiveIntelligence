@@ -68,7 +68,7 @@ public class GuiFactionInvitation extends DecoPlayerGui<ContainerPlayerGui>
 		PlayerInfo playerInfo = DiplomacyHandler.getInstance(true).getPlayerInfo(ClientUtils.mc().player);
 		String playerName = playerInfo.getName();
 		PermissionRole role = userIdentity.getRoleOf(player.getUniqueID());
-		String roleName = role==null?"unknown": role.getDisplayName();
+		String roleName = role==null?"unknown": role.getLocalizedName();
 
 		//Current faction status
 		if(Graphics.decoVanillaGUIStyle==DecoVanillaGUIStyle.VANILLA)

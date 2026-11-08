@@ -105,10 +105,7 @@ public abstract class ItemIILightEngineerArmorBase extends ItemIIUpgradeableArmo
 
 	@Nonnull
 	@Override
-	public ItemStack getContainerItem(@Nonnull ItemStack stack)
-	{
-		ItemStack damaged = stack.copy();
-		damaged.setItemDamage(stack.getItemDamage()+1);
-		return damaged.getItemDamage() >= damaged.getMaxDamage()?ItemStack.EMPTY: damaged;
+	public ItemStack getContainerItem(ItemStack stack) {
+		return stack.copy(); //no damage to armor when crafted with something
 	}
 }

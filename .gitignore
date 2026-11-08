@@ -15,6 +15,11 @@ out
 *.iml
 .idea
 
+# llm
+.codex/
+.agents/
+agents.md
+
 # vs code
 .vscode/
 

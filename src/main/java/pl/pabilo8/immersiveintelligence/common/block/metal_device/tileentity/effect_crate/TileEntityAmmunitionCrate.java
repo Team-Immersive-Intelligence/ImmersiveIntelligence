@@ -33,7 +33,7 @@ import static pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.M
  * Stores mode-specific ammunition and reloads compatible weapons.
  *
  * @author Pabilo8(pabilo@iiteam.net)
- * @updated 13.08.2026
+ * @updated 14.10.2026
  * @since 17.05.2019
  */
 public class TileEntityAmmunitionCrate extends TileEntityEffectCrate
@@ -46,6 +46,7 @@ public class TileEntityAmmunitionCrate extends TileEntityEffectCrate
 
 	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CLIENT_MESSAGE, SyncEvents.TILE_DROP_AS_ITEM})
 	public AmmunitionCrateMode mode = AmmunitionCrateMode.REVOLVER;
+	private boolean inventorySyncPending;
 
 	public TileEntityAmmunitionCrate()
 	{
@@ -276,8 +277,24 @@ public class TileEntityAmmunitionCrate extends TileEntityEffectCrate
 	public void update()
 	{
 		super.update();
-		if(world!=null&&!world.isRemote&&world.getTotalWorldTime()%10==0)
+		if(world==null||world.isRemote)
+			return;
+		long time = world.getTotalWorldTime();
+		if(time%10==0)
 			outputSpentItems();
+		if(inventorySyncPending&&time%5==0)
+		{
+			inventorySyncPending = false;
+			updateTileForEvent(SyncEvents.TILE_GUI_OPENED);
+		}
+	}
+
+	@Override
+	public void markDirty()
+	{
+		super.markDirty();
+		if(world!=null&&!world.isRemote)
+			inventorySyncPending = true;
 	}
 
 	private void dropInvalidModeContents()

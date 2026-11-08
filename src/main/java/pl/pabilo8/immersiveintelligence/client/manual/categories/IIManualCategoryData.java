@@ -14,7 +14,6 @@ import pl.pabilo8.immersiveintelligence.common.compat.ie.recipe.MetalPressRecipe
 import pl.pabilo8.immersiveintelligence.common.crafting.IIRecipes;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIMaterial.Materials;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIPrecisionTool.PrecisionTools;
-import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMaterialDust.MaterialsDust;
 import pl.pabilo8.immersiveintelligence.common.item.data.ItemIIFunctionalCircuit.Circuits;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
@@ -52,9 +51,9 @@ public class IIManualCategoryData extends IIManualCategory
 						BlueprintCraftingRecipe.getTypedBlueprint("processors")
 				))
 				.addSource("basic_circuit_blueprints", getSourceForBlueprint("basic_circuits"))
-				.addSource("advanced_electronic_alloy", getSourceForItem(
+				/*.addSource("advanced_electronic_alloy", getSourceForItem(
 						IIContent.itemMaterialDust.getStack(MaterialsDust.ADVANCED_ELECTRONIC_ALLOY)
-				))
+				))*/
 				.addSource("all_circuits", getSourceForItems(
 						IIRecipes.BASIC_CIRCUIT,
 						IIContent.itemMaterial.getStack(Materials.ADVANCED_CIRCUIT_BOARD),

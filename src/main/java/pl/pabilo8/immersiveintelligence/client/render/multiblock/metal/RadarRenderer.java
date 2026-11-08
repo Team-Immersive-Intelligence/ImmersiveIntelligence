@@ -30,7 +30,7 @@ public class RadarRenderer extends IIMultiblockRenderer<TileEntityRadar>
 {
 	private AMTModel model;
 	private AMTConstructionModel constructionModel;
-	private AMTUpgradeModel radioLocatorsUpgrade;
+	private AMTUpgradeModel radioLocatorsUpgrade, weatherAnomalyDetectorsUpgrade;
 	private IIAnimationCompiledMap animationDish;
 
 	@Override
@@ -47,6 +47,11 @@ public class RadarRenderer extends IIMultiblockRenderer<TileEntityRadar>
 			{
 				radioLocatorsUpgrade.defaultize();
 				radioLocatorsUpgrade.render(tes, buf);
+			}
+			if(weatherAnomalyDetectorsUpgrade!=null&&weatherAnomalyDetectorsUpgrade.renderProgress(te, tes, buf, partialTicks)==UpgradeStage.INSTALLED)
+			{
+				weatherAnomalyDetectorsUpgrade.defaultize();
+				weatherAnomalyDetectorsUpgrade.render(tes, buf);
 			}
 
 			float progress = (((te.dishRotation+(te.active?partialTicks: 0))%360)/360f);
@@ -75,15 +80,23 @@ public class RadarRenderer extends IIMultiblockRenderer<TileEntityRadar>
 		);
 		this.radioLocatorsUpgrade = new AMTUpgradeModel(
 				IIContent.UPGRADE_RADIO_LOCATORS,
-				modelDir.with("upgrade_traingulators.obj.ie"),
+				modelDir.with("upgrade_triangulators.obj.ie"),
 				new ResourceLocation(ImmersiveIntelligence.MODID, "radar/upgrade_triangulators")
 		);
+		if(IIContent.UPGRADE_WEATHER_ANOMALY_DETECTORS!=null)
+			this.weatherAnomalyDetectorsUpgrade = new AMTUpgradeModel(
+					IIContent.UPGRADE_WEATHER_ANOMALY_DETECTORS,
+					modelDir.with("upgrade_weather.obj.ie"),
+					new ResourceLocation(ImmersiveIntelligence.MODID, "radar/upgrade_weather")
+			);
+		else
+			this.weatherAnomalyDetectorsUpgrade = null;
 
 		this.animationDish = IIAnimationCompiledMap.create(this.model, IIReference.RES_II.with("radar/dish"));
 
 		UpgradeTechTree.getTreeFor(TileEntityRadar.class)
 				.withBaseModelLocation(modelDir.with("radar_inv.obj"))
-				.withUpgradeModelLocation(IIContent.UPGRADE_RADIO_LOCATORS, modelDir.with("upgrade_traingulators.obj.ie"));
+				.withUpgradeModelLocation(IIContent.UPGRADE_RADIO_LOCATORS, modelDir.with("upgrade_triangulators.obj.ie"));
 
 	}
 }

@@ -11,6 +11,7 @@ import pl.pabilo8.immersiveintelligence.api.style.StyleCustomization;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoColorPicker;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoTab;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoDropdown;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoElementDisplays;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
@@ -29,6 +30,7 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
  */
 public class DecoStyleWidget extends DecoComponentWidgetBase<DecoStyleWidget>
 {
+	private static final String TOOLTIP_KEY = IIReference.GUI_TOOLTIP_KEY+"widget.style.";
 	private final IStyleCustomizable customizable;
 	private final StyleCustomization style;
 
@@ -48,26 +50,26 @@ public class DecoStyleWidget extends DecoComponentWidgetBase<DecoStyleWidget>
 		if(super.initialize())
 		{
 			//Create upper text
-			String text = IIReference.GUI_TOOLTIP_KEY+"widget.style.main";
+			String text = TOOLTIP_KEY+"main";
 			if(!style.getConstraints().getStyles().isEmpty())
 				text = text+".variants";
 			if(style.getConstraints().getColorCustomization()!=PaintStyleConstraint.NOT_APPLICABLE)
 				text = text+".color";
 
-			String key = IIReference.GUI_TOOLTIP_KEY+"widget.style.main.tile";
+			String key = TOOLTIP_KEY+"main.tile";
 			if(customizable instanceof TileEntityMultiblockPart)
-				key = IIReference.GUI_TOOLTIP_KEY+"widget.style.main.multiblock";
+				key = TOOLTIP_KEY+"main.multiblock";
 			else if(customizable instanceof EntityVehicleBase)
-				key = IIReference.GUI_TOOLTIP_KEY+"widget.style.main.vehicle";
+				key = TOOLTIP_KEY+"main.vehicle";
 			else if(customizable instanceof Entity)
-				key = IIReference.GUI_TOOLTIP_KEY+"widget.style.main.entity";
+				key = TOOLTIP_KEY+"main.entity";
 
 			withTitleLabel(IIReference.GUI_TOOLTIP_KEY+"widget.style", DecoAlignment.TOP);
 			DecoLabel headInfo = addLabel(TextFormatting.ITALIC+I18n.format(text, I18n.format(key)), 4, 2+4)
 					.withSize(width-4-4, 32)
 					.withWrapping(true);
 
-			addLabel(IIReference.GUI_TOOLTIP_KEY+"widget.style.style", 2, 10+2+headInfo.getTotalHeight());
+			addLabel(TOOLTIP_KEY+"style", 2, 10+2+headInfo.getTotalHeight());
 			addComponent(new DecoDropdown<String>(32, 10+headInfo.getTotalHeight())
 					.withWidth(width-32-4)
 					.withDropdownWidth(width-32-4)
@@ -89,6 +91,8 @@ public class DecoStyleWidget extends DecoComponentWidgetBase<DecoStyleWidget>
 									.withTag("style", customizable.getStyle().serializeNBT()).unwrap()
 							));
 					})
+					.withDisplayFunction(DecoElementDisplays.getSimpleTextDisplay(styleName ->
+							I18n.format(TOOLTIP_KEY+"style_names"+styleName)))
 			);
 			if(style.getConstraints().getColorCustomization()!=PaintStyleConstraint.NOT_APPLICABLE)
 				addComponent(new DecoColorPicker(32, 10+16+headInfo.getTotalHeight())
@@ -129,6 +133,6 @@ public class DecoStyleWidget extends DecoComponentWidgetBase<DecoStyleWidget>
 				.withIconAlignment(DecoAlignment.CENTER)
 				//Engineer's Manual
 				.withIcon(DecoTextures.ICON_STYLE)
-				.withTranslatedTooltip(IIReference.GUI_TOOLTIP_KEY+"widget.style.show");
+				.withTranslatedTooltip(TOOLTIP_KEY+"show");
 	}
 }

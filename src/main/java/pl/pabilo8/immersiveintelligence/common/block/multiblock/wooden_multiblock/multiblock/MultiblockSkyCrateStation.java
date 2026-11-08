@@ -8,6 +8,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multibloc
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySkyCrateStation;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -22,6 +23,12 @@ public class MultiblockSkyCrateStation extends MultiblockStuctureBase<TileEntity
 		super(new ResourceLocation(ImmersiveIntelligence.MODID, "multiblocks/skycrate_station"));
 		offset = new Vec3i(1, 1, 1);
 		INSTANCE = this;
+		addPOI(MultiblockPOI.SKYCRATE_WIRE_MOUNT, "wire");
+		addPOI(MultiblockPOI.ROTARY_INPUT, "rotary");
+		addPOI(MultiblockPOI.REDSTONE_INPUT, "redstone");
+		addPOI(MultiblockPOI.MISC_FLAGPOLE, "flag");
+		addPOI(MultiblockPOI.ITEM_INPUT, "cargo_input");
+		addPOI(MultiblockPOI.ITEM_OUTPUT, "cargo_output");
 	}
 
 	@Override

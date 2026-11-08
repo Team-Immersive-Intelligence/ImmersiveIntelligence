@@ -11,6 +11,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
@@ -128,10 +129,13 @@ public class ItemIILightEngineerBoots extends ItemIILightEngineerArmorBase imple
 
 
 		boolean reinforcement = getUpgrades(stack).hasKey("boot_reinforcement");
-		if(reinforcement&&player.isBurning())
+		if(reinforcement)
 		{
-			ItemNBTHelper.setBoolean(stack, "boot_reinforcement", true);
-			player.extinguish();
+			//prevent magma block damage while wearing reinforced boots.
+			if(!world.isRemote&&world.getBlockState(player.getPosition().down()).getBlock()==Blocks.MAGMA)
+			{
+				player.addPotionEffect(new PotionEffect(MobEffects.FIRE_RESISTANCE, 2, 0, true, false));
+			}
 		}
 	}
 

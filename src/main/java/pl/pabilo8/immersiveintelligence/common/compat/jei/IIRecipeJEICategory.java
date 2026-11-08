@@ -2,7 +2,10 @@ package pl.pabilo8.immersiveintelligence.common.compat.jei;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
 import mezz.jei.api.IModRegistry;
-import mezz.jei.api.gui.*;
+import mezz.jei.api.gui.IDrawable;
+import mezz.jei.api.gui.IDrawableStatic;
+import mezz.jei.api.gui.IGuiItemStackGroup;
+import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeCategory;
@@ -17,7 +20,6 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.crafting.DustStack;
 import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIMultiblockRecipe;
 import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIRecipeLayout;
 import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIRecipeLayout.IOType;
@@ -25,7 +27,6 @@ import pl.pabilo8.immersiveintelligence.api.crafting.recipe.LayoutComponent;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
-import pl.pabilo8.immersiveintelligence.common.compat.jei.ingredients.JEIDustStackRenderer;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
@@ -37,6 +38,7 @@ import java.util.stream.Collectors;
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
+ * @updated 07.10.2026
  * @since 05.12.2025
  */
 @ParametersAreNonnullByDefault
@@ -45,6 +47,7 @@ public class IIRecipeJEICategory<T extends IIMultiblockRecipe> implements IRecip
 	private final String uniqueName;
 	private final String localizedName;
 	private final Class<T> recipeClass;
+	private java.util.function.Supplier<List<IIMultiblockRecipe>> displayRecipes;
 	private ItemStack[] displayStacks;
 	private IDrawable background;
 
@@ -62,7 +65,8 @@ public class IIRecipeJEICategory<T extends IIMultiblockRecipe> implements IRecip
 		List<T> recipes = IIMultiblockRecipe.getRecipes(recipeClass);
 		if(!recipes.isEmpty())
 		{
-			IIRecipeLayout layout = recipes.get(0).getRecipeLayout();
+			IIRecipeLayout layout = recipes.stream().filter(r -> r.matchesSubCategory(getUid()))
+					.map(IIMultiblockRecipe::getRecipeLayout).filter(java.util.Objects::nonNull).findFirst().orElse(null);
 			if(layout!=null)
 				this.background = new MostExcellentDrawableImplementation(layout.getGridWidth(), layout.getGridHeight(),
 						layout.isEarlyGame()?DecoTextures.BG_WOODEN: DecoTextures.BG_STEEL,
@@ -86,6 +90,20 @@ public class IIRecipeJEICategory<T extends IIMultiblockRecipe> implements IRecip
 	{
 		this(recipeClass, recipeName, "desc.immersiveintelligence.jei."+recipeName+"_recipe");
 		this.displayStacks = new ItemStack[]{machineStack};
+	}
+
+	public IIRecipeJEICategory<T> withDisplayRecipes(java.util.function.Supplier<List<IIMultiblockRecipe>> supplier)
+	{
+		this.displayRecipes = supplier;
+		List<IIMultiblockRecipe> displays = supplier.get();
+		if(!displays.isEmpty())
+		{
+			IIRecipeLayout layout = displays.get(0).getRecipeLayout();
+			if(layout!=null)
+				background = new MostExcellentDrawableImplementation(layout.getGridWidth(), layout.getGridHeight(),
+						DecoTextures.BG_STEEL, DecoTextures.TEMPLATE_ROUND);
+		}
+		return this;
 	}
 
 	public void addCatalysts(IModRegistry registry)
@@ -136,55 +154,49 @@ public class IIRecipeJEICategory<T extends IIMultiblockRecipe> implements IRecip
 		if(layout!=null)
 		{
 			IGuiItemStackGroup itemStacks = recipeLayout.getItemStacks();
-			IGuiFluidStackGroup fluidStacks = recipeLayout.getFluidStacks();
 
 			//Track indices for automatic assignment
 			int itemInputIndex = 0, itemOutputIndex = 0;
-			int fluidInputIndex = 0, fluidOutputIndex = 0;
-			int dustInputIndex = 0, dustOutputIndex = 0;
 
 			List<LayoutComponent> components = layout.getComponents();
 
+			java.util.Set<Integer> toolSlots = new java.util.HashSet<>();
 			for(LayoutComponent component : components)
 			{
+				if(component.getData()==null||component.getIoType()==IOType.NEUTRAL)
+					continue;
 				int x = component.getX();
 				int y = component.getY();
 
 				switch(component.getType())
 				{
 					case SLOT:
+						if(component.isToolSlot())
+							toolSlots.add(getSlotIndex(component.getIoType()==IOType.INPUT, component.getIoType()==IOType.INPUT?itemInputIndex: itemOutputIndex, ingredients));
 						setupSlot(component, itemStacks, ingredients, x, y, itemInputIndex, itemOutputIndex);
 						if(component.getIoType()==IOType.INPUT)
 							itemInputIndex++;
 						else if(component.getIoType()==IOType.OUTPUT)
 							itemOutputIndex++;
 						break;
-					case FLUID_TANK:
-						setupFluidTank(component, fluidStacks, ingredients, x, y, fluidInputIndex, fluidOutputIndex);
-						if(component.getIoType()==IOType.INPUT)
-							fluidInputIndex++;
-						else if(component.getIoType()==IOType.OUTPUT)
-							fluidOutputIndex++;
-						break;
-					case DUST_TANK:
-						setupDustTank(component, recipeLayout, ingredients, x, y, dustInputIndex, dustOutputIndex);
-						if(component.getIoType()==IOType.INPUT)
-							dustInputIndex++;
-						else if(component.getIoType()==IOType.OUTPUT)
-							dustOutputIndex++;
-						break;
 					default:
 						break;
 				}
 			}
+			itemStacks.addTooltipCallback((slot, input, stack, tooltip) -> {
+				if(toolSlots.contains(slot))
+					tooltip.add(I18n.format("desc.immersiveintelligence.recipe.tool_slot"));
+			});
+			//The wrapper scales all tanks together and keeps grouped variants in sync.
+			recipeWrapper.bindDisplay(recipeLayout);
 		}
 	}
 
 	//--- Layout setup methods ---//
 
 	private void setupSlot(LayoutComponent component, IGuiItemStackGroup itemStacks,
-	                       IIngredients ingredients, int x, int y,
-	                       int itemInputIndex, int itemOutputIndex)
+						   IIngredients ingredients, int x, int y,
+						   int itemInputIndex, int itemOutputIndex)
 	{
 
 		IOType ioType = component.getIoType();
@@ -210,89 +222,10 @@ public class IIRecipeJEICategory<T extends IIMultiblockRecipe> implements IRecip
 				}
 	}
 
-	private void setupFluidTank(LayoutComponent component, IGuiFluidStackGroup fluidStacks,
-	                            IIngredients ingredients, int x, int y,
-	                            int fluidInputIndex, int fluidOutputIndex)
-	{
-
-		IOType ioType = component.getIoType();
-		boolean isInput = ioType==IOType.INPUT;
-
-		int width = component.getWidth();
-		int height = component.getHeight();
-
-		if(isInput)
-		{
-			//Assign input fluid tank
-			if(fluidInputIndex < ingredients.getInputs(VanillaTypes.FLUID).size())
-			{
-				int tankIndex = getFluidTankIndex(true, fluidInputIndex, ingredients);
-				fluidStacks.init(tankIndex, true, x+1, y+1,
-						width-2, height-1, 1000, false, null);
-				fluidStacks.set(tankIndex, ingredients.getInputs(VanillaTypes.FLUID).get(fluidInputIndex));
-			}
-		}
-		else //Assign output fluid tank
-			if(ioType==IOType.OUTPUT)
-				if(fluidOutputIndex < ingredients.getOutputs(VanillaTypes.FLUID).size())
-				{
-					int tankIndex = getFluidTankIndex(false, fluidOutputIndex, ingredients);
-					fluidStacks.init(tankIndex, false, x+1, y+1,
-							width-2, height-1, 1000, false, null);
-					fluidStacks.set(tankIndex, ingredients.getOutputs(VanillaTypes.FLUID).get(fluidOutputIndex));
-				}
-	}
-
-	private void setupDustTank(LayoutComponent component, IRecipeLayout recipeLayout,
-	                           IIngredients ingredients, int x, int y,
-	                           int dustInputIndex, int dustOutputIndex)
-	{
-		IOType ioType = component.getIoType();
-		boolean isInput = ioType==IOType.INPUT;
-		int width = component.getWidth();
-		int height = component.getHeight();
-
-		IGuiIngredientGroup<DustStack> dustStacks = recipeLayout.getIngredientsGroup(JEIHelper.DUSTSTACK);
-
-		if(isInput)
-		{
-			List<List<DustStack>> inputs = ingredients.getInputs(JEIHelper.DUSTSTACK);
-			if(dustInputIndex < inputs.size())
-			{
-				int idx = getDustTankIndex(true, dustInputIndex, ingredients);
-				dustStacks.init(idx, true, new JEIDustStackRenderer(width-2, height-1),
-						x, y, width, height, 1, 1);
-				dustStacks.set(idx, inputs.get(dustInputIndex));
-			}
-		}
-		else if(ioType==IOType.OUTPUT)
-		{
-			List<List<DustStack>> outputs = ingredients.getOutputs(JEIHelper.DUSTSTACK);
-			if(dustOutputIndex < outputs.size())
-			{
-				int idx = getDustTankIndex(false, dustOutputIndex, ingredients);
-				dustStacks.init(idx, false, new JEIDustStackRenderer(width, height),
-						x, y, width, height, 1, 1);
-				dustStacks.set(idx, outputs.get(dustOutputIndex));
-			}
-		}
-	}
-
 	private int getSlotIndex(boolean isInput, int index, IIngredients ingredients)
 	{
 		//Output slots start after all input slots
 		return isInput?index: ingredients.getInputs(VanillaTypes.ITEM).size()+index;
-	}
-
-	private int getFluidTankIndex(boolean isInput, int index, IIngredients ingredients)
-	{
-		//Output tanks start after all input tanks
-		return isInput?index: ingredients.getInputs(VanillaTypes.FLUID).size()+index;
-	}
-
-	private int getDustTankIndex(boolean isInput, int index, IIngredients ingredients)
-	{
-		return isInput?index: ingredients.getInputs(JEIHelper.DUSTSTACK).size()+index;
 	}
 
 	//--- Recipe Wrapper ---//
@@ -307,9 +240,16 @@ public class IIRecipeJEICategory<T extends IIMultiblockRecipe> implements IRecip
 	public void register(IModRegistry modRegistry)
 	{
 		addCatalysts(modRegistry);
+		if(displayRecipes!=null)
+		{
+			modRegistry.addRecipes(displayRecipes.get().stream()
+					.map(display -> new IIRecipeJEIWrapper<>(display, displayStacks.length > 0?displayStacks[0]: ItemStack.EMPTY))
+					.collect(Collectors.toList()), getUid());
+			return;
+		}
 		modRegistry.handleRecipes(recipeClass, this, getRecipeCategoryUid());
 		modRegistry.addRecipes(IIMultiblockRecipe.streamRecipes(recipeClass)
-				.filter(t -> t.matchesSubCategory(getUid()))
+				.filter(t -> t.matchesSubCategory(getUid())&&t.getRecipeLayout()!=null)
 				.collect(Collectors.toList()), getUid()
 		);
 		IILogger.info("Registered JEI compat for "+recipeClass.getSimpleName());
@@ -374,10 +314,14 @@ public class IIRecipeJEICategory<T extends IIMultiblockRecipe> implements IRecip
 					.finish();
 
 			//Background
+			TextureAtlasSprite spriteBack = mc.getTextureMapBlocks().getAtlasSprite(texture.toString());
+			float uBack = spriteBack.getMinU(), uuBack = spriteBack.getMaxU();
+			float vBack = spriteBack.getMinV(), vvBack = spriteBack.getMaxV();
 			GL11.glStencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_KEEP);
 			GL11.glStencilFunc(GL11.GL_EQUAL, 1, 0xFF);
 			IIDrawUtils.startTexturedColored()
-					.drawRepeatedTexColorRect(xOffset-4, yOffset-4, width+8, height+8, IIColor.WHITE, texture, 16)
+					.drawConnectedTexColorRect(xOffset-4, yOffset-4, width+8, height+8, IIColor.WHITE,
+							32, 32, 8, 8, uBack, uuBack, vBack, vvBack)
 					.finish();
 			GL11.glDisable(GL11.GL_STENCIL_TEST);
 
@@ -387,9 +331,9 @@ public class IIRecipeJEICategory<T extends IIMultiblockRecipe> implements IRecip
 			IIDrawUtils.startColored()
 					.drawColorGradient(xOffset, yOffset, width, height/2,
 							IIColor.fromARGB(255, 128, 128, 128),
-							IIColor.fromARGB(255, 128, 128, 128),
+							IIColor.fromARGB(0, 128, 128, 128),
 							IIColor.fromARGB(255, 0, 0, 0),
-							IIColor.fromARGB(255, 0, 0, 0))
+							IIColor.fromARGB(0, 0, 0, 0))
 					.finish();
 			GlStateManager.enableTexture2D();
 

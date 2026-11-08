@@ -5,7 +5,7 @@
     "textures": {
       "all": "immersiveintelligence:blocks/metal/ore_platinum"
     },
-    "model": "cube_all"
+    "model": "stone"
   },
   "variants": {
     "inventory,type=platinum": [
@@ -36,6 +36,20 @@
         }
       }
     ],
+    "inventory,type=tin": [
+      {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/ore_tin"
+        }
+      }
+    ],
+    "inventory,type=chromium": [
+      {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/ore_chromium"
+        }
+      }
+    ],
     "inventory,type=fluorite": [
       {
         "textures": {
@@ -43,10 +57,38 @@
         }
       }
     ],
+    "inventory,type=fluorite_overworld": [
+      {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/ore_fluorite_overworld"
+        }
+      }
+    ],
     "inventory,type=phosphorus": [
       {
         "textures": {
           "all": "immersiveintelligence:blocks/metal/ore_phosphorus"
+        }
+      }
+    ],
+    "inventory,type=phosphorus_overworld": [
+      {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/ore_phosphorus_overworld"
+        }
+      }
+    ],
+    "inventory,type=sulfur": [
+      {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/ore_sulfur"
+        }
+      }
+    ],
+    "inventory,type=sulfur_overworld": [
+      {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/ore_sulfur_overworld"
         }
       }
     ],
@@ -71,14 +113,44 @@
           "all": "immersiveintelligence:blocks/metal/ore_salt"
         }
       },
+      "tin": {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/ore_tin"
+        }
+      },
+      "chromium": {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/ore_chromium"
+        }
+      },
       "fluorite": {
         "textures": {
           "all": "immersiveintelligence:blocks/metal/ore_fluorite"
         }
       },
+      "fluorite_overworld": {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/ore_fluorite_overworld"
+        }
+      },
       "phosphorus": {
         "textures": {
           "all": "immersiveintelligence:blocks/metal/ore_phosphorus"
+        }
+      },
+      "phosphorus_overworld": {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/ore_phosphorus_overworld"
+        }
+      },
+      "sulfur": {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/ore_sulfur"
+        }
+      },
+      "sulfur_overworld": {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/ore_sulfur_overworld"
         }
       }
     }

@@ -12,7 +12,6 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoSwi
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoTab;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoTabGroup;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoDropdown;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoElementDisplays;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoList;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoColorPickerPanel;
@@ -192,8 +191,7 @@ public class GuiFlagpoleFaction extends DecoTileGui<TileEntityFlagpole, Containe
 						.withComponent("head", () -> new DecoPlayerDisplay(3, 3).withSize(16, 16))
 						.withComponent("role", p -> new DecoDropdown<PermissionRole>(p.width-118, 3)
 								.withSize(96, 16)
-								.withEntries(assignableRoles)
-								.withDisplayFunction(DecoElementDisplays.getSimpleTextDisplay(PermissionRole::getDisplayName)))
+								.withEntries(assignableRoles))
 						.withComponent("remove", p -> new DecoButton(p.width-19, 3)
 								.withSize(16, 16)
 								.withTemplate(DecoTemplates.ACTION_BUTTON_REMOVE)
@@ -319,7 +317,6 @@ public class GuiFlagpoleFaction extends DecoTileGui<TileEntityFlagpole, Containe
 		DecoDropdown<PermissionRole> roleDropdown = panel.addComponent(new DecoDropdown<PermissionRole>(panel.width-150-2, 2)
 				.withSize(150, 16)
 				.withEntries(roles)
-				.withDisplayFunction(DecoElementDisplays.getSimpleTextDisplay(PermissionRole::getDisplayName))
 				.withSelectedEntry(selectedRole)
 				.withTranslatedTooltip(IIReference.GUI_LABEL_KEY+"faction_management.permissions.role.tooltip")
 		);

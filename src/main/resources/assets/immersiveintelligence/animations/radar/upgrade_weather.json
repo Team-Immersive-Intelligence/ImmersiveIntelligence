@@ -1,0 +1,185 @@
+{
+  "comment": "Made by Pabilo8 with Blockbench",
+  "groups": {
+    "upgrade_weather1": {
+      "position": [
+        {
+          "time": 0,
+          "transform": [6, 6, -6]
+        },
+        {
+          "time": 0.07143,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "upgrade_weather2": {
+      "rotation": [
+        {
+          "time": 0.14286,
+          "transform": [45, 0, 0]
+        },
+        {
+          "time": 0.21429,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "position": [
+        {
+          "time": 0.14286,
+          "transform": [6, 6, -6]
+        },
+        {
+          "time": 0.21429,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "scale": [
+        {
+          "time": 0.14286,
+          "transform": [1, 0, 1]
+        },
+        {
+          "time": 0.21429,
+          "transform": [1, 1, 1]
+        }
+      ]
+    },
+    "upgrade_weather3": {
+      "position": [
+        {
+          "time": 0.07143,
+          "transform": [6, 6, -6]
+        },
+        {
+          "time": 0.14286,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "upgrade_weather4": {
+      "position": [
+        {
+          "time": 0.21429,
+          "transform": [-6, 6, 6]
+        },
+        {
+          "time": 0.28571,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "upgrade_weather5": {
+      "rotation": [
+        {
+          "time": 0.35714,
+          "transform": [-45, 0, 0]
+        },
+        {
+          "time": 0.42857,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "position": [
+        {
+          "time": 0.35714,
+          "transform": [6, 6, -6]
+        },
+        {
+          "time": 0.42857,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "scale": [
+        {
+          "time": 0.35714,
+          "transform": [1, 0, 1]
+        },
+        {
+          "time": 0.42857,
+          "transform": [1, 1, 1]
+        }
+      ]
+    },
+    "upgrade_weather6": {
+      "position": [
+        {
+          "time": 0.28571,
+          "transform": [-6, 6, 6]
+        },
+        {
+          "time": 0.35714,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "upgrade_weather7": {
+      "position": [
+        {
+          "time": 0.42857,
+          "transform": [0, 8, 0]
+        },
+        {
+          "time": 0.57143,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "upgrade_weather8": {
+      "position": [
+        {
+          "time": 0.57143,
+          "transform": [9, 0, 0]
+        },
+        {
+          "time": 0.71429,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "scale": [
+        {
+          "time": 0.57143,
+          "transform": [0, 1, 0]
+        },
+        {
+          "time": 0.71429,
+          "transform": [1, 1, 1]
+        }
+      ]
+    },
+    "upgrade_weather9": {
+      "position": [
+        {
+          "time": 0.71429,
+          "transform": [0, 8, 0]
+        },
+        {
+          "time": 0.85714,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "upgrade_weather10": {
+      "rotation": [
+        {
+          "time": 0.85714,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 1,
+          "transform": [0, 360, 0]
+        }
+      ],
+      "position": [
+        {
+          "time": 0.85714,
+          "transform": [0, 3, 0]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, 0]
+        }
+      ]
+    }
+  }
+}

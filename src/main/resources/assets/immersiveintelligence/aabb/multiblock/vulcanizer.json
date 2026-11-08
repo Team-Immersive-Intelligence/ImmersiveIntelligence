@@ -1,7 +1,95 @@
 {
   "bounds": {
+    "input_top": [-1, 0, 0, 15, 13, 16],
+    "input": [-1, 0, 0, 15, 16, 16],
+    "none": [-64, -64, -64, -64, -64, -64],
+    "input_bottom": [-1, 3, 0, 15, 16, 16],
+    "rotato_base1": [-2, 0, 3, 16, 9, 16],
+    "rotato_base2": [-2, 0, 0, 16, 9, 13],
+    "rotato_base3": [0, 0, 0, 8, 9, 13],
+    "rotato_base4": [0, 0, 3, 8, 9, 16],
+    "cable1": [5, 0, 3, 15, 4, 7],
+    "cable1_2": [5, 0, 9, 15, 4, 13],
+    "cable1_2_2": [5, 0, 13, 16, 4, 17],
+    "cable1_2_3": [10, 0, 5, 16, 4, 9],
+    "cable1_2_3_2": [0, 0, 5, 17, 4, 9],
+    "cable1_2_3_2_copy": [0, 0, 13, 9, 4, 17],
+    "pipe": [6, 0, -1, 27, 6, 5],
+    "pipe_2": [0, 0, -1, 11, 6, 5],
+    "pipe_3": [5, 0, 5, 16, 6, 11],
+    "pipe_4": [0, 0, 5, 16, 6, 11],
+    "pipe_5": [5, 0, 11, 11, 6, 15],
+    "cable1_3": [5, 0, 17, 9, 4, 20],
+    "cable1_4": [13, 0, 9, 17, 4, 22],
+    "input_top_2": [-1, 5, 0, 15, 11, 16],
+    "input_top_2_2": [-1, 3, 0, 15, 9, 16],
+    "input_top_2_3": [-1, 7, 0, 15, 13, 16],
+    "input_top_2_3_copy": [-1, 11, 0, 15, 17, 1],
+    "input_top_2_3_copy_2": [-1, -1, 0, 15, 5, 1],
+    "input_back_wall": [-1, 0, 15, 15, 13, 16],
+    "input_back_wall_2": [-1, 3, 15, 15, 16, 16],
+    "tank": [1, 3, -1, 16, 16, 15],
+    "tank_2": [0, 3, 1, 15, 16, 15],
+    "tank_3": [0, 3, -1, 15, 16, 15],
+    "tank_copy": [1, 3, 1, 16, 16, 15],
+    "tank_copy_2": [1, 0, -1, 16, 16, 15],
+    "tank_copy_3": [1, 0, 1, 16, 16, 15],
+    "tank_4": [1, 0, 1, 16, 13, 15],
+    "tank_5": [0, 0, 1, 15, 13, 15],
+    "tank_copy_4": [1, 0, -1, 16, 13, 15],
+    "tank_6": [0, 0, -1, 15, 13, 15],
+    "tank_7": [0, -3, -1, 15, 13, 15],
+    "tank_8": [0, -3, 1, 15, 13, 15],
+    "full_block": [0, 0, 0, 16, 16, 16],
+    "input_back_wall_copy": [-1, 0, 15, 15, 16, 16],
+    "input_leg1": [12, 0, 1, 14, 3, 3],
+    "input_leg2": [12, 0, 13, 14, 3, 15],
+    "input_leg3": [1, 0, 13, 3, 3, 15],
+    "input_leg4": [1, 0, 1, 3, 3, 3],
+    "input_tape_port": [6, 0, 2, 10, 3, 14],
+    "tank_leg1": [12, 0, 2, 14, 3, 4],
+    "tank_leg2": [12, 0, 12, 14, 3, 14],
+    "tank_leg3": [2, 0, 2, 4, 3, 4],
+    "tank_leg4": [2, 0, 12, 4, 3, 14],
+    "rotator_center": [-7, -24, -7, 7, 24, 7],
+    "container": [-10, -12, -10, 10, 12, 10],
+    "container_top": [-6, -3, -6, 6, 3, 6],
+    "container_pipe": [-3, -5, -3, 3, 5, 3]
   },
+  "name": "II:Vulcanizer",
+  "master": [2, 1, 0],
   "positions": {
+    "8": ["full_block", "none"],
+    "28": ["tank", "tank_leg4"],
+    "29": ["tank_3", "tank_leg2"],
+    "30": ["none", "cable1"],
+    "31": "rotato_base2",
+    "32": ["rotato_base3", "pipe"],
+    "34": ["tank_copy", "tank_leg3"],
+    "35": ["tank_2", "tank_leg1"],
+    "36": ["none", "cable1_2"],
+    "37": ["rotato_base1", "cable1_2_3"],
+    "38": "rotato_base4",
+    "39": ["none", "pipe_3", "pipe_5"],
+    "40": "pipe_4",
+    "42": ["none", "cable1_2_2", "cable1_2_3"],
+    "43": ["none", "cable1_2_3_2", "cable1_2_3_2_copy", "cable1_3", "cable1_4"],
+    "46": ["input_top_2_2", "input_top_2_3_copy", "input_back_wall_2", "input_leg4", "input_leg3", "input_tape_port"],
+    "47": ["input_bottom", "input_leg1", "input_leg2"],
+    "52": "tank_copy_2",
+    "53": "tank_6",
+    "58": "tank_copy_3",
+    "59": "tank_5",
+    "70": ["input_top_2", "input_back_wall_copy"],
+    "71": "input",
+    "76": "tank_copy_4",
+    "77": "tank_7",
+    "82": "tank_4",
+    "83": "tank_8",
+    "94": ["input_top_2_3", "input_top_2_3_copy_2", "input_back_wall"],
+    "95": "input_top",
+    "24,25,26,41,44,48,49,50,55,56,61,62,66,67,68,73,74,79,80,85,86,91,92": "none",
+    "0,1,2,3,4,5,6,7,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23": "full_block"
   },
   "poi": {
     "energy": 22,
@@ -10,10 +98,135 @@
     "input_sulfur": 53,
     "input_compound": 71,
     "input_rubber": 95,
-    "outputs": [0, 1, 2]
+    "outputs": [18, 19, 20]
   },
   "rotations": {
-    "input": "clockwise_90",
-    "output": "clockwise_180"
+    "energy": "none",
+    "redstone": "clockwise_180",
+    "inputs": "counterclockwise_90",
+    "outputs": "none"
+  },
+  "tactile_transforms": {
+    "all": {
+      "offset": [-2.6875, 0, -1]
+    },
+    "south": {
+      "rotation": [0, 0, 0],
+      "flip_xz_size": false
+    },
+    "west": {
+      "rotation": [0, 90, 0],
+      "flip_xz_size": true
+    },
+    "north": {
+      "rotation": [0, 180, 0],
+      "flip_xz_size": false
+    },
+    "east": {
+      "rotation": [0, 270, 0],
+      "flip_xz_size": true
+    },
+    "mirrored": {}
+  },
+  "tactile": {
+    "_schema": "immersiveintelligence:models/block/multiblock/vulcanizer/vulcanizer.obj.amt",
+    "rotator": [
+      {
+        "offset": [0, 15, 0],
+        "type": "rotator_center"
+      }
+    ],
+    "container_left": [
+      {
+        "offset": [14.08824, -20.99083, -43.72791],
+        "type": "container"
+      },
+      {
+        "offset": [-13.91176, -20.99083, -43.72791],
+        "type": "container"
+      },
+      {
+        "offset": [-0.91176, -20.99083, -43.72791],
+        "type": "container"
+      },
+      {
+        "offset": [18.08824, -1.99083, -39.72791],
+        "type": "container_top"
+      },
+      {
+        "offset": [-17.91176, -1.99083, -39.72791],
+        "type": "container_top"
+      },
+      {
+        "offset": [1.08824, -1.99083, -39.72791],
+        "type": "container_top"
+      },
+      {
+        "offset": [11.08824, -1.99083, -39.72791],
+        "type": "container_top"
+      },
+      {
+        "offset": [-8.91176, -1.99083, -39.72791],
+        "type": "container_top"
+      },
+      {
+        "offset": [-13.91176, -3.99083, -48.72791],
+        "type": "container_pipe"
+      },
+      {
+        "offset": [0.08824, -3.99083, -48.72791],
+        "type": "container_pipe"
+      },
+      {
+        "offset": [15.08824, -3.99083, -48.72791],
+        "type": "container_pipe"
+      }
+    ],
+    "container_right": [
+      {
+        "offset": [12.86439, -11.625, 0.56944],
+        "type": "container"
+      },
+      {
+        "offset": [-15.13561, -11.625, 0.56944],
+        "type": "container"
+      },
+      {
+        "offset": [-2.13561, -11.625, 0.56944],
+        "type": "container"
+      },
+      {
+        "offset": [-10.13561, 7.375, -3.38638],
+        "type": "container_top"
+      },
+      {
+        "offset": [9.86439, 7.375, -3.38638],
+        "type": "container_top"
+      },
+      {
+        "offset": [-0.13561, 7.375, -3.38638],
+        "type": "container_top"
+      },
+      {
+        "offset": [-19.13561, 7.375, -3.38638],
+        "type": "container_top"
+      },
+      {
+        "offset": [16.86439, 7.375, -3.38638],
+        "type": "container_top"
+      },
+      {
+        "offset": [12.86439, 5.375, 5.36362],
+        "type": "container_pipe"
+      },
+      {
+        "offset": [-1.13561, 5.375, 5.36362],
+        "type": "container_pipe"
+      },
+      {
+        "offset": [-16.13561, 5.375, 5.36362],
+        "type": "container_pipe"
+      }
+    ]
   }
 }

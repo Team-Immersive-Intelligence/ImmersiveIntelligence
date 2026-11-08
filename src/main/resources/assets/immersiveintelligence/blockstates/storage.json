@@ -43,6 +43,27 @@
         }
       }
     ],
+    "inventory,type=tin": [
+      {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/storage_tin"
+        }
+      }
+    ],
+    "inventory,type=chromium": [
+      {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/storage_chromium"
+        }
+      }
+    ],
+    "inventory,type=stainless_steel": [
+      {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/storage_stainless_steel"
+        }
+      }
+    ],
     "type": {
       "platinum": {
         "textures": {
@@ -67,6 +88,21 @@
       "duraluminium": {
         "textures": {
           "all": "immersiveintelligence:blocks/metal/storage_duraluminium"
+        }
+      },
+      "tin": {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/storage_tin"
+        }
+      },
+      "chromium": {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/storage_chromium"
+        }
+      },
+      "stainless_steel": {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/storage_stainless_steel"
         }
       }
     }

@@ -7,14 +7,8 @@ import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraftforge.common.property.Properties;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.BlockIIWoodenMultiblock.WoodenMultiblocks;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.multiblock.MultiblockSawmill;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.multiblock.MultiblockSkyCartStation;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.multiblock.MultiblockSkyCratePost;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.multiblock.MultiblockSkyCrateStation;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySawmill;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySkyCartStation;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySkyCratePost;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySkyCrateStation;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.multiblock.*;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.*;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.EnumMultiblockProvider;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBlockProperties;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IITileMultiblockEnum;
@@ -50,10 +44,13 @@ public class BlockIIWoodenMultiblock extends BlockIIMultiblock<WoodenMultiblocks
 		SKYCRATE_POST,
 		@EnumMultiblockProvider(tile = TileEntitySkyCrateStation.class, multiblock = MultiblockSkyCrateStation.class)
 		SKYCRATE_STATION,
-		@EnumMultiblockProvider(tile = TileEntitySawmill.class, multiblock = MultiblockSawmill.class)
 		@IIBlockProperties(needsCustomState = true, renderLayer = BlockRenderLayer.CUTOUT)
+		@EnumMultiblockProvider(tile = TileEntitySawmill.class, multiblock = MultiblockSawmill.class)
 		SAWMILL,
 		@EnumMultiblockProvider(tile = TileEntitySkyCartStation.class, multiblock = MultiblockSkyCartStation.class)
-		SKYCART_STATION
+		SKYCART_STATION,
+		@IIBlockProperties(needsCustomState = true)
+		@EnumMultiblockProvider(tile = TileEntityDieselEngine.class, multiblock = MultiblockDieselEngine.class)
+		DIESEL_ENGINE
 	}
 }

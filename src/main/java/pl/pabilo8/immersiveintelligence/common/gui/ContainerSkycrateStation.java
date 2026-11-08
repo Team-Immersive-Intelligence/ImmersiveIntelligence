@@ -1,8 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.gui;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Slot;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySkyCartStation;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySkyCrateStation;
 import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIITileBase;
 
@@ -14,16 +12,12 @@ import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIITileBase;
  */
 public class ContainerSkycrateStation extends ContainerIITileBase<TileEntitySkyCrateStation>
 {
-
-	public Slot inputSlot;
-
 	public ContainerSkycrateStation(EntityPlayer player, TileEntitySkyCrateStation tile)
 	{
 		super(player, tile);
-		this.addSlotArray(52+12-2, 32, 0, TileEntitySkyCartStation.GEAR_SLOTS, 5, MotorGearSlot::new);
+		this.addSlotArray(52+12-2, 32, 0, TileEntitySkyCrateStation.GEAR_SLOTS, 5, MotorGearSlot::new);
 
 		this.addPlayerInventory(player.inventory, 8, 87);
 
 	}
 }
-

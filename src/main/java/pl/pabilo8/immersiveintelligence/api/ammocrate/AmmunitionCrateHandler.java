@@ -6,6 +6,7 @@ import blusunrize.immersiveengineering.common.items.ItemBullet;
 import blusunrize.immersiveengineering.common.items.ItemRevolver;
 import blusunrize.immersiveengineering.common.items.ItemSpeedloader;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
+import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -360,7 +361,20 @@ public class AmmunitionCrateHandler
 	 */
 	public static ItemStack extractMountedBullet(Entity gun)
 	{
-		return extractMountedBulletFrom(findMountedBeltFedCrate(gun));
+		TileEntityAmmunitionCrate crate = findMountedBeltFedCrate(gun);
+		if(crate==null)
+			return ItemStack.EMPTY;
+		if(gun.world.isRemote)
+			return Utils.copyStackWithAmount(crate.findAmmunition(AmmunitionCrateHandler::isMachinegunRound), 1);
+
+		ItemStack bullet = extractMountedBulletFrom(crate);
+		if(!bullet.isEmpty())
+		{
+			ItemStack casing = crate.insertSpentCasing(IIContent.itemAmmoMachinegun.getCasingStack(1));
+			if(!casing.isEmpty())
+				Utils.dropStackAtPos(gun.world, gun.getPosition(), casing);
+		}
+		return bullet;
 	}
 
 	/**

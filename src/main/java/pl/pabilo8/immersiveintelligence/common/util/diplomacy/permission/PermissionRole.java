@@ -1,5 +1,10 @@
 package pl.pabilo8.immersiveintelligence.common.util.diplomacy.permission;
 
+import net.minecraft.client.resources.I18n;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.ILocalizedString;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import java.util.EnumMap;
@@ -13,7 +18,7 @@ import java.util.Map;
  * @ii-approved 0.3.1
  * @since 27.04.2026
  */
-public class PermissionRole
+public class PermissionRole implements ILocalizedString
 {
 	private final String id;
 	private final String displayName;
@@ -66,6 +71,20 @@ public class PermissionRole
 	public String getDisplayName()
 	{
 		return displayName;
+	}
+
+	@Override
+	public String getFullLocaleKey()
+	{
+		return IIReference.DESCRIPTION_KEY+"diplomacy.rolename."+id;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public String getLocalizedName()
+	{
+		String key = getFullLocaleKey();
+		return I18n.hasKey(key)?I18n.format(key): displayName;
 	}
 
 	/* ---------- NBT ---------- */

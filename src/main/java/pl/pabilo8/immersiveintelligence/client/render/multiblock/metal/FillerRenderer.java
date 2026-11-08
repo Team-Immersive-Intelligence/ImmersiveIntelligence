@@ -34,7 +34,7 @@ import javax.annotation.Nonnull;
  * Renders the Filler multiblock and its filling process.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 22.08.2026
+ * @updated 05.10.2026
  * @ii-approved 0.3.1
  * @since 1.05.2021
  */
@@ -70,10 +70,10 @@ public class FillerRenderer extends IIMultiblockRenderer<TileEntityFiller>
 			float transition = (progress-0.3f)/0.3f;
 
 			//The work animation moves the first process from item to item_out at 2/3 progress.
-			itemOut.setStack(recipe.recipe, transition);
+			itemOut.setStack(recipe, transition);
 
 			if(!hasSecondProcess)
-				item.setStack(recipe.recipe, transition);
+				item.setStack(recipe, transition);
 
 			//Second process, if present
 			if(hasSecondProcess)
@@ -82,7 +82,7 @@ public class FillerRenderer extends IIMultiblockRenderer<TileEntityFiller>
 				progress = te.getProductionProgress(recipe, partialTicks);
 
 				work2.apply(progress);
-				item.setStack(recipe.recipe, progress);
+				item.setStack(recipe, progress);
 			}
 			else if(progress > 0.66f)
 				item.setVisible(false);
@@ -97,6 +97,7 @@ public class FillerRenderer extends IIMultiblockRenderer<TileEntityFiller>
 	@Override
 	public void drawSimple(BufferBuilder buf, float partialTicks, Tessellator tes)
 	{
+		model.defaultize();
 		active.apply(false);
 		model.render(tes, buf);
 	}
@@ -142,7 +143,13 @@ public class FillerRenderer extends IIMultiblockRenderer<TileEntityFiller>
 			bullet = new AMTBullet(name, header, null);
 		}
 
-		public void setStack(FillerRecipe recipe, float transition)
+		public void setStack(IIMultiblockProcess<FillerRecipe> process, float transition)
+		{
+			FillerRecipe recipe = process.recipe;
+			setStack(recipe, process.processData.unwrap().hasKey("displayInput")?process.processData.getItemStack("displayInput"): recipe.itemInput.getExampleStack(), transition);
+		}
+
+		private void setStack(FillerRecipe recipe, ItemStack input, float transition)
 		{
 			transition = MathHelper.clamp(transition, 0f, 1f);
 
@@ -156,7 +163,7 @@ public class FillerRenderer extends IIMultiblockRenderer<TileEntityFiller>
 			else
 			{
 				this.transition = transition;
-				this.stackFrom = recipe.itemInput.getExampleStack();
+				this.stackFrom = input;
 				this.stackInto = recipe.itemOutput;
 			}
 		}

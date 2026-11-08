@@ -1,0 +1,13 @@
+{
+  "origins": {
+    "form": [0, -16, 16],
+    "output3": [36, 21, 37.5],
+    "output2": [21, 21, 37.5],
+    "output1": [5, 21, 37.5]
+  },
+  "hierarchy": {
+    "output3": "form",
+    "output2": "form",
+    "output1": "form"
+  }
+}

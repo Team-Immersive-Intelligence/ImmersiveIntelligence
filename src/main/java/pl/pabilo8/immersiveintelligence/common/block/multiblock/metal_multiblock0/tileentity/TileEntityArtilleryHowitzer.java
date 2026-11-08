@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity;
 
-import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
 import blusunrize.immersiveengineering.api.tool.ConveyorHandler.IConveyorAttachable;
 import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
@@ -40,10 +39,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileManager.ITa
 import pl.pabilo8.immersiveintelligence.common.item.ammo.artillery.ItemIIAmmoArtilleryHeavy;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
-import pl.pabilo8.immersiveintelligence.common.util.IIMath;
-import pl.pabilo8.immersiveintelligence.common.util.IIReference;
-import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
-import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
+import pl.pabilo8.immersiveintelligence.common.util.*;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.gun.GunAimCoordinate;
@@ -67,7 +63,7 @@ import java.util.function.Predicate;
  * A strategic artillery gun multiblock.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 09.08.2026
+ * @updated 05.10.2026
  * @ii-approved 0.3.1
  * @since 28.06.2019
  */
@@ -119,7 +115,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 	public TileEntityArtilleryHowitzer()
 	{
 		super(MultiblockArtilleryHowitzer.INSTANCE);
-		this.energyStorage = new FluxStorageAdvanced(ArtilleryHowitzer.energyCapacity);
+		this.energyStorage = new IIEnergyStorage(ArtilleryHowitzer.energyCapacity);
 
 		//shell queue: 0-5 in, 5-11 out
 		inventory = NonNullList.withSize(12, ItemStack.EMPTY);

@@ -16,7 +16,8 @@ sourceSets {
 // Java sources remain raw source files; resources come exclusively from the
 // processResources output, after expansion, renaming and filtering.
 def mkxSourcesJar = null
-if (mkxBool('generate_sources_jar', true)) {
+if (mkxBool('generate_sources_jar', true))
+{
 	def processedResources = tasks.named('processResources')
 	mkxSourcesJar = tasks.register('sourcesJar', org.gradle.api.tasks.bundling.Jar) {
 		group = 'build'
@@ -39,7 +40,8 @@ java {
 		withJavadocJar()
 }
 
-if (mkxSourcesJar != null) {
+if (mkxSourcesJar != null)
+{
 	// withSourcesJar() reuses a pre-existing task but does not attach that task
 	// to assemble, so preserve the standard lifecycle relationship explicitly.
 	tasks.named('assemble').configure {
@@ -78,7 +80,8 @@ minecraft {
 	extraRunJvmArguments.add('-ea:' + mkxString('mod_package'))
 }
 
-if (mkxBool('ii_use_modern_java_syntax', false)) {
+if (mkxBool('ii_use_modern_java_syntax', false))
+{
 	dependencies {
 		annotationProcessor 'com.github.bsideup.jabel:jabel-javac-plugin:1.0.1'
 		compileOnly('com.github.bsideup.jabel:jabel-javac-plugin:1.0.1') { transitive = false }
@@ -98,14 +101,17 @@ tasks.named('injectTags').configure {
 
 tasks.withType(JavaCompile).configureEach {
 	options.encoding = 'UTF-8'
-	if (mkxBool('ii_use_modern_java_syntax', false) && !(name in ['compileMcLauncherJava', 'compilePatchedMcJava'])) {
+	if (mkxBool('ii_use_modern_java_syntax', false) && !(name in ['compileMcLauncherJava', 'compilePatchedMcJava']))
+	{
 		sourceCompatibility = mkxString('ii_modern_java_language', '16')
 		options.release.set(8)
 		javaCompiler.set(javaToolchains.compilerFor {
 			languageVersion.set(JavaLanguageVersion.of(mkxInt('ii_modern_java_language', 16)))
 			vendor.set(JvmVendorSpec.AZUL)
 		})
-	} else {
+	}
+	else
+	{
 		sourceCompatibility = JavaVersion.VERSION_1_8
 		targetCompatibility = JavaVersion.VERSION_1_8
 	}
@@ -113,16 +119,16 @@ tasks.withType(JavaCompile).configureEach {
 
 def mkxMcmodInfoValues = {
 	return [
-			mod_id_json: mkxJsonString(mkxString('mod_id')),
-			mod_name_json: mkxJsonString(mkxString('mod_name')),
-			mod_version_json: mkxJsonString(project.version.toString()),
+			mod_id_json         : mkxJsonString(mkxString('mod_id')),
+			mod_name_json       : mkxJsonString(mkxString('mod_name')),
+			mod_version_json    : mkxJsonString(project.version.toString()),
 			minecraft_version_json: mkxJsonString(mkxString('minecraft_version')),
 			mod_description_json: mkxJsonString(mkxString('mod_description')),
-			mod_url_json: mkxJsonString(mkxString('mod_url')),
+			mod_url_json        : mkxJsonString(mkxString('mod_url')),
 			mod_update_json_json: mkxJsonString(mkxString('mod_update_json')),
-			mod_logo_path_json: mkxJsonString(mkxString('mod_logo_path')),
-			mod_authors_json: mkxJsonStringList('mod_authors'),
-			mod_credits_json: mkxJsonString(mkxString('mod_credits'))
+			mod_logo_path_json  : mkxJsonString(mkxString('mod_logo_path')),
+			mod_authors_json    : mkxJsonStringList('mod_authors'),
+			mod_credits_json    : mkxJsonString(mkxString('mod_credits'))
 	]
 }
 
@@ -151,7 +157,8 @@ processResources {
 	exclude '**/desktop.ini', '**/Thumbs.db', '**/.DS_Store'
 }
 
-if (mkxBool('use_access_transformer', false)) {
+if (mkxBool('use_access_transformer', false))
+{
 	mkxList('access_transformer_locations').each { location ->
 		def atFile = file("src/main/resources/${location}")
 		if (!atFile.exists())

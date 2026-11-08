@@ -16,6 +16,7 @@ import java.util.function.Predicate;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
  * @since 21.09.2026
+ * @updated 07.10.2026
  */
 public class FilteredMultiFluidTank extends MultiFluidTank implements IFilteredTank<FilteredMultiFluidTank>
 {
@@ -58,6 +59,10 @@ public class FilteredMultiFluidTank extends MultiFluidTank implements IFilteredT
 	@Override
 	public FluidStack drain(int maxDrain, boolean doDrain)
 	{
+		if(maxDrain <= 0)
+			return null;
+		if(outputFilter==null)
+			return super.drain(maxDrain, doDrain);
 		if(this.fluids.isEmpty())
 			return null;
 

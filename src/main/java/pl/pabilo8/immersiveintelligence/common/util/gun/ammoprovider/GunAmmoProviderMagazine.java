@@ -87,7 +87,8 @@ public class GunAmmoProviderMagazine extends GunAmmoProvider
 		rebuildMagazineFromBullets();
 		if(!magazineStack.isEmpty())
 		{
-			if(!AmmunitionCrateHandler.returnMountedMagazine(gun, magazineType, magazineStack))
+			//Return the item only on the server. Clear the visual state on both sides.
+			if(!gun.world.isRemote&&!AmmunitionCrateHandler.returnMountedMagazine(gun, magazineType, magazineStack))
 				giveOrDrop(magazineStack);
 			clear();
 			magazineStack = ItemStack.EMPTY;
@@ -135,12 +136,15 @@ public class GunAmmoProviderMagazine extends GunAmmoProvider
 		if(foundMagazine==null||foundMagazine.isEmpty())
 			return false;
 
-		//Copy before extraction. Load only after the source releases the magazine.
+		//Copy for the reload animation. Only the server extracts the magazine.
 		ItemStack loadedMagazine = foundMagazine.copy();
-		boolean consumed = fromCrate?AmmunitionCrateHandler.consumeMountedMagazine(gun, foundMagazine):
-				consumeMagazineFromHotbar(foundMagazine);
-		if(!consumed)
-			return false;
+		if(!gun.world.isRemote)
+		{
+			boolean consumed = fromCrate?AmmunitionCrateHandler.consumeMountedMagazine(gun, foundMagazine):
+					consumeMagazineFromHotbar(foundMagazine);
+			if(!consumed)
+				return false;
+		}
 
 		setLoadedStack(loadedMagazine);
 		return true;

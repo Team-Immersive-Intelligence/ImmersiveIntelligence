@@ -159,6 +159,7 @@ public class DecoTextures
 	public static final ResLoc ICON_ACTION_REJECT = ResLoc.of(RES_TEXTURES_DECO_ICON, "action_reject");
 	public static final ResLoc ICON_ACTION_HELP = ResLoc.of(RES_TEXTURES_DECO_ICON, "action_help");
 	public static final ResLoc ICON_ACTION_PIN = ResLoc.of(RES_TEXTURES_DECO_ICON, "action_pin");
+	public static final ResLoc ICON_ACTION_CENTER = ResLoc.of(RES_TEXTURES_DECO_ICON, "action_center");
 
 	//--- Custom Deco Component Textures ---//
 	public static final ResLoc COMPONENT_BUTTON_PAPER = ResLoc.of(RES_TEXTURES_DECO, "component/button_paper");
@@ -189,6 +190,8 @@ public class DecoTextures
 	public static final ResLoc MAP_MARKER_MISSILE_SILO = ResLoc.of(RES_TEXTURES_DECO, "map/marker/missile_silo");
 	public static final ResLoc MAP_MARKER_RADAR = ResLoc.of(RES_TEXTURES_DECO, "map/marker/radar");
 	public static final ResLoc MAP_MARKER_RADIO_STATION = ResLoc.of(RES_TEXTURES_DECO, "map/marker/radio_station");
+	public static final ResLoc MAP_MARKER_WEATHER = ResLoc.of(RES_TEXTURES_DECO, "map/marker/weather");
+	public static final ResLoc MAP_MARKER_RADIO_CONTACT = ResLoc.of(RES_TEXTURES_DECO, "map/marker/radio_contact");
 
 	public static final ResLoc ICON_INVENTORY_FACTION_INVITES = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_faction_invites");
 	public static final ResLoc ICON_INVENTORY_FACTION_INVITES_ACTIVE = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_faction_invites_active");

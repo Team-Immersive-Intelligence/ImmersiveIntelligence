@@ -14,17 +14,20 @@ import net.minecraftforge.client.model.obj.OBJModel.MaterialLibrary;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTRenderable;
-import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMT;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.*;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
+import pl.pabilo8.immersiveintelligence.common.util.amt.AMTModelHeader;
 import pl.pabilo8.immersiveintelligence.common.util.amt.IIAnimation.IIAnimationGroup;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.meta.When;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Objects;
+import java.util.function.BiFunction;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -35,6 +38,22 @@ public class AMTUtils
 {
 	//--- Empty OBJ Model Placeholder ---//
 	private static final OBJModel EMPTY = new OBJModel(new MaterialLibrary(), ResLoc.of(IIReference.RES_BLOCK_MODEL, "empty.obj"));
+	private static final HashMap<String, BiFunction<String, AMTModelHeader, AMT>> REGISTERED_TYPES = new HashMap<>();
+
+	static
+	{
+		REGISTERED_TYPES.put("particle", AMTParticle::new);
+		REGISTERED_TYPES.put("text", AMTText::new);
+		REGISTERED_TYPES.put("wire", AMTWire::new);
+		REGISTERED_TYPES.put("item", AMTItem::new);
+		REGISTERED_TYPES.put("hand", AMTHand::new);
+		REGISTERED_TYPES.put("fluid", AMTFluid::new);
+		REGISTERED_TYPES.put("chain", AMTChain::new);
+		REGISTERED_TYPES.put("bullet", AMTBullet::new);
+		REGISTERED_TYPES.put("blend_mode_group", AMTBlendModeGroup::new);
+		REGISTERED_TYPES.put("biped_adapter", AMTBipedAdapter::new);
+		REGISTERED_TYPES.put("banner", AMTBanner::new);
+	}
 
 	//--- Time Calculation ---//
 

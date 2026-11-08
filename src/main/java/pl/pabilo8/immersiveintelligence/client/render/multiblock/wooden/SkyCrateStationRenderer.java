@@ -18,18 +18,20 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityBanner;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.rotary.IIRotaryUtils;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.ISkycrateMount;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.wooden.ModelSkyCrateStation;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.SkyCrateStation;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySkyCrateStation;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
-import pl.pabilo8.immersiveintelligence.common.util.item.IIItemUtils;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -37,7 +39,10 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 /**
+ * Renders the Skycrate Station with its retained TMT model.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 08.10.2026
  * @since 01.06.2019
  */
 public class SkyCrateStationRenderer extends TileEntitySpecialRenderer<TileEntitySkyCrateStation> implements IReloadableModelContainer<SkyCrateStationRenderer>
@@ -60,11 +65,20 @@ public class SkyCrateStationRenderer extends TileEntitySpecialRenderer<TileEntit
 	{
 		if(te!=null&&!te.isDummy())
 		{
+			NonNullList<ItemStack> inventory = te.hasWorld()?te.getInventory(): te.inventory;
+			if(inventory==null||inventory.size() < 6||te.rotation==null)
+				return;
+			if(model==null||modelFlipped==null)
+				reloadModels();
+			boolean lighting = GL11.glIsEnabled(GL11.GL_LIGHTING);
+			boolean light0 = GL11.glIsEnabled(GL11.GL_LIGHT0), light1 = GL11.glIsEnabled(GL11.GL_LIGHT1);
+			boolean cull = GL11.glIsEnabled(GL11.GL_CULL_FACE), rescale = GL11.glIsEnabled(GL12.GL_RESCALE_NORMAL);
 			ClientUtils.bindTexture(texture);
 			GlStateManager.pushMatrix();
 			GlStateManager.translate((float)x, (float)y, (float)z);
 			GlStateManager.disableLighting();
-			RenderHelper.enableStandardItemLighting();
+			if(te.hasWorld())
+				RenderHelper.enableStandardItemLighting();
 			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 
 			float rpm_pitch = 0, rpm_grab = 0, rpm_crate = 0, rpm_gears;
@@ -78,11 +92,9 @@ public class SkyCrateStationRenderer extends TileEntitySpecialRenderer<TileEntit
 			if(te.hasWorld())
 			{
 				motorTick = (te.getWorld().getTotalWorldTime()%IIRotaryUtils.getMaxWorldRotationTicks()+partialTicks)/IIRotaryUtils.getMaxWorldRotationTicks();
-				progress = te.progress+(partialTicks*IIRotaryUtils.getEffectiveEnergy(te.rotation,
-						SkyCrateStation.speedMin, SkyCrateStation.speedEfficient, SkyCrateStation.torqueMin, SkyCrateStation.torqueEfficient)
-						*IIRotaryUtils.getGearEfficiency(IIItemUtils.trimInventory(te.getInventory(), 0, 3)));
-				crateItem = te.getInventory().get(3);
-				mountItem = te.getInventory().get(4);
+				progress = te.getAnimationProgress(partialTicks);
+				crateItem = inventory.get(3);
+				mountItem = inventory.get(4);
 
 			}
 			double pistonOnly = 0, cratePusher = 0, inserterAngle = 0, inserterLength = 0;
@@ -105,7 +117,7 @@ public class SkyCrateStationRenderer extends TileEntitySpecialRenderer<TileEntit
 				}
 				case 2:
 				{
-					animProgress = progress/SkyCrateStation.crateInTime;
+					animProgress = progress;
 					convInWork = true;
 					float oneThird = (float)Math.min(animProgress/0.45f, 1f);
 					float half = (float)Math.min(animProgress/0.65f, 1f);
@@ -123,7 +135,7 @@ public class SkyCrateStationRenderer extends TileEntitySpecialRenderer<TileEntit
 				}
 				case 3:
 				{
-					animProgress = progress/SkyCrateStation.crateOutTime;
+					animProgress = progress;
 					float finalAnimProgress = (float)animProgress;
 					drawCrate(te, animProgress, (double1) ->
 							GlStateManager.translate(-1.5*finalAnimProgress, 0, 0)
@@ -133,58 +145,58 @@ public class SkyCrateStationRenderer extends TileEntitySpecialRenderer<TileEntit
 				}
 				case 4:
 				{
-					animProgress = progress/SkyCrateStation.inputTime;
-					mountItem = te.getInventory().get(4);
+					animProgress = progress;
+					mountItem = inventory.get(4);
 					double angle2 = MathHelper.clamp(Math.abs(animProgress-0.35d)/0.15, 0, 1);
 					pistonOnly = angle2 > 0.5?1f-((angle2-0.5)/0.5): 1;
 
 					rpm_grab = animProgress <= 0.3f?60f:
 							animProgress <= 0.5f?60f-(60f*((float)animProgress-0.3f)/0.2f):
-							animProgress <= 0.8d?0:
-							-60f;
+									animProgress <= 0.8d?0:
+											-60f;
 
 					rpm_pitch = animProgress <= 0.3f?45f:
 							animProgress <= 0.8f?-45f:
-							45f;
+									45f;
 
-					inserterAngle = animProgress <= 0.3d?Math.min(0.5, animProgress/0.3*0.65d):
+					inserterAngle = animProgress <= 0.3d?animProgress/0.3*0.65d:
 							animProgress <= 0.8d?0.65d-((animProgress-0.3d)/0.5d*1.65d):
-							-1.25d+((animProgress-0.8d)/0.2d*1.25d);
+									-1d+((animProgress-0.8d)/0.2d);
 					inserterLength = animProgress <= 0.3d?animProgress/0.3d:
 							animProgress <= 0.5d?1d-(((animProgress-0.3d)/0.2d)*0.75):
-							animProgress <= 0.8d?0.25d:
-							(1d-((animProgress-0.8f)/0.3d))*0.25;
+									animProgress <= 0.8d?0.25d:
+											(1d-((animProgress-0.8d)/0.2d))*0.25;
 
 					break;
 				}
 				case 5:
 				{
-					animProgress = progress/SkyCrateStation.outputTime;
+					animProgress = progress;
 
 					inserterAngle = animProgress <= 0.15d?animProgress/0.15*-1:
 							animProgress <= 0.65d?-1+((animProgress-0.15)/0.5*1.75):
-							animProgress <= 0.6d?1.75-((animProgress-0.65)/0.1*0.75):
-							0.65*(1f-((animProgress-0.75)/0.25));
+									animProgress <= 0.75d?0.75-((animProgress-0.65)/0.1*0.1):
+											0.65*(1f-((animProgress-0.75)/0.25));
 
 					inserterLength = animProgress <= 0.15?animProgress/0.15d*0.25:
-							animProgress <= 0.65?0.25+((animProgress-0.15)/0.5):
-							animProgress <= 0.75?1: 1-((animProgress-0.75)/0.25);
+							animProgress <= 0.65?0.25+((animProgress-0.15)/0.5*0.75):
+									animProgress <= 0.75?1: 1-((animProgress-0.75)/0.25);
 
 					rpm_pitch = animProgress <= 0.15?-60f:
 							animProgress <= 0.65?60f:
-							animProgress <= 0.75?-60f: -80f;
+									animProgress <= 0.75?-60f: -80f;
 
 					rpm_grab = animProgress <= 0.15?35f:
 							animProgress <= 0.65?70f:
-							animProgress <= 0.75?0f: -80f;
+									animProgress <= 0.75?0f: -80f;
 
 					cratePusher = animProgress <= 0.75?0:
 							animProgress <= 0.95?(animProgress-0.75)/0.2:
-							1-((animProgress-0.95)/0.05);
+									1-((animProgress-0.95)/0.05);
 
 					rpm_crate = animProgress <= 0.75?0:
 							animProgress <= 0.95?35:
-							250;
+									250;
 					break;
 				}
 			}
@@ -251,7 +263,7 @@ public class SkyCrateStationRenderer extends TileEntitySpecialRenderer<TileEntit
 				GlStateManager.rotate(-90f*(float)inserterAngle*flipMod, 1, 0, 0);
 				GlStateManager.translate(0, -1, 0);
 				GlStateManager.scale(0.85, 0.85, 0.85);
-				mount.render(mountItem, getWorld(), partialTicks, -1);
+				mount.render(mountItem, te.getWorld(), partialTicks, -1);
 			}
 			else if(te.animation==5&&animProgress > 0.15&&animProgress <= 0.75&&mountItem.getItem() instanceof ISkycrateMount)
 			{
@@ -261,7 +273,7 @@ public class SkyCrateStationRenderer extends TileEntitySpecialRenderer<TileEntit
 				GlStateManager.rotate(-90f*(float)inserterAngle*flipMod, 1, 0, 0);
 				GlStateManager.translate(0, -1, 0);
 				GlStateManager.scale(0.85, 0.85, 0.85);
-				mount.render(mountItem, getWorld(), partialTicks, -1);
+				mount.render(mountItem, te.getWorld(), partialTicks, -1);
 
 				if(animProgress >= 0.65)
 				{
@@ -279,31 +291,31 @@ public class SkyCrateStationRenderer extends TileEntitySpecialRenderer<TileEntit
 			GlStateManager.pushMatrix();
 			GlStateManager.scale(0.55, 0.55, 0.55);
 			GlStateManager.rotate(-360f*(float)motorTick*rpm_gears, 0, 0, 1);
-			ClientUtils.mc().getRenderItem().renderItem(te.getInventory().get(1), TransformType.NONE);
+			ClientUtils.mc().getRenderItem().renderItem(inventory.get(1), TransformType.NONE);
 			GlStateManager.popMatrix();
 
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(0.125+0.0625, 0.425, 0);
 			GlStateManager.scale(0.55, 0.55, 0.55);
 			GlStateManager.rotate(360f*(float)motorTick*rpm_gears, 0, 0, 1);
-			ClientUtils.mc().getRenderItem().renderItem(te.getInventory().get(2), TransformType.NONE);
+			ClientUtils.mc().getRenderItem().renderItem(inventory.get(2), TransformType.NONE);
 			GlStateManager.popMatrix();
 
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(0.125+0.0625, -0.425, 0);
 			GlStateManager.scale(0.55, 0.55, 0.55);
 			GlStateManager.rotate(360f*(float)motorTick*rpm_gears, 0, 0, 1);
-			ClientUtils.mc().getRenderItem().renderItem(te.getInventory().get(0), TransformType.NONE);
+			ClientUtils.mc().getRenderItem().renderItem(inventory.get(0), TransformType.NONE);
 			GlStateManager.popMatrix();
 
 			GlStateManager.popMatrix();
 
 			GlStateManager.pushMatrix();
 
-			Set<Connection> conns = ImmersiveNetHandler.INSTANCE.getConnections(getWorld(), te.getBlockPosForPos(te.getConnectionPos()[0]));
-			if(conns!=null&&conns.size() > 0)
+			Set<Connection> conns = te.hasWorld()?ImmersiveNetHandler.INSTANCE.getConnections(te.getWorld(), te.getPOIPos(MultiblockPOI.SKYCRATE_WIRE_MOUNT)): null;
+			if(conns!=null&&!conns.isEmpty())
 			{
-				Connection conn = (Connection)conns.toArray()[0];
+				Connection conn = conns.iterator().next();
 				double diam = conn.cableType.getRenderDiameter();
 				GlStateManager.pushMatrix();
 				ClientUtils.bindTexture("immersiveengineering:textures/blocks/wire.png");
@@ -337,7 +349,7 @@ public class SkyCrateStationRenderer extends TileEntitySpecialRenderer<TileEntit
 						{
 							GlStateManager.pushMatrix();
 							GlStateManager.translate(0, 0, -MathHelper.clamp((animProgress-0.25)/0.1, 0, 1));
-							mount.render(mountItem, getWorld(), partialTicks, -1);
+							mount.render(mountItem, te.getWorld(), partialTicks, -1);
 							GlStateManager.popMatrix();
 
 						}
@@ -350,7 +362,7 @@ public class SkyCrateStationRenderer extends TileEntitySpecialRenderer<TileEntit
 					{
 						if(animProgress > 0.75)
 						{
-							mount.render(mountItem, getWorld(), partialTicks, -1);
+							mount.render(mountItem, te.getWorld(), partialTicks, -1);
 							GlStateManager.translate(0, 0.5, 0);
 							ClientUtils.mc().getRenderItem().renderItem(crateItem, TransformType.NONE);
 						}
@@ -362,7 +374,7 @@ public class SkyCrateStationRenderer extends TileEntitySpecialRenderer<TileEntit
 					}
 					else
 					{
-						mount.render(mountItem, getWorld(), partialTicks, -1);
+						mount.render(mountItem, te.getWorld(), partialTicks, -1);
 						GlStateManager.translate(0, 0.5, 0);
 						ClientUtils.mc().getRenderItem().renderItem(crateItem, TransformType.NONE);
 					}
@@ -372,7 +384,7 @@ public class SkyCrateStationRenderer extends TileEntitySpecialRenderer<TileEntit
 
 			GlStateManager.popMatrix();
 
-			ItemStack bannerItem = te.getInventory().get(5);
+			ItemStack bannerItem = inventory.get(5);
 
 			if(!bannerItem.isEmpty())
 			{
@@ -384,7 +396,7 @@ public class SkyCrateStationRenderer extends TileEntitySpecialRenderer<TileEntit
 					GlStateManager.translate(1.5, 3.65, te.mirrored?-2: 1.9);
 					GlStateManager.scale(0.55, 0.55, 0.55);
 					ClientUtils.mc().getTextureManager().bindTexture(res);
-					float f3 = (float)(x*7+y*9+z*13+te.getWorld().getTotalWorldTime()+partialTicks);
+					float f3 = (float)(x*7+y*9+z*13+(te.hasWorld()?te.getWorld().getTotalWorldTime(): 0)+partialTicks);
 					modelBanner.bannerSlate.rotateAngleZ = (float)Math.PI;
 					modelBanner.bannerSlate.rotateAngleY = (float)Math.PI;
 					modelBanner.bannerSlate.rotateAngleX = -(-0.0125F+0.01F*MathHelper.cos(f3*(float)Math.PI*0.02F))*(float)Math.PI;
@@ -411,6 +423,17 @@ public class SkyCrateStationRenderer extends TileEntitySpecialRenderer<TileEntit
 
 
 			GlStateManager.popMatrix();
+			if(lighting) GlStateManager.enableLighting();
+			else GlStateManager.disableLighting();
+			if(light0) GlStateManager.enableLight(0);
+			else GlStateManager.disableLight(0);
+			if(light1) GlStateManager.enableLight(1);
+			else GlStateManager.disableLight(1);
+			if(cull) GlStateManager.enableCull();
+			else GlStateManager.disableCull();
+			if(rescale) GlStateManager.enableRescaleNormal();
+			else GlStateManager.disableRescaleNormal();
+			GlStateManager.color(1, 1, 1, 1);
 		}
 	}
 
@@ -421,7 +444,7 @@ public class SkyCrateStationRenderer extends TileEntitySpecialRenderer<TileEntit
 		if(executed!=null)
 			executed.accept(animation);
 		GlStateManager.scale(0.85, 0.85, 0.85);
-		ClientUtils.mc().getRenderItem().renderItem(te.getInventory().get(3), TransformType.NONE);
+		ClientUtils.mc().getRenderItem().renderItem(te.hasWorld()?te.getInventory().get(3): te.inventory.get(3), TransformType.NONE);
 		GlStateManager.popMatrix();
 		ClientUtils.bindTexture(texture);
 	}

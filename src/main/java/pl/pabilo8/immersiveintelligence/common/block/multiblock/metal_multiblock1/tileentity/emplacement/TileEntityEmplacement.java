@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement;
 
-import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
 import blusunrize.immersiveengineering.common.util.Utils;
 import com.elytradev.mirage.event.GatherLightsEvent;
 import com.elytradev.mirage.lighting.ILightEventConsumer;
@@ -54,6 +53,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileManager;
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileManager.ITactileListener;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
+import pl.pabilo8.immersiveintelligence.common.util.IIEnergyStorage;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyHandler;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.OwnerIdentity;
@@ -72,13 +72,14 @@ import pl.pabilo8.immersiveintelligence.common.util.sound.SoundHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
 import java.util.Optional;
 
 /**
  * Coordinates Emplacement platform movement, servicing, weapon operation, and external storage access.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 27.09.2026
+ * @updated 05.10.2026
  * @ii-approved 0.3.1
  * @since 27.10.2020
  */
@@ -136,7 +137,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 	public TileEntityEmplacement()
 	{
 		super(MultiblockEmplacement.INSTANCE);
-		this.energyStorage = new FluxStorageAdvanced(Emplacement.energyCapacity);
+		this.energyStorage = new IIEnergyStorage(Emplacement.energyCapacity);
 		this.inventory = NonNullList.withSize(64, ItemStack.EMPTY);
 		this.door = new MultiblockInteractablePart(Emplacement.lidTime);
 		this.upgradeManager = new UpgradeManager<>(this);

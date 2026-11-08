@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 29.08.2024
+ * @updated 05.10.2026
  * @ii-approved 0.3.1
  * @since 29.07.2021
  */
@@ -84,7 +84,9 @@ public class DustUtils
 	{
 		return dustIngredients.entries().stream()
 				.filter(e -> e.getKey().equals(dustName))
-				.map(e -> e.getValue().getExampleStack())
+				.flatMap(e -> e.getValue().getStackList().stream())
+				.filter(stack -> !stack.isEmpty())
+				.map(ItemStack::copy)
 				.collect(Collectors.toList());
 	}
 

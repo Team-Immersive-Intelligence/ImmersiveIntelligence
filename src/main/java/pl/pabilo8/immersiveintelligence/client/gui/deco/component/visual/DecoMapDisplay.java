@@ -9,6 +9,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.map.DecoMapDefaultColorMapper;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.map.IDecoMapColorMapper;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.map.layers.MapLayerBuilder;
@@ -16,9 +17,13 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.map.lay
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.map.layers.MapRect;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.map.layers.MapSprite;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.map.scanners.MapScanner;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoColors;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil;
 import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil.Shaders;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -61,6 +66,7 @@ public class DecoMapDisplay extends DecoComponent<DecoMapDisplay>
 
 	private float zoom = 1.0f, panX = 0.0f, panY = 0.0f;
 	private int lastMouseX, lastMouseY;
+	private final DecoButton[] navigationButtons;
 
 	//--- Layers --- //
 	private final Map<String, MapLayerBuilder> layers = new LinkedHashMap<>();
@@ -68,6 +74,32 @@ public class DecoMapDisplay extends DecoComponent<DecoMapDisplay>
 	public DecoMapDisplay(int x, int y)
 	{
 		super(x, y);
+		navigationButtons = new DecoButton[]{
+				new DecoButton(2, 2)
+						.withSize(14, 14)
+						.withBackground(DecoTextures.COMPONENT_BUTTON_PAPER)
+						.withIcon(DecoTextures.ICON_ACTION_ADD, 16)
+						.withTextColor(DecoColors.H2, DecoColors.H2)
+						.withTextHoveredColor(DecoColors.H2)
+						.withTranslatedTooltip(IIReference.GUI_LABEL_KEY+"map_display.zoom_in")
+						.withOnLMBPressed(() -> changeZoom(0.25f)),
+				new DecoButton(2+14, 2)
+						.withSize(14, 14)
+						.withBackground(DecoTextures.COMPONENT_BUTTON_PAPER)
+						.withIcon(DecoTextures.ICON_ACTION_REMOVE, 16)
+						.withTextColor(DecoColors.H2, DecoColors.H2)
+						.withTextHoveredColor(DecoColors.H2)
+						.withTranslatedTooltip(IIReference.GUI_LABEL_KEY+"map_display.zoom_out")
+						.withOnLMBPressed(() -> changeZoom(-0.25f)),
+				new DecoButton(2+14+14, 2)
+						.withSize(14, 14)
+						.withBackground(DecoTextures.COMPONENT_BUTTON_PAPER)
+						.withIcon(DecoTextures.ICON_ACTION_CENTER, 16)
+						.withTextColor(DecoColors.H2, DecoColors.H2)
+						.withTextHoveredColor(DecoColors.H2)
+						.withTranslatedTooltip(IIReference.GUI_LABEL_KEY+"map_display.center")
+						.withOnLMBPressed(this::centerView)
+		};
 		withOnDragged(this::onMouseDragged);
 		withOnPressed(this::onMousePressed);
 		withOnTooltip(this::onTooltip);
@@ -208,7 +240,10 @@ public class DecoMapDisplay extends DecoComponent<DecoMapDisplay>
 	protected void draw(int mouseX, int mouseY, float partialTicks)
 	{
 		if(world==null||customMapData==null||mapTexture==null)
+		{
+			updateInvisibleComponent();
 			return;
+		}
 
 		//Update scanner data, they use their own intervals
 		updateScanners();
@@ -245,6 +280,66 @@ public class DecoMapDisplay extends DecoComponent<DecoMapDisplay>
 		parentGui.scissorEnd();
 
 		GlStateManager.popMatrix();
+		drawNavigationButtons(mc, mouseX, mouseY, partialTicks);
+	}
+
+	private void updateNavigationButtons()
+	{
+		boolean active = visible&&world!=null&&customMapData!=null&&mapTexture!=null
+				&&(panningEnabled||zoomScrollEnabled)&&width >= 56&&height >= 20;
+		for(DecoButton button : navigationButtons)
+			button.setActive(active);
+		navigationButtons[0].enabled = active&&enabled&&zoomScrollEnabled&&zoom < zoomMax;
+		navigationButtons[1].enabled = active&&enabled&&zoomScrollEnabled&&zoom > zoomMin;
+		navigationButtons[2].enabled = active&&enabled;
+	}
+
+	private void drawNavigationButtons(Minecraft mc, int mouseX, int mouseY, float partialTicks)
+	{
+		updateNavigationButtons();
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(x, y, 0);
+		GlStateManager.color(1f, 1f, 1f, 1f);
+		for(DecoButton button : navigationButtons)
+			button.drawButton(mc, mouseX-x, mouseY-y, partialTicks);
+		GlStateManager.popMatrix();
+	}
+
+	@Nullable
+	private DecoButton getNavigationButton(int mouseX, int mouseY)
+	{
+		updateNavigationButtons();
+		for(DecoButton button : navigationButtons)
+			if(button.visible&&IIMath.isPointInRectangle(button.x, button.y, button.x+button.width, button.y+button.height, mouseX-x, mouseY-y))
+				return button;
+		return null;
+	}
+
+	@Override
+	protected boolean ownsVirtualChild(DecoComponent<?> component)
+	{
+		for(DecoButton button : navigationButtons)
+			if(button==component)
+				return true;
+		return false;
+	}
+
+	@Nullable
+	@Override
+	protected DecoMouseCapture decoMousePressedVirtualChild(Minecraft mc, int mouseX, int mouseY, MouseButton mouseButton)
+	{
+		DecoButton button = getNavigationButton(mouseX, mouseY);
+		if(button==null)
+			return null;
+		DecoMouseCapture capture = button.decoMousePressed(mc, mouseX-x, mouseY-y, mouseButton);
+		return capture==null?null: capture.translated(-x, -y);
+	}
+
+	@Override
+	protected void updateInvisibleComponent()
+	{
+		for(DecoButton button : navigationButtons)
+			button.setActive(false);
 	}
 
 	private void updateScanners()
@@ -359,6 +454,9 @@ public class DecoMapDisplay extends DecoComponent<DecoMapDisplay>
 	@Override
 	public void cleanup()
 	{
+		updateInvisibleComponent();
+		for(DecoButton button : navigationButtons)
+			button.cleanup();
 		layers.clear();
 		customMapData = null;
 		if(mapTexture!=null)
@@ -465,8 +563,6 @@ public class DecoMapDisplay extends DecoComponent<DecoMapDisplay>
 
 	private void normalizeView()
 	{
-		assert world!=null&&customMapData!=null;
-
 		float s = zoom*baseZoom;
 		float half = radiusBlocks/2f;
 
@@ -495,18 +591,31 @@ public class DecoMapDisplay extends DecoComponent<DecoMapDisplay>
 
 	//--- Actions ---//
 
+	private void changeZoom(float amount)
+	{
+		zoom = MathHelper.clamp(zoom+amount, zoomMin, zoomMax);
+		normalizeView();
+	}
+
+	private void centerView()
+	{
+		zoom = MathHelper.clamp(1f, zoomMin, zoomMax);
+		panX = panY = 0f;
+		normalizeView();
+	}
+
 	private boolean onScroll(DecoMapDisplay gui, int mouseScroll, int mouseX, int mouseY)
 	{
 		if(!zoomScrollEnabled) return false;
 
-		float step = 0.05f;
-		zoom = MathHelper.clamp(zoom+mouseScroll*step, zoomMin, zoomMax);
-		normalizeView();
+		changeZoom(mouseScroll*0.05f);
 		return true;
 	}
 
 	private boolean onMousePressed(DecoMapDisplay gui, MouseButton button, int mouseX, int mouseY)
 	{
+		if(getNavigationButton(mouseX, mouseY)!=null)
+			return false;
 		if(panningEnabled&&button==MouseButton.LEFT)
 		{
 			lastMouseX = mouseX;
@@ -534,6 +643,9 @@ public class DecoMapDisplay extends DecoComponent<DecoMapDisplay>
 
 	private Collection<String> onTooltip(DecoMapDisplay decoMapDisplay)
 	{
+		for(DecoButton button : navigationButtons)
+			if(button.isMouseOver())
+				return button.getTooltip();
 		return Collections.emptyList();
 	}
 }

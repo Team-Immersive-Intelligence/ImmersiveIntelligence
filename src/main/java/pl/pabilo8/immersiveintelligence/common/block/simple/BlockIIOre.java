@@ -17,6 +17,8 @@ import pl.pabilo8.immersiveintelligence.common.util.block.ItemBlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 
 import javax.annotation.Nonnull;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -36,21 +38,9 @@ public class BlockIIOre extends BlockIIBase<Ores>
 	@Override
 	public void getDrops(@Nonnull NonNullList<ItemStack> drops, @Nonnull IBlockAccess world, @Nonnull BlockPos pos, @Nonnull IBlockState state, int fortune)
 	{
-		switch(state.getValue(property))
-		{
-			case FLUORITE:
-				drops.add(IIContent.itemMaterialGem.getStack(MaterialsGem.FLUORITE,
-						(1+Math.round((float)Math.random()))*(1+fortune)));
-				break;
-			case PHOSPHORUS:
-				drops.add(IIContent.itemMaterialGem.getStack(MaterialsGem.PHOSPHORUS,
-						(2+Math.round((float)Math.random()))*(1+fortune)));
-				break;
-			default:
-				super.getDrops(drops, world, pos, state, fortune);
-				break;
-		}
-
+		Ores ore = state.getValue(property);
+		if(ore.dropSupplier!=null)
+			drops.add(ore.dropSupplier.apply(fortune));
 	}
 
 	public enum Ores implements IIBlockEnum
@@ -62,10 +52,38 @@ public class BlockIIOre extends BlockIIBase<Ores>
 		@IIBlockProperties(harvestLevel = 2)
 		TUNGSTEN,
 		@IIBlockProperties(harvestLevel = 1)
-		SALT,
+		SALT(() -> IIContent.itemMaterialGem.getStack(MaterialsGem.SALT)),
 		@IIBlockProperties(harvestLevel = 3)
-		FLUORITE,
+		FLUORITE(() -> IIContent.itemMaterialGem.getStack(MaterialsGem.FLUORITE)),
 		@IIBlockProperties(harvestLevel = 3)
-		PHOSPHORUS
+		PHOSPHORUS(() -> IIContent.itemMaterialGem.getStack(MaterialsGem.PHOSPHORUS)),
+		@IIBlockProperties(harvestLevel = 1)
+		SULFUR(() -> IIContent.itemMaterialGem.getStack(MaterialsGem.SULFUR)),
+		@IIBlockProperties(harvestLevel = 1, oreDict = "oreSulfur")
+		SULFUR_OVERWORLD(() -> IIContent.itemMaterialGem.getStack(MaterialsGem.SULFUR)),
+		@IIBlockProperties(harvestLevel = 1)
+		TIN,
+		@IIBlockProperties(harvestLevel = 5)
+		CHROMIUM,
+		@IIBlockProperties(harvestLevel = 3, oreDict = "orePhosphorus")
+		PHOSPHORUS_OVERWORLD(() -> IIContent.itemMaterialGem.getStack(MaterialsGem.PHOSPHORUS)),
+		@IIBlockProperties(harvestLevel = 3, oreDict = "oreFluorite")
+		FLUORITE_OVERWORLD(() -> IIContent.itemMaterialGem.getStack(MaterialsGem.FLUORITE));
+
+		private final Function<Integer, ItemStack> dropSupplier;
+
+		Ores(Supplier<ItemStack> stackSupplier)
+		{
+			this.dropSupplier = (fortune) -> {
+				ItemStack stack = stackSupplier.get();
+				stack.setCount((1+Math.round((float)Math.random()))*(1+fortune));
+				return stack;
+			};
+		}
+
+		Ores()
+		{
+			this.dropSupplier = null;
+		}
 	}
 }

@@ -28,20 +28,32 @@ public class RecipePowerpackAdvanced extends Impl<IRecipe> implements IRecipe
 	{
 		ItemStack powerpack = ItemStack.EMPTY;
 		ItemStack armor = ItemStack.EMPTY;
+
 		for(int i = 0; i < inv.getSizeInventory(); i++)
 		{
 			ItemStack stackInSlot = inv.getStackInSlot(i);
-			if(!stackInSlot.isEmpty())
-				if(powerpack.isEmpty()&&IIContent.itemAdvancedPowerPack.equals(stackInSlot.getItem()))
-					powerpack = stackInSlot;
-				else if(armor.isEmpty()&&isValidArmor(stackInSlot))
-					armor = stackInSlot;
-				else
-					return false;
+			if(stackInSlot.isEmpty())
+				continue;
+
+			if(powerpack.isEmpty() && IIContent.itemAdvancedPowerPack.equals(stackInSlot.getItem()))
+				powerpack = stackInSlot;
+			else if(armor.isEmpty() && isValidArmor(stackInSlot))
+				armor = stackInSlot;
+			else
+				return false;
 		}
-		if(!powerpack.isEmpty()&&(!armor.isEmpty()||!ItemNBTHelper.hasKey(armor, IIContent.NBT_AdvancedPowerpack)))
+
+		//combines powerpack and chestplate
+		if(!powerpack.isEmpty() && !armor.isEmpty()
+				&& !ItemNBTHelper.hasKey(armor, IIContent.NBT_AdvancedPowerpack))
 			return true;
-		else return !armor.isEmpty()&&ItemNBTHelper.hasKey(armor, IIContent.NBT_AdvancedPowerpack)&&powerpack.isEmpty();
+
+		//removal
+		if(powerpack.isEmpty() && !armor.isEmpty()
+				&& ItemNBTHelper.hasKey(armor, IIContent.NBT_AdvancedPowerpack))
+			return true;
+
+		return false;
 	}
 
 	/**
@@ -102,13 +114,24 @@ public class RecipePowerpackAdvanced extends Impl<IRecipe> implements IRecipe
 	@Override
 	public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv)
 	{
-		NonNullList<ItemStack> remaining = ForgeHooks.defaultRecipeGetRemainingItems(inv);
-		for(int i = 0; i < remaining.size(); i++)
+		NonNullList<ItemStack> remaining =
+				NonNullList.withSize(inv.getSizeInventory(), ItemStack.EMPTY);
+
+		for(int i = 0; i < inv.getSizeInventory(); i++)
 		{
 			ItemStack stackInSlot = inv.getStackInSlot(i);
-			if(!stackInSlot.isEmpty()&&ItemNBTHelper.hasKey(stackInSlot, IIContent.NBT_AdvancedPowerpack))
-				remaining.set(i, ItemNBTHelper.getItemStack(stackInSlot, IIContent.NBT_AdvancedPowerpack));
+			if(stackInSlot.isEmpty())
+				continue;
+
+			//removing a powerpack from a chestplate
+			if(isValidArmor(stackInSlot)
+					&& ItemNBTHelper.hasKey(stackInSlot, IIContent.NBT_AdvancedPowerpack))
+			{
+				remaining.set(i,
+						ItemNBTHelper.getItemStack(stackInSlot, IIContent.NBT_AdvancedPowerpack));
+			}
 		}
+
 		return remaining;
 	}
 
