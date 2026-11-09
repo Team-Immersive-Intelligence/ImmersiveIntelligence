@@ -13,6 +13,12 @@ import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityAtmosphericCondenser;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerAtmosphericCondenser;
 
+import static pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures.FRAME_STEEL;
+
+/**
+ * @author Avalon (avalon@iiteam.net)
+ * @since 04.11.2026
+ */
 @DecoTemplate(name = "atmospheric_condenser", category = DecoGuiCategory.PRODUCTION_TILE)
 public class GuiAtmosphericCondenser extends DecoTileGui<TileEntityAtmosphericCondenser, ContainerAtmosphericCondenser>
 {
@@ -25,7 +31,7 @@ public class GuiAtmosphericCondenser extends DecoTileGui<TileEntityAtmosphericCo
 	public void onInit()
 	{
 		startBackground()
-				.withBox(DecoTextures.BG_STEEL_ROUGH, 0, 0, 176, 76)
+				.withBox(DecoTextures.BG_ALUMINIUM, 0, 0, 176, 76)
 				.withTitleBar(tile)
 				.withInventorySlots(SlotStyle.IE_INPUT, container.bucketInputSlots)
 				.withInventorySlots(SlotStyle.IE_OUTPUT, container.bucketOutputSlots)
@@ -34,13 +40,13 @@ public class GuiAtmosphericCondenser extends DecoTileGui<TileEntityAtmosphericCo
 				.build();
 
 		addComponents(
-				new DecoFluidTank(3, 10)
+				new DecoFluidTank(3, 10+4)
 						.withSize(24, 48)
 						.withFluidTank(tile.nitrogenTank),
-				new DecoFluidTank(59, 10)
+				new DecoFluidTank(59, 10+4)
 						.withSize(24, 48)
 						.withFluidTank(tile.oxygenTank),
-				new DecoFluidTank(115, 10)
+				new DecoFluidTank(115, 10+4)
 						.withSize(24, 48)
 						.withFluidTank(tile.argonTank),
 				new DecoBar(164, 2)
