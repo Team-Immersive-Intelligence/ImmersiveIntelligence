@@ -1,7 +1,3 @@
-/**
- * @author Avalon (avalon@iiteam.net)
- * @since 04.11.2026
- */
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity;
 
 import net.minecraft.item.ItemStack;
@@ -25,6 +21,11 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInter
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIGeneric;
 import static pl.pabilo8.immersiveintelligence.common.IIUtils.handleBucketTankInteraction;
 import static pl.pabilo8.immersiveintelligence.common.IIUtils.outputFluidToTank;
+
+/**
+ * @author Avalon (avalon@iiteam.net)
+ * @since 04.11.2026
+ */
 
 public class TileEntityAtmosphericCondenser extends TileEntityMultiblockIIGeneric<TileEntityAtmosphericCondenser>
 		implements IIIGuiMultiblockTile

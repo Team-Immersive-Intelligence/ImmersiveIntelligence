@@ -1,7 +1,3 @@
-/**
- * @author Avalon (avalon@iiteam.net)
- * @since 04.11.2026
- */
 package pl.pabilo8.immersiveintelligence.common.gui;
 
 import net.minecraft.entity.player.EntityPlayer;

@@ -1,7 +1,3 @@
-/**
- * @author Avalon (avalon@iiteam.net)
- * @since 04.11.2026
- */
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock;
 
 import net.minecraft.util.ResourceLocation;
@@ -13,6 +9,11 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
+
+/**
+ * @author Avalon (avalon@iiteam.net)
+ * @since 04.11.2026
+ */
 
 public class MultiblockAtmosphericCondenser extends MultiblockStuctureBase<TileEntityAtmosphericCondenser>
 {

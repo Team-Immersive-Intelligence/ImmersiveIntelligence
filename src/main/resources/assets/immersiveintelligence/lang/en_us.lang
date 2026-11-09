@@ -889,6 +889,7 @@ desc.immersiveengineering.info.multiblock.II:MissileSilo=Missile Silo
 desc.immersiveengineering.info.multiblock.II:ScanningConveyor=Scanning Conveyor
 desc.immersiveengineering.info.multiblock.II:Packer=Packer
 desc.immersiveengineering.info.multiblock.II:MinecartPacker=Railway Packer
+desc.immersiveengineering.info.multiblock.II:AtmosphericCondenser=Atmospheric Condenser
 
 desc.immersiveengineering.info.multiblock.II:RedstoneDataInterface=Redstone-Data Interface
 
@@ -4282,5 +4283,3 @@ item.banner.immersiveintelligence_infrared_helmet.lightBlue=Light Blue Infrared 
 item.banner.immersiveintelligence_infrared_helmet.magenta=Magenta Infrared Helmet
 item.banner.immersiveintelligence_infrared_helmet.orange=Orange Infrared Helmet
 item.banner.immersiveintelligence_infrared_helmet.white=White Infrared Helmet
-
-desc.immersiveengineering.info.multiblock.II:AtmosphericCondenser=Atmospheric Condenser
