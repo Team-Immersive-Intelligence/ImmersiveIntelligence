@@ -1,0 +1,6 @@
+# Made by Pabilo8 with Blockbench
+
+newmtl data_device
+map_Kd immersiveintelligence:blocks/metal_device/data_device
+newmtl data_connector
+map_Kd immersiveintelligence:blocks/data_connector

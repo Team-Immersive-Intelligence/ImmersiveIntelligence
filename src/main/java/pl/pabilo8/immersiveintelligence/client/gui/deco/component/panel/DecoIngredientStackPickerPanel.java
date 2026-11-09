@@ -57,6 +57,7 @@ public class DecoIngredientStackPickerPanel extends DecoPanel
 
 	private Consumer<? super IngredientReference> onStackChanged;
 	private int maxEnergyCount = 1000000;
+	private boolean oreDictSelection = true;
 
 	public DecoIngredientStackPickerPanel(int x, int y)
 	{
@@ -80,6 +81,8 @@ public class DecoIngredientStackPickerPanel extends DecoPanel
 	public DecoIngredientStackPickerPanel withIngredientReference(@Nonnull IngredientReference stack)
 	{
 		this.stack = stack.clone();
+		if(!oreDictSelection)
+			this.stack.oreName = null;
 		this.stack.inputSize = clampInteger(this.stack.inputSize, getMinimumCount(), Integer.MAX_VALUE);
 		if(isItemDataTypeMode())
 		{
@@ -207,13 +210,21 @@ public class DecoIngredientStackPickerPanel extends DecoPanel
 
 	public DecoIngredientStackPickerPanel withOreDictBased(boolean oreDict)
 	{
-		if(isItemDataTypeMode())
+		if(isItemDataTypeMode()||!oreDictSelection)
 			this.stack.oreName = null;
 		else if(oreDict&&this.stack.stack!=null&&!this.stack.stack.isEmpty())
 			this.stack.oreName = findFirstOreName(this.stack.stack);
 		else if(this.stack.stack!=null&&!this.stack.stack.isEmpty())
 			this.stack.oreName = null;
 		applyToUI();
+		return this;
+	}
+
+	public DecoIngredientStackPickerPanel withOreDictSelection(boolean enabled)
+	{
+		this.oreDictSelection = enabled;
+		if(!enabled)
+			this.stack.oreName = null;
 		return this;
 	}
 
@@ -423,13 +434,13 @@ public class DecoIngredientStackPickerPanel extends DecoPanel
 
 				addComponents(
 						toggleNBT = new DecoSwitch(4, height-16-2)
-								.withSize(isItemDataTypeMode()?width-8: width/2-8, 16)
+								.withSize(isItemDataTypeMode()||!oreDictSelection?width-8: width/2-8, 16)
 								.withText(TRANSLATION_KEY+"nbt")
 								.withOnToggle(this::withMatchNBT)
 								.withTranslatedTooltip(TRANSLATION_KEY+(isItemDataTypeMode()?"nbt.data_type.tooltip": "nbt.item.tooltip"))
 				);
 
-				if(!isItemDataTypeMode())
+				if(!isItemDataTypeMode()&&oreDictSelection)
 					addComponents(
 							toggleOre = new DecoSwitch(4+width/2, height-16-2)
 									.withSize(width/2-8, 16)
@@ -461,7 +472,7 @@ public class DecoIngredientStackPickerPanel extends DecoPanel
 				if(metadataField!=null)
 					metadataField.visible = !fieldsHidden;
 				if(toggleOre!=null)
-					toggleOre.visible = !fieldsHidden&&!isItemDataTypeMode();
+					toggleOre.visible = !fieldsHidden&&!isItemDataTypeMode()&&oreDictSelection;
 				if(toggleNBT!=null)
 				{
 					toggleNBT.visible = !fieldsHidden;

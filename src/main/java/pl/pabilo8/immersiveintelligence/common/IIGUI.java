@@ -36,6 +36,10 @@ import pl.pabilo8.immersiveintelligence.client.gui.block.flagpole.GuiFlagpole;
 import pl.pabilo8.immersiveintelligence.client.gui.block.flagpole.GuiFlagpoleConfig;
 import pl.pabilo8.immersiveintelligence.client.gui.block.flagpole.GuiFlagpoleFaction;
 import pl.pabilo8.immersiveintelligence.client.gui.block.inserter.GuiInserter;
+import pl.pabilo8.immersiveintelligence.client.gui.block.inventory_interface.GuiInventoryInterface;
+import pl.pabilo8.immersiveintelligence.client.gui.block.inventory_interface.GuiInventoryInterfaceEdit;
+import pl.pabilo8.immersiveintelligence.client.gui.block.inventory_interface.GuiInventoryInterfaceOutput;
+import pl.pabilo8.immersiveintelligence.client.gui.block.inventory_interface.GuiInventoryInterfaceValue;
 import pl.pabilo8.immersiveintelligence.client.gui.block.packer.GuiPacker;
 import pl.pabilo8.immersiveintelligence.client.gui.block.packer.GuiPackerLabeler;
 import pl.pabilo8.immersiveintelligence.client.gui.block.radar.GuiRadar;
@@ -190,6 +194,7 @@ public enum IIGUI implements ISerializableEnum
 	CLIPBOARD_ITEM(ContainerClipboardItem::new),
 	CLIPBOARD_BLOCK(TileEntityClipboard.class, ContainerClipboardTile::new),
 	DIESEL_ENGINE(TileEntityDieselEngine.class, ContainerDieselEngine::new),
+
 	DATA_BUFFER(TileEntityDataBuffer.class, (player, tile) -> new ContainerSmallDataDevice<>(player, tile, true)),
 	DATA_BUFFER_EDIT(TileEntityDataBuffer.class, (player, tile) -> new ContainerSmallDataDevice<>(player, tile, true)),
 	DATA_MAPPER(TileEntityDataMapper.class, (player, tile) -> new ContainerSmallDataDevice<>(player, tile, true)),
@@ -198,7 +203,12 @@ public enum IIGUI implements ISerializableEnum
 	DATA_APPENDER(TileEntityDataAppender.class, (player, tile) -> new ContainerSmallDataDevice<>(player, tile, true)),
 	DATA_APPENDER_EDIT(TileEntityDataAppender.class, ContainerSmallDataDevice::new),
 	REDSTONE_SEQUENCER(TileEntityRedstoneSequencer.class, ContainerSmallDataDevice::new),
-	NIXIE_DISPLAY(TileEntityNixieDisplayBase.class, (player, tile) -> new ContainerSmallDataDevice<>(player, tile, 88));
+	NIXIE_DISPLAY(TileEntityNixieDisplayBase.class, (player, tile) -> new ContainerSmallDataDevice<>(player, tile, 88)),
+
+	INVENTORY_INTERFACE(TileEntityInventoryInterface.class, ContainerInventoryInterface::getMainGui),
+	INVENTORY_INTERFACE_EDIT(TileEntityInventoryInterface.class, ContainerInventoryInterface::getEditGui),
+	INVENTORY_INTERFACE_OUTPUT(TileEntityInventoryInterface.class, ContainerInventoryInterface::getOutputGui),
+	INVENTORY_INTERFACE_VALUE(TileEntityInventoryInterface.class, ContainerInventoryInterface::getOutputGui);
 
 	public final Class<? extends TileEntity> teClass;
 	public final Class<? extends Entity> entityClass;
@@ -327,6 +337,10 @@ public enum IIGUI implements ISerializableEnum
 		IIGUI.DATA_APPENDER.setClientTileGui(GuiDataAppender::new);
 		IIGUI.DATA_APPENDER_EDIT.setClientTileGui(GuiDataAppenderEdit::new);
 		IIGUI.REDSTONE_SEQUENCER.setClientTileGui(GuiRedstoneSequencer::new);
+		IIGUI.INVENTORY_INTERFACE.setClientTileGui(GuiInventoryInterface::new);
+		IIGUI.INVENTORY_INTERFACE_EDIT.setClientTileGui(GuiInventoryInterfaceEdit::new);
+		IIGUI.INVENTORY_INTERFACE_OUTPUT.setClientTileGui(GuiInventoryInterfaceOutput::new);
+		IIGUI.INVENTORY_INTERFACE_VALUE.setClientTileGui(GuiInventoryInterfaceValue::new);
 		IIGUI.INSERTER.setClientTileGui(GuiInserter::new);
 		IIGUI.NIXIE_DISPLAY.setClientTileGui(GuiNixieDisplay::new);
 		//Crates

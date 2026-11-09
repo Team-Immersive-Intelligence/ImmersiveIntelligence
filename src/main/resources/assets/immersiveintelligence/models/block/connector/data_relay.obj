@@ -1,7 +1,7 @@
 # Made by Pabilo8 in Blockbench 4.2.0
 mtllib data_connector.mtl
 
-o Main
+o main
 v 0.625 1 0.625
 v 0.625 1 0.375
 v 0.6875 0.875 0.6875

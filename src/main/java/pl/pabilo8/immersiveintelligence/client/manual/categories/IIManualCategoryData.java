@@ -4,7 +4,6 @@ import blusunrize.immersiveengineering.api.crafting.BlueprintCraftingRecipe;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.common.IEContent;
 import net.minecraft.item.ItemStack;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualCategory;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualEntry;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
@@ -21,7 +20,10 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import java.util.Arrays;
 
 /**
+ * Registers manual entries and data sources for data devices.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 24.10.2026
  * @since 18.01.2020
  */
 public class IIManualCategoryData extends IIManualCategory
@@ -100,36 +102,23 @@ public class IIManualCategoryData extends IIManualCategory
 				.addSource("relay", getSourceForItem(IIContent.blockDataConnector.getStack(IIBlockTypes_Connector.DATA_RELAY)))
 				.addSource("duplex_connector", getSourceForItem(IIContent.blockDataConnector.getStack(IIBlockTypes_Connector.DATA_DUPLEX_CONNECTOR)))
 				.addSource("debugger", getSourceForItem(IIContent.blockDataConnector.getStack(IIBlockTypes_Connector.DATA_DEBUGGER)))
-				.addSource("wired_connection", EasyNBT.newNBT()
-						.withString("animation", ImmersiveIntelligence.MODID+":manual/wired_connection")
-						.withInt("duration", 120)
-						.withList("elements",
-								EasyNBT.parseEasyNBT("{name:\"input\",rot:[0.0,-90.0,0.0],pos:[-2.5,0.0,-1.25],model:\"immersiveintelligence:models/block/metal_device/punchtape_reader.obj\"}"),
-								EasyNBT.parseEasyNBT("{name:\"conn\",rot:[0.0,0.0,90.0],pos:[-1.5,0.0,-1.25],model:\"immersiveintelligence:models/block/connector/data_connector.obj.ie\"}"),
-								EasyNBT.parseEasyNBT("{name:\"wire0\",start:[16.0,14.4,-20.0], end:[8.0,16.0,8.0], diameter: 0.125, type:\"wire\"}"),
-								EasyNBT.parseEasyNBT("{name:\"relay\",pos:[0.0,0.0,0.0],model:\"immersiveintelligence:models/block/connector/data_relay.obj\"}"),
-								EasyNBT.parseEasyNBT("{name:\"debugger\",pos:[1.25,0.0,1.25],model:\"immersiveintelligence:models/block/metal_device/data_debugger/data_debugger.obj\"}"),
-								EasyNBT.parseEasyNBT("{name:\"wire0\",start:[8.0,16.0,8.0], end:[-12.0,18.0,20.0], diameter: 0.125, type:\"wire\"}")
-						)
-						.withList("overlay",
-								EasyNBT.parseEasyNBT("{name:\"punchtape\",pos:[0.0,0.0,0.0], type:\"item\", stack:%s}", IIContent.itemPunchtape.getStack(1).serializeNBT()),
-								EasyNBT.parseEasyNBT("{name:\"data\",pos:[0.0,0.0,0.0], type:\"text\", text:\"{...}\"}"),
-								EasyNBT.parseEasyNBT("{name:\"particle\",pos:[0.0,0.0,0.0], type:\"text\", text:\"{...}\"}")
-						)
+				.addSource("wired_connection", getScenarioSource("wired_connection", 120, 1f)
 						.withList("hovers",
-								EasyNBT.parseEasyNBT("{x:%s,y:%s,w:%s,h:%s,item:%s}", 76, 10, 32, 32,
-										IIContent.blockDataConnector.getStack(IIBlockTypes_Connector.DATA_DEBUGGER).serializeNBT().toString()),
-								EasyNBT.parseEasyNBT("{x:%s,y:%s,w:%s,h:%s,item:%s}", 48, 24, 24, 27,
-										IIContent.blockDataConnector.getStack(IIBlockTypes_Connector.DATA_RELAY).serializeNBT().toString()),
-								EasyNBT.parseEasyNBT("{x:%s,y:%s,w:%s,h:%s,item:%s}", 28, 38, 16, 16,
-										IIContent.blockDataConnector.getStack(IIBlockTypes_Connector.DATA_CONNECTOR).serializeNBT().toString()),
-								EasyNBT.parseEasyNBT("{x:%s,y:%s,w:%s,h:%s,item:%s}", 2, 32, 32, 32,
-										IIContent.blockMetalDevice.getStack(IIBlockTypes_MetalDevice.PUNCHTAPE_READER).serializeNBT().toString())
-						)
-				)
-				.addSource("wireless_connection", EasyNBT.newNBT());
+								EasyNBT.parseEasyNBT("{x:76,y:10,w:32,h:32,item:%s}",
+										IIContent.blockDataConnector.getStack(IIBlockTypes_Connector.DATA_DEBUGGER).serializeNBT()),
+								EasyNBT.parseEasyNBT("{x:48,y:24,w:24,h:27,item:%s}",
+										IIContent.blockDataConnector.getStack(IIBlockTypes_Connector.DATA_RELAY).serializeNBT()),
+								EasyNBT.parseEasyNBT("{x:28,y:38,w:16,h:16,item:%s}",
+										IIContent.blockDataConnector.getStack(IIBlockTypes_Connector.DATA_CONNECTOR).serializeNBT()),
+								EasyNBT.parseEasyNBT("{x:2,y:32,w:32,h:32,item:%s}",
+										IIContent.blockMetalDevice.getStack(IIBlockTypes_MetalDevice.PUNCHTAPE_READER).serializeNBT())
+						))
+				.addSource("wireless_connection", getScenarioSource("wireless_connection", 160, 0.3f));
 		addEntry("data_callback")
-				.addSource("data_callback_scenario", EasyNBT.newNBT());
+				.addSource("data_callback_scenario", getScenarioSource("data_callback", 200, 0.5f));
+		addEntry("inventory_interface")
+				.addSource("inventory_interface", getSourceForItem(
+						IIContent.blockDataConnector.getStack(IIBlockTypes_Connector.INVENTORY_INTERFACE)));
 
 		addEntry("data_input_machine")
 				.addSource("punchtape", getSourceForItem(IIContent.itemPunchtape.getStack(1)))
@@ -174,6 +163,7 @@ public class IIManualCategoryData extends IIManualCategory
 						IIContent.blockMetalDevice.getStack(IIBlockTypes_MetalDevice.QUAD_NIXIE_DISPLAY)
 				));
 		addEntry("radio_station")
+				.addSource("wireless_connection", getScenarioSource("wireless_connection", 160, 0.3f))
 				.addSource("basic_radio_tuner", getSourceForItem(IIContent.itemRadioTuner.getStack(1)))
 				.addSource("advanced_radio_tuner", getSourceForItem(new ItemStack(IIContent.itemRadioTuner, 1, 1)
 				));
@@ -195,4 +185,15 @@ public class IIManualCategoryData extends IIManualCategory
 				));
 
 	}
+
+	private static EasyNBT getScenarioSource(String name, int duration, float scale)
+	{
+		return EasyNBT.newNBT()
+				.withString("header", "immersiveintelligence:models/manual/"+name+".obj.amt")
+				.withString("animation", "immersiveintelligence:manual/"+name)
+				.withInt("duration", duration)
+				.withFloat("scale", scale)
+				.withFloat("offset_y", name.equals("wired_connection")?15: 7);
+	}
+
 }
