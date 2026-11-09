@@ -82,6 +82,9 @@ public class TileEntityAtmosphericCondenser extends TileEntityMultiblockIIGeneri
 			}
 		}
 
+		if(getRedstoneAtPos(0))
+			return;
+
 		if(argonTank.getFluidAmount()+AtmosphericCondenser.argonPerCycle > AtmosphericCondenser.fluidCapacity
 				||nitrogenTank.getFluidAmount()+AtmosphericCondenser.nitrogenPerCycle > AtmosphericCondenser.fluidCapacity
 				||oxygenTank.getFluidAmount()+AtmosphericCondenser.oxygenPerCycle > AtmosphericCondenser.fluidCapacity)
