@@ -1,0 +1,10 @@
+# Made with Blockbench
+
+newmtl common_thingies
+map_Kd immersiveintelligence:blocks/common/common_thingies
+newmtl common_copper_cable
+map_Kd immersiveintelligence:blocks/common/common_copper_cable
+newmtl newspaper_stand
+map_Kd immersiveintelligence:blocks/metal_device/newspaper_stand
+newmtl buchundnewsundpage
+map_Kd immersiveintelligence:blocks/metal_device/newspaper_stand_papers

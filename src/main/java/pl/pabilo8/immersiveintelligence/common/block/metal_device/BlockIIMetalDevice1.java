@@ -15,6 +15,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDevice1.IIBlockTypes_MetalDevice1;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.TileEntityCO2Filter;
+import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.TileEntityNewspaperStand;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIITileProvider;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.EnumTileProvider;
@@ -42,6 +43,7 @@ public class BlockIIMetalDevice1 extends BlockIITileProvider<IIBlockTypes_MetalD
 		setBlockLayer(BlockRenderLayer.CUTOUT_MIPPED);
 
 		this.setMetaMobilityFlag(IIBlockTypes_MetalDevice1.CO2_FILTER, EnumPushReaction.BLOCK);
+		this.setMetaMobilityFlag(IIBlockTypes_MetalDevice1.NEWSPAPER_STAND, EnumPushReaction.BLOCK);
 	}
 
 	@Override
@@ -70,6 +72,12 @@ public class BlockIIMetalDevice1 extends BlockIITileProvider<IIBlockTypes_MetalD
 					return false;
 			}
 		}
+		else if(stack.getItemDamage()==IIBlockTypes_MetalDevice1.NEWSPAPER_STAND.getMeta())
+		{
+			BlockPos upperPos = pos.up();
+			if(world.isOutsideBuildHeight(upperPos)||!world.getBlockState(upperPos).getBlock().isReplaceable(world, upperPos))
+				return false;
+		}
 		return true;
 	}
 
@@ -78,7 +86,8 @@ public class BlockIIMetalDevice1 extends BlockIITileProvider<IIBlockTypes_MetalD
 		@EnumTileProvider(tile = TileEntityCO2Filter.class)
 		@IIBlockProperties(needsCustomState = true, renderLayer = BlockRenderLayer.CUTOUT, category = IICategory.TOOLS)
 		CO2_FILTER,
-		@IIBlockProperties(hidden = TernaryValue.TRUE, category = IICategory.ELECTRONICS)
+		@EnumTileProvider(tile = TileEntityNewspaperStand.class)
+		@IIBlockProperties(needsCustomState = true, renderLayer = BlockRenderLayer.CUTOUT, category = IICategory.TOOLS)
 		NEWSPAPER_STAND,
 		//Scheduled for 0.4.0
 		@IIBlockProperties(hidden = TernaryValue.TRUE, category = IICategory.LOGISTICS)

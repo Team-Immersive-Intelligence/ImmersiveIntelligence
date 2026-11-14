@@ -1,0 +1,242 @@
+{
+	"origins": {
+		"sign": [
+			0.0,
+			0.0,
+			0.0
+		],
+		"AllNewspaper": [
+			0.0,
+			0.0,
+			0.0
+		],
+		"newspaper": [
+			-4.997565,
+			9.59386,
+			0.0
+		],
+		"newspaper2": [
+			-4.997565,
+			17.588743,
+			0.0
+		],
+		"newspaper3": [
+			-4.997565,
+			25.583626,
+			0.0
+		],
+		"newspaper4": [
+			-0.151441,
+			9.59386,
+			-4.967277
+		],
+		"newspaper5": [
+			-0.151441,
+			17.588743,
+			-4.967277
+		],
+		"newspaper6": [
+			-0.151441,
+			25.583626,
+			-4.967277
+		],
+		"newspaper7": [
+			4.936989,
+			25.583626,
+			-0.121152
+		],
+		"newspaper8": [
+			4.936989,
+			17.588743,
+			-0.121152
+		],
+		"newspaper9": [
+			4.936989,
+			9.59386,
+			-0.121152
+		],
+		"newspaper10": [
+			0.090866,
+			9.59386,
+			4.967277
+		],
+		"newspaper11": [
+			0.090866,
+			17.588743,
+			4.967277
+		],
+		"newspaper12": [
+			0.090866,
+			25.583626,
+			4.967277
+		],
+		"Allbook": [
+			0.0,
+			0.0,
+			0.0
+		],
+		"book": [
+			-4.997565,
+			9.59386,
+			0.0
+		],
+		"book2": [
+			-4.997565,
+			17.588743,
+			0.0
+		],
+		"book3": [
+			-4.997565,
+			25.583626,
+			0.0
+		],
+		"book4": [
+			-0.151441,
+			9.59386,
+			-4.967277
+		],
+		"book5": [
+			-0.151441,
+			17.588743,
+			-4.967277
+		],
+		"book6": [
+			-0.151441,
+			25.583626,
+			-4.967277
+		],
+		"book7": [
+			4.936989,
+			9.59386,
+			-0.121152
+		],
+		"book8": [
+			4.936989,
+			17.588743,
+			-0.121152
+		],
+		"book9": [
+			4.936989,
+			25.583626,
+			-0.121152
+		],
+		"book10": [
+			0.454324,
+			25.583626,
+			4.967277
+		],
+		"book11": [
+			0.454324,
+			17.588743,
+			4.967277
+		],
+		"book12": [
+			0.454324,
+			9.59386,
+			4.967277
+		],
+		"Allpage": [
+			0.0,
+			0.0,
+			0.0
+		],
+		"page": [
+			-4.997565,
+			9.59386,
+			0.0
+		],
+		"page2": [
+			-4.997565,
+			17.588743,
+			0.0
+		],
+		"page3": [
+			-4.997565,
+			25.583626,
+			0.0
+		],
+		"page4": [
+			-0.33317,
+			25.583626,
+			-4.967277
+		],
+		"page5": [
+			-0.393748,
+			17.588743,
+			-4.785547
+		],
+		"page6": [
+			-0.393748,
+			9.59386,
+			-4.967277
+		],
+		"page7": [
+			4.997565,
+			9.59386,
+			-0.302883
+		],
+		"page8": [
+			4.997565,
+			17.588743,
+			-0.302883
+		],
+		"page9": [
+			4.997565,
+			25.583626,
+			-0.302883
+		],
+		"page10": [
+			0.272595,
+			25.583626,
+			5.08843
+		],
+		"page11": [
+			0.272595,
+			17.588743,
+			5.08843
+		],
+		"page12": [
+			0.272595,
+			9.59386,
+			5.08843
+		]
+	},
+	"hierarchy": {
+		"newspaper": "AllNewspaper",
+		"newspaper2": "AllNewspaper",
+		"newspaper3": "AllNewspaper",
+		"newspaper4": "AllNewspaper",
+		"newspaper5": "AllNewspaper",
+		"newspaper6": "AllNewspaper",
+		"newspaper7": "AllNewspaper",
+		"newspaper8": "AllNewspaper",
+		"newspaper9": "AllNewspaper",
+		"newspaper10": "AllNewspaper",
+		"newspaper11": "AllNewspaper",
+		"newspaper12": "AllNewspaper",
+		"book": "Allbook",
+		"book2": "Allbook",
+		"book3": "Allbook",
+		"book4": "Allbook",
+		"book5": "Allbook",
+		"book6": "Allbook",
+		"book7": "Allbook",
+		"book8": "Allbook",
+		"book9": "Allbook",
+		"book10": "Allbook",
+		"book11": "Allbook",
+		"book12": "Allbook",
+		"page": "Allpage",
+		"page2": "Allpage",
+		"page3": "Allpage",
+		"page4": "Allpage",
+		"page5": "Allpage",
+		"page6": "Allpage",
+		"page7": "Allpage",
+		"page8": "Allpage",
+		"page9": "Allpage",
+		"page10": "Allpage",
+		"page11": "Allpage",
+		"page12": "Allpage"
+	}
+}

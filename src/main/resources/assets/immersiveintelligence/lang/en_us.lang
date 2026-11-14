@@ -713,6 +713,7 @@ tile.immersiveintelligence.metal_device.repair_crate.name=Repair Crate
 tile.immersiveintelligence.metal_device.latex_collector.name=Latex Collector
 
 tile.immersiveintelligence.metal_device1.co2_filter.name=Carbon Dioxide Filter
+tile.immersiveintelligence.metal_device1.newspaper_stand.name=Newspaper Stand
 
 tile.immersiveintelligence.gearbox.wooden_gearbox.name=Wooden Gearbox
 tile.immersiveintelligence.mechanical_device.wooden_transmission_box.name=Wooden Transmission Box

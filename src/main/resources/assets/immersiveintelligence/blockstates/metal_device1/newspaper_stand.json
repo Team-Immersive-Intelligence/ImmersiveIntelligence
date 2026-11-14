@@ -1,0 +1,67 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "transform": "forge:default-block",
+    "model": "immersiveengineering:ie_empty",
+    "textures": {
+      "particle": "immersiveintelligence:blocks/metal_device/newspaper_stand"
+    }
+  },
+  "variants": {
+    "inventory,type=newspaper_stand": [
+      {
+        "model": "immersiveintelligence:metal_device/newspaper_stand.obj",
+        "custom": {
+          "flip-v": true
+        },
+        "transform": {
+          "scale": [0.28, 0.28, 0.28],
+          "gui": {
+            "translation": [0, -0.2, 0],
+            "rotation": [
+              {"x": 30},
+              {"y": 135}
+            ],
+            "scale": [1.5, 1.5, 1.5]
+          }
+        }
+      }
+    ],
+    "type": {
+      "newspaper_stand": {}
+    },
+    "facing": {
+      "down": {},
+      "up": {},
+      "north": {},
+      "south": {
+        "transform": {
+          "rotation": {"y": 180}
+        }
+      },
+      "west": {
+        "transform": {
+          "rotation": {"y": 90}
+        }
+      },
+      "east": {
+        "transform": {
+          "rotation": {"y": -90}
+        }
+      }
+    },
+    "_0multiblockslave": {
+      "false": {
+        "model": "immersiveintelligence:metal_device/newspaper_stand.obj",
+        "custom": {"flip-v": true}
+      },
+      "true": {
+        "model": "immersiveengineering:ie_empty"
+      }
+    },
+    "boolean0": {
+      "false": {},
+      "true": {}
+    }
+  }
+}
