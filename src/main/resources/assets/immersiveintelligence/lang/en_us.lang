@@ -813,6 +813,7 @@ tile.immersiveintelligence.metal_multiblock.radio_station.name=Radio Station
 tile.immersiveintelligence.metal_multiblock.printing_press.name=Printing Press
 tile.immersiveintelligence.metal_multiblock.chemical_bath.name=Chemical Bath
 tile.immersiveintelligence.metal_multiblock.electrolyzer.name=Electrolyzer
+tile.immersiveintelligence.metal_multiblock.atmospheric_condenser.name=Atmospheric Condenser
 tile.immersiveintelligence.metal_multiblock.precision_assembler.name=Precision Assembler
 tile.immersiveintelligence.metal_multiblock.periscope.name=Periscope
 tile.immersiveintelligence.metal_multiblock.artillery_howitzer.name=Artillery Howitzer
@@ -888,6 +889,7 @@ desc.immersiveengineering.info.multiblock.II:MissileSilo=Missile Silo
 desc.immersiveengineering.info.multiblock.II:ScanningConveyor=Scanning Conveyor
 desc.immersiveengineering.info.multiblock.II:Packer=Packer
 desc.immersiveengineering.info.multiblock.II:MinecartPacker=Railway Packer
+desc.immersiveengineering.info.multiblock.II:AtmosphericCondenser=Atmospheric Condenser
 
 desc.immersiveengineering.info.multiblock.II:RedstoneDataInterface=Redstone-Data Interface
 
@@ -4281,4 +4283,3 @@ item.banner.immersiveintelligence_infrared_helmet.lightBlue=Light Blue Infrared 
 item.banner.immersiveintelligence_infrared_helmet.magenta=Magenta Infrared Helmet
 item.banner.immersiveintelligence_infrared_helmet.orange=Orange Infrared Helmet
 item.banner.immersiveintelligence_infrared_helmet.white=White Infrared Helmet
-

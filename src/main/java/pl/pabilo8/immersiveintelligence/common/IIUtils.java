@@ -190,9 +190,9 @@ public class IIUtils
 
 			FluidStack out = tank.drain(Math.min(tank.getFluidAmount(), amount), false);
 			IFluidHandler output = FluidUtil.getFluidHandler(world, pos.offset(side), side.getOpposite());
-			if(output!=null)
+			if(output!=null&&out!=null)
 			{
-				int accepted = output.fill(out, true);
+				int accepted = output.fill(out, false);
 				if(accepted > 0)
 				{
 					int drained = output.fill(Utils.copyFluidStackWithAmount(out, Math.min(out.amount, accepted), false), true);
