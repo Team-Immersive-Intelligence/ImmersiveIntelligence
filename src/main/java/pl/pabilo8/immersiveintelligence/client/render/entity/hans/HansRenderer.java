@@ -16,6 +16,7 @@ import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.model.misc.ModelHansBiped;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
+import pl.pabilo8.immersiveintelligence.client.render.entity.IIBipedWearableLayerRenderer;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.HansAnimations.HansLegAnimation;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
@@ -155,6 +156,7 @@ public class HansRenderer extends RenderLivingBase<EntityHans> implements IReloa
 		this.addLayer(new LayerArrow(this));
 		this.addLayer(new LayerBipedArmor(this));
 		this.addLayer(new LayerHansHeldItem(this));
+		IIBipedWearableLayerRenderer.install(this, true);
 	}
 
 	public double getOffsetForPose(EntityHans entity, HansLegAnimation animation)

@@ -266,7 +266,7 @@ public class AMTModel implements Iterable<AMT>, AMTRenderable
 	@Override
 	public void disposeOf()
 	{
-		for(AMT amt : model)
+		for(AMT amt : getChildrenRecursive())
 			amt.disposeOf();
 	}
 

@@ -1,64 +1,65 @@
 package pl.pabilo8.immersiveintelligence.client.render.entity;
 
-import blusunrize.immersiveengineering.client.ClientUtils;
-import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import net.minecraft.client.model.ModelBiped;
-import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
-import org.apache.commons.lang3.tuple.Pair;
-import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIArmorRenderer;
+import pl.pabilo8.immersiveintelligence.common.compat.BaublesHelper;
+import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
+import pl.pabilo8.immersiveintelligence.common.item.tools.backpack.ItemIIBackpackBase;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.Collections;
+import java.util.Set;
+import java.util.WeakHashMap;
 
 /**
+ * Renders backpacks attached to chestplates or worn in the Baubles body slot.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 04.11.2026
  * @since 15.04.2021
  */
-public class IIBipedWearableLayerRenderer implements LayerRenderer<EntityLivingBase>
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+public class IIBipedWearableLayerRenderer<T extends EntityLivingBase> implements LayerRenderer<T>
 {
-	public static boolean rendersAssigned = false;
-	public static Map<UUID, Pair<ItemStack, Integer>> ADVANCED_POWERPACK_PLAYERS = new HashMap<>();
+	private static final Set<RenderLivingBase<?>> REGISTERED = Collections.newSetFromMap(new WeakHashMap<>());
+	private final RenderLivingBase<T> renderer;
 
-	public static void addWornAdvancedPowerpack(EntityLivingBase living, ItemStack powerpack)
+	/**
+	 * Adds the backpack layer to a biped renderer once or after its layers are rebuilt.
+	 */
+	public static <T extends EntityLivingBase> void install(RenderLivingBase<T> renderer, boolean rebuilt)
 	{
-		ADVANCED_POWERPACK_PLAYERS.put(living.getUniqueID(), Pair.of(powerpack, 5));
+		if(renderer.getMainModel() instanceof ModelBiped&&(REGISTERED.add(renderer)||rebuilt))
+			renderer.addLayer(new IIBipedWearableLayerRenderer<>(renderer));
 	}
 
 	@Override
-	public void doRenderLayer(EntityLivingBase living, float limbSwing, float prevLimbSwing, float partialTicks, float rotation, float yaw, float pitch, float scale)
+	public void doRenderLayer(T living, float limbSwing, float limbAmount, float partialTicks, float age, float yaw, float pitch, float scale)
 	{
-		if(!living.getItemStackFromSlot(EntityEquipmentSlot.CHEST).isEmpty()&&ItemNBTHelper.hasKey(living.getItemStackFromSlot(EntityEquipmentSlot.CHEST), IIContent.NBT_AdvancedPowerpack))
-		{
-			ItemStack powerpack = ItemNBTHelper.getItemStack(living.getItemStackFromSlot(EntityEquipmentSlot.CHEST), IIContent.NBT_AdvancedPowerpack);
-			addWornAdvancedPowerpack(living, powerpack);
-		}
+		ItemStack chest = living.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
+		if(chest.getItem() instanceof ItemIIBackpackBase)
+			return;
 
-		if(ADVANCED_POWERPACK_PLAYERS.containsKey(living.getUniqueID()))
-		{
-			Pair<ItemStack, Integer> entry = ADVANCED_POWERPACK_PLAYERS.get(living.getUniqueID());
-			renderAdvancedPowerpack(entry.getLeft(), living, limbSwing, prevLimbSwing, partialTicks, rotation, yaw, pitch, scale);
-			int time = entry.getValue()-1;
-			if(time <= 0)
-				ADVANCED_POWERPACK_PLAYERS.remove(living.getUniqueID());
-			else
-				ADVANCED_POWERPACK_PLAYERS.put(living.getUniqueID(), Pair.of(entry.getLeft(), time));
-		}
-	}
+		ItemStack backpack = ItemIIBackpackBase.getAttachedBackpack(chest);
+		if(backpack.isEmpty()&&IICompatModule.baubles&&living instanceof EntityPlayer)
+			backpack = BaublesHelper.getBodyBauble((EntityPlayer)living);
 
-	private void renderAdvancedPowerpack(ItemStack powerpack, EntityLivingBase living, float limbSwing, float prevLimbSwing, float partialTicks, float rotation, float yaw, float pitch, float scale)
-	{
-		if(!powerpack.isEmpty())
+		if(backpack.getItem() instanceof ItemIIBackpackBase&&renderer.getMainModel() instanceof ModelBiped)
 		{
-			GlStateManager.pushMatrix();
-			ModelBiped model = IIContent.itemAdvancedPowerPack.getArmorModel(living, powerpack, EntityEquipmentSlot.CHEST, null);
-			ClientUtils.bindTexture(IIContent.itemAdvancedPowerPack.getArmorTexture(powerpack, living, EntityEquipmentSlot.CHEST, null));
-			model.render(living, limbSwing, prevLimbSwing, rotation, yaw, pitch, scale);
-			GlStateManager.popMatrix();
+			IIArmorRenderer<?> model = IIArmorRenderer.get(backpack);
+			if(model!=null)
+			{
+				IIClientUtils.bindAtlas();
+				model.renderOnBiped(backpack, living, (ModelBiped)renderer.getMainModel(), partialTicks, scale);
+			}
 		}
 	}
 

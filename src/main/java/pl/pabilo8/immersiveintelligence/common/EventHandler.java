@@ -1,7 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common;
 
 import blusunrize.immersiveengineering.api.MultiblockHandler.MultiblockFormEvent.Post;
-import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
+import blusunrize.immersiveengineering.common.util.IEDamageSources.ElectricDamageSource;
 import blusunrize.immersiveengineering.common.util.inventory.IIEInventory;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -14,13 +14,9 @@ import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EntityDamageSourceIndirect;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.util.*;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.GameRules.ValueType;
-import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.GameRuleChangeEvent;
@@ -68,6 +64,9 @@ import pl.pabilo8.immersiveintelligence.common.entity.mounted_weapon.EntityMount
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleSeat;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine;
 import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIILightEngineerBoots;
+import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIIRadioTuner;
+import pl.pabilo8.immersiveintelligence.common.item.tools.backpack.ItemIIAdvancedPowerPack;
+import pl.pabilo8.immersiveintelligence.common.item.tools.backpack.ItemIIBackpackBase;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBlockDamageSync;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIIGameruleUpdate;
@@ -81,6 +80,7 @@ import pl.pabilo8.immersiveintelligence.common.util.item.IIItemUtils;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradeableArmor;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Handles events for server side.
@@ -341,6 +341,15 @@ public class EventHandler
 	{
 		EntityPlayer player = event.getEntityPlayer();
 
+		ItemStack held = player.getHeldItem(event.getHand());
+		if(held.getItem() instanceof ItemIIRadioTuner
+				&&((ItemIIRadioTuner)held.getItem()).tuneEntity(player, event.getHand(), event.getTarget()))
+		{
+			event.setCancellationResult(EnumActionResult.SUCCESS);
+			event.setCanceled(true);
+			return;
+		}
+
 		//Display upgrade GUI for compatible entities when using a wrench
 		if(IIItemUtils.isWrench(player.getHeldItem(EnumHand.MAIN_HAND))||IIItemUtils.isWrench(player.getHeldItem(EnumHand.OFF_HAND)))
 		{
@@ -363,25 +372,28 @@ public class EventHandler
 	}
 
 
-	//--- Hanses ---//
+	//--- Backpacks ---//
 
 	@SubscribeEvent(priority = EventPriority.LOW)
 	public void onLivingUpdate(LivingUpdateEvent event)
 	{
 		EntityLivingBase living = event.getEntityLiving();
-		World world = living.world;
-
-		if(world.isRemote||!(living instanceof EntityPlayer))
+		if(living.world.isRemote)
 			return;
 
-		EntityPlayer player = (EntityPlayer)living;
-		//Handle powerpack crafted with armor
-		if(!living.getItemStackFromSlot(EntityEquipmentSlot.CHEST).isEmpty()
-				&&ItemNBTHelper.hasKey(living.getItemStackFromSlot(EntityEquipmentSlot.CHEST), IIContent.NBT_AdvancedPowerpack))
+		ItemStack chest = living.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
+		if(chest.getItem() instanceof ItemIIBackpackBase)
 		{
-			ItemStack powerpack = ItemNBTHelper.getItemStack(living.getItemStackFromSlot(EntityEquipmentSlot.CHEST), IIContent.NBT_AdvancedPowerpack);
-			if(!powerpack.isEmpty())
-				powerpack.getItem().onArmorTick(living.getEntityWorld(), player, powerpack);
+			// Player equipment ticks through ItemArmor.
+			if(!(living instanceof EntityPlayer))
+				((ItemIIBackpackBase)chest.getItem()).onWornTick(living, chest);
+		}
+		else
+		{
+			ItemStack backpack = ItemIIBackpackBase.getAttachedBackpack(chest);
+			if(backpack.getItem() instanceof ItemIIBackpackBase
+					&&((ItemIIBackpackBase)backpack.getItem()).onWornTick(living, backpack))
+				ItemIIBackpackBase.setAttachedBackpack(chest, backpack);
 		}
 	}
 
@@ -406,6 +418,24 @@ public class EventHandler
 		chest = entity.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
 		legs = entity.getItemStackFromSlot(EntityEquipmentSlot.LEGS);
 		boots = entity.getItemStackFromSlot(EntityEquipmentSlot.FEET);
+
+		if(!entity.world.isRemote&&event.getSource() instanceof ElectricDamageSource)
+		{
+			ItemStack attached = ItemIIBackpackBase.getAttachedBackpack(chest);
+			ItemStack backpack = attached;
+			if(!(backpack.getItem() instanceof ItemIIAdvancedPowerPack)&&IICompatModule.baubles&&entity instanceof EntityPlayer)
+				backpack = BaublesHelper.getBodyBauble((EntityPlayer)entity);
+			if(backpack.getItem() instanceof ItemIIAdvancedPowerPack)
+			{
+				ElectricDamageSource source = (ElectricDamageSource)event.getSource();
+				((ItemIIAdvancedPowerPack)backpack.getItem()).onStrike(backpack, EntityEquipmentSlot.CHEST, entity,
+						Collections.emptyMap(), source, source.source);
+				if(backpack==attached)
+					ItemIIBackpackBase.setAttachedBackpack(chest, backpack);
+				event.setCanceled(true);
+				return;
+			}
+		}
 
 		//plates - deflect arrows like a shield
 		if(event.getSource() instanceof EntityDamageSourceIndirect&&event.getSource().getImmediateSource() instanceof EntityArrow)

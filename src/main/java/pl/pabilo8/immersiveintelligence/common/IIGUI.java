@@ -51,6 +51,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoPlayerGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoResource;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTemplate;
 import pl.pabilo8.immersiveintelligence.client.gui.entity.GuiEntityUpgrade;
+import pl.pabilo8.immersiveintelligence.client.gui.item.GuiBackpack;
 import pl.pabilo8.immersiveintelligence.client.gui.item.GuiCasingPouch;
 import pl.pabilo8.immersiveintelligence.client.gui.item.GuiClipboardItem;
 import pl.pabilo8.immersiveintelligence.client.gui.item.GuiPrintedPage;
@@ -208,7 +209,9 @@ public enum IIGUI implements ISerializableEnum
 	INVENTORY_INTERFACE(TileEntityInventoryInterface.class, ContainerInventoryInterface::getMainGui),
 	INVENTORY_INTERFACE_EDIT(TileEntityInventoryInterface.class, ContainerInventoryInterface::getEditGui),
 	INVENTORY_INTERFACE_OUTPUT(TileEntityInventoryInterface.class, ContainerInventoryInterface::getOutputGui),
-	INVENTORY_INTERFACE_VALUE(TileEntityInventoryInterface.class, ContainerInventoryInterface::getOutputGui);
+	INVENTORY_INTERFACE_VALUE(TileEntityInventoryInterface.class, ContainerInventoryInterface::getOutputGui),
+
+	BACKPACK((player, stack, hand) -> stack.getItem()==IIContent.itemBackpack?new ContainerBackpack(player, stack, hand): null);
 
 	public final Class<? extends TileEntity> teClass;
 	public final Class<? extends Entity> entityClass;
@@ -375,6 +378,7 @@ public enum IIGUI implements ISerializableEnum
 		IIGUI.PRINTED_PAGE_BOOK.setClientStackGui(GuiPrintedPage::new);
 
 		IIGUI.CASING_POUCH.setClientStackGui(GuiCasingPouch::new);
+		IIGUI.BACKPACK.setClientStackGui((player, stack, hand) -> stack.getItem()==IIContent.itemBackpack?new GuiBackpack(player, stack, hand): null);
 		IIGUI.CLIPBOARD_ITEM.setClientStackGui(GuiClipboardItem::new);
 		IIGUI.CLIPBOARD_BLOCK.setClientTileGui(GuiClipboardBlock::new);
 

@@ -73,7 +73,7 @@ import pl.pabilo8.immersiveintelligence.common.item.data.ItemIISmallWireCoil;
 import pl.pabilo8.immersiveintelligence.common.item.mechanical.ItemIIMotorBelt;
 import pl.pabilo8.immersiveintelligence.common.item.mechanical.ItemIIMotorGear;
 import pl.pabilo8.immersiveintelligence.common.item.tools.*;
-import pl.pabilo8.immersiveintelligence.common.item.tools.backpack.ItemIIAdvancedPowerPack;
+import pl.pabilo8.immersiveintelligence.common.item.tools.backpack.*;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.*;
 import pl.pabilo8.immersiveintelligence.common.util.IBatchOredictRegister;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
@@ -319,6 +319,10 @@ public class IIContent
 	);
 	//Backpacks
 	public static final ItemIIAdvancedPowerPack itemAdvancedPowerPack = new ItemIIAdvancedPowerPack();
+	public static final ItemIIBackPack itemBackpack = new ItemIIBackPack();
+	public static final ItemIIFluidPack itemFluidPack = new ItemIIFluidPack();
+	public static final ItemIIParachutePack itemParachutePack = new ItemIIParachutePack();
+	public static final ItemIIRadioPack itemRadioPack = new ItemIIRadioPack();
 	public static final String NBT_AdvancedPowerpack = "II:Powerpack";
 	//Data
 	@IBatchOredictRegister(oreDict = "punchtape")

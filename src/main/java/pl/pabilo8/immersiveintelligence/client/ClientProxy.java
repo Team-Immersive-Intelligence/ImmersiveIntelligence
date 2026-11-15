@@ -12,15 +12,12 @@ import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IColoured
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
 import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
 import blusunrize.immersiveengineering.common.items.IEItemInterfaces.IColouredItem;
-import blusunrize.immersiveengineering.common.items.IEItemInterfaces.IGuiItem;
 import blusunrize.immersiveengineering.common.items.ItemIEBase;
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.entity.Render;
-import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.resources.IReloadableResourceManager;
@@ -78,7 +75,10 @@ import pl.pabilo8.immersiveintelligence.client.model.item.ModelMeasuringCup.Meas
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.render.ammunition.*;
 import pl.pabilo8.immersiveintelligence.client.render.ammunition.NavalMineRenderer.NavalMineItemstackRenderer;
-import pl.pabilo8.immersiveintelligence.client.render.entity.*;
+import pl.pabilo8.immersiveintelligence.client.render.armor.*;
+import pl.pabilo8.immersiveintelligence.client.render.entity.DroneRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.entity.MineSignRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.entity.SkyCrateRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.entity.hans.HansRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.entity.vehicle.*;
 import pl.pabilo8.immersiveintelligence.client.render.entity.weapon.MachinegunRenderer;
@@ -164,7 +164,10 @@ import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -176,6 +179,7 @@ import java.util.*;
 public class ClientProxy extends CommonProxy
 {
 	public static KeyBinding keybindManualReload, keybindArmorHelmet, keybindArmorExosuit, keybindZoom;
+	public static KeyBinding keybindParachute;
 	public static KeyBinding keybindVehicleEngine, keybindVehicleClutch, keybindVehicleTowing;
 	public static KeyBinding keybindVehicleGearUp, keybindVehicleGearDown, keybindVehicleReductionSwitch;
 	public static KeyBinding keybindVehicleGunUp, keybindVehicleGunDown, keybindVehicleGunLeft, keybindVehicleGunRight;
@@ -328,9 +332,9 @@ public class ClientProxy extends CommonProxy
 			return null;
 		}
 
-		EnumHand hand;
+		EnumHand hand = getItemGuiHand(player, ID);
 		TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
-		ItemStack stack = player.getHeldItem(hand = (player.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof IGuiItem?EnumHand.MAIN_HAND: EnumHand.OFF_HAND));
+		ItemStack stack = player.getHeldItem(hand);
 		Entity entity = y==Integer.MIN_VALUE?world.getEntityByID(x): null;
 
 		if(ID==IIGUI.UPGRADE_TILE.ordinal()&&te instanceof IUpgradableDevice)
@@ -416,7 +420,7 @@ public class ClientProxy extends CommonProxy
 		registerEntityRenderer(EntityFlare.class, EntityRenderNone::new);
 
 		registerEntityRenderer(EntityHans.class, HansRenderer::new);
-		registerEntityRenderer(EntityParachute.class, ParachuteRenderer::new);
+		registerEntityRenderer(EntityParachute.class, EntityRenderNone::new);
 		registerEntityRenderer(EntityAMTTactile.class, EntityRenderNone::new);
 		registerEntityRenderer(EntityTactileLivingBase.class, EntityRenderNone::new);
 
@@ -435,6 +439,13 @@ public class ClientProxy extends CommonProxy
 		new ElectricWirecutterRenderer();
 		//TODO: 22.09.2024 mine detector renderer
 		new ClipboardRenderer();
+
+		//Armour
+		new AdvancedPowerPackRenderer();
+		new FluidPackRenderer();
+		new ParachutePackRenderer();
+		new BackpackRenderer();
+		new RadioPackRenderer();
 
 		for(IAmmoTypeItem<?, ?> bullet : AmmoRegistry.getAllAmmoItems())
 		{
@@ -677,6 +688,8 @@ public class ClientProxy extends CommonProxy
 				.withContext(KeyConflictContext.IN_GAME).register();
 		keybindZoom = new IIKeybind("mgScope", Keyboard.KEY_Z, IIKeybind.CATEGORY_GAMEPLAY)
 				.withContext(KeyConflictContext.IN_GAME).register();
+		keybindParachute = new IIKeybind("parachute", Keyboard.KEY_P, IIKeybind.CATEGORY_GAMEPLAY)
+				.withContext(KeyConflictContext.IN_GAME).register();
 
 		//Vehicle Keybinds
 		keybindVehicleEngine = new IIKeybind("vehicle.engine.toggle", Keyboard.KEY_R, IIKeybind.CATEGORY_VEHICLES)
@@ -723,13 +736,6 @@ public class ClientProxy extends CommonProxy
 	public void postInit(FMLPostInitializationEvent event)
 	{
 		super.postInit(event);
-
-		//Render Layers
-		Map<String, RenderPlayer> skinMap = Minecraft.getMinecraft().getRenderManager().getSkinMap();
-		RenderPlayer render = skinMap.get("default");
-		render.addLayer(new IIBipedWearableLayerRenderer());
-		render = skinMap.get("slim");
-		render.addLayer(new IIBipedWearableLayerRenderer());
 
 		//Load Manual Pages
 		IILogger.info("Registering II Manual Pages.");

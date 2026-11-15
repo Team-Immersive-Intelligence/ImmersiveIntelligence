@@ -1,0 +1,25 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "L L",
+    "PCP",
+    "L L"
+  ],
+  "key": {
+    "L": {
+      "type": "forge:ore_dict",
+      "ore": "leather"
+    },
+    "P": {
+      "type": "forge:ore_dict",
+      "ore": "plateIron"
+    },
+    "C": {
+      "item": "immersiveengineering:wooden_device0",
+      "data": 0
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:backpack"
+  }
+}

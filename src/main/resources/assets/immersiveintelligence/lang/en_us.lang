@@ -243,7 +243,11 @@ item.immersiveintelligence.light_engineer_armor_leggings.name=Engineer's Light L
 item.immersiveintelligence.light_engineer_armor_boots.name=Engineer's Light Boots
 item.immersiveintelligence.brass_horse_armor.name=Brass Horse Armor
 item.immersiveintelligence.steel_horse_armor.name=Steel Horse Armor
-item.immersiveintelligence.advanced_powerpack.name=Improved Capacitor Backpack
+item.immersiveintelligence.advanced_powerpack.name=Advanced Capacitor Backpack
+item.immersiveintelligence.backpack.name=Backpack
+item.immersiveintelligence.fluid_backpack.name=Canister Backpack
+item.immersiveintelligence.parachute_backpack.name=Parachute Backpack
+item.immersiveintelligence.radio_backpack.name=Radio Backpack
 
 item.immersiveintelligence.lighter.name=Engineer's Lighter
 item.immersiveintelligence.measuring_cup.name=Engineer's Measuring Cup
@@ -1345,6 +1349,8 @@ desc.immersiveintelligence.multiblock_item=Check Engineer's Manual on how to bui
 desc.immersiveintelligence.radio_configurator_basic=Allows changing the frequency of basic radio devices.
 desc.immersiveintelligence.radio_configurator_advanced=An upgraded radio tuner, allows setting even higher frequencies.
 desc.immersiveintelligence.radio_configurator_frequency=Frequency: %s
+desc.immersiveintelligence.fluid_backpack_empty=Empty
+desc.immersiveintelligence.fluid_backpack_contents=%s (%s / %s mB)
 desc.immersiveintelligence.radio_configurator_max_frequency=Max Frequency: %s
 desc.immersiveintelligence.naval_mine_chain_length=Max Chain Length: %s
 desc.immersiveintelligence.measuring_cup_size=Capacity: %s / %s mB
@@ -2961,6 +2967,7 @@ desc.immersiveengineering.info.blueprint.bullet_magazines=Bullet Magazines
 key.immersiveintelligence.manualReload=Manual Reload
 key.immersiveintelligence.armorHelmet=Toggle Light Engineer Armor Headgear
 key.immersiveintelligence.armorExosuit=Toggle Light Engineer Armor Exoskeleton
+key.immersiveintelligence.parachute=Deploy Parachute
 
 key.immersiveintelligence.manualLookup=Find Engineer's Manual Page for Hovered Item
 

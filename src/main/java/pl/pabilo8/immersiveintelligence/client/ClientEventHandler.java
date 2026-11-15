@@ -98,6 +98,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.tooltip.*;
 import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageBase;
 import pl.pabilo8.immersiveintelligence.client.model.IIModelRegistry;
 import pl.pabilo8.immersiveintelligence.client.render.IPassengerAnimationsRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.entity.IIBipedWearableLayerRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.item.BinocularsRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.item.ISpecificHandRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.item.MineDetectorRenderer;
@@ -114,10 +115,12 @@ import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProje
 import pl.pabilo8.immersiveintelligence.common.entity.mounted_weapon.EntityMountedWeapon;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleSeat;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIIPrintedPage.PageType;
+import pl.pabilo8.immersiveintelligence.common.item.tools.backpack.ItemIIBackpackBase;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIGunBase;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIRailgunOverride;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageDiplomacySync;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageItemKeybind;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageItemScrollableSwitch;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageManualClose;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
@@ -760,6 +763,12 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	}
 
 	@SubscribeEvent
+	public void onRenderLiving(RenderLivingEvent.Pre<?> event)
+	{
+		IIBipedWearableLayerRenderer.install(event.getRenderer(), false);
+	}
+
+	@SubscribeEvent
 	public void onItemTooltip(ItemTooltipEvent event)
 	{
 		ItemStack stack = event.getItemStack();
@@ -777,10 +786,14 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 
 		if(stack.getItem() instanceof IAmmoTypeItem)
 			IIAmmoUtils.createAmmoTooltip((IAmmoTypeItem<?, ?>)stack.getItem(), stack, event.getEntity().world, event.getToolTip());
-		else if(ItemNBTHelper.hasKey(stack, IIContent.NBT_AdvancedPowerpack))
+		else
 		{
-			ItemStack powerpack = ItemNBTHelper.getItemStack(stack, IIContent.NBT_AdvancedPowerpack);
-			IIContent.itemAdvancedPowerPack.addInformation(powerpack, event.getEntity().world, event.getToolTip(), event.getFlags());
+			ItemStack backpack = ItemIIBackpackBase.getAttachedBackpack(stack);
+			if(!backpack.isEmpty())
+			{
+				event.getToolTip().add(TextFormatting.GRAY+backpack.getDisplayName());
+				backpack.getItem().addInformation(backpack, event.getEntity().world, event.getToolTip(), event.getFlags());
+			}
 		}
 	}
 
@@ -1105,6 +1118,9 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 
 		if(mc.world!=null&&mc.player!=null)
 		{
+			if(ClientProxy.keybindParachute.isPressed()&&mc.currentScreen==null)
+				IIPacketHandler.sendToServer(new MessageItemKeybind(MessageItemKeybind.KEYBIND_PARACHUTE));
+
 			//Make close bullets produce a whistling sound
 			if(Weapons.bulletsWhistleSound)
 			{

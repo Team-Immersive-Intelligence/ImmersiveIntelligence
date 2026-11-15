@@ -167,7 +167,8 @@ public class IIManualCategoryData extends IIManualCategory
 				.addSource("basic_radio_tuner", getSourceForItem(IIContent.itemRadioTuner.getStack(1)))
 				.addSource("advanced_radio_tuner", getSourceForItem(new ItemStack(IIContent.itemRadioTuner, 1, 1)
 				));
-		addEntry("radio_backpack");
+		addEntry("radio_backpack")
+				.addSource("radio_backpack", getSourceForItem(new ItemStack(IIContent.itemRadioPack)));
 		addEntry("printing_press")
 				.addSource("paper_page", getSourceForRecipe(MetalPressRecipeAdapter.class,
 						new IngredientStack("paper"), new ItemStack(IEContent.itemMold, 1, 0)));

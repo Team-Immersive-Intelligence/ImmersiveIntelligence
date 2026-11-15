@@ -11,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.server.SPacketTitle;
 import net.minecraft.network.play.server.SPacketTitle.Type;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -21,6 +22,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.data.radio.IRadioDevice;
+import pl.pabilo8.immersiveintelligence.api.data.radio.RadioNetwork;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IItemScrollable;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
@@ -100,42 +102,59 @@ public class ItemIIRadioTuner extends ItemIISubItemsBase<RadioTuners> implements
 	@Nonnull
 	public EnumActionResult onItemUse(@Nonnull EntityPlayer player, @Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ)
 	{
-		if(worldIn.isRemote)
-			return EnumActionResult.FAIL;
-
 		TileEntity tile = worldIn.getTileEntity(pos);
-		if(tile instanceof IRadioDevice)
+		if(!(tile instanceof IRadioDevice))
+			return EnumActionResult.PASS;
+
+		if(!worldIn.isRemote)
 		{
-			ItemStack stack = player.getHeldItem(hand);
-
-			int frequency = ItemNBTHelper.getInt(stack, TAG_FREQUENCY);
-			IRadioDevice device = (IRadioDevice)tile;
-			int maxFrequency = device.isBasicRadio()?IIConfig.radioBasicMaxFrequency: IIConfig.radioAdvancedMaxFrequency;
-
-			if(!player.isSneaking()) //set frequency
-			{
-				if(frequency > maxFrequency)
-					IIPacketHandler.sendChatTranslation(player, IIReference.INFO_KEY+"frequency_invalid", maxFrequency);
-				else
-				{
-					device.setFrequency(frequency);
-					IIPacketHandler.sendChatTranslation(player, IIReference.INFO_KEY+"frequency_set", device.getFrequency());
-				}
-			}
-			else //get frequency
-			{
-				ItemNBTHelper.setInt(stack, TAG_FREQUENCY, frequency);
-				sendSetFrequencyPacket(((EntityPlayerMP)player), frequency);
-			}
-
-			//sync
-			IIPacketHandler.sendToClient(tile, new MessageIITileSync(((TileEntityIEBase)tile)));
-			return EnumActionResult.SUCCESS;
+			tuneRadio(player, hand, (IRadioDevice)tile);
+			if(tile instanceof TileEntityIEBase)
+				IIPacketHandler.sendToClient(tile, new MessageIITileSync((TileEntityIEBase)tile));
 		}
+		return EnumActionResult.SUCCESS;
+	}
+
+	@Override
+	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand)
+	{
+		return new ActionResult<>(tuneEntity(player, hand, player)?EnumActionResult.SUCCESS: EnumActionResult.PASS,
+				player.getHeldItem(hand));
+	}
+
+	/**
+	 * Sets or reads the frequency of the first radio provided by an entity.
+	 */
+	public boolean tuneEntity(EntityPlayer player, EnumHand hand, Entity target)
+	{
+		for(IRadioDevice radio : RadioNetwork.getEntityRadios(target))
+		{
+			if(!player.world.isRemote)
+				tuneRadio(player, hand, radio);
+			return true;
+		}
+		return false;
+	}
+
+	private void tuneRadio(EntityPlayer player, EnumHand hand, IRadioDevice device)
+	{
+		ItemStack stack = player.getHeldItem(hand);
+		int frequency = ItemNBTHelper.getInt(stack, TAG_FREQUENCY);
+		int maxFrequency = device.isBasicRadio()?IIConfig.radioBasicMaxFrequency: IIConfig.radioAdvancedMaxFrequency;
+		if(player.isSneaking())
+		{
+			frequency = device.getFrequency();
+			ItemNBTHelper.setInt(stack, TAG_FREQUENCY, frequency);
+			if(player instanceof EntityPlayerMP)
+				sendSetFrequencyPacket((EntityPlayerMP)player, frequency);
+		}
+		else if(frequency > maxFrequency)
+			IIPacketHandler.sendChatTranslation(player, IIReference.INFO_KEY+"frequency_invalid", maxFrequency);
 		else
-
-
-			return EnumActionResult.FAIL;
+		{
+			device.setFrequency(frequency);
+			IIPacketHandler.sendChatTranslation(player, IIReference.INFO_KEY+"frequency_set", device.getFrequency());
+		}
 	}
 
 	@Override

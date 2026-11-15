@@ -81,6 +81,7 @@ import pl.pabilo8.immersiveintelligence.api.ammocrate.AmmunitionCrateHandler;
 import pl.pabilo8.immersiveintelligence.api.crafting.DustUtils;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataOperationUtils;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataTypeUtils;
+import pl.pabilo8.immersiveintelligence.api.data.radio.RadioNetwork;
 import pl.pabilo8.immersiveintelligence.api.protection.protection.CorrosionHandler;
 import pl.pabilo8.immersiveintelligence.api.protection.protection.capability.ProtectionCapabilities;
 import pl.pabilo8.immersiveintelligence.api.rotary.CapabilityRotaryEnergy;
@@ -97,7 +98,7 @@ import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIOre.Ores;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIISmallCrate;
 import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
 import pl.pabilo8.immersiveintelligence.common.crafting.IIRecipes;
-import pl.pabilo8.immersiveintelligence.common.crafting.RecipePowerpackAdvanced;
+import pl.pabilo8.immersiveintelligence.common.crafting.RecipeBackpackArmor;
 import pl.pabilo8.immersiveintelligence.common.crafting.RecipeSkinCraftingHandler;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityParachute;
@@ -133,6 +134,7 @@ import pl.pabilo8.immersiveintelligence.common.gui.ContainerEntityUpgrade;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerTileUpgrade;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIIMinecart.Minecarts;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMaterialDust.MaterialsDust;
+import pl.pabilo8.immersiveintelligence.common.item.tools.backpack.ItemIIBackpackBase;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.util.IBatchOredictRegister;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
@@ -403,14 +405,22 @@ public class CommonProxy implements IGuiHandler
 
 		event.getRegistry().register(new RecipeSkinCraftingHandler().setRegistryName(ImmersiveIntelligence.MODID, "contributor_skin"));
 
-		event.getRegistry().register(new RecipePowerpackAdvanced().setRegistryName(ImmersiveIntelligence.MODID, "powerpack_advanced"));
-		assert IIContent.itemAdvancedPowerPack.getRegistryName()!=null;
-		if(Arrays.stream(Tools.powerpack_blacklist).noneMatch(s -> s.equals(IIContent.itemAdvancedPowerPack.getRegistryName().toString())))
-		{
-			List<String> collect = new ArrayList<>(Arrays.asList(Tools.powerpack_blacklist));
-			collect.add(IIContent.itemAdvancedPowerPack.getRegistryName().toString());
-			Tools.powerpack_blacklist = collect.toArray(new String[0]);
-		}
+		for(Item item : IIContent.ITEMS)
+			if(item instanceof ItemIIBackpackBase)
+			{
+				String name = item.getRegistryName().getResourcePath();
+				String recipeName = item==IIContent.itemAdvancedPowerPack?"powerpack_advanced": name+"_armor";
+				event.getRegistry().register(new RecipeBackpackArmor((ItemIIBackpackBase)item)
+						.setRegistryName(ImmersiveIntelligence.MODID, recipeName));
+				// Prevent IE's powerpack recipe from treating a backpack as a chestplate.
+				String registryName = item.getRegistryName().toString();
+				if(!Arrays.asList(Tools.powerpack_blacklist).contains(registryName))
+				{
+					List<String> blacklist = new ArrayList<>(Arrays.asList(Tools.powerpack_blacklist));
+					blacklist.add(registryName);
+					Tools.powerpack_blacklist = blacklist.toArray(new String[0]);
+				}
+			}
 
 		VehicleFuelHandler.addVehicle(EntityMotorbike.class, FluidRegistry.getFluid("diesel"), FluidRegistry.getFluid("biodiesel"));
 		VehicleFuelHandler.addVehicle(EntityTrackedMotorbike.class, FluidRegistry.getFluid("diesel"), FluidRegistry.getFluid("biodiesel"));
@@ -503,6 +513,13 @@ public class CommonProxy implements IGuiHandler
 			return;
 		IGuiItem gui = (IGuiItem)stack.getItem();
 		player.openGui(ImmersiveIntelligence.INSTANCE, gui.getGuiID(stack), player.world, (int)player.posX, (int)player.posY, (int)player.posZ);
+	}
+
+	protected static EnumHand getItemGuiHand(EntityPlayer player, int id)
+	{
+		Item main = player.getHeldItemMainhand().getItem();
+		boolean useMainHand = id==IIGUI.BACKPACK.ordinal()?main==IIContent.itemBackpack: main instanceof IGuiItem;
+		return useMainHand?EnumHand.MAIN_HAND: EnumHand.OFF_HAND;
 	}
 
 	//--- GUI Handling ---//
@@ -618,6 +635,7 @@ public class CommonProxy implements IGuiHandler
 		NBTSerialisation.preInit();
 
 		CapabilityRotaryEnergy.register();
+		RadioNetwork.registerCapability();
 		ProtectionCapabilities.register();
 		CapabilityChunkOwnership.register();
 		IEApi.prefixToIngotMap.put("spring", new Integer[]{2, 1});
@@ -932,9 +950,9 @@ public class CommonProxy implements IGuiHandler
 			return null;
 		}
 
-		EnumHand hand;
+		EnumHand hand = getItemGuiHand(player, ID);
 		TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
-		ItemStack stack = player.getHeldItem(hand = (player.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof IGuiItem?EnumHand.MAIN_HAND: EnumHand.OFF_HAND));
+		ItemStack stack = player.getHeldItem(hand);
 		Entity entity = y==Integer.MIN_VALUE?world.getEntityByID(x): null;
 
 		if(ID==IIGUI.UPGRADE_TILE.ordinal()&&te instanceof IUpgradableDevice)

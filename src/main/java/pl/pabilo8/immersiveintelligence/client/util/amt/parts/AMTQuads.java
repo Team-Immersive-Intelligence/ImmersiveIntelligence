@@ -127,6 +127,7 @@ public class AMTQuads extends AMT
 	{
 		super.applyProperties(nbt);
 		nbt.checkSetBoolean("lighting", this::setLighting);
+		nbt.checkSetColor("bakedColor", iiColor -> this.bakedColor = iiColor);
 	}
 
 	@Override

@@ -133,6 +133,12 @@ public class AMTModelHeader
 		}
 	}
 
+	public AMTModelHeader withPartProperties(String name, EasyNBT nbt)
+	{
+		properties.put(name, properties.getOrDefault(name, EasyNBT.newNBT()).mergeWith(nbt));
+		return this;
+	}
+
 	/**
 	 * Joins multiple headers into one
 	 *

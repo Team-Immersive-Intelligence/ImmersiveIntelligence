@@ -14,9 +14,13 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.compat.BaublesHelper;
+import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine;
 import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIILightEngineerHelmet;
 import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIILightEngineerLeggings;
+import pl.pabilo8.immersiveintelligence.common.item.tools.backpack.ItemIIBackpackBase;
+import pl.pabilo8.immersiveintelligence.common.item.tools.backpack.ItemIIParachutePack;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIGunBase;
 import pl.pabilo8.immersiveintelligence.common.network.IIMessage;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -31,6 +35,7 @@ public class MessageItemKeybind extends IIMessage
 	public static final int KEYBIND_GUN_RELOAD = 0;
 	public static final int KEYBIND_HEADGEAR = 1;
 	public static final int KEYBIND_EXOSKELETON = 2;
+	public static final int KEYBIND_PARACHUTE = 3;
 
 	private int id;
 
@@ -83,6 +88,17 @@ public class MessageItemKeybind extends IIMessage
 					ItemNBTHelper.setInt(equipped, "exoskeletonMode", mode = IIUtils.cycleInt(!player.isSneaking(), mode, 0, 2));
 					IIPacketHandler.sendChatTranslation(player, IIReference.INFO_KEY+"exoskeleton."+mode);
 				}
+			}
+			break;
+			case KEYBIND_PARACHUTE:
+			{
+				equipped = player.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
+				if(!(equipped.getItem() instanceof ItemIIParachutePack))
+					equipped = ItemIIBackpackBase.getAttachedBackpack(equipped);
+				if(!(equipped.getItem() instanceof ItemIIParachutePack)&&IICompatModule.baubles)
+					equipped = BaublesHelper.getBodyBauble(player);
+				if(equipped.getItem() instanceof ItemIIParachutePack)
+					((ItemIIParachutePack)equipped.getItem()).deployParachute(player);
 			}
 			break;
 		}

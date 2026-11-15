@@ -1,0 +1,20 @@
+{
+  "origins": {
+    "body": [
+      0.3487,
+      17.2304,
+      -6.0682
+    ],
+    "slot_item": [
+      -6.5,
+      16,
+      -5
+    ]
+  },
+  "hierarchy": {
+    "slot_item": "body"
+  },
+  "types": {
+    "slot_item": "locator"
+  }
+}

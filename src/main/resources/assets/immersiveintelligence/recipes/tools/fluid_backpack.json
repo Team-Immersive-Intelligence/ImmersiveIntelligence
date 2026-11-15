@@ -1,0 +1,19 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "S S",
+    "SBS"
+  ],
+  "key": {
+    "S": {
+      "type": "forge:ore_dict",
+      "ore": "plateSteel"
+    },
+    "B": {
+      "item": "immersiveintelligence:backpack"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:fluid_backpack"
+  }
+}

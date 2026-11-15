@@ -460,7 +460,7 @@ public class TileEntityFlagpole extends TileEntityMultiblockIIConnectable<TileEn
 	}
 
 	@Override
-	public DimensionBlockPos getDevicePosition()
+	public DimensionBlockPos getRadioDevicePosition()
 	{
 		TileEntityFlagpole target = isDummy()?master(): this;
 		return new DimensionBlockPos(target==null?getPos(): target.getPos(), world);

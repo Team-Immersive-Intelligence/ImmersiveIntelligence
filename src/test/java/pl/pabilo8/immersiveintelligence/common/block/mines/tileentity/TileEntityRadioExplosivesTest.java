@@ -52,9 +52,9 @@ public class TileEntityRadioExplosivesTest extends GameTestBasic
 		when(sender.isRadioAvailable()).thenReturn(true);
 		when(sender.canRelayRadio()).thenReturn(true);
 		when(sender.getRange()).thenReturn(100f);
-		when(sender.getDevicePosition()).thenReturn(new DimensionBlockPos(0, 0, 0, 0));
+		when(sender.getRadioDevicePosition()).thenReturn(new DimensionBlockPos(0, 0, 0, 0));
 		when(receiver.isRadioAvailable()).thenReturn(true);
-		when(receiver.getDevicePosition()).thenReturn(new DimensionBlockPos(1, 0, 0, 0));
+		when(receiver.getRadioDevicePosition()).thenReturn(new DimensionBlockPos(1, 0, 0, 0));
 		RadioNetwork.INSTANCE.addDevice(sender);
 		RadioNetwork.INSTANCE.addDevice(explosives);
 		RadioNetwork.INSTANCE.addDevice(receiver);
@@ -115,7 +115,7 @@ public class TileEntityRadioExplosivesTest extends GameTestBasic
 		}
 
 		@Override
-		public DimensionBlockPos getDevicePosition()
+		public DimensionBlockPos getRadioDevicePosition()
 		{
 			return new DimensionBlockPos(0, 0, 0, 0);
 		}

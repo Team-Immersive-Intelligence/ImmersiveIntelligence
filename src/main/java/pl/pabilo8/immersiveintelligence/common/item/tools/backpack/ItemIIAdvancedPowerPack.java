@@ -9,35 +9,20 @@ import blusunrize.immersiveengineering.common.util.EnergyHelper;
 import blusunrize.immersiveengineering.common.util.EnergyHelper.IIEEnergyItem;
 import blusunrize.immersiveengineering.common.util.IEDamageSources.ElectricDamageSource;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ISpecialArmor;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
-import pl.pabilo8.immersiveintelligence.client.model.armor.ModelAdvancedPowerpack;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
-import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 
@@ -47,41 +32,20 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Supplies energy to the wearer's equipment.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 04.11.2026
  * @since 23.01.2021
  */
 @IIItemProperties(category = IICategory.TOOLS)
-public class ItemIIAdvancedPowerPack extends ItemArmor implements ISpecialArmor, IIEEnergyItem, IElectricEquipment, IColouredItem
+public class ItemIIAdvancedPowerPack extends ItemIIBackpackBase implements IIEEnergyItem, IElectricEquipment, IColouredItem
 {
 	public static final String NBT_COLOR = "II:AdvancedPowerpackColour";
 
 	public ItemIIAdvancedPowerPack()
 	{
-		super(ArmorMaterial.IRON, 0, EntityEquipmentSlot.CHEST);
-		setMaxDamage(0);
-		String name = "advanced_powerpack";
-		this.setUnlocalizedName(ImmersiveIntelligence.MODID+"."+name);
-		this.setCreativeTab(IIContent.II_CREATIVE_TAB);
-		IIContent.ITEMS.add(this);
-	}
-
-	//Armor should use a model instead of layered textures
-	@Nullable
-	public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type)
-	{
-		//Whatever you say, Blu, I know the real reason why you removed it
-		//return ImmersiveEngineering.MODID+":textures/models/maneuver_gear.png";
-		return ImmersiveIntelligence.MODID+":textures/armor/empty.png";
-	}
-
-	@Nullable
-	@Override
-	@SideOnly(Side.CLIENT)
-	public ModelBiped getArmorModel(EntityLivingBase entityLiving, ItemStack itemStack, EntityEquipmentSlot armorSlot, ModelBiped _default)
-	{
-		//And yes, I really like AoT in its current state
-		//return ModelManeuverGear.getModel();
-		return ModelAdvancedPowerpack.getModel(armorSlot, itemStack);
+		super("advanced_powerpack");
 	}
 
 	/**
@@ -96,53 +60,24 @@ public class ItemIIAdvancedPowerPack extends ItemArmor implements ISpecialArmor,
 		list.add(I18n.format(Lib.DESC_INFO+"colour", "<hexcol="+hexCol+":#"+hexCol+">"));
 	}
 
-	@SideOnly(Side.CLIENT)
-	@Nullable
 	@Override
-	public FontRenderer getFontRenderer(ItemStack stack)
+	public boolean onWornTick(EntityLivingBase wearer, ItemStack stack)
 	{
-		return IIClientUtils.fontRegular;
-	}
-
-	@Override
-	public void onArmorTick(World world, EntityPlayer player, ItemStack itemStack)
-	{
-		int energy = getEnergyStored(itemStack);
-		if(energy > 0)
+		int stored = getEnergyStored(stack);
+		int remaining = stored;
+		for(EntityEquipmentSlot slot : EntityEquipmentSlot.values())
 		{
-			int pre = energy;
-			for(EntityEquipmentSlot slot : EntityEquipmentSlot.values())
-				if(EnergyHelper.isFluxItem(player.getItemStackFromSlot(slot))&&!(player.getItemStackFromSlot(slot).getItem() instanceof ItemPowerpack))
-					energy -= EnergyHelper.insertFlux(player.getItemStackFromSlot(slot), Math.min(energy, 4096), false);
-			if(pre!=energy)
-				EnergyHelper.extractFlux(itemStack, pre-energy, false);
+			if(remaining <= 0)
+				break;
+			ItemStack equipment = wearer.getItemStackFromSlot(slot);
+			if(!(equipment.getItem() instanceof ItemIIAdvancedPowerPack||equipment.getItem() instanceof ItemPowerpack)
+					&&EnergyHelper.isFluxItem(equipment))
+				remaining -= EnergyHelper.insertFlux(equipment, Math.min(remaining, 4096), false);
 		}
-	}
-
-	/**
-	 * Gets a map of item attribute modifiers, used by ItemSword to increase hit damage.
-	 */
-	@Override
-	public Multimap<String, AttributeModifier> getItemAttributeModifiers(EntityEquipmentSlot equipmentSlot)
-	{
-		return HashMultimap.create();
-	}
-
-	@Override
-	public ArmorProperties getProperties(EntityLivingBase player, ItemStack armor, DamageSource source, double damage, int slot)
-	{
-		return new ArmorProperties(0, 0, 0);
-	}
-
-	@Override
-	public int getArmorDisplay(EntityPlayer player, ItemStack armor, int slot)
-	{
-		return 0;
-	}
-
-	@Override
-	public void damageArmor(EntityLivingBase entity, ItemStack stack, DamageSource source, int damage, int slot)
-	{
+		if(remaining==stored)
+			return false;
+		EnergyHelper.extractFlux(stack, stored-remaining, false);
+		return true;
 	}
 
 	@Override

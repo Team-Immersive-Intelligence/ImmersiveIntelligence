@@ -291,9 +291,9 @@ public class TileEntityRadar extends TileEntityMultiblockIIGeneric<TileEntityRad
 	{
 		if(!isRadioAvailable()||sender==null)
 			return false;
-		DimensionBlockPos senderPos = sender.getDevicePosition();
+		DimensionBlockPos senderPos = sender.getRadioDevicePosition();
 		if(senderPos.dimension!=world.provider.getDimension()||
-				senderPos.distanceSq(getDevicePosition()) > (double)Radar.detectionRadius*Radar.detectionRadius)
+				senderPos.distanceSq(getRadioDevicePosition()) > (double)Radar.detectionRadius*Radar.detectionRadius)
 			return false;
 		Vec3d position = new Vec3d(senderPos).addVector(0.5d, 0.5d, 0.5d);
 		long now = world.getTotalWorldTime();
@@ -359,7 +359,7 @@ public class TileEntityRadar extends TileEntityMultiblockIIGeneric<TileEntityRad
 	}
 
 	@Override
-	public DimensionBlockPos getDevicePosition()
+	public DimensionBlockPos getRadioDevicePosition()
 	{
 		TileEntityRadar master = isDummy()?master(): this;
 		return new DimensionBlockPos(master==null?getPos(): master.getPOIPos("radar"), world);

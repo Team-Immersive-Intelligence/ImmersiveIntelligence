@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.client.util.amt.parts;
 
+import lombok.Setter;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -38,11 +39,14 @@ public abstract class AMT implements AMTRenderable, Cloneable
 	/**
 	 * Whether this AMT should be rendered
 	 */
+	@Setter
 	protected boolean visible;
 	/**
 	 * Offset (XYZ), Scale (XYZ)
 	 */
-	protected Vec3d off, scale;
+	protected Vec3d off;
+	@Setter
+	protected Vec3d scale;
 
 	//--- Basic Mutable Properties ---//
 	/**
@@ -62,6 +66,7 @@ public abstract class AMT implements AMTRenderable, Cloneable
 	/**
 	 * Custom Property Value, used by some AMT components
 	 */
+	@Setter
 	protected float property;
 	/**
 	 * Children ModelThingies, rendered after this one
@@ -239,19 +244,9 @@ public abstract class AMT implements AMTRenderable, Cloneable
 
 	//--- Setters ---//
 
-	public void setVisible(boolean visible)
-	{
-		this.visible = visible;
-	}
-
 	public void setPosition(Vec3d off)
 	{
 		this.off = off;
-	}
-
-	public void setScale(Vec3d scale)
-	{
-		this.scale = scale;
 	}
 
 	public void setRotation(Vec3d rot)
@@ -263,11 +258,6 @@ public abstract class AMT implements AMTRenderable, Cloneable
 	{
 		this.shader = shader;
 		this.shaderValue = shaderValue;
-	}
-
-	public void setProperty(float property)
-	{
-		this.property = property;
 	}
 
 	@Override
