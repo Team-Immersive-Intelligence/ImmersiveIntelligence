@@ -812,6 +812,7 @@ tile.immersiveintelligence.metal_multiblock.arithmetic_logic_machine.name=Arithm
 tile.immersiveintelligence.metal_multiblock.radio_station.name=Radio Station
 tile.immersiveintelligence.metal_multiblock.printing_press.name=Printing Press
 tile.immersiveintelligence.metal_multiblock.chemical_bath.name=Chemical Bath
+tile.immersiveintelligence.metal_multiblock.small_chemical_reactor.name=Chemical Reactor
 tile.immersiveintelligence.metal_multiblock.electrolyzer.name=Electrolyzer
 tile.immersiveintelligence.metal_multiblock.precision_assembler.name=Precision Assembler
 tile.immersiveintelligence.metal_multiblock.periscope.name=Periscope
@@ -4281,4 +4282,3 @@ item.banner.immersiveintelligence_infrared_helmet.lightBlue=Light Blue Infrared 
 item.banner.immersiveintelligence_infrared_helmet.magenta=Magenta Infrared Helmet
 item.banner.immersiveintelligence_infrared_helmet.orange=Orange Infrared Helmet
 item.banner.immersiveintelligence_infrared_helmet.white=White Infrared Helmet
-
