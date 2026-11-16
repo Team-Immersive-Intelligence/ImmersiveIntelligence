@@ -880,6 +880,7 @@ desc.immersiveengineering.info.multiblock.II:ArithmeticLogicMachine=Arithmetic-L
 desc.immersiveengineering.info.multiblock.II:RadioStation=Radio Station
 desc.immersiveengineering.info.multiblock.II:PrintingPress=Printing Press
 desc.immersiveengineering.info.multiblock.II:ChemicalBath=Chemical Bath
+desc.immersiveengineering.info.multiblock.II:SmallChemicalReactor=Chemical Reactor
 desc.immersiveengineering.info.multiblock.II:Electrolyzer=Electrolyzer
 desc.immersiveengineering.info.multiblock.II:PrecisionAssembler=Precision Assembler
 desc.immersiveengineering.info.multiblock.II:Periscope=Periscope
