@@ -188,7 +188,8 @@ public enum IIGUI implements ISerializableEnum
 	FACTION_INVITATIONS(ContainerPlayerGui::new),
 	CLIPBOARD_ITEM(ContainerClipboardItem::new),
 	CLIPBOARD_BLOCK(TileEntityClipboard.class, ContainerClipboardTile::new),
-	DIESEL_ENGINE(TileEntityDieselEngine.class, ContainerDieselEngine::new);
+	DIESEL_ENGINE(TileEntityDieselEngine.class, ContainerDieselEngine::new),
+	SMALL_CHEMICAL_REACTOR(TileEntitySmallChemicalReactor.class, ContainerSmallChemicalReactor::new);
 
 	public final Class<? extends TileEntity> teClass;
 	public final Class<? extends Entity> entityClass;
@@ -302,6 +303,7 @@ public enum IIGUI implements ISerializableEnum
 
 		IIGUI.PRINTING_PRESS.setClientTileGui(GuiPrintingPress::new);
 		IIGUI.CHEMICAL_BATH.setClientTileGui(GuiChemicalBath::new);
+		IIGUI.SMALL_CHEMICAL_REACTOR.setClientTileGui(GuiSmallChemicalReactor::new);
 		IIGUI.ELECTROLYZER.setClientTileGui(GuiElectrolyzer::new);
 		IIGUI.PRECISION_ASSEMBLER.setClientTileGui(GuiPrecisionAssembler::new);
 		IIGUI.FUEL_STATION.setClientTileGui(GuiFuelStation::new);
