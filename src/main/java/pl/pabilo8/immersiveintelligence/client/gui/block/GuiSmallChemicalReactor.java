@@ -2,6 +2,7 @@ package pl.pabilo8.immersiveintelligence.client.gui.block;
 
 import net.minecraft.entity.player.EntityPlayer;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTileGui;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoFluidTank;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiCategory;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTemplate;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
@@ -27,11 +28,25 @@ public class GuiSmallChemicalReactor extends DecoTileGui<TileEntitySmallChemical
 	public void onInit()
 	{
 		startBackground()
-				.withBox(DecoTextures.BG_STEEL, 0, 0, 176, 76)
+				.withBox(DecoTextures.BG_STEEL, 0, 0, 248, 80)
 				.withTitleBar(tile)
-				.withBox(DecoTextures.BG_WOODEN, DecoTextures.TEMPLATE_ROUND_WOODEN, 0, 76, 176, 92)
+				.withInventorySlots(SlotStyle.IE_INPUT, container.slotsInput)
+				.withInventorySlots(SlotStyle.IE_OUTPUT, container.slotsOutput)
+				.withBox(DecoTextures.BG_WOODEN, DecoTextures.TEMPLATE_ROUND_WOODEN, 0, 80, 248, 88)
 				.withInventorySlots(SlotStyle.VANILLA, container.playerInventory)
 				.withInventoryTitleBar()
 				.build();
+
+		addComponents(
+				new 				DecoFluidTank(26, 12)
+						.withSize(24, 58)
+						.withFluidTank(tile.tankInput1),
+								new DecoFluidTank(76, 12)
+						.withSize(24, 58)
+						.withFluidTank(tile.tankInput2),
+								new DecoFluidTank(196, 12)
+						.withSize(24, 58)
+						.withFluidTank(tile.tankOutput1)
+		);
 	}
 }

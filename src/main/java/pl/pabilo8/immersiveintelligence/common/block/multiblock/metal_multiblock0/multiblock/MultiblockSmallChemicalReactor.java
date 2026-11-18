@@ -22,6 +22,11 @@ public class MultiblockSmallChemicalReactor extends MultiblockStuctureBase<TileE
 {
 	public static MultiblockSmallChemicalReactor INSTANCE;
 
+	public static final int SLOT_ITEM_INPUT = 0, SLOT_ITEM_OUTPUT = 1, SLOT_CATALYST = 2;
+	public static final int SLOT_TANK_INPUT_1_BUCKET_INPUT = 3, SLOT_TANK_INPUT_1_BUCKET_OUTPUT = 4;
+	public static final int SLOT_TANK_INPUT_2_BUCKET_INPUT = 5, SLOT_TANK_INPUT_2_BUCKET_OUTPUT = 6;
+	public static final int SLOT_TANK_OUTPUT_1_BUCKET_INPUT = 7, SLOT_TANK_OUTPUT_1_BUCKET_OUTPUT = 8;
+
 	public MultiblockSmallChemicalReactor()
 	{
 		super(new ResourceLocation(ImmersiveIntelligence.MODID, "multiblocks/small_chemical_reactor"));
