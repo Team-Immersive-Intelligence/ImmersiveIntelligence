@@ -2,8 +2,10 @@ package pl.pabilo8.immersiveintelligence.client.gui.block;
 
 import net.minecraft.entity.player.EntityPlayer;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTileGui;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoFluidTank;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiCategory;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTemplates;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTemplate;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.SlotStyle;
@@ -38,6 +40,8 @@ public class GuiSmallChemicalReactor extends DecoTileGui<TileEntitySmallChemical
 				.build();
 
 		addComponents(
+				new DecoBar(240, 0)
+						.withTemplate(DecoTemplates.BAR_ELECTRIC_ENERGY.apply(tile.energyStorage)),
 				new 				DecoFluidTank(26, 12)
 						.withSize(24, 58)
 						.withFluidTank(tile.tankInput1),
