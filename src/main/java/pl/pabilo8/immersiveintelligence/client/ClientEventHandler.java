@@ -1118,8 +1118,8 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 
 		if(mc.world!=null&&mc.player!=null)
 		{
-			if(ClientProxy.keybindParachute.isPressed()&&mc.currentScreen==null)
-				IIPacketHandler.sendToServer(new MessageItemKeybind(MessageItemKeybind.KEYBIND_PARACHUTE));
+			if(ClientProxy.keybindBackpackAction.isPressed()&&mc.currentScreen==null)
+				IIPacketHandler.sendToServer(new MessageItemKeybind(MessageItemKeybind.KEYBIND_BACKPACK_ACTION));
 
 			//Make close bullets produce a whistling sound
 			if(Weapons.bulletsWhistleSound)

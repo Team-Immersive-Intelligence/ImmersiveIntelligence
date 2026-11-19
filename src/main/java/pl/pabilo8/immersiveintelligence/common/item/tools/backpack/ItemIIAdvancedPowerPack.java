@@ -12,19 +12,24 @@ import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.energy.CapabilityEnergy;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools.Backpacks;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
+import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -39,13 +44,14 @@ import java.util.Map;
  * @since 23.01.2021
  */
 @IIItemProperties(category = IICategory.TOOLS)
+@GeneratedItemModels(itemName = "advanced_powerpack", texturePath = "backpack/advanced_powerpack")
 public class ItemIIAdvancedPowerPack extends ItemIIBackpackBase implements IIEEnergyItem, IElectricEquipment, IColouredItem
 {
 	public static final String NBT_COLOR = "II:AdvancedPowerpackColour";
 
 	public ItemIIAdvancedPowerPack()
 	{
-		super("advanced_powerpack");
+		super("advanced_powerpack", "advanced_powerpack");
 	}
 
 	/**
@@ -54,6 +60,7 @@ public class ItemIIAdvancedPowerPack extends ItemIIBackpackBase implements IIEEn
 	@Override
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> list, ITooltipFlag flag)
 	{
+		super.addInformation(stack, world, list, flag);
 		String stored = this.getEnergyStored(stack)+"/"+this.getMaxEnergyStored(stack);
 		list.add(I18n.format(Lib.DESC+"info.energyStored", TextFormatting.GOLD+stored+TextFormatting.RESET));
 		String hexCol = Integer.toHexString(getColor(stack));
@@ -61,8 +68,22 @@ public class ItemIIAdvancedPowerPack extends ItemIIBackpackBase implements IIEEn
 	}
 
 	@Override
+	public boolean handleWearingPlayerInteraction(ItemStack stack, EntityPlayer wearer, EntityPlayer visitor, EnumHand hand)
+	{
+		return false;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public String[] getBackpackOverlayText(ItemStack stack)
+	{
+		return new String[]{stack.getDisplayName(), I18n.format(Lib.DESC+"info.energyStored", getEnergyStored(stack)+"/"+getMaxEnergyStored(stack))};
+	}
+
+	@Override
 	public boolean onWornTick(EntityLivingBase wearer, ItemStack stack)
 	{
+		super.onWornTick(wearer, stack);
 		int stored = getEnergyStored(stack);
 		int remaining = stored;
 		for(EntityEquipmentSlot slot : EntityEquipmentSlot.values())
@@ -83,7 +104,7 @@ public class ItemIIAdvancedPowerPack extends ItemIIBackpackBase implements IIEEn
 	@Override
 	public int getMaxEnergyStored(ItemStack container)
 	{
-		return Tools.advancedPowerpackCapacity;
+		return Backpacks.advancedPowerpackCapacity;
 	}
 
 	@Override
@@ -131,7 +152,7 @@ public class ItemIIAdvancedPowerPack extends ItemIIBackpackBase implements IIEEn
 	@Override
 	public int getColourForIEItem(ItemStack stack, int renderPass)
 	{
-		if(renderPass==0)
+		if(renderPass!=1)
 			return 0xffffff;
 		if(!ItemNBTHelper.hasKey(stack, NBT_COLOR))
 			return 0x486c94;

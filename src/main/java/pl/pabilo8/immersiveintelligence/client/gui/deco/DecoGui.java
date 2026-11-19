@@ -14,8 +14,8 @@ import net.minecraft.client.shader.Framebuffer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -260,7 +260,7 @@ public abstract class DecoGui<T, C extends Container> extends GuiContainer
 
 		if(clipboards < 4&&!playerContainer.offHandInventory.isEmpty()
 				&&playerContainer.offHandInventory.get(0).getItem()==IIContent.itemClipboard)
-			addWidget(new DecoClipboardWidget(playerContainer, EnumHand.OFF_HAND));
+			addWidget(new DecoClipboardWidget(playerContainer, EntityEquipmentSlot.OFFHAND));
 	}
 
 	/**

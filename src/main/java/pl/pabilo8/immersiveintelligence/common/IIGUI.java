@@ -7,9 +7,9 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Optional.Method;
 import net.minecraftforge.fml.relauncher.Side;
@@ -72,6 +72,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multibloc
 import pl.pabilo8.immersiveintelligence.common.block.rotary_device.tileentity.TileEntityGearbox;
 import pl.pabilo8.immersiveintelligence.common.block.simple.tileentity.TileEntityClipboard;
 import pl.pabilo8.immersiveintelligence.common.block.simple.tileentity.TileEntitySmallCrate;
+import pl.pabilo8.immersiveintelligence.common.block.simple.tileentity.backpack.TileEntityStorageBackpack;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.DecoGuiJEIHandler;
 import pl.pabilo8.immersiveintelligence.common.gui.*;
 import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
@@ -211,20 +212,21 @@ public enum IIGUI implements ISerializableEnum
 	INVENTORY_INTERFACE_OUTPUT(TileEntityInventoryInterface.class, ContainerInventoryInterface::getOutputGui),
 	INVENTORY_INTERFACE_VALUE(TileEntityInventoryInterface.class, ContainerInventoryInterface::getOutputGui),
 
-	BACKPACK((player, stack, hand) -> stack.getItem()==IIContent.itemBackpack?new ContainerBackpack(player, stack, hand): null);
+	BACKPACK((player, stack, hand) -> stack.getItem()==IIContent.itemBackpack?new ContainerBackpack(player, stack, hand): null),
+	BACKPACK_BLOCK(TileEntityStorageBackpack.class, ContainerBackpackBlock::new);
 
 	public final Class<? extends TileEntity> teClass;
 	public final Class<? extends Entity> entityClass;
 	public final BiFunction<EntityPlayer, TileEntity, Container> containerFromTile;
 	public final BiFunction<EntityPlayer, Entity, Container> containerFromEntity;
-	public final TriFunction<EntityPlayer, ItemStack, EnumHand, Container> containerFromStack;
+	public final TriFunction<EntityPlayer, ItemStack, EntityEquipmentSlot, Container> containerFromStack;
 	public final Function<EntityPlayer, Container> containerFromPlayer;
 	public boolean item, player;
 
 	@SideOnly(Side.CLIENT)
 	public BiFunction<EntityPlayer, TileEntity, GuiScreen> guiFromTile;
 	@SideOnly(Side.CLIENT)
-	public TriFunction<EntityPlayer, ItemStack, EnumHand, GuiScreen> guiFromStack;
+	public TriFunction<EntityPlayer, ItemStack, EntityEquipmentSlot, GuiScreen> guiFromStack;
 	@SideOnly(Side.CLIENT)
 	public Function<EntityPlayer, GuiScreen> guiFromPlayer;
 	@SideOnly(Side.CLIENT)
@@ -267,7 +269,7 @@ public enum IIGUI implements ISerializableEnum
 	/**
 	 * ItemStack GUI constructor
 	 */
-	IIGUI(@Nonnull TriFunction<EntityPlayer, ItemStack, EnumHand, Container> containerFromStack)
+	IIGUI(@Nonnull TriFunction<EntityPlayer, ItemStack, EntityEquipmentSlot, Container> containerFromStack)
 	{
 		this.teClass = null;
 		this.entityClass = null;
@@ -378,9 +380,11 @@ public enum IIGUI implements ISerializableEnum
 		IIGUI.PRINTED_PAGE_BOOK.setClientStackGui(GuiPrintedPage::new);
 
 		IIGUI.CASING_POUCH.setClientStackGui(GuiCasingPouch::new);
-		IIGUI.BACKPACK.setClientStackGui((player, stack, hand) -> stack.getItem()==IIContent.itemBackpack?new GuiBackpack(player, stack, hand): null);
+		IIGUI.BACKPACK.setClientStackGui((player, stack, hand) ->
+				stack.getItem()==IIContent.itemBackpack?new GuiBackpack(player, stack, hand): null);
 		IIGUI.CLIPBOARD_ITEM.setClientStackGui(GuiClipboardItem::new);
 		IIGUI.CLIPBOARD_BLOCK.setClientTileGui(GuiClipboardBlock::new);
+		IIGUI.BACKPACK_BLOCK.setClientTileGui(GuiBackpackBlock::new);
 
 		//noinspection rawtypes,unchecked
 		IIGUI.UPGRADE_TILE.setClientTileGui((player, tile) -> new GuiTileUpgrade(player, tile));
@@ -489,7 +493,7 @@ public enum IIGUI implements ISerializableEnum
 	}
 
 	@SideOnly(Side.CLIENT)
-	public void setClientStackGui(TriFunction<EntityPlayer, ItemStack, EnumHand, GuiScreen> guiFromStack)
+	public void setClientStackGui(TriFunction<EntityPlayer, ItemStack, EntityEquipmentSlot, GuiScreen> guiFromStack)
 	{
 		this.guiFromStack = guiFromStack;
 		this.item = true;

@@ -24,12 +24,13 @@ import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Tuple;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.client.ForgeHooksClient;
@@ -78,6 +79,7 @@ import pl.pabilo8.immersiveintelligence.client.render.ammunition.NavalMineRender
 import pl.pabilo8.immersiveintelligence.client.render.armor.*;
 import pl.pabilo8.immersiveintelligence.client.render.entity.DroneRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.entity.MineSignRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.entity.ParachuteRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.entity.SkyCrateRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.entity.hans.HansRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.entity.vehicle.*;
@@ -179,7 +181,7 @@ import java.util.List;
 public class ClientProxy extends CommonProxy
 {
 	public static KeyBinding keybindManualReload, keybindArmorHelmet, keybindArmorExosuit, keybindZoom;
-	public static KeyBinding keybindParachute;
+	public static KeyBinding keybindBackpackAction;
 	public static KeyBinding keybindVehicleEngine, keybindVehicleClutch, keybindVehicleTowing;
 	public static KeyBinding keybindVehicleGearUp, keybindVehicleGearDown, keybindVehicleReductionSwitch;
 	public static KeyBinding keybindVehicleGunUp, keybindVehicleGunDown, keybindVehicleGunLeft, keybindVehicleGunRight;
@@ -332,11 +334,10 @@ public class ClientProxy extends CommonProxy
 			return null;
 		}
 
-		EnumHand hand = getItemGuiHand(player, ID);
 		TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
-		ItemStack stack = player.getHeldItem(hand);
 		Entity entity = y==Integer.MIN_VALUE?world.getEntityByID(x): null;
-
+		EntityPlayer otherPlayer = y==Integer.MAX_VALUE?(EntityPlayer)world.getEntityByID(x): null;
+		Tuple<ItemStack, EntityEquipmentSlot> guiHand = getItemGuiHand(ID, player, otherPlayer, z);
 		if(ID==IIGUI.UPGRADE_TILE.ordinal()&&te instanceof IUpgradableDevice)
 		{
 			IUpgradableDevice upgradeMaster = ((IUpgradableDevice)te).master();
@@ -358,8 +359,8 @@ public class ClientProxy extends CommonProxy
 			IIGUI guiBuilder = IIGUI.values()[ID];
 			if(guiBuilder.player)
 				return guiBuilder.guiFromPlayer==null?null: guiBuilder.guiFromPlayer.apply(player);
-			if(guiBuilder.item)
-				return guiBuilder.guiFromStack.apply(player, stack, hand);
+			if(guiBuilder.item&&!guiHand.getFirst().isEmpty())
+				return guiBuilder.guiFromStack.apply(otherPlayer!=null?otherPlayer: player, guiHand.getFirst(), guiHand.getSecond());
 			if(guiBuilder.entityClass!=null&&guiBuilder.containerFromEntity!=null)
 			{
 				if(guiBuilder.entityClass.isInstance(entity))
@@ -420,7 +421,7 @@ public class ClientProxy extends CommonProxy
 		registerEntityRenderer(EntityFlare.class, EntityRenderNone::new);
 
 		registerEntityRenderer(EntityHans.class, HansRenderer::new);
-		registerEntityRenderer(EntityParachute.class, EntityRenderNone::new);
+		registerEntityRenderer(EntityParachute.class, ParachuteRenderer::new);
 		registerEntityRenderer(EntityAMTTactile.class, EntityRenderNone::new);
 		registerEntityRenderer(EntityTactileLivingBase.class, EntityRenderNone::new);
 
@@ -440,7 +441,7 @@ public class ClientProxy extends CommonProxy
 		//TODO: 22.09.2024 mine detector renderer
 		new ClipboardRenderer();
 
-		//Armour
+		//Armor
 		new AdvancedPowerPackRenderer();
 		new FluidPackRenderer();
 		new ParachutePackRenderer();
@@ -459,10 +460,15 @@ public class ClientProxy extends CommonProxy
 						RevolverAmmoPart.BULLET.ordinal(), RevolverAmmoPart.CORE.ordinal());
 		}
 
-		//Old items
+		//Custom model items
 		IIModelRegistry.INSTANCE.registerCustomItemModel(IIContent.itemBulletMagazine);
 		IIModelRegistry.INSTANCE.registerCustomItemModel(IIContent.itemBinoculars);
 		IIModelRegistry.INSTANCE.registerCustomItemModel(IIContent.itemCasingPouch);
+		IIModelRegistry.INSTANCE.registerCustomItemModel(IIContent.itemBackpack);
+		IIModelRegistry.INSTANCE.registerCustomItemModel(IIContent.itemAdvancedPowerPack);
+		IIModelRegistry.INSTANCE.registerCustomItemModel(IIContent.itemFluidPack);
+		IIModelRegistry.INSTANCE.registerCustomItemModel(IIContent.itemRadioPack);
+		IIModelRegistry.INSTANCE.registerCustomItemModel(IIContent.itemParachutePack);
 
 		//Mechanical
 		registerTileRenderer(SawmillRenderer.class);
@@ -688,7 +694,7 @@ public class ClientProxy extends CommonProxy
 				.withContext(KeyConflictContext.IN_GAME).register();
 		keybindZoom = new IIKeybind("mgScope", Keyboard.KEY_Z, IIKeybind.CATEGORY_GAMEPLAY)
 				.withContext(KeyConflictContext.IN_GAME).register();
-		keybindParachute = new IIKeybind("parachute", Keyboard.KEY_P, IIKeybind.CATEGORY_GAMEPLAY)
+		keybindBackpackAction = new IIKeybind("backpackAction", Keyboard.KEY_P, IIKeybind.CATEGORY_GAMEPLAY)
 				.withContext(KeyConflictContext.IN_GAME).register();
 
 		//Vehicle Keybinds

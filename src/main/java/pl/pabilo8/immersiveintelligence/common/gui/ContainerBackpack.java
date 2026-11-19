@@ -2,9 +2,9 @@ package pl.pabilo8.immersiveintelligence.common.gui;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ClickType;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumHand;
 import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIItemBase;
 
 import javax.annotation.Nonnull;
@@ -20,17 +20,17 @@ public class ContainerBackpack extends ContainerIIItemBase
 	private final ItemStack backpack;
 	public Slot[] backpackSlots;
 
-	public ContainerBackpack(EntityPlayer player, ItemStack stack, EnumHand hand)
+	public ContainerBackpack(EntityPlayer player, ItemStack stack, EntityEquipmentSlot slot)
 	{
-		super(player, stack, hand);
+		super(player, stack, slot);
 		backpack = stack;
 	}
 
 	@Override
 	protected int addSlots(int first)
 	{
-		backpackSlots = addSlotArray(8, 23, first, inv.getSlots(), 9);
-		addPlayerInventory(inventoryPlayer, 8, 83);
+		backpackSlots = addSlotArray(8, 23-8, first, inv.getSlots(), 9);
+		addPlayerInventory(inventoryPlayer, 8, 83-4);
 		return backpackSlots.length;
 	}
 

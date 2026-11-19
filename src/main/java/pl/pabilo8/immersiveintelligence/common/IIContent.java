@@ -373,6 +373,7 @@ public class IIContent
 	public static final BlockIIDataDevice blockDataConnector = new BlockIIDataDevice();
 	public static final BlockIISmallCrate blockSmallCrate = new BlockIISmallCrate();
 	public static final BlockIIClipboard blockClipboard = new BlockIIClipboard();
+	public static final BlockIIBackpack blockBackpack = new BlockIIBackpack();
 	//explosives
 	public static final BlockIIAdvancedExplosives blockAdvancedExplosives = new BlockIIAdvancedExplosives();
 	//ammunition

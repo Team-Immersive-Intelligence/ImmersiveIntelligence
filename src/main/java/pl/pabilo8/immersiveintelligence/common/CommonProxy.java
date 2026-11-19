@@ -45,6 +45,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Tuple;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -99,6 +100,7 @@ import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIISmallCrate;
 import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
 import pl.pabilo8.immersiveintelligence.common.crafting.IIRecipes;
 import pl.pabilo8.immersiveintelligence.common.crafting.RecipeBackpackArmor;
+import pl.pabilo8.immersiveintelligence.common.crafting.RecipeParachuteRefill;
 import pl.pabilo8.immersiveintelligence.common.crafting.RecipeSkinCraftingHandler;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityParachute;
@@ -404,6 +406,7 @@ public class CommonProxy implements IGuiHandler
 
 
 		event.getRegistry().register(new RecipeSkinCraftingHandler().setRegistryName(ImmersiveIntelligence.MODID, "contributor_skin"));
+		event.getRegistry().register(new RecipeParachuteRefill().setRegistryName(ImmersiveIntelligence.MODID, "parachute_backpack_refill"));
 
 		for(Item item : IIContent.ITEMS)
 			if(item instanceof ItemIIBackpackBase)
@@ -508,18 +511,32 @@ public class CommonProxy implements IGuiHandler
 
 	public static void openGuiForItem(@Nonnull EntityPlayer player, @Nonnull EnumHand hand)
 	{
-		ItemStack stack = player.getItemStackFromSlot(hand==EnumHand.MAIN_HAND?EntityEquipmentSlot.MAINHAND: EntityEquipmentSlot.OFFHAND);
-		if(stack.isEmpty()||!(stack.getItem() instanceof IGuiItem))
-			return;
-		IGuiItem gui = (IGuiItem)stack.getItem();
-		player.openGui(ImmersiveIntelligence.INSTANCE, gui.getGuiID(stack), player.world, (int)player.posX, (int)player.posY, (int)player.posZ);
+		openGuiForItem(player, hand==EnumHand.MAIN_HAND?EntityEquipmentSlot.MAINHAND: EntityEquipmentSlot.OFFHAND);
 	}
 
-	protected static EnumHand getItemGuiHand(EntityPlayer player, int id)
+	public static void openGuiForItem(@Nonnull EntityPlayer player, @Nonnull EntityEquipmentSlot slot)
 	{
-		Item main = player.getHeldItemMainhand().getItem();
-		boolean useMainHand = id==IIGUI.BACKPACK.ordinal()?main==IIContent.itemBackpack: main instanceof IGuiItem;
-		return useMainHand?EnumHand.MAIN_HAND: EnumHand.OFF_HAND;
+		openGuiForItem(player, player, slot);
+	}
+
+	public static void openGuiForItem(@Nonnull EntityPlayer player, @Nonnull EntityPlayer wearer, @Nonnull EntityEquipmentSlot slot)
+	{
+		ItemStack stack = wearer.getItemStackFromSlot(slot);
+		if(stack.isEmpty()||!(stack.getItem() instanceof IGuiItem gui))
+			return;
+		player.openGui(ImmersiveIntelligence.INSTANCE, gui.getGuiID(stack), wearer.world, wearer.getEntityId(), Integer.MAX_VALUE, slot.ordinal());
+	}
+
+	protected static Tuple<ItemStack, EntityEquipmentSlot> getItemGuiHand(int guiID, EntityPlayer player, @Nullable EntityPlayer otherPlayer, int inventorySlot)
+	{
+		//Not an item GUI
+		if(guiID < 0||guiID >= IIGUI.values().length)
+			return new Tuple<>(ItemStack.EMPTY, EntityEquipmentSlot.MAINHAND);
+
+		//Get the item from the slot
+		EntityEquipmentSlot slot = EntityEquipmentSlot.values()[inventorySlot%EntityEquipmentSlot.values().length];
+		EntityPlayer source = otherPlayer==null?player: otherPlayer;
+		return new Tuple<>(source.getItemStackFromSlot(slot), slot);
 	}
 
 	//--- GUI Handling ---//
@@ -534,19 +551,6 @@ public class CommonProxy implements IGuiHandler
 	{
 		String s = tile.getSimpleName();
 		s = s.substring(s.indexOf("TileEntity")+"TileEntity".length());
-		//Keep the persisted IDs of the devices replaced by these classes.
-		switch(s)
-		{
-			case "DataBuffer":
-				s = "SmallDataBuffer";
-				break;
-			case "DataMapper":
-				s = "TimedBuffer";
-				break;
-			case "RedstoneSequencer":
-				s = "RedstoneBuffer";
-				break;
-		}
 		GameRegistry.registerTileEntity(tile, new ResourceLocation(ImmersiveIntelligence.MODID+":"+s));
 	}
 
@@ -950,10 +954,10 @@ public class CommonProxy implements IGuiHandler
 			return null;
 		}
 
-		EnumHand hand = getItemGuiHand(player, ID);
 		TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
-		ItemStack stack = player.getHeldItem(hand);
 		Entity entity = y==Integer.MIN_VALUE?world.getEntityByID(x): null;
+		EntityPlayer otherPlayer = y==Integer.MAX_VALUE?(EntityPlayer)world.getEntityByID(x): null;
+		Tuple<ItemStack, EntityEquipmentSlot> guiHand = getItemGuiHand(ID, player, otherPlayer, z);
 
 		if(ID==IIGUI.UPGRADE_TILE.ordinal()&&te instanceof IUpgradableDevice)
 		{
@@ -966,7 +970,6 @@ public class CommonProxy implements IGuiHandler
 		{
 			IUpgradableDevice upgradeMaster = ((IUpgradableDevice)entity).master();
 			if(upgradeMaster!=null)
-				//noinspection rawtypes,unchecked
 				return new ContainerEntityUpgrade<>(player, (Entity & IUpgradableDevice & IIEInventory)upgradeMaster);
 		}
 
@@ -977,7 +980,7 @@ public class CommonProxy implements IGuiHandler
 			if(gui.player)
 				return gui.containerFromPlayer==null?null: gui.containerFromPlayer.apply(player);
 			if(gui.item)
-				return gui.containerFromStack==null?null: gui.containerFromStack.apply(player, stack, hand);
+				return gui.containerFromStack==null?null: gui.containerFromStack.apply(otherPlayer!=null?otherPlayer: player, guiHand.getFirst(), guiHand.getSecond());
 			if(gui.entityClass!=null&&gui.containerFromEntity!=null)
 			{
 				if(gui.entityClass.isInstance(entity))

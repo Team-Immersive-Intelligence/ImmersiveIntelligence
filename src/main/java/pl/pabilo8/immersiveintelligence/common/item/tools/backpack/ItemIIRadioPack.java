@@ -8,9 +8,11 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
@@ -21,6 +23,8 @@ import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.radio.IRadioDevice;
 import pl.pabilo8.immersiveintelligence.api.data.radio.RadioNetwork;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools.Backpacks;
+import pl.pabilo8.immersiveintelligence.common.item.data.ItemIIPunchtape;
 import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIIRadioTuner;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
@@ -29,25 +33,57 @@ import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Provides a mobile radio relay on the wearer's frequency.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 04.11.2026
- * @since 23.01.2021
+ * @since 13.11.2026
  */
 @IIItemProperties(category = IICategory.TOOLS)
 @GeneratedItemModels(itemName = "radio_backpack", texturePath = "backpack/radiopack")
 public class ItemIIRadioPack extends ItemIIBackpackBase
 {
 	private static final String RADIO_COOLDOWN = "radio_cooldown";
-	private static final int RANGE = 32;
 
 	public ItemIIRadioPack()
 	{
-		super("radio_backpack");
+		super("radio_backpack", "radiopack");
+	}
+
+	@Override
+	public boolean handleWearingPlayerInteraction(ItemStack stack, EntityPlayer wearer, EntityPlayer visitor, EnumHand hand)
+	{
+		ItemStack held = visitor.getHeldItem(hand);
+		IRadioDevice radio = new BackpackRadio(stack, wearer, stack);
+		if(held.getItem() instanceof ItemIIRadioTuner)
+		{
+			if(!visitor.world.isRemote)
+				((ItemIIRadioTuner)held.getItem()).tuneRadio(visitor, hand, radio);
+			return true;
+		}
+		if(held.getItem() instanceof ItemIIPunchtape)
+		{
+			DataPacket packet = ((ItemIIPunchtape)held.getItem()).getStoredData(held);
+			if(packet.isEmpty()||!radio.isRadioAvailable())
+				return false;
+			if(visitor.world.isRemote)
+				return true;
+			RadioNetwork.INSTANCE.sendPacket(packet, radio, new ArrayList<>());
+
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public String[] getBackpackOverlayText(ItemStack stack)
+	{
+		return new String[]{stack.getDisplayName(), I18n.format(IIReference.DESCRIPTION_KEY+"radio_configurator_frequency",
+				ItemNBTHelper.getInt(stack, ItemIIRadioTuner.TAG_FREQUENCY))};
 	}
 
 	@Override
@@ -59,6 +95,7 @@ public class ItemIIRadioPack extends ItemIIBackpackBase
 	@Override
 	public boolean onWornTick(EntityLivingBase wearer, ItemStack stack)
 	{
+		super.onWornTick(wearer, stack);
 		int cooldown = ItemNBTHelper.getInt(stack, RADIO_COOLDOWN);
 		if(cooldown <= 0)
 			return false;
@@ -70,6 +107,7 @@ public class ItemIIRadioPack extends ItemIIBackpackBase
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag flag)
 	{
+		super.addInformation(stack, world, tooltip, flag);
 		tooltip.add(I18n.format(IIReference.DESCRIPTION_KEY+"radio_configurator_frequency",
 				ItemNBTHelper.getInt(stack, ItemIIRadioTuner.TAG_FREQUENCY)));
 	}
@@ -147,7 +185,7 @@ public class ItemIIRadioPack extends ItemIIBackpackBase
 		@Override
 		public float getRange()
 		{
-			return RANGE;
+			return Backpacks.radiopackRange;
 		}
 
 		@Override

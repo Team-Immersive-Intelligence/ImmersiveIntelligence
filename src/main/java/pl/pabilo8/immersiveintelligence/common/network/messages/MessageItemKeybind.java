@@ -14,13 +14,12 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
-import pl.pabilo8.immersiveintelligence.common.compat.BaublesHelper;
-import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
+
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine;
 import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIILightEngineerHelmet;
 import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIILightEngineerLeggings;
 import pl.pabilo8.immersiveintelligence.common.item.tools.backpack.ItemIIBackpackBase;
-import pl.pabilo8.immersiveintelligence.common.item.tools.backpack.ItemIIParachutePack;
+
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIGunBase;
 import pl.pabilo8.immersiveintelligence.common.network.IIMessage;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -35,7 +34,7 @@ public class MessageItemKeybind extends IIMessage
 	public static final int KEYBIND_GUN_RELOAD = 0;
 	public static final int KEYBIND_HEADGEAR = 1;
 	public static final int KEYBIND_EXOSKELETON = 2;
-	public static final int KEYBIND_PARACHUTE = 3;
+	public static final int KEYBIND_BACKPACK_ACTION = 3;
 
 	private int id;
 
@@ -90,15 +89,16 @@ public class MessageItemKeybind extends IIMessage
 				}
 			}
 			break;
-			case KEYBIND_PARACHUTE:
+			case KEYBIND_BACKPACK_ACTION:
 			{
-				equipped = player.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
-				if(!(equipped.getItem() instanceof ItemIIParachutePack))
-					equipped = ItemIIBackpackBase.getAttachedBackpack(equipped);
-				if(!(equipped.getItem() instanceof ItemIIParachutePack)&&IICompatModule.baubles)
-					equipped = BaublesHelper.getBodyBauble(player);
-				if(equipped.getItem() instanceof ItemIIParachutePack)
-					((ItemIIParachutePack)equipped.getItem()).deployParachute(player);
+				if(player.isSpectator())
+					break;
+				for(int slot = 0; slot < 2; slot++)
+				{
+					ItemIIBackpackBase.WornBackpack worn = ItemIIBackpackBase.getWornBackpack(player, slot);
+					if(worn!=null&&((ItemIIBackpackBase)worn.getStack().getItem()).onBackpackAction(player, worn))
+						break;
+				}
 			}
 			break;
 		}

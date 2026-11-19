@@ -2,9 +2,9 @@ package pl.pabilo8.immersiveintelligence.common.gui;
 
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumHand;
 import pl.pabilo8.immersiveintelligence.common.crafting.IIRecipes;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine;
 import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIItemBase;
@@ -17,9 +17,9 @@ public class ContainerCasingPouch extends ContainerIIItemBase
 {
 	public Slot[] slotsCasing, slotsMagazine;
 
-	public ContainerCasingPouch(EntityPlayer player, ItemStack heldStack, EnumHand hand)
+	public ContainerCasingPouch(EntityPlayer player, ItemStack heldStack, EntityEquipmentSlot slot)
 	{
-		super(player, heldStack, hand);
+		super(player, heldStack, slot);
 		ItemNBTHelper.setBoolean(heldStack, "open", true);
 	}
 

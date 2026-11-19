@@ -1349,6 +1349,18 @@ desc.immersiveintelligence.multiblock_item=Check Engineer's Manual on how to bui
 desc.immersiveintelligence.radio_configurator_basic=Allows changing the frequency of basic radio devices.
 desc.immersiveintelligence.radio_configurator_advanced=An upgraded radio tuner, allows setting even higher frequencies.
 desc.immersiveintelligence.radio_configurator_frequency=Frequency: %s
+desc.immersiveintelligence.backpack_free_slots=Free slots: %s / %s
+desc.immersiveintelligence.parachute_backpack.ready=Parachute packed
+desc.immersiveintelligence.parachute_backpack.used=Parachute empty: recover a fallen canopy or refill with Tough Fabric
+info.immersiveintelligence.backpack.forbidden=You do not have permission to access this backpack.
+info.immersiveintelligence.backpack.access=Backpack access: %s
+info.immersiveintelligence.backpack.access.private=Private
+info.immersiveintelligence.backpack.access.faction=Faction
+info.immersiveintelligence.backpack.access.allied=Allied
+info.immersiveintelligence.backpack.access.public=Public
+info.immersiveintelligence.backpack.fluid_mode.none=Canister transfer: Disabled
+info.immersiveintelligence.backpack.fluid_mode.input=Canister transfer: Drain held containers
+info.immersiveintelligence.backpack.fluid_mode.output=Canister transfer: Fill held containers
 desc.immersiveintelligence.fluid_backpack_empty=Empty
 desc.immersiveintelligence.fluid_backpack_contents=%s (%s / %s mB)
 desc.immersiveintelligence.radio_configurator_max_frequency=Max Frequency: %s
@@ -2967,7 +2979,7 @@ desc.immersiveengineering.info.blueprint.bullet_magazines=Bullet Magazines
 key.immersiveintelligence.manualReload=Manual Reload
 key.immersiveintelligence.armorHelmet=Toggle Light Engineer Armor Headgear
 key.immersiveintelligence.armorExosuit=Toggle Light Engineer Armor Exoskeleton
-key.immersiveintelligence.parachute=Deploy Parachute
+key.immersiveintelligence.backpackAction=Use Backpack
 
 key.immersiveintelligence.manualLookup=Find Engineer's Manual Page for Hovered Item
 
@@ -3268,6 +3280,7 @@ ie.manual.folder.armortools=Armor and Tools
 ie.manual.folder.staticdefense=Defensive Structures
 ie.manual.folder.terrain_control=Terrain Control
 ie.manual.folder.small_data_devices=Small Data Devices
+ie.manual.folder.backpacks=Backpacks
 
 ie.manual.entry.traits.level_beginner=Complexity: Pre-Industrial
 ie.manual.entry.traits.level_early_industrial=Complexity: Early Industrial

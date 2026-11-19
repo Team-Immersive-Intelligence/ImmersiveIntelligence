@@ -183,6 +183,9 @@ public class IIConfigHandler
 			@Comment({"Enable manual page lookup from inventory screens."})
 			public static boolean enableManualLookup = true;
 
+			@Comment({"If disabled, II will not change the location of IE manual pages in the manual."})
+			public static boolean enableManualOverride = true;
+
 			@Comment({"Time to hold the manual lookup key, in ticks."})
 			@RangeInt(min = 1)
 			public static int manualLookupTime = 20;
@@ -199,6 +202,7 @@ public class IIConfigHandler
 
 			public static class Railgun
 			{
+
 				@Comment({"If disabled, II will not make any changes to IE railgun. This also disables using railgun grenades (as they use a custom entity)."})
 				public static boolean enableRailgunOverride = true;
 
@@ -626,14 +630,25 @@ public class IIConfigHandler
 			@RequiresMcRestart
 			public static int precisionToolHammerUsageTime = 80;
 
-			@Comment({"The capacity of the Improved Capacitor Backpack (in IF)."})
-			@RequiresMcRestart
-			public static int advancedPowerpackCapacity = 1000000;
-
 			@Comment({"Whether advanced multiblock construction should be free and instantenous in creative mode."})
 			public static boolean instantCreativeConstruction = true;
 			@Comment({"Whether machine upgrading should be free and instantenous in creative mode."})
 			public static boolean instantCreativeUpgrading = true;
+
+			public static class Backpacks
+			{
+				@Comment({"The capacity of the Canister Backpack (in mB)."})
+				public static final int fluidpackCapacity = 16000;
+
+				@Comment({"Fluid transfer rate of the Canister Backpack (in mB/t)."})
+				public static final int fluidpackTransferRate = 1000;
+
+				@Comment({"The capacity of the Improved Capacitor Backpack (in IF)."})
+				public static int advancedPowerpackCapacity = 1000000;
+
+				@Comment({"Transmission range of the Radio Backpack (in blocks)."})
+				public static final float radiopackRange = 32;
+			}
 
 			public static class SkycrateMounts
 			{

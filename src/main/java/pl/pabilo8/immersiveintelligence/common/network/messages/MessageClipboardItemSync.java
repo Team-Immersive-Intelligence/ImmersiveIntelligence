@@ -3,11 +3,11 @@ package pl.pabilo8.immersiveintelligence.common.network.messages;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.network.NetHandlerPlayClient;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetHandlerPlayServer;
-import net.minecraft.util.EnumHand;
 import net.minecraft.world.WorldServer;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIIClipboard;
@@ -21,14 +21,14 @@ import pl.pabilo8.immersiveintelligence.common.network.IIMessage;
  */
 public class MessageClipboardItemSync extends IIMessage
 {
-	private EnumHand hand;
+	private EntityEquipmentSlot slot;
 	private int inventorySlot = -1;
 	private boolean inventoryTarget;
 	private NBTTagList entries;
 
-	public MessageClipboardItemSync(EnumHand hand, NBTTagList entries)
+	public MessageClipboardItemSync(EntityEquipmentSlot slot, NBTTagList entries)
 	{
-		this.hand = hand;
+		this.slot = slot;
 		this.entries = ItemIIClipboard.sanitiseEntries(entries);
 	}
 
@@ -55,9 +55,9 @@ public class MessageClipboardItemSync extends IIMessage
 		}
 		else
 		{
-			if(hand==null)
+			if(slot==null)
 				return;
-			clipboard = handler.player.getHeldItem(hand);
+			clipboard = handler.player.getItemStackFromSlot(slot);
 		}
 		if(clipboard.getItem()!=IIContent.itemClipboard)
 			return;
@@ -77,7 +77,7 @@ public class MessageClipboardItemSync extends IIMessage
 		if(inventoryTarget)
 			inventorySlot = buf.readInt();
 		else
-			hand = readEnum(buf, EnumHand.class);
+			slot = readEnum(buf, EntityEquipmentSlot.class);
 		NBTTagCompound nbt = readTagCompound(buf);
 		entries = ItemIIClipboard.sanitiseEntries(nbt.getTagList(ItemIIClipboard.NBT_ENTRIES, 10));
 	}
@@ -89,7 +89,7 @@ public class MessageClipboardItemSync extends IIMessage
 		if(inventoryTarget)
 			buf.writeInt(inventorySlot);
 		else
-			writeEnum(buf, hand);
+			writeEnum(buf, slot);
 		NBTTagCompound nbt = new NBTTagCompound();
 		nbt.setTag(ItemIIClipboard.NBT_ENTRIES, entries);
 		writeTagCompound(buf, nbt);

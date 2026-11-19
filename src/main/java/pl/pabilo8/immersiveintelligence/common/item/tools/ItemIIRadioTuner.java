@@ -136,7 +136,7 @@ public class ItemIIRadioTuner extends ItemIISubItemsBase<RadioTuners> implements
 		return false;
 	}
 
-	private void tuneRadio(EntityPlayer player, EnumHand hand, IRadioDevice device)
+	public void tuneRadio(EntityPlayer player, EnumHand hand, IRadioDevice device)
 	{
 		ItemStack stack = player.getHeldItem(hand);
 		int frequency = ItemNBTHelper.getInt(stack, TAG_FREQUENCY);

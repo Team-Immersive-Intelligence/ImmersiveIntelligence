@@ -1,0 +1,18 @@
+# Made by Pabilo8 with Blockbench
+
+newmtl data_debugger
+map_Kd immersiveintelligence:blocks/metal_device/data_debugger
+newmtl advanced_powerpack
+map_Kd immersiveintelligence:armor/advanced_powerpack
+newmtl backpack
+map_Kd immersiveintelligence:armor/backpack
+newmtl fluidpack
+map_Kd immersiveintelligence:armor/fluidpack
+newmtl parachute_backpack
+map_Kd immersiveintelligence:armor/parachute_backpack
+newmtl radio_backpack
+map_Kd immersiveintelligence:armor/radio_backpack
+newmtl radio_backpack2
+map_Kd immersiveintelligence:armor/radio_backpack2
+newmtl common_cable_and_pipe
+map_Kd immersiveintelligence:blocks/common/common_cable_and_pipe

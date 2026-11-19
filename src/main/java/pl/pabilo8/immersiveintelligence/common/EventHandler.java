@@ -341,6 +341,33 @@ public class EventHandler
 	{
 		EntityPlayer player = event.getEntityPlayer();
 
+		if(event.getTarget() instanceof EntityPlayer wearer)
+		{
+			ItemIIBackpackBase.WornBackpack worn = ItemIIBackpackBase.getWornBackpack(wearer);
+			if(worn!=null)
+			{
+				ItemStack stack = worn.getStack();
+				ItemIIBackpackBase item = (ItemIIBackpackBase)stack.getItem();
+				if(player.isSpectator()||!player.isEntityAlive())
+					return;
+				if(!player.world.isRemote&&!item.getBackpackAccess(stack).canAccess(wearer, player))
+				{
+					IIPacketHandler.sendChatTranslation(player, IIReference.INFO_KEY+"backpack.forbidden");
+					event.setCancellationResult(EnumActionResult.SUCCESS);
+					event.setCanceled(true);
+					return;
+				}
+				if(item.handleWearingPlayerInteraction(stack, wearer, player, event.getHand()))
+				{
+					if(!player.world.isRemote)
+						worn.save(stack);
+					event.setCancellationResult(EnumActionResult.SUCCESS);
+					event.setCanceled(true);
+				}
+				return;
+			}
+		}
+
 		ItemStack held = player.getHeldItem(event.getHand());
 		if(held.getItem() instanceof ItemIIRadioTuner
 				&&((ItemIIRadioTuner)held.getItem()).tuneEntity(player, event.getHand(), event.getTarget()))

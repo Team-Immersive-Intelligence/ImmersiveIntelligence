@@ -131,6 +131,13 @@ public class IIModelRegistry extends ImmersiveModelRegistry
 			ResourceLocation loc = new ResourceLocation(modID, ((ItemIEBase)item).itemName);
 			itemModelReplacements.put(new ModelResourceLocation(loc, "inventory"), replacement);
 		}
+		else
+		{
+			//item.immersiveintelligence.name
+			String[] split = item.getUnlocalizedName().split("\\.");
+			if(split.length >= 3)
+				itemModelReplacements.put(new ModelResourceLocation(new ResourceLocation(split[1], split[2]), "inventory"), replacement);
+		}
 	}
 
 	/**
@@ -181,6 +188,11 @@ public class IIModelRegistry extends ImmersiveModelRegistry
 	 * Overloaded method of registering a dynamic override item model for an IE item using meta values
 	 */
 	public void registerCustomItemModel(ItemIIBase item)
+	{
+		registerCustomItemModel((Item)item);
+	}
+
+	public void registerCustomItemModel(Item item)
 	{
 		registerCustomItemModel(item, ImmersiveIntelligence.MODID, new ImmersiveModelRegistry.ItemModelReplacement()
 		{
