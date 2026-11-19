@@ -7,7 +7,9 @@ import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.SmallChemicalReactor;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockSmallChemicalReactor;
+import pl.pabilo8.immersiveintelligence.common.util.IIEnergyStorage;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.fluid.FilteredFluidTank;
@@ -21,8 +23,6 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultibl
 public class TileEntitySmallChemicalReactor extends TileEntityMultiblockIIGeneric<TileEntitySmallChemicalReactor>
 		implements IIIGuiMultiblockTile
 {
-	private static final int TANK_CAPACITY = 4000;
-
 	@SyncNBT(name = "tank0", events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_RECIPE_CHANGED, SyncEvents.TILE_CUSTOM1})
 	public FilteredFluidTank tankInput1;
 	@SyncNBT(name = "tank1", events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_RECIPE_CHANGED, SyncEvents.TILE_CUSTOM1})
@@ -34,9 +34,10 @@ public class TileEntitySmallChemicalReactor extends TileEntityMultiblockIIGeneri
 	{
 		super(MultiblockSmallChemicalReactor.INSTANCE);
 		this.inventory = NonNullList.withSize(9, ItemStack.EMPTY);
-		this.tankInput1 = new FilteredFluidTank(TANK_CAPACITY);
-		this.tankInput2 = new FilteredFluidTank(TANK_CAPACITY);
-		this.tankOutput1 = new FilteredFluidTank(TANK_CAPACITY);
+		this.tankInput1 = new FilteredFluidTank(SmallChemicalReactor.fluidCapacity);
+		this.tankInput2 = new FilteredFluidTank(SmallChemicalReactor.fluidCapacity);
+		this.tankOutput1 = new FilteredFluidTank(SmallChemicalReactor.fluidCapacity);
+		this.energyStorage = new IIEnergyStorage(SmallChemicalReactor.energyCapacity);
 	}
 
 	@Override

@@ -29,7 +29,7 @@ import java.util.Map;
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @author Avalon (avalon@iiteam.net)
- * @updated 07.10.2026
+ * @updated 18.11.2026
  * @since 12.05.2019
  */
 @Mod.EventBusSubscriber
@@ -724,6 +724,10 @@ public class IIConfigHandler
 			@Comment("Config for the Electrolyzer, allows for changes to the energy and fluid capacity")
 			public static Electrolyzer electrolyzer;
 			@SubConfig
+			@LangKey("tile.immersiveintelligence.metal_multiblock.small_chemical_reactor.name")
+			@Comment("Config for the Small Chemical Reactor, allows for changes to the energy and fluid capacity")
+			public static SmallChemicalReactor smallChemicalReactor;
+			@SubConfig
 			@LangKey("tile.immersiveintelligence.metal_multiblock.precision_assembler.name")
 			@Comment("Config for the precision Assembler, allows changes to energy capacity and processing time")
 			public static PrecisionAssembler precisionAssembler;
@@ -1120,6 +1124,16 @@ public class IIConfigHandler
 				@RequiresWorldRestart
 				@Comment({"Fluid capacity of the electrolyzer."})
 				public static int fluidCapacity = 12000;
+			}
+
+			public static class SmallChemicalReactor
+			{
+				@Comment({"Energy capacity of the small chemical reactor."})
+				public static int energyCapacity = 16000;
+
+				@RequiresWorldRestart
+				@Comment({"Fluid capacity of each tank of the small chemical reactor."})
+				public static int fluidCapacity = 4000;
 			}
 
 			public static class PrecisionAssembler
