@@ -3,18 +3,24 @@ package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multibloc
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.SmallChemicalReactor;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockSmallChemicalReactor;
+import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMaterialCatalyst;
 import pl.pabilo8.immersiveintelligence.common.util.IIEnergyStorage;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.fluid.FilteredFluidTank;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IIIGuiMultiblockTile;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIGeneric;
+
+import javax.annotation.Nullable;
 
 /**
  * @author Avalon (avalon@iiteam.net)
@@ -29,6 +35,8 @@ public class TileEntitySmallChemicalReactor extends TileEntityMultiblockIIGeneri
 	public FilteredFluidTank tankInput2;
 	@SyncNBT(name = "tank2", events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_RECIPE_CHANGED, SyncEvents.TILE_CUSTOM1})
 	public FilteredFluidTank tankOutput1;
+	private IItemHandler catalystInputHandler = getSingleInventoryHandler(MultiblockSmallChemicalReactor.SLOT_CATALYST, true, false);
+	private IItemHandler itemInputHandler = getSingleInventoryHandler(MultiblockSmallChemicalReactor.SLOT_ITEM_INPUT, true, false);
 
 	public TileEntitySmallChemicalReactor()
 	{
@@ -45,6 +53,7 @@ public class TileEntitySmallChemicalReactor extends TileEntityMultiblockIIGeneri
 	{
 		super.dummyCleanup();
 		tankInput1 = tankInput2 = tankOutput1 = null;
+		catalystInputHandler = itemInputHandler = null;
 	}
 
 	@Override
@@ -61,8 +70,13 @@ public class TileEntitySmallChemicalReactor extends TileEntityMultiblockIIGeneri
 			update |= IIUtils.handleBucketTankInteraction(tankOutput1, inventory,
 					MultiblockSmallChemicalReactor.SLOT_TANK_OUTPUT_1_BUCKET_INPUT,
 					MultiblockSmallChemicalReactor.SLOT_TANK_OUTPUT_1_BUCKET_OUTPUT, true);
+			for(int output : getPOI("fluid_output"))
+				update |= IIUtils.outputFluidToTank(tankOutput1, 100, getBlockPosForPos(output), world, facing.getOpposite());
 			if(update)
+			{
+				markDirty();
 				updateTileForEvent(SyncEvents.TILE_CUSTOM1);
+			}
 		}
 	}
 
@@ -70,6 +84,35 @@ public class TileEntitySmallChemicalReactor extends TileEntityMultiblockIIGeneri
 	protected IFluidTank[] getFluidTanks(int pos, EnumFacing side)
 	{
 		return new IFluidTank[]{tankInput1, tankInput2, tankOutput1};
+	}
+
+	@Override
+	protected boolean isTankAvailable(int pos, int tank)
+	{
+		switch(tank)
+		{
+			case 0:
+				return multiblock.isPointOfInterest(pos, "fluid_input_1");
+			case 1:
+				return multiblock.isPointOfInterest(pos, "fluid_input_2");
+			case 2:
+				return multiblock.isPointOfInterest(pos, "fluid_output");
+			default:
+				return false;
+		}
+	}
+
+	@Nullable
+	@Override
+	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing side)
+	{
+		if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY&&(isPOI("catalyst_input")||isPOI("item_input")))
+		{
+			TileEntitySmallChemicalReactor master = master();
+			return master==null?null: CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(
+					isPOI("catalyst_input")?master.catalystInputHandler: master.itemInputHandler);
+		}
+		return super.getCapability(capability, side);
 	}
 
 	@Override
@@ -90,11 +133,12 @@ public class TileEntitySmallChemicalReactor extends TileEntityMultiblockIIGeneri
 		switch(slot)
 		{
 			case MultiblockSmallChemicalReactor.SLOT_ITEM_INPUT:
-			case MultiblockSmallChemicalReactor.SLOT_CATALYST:
 			case MultiblockSmallChemicalReactor.SLOT_TANK_INPUT_1_BUCKET_OUTPUT:
 			case MultiblockSmallChemicalReactor.SLOT_TANK_INPUT_2_BUCKET_OUTPUT:
 			case MultiblockSmallChemicalReactor.SLOT_TANK_OUTPUT_1_BUCKET_OUTPUT:
 				return true;
+			case MultiblockSmallChemicalReactor.SLOT_CATALYST:
+				return stack.getItem() instanceof ItemIIMaterialCatalyst;
 			case MultiblockSmallChemicalReactor.SLOT_TANK_INPUT_1_BUCKET_INPUT:
 			case MultiblockSmallChemicalReactor.SLOT_TANK_INPUT_2_BUCKET_INPUT:
 			case MultiblockSmallChemicalReactor.SLOT_TANK_OUTPUT_1_BUCKET_INPUT:

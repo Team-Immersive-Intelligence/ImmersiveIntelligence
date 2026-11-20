@@ -597,5 +597,13 @@
     "42": "part_42",
     "57": "part_57"
   },
-  "poi": {}
+  "poi": {
+    "fluid_input_1": 6,
+    "fluid_input_2": 13,
+    "fluid_output": [0, 2],
+    "redstone": 29,
+    "energy": 34,
+    "catalyst_input": 8,
+    "item_input": 12
+  }
 }

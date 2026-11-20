@@ -12,6 +12,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntitySmallChemicalReactor;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 import javax.annotation.Nullable;
 /**
@@ -32,6 +33,12 @@ public class MultiblockSmallChemicalReactor extends MultiblockStuctureBase<TileE
 		super(new ResourceLocation(ImmersiveIntelligence.MODID, "multiblocks/small_chemical_reactor"));
 		offset = new Vec3i(0, 0, 4);
 		INSTANCE = this;
+
+		addPOI(MultiblockPOI.FLUID_INPUT, "fluid_input_1", "fluid_input_2");
+		addPOI(MultiblockPOI.FLUID_OUTPUT, "fluid_output");
+		addPOI(MultiblockPOI.REDSTONE_INPUT, "redstone");
+		addPOI(MultiblockPOI.ENERGY_INPUT, "energy");
+		addPOI(MultiblockPOI.ITEM_INPUT, "catalyst_input", "item_input");
 	}
 
 	@Override
