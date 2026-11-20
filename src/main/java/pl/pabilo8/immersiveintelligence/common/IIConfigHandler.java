@@ -724,6 +724,10 @@ public class IIConfigHandler
 			@Comment("Config for the Electrolyzer, allows for changes to the energy and fluid capacity")
 			public static Electrolyzer electrolyzer;
 			@SubConfig
+			@LangKey("tile.immersiveintelligence.metal_multiblock.atmospheric_condenser.name")
+			@Comment("Config for the Atmospheric Condenser, allows for changes to energy consumption, production rates, and tank capacity")
+			public static AtmosphericCondenser atmosphericCondenser;
+			@SubConfig
 			@LangKey("tile.immersiveintelligence.metal_multiblock.precision_assembler.name")
 			@Comment("Config for the precision Assembler, allows changes to energy capacity and processing time")
 			public static PrecisionAssembler precisionAssembler;
@@ -1120,6 +1124,31 @@ public class IIConfigHandler
 				@RequiresWorldRestart
 				@Comment({"Fluid capacity of the electrolyzer."})
 				public static int fluidCapacity = 12000;
+			}
+
+			public static class AtmosphericCondenser
+			{
+				@Comment({"Energy capacity of the atmospheric condenser."})
+				public static int energyCapacity = 32000;
+
+				@RequiresWorldRestart
+				@Comment({"Fluid tank capacity of the atmospheric condenser."})
+				public static int fluidCapacity = 32000;
+
+				@Comment({"Energy consumption per tick during production."})
+				public static int energyPerTick = 8;
+
+				@Comment({"Ticks required per production cycle."})
+				public static int ticksPerCycle = 20;
+
+				@Comment({"Argon produced per cycle (in mB)."})
+				public static int argonPerCycle = 10;
+
+				@Comment({"Nitrogen produced per cycle (in mB)."})
+				public static int nitrogenPerCycle = 780;
+
+				@Comment({"Oxygen produced per cycle (in mB)."})
+				public static int oxygenPerCycle = 210;
 			}
 
 			public static class PrecisionAssembler
