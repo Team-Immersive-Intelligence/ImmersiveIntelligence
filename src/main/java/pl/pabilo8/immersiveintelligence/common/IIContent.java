@@ -48,6 +48,7 @@ import pl.pabilo8.immersiveintelligence.common.block.rotary_device.BlockIIMechan
 import pl.pabilo8.immersiveintelligence.common.block.simple.*;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIConcreteDecoration.ConcreteDecorations;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIMetalBase.Metals;
+import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIPaintedTinSheetmetal.PaintedColors;
 import pl.pabilo8.immersiveintelligence.common.item.*;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoRailgunGrenade;
@@ -335,6 +336,9 @@ public class IIContent
 	public static final BlockIISlab<Metals> blockMetalSlabs = new BlockIISlab<>(blockSheetmetal);
 	@IBatchOredictRegister(oreDict = "slabSheetmetal")
 	public static final BlockIISlab<Metals> blockSheetmetalSlabs = new BlockIISlab<>(blockMetalStorage);
+	//painted tin sheetmetal
+	public static final BlockIIPaintedTinSheetmetal blockPaintedTinSheetmetal = new BlockIIPaintedTinSheetmetal();
+	public static final BlockIISlab<PaintedColors> blockPaintedTinSheetmetalSlabs = new BlockIISlab<>(blockPaintedTinSheetmetal);
 	//regular blocks
 	public static final BlockIISandbags blockSandbags = new BlockIISandbags();
 	public static final BlockIIClothDecoration blockClothDecoration = new BlockIIClothDecoration();
