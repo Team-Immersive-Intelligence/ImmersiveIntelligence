@@ -2,14 +2,19 @@ package pl.pabilo8.immersiveintelligence.client.render.ammunition;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.CullFace;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IBipedModifyingRenderer;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.naval_mine.EntityNavalMine;
 
@@ -67,7 +72,7 @@ public class NavalMineRenderer extends Render<EntityNavalMine>
 	/**
 	 * Renders a naval mine ItemStack
 	 */
-	public static class NavalMineItemstackRenderer extends TileEntityItemStackRenderer
+	public static class NavalMineItemstackRenderer extends TileEntityItemStackRenderer implements IBipedModifyingRenderer
 	{
 		@Override
 		public void renderByItem(@Nonnull ItemStack stack, float partialTicks)
@@ -86,6 +91,24 @@ public class NavalMineRenderer extends Render<EntityNavalMine>
 					break;
 			}
 			GlStateManager.popMatrix();
+		}
+
+		@Override
+		public boolean onBipedRender(EntityLivingBase livingBase, ModelBiped biped, ItemStack stack, EnumHand hand, float swingProgress, float partialTicks)
+		{
+			if((hand==EnumHand.MAIN_HAND)==(livingBase.getPrimaryHand()==EnumHandSide.RIGHT))
+			{
+				//Right hand
+				biped.bipedRightArm.rotateAngleX -= 0.5f;
+				biped.bipedLeftArm.rotateAngleX = biped.bipedRightArm.rotateAngleX;
+			}
+			else
+			{
+				//Left hand
+				biped.bipedLeftArm.rotateAngleX -= 0.5f;
+				biped.bipedRightArm.rotateAngleX = biped.bipedLeftArm.rotateAngleX;
+			}
+			return true;
 		}
 	}
 }

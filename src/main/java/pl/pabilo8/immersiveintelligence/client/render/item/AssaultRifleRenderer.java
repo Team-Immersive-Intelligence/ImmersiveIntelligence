@@ -24,6 +24,7 @@ import pl.pabilo8.immersiveintelligence.client.util.amt.parts.*;
 import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTBullet.BulletState;
 import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIItemRendererAMT.RegisteredItemRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIUpgradableItemRendererAMT;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.ISpecificHandRenderer;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.AssaultRifle;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIAssaultRifle;

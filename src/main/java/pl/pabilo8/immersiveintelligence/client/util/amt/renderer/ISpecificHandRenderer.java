@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.client.render.item;
+package pl.pabilo8.immersiveintelligence.client.util.amt.renderer;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;

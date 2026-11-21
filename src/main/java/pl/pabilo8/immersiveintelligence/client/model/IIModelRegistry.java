@@ -30,6 +30,7 @@ import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.block.rotary_device.tileentity.TileEntityMechanicalConnectable;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIIItemTextureOverride;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
@@ -156,7 +157,8 @@ public class IIModelRegistry extends ImmersiveModelRegistry
 			public IBakedModel createBakedModel(IBakedModel existingModel)
 			{
 				IBakedModel perspectiveModel = replacement.createBakedModel(existingModel);
-				return new ModelDualPerspective(existingModel, perspectiveModel==null?existingModel: perspectiveModel);
+				IBakedModel guiModel = item instanceof IIIItemTextureOverride?new ModelItemDynamicOverride(existingModel, null): existingModel;
+				return new ModelDualPerspective(guiModel, perspectiveModel==null?guiModel: perspectiveModel);
 			}
 		});
 	}

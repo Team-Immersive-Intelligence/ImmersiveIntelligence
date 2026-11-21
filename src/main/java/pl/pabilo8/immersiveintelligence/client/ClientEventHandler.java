@@ -99,12 +99,11 @@ import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageBase;
 import pl.pabilo8.immersiveintelligence.client.model.IIModelRegistry;
 import pl.pabilo8.immersiveintelligence.client.render.IPassengerAnimationsRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.entity.IIBipedWearableLayerRenderer;
-import pl.pabilo8.immersiveintelligence.client.render.item.BinocularsRenderer;
-import pl.pabilo8.immersiveintelligence.client.render.item.ISpecificHandRenderer;
-import pl.pabilo8.immersiveintelligence.client.render.item.MineDetectorRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.item.PrintedPageRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.CameraHandler;
 import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTBipedAdapter;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IBipedModifyingRenderer;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.ISpecificHandRenderer;
 import pl.pabilo8.immersiveintelligence.common.*;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Factions;
@@ -198,6 +197,8 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	{
 		if(!(entity instanceof EntityLivingBase living))
 			return;
+		Minecraft mc = ClientUtils.mc();
+		float partialTicks = mc.getRenderPartialTicks();
 
 		//Concealed potion effect
 		if(((EntityLivingBase)entity).isPotionActive(IIPotions.concealed))
@@ -214,20 +215,20 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 			if(vehicle instanceof EntityVehicleSeat)
 				vehicle = vehicle.getRidingEntity();
 
-			Minecraft mc = ClientUtils.mc();
 			if(vehicle!=null)
 			{
 				Render<Entity> renderer = mc.getRenderManager().getEntityClassRenderObject(vehicle.getClass());
 				//noinspection rawtypes
-				//noinspection unchecked
 				if(renderer instanceof IPassengerAnimationsRenderer par)
-					if(par.handleBipedRotations(model, vehicle, living, mc.getRenderPartialTicks()))
+					//noinspection unchecked
+					if(par.handleBipedRotations(model, vehicle, living, partialTicks))
 						return;
 			}
 		}
 
 		//Item holding animations
 		if(IEConfig.fancyItemHolding)
+		{
 			for(EnumHand hand : EnumHand.values())
 			{
 				ItemStack heldItem = living.getHeldItem(hand);
@@ -235,7 +236,11 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 				{
 					Item item = heldItem.getItem();
 					boolean right = (hand==EnumHand.MAIN_HAND)==(living.getPrimaryHand()==EnumHandSide.RIGHT);
-					if(item==IIContent.itemMachinegun)
+					//AMT-based renderer
+					if(item.getTileEntityItemStackRenderer() instanceof IBipedModifyingRenderer bipedRenderer)
+						bipedRenderer.onBipedRender(living, model, heldItem, hand, model.swingProgress, partialTicks);
+						//Other cases
+					else if(item==IIContent.itemMachinegun)
 						if(right)
 						{
 							model.bipedRightArm.rotateAngleX *= 0.25f;
@@ -284,38 +289,6 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 							model.bipedRightArm.rotationPointZ += IIMath.clampedLerp3Par(0, 2f, 0, v);
 						}
 					}
-					else if(living.isSneaking()&&item==IIContent.itemBinoculars)
-					{
-						model.bipedRightArm.rotateAngleY = model.bipedHead.rotateAngleY-0.25f;
-						model.bipedLeftArm.rotateAngleY = model.bipedHead.rotateAngleY+0.25f;
-
-						model.bipedRightArm.rotateAngleX = model.bipedHead.rotateAngleX-2f;
-						model.bipedLeftArm.rotateAngleX = model.bipedRightArm.rotateAngleX;
-
-						int id = heldItem.getMetadata();
-						BinocularsRenderer.INSTANCE.render(id==1?ItemNBTHelper.getBoolean(heldItem, "wasUsed")?2: 1: id, model.bipedHead, true);
-					}
-					else if(item==IIContent.itemMineDetector)
-					{
-						float v = MineDetectorRenderer.instance.renderBase(living, 2.125f, true);
-
-						model.bipedRightArm.rotateAngleY = model.bipedBody.rotateAngleY-0.45f;
-						model.bipedLeftArm.rotateAngleY = model.bipedBody.rotateAngleY+0.45f;
-
-						model.bipedRightArm.rotateAngleX = -1.25f-(1f-v)*0.5f;
-						model.bipedLeftArm.rotateAngleX = model.bipedRightArm.rotateAngleX;
-					}
-					else if(item==IIContent.itemNavalMine)
-						if(right)
-						{
-							model.bipedRightArm.rotateAngleX -= 0.5f;
-							model.bipedLeftArm.rotateAngleX = model.bipedRightArm.rotateAngleX;
-						}
-						else
-						{
-							model.bipedLeftArm.rotateAngleX -= 0.5f;
-							model.bipedRightArm.rotateAngleX = model.bipedLeftArm.rotateAngleX;
-						}
 					else if(item==IIContent.itemGrenade)
 					{
 						float use = 1f-MathHelper.clamp(((EntityLivingBase)entity).getItemInUseCount()/(float)heldItem.getMaxItemUseDuration(), 0, 1);
@@ -330,6 +303,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 
 				}
 			}
+		}
 	}
 
 	/**

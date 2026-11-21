@@ -432,7 +432,7 @@ public class ClientProxy extends CommonProxy
 		new SubmachinegunRenderer();
 
 		//Tools
-		//TODO: 22.09.2024 binoculars
+		new BinocularsRenderer();
 		new RadioTunerRenderer();
 		new TachometerRenderer();
 		new ElectricHammerRenderer();
@@ -462,7 +462,6 @@ public class ClientProxy extends CommonProxy
 
 		//Custom model items
 		IIModelRegistry.INSTANCE.registerCustomItemModel(IIContent.itemBulletMagazine);
-		IIModelRegistry.INSTANCE.registerCustomItemModel(IIContent.itemBinoculars);
 		IIModelRegistry.INSTANCE.registerCustomItemModel(IIContent.itemCasingPouch);
 		IIModelRegistry.INSTANCE.registerCustomItemModel(IIContent.itemBackpack);
 		IIModelRegistry.INSTANCE.registerCustomItemModel(IIContent.itemAdvancedPowerPack);
