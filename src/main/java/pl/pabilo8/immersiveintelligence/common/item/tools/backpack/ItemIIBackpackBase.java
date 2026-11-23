@@ -60,7 +60,7 @@ public abstract class ItemIIBackpackBase extends ItemArmor implements ISpecialAr
 
 	protected ItemIIBackpackBase(String name, String textureName)
 	{
-		super(ArmorMaterial.IRON, 0, EntityEquipmentSlot.CHEST);
+		super(ArmorMaterial.LEATHER, 0, EntityEquipmentSlot.CHEST);
 		this.backpackName = name;
 		this.textureName = textureName;
 
@@ -301,6 +301,12 @@ public abstract class ItemIIBackpackBase extends ItemArmor implements ISpecialAr
 	public FontRenderer getFontRenderer(ItemStack stack)
 	{
 		return IIClientUtils.fontRegular;
+	}
+
+	@Override
+	public boolean hasOverlay(ItemStack stack)
+	{
+		return false;
 	}
 
 	/**
