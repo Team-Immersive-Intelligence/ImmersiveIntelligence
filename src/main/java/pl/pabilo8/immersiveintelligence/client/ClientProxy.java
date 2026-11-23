@@ -438,7 +438,7 @@ public class ClientProxy extends CommonProxy
 		new ElectricHammerRenderer();
 		new ElectricWrenchRenderer();
 		new ElectricWirecutterRenderer();
-		//TODO: 22.09.2024 mine detector renderer
+		new MineDetectorRenderer();
 		new ClipboardRenderer();
 
 		//Armor
@@ -506,7 +506,6 @@ public class ClientProxy extends CommonProxy
 		//Tools
 		IIContent.itemTripodPeriscope.setTileEntityItemStackRenderer(TripodPeriscopeRenderer.instance);
 		IIContent.itemMortar.setTileEntityItemStackRenderer(MortarRenderer.instance);
-		IIContent.itemMineDetector.setTileEntityItemStackRenderer(MineDetectorRenderer.instance);
 
 		//Mines and explosives
 		registerTileRenderer(TripmineRenderer.class, IIContent.blockTripmine);

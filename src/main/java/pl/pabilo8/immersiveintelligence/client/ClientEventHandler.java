@@ -9,7 +9,6 @@ import blusunrize.lib.manual.gui.GuiManual;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.MultimapBuilder;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
@@ -949,16 +948,6 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		if(stack.getItem()==IIContent.itemPrintedPage&&PageType.fromStack(stack).useHandSpecialRender())
 		{
 			PrintedPageRenderer.renderItemFirstPerson(stack, event.getHand(), event.getEquipProgress(), event.getSwingProgress(), event.getInterpolatedPitch());
-			event.setCanceled(true);
-		}
-
-		if(stack.getItem()==IIContent.itemMineDetector&&event.getHand()==EnumHand.MAIN_HAND)
-		{
-			GlStateManager.pushMatrix();
-			EntityPlayerSP player = ClientUtils.mc().player;
-			MineDetectorRenderer.instance.renderBase(player, 2.125f, false);
-			GlStateManager.popMatrix();
-
 			event.setCanceled(true);
 		}
 

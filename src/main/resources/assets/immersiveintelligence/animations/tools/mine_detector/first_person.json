@@ -1,0 +1,107 @@
+{
+  "comment": "Made by Pabilo8 with Blockbench",
+  "groups": {
+    "handle": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [-65, 0, 0]
+        },
+        {
+          "time": 1,
+          "transform": [-32.5, 0, 0]
+        }
+      ],
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "base": {
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, 0, 16]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, 48]
+        }
+      ]
+    },
+    "left_arm": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [-85, -25, 0]
+        },
+        {
+          "time": 1,
+          "transform": [-122.68944, -20.25437, -14.97401]
+        }
+      ]
+    },
+    "right_arm": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [-102.06838, 26.12797, 8.89674]
+        },
+        {
+          "time": 1,
+          "transform": [-123.24412, 29.39216, 17.69654]
+        }
+      ]
+    },
+    "offhand": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [15, 0, 230]
+        },
+        {
+          "time": 1,
+          "transform": [35, 0, 230]
+        }
+      ],
+      "position": [
+        {
+          "time": 0,
+          "transform": [2, 0, 0]
+        }
+      ],
+      "visibility": [
+        {
+          "time": 0,
+          "visibility": true
+        }
+      ]
+    },
+    "mainhand": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [15, 0, 130]
+        },
+        {
+          "time": 1,
+          "transform": [35, 0, 130]
+        }
+      ],
+      "position": [
+        {
+          "time": 0,
+          "transform": [-1, 2, 0]
+        }
+      ],
+      "visibility": [
+        {
+          "time": 0,
+          "visibility": true
+        }
+      ]
+    }
+  }
+}

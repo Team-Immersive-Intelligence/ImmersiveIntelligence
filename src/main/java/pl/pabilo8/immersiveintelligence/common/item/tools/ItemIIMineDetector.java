@@ -19,6 +19,8 @@ import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
+import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
+import pl.pabilo8.modworks.annotations.item.ItemModelType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +33,7 @@ import java.util.List;
  * @updated 04.10.2026
  */
 @IIItemProperties(category = IICategory.WARFARE)
+@GeneratedItemModels(itemName = "mine_detector", type = ItemModelType.ITEM_SIMPLE_TOOL, texturePath = "tools/mine_detector_item")
 public class ItemIIMineDetector extends ItemIIElectricTool
 {
 	public static final List<IngredientStack> detectableBlocks = new ArrayList<>();
