@@ -102,7 +102,7 @@ public class IIManualCategoryData extends IIManualCategory
 				.addSource("relay", getSourceForItem(IIContent.blockDataConnector.getStack(IIBlockTypes_Connector.DATA_RELAY)))
 				.addSource("duplex_connector", getSourceForItem(IIContent.blockDataConnector.getStack(IIBlockTypes_Connector.DATA_DUPLEX_CONNECTOR)))
 				.addSource("debugger", getSourceForItem(IIContent.blockDataConnector.getStack(IIBlockTypes_Connector.DATA_DEBUGGER)))
-				.addSource("wired_connection", getScenarioSource("wired_connection", 120, 1f)
+				.addSource("wired_connection", getScenarioSource("wired_connection", 120, 1f, 15f)
 						.withList("hovers",
 								EasyNBT.parseEasyNBT("{x:76,y:10,w:32,h:32,item:%s}",
 										IIContent.blockDataConnector.getStack(IIBlockTypes_Connector.DATA_DEBUGGER).serializeNBT()),
@@ -113,9 +113,9 @@ public class IIManualCategoryData extends IIManualCategory
 								EasyNBT.parseEasyNBT("{x:2,y:32,w:32,h:32,item:%s}",
 										IIContent.blockMetalDevice.getStack(IIBlockTypes_MetalDevice.PUNCHTAPE_READER).serializeNBT())
 						))
-				.addSource("wireless_connection", getScenarioSource("wireless_connection", 160, 0.3f));
+				.addSource("wireless_connection", getScenarioSource("wireless_connection", 160, 0.3f, 0f));
 		addEntry("data_callback")
-				.addSource("data_callback_scenario", getScenarioSource("data_callback", 200, 0.5f));
+				.addSource("data_callback_scenario", getScenarioSource("data_callback", 120, 0.6125f, 0f));
 		addEntry("inventory_interface")
 				.addSource("inventory_interface", getSourceForItem(
 						IIContent.blockDataConnector.getStack(IIBlockTypes_Connector.INVENTORY_INTERFACE)));
@@ -126,8 +126,7 @@ public class IIManualCategoryData extends IIManualCategory
 		addEntry("punchtapes")
 				.addSource("punchtape", getSourceForItem(IIContent.itemMaterial.getStack(Materials.PUNCHTAPE_EMPTY)))
 				.addSource("reader", getSourceForItem(IIContent.blockMetalDevice.getStack(IIBlockTypes_MetalDevice.PUNCHTAPE_READER)))
-				.addSource("writer", getSourceForItem(IIContent.blockMetalDevice.getStack(IIBlockTypes_MetalDevice.PUNCHTAPE_READER)))
-				.addSource("punchtape_scenario", EasyNBT.newNBT());
+				.addSource("writer", getSourceForItem(IIContent.blockMetalDevice.getStack(IIBlockTypes_MetalDevice.PUNCHTAPE_READER)));
 		addEntry("arithmetic_logic_machine");
 		IIManualEntry functionalCircuits = addEntry("functions/_functional_circuits")
 				.addSource("circuit_blueprints", getSourceForItems(
@@ -163,7 +162,7 @@ public class IIManualCategoryData extends IIManualCategory
 						IIContent.blockMetalDevice.getStack(IIBlockTypes_MetalDevice.QUAD_NIXIE_DISPLAY)
 				));
 		addEntry("radio_station")
-				.addSource("wireless_connection", getScenarioSource("wireless_connection", 160, 0.3f))
+				.addSource("wireless_connection", getScenarioSource("wireless_connection", 160, 0.3f, 16f))
 				.addSource("basic_radio_tuner", getSourceForItem(IIContent.itemRadioTuner.getStack(1)))
 				.addSource("advanced_radio_tuner", getSourceForItem(new ItemStack(IIContent.itemRadioTuner, 1, 1)
 				));
@@ -185,14 +184,14 @@ public class IIManualCategoryData extends IIManualCategory
 
 	}
 
-	private static EasyNBT getScenarioSource(String name, int duration, float scale)
+	private static EasyNBT getScenarioSource(String name, int duration, float scale, float offsetY)
 	{
 		return EasyNBT.newNBT()
 				.withString("header", "immersiveintelligence:models/manual/"+name+".obj.amt")
 				.withString("animation", "immersiveintelligence:manual/"+name)
 				.withInt("duration", duration)
 				.withFloat("scale", scale)
-				.withFloat("offset_y", name.equals("wired_connection")?15: 7);
+				.withFloat("offset_y", offsetY);
 	}
 
 }

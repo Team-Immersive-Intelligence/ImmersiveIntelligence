@@ -7,40 +7,43 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualObject;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualPage;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTLoader;
 import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIAnimationCompiledMap;
 import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
-import pl.pabilo8.immersiveintelligence.client.util.amt.parts.*;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMT;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTLocator;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
+import pl.pabilo8.immersiveintelligence.common.util.amt.AMTModelHeader;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
-import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 /**
- * Displays a scene using 3D models. Very useful for showing practical in-world examples.
+ * Displays animated manual scenes from AMT model headers.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 27.10.2026
  * @since 04.11.2022
  */
 public class IIManualScenario extends IIManualObject
 {
 	//--- Setup ---//
-	private int animationTime = 0, maxAnimationTime;
-	private float displayScale;
+	private int maxAnimationTime;
+	private long animationStart;
+	private float displayScale, displayOffsetY;
 	private float ww, hh;
 	private AMTModel objects, overlay;
-	private AMTModel joined;
 	private IIAnimationCompiledMap animation;
 	private HoverBox[] hovers;
-
-	private String hoveredText = null;
 
 	public IIManualScenario(ManualObjectInfo info, EasyNBT nbt)
 	{
@@ -52,72 +55,57 @@ public class IIManualScenario extends IIManualObject
 	{
 		super.postInit(page);
 
-		this.objects = new AMTModel(dataSource.getList("elements", 10).tagList.stream()
-				.map(this::createAMT)
-				.toArray(AMT[]::new));
-		this.overlay = new AMTModel(dataSource.getList("overlay", 10).tagList.stream()
-				.map(this::createAMT)
-				.toArray(AMT[]::new));
-		this.hovers = dataSource.getList("hovers", 10).tagList.stream()
-				.map(n -> EasyNBT.wrapNBT((NBTTagCompound)n))
+		AMTModel scene = new AMTModel();
+		if(dataSource.hasKey("header"))
+		{
+			AMTModelHeader header = AMTLoader.loadHeader(new ResourceLocation(dataSource.getString("header")));
+			AMT[] parts = header.createParts((name, properties) -> createModel(name, header, properties));
+			header.applyHierarchy(Arrays.asList(parts));
+			scene = new AMTModel(Arrays.stream(parts).filter(part -> !part.isChild()).toArray(AMT[]::new));
+		}
+		this.objects = new AMTModel(scene.stream()
+				.filter(part -> !part.getName().equals("overlay")).toArray(AMT[]::new));
+		this.overlay = new AMTModel(scene.stream()
+				.filter(part -> part.getName().equals("overlay")).toArray(AMT[]::new));
+		this.hovers = dataSource.streamList(NBTTagCompound.class, "hovers")
+				.map(EasyNBT::wrapNBT)
 				.map(HoverBox::new)
 				.toArray(HoverBox[]::new);
 
-		this.joined = new AMTModel(this.objects, this.overlay);
-		this.animation = IIAnimationCompiledMap.create(this.joined, new ResourceLocation(dataSource.getString("animation")));
+		this.animation = dataSource.hasKey("animation")?
+				IIAnimationCompiledMap.create(scene, new ResourceLocation(dataSource.getString("animation"))): null;
 		this.maxAnimationTime = dataSource.getInt("duration");
+		this.animationStart = Minecraft.getSystemTime();
 
 		ww = width/2f;
 		hh = height/2f;
 		dataSource.checkSetFloat("scale", f -> displayScale = 20*f, 1f);
-
+		dataSource.checkSetFloat("offset_y", f -> displayOffsetY = f, 15f);
 	}
 
-	@Nonnull
-	private AMT createAMT(NBTBase tag)
+	@Nullable
+	private static AMT createModel(String name, AMTModelHeader header, EasyNBT nbt)
 	{
-		// TODO: 25.11.2022 IMPROVE
-		EasyNBT nbt = EasyNBT.wrapNBT((NBTTagCompound)tag);
+		if(!nbt.hasKey("model")&&!nbt.hasKey("models"))
+			return null;
 
-		//create a main node for the model
-		AMT amt;
-
-		switch(nbt.getString("type"))
+		AMTLocator part = new AMTLocator(name, header);
+		List<AMT> children = new ArrayList<>();
+		List<String> models = new ArrayList<>();
+		nbt.checkSetString("model", models::add);
+		nbt.streamList(NBTTagString.class, "models").map(NBTTagString::getString).forEach(models::add);
+		for(String model : models)
 		{
-			case "item":
-				amt = new AMTItem(nbt.getString("name"), Vec3d.ZERO);
-				((AMTItem)amt).setStack(nbt.getItemStack("stack"));
-				break;
-			case "text":
-				amt = new AMTText(nbt.getString("name"), Vec3d.ZERO);
-				((AMTText)amt).setText(getText(nbt));
-				((AMTText)amt).setFontSize(0.0625f);
-				nbt.checkSetString("font_size", ((AMTText)amt)::setText);
-				nbt.checkSetColor("color", ((AMTText)amt)::setColor);
-				nbt.checkSetFloat("font_size", ((AMTText)amt)::setFontSize);
-				break;
-			case "wire":
-				amt = new AMTWire(nbt.getString("name"), Vec3d.ZERO,
-						nbt.getVec3d("start"),
-						nbt.getVec3d("end"),
-						nbt.getColor("color"),
-						nbt.getFloat("diameter")
-				);
-				break;
-			default:
-			case "model":
-			{
-				amt = new AMTLocator(nbt.getString("name"), Vec3d.ZERO);
-				AMTModel model = new AMTModel(DefaultVertexFormats.BLOCK, new ResourceLocation(nbt.getString("model")));
-				//load the model and add the parts as main node's children
-				amt.setChildren(model.getParts());
-			}
-			break;
+			//Embedded models keep their own coordinate system and use scene properties on the parent.
+			AMTModel embedded = new AMTModel(DefaultVertexFormats.BLOCK, new ResourceLocation(model),
+					new AMTModelHeader(), null);
+			int index = children.size();
+			for(AMT child : embedded.getChildrenRecursive())
+				child.rename(name+"/"+index+"/"+child.getName());
+			Collections.addAll(children, embedded.getParts());
 		}
-
-		amt.setPosition(nbt.getVec3d("pos"));
-		amt.setRotation(nbt.getVec3d("rot"));
-		return amt;
+		part.setChildren(children.toArray(new AMT[0]));
+		return part;
 	}
 
 	@Override
@@ -138,8 +126,8 @@ public class IIManualScenario extends IIManualObject
 
 		if(animation!=null&&maxAnimationTime > 0)
 		{
-			this.animationTime = (this.animationTime+1)%maxAnimationTime;
-			animation.apply((this.animationTime+partialTicks)/(float)maxAnimationTime);
+			float animationTime = ((Minecraft.getSystemTime()-animationStart)/50f)%maxAnimationTime;
+			animation.apply(animationTime/maxAnimationTime);
 		}
 
 		GlStateManager.enableOutlineMode(0xff000000);
@@ -149,8 +137,7 @@ public class IIManualScenario extends IIManualObject
 		GlStateManager.pushMatrix();
 		GlStateManager.enableDepth();
 		//center at the image's middle
-		GlStateManager.translate(x+ww, y+hh, 100);
-		GlStateManager.translate(0, 15, 0);
+		GlStateManager.translate(x+ww, y+hh+displayOffsetY, 100);
 
 		//rotation for the base plane
 		GlStateManager.rotate(-35, 0, 0, 1);
@@ -186,23 +173,14 @@ public class IIManualScenario extends IIManualObject
 		GlStateManager.popMatrix();
 		GlStateManager.color(1f, 1f, 1f, 1f);
 
+		GlStateManager.disableDepth();
 		GlStateManager.pushMatrix();
-		GlStateManager.translate(x+8, y+8, 0);
-		GlStateManager.scale(-16, 16, -16);
-		GlStateManager.rotate(180, 0, 1, 0);
+		GlStateManager.translate(x, y, 0);
+		GlStateManager.scale(16, -16, 16);
 		this.overlay.render(tes, buf);
 		GlStateManager.popMatrix();
 
-		this.hoveredText = null;
-		for(HoverBox hover : hovers)
-			if(IIMath.isPointInRectangle(hover.x, hover.y, hover.xx, hover.yy, mx, my))
-			{
-				this.hoveredText = hover.text;
-				break;
-			}
 		GlStateManager.color(1f, 1f, 1f, 1f);
-
-
 	}
 
 	@Override
@@ -214,7 +192,10 @@ public class IIManualScenario extends IIManualObject
 	@Override
 	public List<String> getTooltip(Minecraft mc, int mx, int my)
 	{
-		return hoveredText==null?null: Collections.singletonList(hoveredText);
+		for(HoverBox hover : hovers)
+			if(IIMath.isPointInRectangle(hover.x, hover.y, hover.xx, hover.yy, mx, my))
+				return Collections.singletonList(hover.text);
+		return null;
 	}
 
 	private class HoverBox

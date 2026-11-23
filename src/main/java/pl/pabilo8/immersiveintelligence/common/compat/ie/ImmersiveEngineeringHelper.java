@@ -101,12 +101,10 @@ public class ImmersiveEngineeringHelper extends IICompatModule
 		}
 
 		if(Overrides.enableDecoOverride)
-		{
 			GUI_IE_CRATE_OVERRIDE = EnumHelper.addEnum(IIGUI.class, "IE_CRATE_OVERRIDE", new Class[]{Class.class, BiFunction.class},
 					TileEntityWoodenCrate.class, (BiFunction<EntityPlayer, TileEntity, Container>)
 							(player, te) -> new ContainerIICrate<>(player, (TileEntityWoodenCrate)te)
 			);
-		}
 
 		ReflectionHelper.setPrivateValue(ToolUpgrades.class, ToolUpgrades.REVOLVER_BAYONET, ImmutableSet.of("REVOLVER", "SUBMACHINEGUN", "RIFLE"), "toolset");
 	}
@@ -296,6 +294,7 @@ public class ImmersiveEngineeringHelper extends IICompatModule
 			this.fontManual = new IIFontRenderer(new ResourceLocation("textures/font/ascii.png"));
 			this.fontManual.colorCode[TextFormatting.GOLD.getColorIndex()] = IIReference.COLOR_IMMERSIVE_ORANGE_DARK.getPackedRGB();
 			this.fontManual.createColorBackup();
+			this.fontManual.setUnicodeFlag(true);
 		}
 	}
 

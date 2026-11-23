@@ -175,7 +175,7 @@ public class IIConfigHandler
 
 			@Comment({"If enabled, II will replace compatible Immersive Engineering's GUIs with Deco-based ones."})
 			@RequiresMcRestart
-			public static boolean enableDecoOverride = false;
+			public static boolean enableDecoOverride = true;
 
 			@Comment({"If disabled, II will not replace the IE font in the Engineer's Manual."})
 			public static boolean enableFontOverride = true;

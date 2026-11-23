@@ -2,7 +2,7 @@
 Nixie Tube Displays
 # displays
 |[crafting]{source:"crafting"}|
-[Nixie Tube Displays] are used to display [numbers](../data_types.md#integer) and [text](../data_types.md#string) provided through [data](../data_main.md).
+[Nixie Tube Displays] are used to display [numbers](../../ii_data/data_types.md#integer) and [text](../../ii_data/data_types.md#string) provided through [data](../../ii_data/data_main.md).
 Data Packets are accepted through the bottom or left side. *Characters* from set variables are displayed on the [tubes], then the remaining text and the rest of the packet is passed to the right side, which allows *display chaining*.
 # settings
 The **machine** operates in two modes set in its interface: the [Digit mode] or [Number/Text mode].

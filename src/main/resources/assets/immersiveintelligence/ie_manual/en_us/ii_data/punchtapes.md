@@ -14,6 +14,3 @@ The **Punchtape Reader** has 3 modes of control by redstone:
 [No Redstone] - the machine won't react to redstone signals
 [Send on Redstone] - the machine will repeat sending last read punchtape on receiving a redstone signal
 [Redstone on Send] - the machine will emit a redstone signal when it receives a packet
-# example_password_door
-A very common example for using a punchtape is building a "password door", a kind of security system combining a [Punchtape Reader] and a door connected through a [Redstone-Data Interface].
-|[scenario]{source:"punchtape_scenario"}|
