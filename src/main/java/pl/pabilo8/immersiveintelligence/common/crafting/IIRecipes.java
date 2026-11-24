@@ -13,6 +13,7 @@ import blusunrize.immersiveengineering.common.blocks.stone.BlockTypes_StoneDecor
 import blusunrize.immersiveengineering.common.blocks.wooden.BlockTypes_WoodenDevice0;
 import blusunrize.immersiveengineering.common.crafting.RecipeRGBColouration;
 import blusunrize.immersiveengineering.common.util.EnergyHelper;
+import blusunrize.immersiveengineering.common.util.IEFluid;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.block.Block;
@@ -72,6 +73,7 @@ import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase.AmmoPart
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing.Casing;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine.Magazines;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIMaterial.Materials;
+import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMaterialCatalyst.MaterialsCatalyst;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIMetalPressMold.PressMolds;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIPrecisionTool.PrecisionTools;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIVulcanizerMold.VulcanizerMolds;
@@ -179,6 +181,20 @@ public class IIRecipes
 		addPackerHandling();
 
 		addElectrolyzerRecipes();
+
+		new SmallChemicalReactorRecipe(new FluidStack(IIContent.gasOxygen, 1000), null,
+				new IngredientStack("dustSulfur"), null, new FluidStack(IIContent.gasSulfurDioxide, 1000),
+				ItemStack.EMPTY, 1600, 100);
+
+		new SmallChemicalReactorRecipe(new FluidStack(IIContent.gasSulfurDioxide, 500),
+				new FluidStack(IIContent.gasOxygen, 500), null, null,
+				new FluidStack(IIContent.gasSulfurTrioxide, 1000), ItemStack.EMPTY, 1600, 100);
+
+		new SmallChemicalReactorRecipe(new FluidStack(IIContent.gasHydrogen, 500),
+				new FluidStack(IEContent.fluidEthanol, 500), null,
+				new IngredientStack(IIContent.itemMaterialCatalyst.getStack(MaterialsCatalyst.PLATINUM)),
+				new FluidStack(IIContent.fluidAcetaldol, 1000), ItemStack.EMPTY, 1600, 100);
+
 		addInkRecipes();
 
 		addSmeltingRecipes();

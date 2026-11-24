@@ -61,7 +61,7 @@ public class ItemIIMaterialCatalyst extends ItemIISubItemsBase<MaterialsCatalyst
 
 		ItemNBTHelper.setInt(stack, "damage", getToolDamage(stack)-amount);
 
-		if(getToolDamage(stack) < 0)
+		if(getToolDamage(stack) <= 0)
 			stack.setCount(0);
 	}
 

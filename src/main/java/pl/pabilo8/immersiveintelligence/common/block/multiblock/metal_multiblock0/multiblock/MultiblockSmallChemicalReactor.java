@@ -39,6 +39,7 @@ public class MultiblockSmallChemicalReactor extends MultiblockStuctureBase<TileE
 		addPOI(MultiblockPOI.REDSTONE_INPUT, "redstone");
 		addPOI(MultiblockPOI.ENERGY_INPUT, "energy");
 		addPOI(MultiblockPOI.ITEM_INPUT, "catalyst_input", "item_input");
+		addPOI(MultiblockPOI.ITEM_OUTPUT, "item_output");
 	}
 
 	@Override

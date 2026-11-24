@@ -131,6 +131,8 @@ public class JEIHelper implements IModPlugin
 				IIContent.blockMetalMultiblock0.getStack(MetalMultiblocks0.CHEMICAL_BATH), "washing"));
 		categories.put(ElectrolyzerRecipe.class, new IIRecipeJEICategory<>(ElectrolyzerRecipe.class,
 				IIContent.blockMetalMultiblock0.getStack(MetalMultiblocks0.ELECTROLYZER)));
+		categories.put(SmallChemicalReactorRecipe.class, new IIRecipeJEICategory<>(SmallChemicalReactorRecipe.class,
+				IIContent.blockMetalMultiblock0.getStack(MetalMultiblocks0.SMALL_CHEMICAL_REACTOR)));
 		categories.put(PrecisionAssemblerRecipe.class, new IIRecipeJEICategory<>(PrecisionAssemblerRecipe.class,
 				IIContent.blockMetalMultiblock0.getStack(MetalMultiblocks0.PRECISION_ASSEMBLER)));
 		categories.put(SawmillRecipe.class, new IIRecipeJEICategory<>(SawmillRecipe.class,
