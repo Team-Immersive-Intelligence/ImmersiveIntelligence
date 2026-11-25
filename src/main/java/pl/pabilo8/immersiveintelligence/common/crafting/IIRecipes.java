@@ -62,7 +62,9 @@ import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDe
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDevice.IIBlockTypes_MetalDevice;
 import pl.pabilo8.immersiveintelligence.common.block.mines.BlockIIMine.IIBlockTypes_Mine;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIConcreteDecoration.ConcreteDecorations;
+import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIMetalBase.Metals;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIOre.Ores;
+import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIPaintedTinSheetmetal.PaintedColors;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIISmallCrate.IIBlockTypes_SmallCrate;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIIMinecart.Minecarts;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIIPrintedPage.PageType;
@@ -92,7 +94,6 @@ import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradeableArmor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -1075,6 +1076,17 @@ public class IIRecipes
 				256*160, 160, true, false, false
 		);
 
+		addBathingCleaningRecipe(
+				IIContent.blockSheetmetal.getStack(Metals.TIN),
+				new IngredientStack("paintedSheetmetalTin"),
+				1000, 256*160, 160, true, false, false
+		);
+		addBathingCleaningRecipe(
+				IIContent.blockMetalSlabs.getStack(Metals.TIN),
+				new IngredientStack("slabPaintedSheetmetalTin"),
+				500, 128*160, 160, true, false, false
+		);
+
 		//gray concrete cleaning recipe
 
 		addBathingCleaningRecipe(//gray concrete
@@ -1133,6 +1145,15 @@ public class IIRecipes
 			//get closest approximated dye
 			return new ItemStack(Items.BED, 1, rgb.getDyeColor().getMetadata());
 		}, new IngredientStack(new ItemStack(Items.BED)), 256*240, 240, 200);
+
+		//Painted tin sheetmetal, based off the wool stuff in the chemical painter
+		new ChemicalPainterRecipe((rgb, stack) ->
+				IIContent.blockPaintedTinSheetmetal.getStack(PaintedColors.values()[rgb.getDyeColor().getMetadata()]),
+				new IngredientStack(IIContent.blockSheetmetal.getStack(Metals.TIN)), 256*240, 240, 125);
+
+		new ChemicalPainterRecipe((rgb, stack) ->
+				IIContent.blockPaintedTinSheetmetalSlabs.getStack(PaintedColors.values()[rgb.getDyeColor().getMetadata()]),
+				new IngredientStack(IIContent.blockMetalSlabs.getStack(Metals.TIN)), 128*240, 240, 63);
 
 		//II / IE items
 		new ChemicalPainterRecipe((rgb, stack) -> {
@@ -1935,6 +1956,10 @@ public class IIRecipes
 		OreDictionary.registerOre("gunbarrelSteel", new ItemStack(IEContent.itemMaterial, 1, 14));
 		OreDictionary.registerOre("gunpartRevolver", new ItemStack(IEContent.itemMaterial, 1, 15));
 		OreDictionary.registerOre("gunpartHammer", new ItemStack(IEContent.itemMaterial, 1, 16));
+
+		//Sand for excavator entries
+		OreDictionary.registerOre("sandRed", new ItemStack(Blocks.SAND, 1, 1));
+		OreDictionary.registerOre("sandstoneRed", Blocks.RED_SANDSTONE);
 
 		//Meat for production
 		OreDictionary.registerOre("listAllMeatRaw", Items.PORKCHOP);
