@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.client.manual;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.lib.manual.ManualInstance.ManualEntry;
 import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.resources.IResource;
@@ -40,6 +41,8 @@ public class IIManualEntry extends ManualEntry
 	private final String fullFilePath;
 	@Getter
 	private final String resourceCategory;
+	@Setter
+	@Getter
 	private IIManualPageFolder folder;
 
 	/**
@@ -184,16 +187,6 @@ public class IIManualEntry extends ManualEntry
 			i++;
 		}
 		return -1;
-	}
-
-	public IIManualPageFolder getFolder()
-	{
-		return folder;
-	}
-
-	public void setFolder(IIManualPageFolder folder)
-	{
-		this.folder = folder;
 	}
 
 	public String getFullName()

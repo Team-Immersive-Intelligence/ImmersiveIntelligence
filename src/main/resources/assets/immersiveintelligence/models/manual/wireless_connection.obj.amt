@@ -1,0 +1,109 @@
+{
+  "origins": {
+    "overlay": [0, 0, 0],
+    "station1": [0, 0, 0],
+    "station2": [0, 0, 0],
+    "connector1": [0, 0, 0],
+    "connector2": [0, 0, 0],
+    "debugger1": [0, 0, 0],
+    "debugger2": [0, 0, 0],
+    "wire0": [0, 0, 0],
+    "wire1": [0, 0, 0],
+    "radio_packet": [0, 0, 0],
+    "wired_packet": [0, 0, 0],
+    "radio_caption": [0, 0, 0],
+    "received_caption": [0, 0, 0]
+  },
+  "hierarchy": {
+    "radio_caption": "overlay",
+    "received_caption": "overlay"
+  },
+  "types": {
+    "overlay": "locator",
+    "station1": "model",
+    "station2": "model",
+    "connector1": "model",
+    "connector2": "model",
+    "debugger1": "model",
+    "debugger2": "model",
+    "wire0": "wire",
+    "wire1": "wire",
+    "radio_packet": "text",
+    "wired_packet": "text",
+    "received_caption": "text"
+  },
+  "properties": {
+    "overlay": {
+    },
+    "station1": {
+      "position": [-8.0, 1.0, -1.5],
+      "rotation": [0.0, 0.0, 0.0],
+      "models": [
+        "immersiveintelligence:models/block/multiblock/radio_station/radio_station_base.obj",
+        "immersiveintelligence:models/block/multiblock/radio_station/radio_station.obj.ie"
+      ]
+    },
+    "station2": {
+      "position": [7.0, 1.0, -1.5],
+      "rotation": [0.0, 0.0, 0.0],
+      "models": [
+        "immersiveintelligence:models/block/multiblock/radio_station/radio_station_base.obj",
+        "immersiveintelligence:models/block/multiblock/radio_station/radio_station.obj.ie"
+      ]
+    },
+    "connector1": {
+      "position": [-8.0, 2.0, -1.5],
+      "rotation": [90.0, 0.0, -90.0],
+      "model": "immersiveintelligence:models/block/connector/data_connector.obj.ie"
+    },
+    "connector2": {
+      "position": [7.0, 1.0, -1.5],
+      "rotation": [90.0, 0.0, 0.0],
+      "model": "immersiveintelligence:models/block/connector/data_connector.obj.ie"
+    },
+    "debugger1": {
+      "position": [-5.0, 0.0, -2.5],
+      "rotation": [0.0, 0.0, 0.0],
+      "model": "immersiveintelligence:models/block/metal_device/data_debugger/data_debugger.obj"
+    },
+    "debugger2": {
+      "position": [5.0, 0.0, -2.5],
+      "rotation": [0.0, 0.0, 0.0],
+      "model": "immersiveintelligence:models/block/metal_device/data_debugger/data_debugger.obj"
+    },
+    "wire0": {
+      "start": [136.0, 24.0, -36.0],
+      "end": [93.0, 16.0, -27.0],
+      "diameter": 0.03125,
+      "slack": 1.02
+    },
+    "wire1": {
+      "start": [-104.0, 24.0, -36.0],
+      "end": [-77.0, 16.0, -27.0],
+      "diameter": 0.03125,
+      "slack": 1.02,
+      "color": -1
+    },
+    "radio_packet": {
+      "rotation": [0.0, 0.0, 0.0],
+      "text": "{...}",
+      "fontSize": 16,
+      "color": 16777216,
+      "visible": false
+    },
+    "wired_packet": {
+      "rotation": [0.0, 0.0, 0.0],
+      "text": "{...}",
+      "fontSize": 16,
+      "color": 16777215,
+      "visible": false
+    },
+    "received_caption": {
+      "text": "{a: \"Hello, World!\"}",
+      "fontSize": 8,
+      "position": [-1.0, -0.375, 0.0],
+      "color": 16777216,
+      "visible": false
+    }
+  }
+}

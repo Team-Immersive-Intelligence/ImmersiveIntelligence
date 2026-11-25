@@ -68,8 +68,8 @@ public class RadioNetworkTest
 		when(mockDevice1.isRadioAvailable()).thenReturn(true);
 		when(mockDevice2.isRadioAvailable()).thenReturn(true);
 		when(mockDevice1.canRelayRadio()).thenReturn(true);
-		when(mockDevice1.getDevicePosition()).thenReturn(new DimensionBlockPos(0, 0, 0, 0));
-		when(mockDevice2.getDevicePosition()).thenReturn(new DimensionBlockPos(0, 0, 50, 0));
+		when(mockDevice1.getRadioDevicePosition()).thenReturn(new DimensionBlockPos(0, 0, 0, 0));
+		when(mockDevice2.getRadioDevicePosition()).thenReturn(new DimensionBlockPos(0, 0, 50, 0));
 		when(mockDevice2.onRadioReceive(mockPacket, mockDevice1)).thenReturn(true);
 
 		//Create radio network
@@ -102,9 +102,9 @@ public class RadioNetworkTest
 		when(destination.isRadioAvailable()).thenReturn(true);
 		when(mockDevice1.canRelayRadio()).then(InvocationOnMock::callRealMethod);
 		when(mockDevice2.canRelayRadio()).thenReturn(false);
-		when(mockDevice1.getDevicePosition()).thenReturn(new DimensionBlockPos(0, 0, 0, 0));
-		when(mockDevice2.getDevicePosition()).thenReturn(new DimensionBlockPos(0, 0, 50, 0));
-		when(destination.getDevicePosition()).thenReturn(new DimensionBlockPos(0, 0, 100, 0));
+		when(mockDevice1.getRadioDevicePosition()).thenReturn(new DimensionBlockPos(0, 0, 0, 0));
+		when(mockDevice2.getRadioDevicePosition()).thenReturn(new DimensionBlockPos(0, 0, 50, 0));
+		when(destination.getRadioDevicePosition()).thenReturn(new DimensionBlockPos(0, 0, 100, 0));
 		when(mockDevice2.onRadioReceive(mockPacket, mockDevice1)).thenReturn(true);
 		when(destination.onRadioReceive(mockPacket, mockDevice1)).thenReturn(true);
 
@@ -132,17 +132,17 @@ public class RadioNetworkTest
 	public void testDistanceCheck()
 	{
 		when(mockDevice1.getRange()).thenReturn(100.0f);
-		when(mockDevice1.getDevicePosition()).thenReturn(new DimensionBlockPos(0, 0, 0, 0));
-		when(mockDevice2.getDevicePosition()).thenReturn(new DimensionBlockPos(0, 0, 50, 0));
+		when(mockDevice1.getRadioDevicePosition()).thenReturn(new DimensionBlockPos(0, 0, 0, 0));
+		when(mockDevice2.getRadioDevicePosition()).thenReturn(new DimensionBlockPos(0, 0, 50, 0));
 
 		assertTrue(radioNetwork.distanceCheck(mockDevice1, mockDevice2));
 
 		//Same dimension, too far
-		when(mockDevice2.getDevicePosition()).thenReturn(new DimensionBlockPos(0, 0, 150, 0));
+		when(mockDevice2.getRadioDevicePosition()).thenReturn(new DimensionBlockPos(0, 0, 150, 0));
 		assertFalse(radioNetwork.distanceCheck(mockDevice1, mockDevice2));
 
 		//Different dimension
-		when(mockDevice2.getDevicePosition()).thenReturn(new DimensionBlockPos(0, 0, 0, 1));
+		when(mockDevice2.getRadioDevicePosition()).thenReturn(new DimensionBlockPos(0, 0, 0, 1));
 		assertFalse(radioNetwork.distanceCheck(mockDevice1, mockDevice2));
 	}
 
@@ -155,8 +155,8 @@ public class RadioNetworkTest
 		when(mockDevice1.isRadioAvailable()).then(InvocationOnMock::callRealMethod);
 		when(mockDevice2.isRadioAvailable()).then(InvocationOnMock::callRealMethod);
 		when(mockDevice1.canRelayRadio()).thenReturn(true);
-		when(mockDevice1.getDevicePosition()).thenReturn(new DimensionBlockPos(0, 0, 0, 0));
-		when(mockDevice2.getDevicePosition()).thenReturn(new DimensionBlockPos(0, 0, 50, 0));
+		when(mockDevice1.getRadioDevicePosition()).thenReturn(new DimensionBlockPos(0, 0, 0, 0));
+		when(mockDevice2.getRadioDevicePosition()).thenReturn(new DimensionBlockPos(0, 0, 50, 0));
 		when(mockDevice2.onRadioReceive(mockPacket, mockDevice1)).thenReturn(true);
 
 		createRadioNetwork();

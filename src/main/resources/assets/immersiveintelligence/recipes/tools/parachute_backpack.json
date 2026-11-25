@@ -1,0 +1,19 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "CCC",
+    "CBC"
+  ],
+  "key": {
+    "C": {
+      "type": "forge:ore_dict",
+      "ore": "fabricHemp"
+    },
+    "B": {
+      "item": "immersiveintelligence:backpack"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:parachute_backpack"
+  }
+}

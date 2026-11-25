@@ -92,7 +92,7 @@ public class DecoStyleWidget extends DecoComponentWidgetBase<DecoStyleWidget>
 							));
 					})
 					.withDisplayFunction(DecoElementDisplays.getSimpleTextDisplay(styleName ->
-							I18n.format(TOOLTIP_KEY+"style_names"+styleName)))
+							I18n.format(TOOLTIP_KEY+"style_names."+styleName)))
 			);
 			if(style.getConstraints().getColorCustomization()!=PaintStyleConstraint.NOT_APPLICABLE)
 				addComponent(new DecoColorPicker(32, 10+16+headInfo.getTotalHeight())

@@ -1,0 +1,23 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "  A",
+    "CBC"
+  ],
+  "key": {
+    "A": {
+      "type": "forge:ore_dict",
+      "ore": "stickSteel"
+    },
+    "C": {
+      "type": "forge:ore_dict",
+      "ore": "circuitBasic"
+    },
+    "B": {
+      "item": "immersiveintelligence:backpack"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:radio_backpack"
+  }
+}

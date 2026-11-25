@@ -1,8 +1,8 @@
 package pl.pabilo8.immersiveintelligence.client.gui.item;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumHand;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoItemGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPanel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoItemStackDisplay;
@@ -24,9 +24,9 @@ import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 @DecoTemplate(name = "casing_pouch", category = DecoGuiCategory.GENERIC_TILE)
 public class GuiCasingPouch extends DecoItemGui<ContainerCasingPouch>
 {
-	public GuiCasingPouch(EntityPlayer player, ItemStack heldStack, EnumHand hand)
+	public GuiCasingPouch(EntityPlayer player, ItemStack heldStack, EntityEquipmentSlot slot)
 	{
-		super(player, heldStack, hand, IIGUI.CASING_POUCH);
+		super(player, heldStack, slot, IIGUI.CASING_POUCH);
 	}
 
 	@Override

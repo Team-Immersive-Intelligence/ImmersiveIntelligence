@@ -9,7 +9,6 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -34,12 +33,12 @@ public abstract class ContainerIIItemBase extends ContainerIIBase implements ICa
 	public int internalSlots;
 	protected int blockedSlot;
 
-	public ContainerIIItemBase(EntityPlayer player, ItemStack heldStack, EnumHand hand)
+	public ContainerIIItemBase(EntityPlayer player, ItemStack heldStack, EntityEquipmentSlot slot)
 	{
 		super(player.inventory);
 		this.player = player;
 		this.world = player.world;
-		this.equipmentSlot = hand==EnumHand.MAIN_HAND?EntityEquipmentSlot.MAINHAND: EntityEquipmentSlot.OFFHAND;
+		this.equipmentSlot = slot;
 		this.heldItem = heldStack.copy();
 
 		this.itemHandler = heldStack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);

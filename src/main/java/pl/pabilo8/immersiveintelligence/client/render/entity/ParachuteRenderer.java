@@ -1,146 +1,69 @@
 package pl.pabilo8.immersiveintelligence.client.render.entity;
 
-import blusunrize.immersiveengineering.client.ClientUtils;
-import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
-import pl.pabilo8.immersiveintelligence.client.model.misc.ModelParachute;
-import pl.pabilo8.immersiveintelligence.client.render.IPassengerAnimationsRenderer;
-import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
-import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTLoader;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIAnimationCompiledMap;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIEntityRenderer;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIEntityRenderer.RegisteredEntityRenderer;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityParachute;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
 /**
+ * Displays a recoverable parachute after landing.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @since 21.01.2021
+ * @since 15.11.2026
  */
-public class ParachuteRenderer extends Render<EntityParachute> implements IReloadableModelContainer<ParachuteRenderer>, IPassengerAnimationsRenderer<EntityParachute>
+@RegisteredEntityRenderer(clazz = EntityParachute.class, name = "fallen_parachute")
+public class ParachuteRenderer extends IIEntityRenderer<EntityParachute>
 {
-	private static final String TEXTURE = ImmersiveIntelligence.MODID+":textures/entity/parachute.png";
-	private static final ResourceLocation TEXTURE_WHITE = new ResourceLocation("immersiveengineering", "textures/items/white.png");
-	public static ModelParachute model = new ModelParachute();
+	private static final ResLoc MODEL = IIReference.RES_II.with("models/entity/fallen_parachute").withExtension(ResLoc.EXT_OBJ);
+	private AMTModel model;
+	private IIAnimationCompiledMap showup;
 
-	public ParachuteRenderer(RenderManager renderManager)
+	public ParachuteRenderer(RenderManager manager)
 	{
-		super(renderManager);
-		subscribeToList("parachute");
-	}
-
-	public static void drawRope(BufferBuilder buff, double x, double y, double z, double xx, double yy, double zz, int xdiff, int zdiff)
-	{
-		IIClientUtils.drawRope(buff, x, y, z, xx, yy, zz, xdiff, zdiff);
+		super(manager);
 	}
 
 	@Override
-	public void doRender(EntityParachute entity, double x, double y, double z, float entityYaw, float partialTicks)
+	public void draw(EntityParachute entity, BufferBuilder buffer, float partialTicks, Tessellator tessellator)
 	{
-		GlStateManager.pushMatrix();
-		GlStateManager.translate(x, y-5.5, z);
-		GlStateManager.rotate(entityYaw, 0, 1, 0);
-		GlStateManager.enableRescaleNormal();
-		GlStateManager.enableBlend();
-		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-		GlStateManager.enableLighting();
-
-		GlStateManager.disableLighting();
-		RenderHelper.enableStandardItemLighting();
-		GlStateManager.pushMatrix();
-		double tt = 1d-Math.max((entity.time-partialTicks)/20d, 0);
-		GlStateManager.scale(tt, 1, tt);
-
-		Entity controllingPassenger = entity.getControllingPassenger();
-		if(controllingPassenger!=null)
-		{
-			GlStateManager.disableCull();
-			GlStateManager.pushMatrix();
-			ClientUtils.mc().getTextureManager().bindTexture(new ResourceLocation("immersiveengineering:textures/blocks/wire.png"));
-
-			GlStateManager.scale(0.0625f, 0.0625f, 0.0625f);
-			GlStateManager.translate(0, 14, 0);
-
-			GlStateManager.color(150f/255f, 126f/255f, 109f/255f);
-			Tessellator tessellator = Tessellator.getInstance();
-			BufferBuilder buffer = tessellator.getBuffer();
-			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-
-			drawRope(buffer, -5, -8, 0, -7, 16, 0, 1, 0);
-			drawRope(buffer, -5, -8, 0, -7, 16, 0, 0, 1);
-
-			drawRope(buffer, 5, -8, 0, 7, 16, 0, 1, 0);
-			drawRope(buffer, 5, -8, 0, 7, 16, 0, 0, 1);
-			//drawRope(buffer,-7,-8,0, -7,16,0,0,1);
-
-			drawRope(buffer, -7, 16, 0, -43, 83, -20, 1, 0);
-			drawRope(buffer, -7, 16, 0, -43, 83, -20, 0, 1);
-			drawRope(buffer, -7, 16, 0, -43, 83, 12, 1, 0);
-			drawRope(buffer, -7, 16, 0, -43, 83, 12, 0, 1);
-
-			drawRope(buffer, -7, 16, 0, -16, 83, -46, 1, 0);
-			drawRope(buffer, -7, 16, 0, -16, 83, -46, 0, 1);
-			drawRope(buffer, -7, 16, 0, -16, 83, 40, 1, 0);
-			drawRope(buffer, -7, 16, 0, -16, 83, 40, 0, 1);
-
-			drawRope(buffer, 7, 16, 0, 43, 83, -20, 1, 0);
-			drawRope(buffer, 7, 16, 0, 43, 83, -20, 0, 1);
-			drawRope(buffer, 7, 16, 0, 43, 83, 12, 1, 0);
-			drawRope(buffer, 7, 16, 0, 43, 83, 12, 0, 1);
-
-			drawRope(buffer, 7, 16, 0, 16, 83, -46, 1, 0);
-			drawRope(buffer, 7, 16, 0, 16, 83, -46, 0, 1);
-			drawRope(buffer, 7, 16, 0, 16, 83, 40, 1, 0);
-			drawRope(buffer, 7, 16, 0, 16, 83, 40, 0, 1);
-
-			tessellator.draw();
-
-			GlStateManager.enableCull();
-			GlStateManager.color(1f, 1f, 1f);
-
-			GlStateManager.popMatrix();
-		}
-		ClientUtils.mc().getTextureManager().bindTexture(new ResourceLocation(TEXTURE));
-
-		for(ModelRendererTurbo mod : model.baseModel)
-			mod.render();
-		GlStateManager.popMatrix();
-		for(ModelRendererTurbo mod : model.linkThingyModel)
-			mod.render();
-
-		GlStateManager.disableBlend();
-		GlStateManager.disableRescaleNormal();
-		GlStateManager.popMatrix();
+		if(!entity.hasLanded())
+			return;
+		this.model.defaultize();
+		this.showup.apply(AMTUtils.getAnimationProgress(entity.getLandingAge(), 60, false, partialTicks));
+		GlStateManager.rotate(-entity.rotationYaw, 0, 1, 0);
+		GlStateManager.disableCull();
+		this.model.render(tessellator, buffer);
+		GlStateManager.enableCull();
 	}
 
 	@Override
-	public void reloadModels()
+	public void compileModels()
 	{
-		model = new ModelParachute();
+		this.model = new AMTModel(DefaultVertexFormats.BLOCK, MODEL);
+		this.showup = IIAnimationCompiledMap.create(model, IIReference.RES_II.with("backpack/fallen_parachute_showup"));
 	}
 
 	@Override
-	protected ResourceLocation getEntityTexture(EntityParachute entity)
+	public void registerSprites(TextureMap map)
 	{
-		return null;
+		AMTLoader.preloadTexturesFromOBJ(MODEL, map);
 	}
 
 	@Override
-	public boolean handleBipedRotations(ModelBiped model, EntityParachute entity, EntityLivingBase passenger, float partialTicks)
+	protected void nullifyModels()
 	{
-		model.bipedLeftArm.rotateAngleX -= 2.75;
-		model.bipedLeftArm.rotateAngleZ += 0.35;
-
-		model.bipedRightArm.rotateAngleX += 3.5;
-		model.bipedRightArm.rotateAngleZ -= 0.35;
-		return true;
+		this.model = AMTUtils.disposeOf(this.model);
+		this.showup = null;
 	}
 }

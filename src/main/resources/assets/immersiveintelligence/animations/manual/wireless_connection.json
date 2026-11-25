@@ -1,0 +1,124 @@
+{
+  "groups": {
+    "wired_packet": {
+      "position": [
+        {
+          "time": 0.08,
+          "transform": [-93, 18, -27]
+        },
+        {
+          "time": 0.16,
+          "transform": [-114.5, 18, -31.5]
+        },
+        {
+          "time": 0.24,
+          "transform": [-136, 26, -36]
+        },
+        {
+          "time": 0.27,
+          "transform": [-136, 26, -36]
+        },
+        {
+          "time": 0.64,
+          "transform": [104, 26, -36]
+        },
+        {
+          "time": 0.71,
+          "transform": [90.5, 19, -31.5]
+        },
+        {
+          "time": 0.78,
+          "transform": [77, 18, -27]
+        },
+        {
+          "time": 0.81,
+          "transform": [77, 18, -27]
+        }
+      ],
+      "visibility": [
+        {
+          "time": 0,
+          "visibility": false
+        },
+        {
+          "time": 0.08,
+          "visibility": true
+        },
+        {
+          "time": 0.27,
+          "visibility": false
+        },
+        {
+          "time": 0.64,
+          "visibility": true
+        },
+        {
+          "time": 0.81,
+          "visibility": false
+        },
+        {
+          "time": 1,
+          "visibility": false
+        }
+      ]
+    },
+    "radio_packet": {
+      "position": [
+        {
+          "time": 0.3,
+          "transform": [-120, 129, 0]
+        },
+        {
+          "time": 0.445,
+          "transform": [0, 134, 0]
+        },
+        {
+          "time": 0.59,
+          "transform": [120, 129, 0]
+        },
+        {
+          "time": 0.62,
+          "transform": [120, 129, 0]
+        }
+      ],
+      "visibility": [
+        {
+          "time": 0,
+          "visibility": false
+        },
+        {
+          "time": 0.3,
+          "visibility": true
+        },
+        {
+          "time": 0.62,
+          "visibility": false
+        },
+        {
+          "time": 1,
+          "visibility": false
+        }
+      ]
+    },
+    "received_caption": {
+      "visibility": [
+        {
+          "time": 0,
+          "visibility": false
+        },
+        {
+          "time": 0.81,
+          "visibility": true
+        },
+        {
+          "time": 0.96,
+          "visibility": false
+        },
+        {
+          "time": 1,
+          "visibility": false
+        }
+      ]
+    }
+  }
+}

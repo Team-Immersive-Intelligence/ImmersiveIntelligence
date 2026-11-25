@@ -1,0 +1,55 @@
+{
+  "origins": {
+    "handle": [
+      0,
+      3,
+      1.5
+    ],
+    "base": [
+      0,
+      3,
+      -0.25
+    ],
+    "offhand": [
+      0,
+      34,
+      2
+    ],
+    "mainhand": [
+      2,
+      34,
+      2
+    ]
+  },
+  "hierarchy": {
+    "handle": "base",
+    "offhand": "handle",
+    "mainhand": "handle"
+  },
+  "types": {
+    "offhand": "hand",
+    "mainhand": "hand"
+  },
+  "properties": {
+    "offhand": {
+      "hand": "off_hand"
+    },
+    "mainhand": {
+      "hand": "main_hand"
+    }
+  },
+  "transforms": {
+    "ground": {
+      "scale": [
+        0.75,
+        0.75,
+        0.75
+      ],
+      "translate": [
+        0.425,
+        0.25,
+        0.425
+      ]
+    }
+  }
+}

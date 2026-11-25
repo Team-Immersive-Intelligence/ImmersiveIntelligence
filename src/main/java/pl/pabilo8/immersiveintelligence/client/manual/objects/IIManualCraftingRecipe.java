@@ -31,6 +31,7 @@ import java.util.stream.IntStream;
  * Displays a crafting recipe for item(s).
  *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 30.10.2026
  * @since 22.05.2022
  */
 public class IIManualCraftingRecipe extends IIManualObject
@@ -48,9 +49,9 @@ public class IIManualCraftingRecipe extends IIManualObject
 	}
 
 	@Override
-	public void postInit(IIManualPage page)
+	public void initData(IIManualPage page)
 	{
-		super.postInit(page);
+		super.initData(page);
 
 		//create default
 		stacks = NonNullList.create();
@@ -61,8 +62,14 @@ public class IIManualCraftingRecipe extends IIManualObject
 			dataSource.streamList(NBTTagCompound.class, "items", NBT.TAG_COMPOUND)
 					.map(ItemStack::new)
 					.forEach(stacks::add);
+	}
 
-		recalculateCraftingRecipes(page);
+	@Override
+	public void postInit(IIManualPage page)
+	{
+		super.postInit(page);
+
+		recalculateCraftingRecipes();
 		if(this.recipes.size() > 1)
 		{
 			buttonPrev = new GuiButtonManualNavigation(gui, 100, x-2, y+yOff/2-3, 8, 10, 0);
@@ -70,6 +77,17 @@ public class IIManualCraftingRecipe extends IIManualObject
 		}
 
 		height = yOff;
+	}
+
+	/**
+	 * Gets the item stacks selected as crafting results.
+	 */
+	@Override
+	public List<ItemStack> provideManualItemStacks()
+	{
+		if(stacks==null)
+			this.recalculateCraftingRecipes();
+		return stacks;
 	}
 
 	//--- Rendering, Reaction ---//
@@ -175,15 +193,12 @@ public class IIManualCraftingRecipe extends IIManualObject
 
 	//--- Private Methods (for parsing) ---//
 
-	private void recalculateCraftingRecipes(IIManualPage page)
+	private void recalculateCraftingRecipes()
 	{
 		this.recipes.clear();
 		Set<Integer> searchCrafting = new HashSet<>();
 
-		IntStream.range(0, stacks.size()).forEachOrdered(i -> {
-			searchCrafting.add(i);
-			page.addProvidedItem(stacks.get(i));
-		});
+		IntStream.range(0, stacks.size()).forEachOrdered(searchCrafting::add);
 
 		if(!searchCrafting.isEmpty())
 			for(IRecipe recipe : CraftingManager.REGISTRY)

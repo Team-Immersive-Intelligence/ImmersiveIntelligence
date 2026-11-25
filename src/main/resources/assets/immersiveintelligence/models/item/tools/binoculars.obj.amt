@@ -1,0 +1,133 @@
+{
+  "origins": {
+    "infrared_binoculars_on": [
+      0,
+      0.125,
+      -3
+    ],
+    "infrared_binoculars_off": [
+      0,
+      0.125,
+      -3
+    ],
+    "binoculars": [
+      0,
+      0.125,
+      -3
+    ],
+    "light1": [
+      -2,
+      0,
+      -6
+    ],
+    "light2": [
+      2,
+      0,
+      -6
+    ]
+  },
+  "hierarchy": {
+    "light1": "infrared_binoculars_on",
+    "light2": "infrared_binoculars_on"
+  },
+  "types": {
+    "light1": "particle",
+    "light2": "particle"
+  },
+  "properties": {
+    "light1": {
+      "particle": "light/binoculars_infrared_light",
+      "correct_rotation": false,
+      "base_rotation": [
+        0,
+        0,
+        0
+      ],
+      "property": 0
+    },
+    "light2": {
+      "particle": "light/binoculars_infrared_light",
+      "correct_rotation": false,
+      "base_rotation": [
+        0,
+        0,
+        0
+      ],
+      "property": 0
+    }
+  },
+  "transforms": {
+    "third_person_right_hand": {
+      "rotate": [
+        0,
+        0,
+        90
+      ],
+      "translate": [
+        0.385,
+        0.5,
+        0.625
+      ]
+    },
+    "third_person_left_hand": {
+      "rotate": [
+        0,
+        0,
+        -90
+      ],
+      "translate": [
+        -0.385,
+        0.5,
+        0.625
+      ]
+    },
+    "first_person_right_hand": {
+      "rotate": [
+        -90,
+        -12.5,
+        -75
+      ],
+      "translate": [
+        0.25,
+        1.125,
+        0.5
+      ]
+    },
+    "first_person_left_hand": {
+      "rotate": [
+        -90,
+        -12.5,
+        -75
+      ],
+      "translate": [
+        -0.75,
+        1.125,
+        0.5
+      ]
+    },
+    "head": {
+      "scale": [
+        1.5,
+        1.5,
+        1.5
+      ],
+      "translate": [
+        0,
+        0,
+        0
+      ]
+    },
+    "ground": {
+      "scale": [
+        1.25,
+        1.25,
+        1.25
+      ],
+      "translate": [
+        0.5,
+        0.5,
+        0.75
+      ]
+    }
+  }
+}

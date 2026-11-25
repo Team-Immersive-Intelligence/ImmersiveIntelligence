@@ -493,6 +493,14 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 
 	protected abstract int getMeta();
 
+	/**
+	 * Gets the item stack for this structure's formed block.
+	 */
+	public ItemStack getFormedItemStack()
+	{
+		return new ItemStack(getBlock(), 1, getMeta());
+	}
+
 	protected void addBlockEvent(World world, BlockPos pos)
 	{
 		world.addBlockEvent(pos, getBlock(), 255, 0);

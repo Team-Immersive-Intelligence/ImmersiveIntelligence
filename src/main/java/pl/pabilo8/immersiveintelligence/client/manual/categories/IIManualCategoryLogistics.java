@@ -107,10 +107,6 @@ public class IIManualCategoryLogistics extends IIManualCategory
 						IIContent.blockSmallCrate.getStack(IIBlockTypes_SmallCrate.METAL_CRATE_CUBE),
 						IIContent.blockSmallCrate.getStack(IIBlockTypes_SmallCrate.METAL_CRATE_WIDE)
 				));
-		addEntry("improved_capacitor_backpack")
-				.addSource("improved_capacitor", getSourceForItem(
-						new ItemStack(IIContent.itemAdvancedPowerPack))
-				);
 		addEntry("mechanical_pump")
 				.addSource("pump", getSourceForItem(
 						IIContent.blockMechanicalDevice1.getStack(IIBlockTypes_MechanicalDevice1.MECHANICAL_PUMP))

@@ -1,129 +1,161 @@
 package pl.pabilo8.immersiveintelligence.client.render.item;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
+import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.client.model.obj.OBJModel;
 import org.lwjgl.opengl.GL11;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.client.model.item.ModelMineDetector;
-import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
-import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
+import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIAnimationCompiledMap;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IBipedModifyingRenderer;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIItemRendererAMT;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIItemRendererAMT.RegisteredItemRenderer;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.ISpecificHandRenderer;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIIMineDetector;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
+import pl.pabilo8.immersiveintelligence.common.util.amt.AMTModelHeader;
 
 /**
+ * Renders the articulated mine detector from the player's grip.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 20.11.2026
  * @since 28.01.2021
  */
-public class MineDetectorRenderer extends TileEntityItemStackRenderer implements IReloadableModelContainer<MineDetectorRenderer>
+@RegisteredItemRenderer(name = "items/tools/mine_detector")
+public class MineDetectorRenderer extends IIItemRendererAMT<ItemIIMineDetector> implements IBipedModifyingRenderer, ISpecificHandRenderer
 {
-	private static final String TEXTURE = ImmersiveIntelligence.MODID+":textures/items/tools/mine_detector.png";
-	public static MineDetectorRenderer instance = new MineDetectorRenderer().subscribeToList("mine_detector");
-	@SideOnly(Side.CLIENT)
-	private static ModelMineDetector model;
+	private AMTModel model;
+	private IIAnimationCompiledMap reach, reachFirstPerson, onGround;
+
+	public MineDetectorRenderer()
+	{
+		super(IIContent.itemMineDetector, ResLoc.of(IIReference.RES_ITEM_MODEL, "tools/mine_detector")
+				.withExtension(ResLoc.EXT_OBJ), true);
+	}
 
 	@Override
-	public void renderByItem(ItemStack itemStackIn, float partialTicks)
+	public void draw(ItemStack stack, TransformType transform, BufferBuilder buf, Tessellator tes, float partialTicks)
 	{
+		//Only draw on ground and fixed models
+		if(is1stPerson(transform)||is3rdPerson(transform))
+			return;
+		this.onGround.apply(0f);
+		this.model.render(tes, buf);
+	}
+
+	@Override
+	public boolean onBipedRender(EntityLivingBase living, ModelBiped biped, ItemStack stack, EnumHand hand, float swingProgress, float partialTicks)
+	{
+		if(model==null)
+			return false;
+		float reach = getReach(living);
+		Tessellator tes = Tessellator.getInstance();
+
+		//Set transforms, cache previous texture
 		GlStateManager.pushMatrix();
+		GlStateManager.rotate((float)Math.toDegrees(biped.bipedBody.rotateAngleY), 0, 1, 0);
+		GlStateManager.scale(1, -1, 1);
+		GlStateManager.translate(0, -1.5, -2);
+		int prevTexture = GL11.glGetInteger(GL11.GL_TEXTURE_BINDING_2D);
 
-		ClientUtils.bindTexture(TEXTURE);
-		for(ModelRendererTurbo mod : model.baseModel)
-			mod.render();
-		for(ModelRendererTurbo mod : model.poleModel)
-		{
-			mod.rotateAngleZ = -0.95993109F;
-			mod.render();
-		}
+		//Draw 3rd person model
+		IIClientUtils.bindAtlas();
+		this.reach.apply(reach);
+		this.model.render(tes, tes.getBuffer());
 
+		//Rollback texture
 		GlStateManager.popMatrix();
+		GlStateManager.bindTexture(prevTexture);
+
+		//Set biped angles
+		biped.bipedRightArm.rotateAngleY = biped.bipedBody.rotateAngleY-0.45f;
+		biped.bipedLeftArm.rotateAngleY = biped.bipedBody.rotateAngleY+0.45f;
+
+		biped.bipedRightArm.rotateAngleX = -1.25f-(1f-reach)*0.5f;
+		biped.bipedLeftArm.rotateAngleX = biped.bipedRightArm.rotateAngleX;
+		return true;
 	}
 
 	@Override
-	public void reloadModels()
+	public void compileModels(OBJModel model, AMTModelHeader header)
 	{
-		model = new ModelMineDetector();
+		this.model = new AMTModel(DefaultVertexFormats.ITEM, model, header, AMTModelHeader::createParts);
+		this.reach = IIAnimationCompiledMap.create(this.model, IIReference.RES_II.with("tools/mine_detector/angle"));
+		this.reachFirstPerson = IIAnimationCompiledMap.create(this.model, IIReference.RES_II.with("tools/mine_detector/first_person"));
+		this.onGround = IIAnimationCompiledMap.create(this.model, IIReference.RES_II.with("tools/mine_detector/on_ground"));
 	}
 
-	public float renderBase(EntityLivingBase player, float distance, boolean flipY)
+	@Override
+	protected void nullifyModels()
 	{
+		AMTUtils.disposeOf(model);
+	}
+
+	@Override
+	public boolean doHandRender(ItemStack stack, EnumHand hand, ItemStack otherHand, float swingProgress, float partialTicks)
+	{
+		EntityLivingBase player = ClientUtils.mc().player;
+		if(this.model==null||player==null)
+			return false;
+
+		RayTraceResult hit = player.rayTrace(5, partialTicks);
+		double distance = 2;
+		double height = -player.getEyeHeight();
+		if(hit!=null&&hit.typeOfHit==Type.BLOCK)
+		{
+			Vec3d offset = hit.hitVec.subtract(player.getPositionEyes(partialTicks));
+			distance = MathHelper.clamp(Math.sqrt(offset.x*offset.x+offset.z*offset.z), 0.5, 2);
+			height = offset.y;
+		}
+
+		float progress = MathHelper.clamp((float)distance-1f, 0f, 1f);
+		float pitch = player.prevRotationPitch+(player.rotationPitch-player.prevRotationPitch)*partialTicks;
+
+		//Set transforms, cache previous texture
+		int prevTexture = GL11.glGetInteger(GL11.GL_TEXTURE_BINDING_2D);
 		GlStateManager.pushMatrix();
-		int i = GL11.glGetInteger(GL11.GL_TEXTURE_BINDING_2D);
-		ClientUtils.bindTexture(TEXTURE);
 
-		if(flipY)
+		//The target lies along the camera yaw. Apply pitch to place it in camera space.
+		GlStateManager.rotate(pitch, 1, 0, 0);
+		GlStateManager.translate(0, height-0.5, -4);
+//			GlStateManager.rotate(180, 0, 1, 0);
+
+		//Anchor the animated base at the target.
+		IIClientUtils.bindAtlas();
+		Tessellator tes = Tessellator.getInstance();
+		this.reachFirstPerson.apply(1f-progress);
+		this.model.render(tes, tes.getBuffer());
+
+		GlStateManager.bindTexture(prevTexture);
+		GlStateManager.popMatrix();
+		return true;
+	}
+
+	private float getReach(EntityLivingBase living)
+	{
+		RayTraceResult result = living.rayTrace(5f, 0);
+		if(result!=null&&result.typeOfHit!=Type.MISS)
 		{
-			float v = 0.5f;
-
-			RayTraceResult traceResult = player.rayTrace(distance*2, 0);
-			if(traceResult!=null&&traceResult.typeOfHit!=null)
-			{
-				v = (float)traceResult.hitVec.subtract(player.getPositionVector()).distanceTo(Vec3d.ZERO);
-				if(player.world.getBlockState(traceResult.getBlockPos()).equals(Blocks.AIR.getDefaultState()))
-					v = 0.5f;
-			}
-			v = (float)MathHelper.clamp(v, 0.5, distance);
-			if(player.isSneaking())
-			{
-				GlStateManager.translate(0, -0.15f, 0);
-				v *= 1.125f;
-			}
-
-			//v = distance;
-			//v = distance-(((player.world.getTotalWorldTime()%100)/100f)*distance);
-
-			GlStateManager.rotate(player.cameraPitch, 1, 0, 0);
-			GlStateManager.translate(0, 1, -v);
-			GlStateManager.rotate(90, 0, 1, 0);
-			GlStateManager.scale(-1, -1, 1);
-//			GlStateManager.rotate(player.rotationYawHead, 0, 1, 0);
-			GlStateManager.rotate(180, 0, 1, 0);
-			for(ModelRendererTurbo mod : model.baseModel)
-				mod.render();
-
-			v -= 0.5;
-			distance -= 0.5;
-
-			float angle = ((v/distance));
-
-			for(ModelRendererTurbo mod : model.poleModel)
-			{
-				mod.rotateAngleZ = angle;
-				mod.render();
-			}
-			GlStateManager.bindTexture(i);
-			GlStateManager.popMatrix();
-			return v/distance;
+			Vec3d diff = result.hitVec.subtract(living.getPositionVector());
+			float distance = (float)Math.sqrt(Math.abs(diff.x*diff.z));
+			return 1f-MathHelper.clamp(distance, 0f, 1f);
 		}
-		else
-		{
-			GlStateManager.rotate(player.rotationPitch, 1, 0, 0);
-			GlStateManager.translate(0, -1, -distance);
-//			GlStateManager.rotate(90, 0, 1, 0);
-			GlStateManager.scale(1, 1, 1);
-			//	GlStateManager.rotate(-player.rotationYawHead, 0, 1, 0);
-			GlStateManager.rotate(-90f, 0, 1, 0);
-
-			for(ModelRendererTurbo mod : model.baseModel)
-				mod.render();
-
-			float angle = 1.27f;
-
-			for(ModelRendererTurbo mod : model.poleModel)
-			{
-				mod.rotateAngleZ = -angle;
-				mod.render();
-			}
-
-			GlStateManager.bindTexture(i);
-			GlStateManager.popMatrix();
-			return 0;
-		}
+		return 0f;
 	}
 }

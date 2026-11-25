@@ -90,7 +90,7 @@ public class DecoDropdown<T> extends DecoScrolledCollection<DecoDropdown<T>, T>
 			{
 				List<T> completions = sorter.autocomplete(entries, text);
 				if(completions!=null&&!completions.isEmpty())
-					selectedEntry = entries.indexOf(completions.get(0));
+					withSelectedEntry(completions.get(0));
 				text = "";
 				dropped = false;
 				return true;

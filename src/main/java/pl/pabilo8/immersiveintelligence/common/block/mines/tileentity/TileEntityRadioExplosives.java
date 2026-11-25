@@ -57,7 +57,28 @@ public class TileEntityRadioExplosives extends TileEntityMineBase implements ITi
 		nbtTagCompound.setInteger("radioCooldown", radioCooldown);
 		nbtTagCompound.setInteger("facing", facing.getIndex());
 		super.writeCustomNBT(nbtTagCompound, b);
-		RadioNetwork.INSTANCE.addDevice(this);
+	}
+
+	@Override
+	public void onLoad()
+	{
+		super.onLoad();
+		if(hasWorld()&&!world.isRemote)
+			RadioNetwork.INSTANCE.addDevice(this);
+	}
+
+	@Override
+	public void invalidate()
+	{
+		RadioNetwork.INSTANCE.removeDevice(this);
+		super.invalidate();
+	}
+
+	@Override
+	public void onChunkUnload()
+	{
+		RadioNetwork.INSTANCE.removeDevice(this);
+		super.onChunkUnload();
 	}
 
 	public void explode()
@@ -170,7 +191,7 @@ public class TileEntityRadioExplosives extends TileEntityMineBase implements ITi
 	}
 
 	@Override
-	public DimensionBlockPos getDevicePosition()
+	public DimensionBlockPos getRadioDevicePosition()
 	{
 		return new DimensionBlockPos(this);
 	}

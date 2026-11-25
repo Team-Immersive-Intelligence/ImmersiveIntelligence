@@ -1,9 +1,9 @@
 package pl.pabilo8.immersiveintelligence.client.gui.item;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.EnumHand;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoItemGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoClipboardList;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiCategory;
@@ -29,9 +29,9 @@ public class GuiClipboardItem extends DecoItemGui<ContainerClipboardItem>
 {
 	private DecoClipboardList clipboardList;
 
-	public GuiClipboardItem(EntityPlayer player, ItemStack heldStack, EnumHand hand)
+	public GuiClipboardItem(EntityPlayer player, ItemStack heldStack, EntityEquipmentSlot slot)
 	{
-		super(player, heldStack, hand, IIGUI.CLIPBOARD_ITEM);
+		super(player, heldStack, slot, IIGUI.CLIPBOARD_ITEM);
 	}
 
 	@Override
@@ -69,6 +69,6 @@ public class GuiClipboardItem extends DecoItemGui<ContainerClipboardItem>
 	{
 		NBTTagList entries = DecoClipboardUtils.writeEntries(clipboardList.getEntries());
 		ItemIIClipboard.setEntries(itemStack, entries);
-		IIPacketHandler.sendToServer(new MessageClipboardItemSync(hand, entries));
+		IIPacketHandler.sendToServer(new MessageClipboardItemSync(slot, entries));
 	}
 }

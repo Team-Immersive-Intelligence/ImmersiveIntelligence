@@ -14,9 +14,12 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
+
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine;
 import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIILightEngineerHelmet;
 import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIILightEngineerLeggings;
+import pl.pabilo8.immersiveintelligence.common.item.tools.backpack.ItemIIBackpackBase;
+
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIGunBase;
 import pl.pabilo8.immersiveintelligence.common.network.IIMessage;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -31,6 +34,7 @@ public class MessageItemKeybind extends IIMessage
 	public static final int KEYBIND_GUN_RELOAD = 0;
 	public static final int KEYBIND_HEADGEAR = 1;
 	public static final int KEYBIND_EXOSKELETON = 2;
+	public static final int KEYBIND_BACKPACK_ACTION = 3;
 
 	private int id;
 
@@ -82,6 +86,18 @@ public class MessageItemKeybind extends IIMessage
 					int mode = ItemNBTHelper.getInt(equipped, "exoskeletonMode");
 					ItemNBTHelper.setInt(equipped, "exoskeletonMode", mode = IIUtils.cycleInt(!player.isSneaking(), mode, 0, 2));
 					IIPacketHandler.sendChatTranslation(player, IIReference.INFO_KEY+"exoskeleton."+mode);
+				}
+			}
+			break;
+			case KEYBIND_BACKPACK_ACTION:
+			{
+				if(player.isSpectator())
+					break;
+				for(int slot = 0; slot < 2; slot++)
+				{
+					ItemIIBackpackBase.WornBackpack worn = ItemIIBackpackBase.getWornBackpack(player, slot);
+					if(worn!=null&&((ItemIIBackpackBase)worn.getStack().getItem()).onBackpackAction(player, worn))
+						break;
 				}
 			}
 			break;

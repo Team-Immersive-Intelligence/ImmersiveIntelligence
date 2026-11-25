@@ -1,8 +1,8 @@
 package pl.pabilo8.immersiveintelligence.common.gui;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumHand;
 import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIItemBase;
 
 /**
@@ -13,9 +13,9 @@ import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIItemBase;
  */
 public class ContainerClipboardItem extends ContainerIIItemBase
 {
-	public ContainerClipboardItem(EntityPlayer player, ItemStack heldStack, EnumHand hand)
+	public ContainerClipboardItem(EntityPlayer player, ItemStack heldStack, EntityEquipmentSlot slot)
 	{
-		super(player, heldStack, hand);
+		super(player, heldStack, slot);
 	}
 
 	@Override

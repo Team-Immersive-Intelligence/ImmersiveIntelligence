@@ -1,0 +1,8 @@
+# Made by Pabilo8 with Blockbench
+
+newmtl radio_backpack
+map_Kd immersiveintelligence:armor/radio_backpack
+newmtl radio_backpack2
+map_Kd immersiveintelligence:armor/radio_backpack2
+newmtl radio_headset
+map_Kd immersiveintelligence:armor/radio_headset

@@ -36,7 +36,7 @@
       "max": 16
     },
     "states": {
-      "type": ["small_data_buffer", "timed_buffer", "redstone_buffer", "data_merger"]
+      "type": ["data_buffer", "data_mapper", "redstone_sequencer", "data_appender", "data_merger"]
     }
   },
   {

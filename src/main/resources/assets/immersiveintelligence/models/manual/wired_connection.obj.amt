@@ -1,0 +1,79 @@
+{
+  "origins": {
+    "input": [0, 0, 0],
+    "connector": [0, 0, 0],
+    "relay": [0, 0, 0],
+    "debugger": [0, 0, 0],
+    "wire0": [0, 0, 0],
+    "wire1": [0, 0, 0],
+    "overlay": [0, 0, 0],
+    "packet_caption": [0, 0, 0],
+    "packet": [0, 0, 0]
+  },
+  "hierarchy": {
+    "packet_caption": "overlay"
+  },
+  "types": {
+    "input": "model",
+    "connector": "model",
+    "relay": "model",
+    "debugger": "model",
+    "wire0": "wire",
+    "wire1": "wire",
+    "overlay": "locator",
+    "packet_caption": "text",
+    "packet": "text"
+  },
+  "properties": {
+    "input": {
+      "position": [-1.5, 0.0, -0.25],
+      "rotation": [0.0, 90.0, 0.0],
+      "model": "immersiveintelligence:models/block/metal_device/punchtape_reader.obj"
+    },
+    "connector": {
+      "position": [-1.5, 0.0, -1.25],
+      "rotation": [0.0, 0.0, 90.0],
+      "model": "immersiveintelligence:models/block/connector/data_connector.obj.ie"
+    },
+    "relay": {
+      "position": [0.0, 0.0, 0.0],
+      "rotation": [0.0, 0.0, 0.0],
+      "model": "immersiveintelligence:models/block/connector/data_relay.obj"
+    },
+    "debugger": {
+      "position": [1.25, 0.0, 1.25],
+      "rotation": [0.0, 0.0, 0.0],
+      "model": "immersiveintelligence:models/block/metal_device/data_debugger/data_debugger.obj"
+    },
+    "wire0": {
+      "start": [12.0, 8.0, -12.0],
+      "end": [8.0, 16.0, 8.0],
+      "diameter": 0.0625,
+      "slack": 1.02,
+      "color": -1
+    },
+    "wire1": {
+      "start": [8.0, 16.0, 8.0],
+      "end": [-8.0, 16.0, 33.0],
+      "diameter": 0.0625,
+      "slack": 1.02,
+      "color": -1
+    },
+    "overlay": {
+    },
+    "packet_caption": {
+      "text": "{a: \"Hello, World!\"}",
+      "fontSize": 8,
+      "position": [-0.25, -0.375, 0.0],
+      "color": -16777216,
+      "visible": false
+    },
+    "packet": {
+      "text": "{...}",
+      "fontSize": 8,
+      "color": -16777216,
+      "visible": false,
+      "rotation": [0.0, -90.0, 0.0]
+    }
+  }
+}

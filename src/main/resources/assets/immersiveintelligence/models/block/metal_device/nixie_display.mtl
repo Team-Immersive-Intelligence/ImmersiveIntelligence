@@ -1,0 +1,6 @@
+# Made by Pabilo8 with Blockbench
+
+newmtl nixie_tube
+map_Kd immersiveintelligence:blocks/metal_device/nixie_tube
+newmtl data_device
+map_Kd immersiveintelligence:blocks/metal_device/data_device

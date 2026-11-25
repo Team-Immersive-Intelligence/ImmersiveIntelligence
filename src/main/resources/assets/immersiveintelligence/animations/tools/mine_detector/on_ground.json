@@ -1,0 +1,43 @@
+{
+  "comment": "Made by Pabilo8 with Blockbench",
+  "groups": {
+    "handle": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "base": {
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "offhand": {
+      "visibility": [
+        {
+          "time": 0,
+          "visibility": false
+        }
+      ]
+    },
+    "mainhand": {
+      "visibility": [
+        {
+          "time": 0,
+          "visibility": false
+        }
+      ]
+    }
+  }
+}

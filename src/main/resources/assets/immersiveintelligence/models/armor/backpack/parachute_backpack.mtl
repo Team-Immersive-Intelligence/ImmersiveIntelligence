@@ -1,0 +1,6 @@
+# Made by Pabilo8 with Blockbench
+
+newmtl parachute_backpack
+map_Kd immersiveintelligence:armor/parachute_backpack
+newmtl parachute
+map_Kd immersiveintelligence:armor/parachute

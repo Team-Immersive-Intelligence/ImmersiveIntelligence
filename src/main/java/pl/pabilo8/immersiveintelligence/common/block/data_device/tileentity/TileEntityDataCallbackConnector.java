@@ -17,6 +17,7 @@ import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.device.IDataDevice;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -26,9 +27,9 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
  */
 public class TileEntityDataCallbackConnector extends TileEntityDataConnector
 {
-	@SyncNBT(name = "colorIn")
+	@SyncNBT(name = "colorIn", events = {SyncEvents.TILE_CLIENT_MESSAGE, SyncEvents.TILE_GUI_OPENED})
 	public int colorIn = 0;
-	@SyncNBT(name = "colorOut")
+	@SyncNBT(name = "colorOut", events = {SyncEvents.TILE_CLIENT_MESSAGE, SyncEvents.TILE_GUI_OPENED})
 	public int colorOut = 1;
 
 	@Override
@@ -81,9 +82,9 @@ public class TileEntityDataCallbackConnector extends TileEntityDataConnector
 	@Override
 	public int getRenderColour(IBlockState object, String group)
 	{
-		if("Color_In".equals(group))
+		if("color_in".equals(group))
 			return 0xff000000|EnumDyeColor.byMetadata(this.colorIn).getColorValue();
-		if("Color_Out".equals(group))
+		if("color_out".equals(group))
 			return 0xff000000|EnumDyeColor.byMetadata(this.colorOut).getColorValue();
 		return 0xffffffff;
 	}

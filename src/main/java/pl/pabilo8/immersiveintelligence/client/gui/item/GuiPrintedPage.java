@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHand;
@@ -62,17 +63,17 @@ public class GuiPrintedPage extends GuiScreen
 	private final String title;
 	public final EnumHand initiatedFromHand;
 
-	public GuiPrintedPage(EntityPlayer player, ItemStack heldStack, EnumHand hand)
+	public GuiPrintedPage(EntityPlayer player, ItemStack heldStack, EntityEquipmentSlot slot)
 	{
-		this(player, heldStack, hand, false);
+		this(player, heldStack, slot, false);
 	}
 
-	public GuiPrintedPage(EntityPlayer player, ItemStack heldStack, EnumHand hand, boolean onlyTitle)
+	public GuiPrintedPage(EntityPlayer player, ItemStack heldStack, EntityEquipmentSlot slot, boolean onlyTitle)
 	{
 		generalPageType = PageType.fromStack(heldStack);
 		pageTexture = PAGE_TEXTURE_BG+generalPageType.getUITextureName(heldStack);
 		displayedPagesNum = generalPageType.getDisplayedPages();
-		initiatedFromHand = hand;
+		initiatedFromHand = slot==EntityEquipmentSlot.MAINHAND?EnumHand.MAIN_HAND: EnumHand.OFF_HAND;
 		author = ItemNBTHelper.getString(heldStack, "author");
 		title = ItemNBTHelper.getString(heldStack, "title");
 

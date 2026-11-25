@@ -15,7 +15,10 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import java.util.List;
 
 /**
+ * Displays the item stacks assigned to a manual object.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 30.10.2026
  * @since 22.05.2022
  */
 public class IIManualItemDisplay extends IIManualObject
@@ -29,9 +32,9 @@ public class IIManualItemDisplay extends IIManualObject
 	}
 
 	@Override
-	public void postInit(IIManualPage page)
+	public void initData(IIManualPage page)
 	{
-		super.postInit(page);
+		super.initData(page);
 
 		//create default
 		stacks = NonNullList.create();
@@ -42,7 +45,15 @@ public class IIManualItemDisplay extends IIManualObject
 			dataSource.streamList(NBTTagCompound.class, "items", NBT.TAG_COMPOUND)
 					.map(ItemStack::new)
 					.forEach(stacks::add);
+	}
 
+	/**
+	 * Gets the displayed item stacks.
+	 */
+	@Override
+	public List<ItemStack> provideManualItemStacks()
+	{
+		return stacks;
 	}
 
 	//--- Rendering, Reaction ---//

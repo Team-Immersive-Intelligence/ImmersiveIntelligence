@@ -30,6 +30,7 @@ import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.block.rotary_device.tileentity.TileEntityMechanicalConnectable;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIIItemTextureOverride;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
@@ -131,6 +132,13 @@ public class IIModelRegistry extends ImmersiveModelRegistry
 			ResourceLocation loc = new ResourceLocation(modID, ((ItemIEBase)item).itemName);
 			itemModelReplacements.put(new ModelResourceLocation(loc, "inventory"), replacement);
 		}
+		else
+		{
+			//item.immersiveintelligence.name
+			String[] split = item.getUnlocalizedName().split("\\.");
+			if(split.length >= 3)
+				itemModelReplacements.put(new ModelResourceLocation(new ResourceLocation(split[1], split[2]), "inventory"), replacement);
+		}
 	}
 
 	/**
@@ -149,7 +157,8 @@ public class IIModelRegistry extends ImmersiveModelRegistry
 			public IBakedModel createBakedModel(IBakedModel existingModel)
 			{
 				IBakedModel perspectiveModel = replacement.createBakedModel(existingModel);
-				return new ModelDualPerspective(existingModel, perspectiveModel==null?existingModel: perspectiveModel);
+				IBakedModel guiModel = item instanceof IIIItemTextureOverride?new ModelItemDynamicOverride(existingModel, null): existingModel;
+				return new ModelDualPerspective(guiModel, perspectiveModel==null?guiModel: perspectiveModel);
 			}
 		});
 	}
@@ -181,6 +190,11 @@ public class IIModelRegistry extends ImmersiveModelRegistry
 	 * Overloaded method of registering a dynamic override item model for an IE item using meta values
 	 */
 	public void registerCustomItemModel(ItemIIBase item)
+	{
+		registerCustomItemModel((Item)item);
+	}
+
+	public void registerCustomItemModel(Item item)
 	{
 		registerCustomItemModel(item, ImmersiveIntelligence.MODID, new ImmersiveModelRegistry.ItemModelReplacement()
 		{
