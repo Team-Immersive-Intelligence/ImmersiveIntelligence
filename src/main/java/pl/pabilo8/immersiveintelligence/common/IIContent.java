@@ -338,6 +338,7 @@ public class IIContent
 	public static final BlockIISlab<Metals> blockSheetmetalSlabs = new BlockIISlab<>(blockMetalStorage);
 	//painted tin sheetmetal
 	public static final BlockIIPaintedTinSheetmetal blockPaintedTinSheetmetal = new BlockIIPaintedTinSheetmetal();
+	@IBatchOredictRegister(oreDict = "slabPaintedSheetmetalTin")
 	public static final BlockIISlab<PaintedColors> blockPaintedTinSheetmetalSlabs = new BlockIISlab<>(blockPaintedTinSheetmetal);
 	//regular blocks
 	public static final BlockIISandbags blockSandbags = new BlockIISandbags();

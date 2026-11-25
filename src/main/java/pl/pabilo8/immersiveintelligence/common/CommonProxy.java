@@ -30,7 +30,6 @@ import net.minecraft.block.BlockTNT;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -333,8 +332,8 @@ public class CommonProxy implements IGuiHandler
 			}
 		}
 
-		OreDictionary.registerOre("sandRed", new ItemStack(Blocks.SAND, 1, 1));
-		OreDictionary.registerOre("sandstoneRed", Blocks.RED_SANDSTONE);
+		OreDictionary.registerOre("paintedSheetmetalTin", new ItemStack(IIContent.blockPaintedTinSheetmetal, 1, OreDictionary.WILDCARD_VALUE));
+		OreDictionary.registerOre("slabPaintedSheetmetalTin", new ItemStack(IIContent.blockPaintedTinSheetmetalSlabs, 1, OreDictionary.WILDCARD_VALUE));
 	}
 
 	@SubscribeEvent

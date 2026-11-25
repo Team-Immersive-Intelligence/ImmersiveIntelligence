@@ -94,7 +94,6 @@ import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradeableArmor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -1071,6 +1070,17 @@ public class IIRecipes
 				256*160, 160, true, false, false
 		);
 
+		addBathingCleaningRecipe(
+				IIContent.blockSheetmetal.getStack(Metals.TIN),
+				new IngredientStack("paintedSheetmetalTin"),
+				1000, 256*160, 160, true, false, false
+		);
+		addBathingCleaningRecipe(
+				IIContent.blockMetalSlabs.getStack(Metals.TIN),
+				new IngredientStack("slabPaintedSheetmetalTin"),
+				500, 128*160, 160, true, false, false
+		);
+
 		//gray concrete cleaning recipe
 
 		addBathingCleaningRecipe(//gray concrete
@@ -1893,6 +1903,10 @@ public class IIRecipes
 		OreDictionary.registerOre("gunbarrelSteel", new ItemStack(IEContent.itemMaterial, 1, 14));
 		OreDictionary.registerOre("gunpartRevolver", new ItemStack(IEContent.itemMaterial, 1, 15));
 		OreDictionary.registerOre("gunpartHammer", new ItemStack(IEContent.itemMaterial, 1, 16));
+
+		//Sand for excavator entries
+		OreDictionary.registerOre("sandRed", new ItemStack(Blocks.SAND, 1, 1));
+		OreDictionary.registerOre("sandstoneRed", Blocks.RED_SANDSTONE);
 
 		//Meat for production
 		OreDictionary.registerOre("listAllMeatRaw", Items.PORKCHOP);
