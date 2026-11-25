@@ -14,6 +14,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -52,20 +53,17 @@ public class BlockIIDataDevice extends BlockIITileProvider<IIBlockTypes_Connecto
 		setResistance(15.0F);
 		setLightOpacity(0);
 		setToolTypes(IIReference.TOOL_HAMMER);
+		setSubBlockLayer(IIBlockTypes_Connector.INVENTORY_INTERFACE, BlockRenderLayer.CUTOUT_MIPPED, BlockRenderLayer.SOLID);
 	}
 
 	@Override
 	public String getMappingsExtension(int meta, boolean itemBlock)
 	{
-		switch(enumValues[meta])
+		return switch(enumValues[meta])
 		{
-			case DATA_CONNECTOR:
-			case DATA_RELAY:
-			case DATA_DUPLEX_CONNECTOR:
-				return "plug";
-			default:
-				return super.getMappingsExtension(meta, itemBlock);
-		}
+			case DATA_CONNECTOR, DATA_RELAY, DATA_DUPLEX_CONNECTOR, INVENTORY_INTERFACE -> "plug";
+			default -> super.getMappingsExtension(meta, itemBlock);
+		};
 	}
 
 	@Override
@@ -77,6 +75,7 @@ public class BlockIIDataDevice extends BlockIITileProvider<IIBlockTypes_Connecto
 		{
 			case DATA_CONNECTOR:
 			case DATA_DUPLEX_CONNECTOR:
+			case INVENTORY_INTERFACE:
 			case DATA_RELAY:
 			{
 				TileEntity te = world.getTileEntity(pos);
@@ -220,6 +219,10 @@ public class BlockIIDataDevice extends BlockIITileProvider<IIBlockTypes_Connecto
 
 		@IIBlockProperties(category = IICategory.ELECTRONICS)
 		@EnumTileProvider(tile = TileEntityDataCallbackConnector.class)
-		DATA_DUPLEX_CONNECTOR
+		DATA_DUPLEX_CONNECTOR,
+
+		@IIBlockProperties(category = IICategory.ELECTRONICS, renderLayer = BlockRenderLayer.CUTOUT_MIPPED)
+		@EnumTileProvider(tile = TileEntityInventoryInterface.class)
+		INVENTORY_INTERFACE
 	}
 }

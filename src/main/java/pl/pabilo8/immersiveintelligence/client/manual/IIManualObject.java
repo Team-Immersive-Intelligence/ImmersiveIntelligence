@@ -7,6 +7,7 @@ import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.lib.manual.ManualInstance;
 import blusunrize.lib.manual.gui.GuiButtonManual;
 import blusunrize.lib.manual.gui.GuiManual;
+import lombok.RequiredArgsConstructor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
@@ -22,7 +23,10 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
+ * Provides data and GUI behaviour for an object on a manual page.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 30.10.2026
  * @since 22.03.2022
  */
 public abstract class IIManualObject extends GuiButtonManual
@@ -39,19 +43,36 @@ public abstract class IIManualObject extends GuiButtonManual
 		super(info.gui, info.id, info.x, info.y, 0, 0, "");
 
 		this.dataSource = nbt;
-		this.manual = gui.getManual();
+		this.manual = info.manual;
 		nbt.checkSetInt("x", i -> this.x = info.x+i);
 		nbt.checkSetInt("w", i -> this.width = i, getDefaultWidth());
 		nbt.checkSetInt("h", i -> this.height = i, getDefaultHeight());
 	}
 
 	/**
-	 * Used to add items to page (for search reference) and configure stuff based on the page
+	 * Resolves the data source without creating GUI controls or render state.
 	 */
-	public void postInit(IIManualPage page)
+	public void initData(IIManualPage page)
 	{
 		//load the data source and combine it with the provided nbt compound, if it's mentioned
 		dataSource.checkSetString("source", s -> dataSource.mergeWith(page.getDataSource(s)));
+	}
+
+	/**
+	 * Initialises object data before GUI setup.
+	 */
+	public void postInit(IIManualPage page)
+	{
+		initData(page);
+	}
+
+	/**
+	 * Gets the item stacks linked to this object, or null if it supplies no items.
+	 */
+	@Nullable
+	public List<ItemStack> provideManualItemStacks()
+	{
+		return null;
 	}
 
 	@Override
@@ -163,8 +184,19 @@ public abstract class IIManualObject extends GuiButtonManual
 		return null;
 	}
 
+	/**
+	 * Stores the manual and optional GUI context for a page object.
+	 *
+	 * @author Pabilo8 (pabilo@iiteam.net)
+	 * @updated 30.10.2026
+	 * @since 22.03.2022
+	 */
+	@RequiredArgsConstructor
 	public static class ManualObjectInfo
 	{
+		@Nonnull
+		final ManualInstance manual;
+		@Nullable
 		final GuiManual gui;
 		final int x;
 		final int y;
@@ -172,10 +204,7 @@ public abstract class IIManualObject extends GuiButtonManual
 
 		public ManualObjectInfo(GuiManual gui, int x, int y, int id)
 		{
-			this.gui = gui;
-			this.x = x;
-			this.y = y;
-			this.id = id;
+			this(gui.getManual(), gui, x, y, id);
 		}
 	}
 }

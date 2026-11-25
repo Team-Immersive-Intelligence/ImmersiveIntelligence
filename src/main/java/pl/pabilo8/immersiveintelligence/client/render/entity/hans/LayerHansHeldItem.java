@@ -9,7 +9,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHandSide;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.HansAnimations.HansArmAnimation;
 
@@ -56,9 +55,6 @@ public class LayerHansHeldItem implements LayerRenderer<EntityHans>
 
 		if(!stack.isEmpty())
 		{
-			if(hans.isSneaking()&&stack.getItem()==IIContent.itemBinoculars)
-				return;
-
 			GlStateManager.pushMatrix();
 
 			if(hans.isSneaking())

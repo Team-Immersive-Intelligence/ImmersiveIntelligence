@@ -92,14 +92,12 @@ public class ItemIIBinoculars extends ItemIISubItemsBase<Binoculars> implements 
 	{
 		super.onUpdate(stack, worldIn, entity, itemSlot, isSelected);
 
-		boolean do_tick = worldIn.getTotalWorldTime()%20==0;
-
 		if(worldIn.isRemote)
 			ItemNBTHelper.setBoolean(stack, "sneaking", entity.isSneaking()&&isSelected);
-
-		if(!worldIn.isRemote&&entity instanceof EntityLivingBase)
+		boolean doTick = worldIn.getTotalWorldTime()%20==0;
+		if(!worldIn.isRemote&&entity instanceof EntityLivingBase livingBase)
 		{
-			if(!isSelected||!(entity.isSneaking()||entity.getLowestRidingEntity() instanceof EntityFieldHowitzer)&&do_tick)
+			if(!isSelected||!(entity.isSneaking()||entity.getLowestRidingEntity() instanceof EntityFieldHowitzer)&&doTick)
 			{
 				if(isAdvanced(stack))
 				{
@@ -107,7 +105,7 @@ public class ItemIIBinoculars extends ItemIISubItemsBase<Binoculars> implements 
 					if(ItemNBTHelper.getBoolean(stack, "wasUsed"))
 					{
 						ItemNBTHelper.setBoolean(stack, "wasUsed", false);
-						((EntityLivingBase)entity).removePotionEffect(IIPotions.infraredVision);
+						livingBase.removePotionEffect(IIPotions.infraredVision);
 					}
 				}
 			}
@@ -115,11 +113,11 @@ public class ItemIIBinoculars extends ItemIISubItemsBase<Binoculars> implements 
 			{
 				if(entity instanceof EntityPlayerMP&&worldIn.getTotalWorldTime()%5==0&&(entity.isSneaking()||entity.getLowestRidingEntity() instanceof EntityFieldHowitzer))
 				{
-					float yaw = (360+((EntityLivingBase)entity).rotationYawHead)%360;
+					float yaw = (360+livingBase.rotationYawHead)%360;
 					IIPacketHandler.sendChatTranslation(((EntityPlayerMP)entity), IIReference.INFO_KEY+"yaw", yaw);
 				}
 
-				if(do_tick&&isEnabled(stack)&&isAdvanced(stack))
+				if(doTick&&isEnabled(stack)&&isAdvanced(stack))
 				{
 					IIUtils.applyInfraredVision(entity, 25);
 					ItemNBTHelper.setBoolean(stack, "wasUsed", true);
@@ -162,20 +160,17 @@ public class ItemIIBinoculars extends ItemIISubItemsBase<Binoculars> implements 
 		return OVERLAY_TEXTURE;
 	}
 
-	// TODO: 15.07.2021 make it properly, not the current lazy way
 	@Override
 	@SideOnly(Side.CLIENT)
 	public String getModelCacheKey(ItemStack stack)
 	{
-		return ItemNBTHelper.getBoolean(stack, "sneaking")?"invisible": (isAdvanced(stack)?("infrared_binoculars_"+((isEnabled(stack))?"on": "off")): "binoculars");
+		return isAdvanced(stack)?(isEnabled(stack)?"infrared_binoculars_on": "infrared_binoculars_off"): "binoculars";
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public List<ResourceLocation> getTextures(ItemStack stack, String key)
 	{
-		if(key.equals("invisible"))
-			return Collections.emptyList();
 		return Collections.singletonList(
 				new ResourceLocation(ImmersiveIntelligence.MODID+":items/binoculars/"+key)
 		);
@@ -190,7 +185,7 @@ public class ItemIIBinoculars extends ItemIISubItemsBase<Binoculars> implements 
 		ApiUtils.getRegisterSprite(map, ImmersiveIntelligence.MODID+":items/binoculars/infrared_binoculars_on");
 	}
 
-	boolean isEnabled(ItemStack stack)
+	public boolean isEnabled(ItemStack stack)
 	{
 		return ItemNBTHelper.getBoolean(stack, "enabled")&&getEnergyStored(stack) >= Tools.advancedBinocularsEnergyUsage;
 	}

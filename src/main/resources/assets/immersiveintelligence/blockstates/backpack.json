@@ -1,0 +1,50 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "custom": {
+      "flip-v": true
+    },
+    "textures": {
+      "particle": "immersiveengineering:blocks/storage_steel"
+    }
+  },
+  "variants": {
+    "facing": {
+      "north": {},
+      "east": {
+        "y": 90
+      },
+      "south": {
+        "y": 180
+      },
+      "west": {
+        "y": 270
+      }
+    },
+    "type": {
+      "storage": {
+        "model": "immersiveintelligence:backpack/backpack.obj"
+      },
+      "canister": {
+        "model": "immersiveintelligence:backpack/fluid_backpack.obj"
+      },
+      "radio": {
+        "model": "immersiveengineering:smartmodel/connector",
+        "custom": {
+          "base": "immersiveintelligence:block/backpack/radio_backpack.obj.ie",
+          "layers": ["SOLID"]
+        }
+      },
+      "capacitor": {
+        "model": "immersiveengineering:smartmodel/connector",
+        "custom": {
+          "base": "immersiveintelligence:block/backpack/advanced_powerpack.obj.ie",
+          "layers": ["SOLID"]
+        }
+      },
+      "parachute": {
+        "model": "immersiveintelligence:backpack/parachute_backpack.obj"
+      }
+    }
+  }
+}

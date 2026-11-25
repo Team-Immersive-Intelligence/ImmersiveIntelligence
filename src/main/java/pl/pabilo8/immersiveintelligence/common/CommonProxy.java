@@ -30,7 +30,6 @@ import net.minecraft.block.BlockTNT;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -45,6 +44,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Tuple;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -81,6 +81,7 @@ import pl.pabilo8.immersiveintelligence.api.ammocrate.AmmunitionCrateHandler;
 import pl.pabilo8.immersiveintelligence.api.crafting.DustUtils;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataOperationUtils;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataTypeUtils;
+import pl.pabilo8.immersiveintelligence.api.data.radio.RadioNetwork;
 import pl.pabilo8.immersiveintelligence.api.protection.protection.CorrosionHandler;
 import pl.pabilo8.immersiveintelligence.api.protection.protection.capability.ProtectionCapabilities;
 import pl.pabilo8.immersiveintelligence.api.rotary.CapabilityRotaryEnergy;
@@ -97,7 +98,8 @@ import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIOre.Ores;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIISmallCrate;
 import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
 import pl.pabilo8.immersiveintelligence.common.crafting.IIRecipes;
-import pl.pabilo8.immersiveintelligence.common.crafting.RecipePowerpackAdvanced;
+import pl.pabilo8.immersiveintelligence.common.crafting.RecipeBackpackArmor;
+import pl.pabilo8.immersiveintelligence.common.crafting.RecipeParachuteRefill;
 import pl.pabilo8.immersiveintelligence.common.crafting.RecipeSkinCraftingHandler;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityParachute;
@@ -133,6 +135,7 @@ import pl.pabilo8.immersiveintelligence.common.gui.ContainerEntityUpgrade;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerTileUpgrade;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIIMinecart.Minecarts;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMaterialDust.MaterialsDust;
+import pl.pabilo8.immersiveintelligence.common.item.tools.backpack.ItemIIBackpackBase;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.util.IBatchOredictRegister;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
@@ -333,8 +336,8 @@ public class CommonProxy implements IGuiHandler
 			}
 		}
 
-		OreDictionary.registerOre("sandRed", new ItemStack(Blocks.SAND, 1, 1));
-		OreDictionary.registerOre("sandstoneRed", Blocks.RED_SANDSTONE);
+		OreDictionary.registerOre("paintedSheetmetalTin", new ItemStack(IIContent.blockPaintedTinSheetmetal, 1, OreDictionary.WILDCARD_VALUE));
+		OreDictionary.registerOre("slabPaintedSheetmetalTin", new ItemStack(IIContent.blockPaintedTinSheetmetalSlabs, 1, OreDictionary.WILDCARD_VALUE));
 	}
 
 	@SubscribeEvent
@@ -404,15 +407,24 @@ public class CommonProxy implements IGuiHandler
 
 
 		event.getRegistry().register(new RecipeSkinCraftingHandler().setRegistryName(ImmersiveIntelligence.MODID, "contributor_skin"));
+		event.getRegistry().register(new RecipeParachuteRefill().setRegistryName(ImmersiveIntelligence.MODID, "parachute_backpack_refill"));
 
-		event.getRegistry().register(new RecipePowerpackAdvanced().setRegistryName(ImmersiveIntelligence.MODID, "powerpack_advanced"));
-		assert IIContent.itemAdvancedPowerPack.getRegistryName()!=null;
-		if(Arrays.stream(Tools.powerpack_blacklist).noneMatch(s -> s.equals(IIContent.itemAdvancedPowerPack.getRegistryName().toString())))
-		{
-			List<String> collect = new ArrayList<>(Arrays.asList(Tools.powerpack_blacklist));
-			collect.add(IIContent.itemAdvancedPowerPack.getRegistryName().toString());
-			Tools.powerpack_blacklist = collect.toArray(new String[0]);
-		}
+		for(Item item : IIContent.ITEMS)
+			if(item instanceof ItemIIBackpackBase)
+			{
+				String name = item.getRegistryName().getResourcePath();
+				String recipeName = item==IIContent.itemAdvancedPowerPack?"powerpack_advanced": name+"_armor";
+				event.getRegistry().register(new RecipeBackpackArmor((ItemIIBackpackBase)item)
+						.setRegistryName(ImmersiveIntelligence.MODID, recipeName));
+				// Prevent IE's powerpack recipe from treating a backpack as a chestplate.
+				String registryName = item.getRegistryName().toString();
+				if(!Arrays.asList(Tools.powerpack_blacklist).contains(registryName))
+				{
+					List<String> blacklist = new ArrayList<>(Arrays.asList(Tools.powerpack_blacklist));
+					blacklist.add(registryName);
+					Tools.powerpack_blacklist = blacklist.toArray(new String[0]);
+				}
+			}
 
 		VehicleFuelHandler.addVehicle(EntityMotorbike.class, FluidRegistry.getFluid("diesel"), FluidRegistry.getFluid("biodiesel"));
 		VehicleFuelHandler.addVehicle(EntityTrackedMotorbike.class, FluidRegistry.getFluid("diesel"), FluidRegistry.getFluid("biodiesel"));
@@ -500,11 +512,32 @@ public class CommonProxy implements IGuiHandler
 
 	public static void openGuiForItem(@Nonnull EntityPlayer player, @Nonnull EnumHand hand)
 	{
-		ItemStack stack = player.getItemStackFromSlot(hand==EnumHand.MAIN_HAND?EntityEquipmentSlot.MAINHAND: EntityEquipmentSlot.OFFHAND);
-		if(stack.isEmpty()||!(stack.getItem() instanceof IGuiItem))
+		openGuiForItem(player, hand==EnumHand.MAIN_HAND?EntityEquipmentSlot.MAINHAND: EntityEquipmentSlot.OFFHAND);
+	}
+
+	public static void openGuiForItem(@Nonnull EntityPlayer player, @Nonnull EntityEquipmentSlot slot)
+	{
+		openGuiForItem(player, player, slot);
+	}
+
+	public static void openGuiForItem(@Nonnull EntityPlayer player, @Nonnull EntityPlayer wearer, @Nonnull EntityEquipmentSlot slot)
+	{
+		ItemStack stack = wearer.getItemStackFromSlot(slot);
+		if(stack.isEmpty()||!(stack.getItem() instanceof IGuiItem gui))
 			return;
-		IGuiItem gui = (IGuiItem)stack.getItem();
-		player.openGui(ImmersiveIntelligence.INSTANCE, gui.getGuiID(stack), player.world, (int)player.posX, (int)player.posY, (int)player.posZ);
+		player.openGui(ImmersiveIntelligence.INSTANCE, gui.getGuiID(stack), wearer.world, wearer.getEntityId(), Integer.MAX_VALUE, slot.ordinal());
+	}
+
+	protected static Tuple<ItemStack, EntityEquipmentSlot> getItemGuiHand(int guiID, EntityPlayer player, @Nullable EntityPlayer otherPlayer, int inventorySlot)
+	{
+		//Not an item GUI
+		if(guiID < 0||guiID >= IIGUI.values().length)
+			return new Tuple<>(ItemStack.EMPTY, EntityEquipmentSlot.MAINHAND);
+
+		//Get the item from the slot
+		EntityEquipmentSlot slot = EntityEquipmentSlot.values()[inventorySlot%EntityEquipmentSlot.values().length];
+		EntityPlayer source = otherPlayer==null?player: otherPlayer;
+		return new Tuple<>(source.getItemStackFromSlot(slot), slot);
 	}
 
 	//--- GUI Handling ---//
@@ -607,6 +640,7 @@ public class CommonProxy implements IGuiHandler
 		NBTSerialisation.preInit();
 
 		CapabilityRotaryEnergy.register();
+		RadioNetwork.registerCapability();
 		ProtectionCapabilities.register();
 		CapabilityChunkOwnership.register();
 		IEApi.prefixToIngotMap.put("spring", new Integer[]{2, 1});
@@ -920,10 +954,10 @@ public class CommonProxy implements IGuiHandler
 			return null;
 		}
 
-		EnumHand hand;
 		TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
-		ItemStack stack = player.getHeldItem(hand = (player.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof IGuiItem?EnumHand.MAIN_HAND: EnumHand.OFF_HAND));
 		Entity entity = y==Integer.MIN_VALUE?world.getEntityByID(x): null;
+		EntityPlayer otherPlayer = y==Integer.MAX_VALUE?(EntityPlayer)world.getEntityByID(x): null;
+		Tuple<ItemStack, EntityEquipmentSlot> guiHand = getItemGuiHand(ID, player, otherPlayer, z);
 
 		if(ID==IIGUI.UPGRADE_TILE.ordinal()&&te instanceof IUpgradableDevice)
 		{
@@ -936,7 +970,6 @@ public class CommonProxy implements IGuiHandler
 		{
 			IUpgradableDevice upgradeMaster = ((IUpgradableDevice)entity).master();
 			if(upgradeMaster!=null)
-				//noinspection rawtypes,unchecked
 				return new ContainerEntityUpgrade<>(player, (Entity & IUpgradableDevice & IIEInventory)upgradeMaster);
 		}
 
@@ -947,7 +980,7 @@ public class CommonProxy implements IGuiHandler
 			if(gui.player)
 				return gui.containerFromPlayer==null?null: gui.containerFromPlayer.apply(player);
 			if(gui.item)
-				return gui.containerFromStack==null?null: gui.containerFromStack.apply(player, stack, hand);
+				return gui.containerFromStack==null?null: gui.containerFromStack.apply(otherPlayer!=null?otherPlayer: player, guiHand.getFirst(), guiHand.getSecond());
 			if(gui.entityClass!=null&&gui.containerFromEntity!=null)
 			{
 				if(gui.entityClass.isInstance(entity))

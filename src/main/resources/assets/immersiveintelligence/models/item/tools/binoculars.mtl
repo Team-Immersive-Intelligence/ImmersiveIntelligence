@@ -1,0 +1,8 @@
+# Made by Pabilo8 with Blockbench
+
+newmtl binoculars
+map_Kd immersiveintelligence:items/binoculars/model/binoculars
+newmtl binoculars_infrared_off
+map_Kd immersiveintelligence:items/binoculars/model/binoculars_infrared_off
+newmtl binoculars_infrared_on
+map_Kd immersiveintelligence:items/binoculars/model/binoculars_infrared_on

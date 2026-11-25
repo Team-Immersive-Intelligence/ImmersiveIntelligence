@@ -1,0 +1,154 @@
+{
+  "origins": {
+    "world": [0, 0, 0],
+    "overlay": [0, 0, 0],
+    "input": [0, 0, 0],
+    "press": [0, 0, 0],
+    "input_connector": [0, 0, 0],
+    "press_connector": [0, 0, 0],
+    "relay": [0, 0, 0],
+    "debugger": [0, 0, 0],
+    "input_wire": [0, 0, 0],
+    "press_wire": [0, 0, 0],
+    "response_wire": [0, 0, 0],
+    "request_packet": [0, 0, 0],
+    "response_packet": [0, 0, 0],
+    "request_header": [0, 0, 0],
+    "request_values": [0, 0, 0],
+    "response_values": [0, 0, 0]
+  },
+  "hierarchy": {
+    "input": "world",
+    "press": "world",
+    "input_connector": "world",
+    "press_connector": "world",
+    "relay": "world",
+    "debugger": "world",
+    "input_wire": "world",
+    "press_wire": "world",
+    "response_wire": "world",
+    "request_packet": "world",
+    "response_packet": "world",
+    "request_header": "overlay",
+    "request_values": "overlay",
+    "response_values": "overlay"
+  },
+  "types": {
+    "world": "locator",
+    "overlay": "locator",
+    "input": "model",
+    "press": "model",
+    "input_connector": "model",
+    "press_connector": "model",
+    "relay": "model",
+    "debugger": "model",
+    "input_wire": "wire",
+    "press_wire": "wire",
+    "response_wire": "wire",
+    "request_packet": "text",
+    "response_packet": "text",
+    "request_header": "text",
+    "request_values": "text",
+    "response_values": "text"
+  },
+  "properties": {
+    "world": {
+      "position": [0.0, 0.0, 0.0],
+      "rotation": [0.0, 0.0, 0.0]
+    },
+    "overlay": {
+    },
+    "input": {
+      "position": [-3.0, 1.0, -2.0],
+      "rotation": [0.0, 0.0, 0.0],
+      "models": [
+        "immersiveintelligence:models/block/multiblock/data_input_machine/data_input_machine_base.obj",
+        "immersiveintelligence:models/block/multiblock/data_input_machine/data_input_machine.obj.ie"
+      ]
+    },
+    "press": {
+      "position": [3.0, 1.0, -2.0],
+      "rotation": [0.0, 0.0, 0.0],
+      "models": [
+        "immersiveintelligence:models/block/multiblock/printing_press/printing_press_base.obj",
+        "immersiveintelligence:models/block/multiblock/printing_press/printing_press.obj.ie"
+      ]
+    },
+    "input_connector": {
+      "position": [-1.9375, 0.0, -1.5],
+      "rotation": [0.0, 0.0, 90.0],
+      "model": "immersiveintelligence:models/block/connector/data_connector.obj.ie"
+    },
+    "press_connector": {
+      "position": [1.0, 1.0, -1.5],
+      "rotation": [0.0, 0.0, -90.0],
+      "model": "immersiveintelligence:models/block/connector/data_duplex_connector.obj.ie"
+    },
+    "relay": {
+      "position": [0.0, 0.0, 0.0],
+      "rotation": [0.0, 0.0, 0.0],
+      "model": "immersiveintelligence:models/block/connector/data_relay.obj"
+    },
+    "debugger": {
+      "position": [-2.0, 0.0, 2.0],
+      "rotation": [0.0, 0.0, 0.0],
+      "model": "immersiveintelligence:models/block/metal_device/data_debugger/data_debugger.obj"
+    },
+    "input_wire": {
+      "start": [19.0, 8.0, -16.0],
+      "end": [8.0, 16.0, 8.0],
+      "diameter": 0.03125,
+      "slack": 1.02,
+      "color": -1
+    },
+    "press_wire": {
+      "start": [8.0, 16.0, 8.0],
+      "end": [-4.0, 8.0, -16.0],
+      "diameter": 0.03125,
+      "slack": 1.02,
+      "color": -1
+    },
+    "response_wire": {
+      "start": [8.0, 16.0, 8.0],
+      "end": [35.0, 16.0, 45.0],
+      "diameter": 0.03125,
+      "slack": 1.02,
+      "color": -1
+    },
+    "request_packet": {
+      "text": "{?}",
+      "fontSize": 12,
+      "color": 4753587,
+      "visible": false,
+      "rotation": [0.0, 180.0, 0.0]
+    },
+    "response_packet": {
+      "text": "{!}",
+      "fontSize": 12,
+      "color": 11766600,
+      "visible": false,
+      "rotation": [0.0, 180.0, 0.0]
+    },
+    "request_header": {
+      "text": "c:callback, j:get_black",
+      "fontSize": 8,
+      "position": [-0.125, -0.3125, 0.0],
+      "color": 0,
+      "visible": false
+    },
+    "request_values": {
+      "text": "i:get_cyan, e:get_energy",
+      "fontSize": 8,
+      "position": [-0.125, -0.875, 0.0],
+      "color": 0,
+      "visible": false
+    },
+    "response_values": {
+      "text": "j:1000  i:2000  e:8000",
+      "fontSize": 8,
+      "position": [-0.125, -0.3125, 0.0],
+      "color": 0,
+      "visible": false
+    }
+  }
+}

@@ -138,7 +138,7 @@ public class TileEntityRadioStation extends TileEntityMultiblockIIGeneric<TileEn
 	}
 
 	@Override
-	public DimensionBlockPos getDevicePosition()
+	public DimensionBlockPos getRadioDevicePosition()
 	{
 		return new DimensionBlockPos(getPOIPos("radio_center"), world);
 	}

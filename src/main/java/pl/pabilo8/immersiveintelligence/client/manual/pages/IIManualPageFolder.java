@@ -38,7 +38,7 @@ public class IIManualPageFolder extends ManualPages
 	private final String category;
 	private final String namespace;
 	private final BiConsumer<String, ManualEntry> registerEntry;
-	private final ArrayList<IIManualEntry> entries = new ArrayList<>();
+	private final ArrayList<ManualEntry> entries = new ArrayList<>();
 	private final ArrayList<IIManualPageFolder> subFolders = new ArrayList<>();
 	private final ManualEntry entry;
 	private GuiClickableList menu;
@@ -124,10 +124,11 @@ public class IIManualPageFolder extends ManualPages
 	/**
 	 * Registers a child entry and hides it from the update-news list.
 	 */
-	public void addEntry(IIManualEntry entry)
+	public void addEntry(ManualEntry entry)
 	{
 		entries.add(entry);
-		entry.setFolder(this);
+		if(entry instanceof IIManualEntry iiManualEntry)
+			iiManualEntry.setFolder(this);
 		registerEntry.accept(ManualHelper.CAT_UPDATE, entry);
 		((IEManualInstance)manual).hideEntry(entry.getName());
 	}

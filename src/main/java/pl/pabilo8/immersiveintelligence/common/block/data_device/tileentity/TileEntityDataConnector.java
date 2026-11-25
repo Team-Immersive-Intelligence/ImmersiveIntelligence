@@ -208,7 +208,7 @@ public class TileEntityDataConnector extends TileEntityIIDirectionalConnectable 
 	@Override
 	public int getRenderColour(IBlockState object, String group)
 	{
-		if("Color".equals(group))
+		if("color".equals(group))
 			return 0xff000000|EnumDyeColor.byMetadata(this.color).getColorValue();
 		return 0xffffffff;
 	}

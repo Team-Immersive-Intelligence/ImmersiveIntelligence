@@ -71,6 +71,8 @@ import java.util.function.Predicate;
  * Packs items, fluids, or energy into compatible containers by configured tasks.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @author Avalon (avalon@iiteam.net)
+ * @updated 14.11.2026
  * @updated 07.10.2026
  * @since 28.06.2019
  */
@@ -93,6 +95,7 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 	public IIEnergyStorage energyStorageUpgrade;
 
 	private IItemHandler containerHandler = new IEInventoryHandler(1, this, 0, true, true);
+	private IItemHandler containerInputHandler = new IEInventoryHandler(1, this, 0, true, false);
 	private IItemHandler inventoryInHandler = new IEInventoryHandler(54, this, 1, true, true);
 	private IItemHandler inventoryOutHandler = new IEInventoryHandler(54, this, 55, true, true);
 
@@ -121,7 +124,7 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 		this.energyStorageUpgrade = null;
 		this.fluidTankUpgradeInput = null;
 		this.fluidTankUpgradeOutput = null;
-		this.containerHandler = this.inventoryInHandler = this.inventoryOutHandler = null;
+		this.containerHandler = this.containerInputHandler = this.inventoryInHandler = this.inventoryOutHandler = null;
 	}
 
 	@Override
@@ -136,7 +139,7 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 					update = true;
 
 				processTime++;
-				if(processTime==Packer.actionTime*0.5)
+				if(processTime==Packer.actionTime*0.5&&!world.isRemote)
 				{
 					ItemStack packedItem = containerHandler.getStackInSlot(0);
 					if(!packedItem.isEmpty()&&energyStorage.getEnergyStored() >= Packer.energyUsage)
@@ -228,7 +231,7 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 			}
 		}
 
-		if(update)
+		if(update&&!world.isRemote)
 			updateTileForEvent(SyncEvents.TILE_RECIPE_CHANGED);
 	}
 
@@ -775,6 +778,9 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 	public <T> T getCapability(@Nonnull Capability<T> capability, EnumFacing facing)
 	{
 		TileEntityPacker master = master();
+		if(master!=null&&isPOI("conveyor_in")&&capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+			return (T)master.containerInputHandler;
+
 		if(master!=null)
 			if(isPOI("input"))
 			{

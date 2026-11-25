@@ -20,8 +20,8 @@ import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityParachute;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.hand_weapon.*;
 import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIIArmorUpgrade.ArmorUpgrades;
+import pl.pabilo8.immersiveintelligence.common.item.tools.backpack.ItemIIBackpackBase;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponUpgrade;
-import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradeableArmor;
 
 import javax.annotation.Nullable;
@@ -119,8 +119,7 @@ public class HansUtils
 			hans.setItemStackToSlot(EntityEquipmentSlot.CHEST, backpack);
 		else
 		{
-			EasyNBT.wrapNBT(currentArmor)
-					.withItemStack(IIContent.NBT_AdvancedPowerpack, backpack);
+			ItemIIBackpackBase.setAttachedBackpack(currentArmor, backpack);
 			hans.setItemStackToSlot(EntityEquipmentSlot.CHEST, currentArmor);
 		}
 	}

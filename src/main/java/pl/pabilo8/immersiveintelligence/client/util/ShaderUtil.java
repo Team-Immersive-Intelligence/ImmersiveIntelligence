@@ -36,6 +36,7 @@ public class ShaderUtil
 		createShader(BLUEPRINT, null, "blueprint");
 		createShader(ENERGY, null, "energy");
 		createShader(COLOR, null, "color");
+		createShader(COLOR_NO_LIGHTMAP, null, "color_no_lightmap");
 		createShader(NOISE, null, "noise");
 		createShader(NOISE_NO_LIGHTMAP, null, "noise_no_lightmap");
 		createShader(GRAYSCALE, null, "grayscale");
@@ -66,23 +67,16 @@ public class ShaderUtil
 		shader.setInt("lightmap", 1);
 		switch(shader)
 		{
-			case BLUEPRINT:
-			case ENERGY:
+			case BLUEPRINT, ENERGY ->
+			{
 				shader.setFloat("alpha", parameters[0]);
 				shader.setFloat("time", parameters[1]);
-				break;
-			case ALPHA:
-				shader.setFloat("alpha", parameters[0]);
-				break;
-			case COLOR:
-				COLOR.setVec3("color", parameters[0], parameters[1], parameters[2]);
-				break;
-			case NOISE:
-				shader.setFloat("time", parameters[0]);
-				break;
-			case GRAYSCALE:
-				shader.setFloat("darkness", parameters[0]);
-				break;
+			}
+			case ALPHA -> shader.setFloat("alpha", parameters[0]);
+			case COLOR -> COLOR.setVec3("color", parameters[0], parameters[1], parameters[2]);
+			case COLOR_NO_LIGHTMAP -> COLOR_NO_LIGHTMAP.setVec3("color", parameters[0], parameters[1], parameters[2]);
+			case NOISE -> shader.setFloat("time", parameters[0]);
+			case GRAYSCALE -> shader.setFloat("darkness", parameters[0]);
 		}
 		return true;
 	}
@@ -246,6 +240,7 @@ public class ShaderUtil
 		BLUEPRINT,
 		ENERGY,
 		COLOR,
+		COLOR_NO_LIGHTMAP,
 		NOISE,
 		NOISE_NO_LIGHTMAP,
 		GRAYSCALE;

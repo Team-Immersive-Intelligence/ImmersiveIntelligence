@@ -1,0 +1,65 @@
+{
+  "origins": {
+    "body": [
+      7.5,
+      12,
+      -5
+    ],
+    "buckle1": [
+      10,
+      46,
+      -5
+    ],
+    "rope1": [
+      -4.95,
+      23,
+      -5
+    ],
+    "buckle2": [
+      -10,
+      46,
+      -5
+    ],
+    "rope2": [
+      4.95,
+      23,
+      -5
+    ],
+    "parachute_ropes": [
+      0,
+      63.3228,
+      -5
+    ],
+    "parachute": [
+      0,
+      71,
+      -3
+    ],
+    "hook": [
+      6,
+      20.5,
+      -4
+    ],
+    "belt": [
+      6,
+      19,
+      -4
+    ],
+    "lid": [
+      -4,
+      23,
+      -8
+    ]
+  },
+  "hierarchy": {
+    "buckle1": "body",
+    "rope1": "body",
+    "buckle2": "body",
+    "rope2": "body",
+    "parachute_ropes": "body",
+    "parachute": "body",
+    "hook": "body",
+    "belt": "hook",
+    "lid": "body"
+  }
+}

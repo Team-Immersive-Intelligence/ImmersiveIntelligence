@@ -92,6 +92,10 @@ public class BlockIIMetalMultiblock0 extends BlockIIMultiblock<MetalMultiblocks0
 
 		@EnumMultiblockProvider(tile = TileEntitySmallChemicalReactor.class, multiblock = MultiblockSmallChemicalReactor.class)
 		@IIBlockProperties(needsCustomState = true)
-		SMALL_CHEMICAL_REACTOR
+		SMALL_CHEMICAL_REACTOR,
+
+		@EnumMultiblockProvider(tile = TileEntityAtmosphericCondenser.class, multiblock = MultiblockAtmosphericCondenser.class)
+		@IIBlockProperties(needsCustomState = true)
+		ATMOSPHERIC_CONDENSER
 	}
 }

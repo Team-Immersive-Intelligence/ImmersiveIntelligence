@@ -75,23 +75,19 @@ public class IIManualCategoryWarfare extends IIManualCategory
 				));
 
 
-		ArrayList<ManualPages> bullet_cores = new ArrayList<>();
+		ArrayList<ManualPages> ammoCores = new ArrayList<>();
 		for(AmmoCore entry : AmmoRegistry.getAllCores())
 			if(!entry.getMaterial().getExampleStack().isEmpty())
-				bullet_cores.add(new IIManualPageAmmoCore(ManualHelper.getManual(), entry));
+				ammoCores.add(new IIManualPageAmmoCore(ManualHelper.getManual(), entry));
 
-		ArrayList<ManualPages> bullet_components = new ArrayList<>();
+		ArrayList<ManualPages> ammoComponents = new ArrayList<>();
 		for(AmmoComponent entry : AmmoRegistry.getAllComponents())
 			if(entry.showInManual()&&!entry.getMaterial().getExampleStack().isEmpty())
-				bullet_components.add(new IIManualPageAmmoComponent(ManualHelper.getManual(), entry));
+				ammoComponents.add(new IIManualPageAmmoComponent(ManualHelper.getManual(), entry));
 
-		addEntry("bullet_cores", getCategory(),
-				bullet_cores.toArray(new ManualPages[]{})
-		);
-
-		addEntry("bullet_components", getCategory(),
-				bullet_components.toArray(new ManualPages[]{})
-		);
+		moveEntry("bullets", ManualHelper.CAT_TOOLS, "bullets", getCategory());
+		addEntry("bullet_cores", getCategory(), ammoCores.toArray(new ManualPages[0]));
+		addEntry("bullet_components", getCategory(), ammoComponents.toArray(new ManualPages[0]));
 
 		//Items in Infantry Weapons folder
 		addEntry("weaponry/magazines")
@@ -105,6 +101,9 @@ public class IIManualCategoryWarfare extends IIManualCategory
 						IIContent.itemBulletMagazine.getMagazine(Magazines.CPDS_DRUM)
 				))
 				.addSource("magazine_blueprint", getSourceForItem(BlueprintCraftingRecipe.getTypedBlueprint("bullet_magazines")));
+
+		moveEntry("railgun", ManualHelper.CAT_TOOLS, "weaponry/railgun", getCategory());
+		moveEntry("revolver", ManualHelper.CAT_TOOLS, "weaponry/revolver", getCategory());
 		addEntry("weaponry/machinegun")
 				.addSource("machinegun", getSourceForItems(new ItemStack(IIContent.itemMachinegun)));
 		addEntry("weaponry/rifle")
@@ -113,6 +112,7 @@ public class IIManualCategoryWarfare extends IIManualCategory
 				.addSource("assaultrifle", getSourceForItem(new ItemStack(IIContent.itemAssaultRifle)));
 		addEntry("weaponry/submachinegun")
 				.addSource("submachinegun", getSourceForItem(new ItemStack(IIContent.itemSubmachinegun)));
+
 		addEntry("weaponry/weapon_upgrades")
 				.addSource("heavy_barrel", getSourceForItem(IIContent.itemWeaponUpgrade.getStack(WeaponUpgrade.HEAVY_BARREL)))
 				.addSource("water_cooling", getSourceForItem(IIContent.itemWeaponUpgrade.getStack(WeaponUpgrade.WATER_COOLING)))
@@ -186,6 +186,9 @@ public class IIManualCategoryWarfare extends IIManualCategory
 				.addSource("navalmine", getSourceForItem(IIContent.itemNavalMine.getAmmoStack(IIContent.ammoCoreLead, CoreType.CANISTER, FuseType.CONTACT)));
 		addEntry("staticdefense/explosive_mine_sign")
 				.addSource("mine_sign", getSourceForItem(new ItemStack(IIContent.blockMineSign)));
+		moveEntry("teslaCoil", ManualHelper.CAT_TOOLS, "staticdefense/teslaCoil", getCategory());
+		moveEntry("turret", ManualHelper.CAT_TOOLS, "staticdefense/turret", getCategory());
+		moveEntry("razorwire", ManualHelper.CAT_TOOLS, "staticdefense/razorwire", getCategory());
 
 		addEntry("terrain_control/owner_identity");
 		addEntry("terrain_control/properties");

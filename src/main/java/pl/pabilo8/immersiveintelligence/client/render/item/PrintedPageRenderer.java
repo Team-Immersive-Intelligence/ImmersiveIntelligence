@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumHandSide;
@@ -34,27 +35,28 @@ public class PrintedPageRenderer
 		PageType pageType = PageType.fromStack(stack);
 
 		// Draw Item in Hand
-		if (hand == EnumHand.OFF_HAND)
+		if(hand==EnumHand.OFF_HAND)
 		{
-			if(cachedTypeOff == null
-					|| pageType != cachedTypeOff
-					|| checkNBTCacheNeedsUpdate(stack, cachedStackOff)
+			if(cachedTypeOff==null
+					||pageType!=cachedTypeOff
+					||checkNBTCacheNeedsUpdate(stack, cachedStackOff)
 			)
 			{
 				cachedStackOff = stack.copy();
 				cachedTypeOff = pageType;
-				cachedGuiOff = new GuiPrintedPage(ClientUtils.mc().player, stack, hand, true);
+				cachedGuiOff = new GuiPrintedPage(ClientUtils.mc().player, stack, EntityEquipmentSlot.MAINHAND, true);
 			}
-		} else
+		}
+		else
 		{
-			if(cachedTypeMain == null
-					|| pageType != cachedTypeMain
-					|| checkNBTCacheNeedsUpdate(stack, cachedStackMain)
+			if(cachedTypeMain==null
+					||pageType!=cachedTypeMain
+					||checkNBTCacheNeedsUpdate(stack, cachedStackMain)
 			)
 			{
 				cachedStackMain = stack.copy();
 				cachedTypeMain = pageType;
-				cachedGuiMain = new GuiPrintedPage(ClientUtils.mc().player, stack, hand, true);
+				cachedGuiMain = new GuiPrintedPage(ClientUtils.mc().player, stack, EntityEquipmentSlot.OFFHAND, true);
 			}
 		}
 
@@ -67,24 +69,25 @@ public class PrintedPageRenderer
 		GlStateManager.disableLighting();
 		GlStateManager.translate(-0.5F, -0.5F, 0.0F);
 		GlStateManager.scale(0.0078125F, 0.0078125F, 0.0078125F);
-		if (pageType == PageType.NEWSPAPER) GlStateManager.translate(-165.0F, -15.0F, 0.0F);
+		if(pageType==PageType.NEWSPAPER) GlStateManager.translate(-165.0F, -15.0F, 0.0F);
 		GlStateManager.disableDepth();
 
-		((hand == EnumHand.OFF_HAND) ? cachedGuiOff : cachedGuiMain).drawTitlePage();
+		((hand==EnumHand.OFF_HAND)?cachedGuiOff: cachedGuiMain).drawTitlePage();
 
 		GlStateManager.popMatrix();
 	}
 
 	/**
 	 * Returns true, if the NBT Data between the cached stack and the supplied one suggests, that the cache is invalid
+	 *
 	 * @param stack is the fresh ItemStack
 	 */
 	private static boolean checkNBTCacheNeedsUpdate(ItemStack stack, ItemStack cachedStack)
 	{
-		if (cachedStack == null || stack == null) return true;
+		if(cachedStack==null||stack==null) return true;
 		boolean stackHasNBT = stack.hasTagCompound();
-		if (stackHasNBT != cachedStack.hasTagCompound()) return true;
-		if (stackHasNBT) // At that point we know, that both the cache and the new stack have NBT data
+		if(stackHasNBT!=cachedStack.hasTagCompound()) return true;
+		if(stackHasNBT) // At that point we know, that both the cache and the new stack have NBT data
 			return !cachedStack.getTagCompound().equals(stack.getTagCompound());
 
 		return false;
@@ -95,10 +98,10 @@ public class PrintedPageRenderer
 
 		// Check if page is already rendering as UI, skip it if true, to reduce clutter
 		GuiScreen screen = Minecraft.getMinecraft().currentScreen;
-		if (screen instanceof GuiPrintedPage)
+		if(screen instanceof GuiPrintedPage)
 		{
-			GuiPrintedPage guiPrintedPage = (GuiPrintedPage) screen;
-			if (guiPrintedPage.initiatedFromHand == hand) return;
+			GuiPrintedPage guiPrintedPage = (GuiPrintedPage)screen;
+			if(guiPrintedPage.initiatedFromHand==hand) return;
 
 		}
 

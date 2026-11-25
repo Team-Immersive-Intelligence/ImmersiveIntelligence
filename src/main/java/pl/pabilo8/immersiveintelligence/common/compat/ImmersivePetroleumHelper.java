@@ -1,5 +1,8 @@
 package pl.pabilo8.immersiveintelligence.common.compat;
 
+import blusunrize.immersiveengineering.api.ManualHelper;
+import blusunrize.immersiveengineering.api.ManualPageMultiblock;
+import blusunrize.immersiveengineering.api.MultiblockHandler;
 import blusunrize.immersiveengineering.api.MultiblockHandler.IMultiblock;
 import blusunrize.immersiveengineering.api.tool.ConveyorHandler;
 import blusunrize.immersiveengineering.api.tool.ConveyorHandler.ConveyorDirection;
@@ -9,7 +12,11 @@ import blusunrize.immersiveengineering.client.models.ModelConveyor;
 import blusunrize.immersiveengineering.common.Config;
 import blusunrize.immersiveengineering.common.blocks.ItemBlockIESlabs;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityConveyorBelt;
+import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.immersiveengineering.common.util.chickenbones.Matrix4;
+import blusunrize.lib.manual.IManualPage;
+import blusunrize.lib.manual.ManualInstance.ManualEntry;
+import blusunrize.lib.manual.ManualInstance.ManualLink;
 import flaxbeard.immersivepetroleum.api.energy.FuelHandler;
 import flaxbeard.immersivepetroleum.api.event.SchematicPlaceBlockPostEvent;
 import flaxbeard.immersivepetroleum.api.event.SchematicRenderBlockEvent;
@@ -17,6 +24,7 @@ import flaxbeard.immersivepetroleum.common.IPContent;
 import flaxbeard.immersivepetroleum.common.blocks.ItemBlockIPBase;
 import flaxbeard.immersivepetroleum.common.blocks.metal.BlockTypes_Dummy;
 import flaxbeard.immersivepetroleum.common.entity.EntitySpeedboat;
+import flaxbeard.immersivepetroleum.common.items.ItemProjector;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -44,13 +52,16 @@ import net.minecraftforge.fluids.capability.FluidTankProperties;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.VehicleFuelHandler;
+import pl.pabilo8.immersiveintelligence.client.manual.IIManualPage;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.util.block.ItemBlockIISlabs;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
 
 import javax.annotation.Nonnull;
@@ -58,6 +69,7 @@ import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 
 public class ImmersivePetroleumHelper extends IICompatModule
 {
@@ -284,5 +296,60 @@ public class ImmersivePetroleumHelper extends IICompatModule
 		{
 			return new FluidTank(boat.getContainedFluid(), boat.getMaxFuel());
 		}
+	}
+
+	//--- Manual Helper ---//
+
+	/**
+	 * @return true if the item is a projector
+	 */
+	public static boolean isProjector(ItemStack slotStack)
+	{
+		return slotStack.getItem() instanceof ItemProjector;
+	}
+
+	/**
+	 * @return a multiblock itemstack if the item is a projector with a set blueprint, or the projector item back
+	 */
+	@SideOnly(Side.CLIENT)
+	@Nonnull
+	public static ManualLink getManualLinkForProjector(ItemStack projectorStack)
+	{
+		//Get the multiblock name from NBT
+		String name = ItemNBTHelper.getString(projectorStack, "multiblock");
+
+		//Find the multiblock in registry
+		IMultiblock found = MultiblockHandler.getMultiblocks().stream()
+				.filter(mb -> mb.getUniqueName().equals(name))
+				.findFirst()
+				.orElseGet(() -> null);
+
+		//Find the multiblock page
+		if(found!=null)
+			for(Entry<String, ManualEntry> entry : ManualHelper.getManual().manualContents.entries())
+			{
+				IManualPage[] pages = entry.getValue().getPages();
+				for(int i = 0; i < pages.length; i++)
+				{
+					IManualPage page = pages[i];
+					//Check if multiblock on the page is the one needed
+					if(page instanceof ManualPageMultiblock mbPage)
+					{
+						IMultiblock multiblock = ReflectionHelper.getPrivateValue(ManualPageMultiblock.class, mbPage, "multiblock");
+						if(multiblock==found)
+							return new ManualLink(entry.getValue().getName(), i);
+					}
+					//Search all objects on the page
+					if(page instanceof IIManualPage iiPage)
+					{
+						EasyNBT easyNBT = iiPage.provideManualData();
+						if(easyNBT!=null&&easyNBT.getString("lastMultiblock").equals(name))
+							return new ManualLink(entry.getValue().getName(), i);
+					}
+				}
+			}
+
+		//Fallback to the projector page
+		return ManualHelper.getManual().getManualLink(new ItemStack(projectorStack.getItem()));
 	}
 }

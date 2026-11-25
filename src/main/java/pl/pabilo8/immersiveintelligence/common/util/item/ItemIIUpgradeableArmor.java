@@ -273,13 +273,6 @@ public abstract class ItemIIUpgradeableArmor extends ItemArmor implements IUpgra
 		return multimap;
 	}
 
-	//Armor should use a model instead of layered textures
-	@Nullable
-	public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type)
-	{
-		return ImmersiveIntelligence.MODID+":textures/armor/empty.png";
-	}
-
 	@Override
 	public boolean hasOverlay(@Nonnull ItemStack stack)
 	{

@@ -1,0 +1,22 @@
+{
+  "type": "forge:ore_shapeless",
+  "result": {
+    "item": "immersiveintelligence:data_connector",
+    "data": 11,
+    "count": 1
+  },
+  "ingredients": [
+    {
+      "item": "immersiveintelligence:data_connector",
+      "data": 10
+    },
+    {
+      "type": "forge:ore_dict",
+      "ore": "cameraBasic"
+    },
+    {
+      "type": "forge:ore_dict",
+      "ore": "punchtapeEmpty"
+    }
+  ]
+}

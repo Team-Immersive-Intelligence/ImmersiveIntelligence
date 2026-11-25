@@ -4,20 +4,26 @@ import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.lib.manual.gui.GuiClickableList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualObject;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualPage;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.item.data.ItemIIFunctionalCircuit.Circuits;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
+ * Displays the functions provided by a circuit.
+ *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 30.10.2026
  * @since 02.11.2022
  */
 public class IIManualCircuit extends IIManualObject
@@ -34,10 +40,16 @@ public class IIManualCircuit extends IIManualObject
 	}
 
 	@Override
+	public void initData(IIManualPage page)
+	{
+		super.initData(page);
+		this.circuit = dataSource.getEnum("circuit", Circuits.class);
+	}
+
+	@Override
 	public void postInit(IIManualPage page)
 	{
 		super.postInit(page);
-		this.circuit = dataSource.getEnum("circuit", Circuits.class);
 
 		String[] functionNames = Arrays.stream(this.circuit.getFunctions())
 				.map(name -> I18n.format("datasystem.immersiveintelligence.function."+name.toLowerCase()))
@@ -58,6 +70,15 @@ public class IIManualCircuit extends IIManualObject
 				return b;
 			}
 		};
+	}
+
+	/**
+	 * Gets the item stack for the displayed circuit.
+	 */
+	@Override
+	public List<ItemStack> provideManualItemStacks()
+	{
+		return circuit==null?null: Collections.singletonList(IIContent.itemCircuit.getStack(circuit));
 	}
 
 	@Override

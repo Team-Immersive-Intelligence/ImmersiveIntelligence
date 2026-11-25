@@ -35,7 +35,8 @@ public class IIManualCategoryIEDefaults extends IIManualCategory
 	public void addPages()
 	{
 		super.addPages();
-		//Tools
+		//--- Tools ---//
+
 		addEntry("electric_tools", ManualHelper.CAT_TOOLS)
 				.addSource("e_hammer", getSourceForItem(new ItemStack(IIContent.itemHammer)))
 				.addSource("e_wrench", getSourceForItem(new ItemStack(IIContent.itemElectricWrench)))
@@ -49,12 +50,23 @@ public class IIManualCategoryIEDefaults extends IIManualCategory
 		addEntry("engineers_clipboard", ManualHelper.CAT_TOOLS)
 				.addSource("clipboard", getSourceForItem(new ItemStack(IIContent.itemClipboard)));
 
-		//Simple Machines
+		//Backpacks
+		addEntry("backpacks/backpack", ManualHelper.CAT_TOOLS)
+				.addSource("backpack", getSourceForItem(new ItemStack(IIContent.itemBackpack)));
+		addEntry("backpacks/fluid_backpack", ManualHelper.CAT_TOOLS)
+				.addSource("backpack", getSourceForItem(new ItemStack(IIContent.itemFluidPack)));
+		moveEntry("powerpack", ManualHelper.CAT_TOOLS, "backpacks/capacitor_backpack", ManualHelper.CAT_TOOLS);
+		addEntry("backpacks/improved_capacitor_backpack", ManualHelper.CAT_TOOLS)
+				.addSource("backpack", getSourceForItem(new ItemStack(IIContent.itemAdvancedPowerPack)));
+		addEntry("backpacks/radio_backpack", ManualHelper.CAT_TOOLS)
+				.addSource("backpack", getSourceForItem(new ItemStack(IIContent.itemRadioPack)));
+
+		//--- Simple Machines ---//
 		addEntry("carbon_filter", ManualHelper.CAT_MACHINES)
 				.addSource("co2_filter", getSourceForItem(new ItemStack(IIContent.blockMetalDevice1)
 				));
 
-		//Power, Wires, Generators
+		//--- Power, Wires, Generators ---//
 		addEntry("rotary_power", ManualHelper.CAT_ENERGY)
 				.addSource("gearbox", getSourceForItem(
 						IIContent.blockGearbox.getStack(IIBlockTypes_Gearbox.WOODEN_GEARBOX)
@@ -78,5 +90,6 @@ public class IIManualCategoryIEDefaults extends IIManualCategory
 						IIContent.itemMotorGear.getStack(MotorGear.STEEL),
 						IIContent.itemMotorGear.getStack(MotorGear.TUNGSTEN)
 				));
+
 	}
 }

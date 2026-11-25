@@ -1,0 +1,26 @@
+{
+  "groups": {
+    "parachute_fallen": {
+      "alpha": [
+        {
+          "time": 0,
+          "alpha": 0
+        },
+        {
+          "time": 1,
+          "alpha": 1
+        }
+      ],
+      "scale": [
+        {
+          "time": 0,
+          "transform": [0.6, 0.6, 0.6]
+        },
+        {
+          "time": 1,
+          "transform": [1, 1, 1]
+        }
+      ]
+    }
+  }
+}

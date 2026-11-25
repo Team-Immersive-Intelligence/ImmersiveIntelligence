@@ -8,6 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -20,7 +21,6 @@ import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoFactory;
 import pl.pabilo8.immersiveintelligence.client.model.builtin.IAmmoModel;
 import pl.pabilo8.immersiveintelligence.client.model.builtin.ModelAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Ammunition;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.Grenade;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoGrenade;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase;
@@ -53,7 +53,7 @@ public class ItemIIAmmoGrenade extends ItemIIAmmoBase<EntityAmmoGrenade>
 	@Override
 	public float getComponentSize()
 	{
-		return 0.45f;
+		return 0.285f;
 	}
 
 	@Override
@@ -198,6 +198,7 @@ public class ItemIIAmmoGrenade extends ItemIIAmmoBase<EntityAmmoGrenade>
 		//calculate the position and direction
 		Vec3d vec = IIMath.getVectorForRotation(entity.rotationPitch, entity.getRotationYawHead());
 		Vec3d vv = entity.getPositionVector().addVector(0, (double)entity.getEyeHeight()-0.10000000149011612D, 0);
+		int maxDuration = this.getMaxItemUseDuration(stack);
 
 		//spawn the grenade
 		new AmmoFactory<>(world)
@@ -205,9 +206,8 @@ public class ItemIIAmmoGrenade extends ItemIIAmmoBase<EntityAmmoGrenade>
 				.setOwner(entity)
 				.setPosition(vv)
 				.setDirection(vec)
-				.setVelocityModifier(
-						Math.min(((float)this.getMaxItemUseDuration(stack)-timeLeft)/(float)this.getMaxItemUseDuration(stack), 35)*Grenade.throwSpeedModifier
-				).create();
+				.setVelocityModifier(MathHelper.clamp((float)maxDuration-timeLeft, 35, maxDuration)/(float)maxDuration)
+				.create();
 
 		//take ammo from player if not in creative mode
 		if(!(entity instanceof EntityPlayer)||!((EntityPlayer)entity).capabilities.isCreativeMode)

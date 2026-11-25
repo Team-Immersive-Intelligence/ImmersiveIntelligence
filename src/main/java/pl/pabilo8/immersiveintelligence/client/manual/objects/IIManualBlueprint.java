@@ -18,11 +18,13 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
- * Displays a crafting recipe for item(s).
+ * Displays recipes from a blueprint category.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 30.10.2026
  * @since 22.05.2022
  */
 public class IIManualBlueprint extends IIManualObject
@@ -40,13 +42,18 @@ public class IIManualBlueprint extends IIManualObject
 	}
 
 	@Override
+	public void initData(IIManualPage page)
+	{
+		super.initData(page);
+		blueprintName = dataSource.getString("blueprint");
+	}
+
+	@Override
 	public void postInit(IIManualPage page)
 	{
 		super.postInit(page);
 
-		//add a single item
-		dataSource.checkSetString("blueprint", s -> blueprintName = s);
-		recalculateCraftingRecipes(page);
+		recalculateCraftingRecipes();
 		if(this.recipes.size() > 1)
 		{
 			buttonPrev = new GuiButtonManualNavigation(gui, 100, x-2, y+yOff/2-3, 8, 10, 0);
@@ -54,6 +61,17 @@ public class IIManualBlueprint extends IIManualObject
 		}
 
 		height = yOff+12;
+	}
+
+	/**
+	 * Gets the result stacks from this blueprint category.
+	 */
+	@Override
+	public List<ItemStack> provideManualItemStacks()
+	{
+		return BlueprintCraftingRecipe.recipeList.get(blueprintName).stream()
+				.map(recipe -> recipe.output)
+				.collect(Collectors.toList());
 	}
 
 	//--- Rendering, Reaction ---//
@@ -163,7 +181,7 @@ public class IIManualBlueprint extends IIManualObject
 
 	//--- Private Methods (for parsing) ---//
 
-	private void recalculateCraftingRecipes(IIManualPage page)
+	private void recalculateCraftingRecipes()
 	{
 		this.recipes.clear();
 		ArrayListMultimap<String, BlueprintCraftingRecipe> cmRecipes = BlueprintCraftingRecipe.recipeList;
@@ -180,8 +198,6 @@ public class IIManualBlueprint extends IIManualObject
 			this.recipes.add(pIngredients);
 			if(h*18 > yOff)
 				yOff = h*18;
-
-			page.addProvidedItem(recipe.output);
 		}
 	}
 }

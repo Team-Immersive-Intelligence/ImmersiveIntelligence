@@ -7,9 +7,9 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Optional.Method;
 import net.minecraftforge.fml.relauncher.Side;
@@ -21,6 +21,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.block.arithmetic_logic_machin
 import pl.pabilo8.immersiveintelligence.client.gui.block.arithmetic_logic_machine.GuiArithmeticLogicMachineEdit;
 import pl.pabilo8.immersiveintelligence.client.gui.block.arithmetic_logic_machine.GuiArithmeticLogicMachineMemory;
 import pl.pabilo8.immersiveintelligence.client.gui.block.arithmetic_logic_machine.GuiArithmeticLogicMachineMemoryEdit;
+import pl.pabilo8.immersiveintelligence.client.gui.block.data_device.*;
 import pl.pabilo8.immersiveintelligence.client.gui.block.data_input_machine.GuiDataInputMachine;
 import pl.pabilo8.immersiveintelligence.client.gui.block.data_input_machine.GuiDataInputMachineEdit;
 import pl.pabilo8.immersiveintelligence.client.gui.block.data_merger.GuiDataMerger;
@@ -35,6 +36,10 @@ import pl.pabilo8.immersiveintelligence.client.gui.block.flagpole.GuiFlagpole;
 import pl.pabilo8.immersiveintelligence.client.gui.block.flagpole.GuiFlagpoleConfig;
 import pl.pabilo8.immersiveintelligence.client.gui.block.flagpole.GuiFlagpoleFaction;
 import pl.pabilo8.immersiveintelligence.client.gui.block.inserter.GuiInserter;
+import pl.pabilo8.immersiveintelligence.client.gui.block.inventory_interface.GuiInventoryInterface;
+import pl.pabilo8.immersiveintelligence.client.gui.block.inventory_interface.GuiInventoryInterfaceEdit;
+import pl.pabilo8.immersiveintelligence.client.gui.block.inventory_interface.GuiInventoryInterfaceOutput;
+import pl.pabilo8.immersiveintelligence.client.gui.block.inventory_interface.GuiInventoryInterfaceValue;
 import pl.pabilo8.immersiveintelligence.client.gui.block.packer.GuiPacker;
 import pl.pabilo8.immersiveintelligence.client.gui.block.packer.GuiPackerLabeler;
 import pl.pabilo8.immersiveintelligence.client.gui.block.radar.GuiRadar;
@@ -46,16 +51,17 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoPlayerGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoResource;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTemplate;
 import pl.pabilo8.immersiveintelligence.client.gui.entity.GuiEntityUpgrade;
+import pl.pabilo8.immersiveintelligence.client.gui.item.GuiBackpack;
 import pl.pabilo8.immersiveintelligence.client.gui.item.GuiCasingPouch;
 import pl.pabilo8.immersiveintelligence.client.gui.item.GuiClipboardItem;
 import pl.pabilo8.immersiveintelligence.client.gui.item.GuiPrintedPage;
-import pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity.TileEntityDataMerger;
-import pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity.TileEntityDataRouter;
+import pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity.*;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.TileEntityMetalCrate;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate.TileEntityAmmunitionCrate;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate.TileEntityMedicalCrate;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate.TileEntityRepairCrate;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.inserter.TileEntityInserterBase;
+import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.nixie.TileEntityNixieDisplayBase;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.*;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.*;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
@@ -66,6 +72,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multibloc
 import pl.pabilo8.immersiveintelligence.common.block.rotary_device.tileentity.TileEntityGearbox;
 import pl.pabilo8.immersiveintelligence.common.block.simple.tileentity.TileEntityClipboard;
 import pl.pabilo8.immersiveintelligence.common.block.simple.tileentity.TileEntitySmallCrate;
+import pl.pabilo8.immersiveintelligence.common.block.simple.tileentity.backpack.TileEntityStorageBackpack;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.DecoGuiJEIHandler;
 import pl.pabilo8.immersiveintelligence.common.gui.*;
 import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
@@ -110,6 +117,7 @@ public enum IIGUI implements ISerializableEnum
 			(player, te) -> new ContainerDataInputMachine(player, te, false)
 	),
 	DATA_INPUT_MACHINE_EDIT(TileEntityDataInputMachine.class, ContainerDataInputMachineEditing::new),
+	ATMOSPHERIC_CONDENSER(TileEntityAtmosphericCondenser.class, ContainerAtmosphericCondenser::new),
 
 	ARITHMETIC_LOGIC_MACHINE_STORAGE(TileEntityArithmeticLogicMachine.class,
 			(player, te) -> new ContainerArithmeticLogicMachine(player, te, 0)
@@ -189,20 +197,38 @@ public enum IIGUI implements ISerializableEnum
 	CLIPBOARD_ITEM(ContainerClipboardItem::new),
 	CLIPBOARD_BLOCK(TileEntityClipboard.class, ContainerClipboardTile::new),
 	DIESEL_ENGINE(TileEntityDieselEngine.class, ContainerDieselEngine::new),
-	SMALL_CHEMICAL_REACTOR(TileEntitySmallChemicalReactor.class, ContainerSmallChemicalReactor::new);
+	SMALL_CHEMICAL_REACTOR(TileEntitySmallChemicalReactor.class, ContainerSmallChemicalReactor::new),
+
+	DATA_BUFFER(TileEntityDataBuffer.class, (player, tile) -> new ContainerSmallDataDevice<>(player, tile, true)),
+	DATA_BUFFER_EDIT(TileEntityDataBuffer.class, (player, tile) -> new ContainerSmallDataDevice<>(player, tile, true)),
+	DATA_MAPPER(TileEntityDataMapper.class, (player, tile) -> new ContainerSmallDataDevice<>(player, tile, true)),
+	DATA_MAPPER_EDIT(TileEntityDataMapper.class, ContainerSmallDataDevice::new),
+	DATA_MAPPER_VALUE(TileEntityDataMapper.class, ContainerSmallDataDevice::new),
+	DATA_APPENDER(TileEntityDataAppender.class, (player, tile) -> new ContainerSmallDataDevice<>(player, tile, true)),
+	DATA_APPENDER_EDIT(TileEntityDataAppender.class, ContainerSmallDataDevice::new),
+	REDSTONE_SEQUENCER(TileEntityRedstoneSequencer.class, ContainerSmallDataDevice::new),
+	NIXIE_DISPLAY(TileEntityNixieDisplayBase.class, (player, tile) -> new ContainerSmallDataDevice<>(player, tile, 88)),
+
+	INVENTORY_INTERFACE(TileEntityInventoryInterface.class, ContainerInventoryInterface::getMainGui),
+	INVENTORY_INTERFACE_EDIT(TileEntityInventoryInterface.class, ContainerInventoryInterface::getEditGui),
+	INVENTORY_INTERFACE_OUTPUT(TileEntityInventoryInterface.class, ContainerInventoryInterface::getOutputGui),
+	INVENTORY_INTERFACE_VALUE(TileEntityInventoryInterface.class, ContainerInventoryInterface::getOutputGui),
+
+	BACKPACK((player, stack, hand) -> stack.getItem()==IIContent.itemBackpack?new ContainerBackpack(player, stack, hand): null),
+	BACKPACK_BLOCK(TileEntityStorageBackpack.class, ContainerBackpackBlock::new);
 
 	public final Class<? extends TileEntity> teClass;
 	public final Class<? extends Entity> entityClass;
 	public final BiFunction<EntityPlayer, TileEntity, Container> containerFromTile;
 	public final BiFunction<EntityPlayer, Entity, Container> containerFromEntity;
-	public final TriFunction<EntityPlayer, ItemStack, EnumHand, Container> containerFromStack;
+	public final TriFunction<EntityPlayer, ItemStack, EntityEquipmentSlot, Container> containerFromStack;
 	public final Function<EntityPlayer, Container> containerFromPlayer;
 	public boolean item, player;
 
 	@SideOnly(Side.CLIENT)
 	public BiFunction<EntityPlayer, TileEntity, GuiScreen> guiFromTile;
 	@SideOnly(Side.CLIENT)
-	public TriFunction<EntityPlayer, ItemStack, EnumHand, GuiScreen> guiFromStack;
+	public TriFunction<EntityPlayer, ItemStack, EntityEquipmentSlot, GuiScreen> guiFromStack;
 	@SideOnly(Side.CLIENT)
 	public Function<EntityPlayer, GuiScreen> guiFromPlayer;
 	@SideOnly(Side.CLIENT)
@@ -245,7 +271,7 @@ public enum IIGUI implements ISerializableEnum
 	/**
 	 * ItemStack GUI constructor
 	 */
-	IIGUI(@Nonnull TriFunction<EntityPlayer, ItemStack, EnumHand, Container> containerFromStack)
+	IIGUI(@Nonnull TriFunction<EntityPlayer, ItemStack, EntityEquipmentSlot, Container> containerFromStack)
 	{
 		this.teClass = null;
 		this.entityClass = null;
@@ -311,7 +337,20 @@ public enum IIGUI implements ISerializableEnum
 		IIGUI.DATA_MERGER_EDIT.setClientTileGui(GuiDataMergerEdit::new);
 		IIGUI.DATA_ROUTER.setClientTileGui(GuiDataRouter::new);
 		IIGUI.DATA_ROUTER_EDIT.setClientTileGui(GuiDataRouterEdit::new);
+		IIGUI.DATA_BUFFER.setClientTileGui(GuiDataBuffer::new);
+		IIGUI.DATA_BUFFER_EDIT.setClientTileGui(GuiDataBufferEdit::new);
+		IIGUI.DATA_MAPPER.setClientTileGui(GuiDataMapper::new);
+		IIGUI.DATA_MAPPER_EDIT.setClientTileGui(GuiDataMapperEdit::new);
+		IIGUI.DATA_MAPPER_VALUE.setClientTileGui(GuiDataMapperValue::new);
+		IIGUI.DATA_APPENDER.setClientTileGui(GuiDataAppender::new);
+		IIGUI.DATA_APPENDER_EDIT.setClientTileGui(GuiDataAppenderEdit::new);
+		IIGUI.REDSTONE_SEQUENCER.setClientTileGui(GuiRedstoneSequencer::new);
+		IIGUI.INVENTORY_INTERFACE.setClientTileGui(GuiInventoryInterface::new);
+		IIGUI.INVENTORY_INTERFACE_EDIT.setClientTileGui(GuiInventoryInterfaceEdit::new);
+		IIGUI.INVENTORY_INTERFACE_OUTPUT.setClientTileGui(GuiInventoryInterfaceOutput::new);
+		IIGUI.INVENTORY_INTERFACE_VALUE.setClientTileGui(GuiInventoryInterfaceValue::new);
 		IIGUI.INSERTER.setClientTileGui(GuiInserter::new);
+		IIGUI.NIXIE_DISPLAY.setClientTileGui(GuiNixieDisplay::new);
 		//Crates
 		IIGUI.METAL_CRATE.setClientTileGui(GuiMetalCrate::new);
 		IIGUI.SMALL_CRATE.setClientTileGui(GuiSmallCrate::new);
@@ -326,6 +365,7 @@ public enum IIGUI implements ISerializableEnum
 		IIGUI.DATA_INPUT_MACHINE_STORAGE.setClientTileGui(GuiDataInputMachine::getStorageGui);
 		IIGUI.DATA_INPUT_MACHINE_VARIABLES.setClientTileGui(GuiDataInputMachine::getVariablesGui);
 		IIGUI.DATA_INPUT_MACHINE_EDIT.setClientTileGui(GuiDataInputMachineEdit::new);
+		IIGUI.ATMOSPHERIC_CONDENSER.setClientTileGui(GuiAtmosphericCondenser::new);
 		//ALM
 		IIGUI.ARITHMETIC_LOGIC_MACHINE_STORAGE.setClientTileGui(GuiArithmeticLogicMachine::getStorageGui);
 		IIGUI.ARITHMETIC_LOGIC_MACHINE_VARIABLES.setClientTileGui(GuiArithmeticLogicMachine::getVariablesGui);
@@ -344,8 +384,11 @@ public enum IIGUI implements ISerializableEnum
 		IIGUI.PRINTED_PAGE_BOOK.setClientStackGui(GuiPrintedPage::new);
 
 		IIGUI.CASING_POUCH.setClientStackGui(GuiCasingPouch::new);
+		IIGUI.BACKPACK.setClientStackGui((player, stack, hand) ->
+				stack.getItem()==IIContent.itemBackpack?new GuiBackpack(player, stack, hand): null);
 		IIGUI.CLIPBOARD_ITEM.setClientStackGui(GuiClipboardItem::new);
 		IIGUI.CLIPBOARD_BLOCK.setClientTileGui(GuiClipboardBlock::new);
+		IIGUI.BACKPACK_BLOCK.setClientTileGui(GuiBackpackBlock::new);
 
 		//noinspection rawtypes,unchecked
 		IIGUI.UPGRADE_TILE.setClientTileGui((player, tile) -> new GuiTileUpgrade(player, tile));
@@ -454,7 +497,7 @@ public enum IIGUI implements ISerializableEnum
 	}
 
 	@SideOnly(Side.CLIENT)
-	public void setClientStackGui(TriFunction<EntityPlayer, ItemStack, EnumHand, GuiScreen> guiFromStack)
+	public void setClientStackGui(TriFunction<EntityPlayer, ItemStack, EntityEquipmentSlot, GuiScreen> guiFromStack)
 	{
 		this.guiFromStack = guiFromStack;
 		this.item = true;

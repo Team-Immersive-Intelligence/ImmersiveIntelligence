@@ -1,0 +1,28 @@
+# Made with Blockbench
+
+newmtl common_cable_and_pipe
+map_Kd immersiveintelligence:blocks/common/common_cable_and_pipe
+newmtl common_machinebase
+map_Kd immersiveintelligence:blocks/common/common_machinebase
+newmtl common_bottom
+map_Kd immersiveintelligence:blocks/common/common_bottom
+newmtl common_rough_steel
+map_Kd immersiveintelligence:blocks/common/common_rough_steel
+newmtl common_steel
+map_Kd immersiveintelligence:blocks/common/common_steel
+newmtl common_thingies
+map_Kd immersiveintelligence:blocks/common/common_thingies
+newmtl common_thingies2
+map_Kd immersiveintelligence:blocks/common/common_thingies2
+newmtl atmospheric_condenser
+map_Kd immersiveintelligence:blocks/multiblock/atmospheric_condenser
+newmtl common_table_steel
+map_Kd immersiveintelligence:blocks/common/common_table_steel
+newmtl metal
+map_Kd immersiveintelligence:blocks/small_crate/metal
+newmtl reinforced
+map_Kd immersiveintelligence:blocks/small_crate/reinforced
+newmtl atmospheric_condenser2
+map_Kd immersiveintelligence:blocks/multiblock/atmospheric_condenser2
+newmtl atmospheric_condenser3
+map_Kd immersiveintelligence:blocks/multiblock/atmospheric_condenser3

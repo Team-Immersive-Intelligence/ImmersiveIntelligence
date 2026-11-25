@@ -1,0 +1,6 @@
+# Made by Pabilo8 with Blockbench
+
+newmtl advanced_powerpack
+map_Kd immersiveintelligence:armor/advanced_powerpack
+newmtl common_cable_and_pipe
+map_Kd immersiveintelligence:blocks/common/common_cable_and_pipe

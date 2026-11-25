@@ -2,9 +2,9 @@ package pl.pabilo8.immersiveintelligence.client.gui.deco.component.widget;
 
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.EnumHand;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoTab;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoClipboardList;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
@@ -19,7 +19,6 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Locale;
 
 /**
  * Compact side editor for one Engineer's Clipboard in the player's inventory.
@@ -32,7 +31,7 @@ public class DecoClipboardWidget extends DecoComponentWidgetBase<DecoClipboardWi
 	private final InventoryPlayer inventory;
 	private final int inventorySlot;
 	@Nullable
-	private final EnumHand hand;
+	private final EntityEquipmentSlot slot;
 	private DecoClipboardList clipboardList;
 	@Nullable
 	private String displayName;
@@ -42,7 +41,7 @@ public class DecoClipboardWidget extends DecoComponentWidgetBase<DecoClipboardWi
 	{
 		this.inventory = inventory;
 		this.inventorySlot = inventorySlot;
-		this.hand = null;
+		this.slot = null;
 		withSize(144, 154);
 		withBackground(DecoTextures.BG_PAPER);
 		withBackgroundMask(DecoTextures.TEMPLATE_PAPER);
@@ -52,16 +51,16 @@ public class DecoClipboardWidget extends DecoComponentWidgetBase<DecoClipboardWi
 				stack.getDisplayName(): null;
 	}
 
-	public DecoClipboardWidget(InventoryPlayer inventory, EnumHand hand)
+	public DecoClipboardWidget(InventoryPlayer inventory, EntityEquipmentSlot slot)
 	{
 		this.inventory = inventory;
 		this.inventorySlot = -1;
-		this.hand = hand;
+		this.slot = slot;
 		withSize(144, 154);
 		withBackground(DecoTextures.BG_PAPER);
 		withBackgroundMask(DecoTextures.TEMPLATE_PAPER);
 
-		ItemStack stack = inventory.player.getHeldItem(hand);
+		ItemStack stack = inventory.player.getItemStackFromSlot(slot);
 		this.displayName = stack.hasDisplayName()?stack.getDisplayName(): null;
 	}
 
@@ -83,9 +82,9 @@ public class DecoClipboardWidget extends DecoComponentWidgetBase<DecoClipboardWi
 
 	private ItemStack getClipboard()
 	{
-		if(hand!=null)
+		if(slot!=null)
 		{
-			ItemStack stack = hand==EnumHand.OFF_HAND?inventory.offHandInventory.get(0): inventory.getCurrentItem();
+			ItemStack stack = slot==EntityEquipmentSlot.OFFHAND?inventory.offHandInventory.get(0): inventory.getCurrentItem();
 			return stack.getItem()==IIContent.itemClipboard?stack: ItemStack.EMPTY;
 		}
 		if(inventorySlot < 0||inventorySlot >= inventory.mainInventory.size())
@@ -104,8 +103,8 @@ public class DecoClipboardWidget extends DecoComponentWidgetBase<DecoClipboardWi
 			{
 				NBTTagList entries = DecoClipboardUtils.writeEntries(clipboardList.getEntries());
 				ItemIIClipboard.setEntries(stack, entries);
-				IIPacketHandler.sendToServer(hand==null?
-						new MessageClipboardItemSync(inventorySlot, entries): new MessageClipboardItemSync(hand, entries));
+				IIPacketHandler.sendToServer(slot==null?
+						new MessageClipboardItemSync(inventorySlot, entries): new MessageClipboardItemSync(slot, entries));
 			}
 			dirty = false;
 		}
@@ -115,7 +114,7 @@ public class DecoClipboardWidget extends DecoComponentWidgetBase<DecoClipboardWi
 	@Override
 	public String getName()
 	{
-		return hand==null?"clipboard_"+inventorySlot: "clipboard_"+hand.name().toLowerCase(Locale.ROOT);
+		return slot==null?"clipboard_"+inventorySlot: "clipboard_"+slot.getName().toLowerCase();
 	}
 
 	@Nonnull

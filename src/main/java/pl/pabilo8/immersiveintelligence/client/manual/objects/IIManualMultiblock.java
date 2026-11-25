@@ -28,19 +28,22 @@ import pl.pabilo8.immersiveintelligence.client.manual.IIManualPage;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Basically a copy of {@link blusunrize.immersiveengineering.api.ManualPageMultiblock} adapted for CTMB
+ * Displays a multiblock structure and its material list.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 30.10.2026
  * @since 22.05.2022
  */
 public class IIManualMultiblock extends IIManualObject
@@ -66,11 +69,27 @@ public class IIManualMultiblock extends IIManualObject
 	}
 
 	@Override
+	public void initData(IIManualPage page)
+	{
+		super.initData(page);
+		String mbName = dataSource.getString("mb");
+		multiblock = MultiblockHandler.getMultiblocks().stream().filter(mb -> mb.getUniqueName().equals(mbName)).findFirst().orElse(null);
+	}
+
+	/**
+	 * Gets the item stack for the displayed structure's formed block.
+	 */
+	@Override
+	public List<ItemStack> provideManualItemStacks()
+	{
+		return multiblock instanceof MultiblockStuctureBase<?> structure?
+				Collections.singletonList(structure.getFormedItemStack()): null;
+	}
+
+	@Override
 	public void postInit(IIManualPage page)
 	{
 		super.postInit(page);
-		String mbName = dataSource.getString("mb");
-		multiblock = MultiblockHandler.getMultiblocks().stream().filter(mb -> mb.getUniqueName().equals(mbName)).findFirst().orElse(null);
 
 		if(multiblock!=null&&multiblock.getStructureManual()!=null)
 		{

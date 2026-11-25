@@ -16,6 +16,7 @@ import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMT;
 import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTHand;
 import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIItemRendererAMT;
 import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIItemRendererAMT.RegisteredItemRenderer;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.ISpecificHandRenderer;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIIElectricWrench;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;

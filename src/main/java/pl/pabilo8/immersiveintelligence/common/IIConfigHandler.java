@@ -175,10 +175,20 @@ public class IIConfigHandler
 
 			@Comment({"If enabled, II will replace compatible Immersive Engineering's GUIs with Deco-based ones."})
 			@RequiresMcRestart
-			public static boolean enableDecoOverride = false;
+			public static boolean enableDecoOverride = true;
 
 			@Comment({"If disabled, II will not replace the IE font in the Engineer's Manual."})
 			public static boolean enableFontOverride = true;
+
+			@Comment({"Enable manual page lookup from inventory screens."})
+			public static boolean enableManualLookup = true;
+
+			@Comment({"If disabled, II will not change the location of IE manual pages in the manual."})
+			public static boolean enableManualOverride = true;
+
+			@Comment({"Time to hold the manual lookup key, in ticks."})
+			@RangeInt(min = 1)
+			public static int manualLookupTime = 20;
 
 			@SubConfig
 			@LangKey("item.immersiveengineering.railgun.name")
@@ -192,6 +202,7 @@ public class IIConfigHandler
 
 			public static class Railgun
 			{
+
 				@Comment({"If disabled, II will not make any changes to IE railgun. This also disables using railgun grenades (as they use a custom entity)."})
 				public static boolean enableRailgunOverride = true;
 
@@ -643,14 +654,25 @@ public class IIConfigHandler
 			@RequiresMcRestart
 			public static int precisionToolHammerUsageTime = 80;
 
-			@Comment({"The capacity of the Improved Capacitor Backpack (in IF)."})
-			@RequiresMcRestart
-			public static int advancedPowerpackCapacity = 1000000;
-
 			@Comment({"Whether advanced multiblock construction should be free and instantenous in creative mode."})
 			public static boolean instantCreativeConstruction = true;
 			@Comment({"Whether machine upgrading should be free and instantenous in creative mode."})
 			public static boolean instantCreativeUpgrading = true;
+
+			public static class Backpacks
+			{
+				@Comment({"The capacity of the Canister Backpack (in mB)."})
+				public static final int fluidpackCapacity = 16000;
+
+				@Comment({"Fluid transfer rate of the Canister Backpack (in mB/t)."})
+				public static final int fluidpackTransferRate = 1000;
+
+				@Comment({"The capacity of the Improved Capacitor Backpack (in IF)."})
+				public static int advancedPowerpackCapacity = 1000000;
+
+				@Comment({"Transmission range of the Radio Backpack (in blocks)."})
+				public static final float radiopackRange = 32;
+			}
 
 			public static class SkycrateMounts
 			{
@@ -728,6 +750,10 @@ public class IIConfigHandler
 			@Comment("Config for the Small Chemical Reactor, allows for changes to the energy and fluid capacity")
 			public static SmallChemicalReactor smallChemicalReactor;
 			@SubConfig
+			@LangKey("tile.immersiveintelligence.metal_multiblock.atmospheric_condenser.name")
+			@Comment("Config for the Atmospheric Condenser, allows for changes to energy consumption, production rates, and tank capacity")
+			public static AtmosphericCondenser atmosphericCondenser;
+			@SubConfig
 			@LangKey("tile.immersiveintelligence.metal_multiblock.precision_assembler.name")
 			@Comment("Config for the precision Assembler, allows changes to energy capacity and processing time")
 			public static PrecisionAssembler precisionAssembler;
@@ -776,9 +802,9 @@ public class IIConfigHandler
 			@Comment("Config for the Chemical Dispenser, allows for changes to movement speed, energy usage and capacity")
 			public static ChemicalDispenser chemicalDispenser;
 			@SubConfig
-			@LangKey("tile.immersiveintelligence.metal_device.small_data_buffer.name")
-			@Comment("Config for the Small Data Buffer, allows changes to maximum packet capacity")
-			public static SmallDataBuffer smallDataBuffer;
+			@LangKey("tile.immersiveintelligence.metal_device.data_buffer.name")
+			@Comment("Config for the Data Buffer, allows changes to maximum packet capacity")
+			public static DataBuffer dataBuffer;
 			@SubConfig
 			@LangKey("tile.immersiveintelligence.wooden_multiblock.skycrate_station.name")
 			@Comment("Config for the Skycrate Station, allows for changes to multiblock processing time, and RPM interaction adjustments ")
@@ -1136,6 +1162,31 @@ public class IIConfigHandler
 				public static int fluidCapacity = 4000;
 			}
 
+			public static class AtmosphericCondenser
+			{
+				@Comment({"Energy capacity of the atmospheric condenser."})
+				public static int energyCapacity = 32000;
+
+				@RequiresWorldRestart
+				@Comment({"Fluid tank capacity of the atmospheric condenser."})
+				public static int fluidCapacity = 32000;
+
+				@Comment({"Energy consumption per tick during production."})
+				public static int energyPerTick = 8;
+
+				@Comment({"Ticks required per production cycle."})
+				public static int ticksPerCycle = 20;
+
+				@Comment({"Argon produced per cycle (in mB)."})
+				public static int argonPerCycle = 10;
+
+				@Comment({"Nitrogen produced per cycle (in mB)."})
+				public static int nitrogenPerCycle = 780;
+
+				@Comment({"Oxygen produced per cycle (in mB)."})
+				public static int oxygenPerCycle = 210;
+			}
+
 			public static class PrecisionAssembler
 			{
 				@Comment({"Energy capacity of the chemical bath."})
@@ -1432,10 +1483,11 @@ public class IIConfigHandler
 				public static float sprayRangeGas = 0.75f;
 			}
 
-			public static class SmallDataBuffer
+			public static class DataBuffer
 			{
+				@RangeInt(min = 1, max = 4096)
 				@Comment({"Amount of data packets the machine can store."})
-				public static int packetCapacity = 4;
+				public static int packetCapacity = 64;
 			}
 
 			public static class FuelStation
